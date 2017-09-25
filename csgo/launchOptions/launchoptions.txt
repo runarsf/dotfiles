@@ -1,0 +1,1 @@
+- nogammaramp -windowed -noborder -novid -tickrate 128 -refresh 60 +exec autoexec -language bananagaming -console
