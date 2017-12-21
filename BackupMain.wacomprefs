@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <root type="map">
   <Metadata type="map">
-    <Created type="string">Sun Nov 19 12:42:59 2017</Created>
+    <Created type="string">Tue Dec 12 22:23:26 2017</Created>
     <Name type="map">
       <PenFile type="string">C:\Users\runarsf\AppData\Roaming\WTablet\Wacom_Tablet.dat</PenFile>
       <TouchFile type="string">C:\Users\runarsf\AppData\Roaming\WTablet\WacomTouch.xml</TouchFile>
@@ -19,7 +19,7 @@
       <Z type="integer">0</Z>
     </CPLLastPosition>
     <CPLLastTabPane type="integer">0</CPLLastTabPane>
-    <CPLOpened type="string">Sun Nov 19 12:42:37 2017</CPLOpened>
+    <CPLOpened type="string">Tue Dec 12 22:23:09 2017</CPLOpened>
     <Created type="string">Mon Sep 11 20:01:26 2017</Created>
     <DisplayAsserts type="bool">false</DisplayAsserts>
     <DisplayBrightness type="integer">6</DisplayBrightness>
@@ -908,26 +908,26 @@
                         <Options type="integer">32784</Options>
                         <OverlapArea type="map">
                           <Extent type="map">
-                            <X type="integer">16772</X>
-                            <Y type="integer">4717</Y>
+                            <X type="integer">16074</X>
+                            <Y type="integer">4520</Y>
                             <Z type="integer">0</Z>
                           </Extent>
                           <Origin type="map">
-                            <X type="integer">-6639</X>
-                            <Y type="integer">527</Y>
+                            <X type="integer">-5242</X>
+                            <Y type="integer">0</Y>
                             <Z type="integer">0</Z>
                           </Origin>
                         </OverlapArea>
                         <PacketRate type="integer">100</PacketRate>
                         <TabletInputArea type="map">
                           <Extent type="map">
-                            <X type="integer">8386</X>
-                            <Y type="integer">4926</Y>
+                            <X type="integer">8037</X>
+                            <Y type="integer">4925</Y>
                             <Z type="integer">0</Z>
                           </Extent>
                           <Origin type="map">
-                            <X type="integer">1747</X>
-                            <Y type="integer">527</Y>
+                            <X type="integer">2795</X>
+                            <Y type="integer">0</Y>
                             <Z type="integer">0</Z>
                           </Origin>
                         </TabletInputArea>
@@ -2761,8 +2761,8 @@
                   <Last type="string">Fri Nov 17 22:23:08 2017</Last>
                 </EButton5Click>
                 <ENone type="map">
-                  <Count type="integer">13673</Count>
-                  <Last type="string">Sun Nov 19 12:38:18 2017</Last>
+                  <Count type="integer">13793</Count>
+                  <Last type="string">Tue Dec 12 22:22:36 2017</Last>
                 </ENone>
                 <ERightClick type="map">
                   <Count type="integer">91</Count>
@@ -2772,7 +2772,7 @@
             </TransducerLowerButtonSettings>
             <TransducerName type="string">\~100:0</TransducerName>
             <TransducerTipButtonSettings type="map">
-              <ButtonFunction type="integer">1</ButtonFunction>
+              <ButtonFunction type="integer">0</ButtonFunction>
               <ButtonName type="string">tip</ButtonName>
               <LockScreenQuickNote type="bool">false</LockScreenQuickNote>
               <LowerPressureThreshold type="integer">197</LowerPressureThreshold>
@@ -2782,21 +2782,25 @@
               <UpperPressureThreshold type="integer">205</UpperPressureThreshold>
               <Usage type="map">
                 <ELeftClick type="map">
-                  <Count type="integer">2698</Count>
-                  <Last type="string">Sun Nov 19 12:10:56 2017</Last>
+                  <Count type="integer">2764</Count>
+                  <Last type="string">Sun Dec 10 13:20:34 2017</Last>
                 </ELeftClick>
+                <ENone type="map">
+                  <Count type="integer">2037</Count>
+                  <Last type="string">Tue Dec 12 22:23:03 2017</Last>
+                </ENone>
                 <MaxForStroke type="map">
-                  <L25 type="integer">836</L25>
-                  <L33 type="integer">66</L33>
-                  <L50 type="integer">138</L50>
-                  <L60 type="integer">122</L60>
-                  <L70 type="integer">151</L70>
-                  <L80 type="integer">121</L80>
-                  <L85 type="integer">58</L85>
-                  <L90 type="integer">54</L90>
-                  <L95 type="integer">33</L95>
-                  <Last type="string">Sun Nov 19 12:38:18 2017</Last>
-                  <M95 type="integer">71</M95>
+                  <L25 type="integer">1023</L25>
+                  <L33 type="integer">86</L33>
+                  <L50 type="integer">179</L50>
+                  <L60 type="integer">169</L60>
+                  <L70 type="integer">206</L70>
+                  <L80 type="integer">275</L80>
+                  <L85 type="integer">135</L85>
+                  <L90 type="integer">121</L90>
+                  <L95 type="integer">75</L95>
+                  <Last type="string">Tue Dec 12 22:23:03 2017</Last>
+                  <M95 type="integer">150</M95>
                 </MaxForStroke>
               </Usage>
             </TransducerTipButtonSettings>
@@ -2807,8 +2811,8 @@
               <LockScreenQuickNote type="bool">false</LockScreenQuickNote>
               <Usage type="map">
                 <ENone type="map">
-                  <Count type="integer">1319</Count>
-                  <Last type="string">Sun Nov 19 12:02:47 2017</Last>
+                  <Count type="integer">1802</Count>
+                  <Last type="string">Tue Dec 12 22:15:40 2017</Last>
                 </ENone>
               </Usage>
             </TransducerUpperButtonSettings>
