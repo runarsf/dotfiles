@@ -1,0 +1,270 @@
+/* ==================================================
+     EYE-FRIENDLY COLOR SCHEME FOR TYPERACER (DARKGREY) 
+                   made by noctua 2011                  
+     ================================================== 
+  
+     the code in here only apply to:
+     -pages on the domain play.typeracer.com
+     -pages whose URLs start with http://play.typeracer.com/..
+  
+     1.0 - Beta Version for Chrome, Remove Ads
+     1.1 - Enables option for different languages, makes style specific to typeracer URL
+  
+     typeracer orange   #FF7700
+     typeracer yellow   #DAA520
+  */
+
+
+
+  /* often wished.. hide advertisement banner's (.southWidget) */
+  .eastWidget, .newEastWidget, .newWestWidget, .newNorthWidget, .mainMenuAdUnit, #hostpageBannerAds {
+    display: none !important;
+  }
+
+  /* new/old colorized avatars */
+  /*.avatar {
+    background-image: url(http://www.umal.de/tr/darkavatars.png) !important;
+  }
+*/
+  /* ******************************************************************** */
+  /* bugfix: ensure correct displaying of preselected car avatars         */
+  /*         special thanks to: J-J the jet plane                         */
+  /* ******************************************************************** */
+
+  body img[src="http://data.typeracer.com/public/images/avatars/beetle1.gif"] {
+    width: 0px !important;
+    height: 25px !important;
+    padding-left: 58px !important;
+    background-image: url("http://www.umal.de/tr/porsche1.png") !important;
+  }
+
+  body img[src="http://data.typeracer.com/public/images/avatars/beetle2.gif"] {
+    width: 0px !important;
+    height: 25px !important;
+    padding-left: 58px !important;
+    background-image: url("http://www.umal.de/tr/porsche2.png") !important;
+  }
+
+  body img[src="http://data.typeracer.com/public/images/avatars/beetle3.gif"] {
+    width: 0px !important;
+    height: 25px !important;
+    padding-left: 58px !important;
+    background-image: url("http://www.umal.de/tr/porsche3.png") !important;
+  }  
+
+  body img[src="http://data.typeracer.com/public/images/avatars/beetle4.gif"] {
+    width: 0px !important;
+    height: 25px !important;
+    padding-left: 58px !important;
+    background-image: url("http://www.umal.de/tr/porsche4.png") !important;
+  }
+
+  body img[src="http://data.typeracer.com/public/images/avatars/beetle5.gif"] {
+    width: 0px !important;
+    height: 25px !important;
+    padding-left: 58px !important;
+    background-image: url("http://www.umal.de/tr/porsche5.png") !important;
+  }
+
+  body img[src="http://data.typeracer.com/public/images/avatars/beetle6.gif"] {
+    width: 0px !important;
+    height: 25px !important;
+    padding-left: 58px !important;
+    background-image: url("http://www.umal.de/tr/porsche6.png") !important;
+  }
+
+  body img[src="http://data.typeracer.com/public/images/avatars/beetle7.gif"] {
+    width: 0px !important;
+    height: 25px !important;
+    padding-left: 58px !important;
+    background-image: url("http://www.umal.de/tr/porsche7.png") !important;
+  }
+
+  body img[src="http://data.typeracer.com/public/images/avatars/beetle8.gif"] {
+    width: 0px !important;
+    height: 25px !important;
+    padding-left: 58px !important;
+    background-image: url("http://www.umal.de/tr/porsche8.png") !important;
+  }
+
+  body img[src="http://data.typeracer.com/public/images/avatars/beetle9.gif"] {
+    width: 0px !important;
+    height: 25px !important;
+    padding-left: 58px !important;
+    background-image: url("http://www.umal.de/tr/porsche9.png") !important;
+  }
+
+  body img[src="http://data.typeracer.com/public/images/avatars/beetle10.gif"] {
+    width: 0px !important;
+    height: 25px !important;
+    padding-left: 58px !important;
+    background-image: url("http://www.umal.de/tr/porsche10.png") !important;
+  }
+
+   body img[src="http://data.typeracer.com/public/images/avatars/beetle11.gif"] {
+     width: 0px !important;
+     height: 25px !important;
+     padding-left: 58px !important;
+     background-image: url("http://www.umal.de/tr/porsche11.png") !important;
+  }
+
+  body img[src="http://data.typeracer.com/public/images/avatars/beetle12.gif"] {
+    width: 0px !important;
+    height: 25px !important;
+    padding-left: 58px !important;
+    background-image: url("http://www.umal.de/tr/porsche12.png") !important;
+  }
+
+
+  /* define background and text color */
+  body {
+    background: #232323 url(http://www.umal.de/tr/bg.cache-darkgrey.png) repeat-x scroll 0 0;
+    color: #A4A4A4; /* B4B4B4 */
+  }
+
+  h1, h2, h3 { color: #A4A4A4; }
+  a:hover { color: #6AB5FF; } /* fits better to the icon's */
+  .exceptionNoticePopup a:hover { color: #6AB5FF; }
+  .exceptionNoticePopup a { color: #FF7700; }
+  .navigation a:hover { color: #6AB5FF; background-color: #313131; } /* fits better to bg.cache image */
+  #tstats-name {
+    color: #C9C9C9;
+  }
+  .container {
+    background: url(http://www.umal.de/tr/topleft-darkgrey.png) no-repeat;
+  }
+
+  .main { /* remove bgmain.cache.png (left side) */
+    background-color: #232323; background-image: none;
+  }
+
+  .footer {
+    background: #6B6B6B url(http://www.umal.de/tr/bg.cache-darkgrey.png) repeat-x 0 -92px;
+    margin-top: 12px;
+  }
+
+
+
+
+  /* =======
+     Sign In
+     ======= */
+
+  .PopupWithIcon, .editUserPopup {
+    background-color: #2F2F2F;
+    border-radius: 15px;
+    padding: 15px;
+  }
+
+
+
+
+  /* ===================
+     Account Information
+     =================== */
+
+  .signUpForm .sectionHeaderRow { color: #6AB5FF; /*#CECE00;*/ } /* yellow headers */
+
+
+
+
+  /* ==========
+     racer card
+     ========== */
+
+  .playerInfoPopup {
+    background-color: #2F2F2F; color: #C8C8C8;
+    box-shadow: 5px 5px rgba(0,0,0,0.5); /* shadow with opacity of 50% */
+    border-radius: 15px;
+    padding: 15px;
+  }
+
+
+
+
+  /* compensate our 15px round edges and 15px padding.. */
+  .themeContent {
+    /*margin-left: -30px;*/
+  }
+  #dUI { margin-left: -55px; }
+
+
+
+
+  /* ===========
+     racetrack..
+     =========== */
+
+  /* add round edges */
+  .mainViewport {
+    background-color: #2A2A2A;
+    border-radius: 15px;
+    padding: 15px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #803C00; /*#4A4A4A;*/
+  }
+
+  .gameView .gameStatusLabel { color: #A4A4A4; }
+  .textInfoView .textInfoHeader { color: #A4A4A4;  }
+  .textInfoView .textInfoOwnStats { color: #B4B4B4;  }
+
+  /* text title and race indices numbers */
+  .textInfoView .textInfoTitle { color: #DAA520 !important; }
+  .textInfoView .textInfoTitle a { color: #DAA520 !important; }
+  .textInfoView .textInfoAuthor { color: #DAA520; }
+  .textInfoView .textInfoOwnStatsNumber { color: #C8C8C8; }
+
+  /* good or bad accuracy.. */
+  .textInfoView .textInfoOwnStatsNumber-good { color: #99CC00; }
+  .textInfoView .textInfoOwnStatsNumber-bad  { color: #D08383; }
+
+  /* countown.. */
+  .countdownPopup { background-color: #2B4866; }
+
+  /* text input field for the words.. */
+  .gameView .inputPanel .txtInput { color: #A0A0A0; border-width: thin; }
+  .gameView .inputPanel .txtInput-error { color:#FFFFFF; }
+
+  /* help arrows (only at begin visible) */
+  .arrowPopupText { color: #0000A0; }
+
+
+
+
+  /* ===========
+     top 20 list
+     =========== */
+
+  /* add round edges */
+  .statsView {
+    background-color: #2A2A2A;
+    border-radius: 15px;
+    padding: 15px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #803C00; /*#4A4A4A;*/
+  }
+
+  /* removes the border images */
+  .chrome_tl, .chrome_t, .chrome_tr { background-image: none !important; }
+  .chrome_l, .chrome_r              { background-image: none !important; }
+  .chrome_bl, .chrome_b, .chrome_br { background-image: none !important; }
+
+  /* a little bit darker as the background */
+  .chrome_m {
+    background-color: #2A2A2A;
+  }
+
+  /* optional courier font for readability */
+  .gameView .inputPanel .nonHideableWords {
+    font-family: "Courier New", "Verdana";
+    font-weight: normal;
+    font-size: 20px;
+  }
+
+  .gameView .inputPanel .txtInput {
+    font-family: "Courier New", "Verdana";
+    font-weight: normal;
+    font-size: 24px;
+  }
