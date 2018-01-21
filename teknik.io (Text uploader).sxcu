@@ -1,0 +1,13 @@
+{
+  "Name": "teknik.io (Text uploader)",
+  "RequestURL": "https://api.teknik.io/v1/Paste",
+  "Arguments": {
+    "code": "$input$",
+    "title": "",
+    "syntax": "auto-detect",
+    "expireUnit": "never",
+    "password": "",
+    "hide": "true"
+  },
+  "URL": "$json:result.url$"
+}

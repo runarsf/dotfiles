@@ -1,0 +1,10 @@
+{
+  "Name": "teknik.io (File uploader)",
+  "RequestURL": "https://api.teknik.io/v1/Upload",
+  "FileFormName": "file",
+  "Arguments": {
+    "genDeletionKey": "true"
+  },
+  "URL": "$json:result.url$",
+  "DeletionURL": "$json:result.url$/$json:result.deletionKey$"
+}
