@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <root type="map">
   <Metadata type="map">
-    <Created type="string">Tue Dec 12 22:23:26 2017</Created>
+    <Created type="string">Tue Jan 30 18:45:06 2018</Created>
     <Name type="map">
       <PenFile type="string">C:\Users\runarsf\AppData\Roaming\WTablet\Wacom_Tablet.dat</PenFile>
       <TouchFile type="string">C:\Users\runarsf\AppData\Roaming\WTablet\WacomTouch.xml</TouchFile>
@@ -14,12 +14,12 @@
   <PenFile type="map">
     <CPLLastApp type="integer">0</CPLLastApp>
     <CPLLastPosition type="map">
-      <X type="integer">750</X>
-      <Y type="integer">210</Y>
+      <X type="integer">-774</X>
+      <Y type="integer">461</Y>
       <Z type="integer">0</Z>
     </CPLLastPosition>
     <CPLLastTabPane type="integer">0</CPLLastTabPane>
-    <CPLOpened type="string">Tue Dec 12 22:23:09 2017</CPLOpened>
+    <CPLOpened type="string">Tue Jan 30 18:44:48 2018</CPLOpened>
     <Created type="string">Mon Sep 11 20:01:26 2017</Created>
     <DisplayAsserts type="bool">false</DisplayAsserts>
     <DisplayBrightness type="integer">6</DisplayBrightness>
@@ -913,8 +913,8 @@
                             <Z type="integer">0</Z>
                           </Extent>
                           <Origin type="map">
-                            <X type="integer">-5242</X>
-                            <Y type="integer">0</Y>
+                            <X type="integer">-7688</X>
+                            <Y type="integer">1407</Y>
                             <Z type="integer">0</Z>
                           </Origin>
                         </OverlapArea>
@@ -922,12 +922,12 @@
                         <TabletInputArea type="map">
                           <Extent type="map">
                             <X type="integer">8037</X>
-                            <Y type="integer">4925</Y>
+                            <Y type="integer">4750</Y>
                             <Z type="integer">0</Z>
                           </Extent>
                           <Origin type="map">
-                            <X type="integer">2795</X>
-                            <Y type="integer">0</Y>
+                            <X type="integer">349</X>
+                            <Y type="integer">1407</Y>
                             <Z type="integer">0</Z>
                           </Origin>
                         </TabletInputArea>
@@ -2555,10 +2555,14 @@
             <ExpressKeysShowButtonHUD type="bool">false</ExpressKeysShowButtonHUD>
             <TabletControlsButtonsArray type="array">
               <ArrayElement type="map">
-                <ButtonFunction type="integer">0</ButtonFunction>
+                <ButtonFunction type="integer">31</ButtonFunction>
                 <ButtonName type="string">Button1</ButtonName>
                 <LockScreenQuickNote type="bool">false</LockScreenQuickNote>
                 <Usage type="map">
+                  <EDisplayToggle type="map">
+                    <Count type="integer">27</Count>
+                    <Last type="string">Wed Dec 20 20:43:47 2017</Last>
+                  </EDisplayToggle>
                   <ENone type="map">
                     <Count type="integer">1</Count>
                     <Last type="string">Tue Sep 12 12:16:32 2017</Last>
@@ -2566,10 +2570,14 @@
                 </Usage>
               </ArrayElement>
               <ArrayElement type="map">
-                <ButtonFunction type="integer">0</ButtonFunction>
+                <ButtonFunction type="integer">31</ButtonFunction>
                 <ButtonName type="string">Button2</ButtonName>
                 <LockScreenQuickNote type="bool">false</LockScreenQuickNote>
                 <Usage type="map">
+                  <EDisplayToggle type="map">
+                    <Count type="integer">38</Count>
+                    <Last type="string">Wed Dec 20 23:08:07 2017</Last>
+                  </EDisplayToggle>
                   <ENone type="map">
                     <Count type="integer">3</Count>
                     <Last type="string">Tue Sep 12 12:16:36 2017</Last>
@@ -2577,18 +2585,34 @@
                 </Usage>
               </ArrayElement>
               <ArrayElement type="map">
-                <ButtonFunction type="integer">0</ButtonFunction>
+                <ButtonFunction type="integer">31</ButtonFunction>
                 <ButtonName type="string">Button3</ButtonName>
                 <LockScreenQuickNote type="bool">false</LockScreenQuickNote>
                 <Usage type="map">
+                  <EAppDefined type="map">
+                    <Count type="integer">0</Count>
+                    <Last type="string">Fri Dec 15 19:28:47 2017</Last>
+                  </EAppDefined>
+                  <EDisplayToggle type="map">
+                    <Count type="integer">42</Count>
+                    <Last type="string">Sat Jan 20 22:22:41 2018</Last>
+                  </EDisplayToggle>
+                  <EModifiers type="map">
+                    <Count type="integer">0</Count>
+                    <Last type="string">Fri Dec 15 19:30:02 2017</Last>
+                  </EModifiers>
                   <ENone type="map">
-                    <Count type="integer">16</Count>
-                    <Last type="string">Fri Nov 17 23:56:36 2017</Last>
+                    <Count type="integer">19</Count>
+                    <Last type="string">Fri Dec 15 19:26:51 2017</Last>
                   </ENone>
+                  <ESwitchVDLeft type="map">
+                    <Count type="integer">30</Count>
+                    <Last type="string">Fri Dec 15 19:28:16 2017</Last>
+                  </ESwitchVDLeft>
                 </Usage>
               </ArrayElement>
               <ArrayElement type="map">
-                <ButtonFunction type="integer">0</ButtonFunction>
+                <ButtonFunction type="integer">31</ButtonFunction>
                 <ButtonName type="string">Button4</ButtonName>
                 <LockScreenQuickNote type="bool">false</LockScreenQuickNote>
                 <Usage type="map">
@@ -2596,10 +2620,18 @@
                     <Count type="integer">8</Count>
                     <Last type="string">Tue Sep 12 13:38:41 2017</Last>
                   </EAppDefined>
+                  <EDisplayToggle type="map">
+                    <Count type="integer">34</Count>
+                    <Last type="string">Sun Jan 21 01:39:54 2018</Last>
+                  </EDisplayToggle>
                   <ENone type="map">
-                    <Count type="integer">4</Count>
-                    <Last type="string">Sun Sep 17 21:47:47 2017</Last>
+                    <Count type="integer">5</Count>
+                    <Last type="string">Fri Dec 15 19:30:26 2017</Last>
                   </ENone>
+                  <EPressureHold type="map">
+                    <Count type="integer">0</Count>
+                    <Last type="string">Fri Dec 15 19:30:39 2017</Last>
+                  </EPressureHold>
                 </Usage>
               </ArrayElement>
             </TabletControlsButtonsArray>
@@ -2718,7 +2750,7 @@
             <DoubleClickOnOff type="bool">true</DoubleClickOnOff>
             <DoubleClickTime type="integer">500</DoubleClickTime>
             <TransducerEraserSettings type="map">
-              <ButtonFunction type="integer">0</ButtonFunction>
+              <ButtonFunction type="integer">1</ButtonFunction>
               <ButtonName type="string">eraser</ButtonName>
               <LockScreenQuickNote type="bool">false</LockScreenQuickNote>
               <LowerPressureThreshold type="integer">197</LowerPressureThreshold>
@@ -2731,14 +2763,26 @@
                   <Count type="integer">3</Count>
                   <Last type="string">Sat Nov 18 01:16:31 2017</Last>
                 </EAutoErase>
+                <ELeftClick type="map">
+                  <Count type="integer">639</Count>
+                  <Last type="string">Tue Jan 16 20:02:55 2018</Last>
+                </ELeftClick>
                 <ENone type="map">
-                  <Count type="integer">0</Count>
-                  <Last type="string">Sat Nov 18 13:53:15 2017</Last>
+                  <Count type="integer">2</Count>
+                  <Last type="string">Fri Dec 15 19:37:35 2017</Last>
                 </ENone>
                 <MaxForStroke type="map">
-                  <L25 type="integer">7</L25>
-                  <L33 type="integer">3</L33>
-                  <Last type="string">Sat Nov 18 18:46:44 2017</Last>
+                  <L25 type="integer">97</L25>
+                  <L33 type="integer">5</L33>
+                  <L50 type="integer">7</L50>
+                  <L60 type="integer">4</L60>
+                  <L70 type="integer">6</L70>
+                  <L80 type="integer">9</L80>
+                  <L85 type="integer">6</L85>
+                  <L90 type="integer">2</L90>
+                  <L95 type="integer">1</L95>
+                  <Last type="string">Wed Jan 17 22:10:28 2018</Last>
+                  <M95 type="integer">7</M95>
                 </MaxForStroke>
               </Usage>
             </TransducerEraserSettings>
@@ -2760,10 +2804,22 @@
                   <Count type="integer">27</Count>
                   <Last type="string">Fri Nov 17 22:23:08 2017</Last>
                 </EButton5Click>
+                <EButtonPanning type="map">
+                  <Count type="integer">14</Count>
+                  <Last type="string">Fri Dec 15 19:39:28 2017</Last>
+                </EButtonPanning>
+                <ELeftClick type="map">
+                  <Count type="integer">96</Count>
+                  <Last type="string">Sun Dec 17 21:57:52 2017</Last>
+                </ELeftClick>
                 <ENone type="map">
-                  <Count type="integer">13793</Count>
-                  <Last type="string">Tue Dec 12 22:22:36 2017</Last>
+                  <Count type="integer">15233</Count>
+                  <Last type="string">Tue Jan 23 20:22:35 2018</Last>
                 </ENone>
+                <EPenRotate type="map">
+                  <Count type="integer">19</Count>
+                  <Last type="string">Fri Dec 15 19:37:38 2017</Last>
+                </EPenRotate>
                 <ERightClick type="map">
                   <Count type="integer">91</Count>
                   <Last type="string">Sat Nov 18 13:52:59 2017</Last>
@@ -2786,21 +2842,21 @@
                   <Last type="string">Sun Dec 10 13:20:34 2017</Last>
                 </ELeftClick>
                 <ENone type="map">
-                  <Count type="integer">2037</Count>
-                  <Last type="string">Tue Dec 12 22:23:03 2017</Last>
+                  <Count type="integer">11503</Count>
+                  <Last type="string">Tue Jan 30 16:58:28 2018</Last>
                 </ENone>
                 <MaxForStroke type="map">
-                  <L25 type="integer">1023</L25>
-                  <L33 type="integer">86</L33>
-                  <L50 type="integer">179</L50>
-                  <L60 type="integer">169</L60>
-                  <L70 type="integer">206</L70>
-                  <L80 type="integer">275</L80>
-                  <L85 type="integer">135</L85>
-                  <L90 type="integer">121</L90>
-                  <L95 type="integer">75</L95>
-                  <Last type="string">Tue Dec 12 22:23:03 2017</Last>
-                  <M95 type="integer">150</M95>
+                  <L25 type="integer">1578</L25>
+                  <L33 type="integer">142</L33>
+                  <L50 type="integer">289</L50>
+                  <L60 type="integer">317</L60>
+                  <L70 type="integer">398</L70>
+                  <L80 type="integer">570</L80>
+                  <L85 type="integer">333</L85>
+                  <L90 type="integer">389</L90>
+                  <L95 type="integer">521</L95>
+                  <Last type="string">Tue Jan 30 16:58:28 2018</Last>
+                  <M95 type="integer">2231</M95>
                 </MaxForStroke>
               </Usage>
             </TransducerTipButtonSettings>
@@ -2810,10 +2866,26 @@
               <ButtonName type="string">barrel2</ButtonName>
               <LockScreenQuickNote type="bool">false</LockScreenQuickNote>
               <Usage type="map">
+                <EButtonPanning type="map">
+                  <Count type="integer">26</Count>
+                  <Last type="string">Fri Dec 15 19:35:30 2017</Last>
+                </EButtonPanning>
+                <ELeftClick type="map">
+                  <Count type="integer">113</Count>
+                  <Last type="string">Fri Dec 15 19:47:42 2017</Last>
+                </ELeftClick>
+                <EMiddleClick type="map">
+                  <Count type="integer">17</Count>
+                  <Last type="string">Fri Dec 15 19:34:52 2017</Last>
+                </EMiddleClick>
                 <ENone type="map">
-                  <Count type="integer">1802</Count>
-                  <Last type="string">Tue Dec 12 22:15:40 2017</Last>
+                  <Count type="integer">3487</Count>
+                  <Last type="string">Tue Jan 23 20:22:47 2018</Last>
                 </ENone>
+                <EPenRotate type="map">
+                  <Count type="integer">0</Count>
+                  <Last type="string">Fri Dec 15 19:35:45 2017</Last>
+                </EPenRotate>
               </Usage>
             </TransducerUpperButtonSettings>
             <WinUseInk type="bool">false</WinUseInk>
