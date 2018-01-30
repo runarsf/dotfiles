@@ -5,7 +5,7 @@
 	<InputDev index='1' type='4' name="Mikrofon (Yeti Stereo Microphone)" />
 	<InputDev index='2' type='4' name="CABLE Output (VB-Audio Virtual Cable)" />
 	<InputDev index='3' name="-" />
-	<OutputDev index='1' type='4' name="Hodetelefoner (2- Astro MixAmp Pro Game)" />
+	<OutputDev index='1' type='4' name="Hodetelefoner (Astro MixAmp Pro Game)" />
 	<OutputDev index='2' name="-" pOut1='0' pOut2='0' pOut3='0' pOut4='0' pOut5='0' pOut6='0' pOut7='0' pOut8='0'  />
 	<OutputDev index='3' name="-" pOut1='0' pOut2='0' pOut3='0' pOut4='0' pOut5='0' pOut6='0' pOut7='0' pOut8='0'  />
 	<MIDIDevIn index='1' name="-" />
@@ -17,14 +17,14 @@
 	<LabelVirtualStrip1></LabelVirtualStrip1>
 	<LabelVirtualStrip2></LabelVirtualStrip2>
 	<K7BUSRoute busa='1' busa2='1' busa3='1' busb='1' busb2='1' dblevel='0.00' />
-	<Strip index='1' mute='0' solo='0' mono='0' muc='0' busa='0' busa2='0' busa3='0' busb='1' busb2='0' dblevel='-5.00' />
-	<Strip index='1' paneltype='1' 3DPanelx='0.000' 3DPanely='0.000' ColorPanelx='-0.178' ColorPanely='0.125' ModPanelx='0.000' ModPanely='0.000' audibility_c='0.00' audibility_g='5.50' />
+	<Strip index='1' mute='0' solo='0' mono='0' muc='0' busa='0' busa2='0' busa3='0' busb='1' busb2='0' dblevel='0.00' />
+	<Strip index='1' paneltype='1' 3DPanelx='0.000' 3DPanely='0.000' ColorPanelx='-0.143' ColorPanely='0.420' ModPanelx='0.000' ModPanely='0.000' audibility_c='0.00' audibility_g='4.80' />
 	<Strip index='2' mute='0' solo='0' mono='0' muc='0' busa='1' busa2='0' busa3='0' busb='1' busb2='0' dblevel='0.00' />
 	<Strip index='2' paneltype='1' 3DPanelx='0.000' 3DPanely='0.000' ColorPanelx='0.000' ColorPanely='0.000' ModPanelx='0.000' ModPanely='0.000' audibility_c='0.00' audibility_g='0.00' />
 	<Strip index='3' mute='1' solo='0' mono='0' muc='0' busa='0' busa2='0' busa3='0' busb='0' busb2='0' dblevel='0.00' />
 	<Strip index='3' paneltype='1' 3DPanelx='0.000' 3DPanely='0.000' ColorPanelx='0.000' ColorPanely='0.000' ModPanelx='0.000' ModPanely='0.000' audibility_c='0.00' audibility_g='0.00' />
 	<Strip index='4' mute='0' solo='0' mono='0' muc='0' busa='1' busa2='0' busa3='0' busb='0' busb2='0' dblevel='0.00' />
-	<Strip index='4' EQGain1='0.00' EQGain2='0.00' EQGain3='0.00' 3DPanelx='-0.008' 3DPanely='0.000' />
+	<Strip index='4' EQGain1='0.00' EQGain2='0.00' EQGain3='0.00' 3DPanelx='0.000' 3DPanely='0.000' />
 	<Strip index='5' mute='0' solo='0' mono='0' muc='0' busa='1' busa2='0' busa3='0' busb='1' busb2='0' dblevel='0.00' />
 	<Strip index='5' EQGain1='0.00' EQGain2='0.00' EQGain3='0.00' 3DPanelx='-0.008' 3DPanely='0.000' />
 	<Bus index='1' mute='0' mono='0' cross='0' BusMode='0' EQon='0' dblevel='0.00' />
