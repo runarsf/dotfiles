@@ -1,9 +1,9 @@
 # ========================================================================== #
 #
-# PERSONAL ~/.bashrc FILE
-# by Runar Fredagsvik [runarsf@protonmail.com]
+# PERSONAL ~/.bashrc FILE for UBUNTU
+#+ by Runar Fredagsvik [runarsf@protonmail.com]
 #
-
+#
 #  This file is normally read by interactive shells only.
 #+ Here is the place to define your aliases, functions and
 #+ other interactive features like your prompt.
@@ -17,6 +17,25 @@
 #+ for examples.
 #
 # ========================================================================== #
+#
+# HELP
+#+ you can also use the commands - man - or - *command* --help - for help
+#
+#
+# shopt - shopt (-s|-u) *shell option*
+#+ shopt is a shell builtin command to
+#+ (-s)et and (-u)nset various Bash shell options.
+#
+# alias - alias *contents*
+#+ alias is essentially nothing more than a keyboard shortcut,
+#+ an abbreviation, a means of avoiding typing a long command sequence.
+#
+# grep - *place* | grep *string*
+#+ grep is a command-line utility for searching plain-text data sets
+#+ for lines that match a regular expression.
+#
+# ========================================================================== #
+
 
 # If not running interactively, don't do anything
 case $- in
@@ -24,39 +43,44 @@ case $- in
       *) return;;
 esac
 
-# -----------------
 # Personal Aliases
-# -----------------
 
 alias rm='rm -i'
 alias cp='cp -i'
 alias mv='mv -i'
-# -> Prevents accidentally clobbering files.
 alias mkdir='mkdir -p'
-
 alias h='history'
 alias j='jobs -l'
 alias which='type -a'
 alias ..='cd ..'
 alias cls='clear'
-alias bashrc='cim ~/.bashrc'
+alias bashrc='vim ~/.bashrc'
 alias reload='. ~/.bashrc'
 alias xprt='cp ~/.bashrc /mnt/c/Users/rufus/Desktop'
 alias imprt='mv /mnt/c/Users/rufus/Desktop ~/.bashrc'
-
-# pretty-print of some PATH variables.
 alias path='echo -e ${PATH//:/\\n}'
 alias libpath='echo -e ${LD_LIBRARY_PATH//:/\\n}'
+alias du='du -kh'
+alias df='df -kTh'
+alias keybcfg='sudo dpkg-reconfigure keyboard-configuration'
 
-# ls aliases
-alias ll='ls -alF'
-alias la='ls -A'
-alias l='ls -CF'
+#-------------------------------------------------------------
+# The 'ls' family (this assumes you use a recent GNU ls).
+#-------------------------------------------------------------
+# Add colors for filetype and  human-readable sizes by default on 'ls':
+alias ls='ls -h --color'
+alias lx='ls -lXB'         #  Sort by extension.
+alias lk='ls -lSr'         #  Sort by size, biggest last.
+alias lt='ls -ltr'         #  Sort by date, most recent last.
+alias lc='ls -ltcr'        #  Sort by/show change time,most recent last.
+alias lu='ls -ltur'        #  Sort by/show access time,most recent last.
 
-# other aliases
-alias cls='clear'
-alias bashrc='vim ~/.bashrc'
-
+# The ubiquitous 'll': directories first, with alphanumeric sorting:
+alias ll="ls -lv --group-directories-first"
+alias lm='ll | more'       #  Pipe through 'more'
+alias lr='ll -R'           #  Recursive ls.
+alias la='ll -A'           #  Show hidden files.
+alias tree='tree -Csuh'    #  Nice alternative to 'recursive ls' ...
 
 
 # Color definitions (taken from Color Bash Prompt HowTo).
@@ -114,12 +138,9 @@ trap _exit EXIT
 
 # history shit
 HISTCONTROL=ignoreboth
-shopt -s histappend
 HISTSIZE=1000
 HISTFILESIZE=2000
-
-# check the window size after each command and, if necessary,
-# update the values of LINES and COLUMNS.
+shopt -s histappend
 shopt -s checkwinsize
 
 # If set, the pattern "**" used in a pathname expansion context will
