@@ -122,8 +122,8 @@ NC="\e[m"               # Color Reset
 ALERT=${BWhite}${On_Red} # Bold White on red background
 
 clear
-echo -e "${BCyan}This is BASH ${BRed}${BASH_VERSION%.*}${BCyan}\
- - DISPLAY on ${BRed}$DISPLAY${NC}\n"
+echo -e "${BCyan}BASH ${BRed}${BASH_VERSION%.*}${BCyan}\
+ - DISPLAYED on ${BRed}$DISPLAY${NC}\n"
 date
 if [ -x /usr/games/fortune ]; then
     /usr/games/fortune -s     # Makes our day a bit more fun.... :-)
