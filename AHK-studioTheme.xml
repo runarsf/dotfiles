@@ -1,0 +1,37 @@
+﻿<?xml version="1.0"?>
+<theme>
+	<name>Zenburn_dark_with_maestrith</name>
+	<author>Run1e and maestrith</author>
+	<caret color="16777215" multi="0x00A5FF" lineback="4473924" width="1" debug="255"></caret>
+	<default background="3158064" color="16777215" font="Source Code Pro" size="10" underline="0"></default>
+	<find>
+	</find>
+	<inlinecomment color="8363903" italic="1" size="10" underline="0"></inlinecomment>
+	<numbers color="8421616"></numbers>
+	<punctuation color="16777215"></punctuation>
+	<multilinecomment color="16744576" size="10" underline="0"></multilinecomment>
+	<completequote color="8816334"></completequote>
+	<incompletequote background="0" color="255"></incompletequote>
+	<backtick color="12110995"></backtick>
+	<linenumbers background="3158064" color="16777215" font="Source Code Pro"></linenumbers>
+	<bracematch color="255"></bracematch>
+	<indentguide color="4227327"></indentguide>
+	<editedmarkers edited="0x0000FF" saved="0x00FF00"></editedmarkers>
+	<fold background="0xFFFFFF" color="0"></fold>
+	<projectexplorer>
+	</projectexplorer>
+	<codeexplorer>
+	</codeexplorer>
+	<selfore bool="0" code="2067" color="0"></selfore>
+	<selback bool="1" code="2068" color="32896"></selback>
+	<additionalselback code="2601" color="8421504"></additionalselback>
+	<keyword set="0" color="5741559"></keyword>
+	<keyword set="1" color="7843024"></keyword>
+	<keyword set="2" color="13617276"></keyword>
+	<keyword set="3" color="16758590"></keyword>
+	<keyword set="4" color="16759366"></keyword>
+	<keyword set="5" color="9749720"></keyword>
+	<keyword set="6" color="14732901"></keyword>
+	<keyword set="7" color="8241367"></keyword>
+	<keyword set="8" color="15458669"></keyword>
+</theme>
