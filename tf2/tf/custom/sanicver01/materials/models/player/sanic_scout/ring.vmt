@@ -1,0 +1,8 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/player/sanic_scout/ring"
+	"$surfaceprop" "Metal"
+	"$alphatest" 1
+	"$nocull" 1
+	"$nodecal" 1
+}

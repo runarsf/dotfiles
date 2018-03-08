@@ -1,0 +1,6 @@
+"unlitGeneric"
+{
+	"$basetexture" "models/player/sanic_scout/sanicssj"
+	"$surfaceprop" "metal"
+	"$alphatest" "1"
+}

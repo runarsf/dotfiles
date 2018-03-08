@@ -1,0 +1,18 @@
+"UnlitGeneric"
+{
+	"$basetexture" "models/player/sanic_scout/ssj1"
+	"$alphatest" 1
+	"$nocull" 1
+	"$nodecal" 1
+	"$frame" "1"
+	
+	"Proxies"
+	{
+	"AnimatedTexture"
+		{
+			"animatedTextureVar" "$basetexture"
+			"animatedTextureFrameNumVar" "$frame"
+			"animatedTextureFrameRate" "15"
+		}
+	}
+}

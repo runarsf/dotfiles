@@ -1,0 +1,7 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models/player/sanic_scout/sanic"
+	"$alphatest" 1
+	"$alphatestreference" 0.3
+	"$nodecal" 1
+}

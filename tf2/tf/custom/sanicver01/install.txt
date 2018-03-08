@@ -1,0 +1,28 @@
+=====TF2 SANIC SCOUT PLAYERMODEL VERSION 1.0====
+
+Features:
+
+-Full HUD icons
+-Class Portrait
+-Custom Gibs
+-SUPER SANIC POWER AURA UBER
+-Totally next-gen model topology
+
+
+Install:
+
+Place files in
+
+C:\Program Files (x86)\Steam\steamapps\*ACCOUNTNAME*\team fortress 2\tf\
+
+
+================
+Credits:
+
+MSpaint drawing by 0nyxheart
+
+Model created by TheCorp303
+
+Betatested by Freuderthreep
+
+Distributed On GameBanana By RedzTheUltraKard.
