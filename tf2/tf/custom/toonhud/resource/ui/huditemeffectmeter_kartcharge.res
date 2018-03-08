@@ -1,0 +1,101 @@
+"Resource/UI/HudItemEffectMeter_Scout.res"
+{
+	HudItemEffectMeter
+	{
+		"fieldName"		"HudItemEffectMeter"
+		"visible"		"1"
+		"enabled"		"1"
+		"x_offset"		"0"
+		"xpos"			"10"	[$WIN32]
+		"ypos"			"r40"	[$WIN32]
+		"wide"			"120"
+		"tall"			"100"
+		"MeterFG"		"White"
+		"MeterBG"		"Gray"
+	}
+	
+	"ItemEffectMeterBG"
+	{
+		"ControlName"	"CTFImagePanel"
+		"fieldName"		"ItemEffectMeterBG"
+		"xpos"			"-30"
+		"ypos"			"28"
+		"zpos"			"0"
+		"wide"			"150"
+		"tall"			"75"
+		"visible"		"0"
+		"enabled"		"1"
+		"image"			"../hud/misc_ammo_area_horiz2_blue"
+		"scaleImage"	"1"	
+		"teambg_2"		"../hud/misc_ammo_area_horiz2_red"
+		"teambg_2_lodef"	"../hud/misc_ammo_area_red_lodef"
+		"teambg_3"		"../hud/misc_ammo_area_horiz2_blue"
+		"teambg_3_lodef"	"../hud/misc_ammo_area_blue_lodef"				
+	}
+	
+	"ItemEffectMeterLabel"
+	{
+		"ControlName"			"CExLabel"
+		"fieldName"				"ItemEffectMeterLabel"
+		"xpos"					"15"
+		"ypos"					"75"
+		"zpos"					"2"
+		"wide"					"60"
+		"tall"					"15"
+		"autoResize"			"1"
+		"pinCorner"				"2"
+		"visible"				"0"
+		"enabled"				"0"
+		"tabPosition"			"0"
+		"labelText"				"#TF_KART"
+		"textAlignment"			"center"
+		"dulltext"				"0"
+		"brighttext"			"0"
+		"font"					"G_FontSmall"
+		"fgcolor_override"			"G_White"
+	}
+
+	"ItemEffectMeter"
+	{	
+		"ControlName"			"ContinuousProgressBar"
+		"fieldName"				"ItemEffectMeter"
+		"font"					"Default"
+		"xpos"					"0"
+		"ypos"					"20"
+		"zpos"					"2"
+		"wide"					"120"
+		"paintborder"			"1"
+		"paintbackground"		"1"
+		"bgcolor_override"		"G_ItemMeterBg"
+		"border"				"G_MeterBorder"
+		"tall"					"8"				
+		"autoResize"			"0"
+		"pinCorner"				"0"
+		"visible"				"1"
+		"enabled"				"1"
+		"textAlignment"			"Left"
+		"dulltext"				"0"
+		"brighttext"			"0"
+	}
+	
+	"ItemEffectMeterCount"
+	{
+		"ControlName"			"CExLabel"
+		"fieldName"				"ItemEffectMeterCount"
+		"xpos"					"0"
+		"ypos"					"0"
+		"zpos"					"2"
+		"wide"					"120"
+		"tall"					"20"	
+		"pinCorner"				"2"
+		"visible"				"1"
+		"enabled"				"1"
+		"tabPosition"			"0"
+		"labelText"				"%progresscount%"
+		"textAlignment"			"west"
+		"dulltext"				"0"
+		"brighttext"			"0"
+		"fgcolor"				"G_White"
+		"font"					"G_FontMedium"
+	}
+}

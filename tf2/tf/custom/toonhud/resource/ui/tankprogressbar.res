@@ -1,0 +1,101 @@
+"Resource/UI/TankProgressBar.res"
+{
+	"TankProgressBar"
+	{
+		"ControlName"	"CTankProgressBar"
+		"fieldName"		"TankProgressBar"
+		"xpos"			"0"
+		"ypos"			"0"
+		"zpos"			"3"
+		"wide"			"190"
+		"tall"			"22"
+		"visible"		"0"
+		"enabled"		"1"	
+	}
+
+	"TankImage"
+	{
+		"ControlName"	"CTFImagePanel"
+		"fieldName"		"TankImage"
+		"xpos"			"0"
+		"ypos"			"0"
+		"zpos"			"3"
+		"wide"			"22"
+		"tall"			"22"
+		"visible"		"1"
+		"enabled"		"1"
+		"image"			"../hud/leaderboard_class_tank"
+		"scaleImage"	"1"
+	}
+
+	"ProgressBar"
+	{
+		"ControlName"	"ScalableImagePanel"
+		"fieldName"		"ProgressBar"
+		"xpos"			"25"
+		"ypos"			"3"
+		"ypos_minmode"	"5"
+		"zpos"			"4"
+		"wide"			"165"
+		"tall"			"13"
+		"visible"		"1"
+		"enabled"		"1"
+		"image"			"../hud/color_panel_blu"
+		"src_corner_height"		"23"
+		"src_corner_width"		"23"
+		"draw_corner_width"		"0"
+		"draw_corner_height" 	"0"		
+	}
+	
+	"ProgressBarBG"
+	{
+		"ControlName"	"ScalableImagePanel"
+		"fieldName"		"ProgressBarBG"
+		"xpos"			"25"
+		"ypos"			"3"
+		"ypos_minmode"	"5"
+		"zpos"			"3"
+		"wide"			"165"
+		"tall"			"13"
+		"visible"		"0"
+		"enabled"		"0"
+		"image"			"../HUD/tournament_panel_brown"
+		"paintborder"			"0"
+		"border"				"G_MeterBorder"
+		"src_corner_height"		"23"
+		"src_corner_width"		"23"
+		"draw_corner_width"		"0"
+		"draw_corner_height" 	"0"	
+	}
+	
+	"G_ProgressBarBG"
+	{
+		"ControlName"	"EditablePanel"
+		"fieldName"		"G_ProgressBarBG"
+		"xpos"			"25"
+		"ypos"			"3"
+		"ypos_minmode"	"5"
+		"zpos"			"3"
+		"wide"			"165"
+		"tall"			"13"
+		"visible"		"1"
+		"enabled"		"1"
+		"bgcolor_override"	"0 0 0 150"
+	}
+	
+	"ProgressBarBorder"
+	{
+		"ControlName"	"EditablePanel"
+		"fieldName"		"ProgressBarBorder"
+		"xpos"			"25"
+		"ypos"			"3"
+		"ypos_minmode"	"5"
+		"zpos"			"20"
+		"wide"			"165"
+		"tall"			"13"
+		"visible"		"1"
+		"enabled"		"1"
+		"paintborder"	"1"
+		"border"		"G_TargetBorder"
+	}
+}
