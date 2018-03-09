@@ -1,0 +1,1 @@
+-windowed -noborder -novid -tickrate 128 +exec autoexec -console
