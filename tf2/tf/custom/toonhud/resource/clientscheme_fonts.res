@@ -123,9 +123,9 @@ Scheme
 		{
 			"1"
 			{
-				"name"			"TF2 Build" [$WINDOWS] // Primary font
+				"name"			"Komika Axis" [$WINDOWS] // Primary font
 				"name"			"TF2 Build" [!$WINDOWS] // Primary font
-				"tall"			"50" [$WINDOWS] // Size Huge Primary
+				"tall"			"60" [$WINDOWS] // Size Huge Primary
 				"tall"			"50" [!$WINDOWS] // Size Huge Primary
 				"weight"		"0"
 				"additive"		"0"
@@ -137,9 +137,9 @@ Scheme
 		{
 			"1"
 			{
-				"name"			"TF2 Build" [$WINDOWS] // Primary font
+				"name"			"Komika Axis" [$WINDOWS] // Primary font
 				"name"			"TF2 Build" [!$WINDOWS] // Primary font
-				"tall"			"43" // Size Big Primary
+				"tall"			"40" // Size Big Primary
 				"weight"		"0"
 				"additive"		"0"
 				"antialias"		"1"
@@ -150,9 +150,9 @@ Scheme
 		{
 			"1"
 			{
-				"name"			"TF2 Build" [$WINDOWS] // Primary font
+				"name"			"Komika Axis" [$WINDOWS] // Primary font
 				"name"			"TF2 Build" [!$WINDOWS] // Primary font
-				"tall"			"20" [$WINDOWS] // Size Medium Primary
+				"tall"			"25" [$WINDOWS] // Size Medium Primary
 				"tall"			"20" [!$WINDOWS] // Size Medium Primary
 				"weight"		"0"
 				"additive"		"0"
@@ -164,9 +164,9 @@ Scheme
 		{
 			"1"
 			{
-				"name"			"TF2 Build" [$WINDOWS] // Primary font
+				"name"			"Komika Axis" [$WINDOWS] // Primary font
 				"name"			"TF2 Build" [!$WINDOWS] // Primary font
-				"tall"			"12" [$WINDOWS] // Size Small Primary
+				"tall"			"15" [$WINDOWS] // Size Small Primary
 				"tall"			"12" [!$WINDOWS] // Size Small Primary
 				"weight"		"0"
 				"additive"		"0"
@@ -178,9 +178,9 @@ Scheme
 		{
 			"1"
 			{
-				"name"			"TF2 Build" [$WINDOWS] // Primary font
+				"name"			"Komika Axis" [$WINDOWS] // Primary font
 				"name"			"TF2 Build" [!$WINDOWS] // Primary font
-				"tall"			"11" [$WINDOWS] // Size Tiny Primary
+				"tall"			"14" [$WINDOWS] // Size Tiny Primary
 				"tall"			"11" [!$WINDOWS] // Size Tiny Primary
 				"weight"		"0"
 				"additive"		"0"
@@ -193,7 +193,7 @@ Scheme
 		{
 			"1"
 			{
-				"name"			"TF2 Secondary" [$WINDOWS] // Secondary font
+				"name"			"Dimbo" [$WINDOWS] // Secondary font
 				"name"			"TF2 Secondary" [!$WINDOWS] // Secondary font
 				"tall"			"25" // Size Huge Secondary
 				"weight"		"0"
@@ -206,7 +206,7 @@ Scheme
 		{
 			"1"
 			{
-				"name"			"TF2 Secondary" [$WINDOWS] // Secondary font
+				"name"			"Dimbo" [$WINDOWS] // Secondary font
 				"name"			"TF2 Secondary" [!$WINDOWS] // Secondary font
 				"tall"			"19" // Size Big Secondary
 				"weight"		"0"
@@ -219,7 +219,7 @@ Scheme
 		{
 			"1"
 			{
-				"name"			"TF2 Secondary" [$WINDOWS] // Secondary font
+				"name"			"Dimbo" [$WINDOWS] // Secondary font
 				"name"			"TF2 Secondary" [!$WINDOWS] // Secondary font
 				"tall"			"16" // Size Medium Secondary
 				"weight"		"0"
@@ -232,7 +232,7 @@ Scheme
 		{
 			"1"
 			{
-				"name"			"TF2 Secondary" [$WINDOWS] // Secondary font
+				"name"			"Dimbo" [$WINDOWS] // Secondary font
 				"name"			"TF2 Secondary" [!$WINDOWS] // Secondary font
 				"tall"			"12" // Size Small Secondary
 				"weight"		"0"
@@ -245,7 +245,7 @@ Scheme
 		{
 			"1"
 			{
-				"name"			"TF2 Secondary" [$WINDOWS] // Secondary font
+				"name"			"Dimbo" [$WINDOWS] // Secondary font
 				"name"			"TF2 Secondary" [!$WINDOWS] // Secondary font
 				"tall"			"10" // Size Tiny Secondary
 				"weight"		"0"
@@ -259,9 +259,9 @@ Scheme
 		{
 			"1"
 			{
-				"name"			"TF2 Build" [$WINDOWS] // Health Font | Primary font
+				"name"			"Komika Axis" [$WINDOWS] // Health Font | Primary font
 				"name"			"TF2 Build" [!$WINDOWS] // Health Font | Primary font
-				"tall"			"50" // Size Huge Primary - Font Size Health
+				"tall"			"60" // Size Huge Primary - Font Size Health
 				"weight"		"0"
 				"additive"		"0"
 				"antialias"		"1"
@@ -272,9 +272,9 @@ Scheme
 		{
 			"1"
 			{
-				"name"			"TF2 Build" [$WINDOWS] // Ammo Font | Primary font
+				"name"			"Komika Axis" [$WINDOWS] // Ammo Font | Primary font
 				"name"			"TF2 Build" [!$WINDOWS] // Ammo Font | Primary font
-				"tall"			"50" // Size Huge Primary - Font Size Ammo
+				"tall"			"60" // Size Huge Primary - Font Size Ammo
 				"weight"		"0"
 				"additive"		"0"
 				"antialias"		"1"
@@ -285,9 +285,9 @@ Scheme
 		{
 			"1"
 			{
-				"name"			"TF2 Build" [$WINDOWS] // Primary font
+				"name"			"Komika Axis" [$WINDOWS] // Primary font
 				"name"			"TF2 Build" [!$WINDOWS] // Primary font
-				"tall"			"10" [$WINDOWS] // Font Size Main Menu | Size Small Primary
+				"tall"			"15" [$WINDOWS] // Font Size Main Menu | Size Small Primary
 				"tall"			"10" [!$WINDOWS] // Font Size Main Menu | Size Small Primary
 				"weight"		"0"
 				"additive"		"0"
@@ -299,8 +299,8 @@ Scheme
 		{
 			"1"
 			{
-				"name"			"TF2 Secondary" [$WINDOWS] // Damage font | Primary font
-				"name"			"TF2 Secondary" [!$WINDOWS] // Damage font | Primary font
+				"name"			"Komika Axis" [$WINDOWS] // Damage font | Primary font
+				"name"			"TF2 Build" [!$WINDOWS] // Damage font | Primary font
 				"tall"			"20" // Damage size
 				"weight"		"0"
 				"additive"		"0"
@@ -313,7 +313,7 @@ Scheme
 		{
 			"1"
 			{
-				"name"			"TF2 Build" [$WINDOWS] // Crit damage font | Primary font
+				"name"			"Komika Axis" [$WINDOWS] // Crit damage font | Primary font
 				"name"			"TF2 Build" [!$WINDOWS] // Crit damage font | Primary font
 				"tall"			"22" // Crit damage size
 				"weight"		"0"
@@ -327,7 +327,7 @@ Scheme
 		{
 			"1"
 			{
-				"name"			"TF2 Build" [$WINDOWS] // Target ID health font | Primary font
+				"name"			"Komika Axis" [$WINDOWS] // Target ID health font | Primary font
 				"name"			"TF2 Build" [!$WINDOWS] // Target ID health font | Primary font
 				"tall"			"14" // Target ID health text size
 				"weight"		"0"
@@ -351,9 +351,9 @@ Scheme
 		{
 			"1"
 			{
-				"name"			"TF2 Build" [$WINDOWS] // Primary font
+				"name"			"Komika Axis" [$WINDOWS] // Primary font
 				"name"			"TF2 Build" [!$WINDOWS] // Primary font
-				"tall"			"20" // Size Medium Primary
+				"tall"			"25" // Size Medium Primary
 				"weight"		"0"
 				"additive"		"0"
 				"antialias"		"1"
@@ -1420,7 +1420,7 @@ Scheme
 			{
 				"name"		"TF2Build" [$WINDOWS] // Closed captions font | Secondary font
 				"name"		"TF2Build" [!$WINDOWS] // Closed captions font | Secondary font
-				"tall"		"20" // Closed captions size | Size Medium Primary
+				"tall"		"25" // Closed captions size | Size Medium Primary
 				"weight"	"500"
 				"range"		"0x0000 0x017F" //	Basic Latin, Latin-1 Supplement, Latin Extended-A
 				"antialias"	"1"
@@ -1433,7 +1433,7 @@ Scheme
 			{
 				"name"		"TF2Build" [$WINDOWS] // Closed captions font | Secondary font
 				"name"		"TF2Build" [!$WINDOWS] // Closed captions font | Secondary font
-				"tall"		"20" // Closed captions size | Size Medium Primary
+				"tall"		"25" // Closed captions size | Size Medium Primary
 				"weight"	"500"
 				"italic"	"1"
 				"range"		"0x0000 0x017F" //	Basic Latin, Latin-1 Supplement, Latin Extended-A
@@ -1447,7 +1447,7 @@ Scheme
 			{
 				"name"		"TF2Build" [$WINDOWS] // Closed captions font | Secondary font
 				"name"		"TF2Build" [!$WINDOWS] // Closed captions font | Secondary font
-				"tall"		"20" // Closed captions size | Size Medium Primary
+				"tall"		"25" // Closed captions size | Size Medium Primary
 				"weight"	"900"
 				"range"		"0x0000 0x017F" //	Basic Latin, Latin-1 Supplement, Latin Extended-A
 				"antialias"	"1"
@@ -1460,7 +1460,7 @@ Scheme
 			{
 				"name"		"TF2Build" [$WINDOWS] // Closed captions font | Secondary font
 				"name"		"TF2Build" [!$WINDOWS] // Closed captions font | Secondary font
-				"tall"		"20" // Closed captions size | Size Medium Primary
+				"tall"		"25" // Closed captions size | Size Medium Primary
 				"weight"	"900"
 				"italic"	"1"
 				"range"		"0x0000 0x017F" //	Basic Latin, Latin-1 Supplement, Latin Extended-A
@@ -1474,7 +1474,7 @@ Scheme
 			{
 				"name"		"TF2Build" [$WINDOWS] // Closed captions font | Secondary font
 				"name"		"TF2Build" [!$WINDOWS] // Closed captions font | Secondary font
-				"tall"		"20" // Closed captions size | Size Medium Primary
+				"tall"		"25" // Closed captions size | Size Medium Primary
 				"weight"	"900"
 				"range"		"0x0000 0x017F" //	Basic Latin, Latin-1 Supplement, Latin Extended-A
 				"antialias"	"1"
@@ -3115,14 +3115,5 @@ Scheme
 		"18" "resource/fonts/Montserrat.ttf"
 	}
 }
-
-
-
-
-
-
-
-
-
 
 

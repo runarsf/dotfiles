@@ -8,10 +8,10 @@
 		"xpos"				"cs-0.5"
 		"ypos"				"cs-0.5"
 		"zpos"				"198"
-		"wide"				"24" // Crosshair1 size
-		"tall"				"24" // Crosshair1 size
-		"visible"			"0" // Crosshair1 enabled
-		"enabled"			"0" // Crosshair1 enabled
+		"wide"				"20" // Crosshair1 size
+		"tall"				"20" // Crosshair1 size
+		"visible"			"1" // Crosshair1 enabled
+		"enabled"			"1" // Crosshair1 enabled
 		"image"				"replay/thumbnails/xhairs/xhair1"
 		"scaleImage"		"1"
 		"drawcolor"			"G_Crosshair1Color"
@@ -111,13 +111,13 @@
 	{
 		"ControlName"	"ImagePanel"
 		"fieldName"		"PlayerStatusHealthImage"
-		"xpos"			"c-262" // HB xpos
-		"ypos"			"r77" // HB ypos
-		"xpos_minmode"	"c-242" // HB min xpos
-		"ypos_minmode"	"c+63" // HB min ypos
+		"xpos"			"c-257" // HB xpos
+		"ypos"			"r72" // HB ypos
+		"xpos_minmode"	"c-237" // HB min xpos
+		"ypos_minmode"	"c+68" // HB min ypos
 		"zpos"			"4"
-		"wide"			"40" // HB size
-		"tall"			"40" // HB size
+		"wide"			"30" // HB size
+		"tall"			"30" // HB size
 		"visible"		"1" // HB enabled
 		"enabled"		"1" // HB enabled
 		"scaleImage"	"1"	
@@ -127,13 +127,13 @@
 	{
 		"ControlName"	"ImagePanel"
 		"fieldName"		"PlayerStatusHealthImageBG"
-		"xpos"			"c-264" // HB bg xpos
-		"ypos"			"r79" // HB bg ypos
-		"xpos_minmode"	"c-244" // HB bg min xpos
-		"ypos_minmode"	"c+61" // HB bg min ypos
+		"xpos"			"c-259" // HB bg xpos
+		"ypos"			"r74" // HB bg ypos
+		"xpos_minmode"	"c-239" // HB bg min xpos
+		"ypos_minmode"	"c+66" // HB bg min ypos
 		"zpos"			"3"
-		"wide"			"44" // HB bg size
-		"tall"			"44"// HB bg size
+		"wide"			"34" // HB bg size
+		"tall"			"34"// HB bg size
 		"visible"		"1" // HB enabled
 		"enabled"		"1" // HB enabled
 		"Alpha"			"255" // HB enabled
@@ -744,4 +744,16 @@
 		"fgcolor"		"TanDark"
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
 

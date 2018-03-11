@@ -1407,8 +1407,8 @@
 		"zpos"			"5"
 		"wide"			"245"
 		"tall"			"150"
-		"visible"		"1"	// HFLFMM
-		"enabled"		"1"	// HFLFMM
+		"visible"		"0"	// HFLFMM
+		"enabled"		"0"	// HFLFMM
 		"border"		"SharpMainMenuButton"
 
 		"TitleLabel"

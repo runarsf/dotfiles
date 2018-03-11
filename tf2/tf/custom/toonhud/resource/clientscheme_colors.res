@@ -7,14 +7,14 @@ Scheme
 	{
 		// ToonHUD colors
 		
-		"G_Highlight"			"156 53 51 255" // Highlight color
+		"G_Highlight"			"51 111 156 255" // Highlight color
 		"G_White"				"255 255 255 255"
 		"G_Black"				"0 0 0 255"
 		"G_Red"					"230 0 0 255"
-		"G_Shadow"				"0 0 0 220" // Shadow color
+		"G_Shadow"				"0 0 0 120" // Shadow color
 		"G_LightShadow"			"0 0 0 110"
 		"G_Heal"				"127 224 74 255" // Heal color
-		"G_Hit"					"235 220 50 255" // Hit color
+		"G_Hit"					"229 50 235 255" // Hit color
 		"G_Brown"				"49 44 41 255"
 		"G_Yellow"				"235 220 50 255"
 		"G_WhiteShadow"			"255 255 255 50"
@@ -27,13 +27,13 @@ Scheme
 		"G_TransparentMenuBG"	"0 0 0 200" // Transparent menu color
 		"G_PanelBg"				"40 40 40 200" // Panel color
 		"G_OpaquePanelBg"		"40 40 40 255" // Opaque Panel color
-		"G_Warning"				"255 0 0 255" // Warning color
+		"G_Warning"				"51 111 156 255" // Warning color
 		"G_HealthValue"			"255 255 255 255" // Health value color
 		"G_Overheal"			"255 255 255 255" // Overhealed health value color
 		"G_LowHealthValue"		"255 255 255 255" // Low health value color
 		"G_AmmoClipValue"		"255 255 255 255" // Ammo in clip value color
 		"G_AmmoReserveValue"	"255 255 255 255" // Ammo in reserve value color
-		"G_LowAmmo"				"255 0 0 255" // Low ammo color
+		"G_LowAmmo"				"51 111 156 255" // Low ammo color
 		"G_MetalValue"			"255 255 255 255" // Metal color
 		"G_MetalIcon"			"255 255 255 255" // Metal icon color
 		"G_HeadsValue"			"235 220 50 255" // Heads value color
@@ -43,7 +43,7 @@ Scheme
 		"G_StickyColor"					"255 255 255 255" // Stickybomb color
 		"G_StickyIconColor"				"255 255 255 255" // Stickybomb icon color
 		"G_CustomTargetID" 				"0 0 0 100" // Custom target id bg color
-		"G_CustomBuildingStatusBg" 		"0 0 0 100" // Custom building status bg color
+		"G_CustomBuildingStatusBg" 		"0 0 0 99" // Custom building status bg color
 		"G_TargetHealthValue" 			"255 255 255 255" // Target ID health value color
 		"G_TargetHealthValueShadow" 	"0 0 0 220" // Target ID health value shadow color
 		"G_Killfeed_Base"			"0 0 0 120" // Killfeed Base color
@@ -72,7 +72,7 @@ Scheme
 		"G_CustomHealthValue"		"120 120 120 255"
 		"G_MainMenuOverlay"			"0 0 0 0" // Main Menu overlay color
 		"G_MainMenuButton"			"40 40 40 220" // Main Menu button color
-		"G_MainMenuButtonHover"		"156 53 51 255" // Main Menu hovered button color
+		"G_MainMenuButtonHover"		"51 111 156 255" // Main Menu hovered button color
 		"G_MainMenuButtonFg"		"230 230 230 255" // Main Menu button text color
 		"G_MainMenuButtonHoverFg"	"240 240 240 255" // Main Menu hovered button text color
 		"G_MainMenuShader" 			"0 0 0 100" // Main Menu shader color
@@ -86,9 +86,9 @@ Scheme
 		"G_ItemDescriptionPanelBg"	"24 22 20 255" // Item description panel bg
 		"G_ButtonBg"				"96 83 73 255" // Button bg color
 		"G_ButtonText"				"214 206 200 255" // Button text color
-		"G_ButtonHoverBg"			"156 53 51 255" // Button hover bg color
+		"G_ButtonHoverBg"			"51 111 156 255" // Button hover bg color
 		"G_ButtonHoverText"			"255 255 255 255" // Button hover text color
-		"G_ButtonSelectedBg"		"156 53 51 255" // Button selected bg color
+		"G_ButtonSelectedBg"		"51 120 156 255" // Button selected bg color
 		"G_ButtonSelectedText"		"255 255 255 255" // Button selected text color
 		"G_MiniButtonBg"			"50 50 50 255" // Mini button bg color
 		"G_MiniButtonHoverBg"		"10 10 10 255" // Mini button hover bg color
@@ -101,7 +101,7 @@ Scheme
 		"G_MvmLobbyPanelText"		"220 220 220 255"
 		
 		// Crosshairs
-		"G_Crosshair1Color"		"255 255 255 255" // Crosshair1 color
+		"G_Crosshair1Color"		"0 255 43 255" // Crosshair1 color
 		"G_Crosshair2Color"		"255 255 255 255" // Crosshair2 color
 		"G_Crosshair3Color"		"255 255 255 255" // Crosshair3 color
 		"G_Hitmarker1Color"		"255 0 0 255" // Hitmarker1 color
@@ -113,7 +113,7 @@ Scheme
 		"OrangeDim"			"178 82 22 120"
 		"LightOrange"		"188 112 0 128"
 		"GoalOrange"		"255 133 0"
-		"TFOrange"			"151 51 51 255" // Highlight color
+		"TFOrange"			"51 111 156 255" // Highlight color
 		
 		"QuestGold"			"208 147 75 255"
 		"HalloweenThemeColor2015_Light"	"238 126 17 255"
@@ -478,7 +478,7 @@ Scheme
 		SectionedListPanel.OutOfFocusSelectedTextColor	"Black"
 		SectionedListPanel.OutOfFocusSelectedBgColor	"255 255 255 32"
 
-		Slider.NobColor				"156 53 51 255" // Highlight color
+		Slider.NobColor				"51 111 156 255" // Highlight color
 		Slider.TextColor			"220 206 199 255" // Menu text color
 		Slider.TrackColor			"220 206 199 255" // Menu text color
 		Slider.DisabledTextColor1	"220 206 199 120" // Dimm Menu text color
