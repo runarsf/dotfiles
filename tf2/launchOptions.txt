@@ -1,1 +1,1 @@
--dxlevel 81 -windowed -noborder -novid -tickrate 128 +exec autoexec -console
+-dxlevel 81 -windowed -noborder -noipx -nojoy -sw -w 1920 -h 1080 -novid -tickrate 128 +exec autoexec -console
