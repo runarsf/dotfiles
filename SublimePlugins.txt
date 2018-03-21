@@ -1,0 +1,17 @@
+Package Control
+AutoHotkey
+CFG Configuration Syntax Hightlighting
+ColorPicker
+DocBlockr
+Emmet
+Git
+PyV8
+SublimeREPL
+Terminal
+SublimeLinter
+PackageResourceViewer
+CSSComb
+CanIUse
+Trimmer
+FileDiffs
+Theme - SpaceGray (https://github.com/kkga/spacegray/)
