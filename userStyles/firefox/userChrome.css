@@ -222,6 +222,32 @@ tab {
 
 /*
 *
+* #Small tabs
+* 
+*/
+.tabbrowser-tab {
+  --tab-min-width: 120px;
+  -moz-box-flex: 0 !important;
+  transition: all 0.2s;
+  width: -10px !important;
+}
+
+.tabbrowser-tab[visuallyselected="true"] {
+  -moz-box-flex: 1 !important;
+}
+
+.tabbrowser-tabs > arrowscrollbox {
+  height: 45px !important;
+}
+
+/*
+*
+* #/Small tabs
+* 
+*/
+
+/*
+*
 * #Tab color
 * 
 */
