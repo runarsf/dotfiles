@@ -126,6 +126,11 @@
 #identity-box.verifiedIdentity #identity-icon-labels {display: none !important;} /* Remove owner name for SSL certs */
 #pageActionButton { display: none !important; } /* Remove Page Actions Menu (3 dots) */
 toolbarbutton#neaturl_hugsmile_eu-browser-action {filter:invert(95%) !important;} /* Invert color of Neat URL webextension icon */
+/* #back-button[disabled="true"] { display: none !important; } */
+/* #forward-button[disabled="true"] { display: none !important; } */
+#reload-button { display: none !important; }
+#stop-button { display: none !important; }    
+#home-button { display: none !important; }   
 
 /*
 *
