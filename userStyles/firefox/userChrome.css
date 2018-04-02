@@ -334,7 +334,7 @@ tab {
 
 /*
 *
-* #Small tabs
+* #Small tabs, pinned tabs get resized to fit the screen
 * 
 */
 .tabbrowser-tab {
