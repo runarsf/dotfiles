@@ -1,287 +1,20 @@
 /*
 *
-* #SSL colored tab line
-* 
-*/
-
-#urlbar {
-    position: relative;
-    z-index: 1;
-}
-
-#identity-box:after {
-    content: '';
-    position: absolute;
-    height: 100%;
-    width: 100%;
-    top: 0;
-    left: 0;
-    pointer-events: none;
-    z-index: -1;
-    background: var(--toolbar-bgcolor);
-    opacity: 0.2;
-}
-
-.tab-line {
-    background-color: var(--toolbar-bgcolor) !important;
-}
-
-/* There is also grantedPermissions, but irrelevant. */
-
-/* about:about */
-#urlbar[pageproxystate='valid'] #identity-box.unknownIdentity:after {
-    background-color: #ff0039; /* Firefox Red 50 */
-}
-
-/* about:config */
-#urlbar[pageproxystate='valid'] #identity-box.chromeUI:after {
-    background-color: #0a84ff; /* Firefox Blue 50 */
-}
-
-/* uBlock Origin Dashboard */
-#urlbar[pageproxystate='valid'] #identity-box.extensionPage:after {
-    background-color: #45a1ff; /* Firefox Blue 40 */
-}
-
-/* https://www.github.com/ */
-#urlbar[pageproxystate='valid'] #identity-box.verifiedIdentity:after{
-    background-color: #058b00; /* Firefox Green 70 */
-}
-
-/* https://www.google.com/ */
-#urlbar[pageproxystate='valid'] #identity-box.verifiedDomain:after{
-    background-color: #12bc00; /* Firefox Green 60 */
-}
-
-/* https://mixed-script.badssl.com/ */
-#urlbar[pageproxystate='valid'] #identity-box.mixedActiveBlocked:after {
-    background-color: #30e60b; /* Firefox Green 50 */
-}
-
-/* https://mixed.badssl.com/ */
-#urlbar[pageproxystate='valid'] #identity-box.mixedDisplayContent:after {
-    background-color: #d7b600; /* Firefox Yellow 60 */
-}
-
-/* https://very.badssl.com/ */
-#urlbar[pageproxystate='valid'] #identity-box.mixedDisplayContentLoadedActiveBlocked:after {
-    background-color: #d7b600; /* Firefox Yellow 60 */
-}
-
-/* https://self-signed.badssl.com/ but add certificate exception */
-#urlbar[pageproxystate='valid'] #identity-box.certUserOverridden:after {
-    background-color: #ffe900; /* Firefox Yellow 50 */
-}
-
-/* Don't know an example for this */
-#urlbar[pageproxystate='valid'] #identity-box.weakCipher:after {
-    background-color: #a47f00; /* Firefox Yellow 70 */
-}
-
-/* https://mixed-script.badssl.com/ but disable protection */
-#urlbar[pageproxystate='valid'] #identity-box.mixedActiveContent:after {
-    background-color: #d70022;    /* Firefox Red 60 */
-}
-
-/* http://http-login.badssl.com/ */
-#urlbar[pageproxystate='valid'] #identity-box.insecureLoginForms:after {
-    background-color: #a4000f;    /* Firefox Red 70 */
-}
-
-#urlbar[pageproxystate='valid'][focused="true"] #identity-box::after {
-  background: var(--toolbar-bgcolor);
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*
-*
 * #One-liners
 * 
 */
 .titlebar-placeholder[type="pre-tabs"] {display: none !important;} /* Remove whitespace before */
 .titlebar-placeholder[type="post-tabs"] {display: none !important;} /* Remove whitespace after */
 .titlebar-placeholder[type="pre-tabs"] {border-inline-end: 1px solid black !important;width: 1px !important;} /* Fix one-pixel line from whitespace */
-/*.tab-line{ background-color: green !important; } */ /* Tab color */
+.tab-line{ background-color: gray !important; } /* Tab color */
+toolbarbutton#neaturl_hugsmile_eu-browser-action {filter:invert(95%) !important;} /* Invert color of Neat URL webextension icon */
 #identity-box.verifiedIdentity #identity-icon-labels {display: none !important;} /* Remove owner name for SSL certs */
 #pageActionButton { display: none !important; } /* Remove Page Actions Menu (3 dots) */
-toolbarbutton#neaturl_hugsmile_eu-browser-action {filter:invert(95%) !important;} /* Invert color of Neat URL webextension icon */
 /* #back-button[disabled="true"] { display: none !important; } */
 /* #forward-button[disabled="true"] { display: none !important; } */
 #reload-button { display: none !important; }
 #stop-button { display: none !important; }    
 #home-button { display: none !important; }   
-
-/*
-*
-* #SSL colored search bar
-* 
-*/
-
-#urlbar {
-	position: relative;
-	z-index: 1;
-}
-
-#identity-box:after {
-	content: '';
-	position: absolute;
-	height: 100%;
-	width: 100%;
-	top: 0;
-	left: 0;
-	pointer-events: none;
-	z-index: -1;
-	background: var(--toolbar-bgcolor);
-	opacity: 0.2;
-}
-
-.tab-line {
-	background-color: var(--toolbar-bgcolor);
-}
-
-/* There is also grantedPermissions, but irrelevant. */
-
-/* about:about */
-#urlbar[pageproxystate='valid'] #identity-box.unknownIdentity:after {
-	background: #ff0039; /* Firefox Red 50 */
-}
-
-/* about:config */
-#urlbar[pageproxystate='valid'] #identity-box.chromeUI:after {
-	background: #0a84ff; /* Firefox Blue 50 */
-}
-
-/* uBlock Origin Dashboard */
-#urlbar[pageproxystate='valid'] #identity-box.extensionPage:after {
-	background: #45a1ff; /* Firefox Blue 40 */
-}
-
-/* https://www.github.com/ */
-#urlbar[pageproxystate='valid'] #identity-box.verifiedIdentity:after{
-	background: #058b00; /* Firefox Green 70 */
-}
-
-/* https://www.google.com/ */
-#urlbar[pageproxystate='valid'] #identity-box.verifiedDomain:after{
-	background: #12bc00; /* Firefox Green 60 */
-}
-
-/* https://mixed-script.badssl.com/ */
-#urlbar[pageproxystate='valid'] #identity-box.mixedActiveBlocked:after {
-	background: #30e60b; /* Firefox Green 50 */
-}
-
-/* https://mixed.badssl.com/ */
-#urlbar[pageproxystate='valid'] #identity-box.mixedDisplayContent:after {
-	background: #d7b600; /* Firefox Yellow 60 */
-}
-
-/* https://very.badssl.com/ */
-#urlbar[pageproxystate='valid'] #identity-box.mixedDisplayContentLoadedActiveBlocked:after {
-	background: #d7b600; /* Firefox Yellow 60 */
-}
-
-/* https://self-signed.badssl.com/ but add certificate exception */
-#urlbar[pageproxystate='valid'] #identity-box.certUserOverridden:after {
-	background: #ffe900; /* Firefox Yellow 50 */
-}
-
-/* Don't know an example for this */
-#urlbar[pageproxystate='valid'] #identity-box.weakCipher:after {
-	background: #a47f00; /* Firefox Yellow 70 */
-}
-
-/* https://mixed-script.badssl.com/ but disable protection */
-#urlbar[pageproxystate='valid'] #identity-box.mixedActiveContent:after {
-	background: #d70022;	/* Firefox Red 60 */
-}
-
-/* http://http-login.badssl.com/ */
-#urlbar[pageproxystate='valid'] #identity-box.insecureLoginForms:after {
-	background: #a4000f;	/* Firefox Red 70 */
-}
-
-/*
-*
-* #Overflow menu
-* 
-*/
-
-/* Customize rows and columns for number and size of rows/cols you want */
-#widget-overflow-fixed-list {
-		display: grid;
-		grid-template-rows: 30px 30px; /* two rows, the second one taller */
-		grid-template-columns: 25px 25px 25px 25px 25px 25px 25px [col-end]; /* seven columns, with an anchorpoint at the end */
-}
-
-/* Hides labels */
-#widget-overflow-fixed-list .toolbarbutton-1 > .toolbarbutton-text {
-		display: none !important;
-}
-
-/* Constrains width */
-#widget-overflow-mainView {
-		max-width: 275px !important;
-		min-width: 275px !important;
-}
-/* Restores addon panel widths */
-.PanelUI-subView[title="Tab Session Manager"] {
-		min-width: 345px !important;
-}
-.PanelUI-subView[title="Violentmonkey"] {
-min-width: 280px !important;
-}
-.PanelUI-subView[title="Multi-Account Containers"] {
-		min-width: 300px !important;
-}
-
-/* Hides "Customize Toolbar..." button */
-#overflowMenu-customize-button {
-		display: none !important;
-}
-
-/* Search bar */
-
-/* Makes search bar take up whole top row */
-#widget-overflow-fixed-list #search-container {
-		grid-row-start: 1;
-		grid-row-end: span 2;
-		grid-column-start: 1;
-		grid-column-end: span col-end;
-}
-/* Important to make the search bar display */
-#widget-overflow-fixed-list #searchbar {
-		min-width: 275px !important;
-}
-/* Adjusts spacing */
-#widget-overflow-fixed-list .toolbarbutton-1 {
-		margin-top: -5px !important;
-		margin-bottom: -5px !important;
-}
-#widget-overflow-fixed-list {
-		margin-top: -10px !important;
-}
 
 /*
 *
@@ -332,13 +65,119 @@ tab {
 		display: block; 
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.browserContainer {
+background-color: var(--url-and-searchbar-background-color,  hsla(0,0%,100%,.8)) !important;
+}
+
 /*
 *
-* #Small tabs, pinned tabs get resized to fit the screen
+* COLORED CERT BAR 
+*
+*/
+
+#urlbar {
+  position: relative;
+  z-index: 1;
+}
+
+#identity-box:after {
+  content: '';
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: -1;
+  background: var(--toolbar-bgcolor);
+  opacity: 0.2;
+}
+
+
+/* There is also grantedPermissions, but irrelevant. */
+
+/* about:about */
+#urlbar[pageproxystate='valid'] #identity-box.unknownIdentity:after {
+  background: #ff0039; /* Firefox Red 50 */
+}
+
+/* about:config */
+#urlbar[pageproxystate='valid'] #identity-box.chromeUI:after {
+  background: #0a84ff; /* Firefox Blue 50 */
+}
+
+/* uBlock Origin Dashboard */
+#urlbar[pageproxystate='valid'] #identity-box.extensionPage:after {
+  background: #45a1ff; /* Firefox Blue 40 */
+}
+
+/* https://www.github.com/ */
+#urlbar[pageproxystate='valid'] #identity-box.verifiedIdentity:after{
+  background: #058b00; /* Firefox Green 70 */
+}
+
+/* https://www.google.com/ */
+#urlbar[pageproxystate='valid'] #identity-box.verifiedDomain:after{
+  background: #12bc00; /* Firefox Green 60 */
+}
+
+/* https://mixed-script.badssl.com/ */
+#urlbar[pageproxystate='valid'] #identity-box.mixedActiveBlocked:after {
+  background: #30e60b; /* Firefox Green 50 */
+}
+
+/* https://mixed.badssl.com/ */
+#urlbar[pageproxystate='valid'] #identity-box.mixedDisplayContent:after {
+  background: #d7b600; /* Firefox Yellow 60 */
+}
+
+/* https://very.badssl.com/ */
+#urlbar[pageproxystate='valid'] #identity-box.mixedDisplayContentLoadedActiveBlocked:after {
+  background: #d7b600; /* Firefox Yellow 60 */
+}
+
+/* https://self-signed.badssl.com/ but add certificate exception */
+#urlbar[pageproxystate='valid'] #identity-box.certUserOverridden:after {
+  background: #ffe900; /* Firefox Yellow 50 */
+}
+
+/* Don't know an example for this */
+#urlbar[pageproxystate='valid'] #identity-box.weakCipher:after {
+  background: #a47f00; /* Firefox Yellow 70 */
+}
+
+/* https://mixed-script.badssl.com/ but disable protection */
+#urlbar[pageproxystate='valid'] #identity-box.mixedActiveContent:after {
+  background: #d70022;  /* Firefox Red 60 */
+}
+
+/* http://http-login.badssl.com/ */
+#urlbar[pageproxystate='valid'] #identity-box.insecureLoginForms:after {
+  background: #a4000f;  /* Firefox Red 70 */
+}
+
+/*
+*
+*  Small tabs
 * 
 */
 .tabbrowser-tab {
-  --tab-min-width: 120px;
+  --tab-min-width: 120px !important;
   -moz-box-flex: 0 !important;
   transition: all 0.2s;
   width: -10px !important;
@@ -352,316 +191,77 @@ tab {
   height: 45px !important;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /*
 *
-* #URL bar safari
-* 
+*  Rounded address bar
+*
 */
 
-/* *************************************** URL bar and its container/wrapper    ****************************************/
-
-:root
-{
-    --ubwidth: 1600px;
-    --ubdrop: 1500px;
-}
-
-@media (max-width: 1300px)
-{
-    :root
-    {
-        --ubwidth: 575px;
-        --ubdrop: 575px;
-    }
-}
-
-@media (max-width: 1200px)
-{
-    :root
-    {
-        --ubwidth: 550px;
-        --ubdrop: 550px;
-    }
-}
-
-@media (max-width: 1175px)
-{
-    :root
-    {
-        --ubwidth: 525px;
-        --ubdrop: 525px;
-    }
-}
-
-@media (max-width: 1150px)
-{
-    :root
-    {
-        --ubwidth: 500px;
-        --ubdrop: 500px;
-    }
-}
-
-@media (max-width: 1125px)
-{
-    :root
-    {
-        --ubwidth: 475px;
-        --ubdrop: 475px;
-    }
-}
-
-@media (max-width: 1100px)
-{
-    :root
-    {
-        --ubwidth: 450px;
-        --ubdrop: 450px;
-    }
-}
-
-@media (max-width: 1075px)
-{
-    :root
-    {
-        --ubwidth: 425px;
-        --ubdrop: 425px;
-    }
-}
-
-@media (max-width: 1050px)
-{
-    :root
-    {
-        --ubwidth: 400px;
-        --ubdrop: 400px;
-    }
-}
-
-@media (max-width: 1025px)
-{
-    :root { --ubwidth: 375px; }
-}
-
-@media (max-width: 1000px)
-{
-    :root { --ubwidth: 350px; }
-}
-
-@media (max-width: 900px)
-{
-    :root { --ubwidth: 325px; }
-}
-
-/* urlbar-container : contains back+forward buttons and urlbar */
-#nav-bar #urlbar-container,
-#nav-bar #search-container
-{
-    height: 27px !important;
-    padding: 0px 3.5px !important;
-    -moz-box-pack: center !important;
-    -moz-window-dragging: drag !important;
-}
-
-#titlebar { -moz-box-pack: initial !important; }
-
-/* some spacers to avoid ultra-long urlbar */
-#nav-bar #urlbar-container::before,
-#nav-bar #urlbar-container::after
-{
-    content: '';
-    display: inline-flex;
-    min-width: 7px;
-    -moz-box-flex: 1 !important;
-}
-
-/* urlbar-wrapper : contains forward button and urlbar */
-#nav-bar #urlbar-wrapper
-{
-    margin: 0px !important;
-    height: 37px !important;
-    clip-path: unset !important;
-    max-width: calc(var(--ubwidth) + 28px) !important;
-    width: calc(var(--ubwidth) + 28px) !important;
-}
-
-/* urlbar : contains the url, info icons, go/reload/stop buttons etc */
-#nav-bar #urlbar
-{
-    height: 23px !important;
-    min-height: 23px !important;
-    min-width: calc(var(--ubwidth) - 50px) !important;
-    max-width: var(--ubwidth) !important;
-    margin: 0px 0px !important;
-    padding-inline-start: 0px !important;
-    background: var(--toolbar-bgcolor);
-    border: 0.5px solid rgb(213,211,213) !important;
+#urlbar, .searchbar-textbox{
     border-radius: 0.3em !important;
-    /* last two box shadows here are transparent counterparts for animating focus ring shadows below */
-    box-shadow: inset 0 -0.5px 0px 0px hsla(0,0%,70%,1), inset 0 0px 0px 0px white, 0 0 5px 15px rgba(151,195,243,0), inset 0 0 0 0px rgba(151,195,243,0) !important;
+    height: 27px !important;
+    min-height: 27px !important;
 }
 
-#nav-bar #urlbar[focused="true"]
-{
-    color: white !important;
-    /* Animated box shadows to recreate the native OS X 10.11 focus-ring effect */
-    transition: box-shadow 300ms, border 300ms !important;
-    box-shadow: inset 0 -0.5px 0px 0px rgb(168,205,245), inset 0 0.5px 0.5px 0px white, 0 0 0px 2.5px rgba(151,195,243,0.9), inset 0 0 0 0.5px rgba(151,195,243,0.9) !important;
-    border: 0.5px solid rgba(136,178,220,0.9) !important;
+/*
+* Show close tab button only on hover
+ */
+.tabbrowser-tab:not([pinned]):not(:hover) .tab-close-button {
+  visibility: collapse !important;
 }
 
-/* urlbar-input-box holds the actual URL textbox */
-#nav-bar #urlbar .urlbar-input-box
-{
-    -moz-box-Æ’âˆš: 5 !important;
-    border: none !important;
-    padding-inline-start: 2px !important;
-    -moz-box-ordinal-group: 3 !important;
-    transition: all 300ms ease-in-out !important;
+.tabbrowser-tab:not([pinned]):hover .tab-close-button {
+  visibility: visible !important;
+  display: block !important;
 }
 
-.urlbar-input-box, .searchbar-textbox > .autocomplete-textbox-container > .textbox-input-box { text-align: center; }
-#nav-bar #urlbar[focused=true] .urlbar-input-box { text-align: left; }
 
-#nav-bar #urlbar[focused=true] .urlbar-input-box::after
-{
-    opacity: 0 !important;
-    transition: unset;
+
+/* Dark Themed Drop-down */
+/* Dark Theme - Firefox 48+ */
+#PopupAutoCompleteRichResult .autocomplete-richlistbox {
+background-color: #111 !important;
+}
+#PopupAutoCompleteRichResult .autocomplete-richlistitem {
+border-bottom-color: #333 !important;
+}
+.autocomplete-richlistitem .ac-title,
+.autocomplete-richlistitem .ac-action,
+.autocomplete-richlistitem .ac-separator {
+color: #777 !important;
+}
+.autocomplete-richlistitem[selected=true] {
+background-color: #666 !important;
+}
+.autocomplete-richlistitem[selected=true] .ac-title,
+.ac-title[selected],
+.autocomplete-richlistitem[selected=true] .ac-action,
+.ac-action[selected],
+.autocomplete-richlistitem[selected=true] .ac-separator,
+.ac-separator[selected] {
+color: #eee !important;
+}
+.autocomplete-richlistitem[selected=true] .ac-url,
+.ac-url[selected] {
+color: #69f !important;
 }
 
-/* note: private browsing mode keeps this as is, non-private is the more complex case */
-#main-window:not([privatebrowsingmode=temporary]) #nav-bar:-moz-window-inactive #urlbar .urlbar-input-box::after { background: linear-gradient(to left, rgba(255,255,255,1), rgba(255,255,255,0)) 0px 0px / 50px 100% no-repeat, linear-gradient(to bottom, rgb(255,255,255), rgb(255,255,255)) 50px 0px / calc(100% - 50px) 100% no-repeat; }
+/*
+* show new tab button on hover
+ */
 
-/* URL bar autocomplete popup/dropdown */
-#PopupAutoCompleteRichResult
-{
-    margin-inline-start: calc(-2px + (var(--ubwidth) - var(--ubdrop)) / 2) !important;
-    margin-top: -2px !important;
-    max-width: var(--ubdrop) !important;
-    border-radius: 5px !important;
-    /*       background: linear-gradient(to bottom, rgb(215,213,215), rgb(192,190,192)) !important; */
+/* hide new tab button so tab-bar can collapse */
+.tabs-newtab-button { 
+    display: none; 
 }
 
-.autocomplete-richlistbox
-{
-    background: linear-gradient(to bottom, rgb(237,237,237), rgb(239,239,239)) border-box !important;
-    border-top-left-radius: 5px !important;
-    border-top-right-radius: 5px !important;
-    padding-left: 0 !important;
-    padding-right: 0 !important;
+/* ...but show it on tab-bar hover */
+#tabbrowser-tabs:hover .tabs-newtab-button { 
+    display: block; 
 }
+/* rotate close button on tab hover */
 
-.autocomplete-richlistbox > scrollbox { overflow-y: hidden !important; }
-
-.autocomplete-richlistitem
-{
-    min-height: 20px !important;
-    max-height: 20px !important;
-    border: unset !important;
-    border-radius: unset !important;
-    padding-left: 16px !important;
-    padding-right: 16px !important;
-}
-
-/* *** */
-.searchbar-engine-one-off-item:hover,
-.searchbar-engine-one-off-item[selected],
-.autocomplete-richlistitem[selected],
-.autocomplete-richlistitem:hover { background-color: rgb(17,108,214); }
-
-.ac-site-icon, .ac-type-icon
-{
-    margin-inline-start: 1px !important;
-    margin-inline-end: 8px !important;
-}
-
-.ac-site-icon:not([type=searchengine]), 
-.ac-type-icon:not([type=switchtab]):not([type=remotetab]):not([type=keyword]),
-.ac-separator { display: none !important; }
-
-.ac-type-icon[type=keyword],
-.ac-site-icon[type=searchengine]
-{
-    /* magnifying glass */
-    list-style-image: url('data:image/svg+xml;utf8,\ <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16">\ <circle cx="7" cy="7" r="4" fill="none" stroke="rgb(113,113,113)" stroke-width="1" />\ <path d="M13.5,13.5 L10,10" stroke="rgb(113,113,113)" stroke-width="1" />\ </svg>') !important;
-}
-
-.autocomplete-richlistitem:hover .ac-type-icon[type=keyword],
-.autocomplete-richlistitem:hover .ac-site-icon[type=searchengine],
-.ac-type-icon[type=keyword][selected],
-.ac-site-icon[type=searchengine][selected]
-{
-    /* white magnifying glass */
-    list-style-image: url('data:image/svg+xml;utf8,\ <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16">\ <circle cx="7" cy="7" r="4" fill="none" stroke="white" stroke-width="1" />\ <path d="M13.5,13.5 L10,10" stroke="white" stroke-width="1" />\ </svg>') !important;
-}
-
-.ac-title
-{
-    font-size: 12px !important;
-    color: rgb(62,62,62);
-}
-
-.ac-url { color: gray !important; }
-.autocomplete-richlistitem:hover *,
-.autocomplete-richlistitem[selected] * { color: white !important; }
-
-.autocomplete-richlistitem:hover .ac-tags-text > html|span.ac-tag,
-.autocomplete-richlistitem[selected] .ac-tags-text > html|span.ac-tag
-{
-    background-color: white;
-    color: rgb(17,108,214);
-}
-
-.ac-normal-text { font: message-box !important; }
-
-.ac-url, .ac-action
-{
-    font-size: 11px;
-    margin: 0 !important;
-    padding: 0 !important;
-}
-
-.ac-tags
-{
-    font-size: 10px !important;
-    margin: 0px 3px 0px -3px !important;
-}
-
-.ac-title-text,
-.ac-url-text
-{
-    width: 500ch !important;
+#tabbrowser-tabs .tabbrowser-tab:hover .tab-close-button {
+transform: rotate(1440deg) !important;
+transition: transform ease-in-out 2s !important;
 }
