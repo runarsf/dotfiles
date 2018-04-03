@@ -13,6 +13,7 @@
 -	--ubdrop: 1500px;
 +    --ubwidth: 1600px;
 +    --ubdrop: 1500px;
+ }
  
  @media (max-width: 1300px)
  {
