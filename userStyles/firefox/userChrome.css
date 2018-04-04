@@ -6,7 +6,7 @@
 .titlebar-placeholder[type="pre-tabs"] {display: none !important;} /* Remove whitespace before */
 .titlebar-placeholder[type="post-tabs"] {display: none !important;} /* Remove whitespace after */
 .titlebar-placeholder[type="pre-tabs"] {border-inline-end: 1px solid black !important;width: 1px !important;} /* Fix one-pixel line from whitespace */
-.tab-line{ background-color: gray !important; } /* Tab color */
+.tab-line{ background-color:  !important; } /* Tab color */
 toolbarbutton#neaturl_hugsmile_eu-browser-action {filter:invert(95%) !important;} /* Invert color of Neat URL webextension icon */
 #identity-box.verifiedIdentity #identity-icon-labels {display: none !important;} /* Remove owner name for SSL certs */
 #pageActionButton { display: none !important; } /* Remove Page Actions Menu (3 dots) */
@@ -292,32 +292,6 @@ transition: transform ease-in-out 2s !important;
     transition: all 300ms ease-in-out !important;
 }
 
-.urlbar-input-box, .searchbar-textbox > .autocomplete-textbox-container > .textbox-input-box { text-align: center; }
-#nav-bar #urlbar[focused=true] .urlbar-input-box { text-align: left; }
- 
-#nav-bar #urlbar[focused=true] .urlbar-input-box::after
-{
- opacity: 0 !important;
- transition: unset;
-    opacity: 0 !important;
-    transition: unset;
-}
-
-/* URL bar autocomplete popup/dropdown */
-#PopupAutoCompleteRichResult
-{
- margin-inline-start: calc(-2px + (var(--ubwidth) - var(--ubdrop)) / 2) !important;
- margin-top: -2px !important;
- max-width: var(--ubdrop) !important;
- border-radius: 5px !important;
- /*     background: linear-gradient(to bottom, rgb(215,213,215), rgb(192,190,192)) !important; */
-    margin-inline-start: calc(-2px + (var(--ubwidth) - var(--ubdrop)) / 2) !important;
-    margin-top: -2px !important;
-    max-width: var(--ubdrop) !important;
-    border-radius: 5px !important;
-    /*       background: linear-gradient(to bottom, rgb(215,213,215), rgb(192,190,192)) !important; */
-}
-
 .autocomplete-richlistbox
 {
  background: linear-gradient(to bottom, rgb(237,237,237), rgb(239,239,239)) border-box !important;
@@ -331,8 +305,6 @@ transition: transform ease-in-out 2s !important;
     padding-left: 0 !important;
     padding-right: 0 !important;
 }
- 
-.autocomplete-richlistbox > scrollbox { overflow-y: hidden !important; }
  
 .autocomplete-richlistitem
 {
@@ -370,12 +342,6 @@ transition: transform ease-in-out 2s !important;
 
 
 
-
-
-
-
-
-
 .urlbar-input-box, .searchbar-textbox > .autocomplete-textbox-container > .textbox-input-box { text-align: center; }
 #nav-bar #urlbar[focused=true] .urlbar-input-box { text-align: left; }
 
@@ -391,11 +357,12 @@ transition: transform ease-in-out 2s !important;
 /* URL bar autocomplete popup/dropdown */
 #PopupAutoCompleteRichResult
 {
-    margin-inline-start: calc(-2px + (var(--ubwidth) - var(--ubdrop)) / 2) !important;
+    margin-inline-start: 3vw !important;                                      /* ### */
     margin-top: -2px !important;
-    max-width: var(--ubdrop) !important;
+    max-width: 80vw !important;                                                                                        /* ### */
     border-radius: 5px !important;
     /*       background: linear-gradient(to bottom, rgb(215,213,215), rgb(192,190,192)) !important; */
+    background: White !important;
 }
 
 .autocomplete-richlistbox
