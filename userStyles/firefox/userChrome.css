@@ -24,45 +24,45 @@ toolbarbutton#neaturl_hugsmile_eu-browser-action {filter:invert(95%) !important;
 
 /* Find Bar */
 findbar {
-	-moz-box-ordinal-group: 0	 !important;
-	direction:							rtl !important;
+  -moz-box-ordinal-group: 0  !important;
+  direction:              rtl !important;
 
-	transition-property:				unset !important;
-	transition-duration:				unset !important;
-	transition-timing-function: unset !important;
+  transition-property:        unset !important;
+  transition-duration:        unset !important;
+  transition-timing-function: unset !important;
 
-	border-top-width:					 0																						!important;
-	border-bottom:							1px solid var(--toolbox-border-bottom-color) !important;
-	
+  border-top-width:          0                                            !important;
+  border-bottom:              1px solid var(--toolbox-border-bottom-color) !important;
+  
 }
 findbar .findbar-textbox {
-	direction: ltr !important;
+  direction: ltr !important;
 }
 /* Find Bar */
 
 /* hide tab bar if only one tab */
 tab:only-of-type { 
-		display:none; 
+    display:none; 
 }
 
 /* unset the tab bar min-height */ 
 #tabbrowser-tabs, #tabbrowser-tabs > .tabbrowser-arrowscrollbox, #tabbrowser-tabs[positionpinnedtabs] > .tabbrowser-tab[pinned] {
-		min-height: initial !important;
+    min-height: initial !important;
 }
 
 /* set the height on the tabs instead */
 tab { 
-		line-height: 32px; height: 32px; 
+    line-height: 32px; height: 32px; 
 }
 
 /* hide new tab button so tab-bar can collapse */
 .tabs-newtab-button { 
-		display: none; 
+    display: none; 
 }
 
 /* ...but show it on tab-bar hover */
 #tabbrowser-tabs:hover .tabs-newtab-button { 
-		display: block; 
+    display: block; 
 }
 
 .browserContainer {
@@ -357,9 +357,9 @@ transition: transform ease-in-out 2s !important;
 /* URL bar autocomplete popup/dropdown */
 #PopupAutoCompleteRichResult
 {
-    margin-inline-start: 3vw !important;                                      /* ### */
+    margin-inline-start: 10vw !important;                                      /* ### */
     margin-top: -2px !important;
-    max-width: 80vw !important;                                                                                        /* ### */
+    max-width: 70vw !important;                                                                                        /* ### */
     border-radius: 5px !important;
     /*       background: linear-gradient(to bottom, rgb(215,213,215), rgb(192,190,192)) !important; */
     background: White !important;
