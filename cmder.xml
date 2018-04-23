@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <key name="Software">
 	<key name="ConEmu">
-		<key name=".Vanilla" modified="2018-04-19 23:24:57" build="180206">
+		<key name=".Vanilla" modified="2018-04-23 17:37:58" build="180206">
 			<value name="StartType" type="hex" data="02"/>
 			<value name="CmdLine" type="string" data=""/>
 			<value name="StartTasksFile" type="string" data=""/>
@@ -9,7 +9,7 @@
 			<value name="StartFarFolders" type="hex" data="00"/>
 			<value name="StartFarEditors" type="hex" data="00"/>
 			<value name="StartCreateDelay" type="ulong" data="100"/>
-			<value name="ColorTable00" type="dword" data="00222827"/>
+			<value name="ColorTable00" type="dword" data="00252525"/>
 			<value name="ColorTable01" type="dword" data="009e5401"/>
 			<value name="ColorTable02" type="dword" data="0004aa74"/>
 			<value name="ColorTable03" type="dword" data="00a6831a"/>
@@ -139,9 +139,9 @@
 			<value name="bgImageColors" type="dword" data="ffffffff"/>
 			<value name="bgOperation" type="hex" data="07"/>
 			<value name="bgPluginAllowed" type="hex" data="01"/>
-			<value name="AlphaValue" type="hex" data="FE"/>
+			<value name="AlphaValue" type="hex" data="FF"/>
 			<value name="AlphaValueSeparate" type="hex" data="01"/>
-			<value name="AlphaValueInactive" type="hex" data="EE"/>
+			<value name="AlphaValueInactive" type="hex" data="FF"/>
 			<value name="UserScreenTransparent" type="hex" data="00"/>
 			<value name="ColorKeyTransparent" type="hex" data="00"/>
 			<value name="ColorKeyValue" type="dword" data="00010101"/>
@@ -150,11 +150,11 @@
 			<value name="Cascaded" type="hex" data="01"/>
 			<value name="IntegralSize" type="hex" data="00"/>
 			<value name="WindowMode" type="dword" data="0000051f"/>
-			<value name="ConWnd X" type="long" data="584"/>
-			<value name="ConWnd Y" type="long" data="211"/>
+			<value name="ConWnd X" type="long" data="628"/>
+			<value name="ConWnd Y" type="long" data="240"/>
 			<value name="LastMonitor" type="string" data="0,30,1920,1080"/>
-			<value name="ConWnd Width" type="dword" data="00000077"/>
-			<value name="ConWnd Height" type="dword" data="0000001c"/>
+			<value name="ConWnd Width" type="dword" data="0000008d"/>
+			<value name="ConWnd Height" type="dword" data="00000025"/>
 			<value name="16bit Height" type="ulong" data="0"/>
 			<value name="QuakeStyle" type="hex" data="00"/>
 			<value name="Restore2ActiveMon" type="hex" data="00"/>
@@ -208,7 +208,7 @@
 			<value name="HighlightMouseRow" type="hex" data="00"/>
 			<value name="HighlightMouseCol" type="hex" data="00"/>
 			<value name="FixFarBorders" type="hex" data="01"/>
-			<value name="Anti-aliasing2" type="hex" data="00"/>
+			<value name="Anti-aliasing2" type="hex" data="01"/>
 			<value name="FixFarBordersRanges" type="string" data="2013-25C4;"/>
 			<value name="ExtendUCharMap" type="hex" data="01"/>
 			<value name="EnhanceGraphics" type="hex" data="01"/>
