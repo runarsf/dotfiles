@@ -1,2 +1,3 @@
 # dotfiles
-This repository contains all of my configs. 
+
+This repository contains all of my configs.
