@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <root type="map">
   <Metadata type="map">
-    <Created type="string">Tue Jan 30 18:45:06 2018</Created>
+    <Created type="string">Sun May 27 00:30:59 2018</Created>
     <Name type="map">
-      <PenFile type="string">C:\Users\runarsf\AppData\Roaming\WTablet\Wacom_Tablet.dat</PenFile>
-      <TouchFile type="string">C:\Users\runarsf\AppData\Roaming\WTablet\WacomTouch.xml</TouchFile>
+      <PenFile type="string">C:\Users\rufus\AppData\Roaming\WTablet\Wacom_Tablet.dat</PenFile>
+      <TouchFile type="string">C:\Users\rufus\AppData\Roaming\WTablet\WacomTouch.xml</TouchFile>
     </Name>
     <Version type="map">
-      <PenFile type="string">6.3.25-5</PenFile>
-      <TouchFile type="string">6.3.25-5</TouchFile>
+      <PenFile type="string">6.3.29-6</PenFile>
+      <TouchFile type="string">6.3.29-6</TouchFile>
     </Version>
   </Metadata>
   <PenFile type="map">
     <CPLLastApp type="integer">0</CPLLastApp>
     <CPLLastPosition type="map">
-      <X type="integer">-774</X>
-      <Y type="integer">461</Y>
+      <X type="integer">617</X>
+      <Y type="integer">277</Y>
       <Z type="integer">0</Z>
     </CPLLastPosition>
     <CPLLastTabPane type="integer">0</CPLLastTabPane>
-    <CPLOpened type="string">Tue Jan 30 18:44:48 2018</CPLOpened>
+    <CPLOpened type="string">Sun May 27 00:30:46 2018</CPLOpened>
     <Created type="string">Mon Sep 11 20:01:26 2017</Created>
     <DisplayAsserts type="bool">false</DisplayAsserts>
     <DisplayBrightness type="integer">6</DisplayBrightness>
@@ -72,6 +72,9 @@
         <ContextManager type="map">
           <DisplayToggleOverlay type="map">
             <DisplayCycles type="array">
+              <ArrayElement type="map">
+                <CtxMgrToggleMode type="bool">true</CtxMgrToggleMode>
+              </ArrayElement>
               <ArrayElement type="map">
                 <CtxMgrToggleMode type="bool">true</CtxMgrToggleMode>
               </ArrayElement>
@@ -140,12 +143,12 @@
                         <Options type="integer">1</Options>
                         <ScreenOutputArea type="map">
                           <Extent type="map">
-                            <X type="integer">3840</X>
-                            <Y type="integer">1080</Y>
+                            <X type="integer">7040</X>
+                            <Y type="integer">1800</Y>
                             <Z type="integer">0</Z>
                           </Extent>
                           <Origin type="map">
-                            <X type="integer">-1920</X>
+                            <X type="integer">-5120</X>
                             <Y type="integer">0</Y>
                             <Z type="integer">0</Z>
                           </Origin>
@@ -203,12 +206,12 @@
                         <Options type="integer">1</Options>
                         <ScreenOutputArea type="map">
                           <Extent type="map">
-                            <X type="integer">3840</X>
-                            <Y type="integer">1080</Y>
+                            <X type="integer">7040</X>
+                            <Y type="integer">1800</Y>
                             <Z type="integer">0</Z>
                           </Extent>
                           <Origin type="map">
-                            <X type="integer">-1920</X>
+                            <X type="integer">-5120</X>
                             <Y type="integer">0</Y>
                             <Z type="integer">0</Z>
                           </Origin>
@@ -266,12 +269,12 @@
                         <Options type="integer">1</Options>
                         <ScreenOutputArea type="map">
                           <Extent type="map">
-                            <X type="integer">3840</X>
-                            <Y type="integer">1080</Y>
+                            <X type="integer">7040</X>
+                            <Y type="integer">1800</Y>
                             <Z type="integer">0</Z>
                           </Extent>
                           <Origin type="map">
-                            <X type="integer">-1920</X>
+                            <X type="integer">-5120</X>
                             <Y type="integer">0</Y>
                             <Z type="integer">0</Z>
                           </Origin>
@@ -366,12 +369,12 @@
                         <Options type="integer">1</Options>
                         <ScreenOutputArea type="map">
                           <Extent type="map">
-                            <X type="integer">3840</X>
-                            <Y type="integer">1080</Y>
+                            <X type="integer">7040</X>
+                            <Y type="integer">1800</Y>
                             <Z type="integer">0</Z>
                           </Extent>
                           <Origin type="map">
-                            <X type="integer">-1920</X>
+                            <X type="integer">-5120</X>
                             <Y type="integer">0</Y>
                             <Z type="integer">0</Z>
                           </Origin>
@@ -429,12 +432,12 @@
                         <Options type="integer">1</Options>
                         <ScreenOutputArea type="map">
                           <Extent type="map">
-                            <X type="integer">3840</X>
-                            <Y type="integer">1080</Y>
+                            <X type="integer">7040</X>
+                            <Y type="integer">1800</Y>
                             <Z type="integer">0</Z>
                           </Extent>
                           <Origin type="map">
-                            <X type="integer">-1920</X>
+                            <X type="integer">-5120</X>
                             <Y type="integer">0</Y>
                             <Z type="integer">0</Z>
                           </Origin>
@@ -492,12 +495,12 @@
                         <Options type="integer">1</Options>
                         <ScreenOutputArea type="map">
                           <Extent type="map">
-                            <X type="integer">3840</X>
-                            <Y type="integer">1080</Y>
+                            <X type="integer">7040</X>
+                            <Y type="integer">1800</Y>
                             <Z type="integer">0</Z>
                           </Extent>
                           <Origin type="map">
-                            <X type="integer">-1920</X>
+                            <X type="integer">-5120</X>
                             <Y type="integer">0</Y>
                             <Z type="integer">0</Z>
                           </Origin>
@@ -592,12 +595,12 @@
                         <Options type="integer">1</Options>
                         <ScreenOutputArea type="map">
                           <Extent type="map">
-                            <X type="integer">3840</X>
-                            <Y type="integer">1080</Y>
+                            <X type="integer">7040</X>
+                            <Y type="integer">1800</Y>
                             <Z type="integer">0</Z>
                           </Extent>
                           <Origin type="map">
-                            <X type="integer">-1920</X>
+                            <X type="integer">-5120</X>
                             <Y type="integer">0</Y>
                             <Z type="integer">0</Z>
                           </Origin>
@@ -655,12 +658,12 @@
                         <Options type="integer">1</Options>
                         <ScreenOutputArea type="map">
                           <Extent type="map">
-                            <X type="integer">3840</X>
-                            <Y type="integer">1080</Y>
+                            <X type="integer">7040</X>
+                            <Y type="integer">1800</Y>
                             <Z type="integer">0</Z>
                           </Extent>
                           <Origin type="map">
-                            <X type="integer">-1920</X>
+                            <X type="integer">-5120</X>
                             <Y type="integer">0</Y>
                             <Z type="integer">0</Z>
                           </Origin>
@@ -718,12 +721,12 @@
                         <Options type="integer">1</Options>
                         <ScreenOutputArea type="map">
                           <Extent type="map">
-                            <X type="integer">3840</X>
-                            <Y type="integer">1080</Y>
+                            <X type="integer">7040</X>
+                            <Y type="integer">1800</Y>
                             <Z type="integer">0</Z>
                           </Extent>
                           <Origin type="map">
-                            <X type="integer">-1920</X>
+                            <X type="integer">-5120</X>
                             <Y type="integer">0</Y>
                             <Z type="integer">0</Z>
                           </Origin>
@@ -830,7 +833,7 @@
                         </ScreenOutputArea>
                         <SensitivityX type="double">1.000000</SensitivityX>
                         <SensitivityY type="double">1.000000</SensitivityY>
-                        <WhichMonitor type="string">\\?\DISPLAY#BNQ7840#5&amp;8fb9b9b&amp;0&amp;UID4353#{e6f07b5f-ee97-4a90-b076-33f57bf4eaa7}</WhichMonitor>
+                        <WhichMonitor type="string">\\?\DISPLAY#BNQ7840#5&amp;8fb9b9b&amp;0&amp;UID4359#{e6f07b5f-ee97-4a90-b076-33f57bf4eaa7}</WhichMonitor>
                       </ScreenArea>
                     </ArrayElement>
                     <ArrayElement type="map">
@@ -845,12 +848,12 @@
                         <Options type="integer">32784</Options>
                         <OverlapArea type="map">
                           <Extent type="map">
-                            <X type="integer">30400</X>
-                            <Y type="integer">8550</Y>
+                            <X type="integer">55733</X>
+                            <Y type="integer">14250</Y>
                             <Z type="integer">0</Z>
                           </Extent>
                           <Origin type="map">
-                            <X type="integer">-15200</X>
+                            <X type="integer">-40533</X>
                             <Y type="integer">0</Y>
                             <Z type="integer">0</Z>
                           </Origin>
@@ -893,7 +896,7 @@
                         </ScreenOutputArea>
                         <SensitivityX type="double">1.000000</SensitivityX>
                         <SensitivityY type="double">1.000000</SensitivityY>
-                        <WhichMonitor type="string">\\?\DISPLAY#BNQ7840#5&amp;8fb9b9b&amp;0&amp;UID4353#{e6f07b5f-ee97-4a90-b076-33f57bf4eaa7}</WhichMonitor>
+                        <WhichMonitor type="string">\\?\DISPLAY#BNQ7840#5&amp;8fb9b9b&amp;0&amp;UID4359#{e6f07b5f-ee97-4a90-b076-33f57bf4eaa7}</WhichMonitor>
                       </ScreenArea>
                     </ArrayElement>
                     <ArrayElement type="map">
@@ -908,26 +911,26 @@
                         <Options type="integer">32784</Options>
                         <OverlapArea type="map">
                           <Extent type="map">
-                            <X type="integer">16074</X>
-                            <Y type="integer">4520</Y>
+                            <X type="integer">29465</X>
+                            <Y type="integer">7533</Y>
                             <Z type="integer">0</Z>
                           </Extent>
                           <Origin type="map">
-                            <X type="integer">-7688</X>
-                            <Y type="integer">1407</Y>
+                            <X type="integer">-21429</X>
+                            <Y type="integer">527</Y>
                             <Z type="integer">0</Z>
                           </Origin>
                         </OverlapArea>
                         <PacketRate type="integer">100</PacketRate>
                         <TabletInputArea type="map">
                           <Extent type="map">
-                            <X type="integer">8037</X>
+                            <X type="integer">8036</X>
                             <Y type="integer">4750</Y>
                             <Z type="integer">0</Z>
                           </Extent>
                           <Origin type="map">
-                            <X type="integer">349</X>
-                            <Y type="integer">1407</Y>
+                            <X type="integer">0</X>
+                            <Y type="integer">527</Y>
                             <Z type="integer">0</Z>
                           </Origin>
                         </TabletInputArea>
@@ -956,7 +959,7 @@
                         </ScreenOutputArea>
                         <SensitivityX type="double">1.000000</SensitivityX>
                         <SensitivityY type="double">1.000000</SensitivityY>
-                        <WhichMonitor type="string">\\?\DISPLAY#BNQ7840#5&amp;8fb9b9b&amp;0&amp;UID4353#{e6f07b5f-ee97-4a90-b076-33f57bf4eaa7}</WhichMonitor>
+                        <WhichMonitor type="string">\\?\DISPLAY#BNQ7840#5&amp;8fb9b9b&amp;0&amp;UID4359#{e6f07b5f-ee97-4a90-b076-33f57bf4eaa7}</WhichMonitor>
                       </ScreenArea>
                     </ArrayElement>
                   </InputScreenAreaArray>
@@ -1050,12 +1053,12 @@
                         <Options type="integer">1</Options>
                         <ScreenOutputArea type="map">
                           <Extent type="map">
-                            <X type="integer">3840</X>
-                            <Y type="integer">1080</Y>
+                            <X type="integer">7040</X>
+                            <Y type="integer">1800</Y>
                             <Z type="integer">0</Z>
                           </Extent>
                           <Origin type="map">
-                            <X type="integer">-1920</X>
+                            <X type="integer">-5120</X>
                             <Y type="integer">0</Y>
                             <Z type="integer">0</Z>
                           </Origin>
@@ -1113,12 +1116,12 @@
                         <Options type="integer">1</Options>
                         <ScreenOutputArea type="map">
                           <Extent type="map">
-                            <X type="integer">3840</X>
-                            <Y type="integer">1080</Y>
+                            <X type="integer">7040</X>
+                            <Y type="integer">1800</Y>
                             <Z type="integer">0</Z>
                           </Extent>
                           <Origin type="map">
-                            <X type="integer">-1920</X>
+                            <X type="integer">-5120</X>
                             <Y type="integer">0</Y>
                             <Z type="integer">0</Z>
                           </Origin>
@@ -1176,12 +1179,12 @@
                         <Options type="integer">1</Options>
                         <ScreenOutputArea type="map">
                           <Extent type="map">
-                            <X type="integer">3840</X>
-                            <Y type="integer">1080</Y>
+                            <X type="integer">7040</X>
+                            <Y type="integer">1800</Y>
                             <Z type="integer">0</Z>
                           </Extent>
                           <Origin type="map">
-                            <X type="integer">-1920</X>
+                            <X type="integer">-5120</X>
                             <Y type="integer">0</Y>
                             <Z type="integer">0</Z>
                           </Origin>
@@ -1276,12 +1279,12 @@
                         <Options type="integer">1</Options>
                         <ScreenOutputArea type="map">
                           <Extent type="map">
-                            <X type="integer">3840</X>
-                            <Y type="integer">1080</Y>
+                            <X type="integer">7040</X>
+                            <Y type="integer">1800</Y>
                             <Z type="integer">0</Z>
                           </Extent>
                           <Origin type="map">
-                            <X type="integer">-1920</X>
+                            <X type="integer">-5120</X>
                             <Y type="integer">0</Y>
                             <Z type="integer">0</Z>
                           </Origin>
@@ -1339,12 +1342,12 @@
                         <Options type="integer">1</Options>
                         <ScreenOutputArea type="map">
                           <Extent type="map">
-                            <X type="integer">3840</X>
-                            <Y type="integer">1080</Y>
+                            <X type="integer">7040</X>
+                            <Y type="integer">1800</Y>
                             <Z type="integer">0</Z>
                           </Extent>
                           <Origin type="map">
-                            <X type="integer">-1920</X>
+                            <X type="integer">-5120</X>
                             <Y type="integer">0</Y>
                             <Z type="integer">0</Z>
                           </Origin>
@@ -1402,12 +1405,12 @@
                         <Options type="integer">1</Options>
                         <ScreenOutputArea type="map">
                           <Extent type="map">
-                            <X type="integer">3840</X>
-                            <Y type="integer">1080</Y>
+                            <X type="integer">7040</X>
+                            <Y type="integer">1800</Y>
                             <Z type="integer">0</Z>
                           </Extent>
                           <Origin type="map">
-                            <X type="integer">-1920</X>
+                            <X type="integer">-5120</X>
                             <Y type="integer">0</Y>
                             <Z type="integer">0</Z>
                           </Origin>
@@ -1502,12 +1505,12 @@
                         <Options type="integer">1</Options>
                         <ScreenOutputArea type="map">
                           <Extent type="map">
-                            <X type="integer">3840</X>
-                            <Y type="integer">1080</Y>
+                            <X type="integer">7040</X>
+                            <Y type="integer">1800</Y>
                             <Z type="integer">0</Z>
                           </Extent>
                           <Origin type="map">
-                            <X type="integer">-1920</X>
+                            <X type="integer">-5120</X>
                             <Y type="integer">0</Y>
                             <Z type="integer">0</Z>
                           </Origin>
@@ -1565,12 +1568,12 @@
                         <Options type="integer">1</Options>
                         <ScreenOutputArea type="map">
                           <Extent type="map">
-                            <X type="integer">3840</X>
-                            <Y type="integer">1080</Y>
+                            <X type="integer">7040</X>
+                            <Y type="integer">1800</Y>
                             <Z type="integer">0</Z>
                           </Extent>
                           <Origin type="map">
-                            <X type="integer">-1920</X>
+                            <X type="integer">-5120</X>
                             <Y type="integer">0</Y>
                             <Z type="integer">0</Z>
                           </Origin>
@@ -1628,12 +1631,12 @@
                         <Options type="integer">1</Options>
                         <ScreenOutputArea type="map">
                           <Extent type="map">
-                            <X type="integer">3840</X>
-                            <Y type="integer">1080</Y>
+                            <X type="integer">7040</X>
+                            <Y type="integer">1800</Y>
                             <Z type="integer">0</Z>
                           </Extent>
                           <Origin type="map">
-                            <X type="integer">-1920</X>
+                            <X type="integer">-5120</X>
                             <Y type="integer">0</Y>
                             <Z type="integer">0</Z>
                           </Origin>
@@ -1755,12 +1758,12 @@
                         <Options type="integer">32784</Options>
                         <OverlapArea type="map">
                           <Extent type="map">
-                            <X type="integer">30400</X>
-                            <Y type="integer">8550</Y>
+                            <X type="integer">55733</X>
+                            <Y type="integer">14250</Y>
                             <Z type="integer">0</Z>
                           </Extent>
                           <Origin type="map">
-                            <X type="integer">-15200</X>
+                            <X type="integer">-40533</X>
                             <Y type="integer">0</Y>
                             <Z type="integer">0</Z>
                           </Origin>
@@ -1818,12 +1821,12 @@
                         <Options type="integer">32784</Options>
                         <OverlapArea type="map">
                           <Extent type="map">
-                            <X type="integer">16772</X>
-                            <Y type="integer">4717</Y>
+                            <X type="integer">30748</X>
+                            <Y type="integer">7861</Y>
                             <Z type="integer">0</Z>
                           </Extent>
                           <Origin type="map">
-                            <X type="integer">-6639</X>
+                            <X type="integer">-20615</X>
                             <Y type="integer">527</Y>
                             <Z type="integer">0</Z>
                           </Origin>
@@ -2385,6 +2388,7 @@
         </LandscapeMultiPointCalibration>
         <LowPowerTimeout type="double">120.000000</LowPowerTimeout>
         <MaxDataRateOn type="bool">true</MaxDataRateOn>
+        <PenButtonPanScrollingFactor type="double">3.000000</PenButtonPanScrollingFactor>
         <PortraitMultiPointCalibration type="map">
           <IsSet type="bool">false</IsSet>
           <MatrixColumnCount type="integer">5</MatrixColumnCount>
@@ -2543,11 +2547,12 @@
           <TabletSizeY type="integer">9500</TabletSizeY>
         </PortraitMultiPointCalibration>
         <ReduceTouchSensitivity type="bool">false</ReduceTouchSensitivity>
+        <RotateScale type="double">1.000000</RotateScale>
         <SensorID type="integer">90833678</SensorID>
         <TabletAppTouchFunctions type="array"/>
         <TabletCommInterface type="map">
           <BTDeviceAddress type="string"/>
-          <CommPort type="string">\\?\HID#VID_056A&amp;PID_030E&amp;COL02#6&amp;212692D5&amp;0&amp;0001#{4D1E55B2-F16F-11CF-88CB-001111000030}</CommPort>
+          <CommPort type="string">\\?\HID#VID_056A&amp;PID_030E&amp;COL02#6&amp;212692D5&amp;1&amp;0001#{4D1E55B2-F16F-11CF-88CB-001111000030}</CommPort>
         </TabletCommInterface>
         <TabletControlContainerArray type="array">
           <ArrayElement type="map">
@@ -2764,24 +2769,24 @@
                   <Last type="string">Sat Nov 18 01:16:31 2017</Last>
                 </EAutoErase>
                 <ELeftClick type="map">
-                  <Count type="integer">639</Count>
-                  <Last type="string">Tue Jan 16 20:02:55 2018</Last>
+                  <Count type="integer">653</Count>
+                  <Last type="string">Sat May 26 11:50:47 2018</Last>
                 </ELeftClick>
                 <ENone type="map">
                   <Count type="integer">2</Count>
                   <Last type="string">Fri Dec 15 19:37:35 2017</Last>
                 </ENone>
                 <MaxForStroke type="map">
-                  <L25 type="integer">97</L25>
+                  <L25 type="integer">99</L25>
                   <L33 type="integer">5</L33>
-                  <L50 type="integer">7</L50>
+                  <L50 type="integer">8</L50>
                   <L60 type="integer">4</L60>
-                  <L70 type="integer">6</L70>
+                  <L70 type="integer">8</L70>
                   <L80 type="integer">9</L80>
                   <L85 type="integer">6</L85>
                   <L90 type="integer">2</L90>
                   <L95 type="integer">1</L95>
-                  <Last type="string">Wed Jan 17 22:10:28 2018</Last>
+                  <Last type="string">Sat May 26 11:50:47 2018</Last>
                   <M95 type="integer">7</M95>
                 </MaxForStroke>
               </Usage>
@@ -2813,8 +2818,8 @@
                   <Last type="string">Sun Dec 17 21:57:52 2017</Last>
                 </ELeftClick>
                 <ENone type="map">
-                  <Count type="integer">15233</Count>
-                  <Last type="string">Tue Jan 23 20:22:35 2018</Last>
+                  <Count type="integer">15238</Count>
+                  <Last type="string">Sun May 27 00:27:38 2018</Last>
                 </ENone>
                 <EPenRotate type="map">
                   <Count type="integer">19</Count>
@@ -2842,21 +2847,21 @@
                   <Last type="string">Sun Dec 10 13:20:34 2017</Last>
                 </ELeftClick>
                 <ENone type="map">
-                  <Count type="integer">11503</Count>
-                  <Last type="string">Tue Jan 30 16:58:28 2018</Last>
+                  <Count type="integer">11729</Count>
+                  <Last type="string">Sun May 27 00:28:02 2018</Last>
                 </ENone>
                 <MaxForStroke type="map">
-                  <L25 type="integer">1578</L25>
-                  <L33 type="integer">142</L33>
-                  <L50 type="integer">289</L50>
-                  <L60 type="integer">317</L60>
-                  <L70 type="integer">398</L70>
-                  <L80 type="integer">570</L80>
-                  <L85 type="integer">333</L85>
-                  <L90 type="integer">389</L90>
-                  <L95 type="integer">521</L95>
-                  <Last type="string">Tue Jan 30 16:58:28 2018</Last>
-                  <M95 type="integer">2231</M95>
+                  <L25 type="integer">1588</L25>
+                  <L33 type="integer">143</L33>
+                  <L50 type="integer">296</L50>
+                  <L60 type="integer">329</L60>
+                  <L70 type="integer">408</L70>
+                  <L80 type="integer">579</L80>
+                  <L85 type="integer">343</L85>
+                  <L90 type="integer">404</L90>
+                  <L95 type="integer">527</L95>
+                  <Last type="string">Sun May 27 00:28:02 2018</Last>
+                  <M95 type="integer">2239</M95>
                 </MaxForStroke>
               </Usage>
             </TransducerTipButtonSettings>
@@ -2879,8 +2884,8 @@
                   <Last type="string">Fri Dec 15 19:34:52 2017</Last>
                 </EMiddleClick>
                 <ENone type="map">
-                  <Count type="integer">3487</Count>
-                  <Last type="string">Tue Jan 23 20:22:47 2018</Last>
+                  <Count type="integer">3572</Count>
+                  <Last type="string">Sun May 27 00:23:31 2018</Last>
                 </ENone>
                 <EPenRotate type="map">
                   <Count type="integer">0</Count>
@@ -2939,6 +2944,8 @@
         <TabletType type="integer">25</TabletType>
         <TabletXDimension type="integer">15200</TabletXDimension>
         <TabletYDimension type="integer">9500</TabletYDimension>
+        <WheelScale type="double">6.000000</WheelScale>
+        <ZoomScale type="double">1.000000</ZoomScale>
       </ArrayElement>
     </TabletArray>
     <TabletAwareApplicationInterface type="map">
@@ -6790,7 +6797,7 @@
               <PlatformSpeed type="double">0.500000</PlatformSpeed>
             </PublisherFilter>
           </FilterList>
-          <HIDInstanceID type="string">\\?\hid#vid_056a&amp;pid_030e&amp;col05#6&amp;212692d5&amp;0&amp;0004#{4d1e55b2-f16f-11cf-88cb-001111000030}</HIDInstanceID>
+          <HIDInstanceID type="string">\\?\hid#vid_056a&amp;pid_030e&amp;col05#6&amp;212692d5&amp;1&amp;0004#{4d1e55b2-f16f-11cf-88cb-001111000030}</HIDInstanceID>
           <LeftHandedMode type="integer">0</LeftHandedMode>
           <LogicalExtents type="map">
             <x type="integer">4096</x>
