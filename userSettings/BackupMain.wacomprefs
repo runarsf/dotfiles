@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <root type="map">
   <Metadata type="map">
-    <Created type="string">Sun May 27 00:30:59 2018</Created>
+    <Created type="string">Sat Jun  2 18:52:06 2018</Created>
     <Name type="map">
       <PenFile type="string">C:\Users\rufus\AppData\Roaming\WTablet\Wacom_Tablet.dat</PenFile>
       <TouchFile type="string">C:\Users\rufus\AppData\Roaming\WTablet\WacomTouch.xml</TouchFile>
     </Name>
     <Version type="map">
-      <PenFile type="string">6.3.29-6</PenFile>
-      <TouchFile type="string">6.3.29-6</TouchFile>
+      <PenFile type="string">6.3.30-2</PenFile>
+      <TouchFile type="string">6.3.30-2</TouchFile>
     </Version>
   </Metadata>
   <PenFile type="map">
     <CPLLastApp type="integer">0</CPLLastApp>
     <CPLLastPosition type="map">
-      <X type="integer">617</X>
-      <Y type="integer">277</Y>
+      <X type="integer">-592</X>
+      <Y type="integer">115</Y>
       <Z type="integer">0</Z>
     </CPLLastPosition>
     <CPLLastTabPane type="integer">0</CPLLastTabPane>
-    <CPLOpened type="string">Sun May 27 00:30:46 2018</CPLOpened>
+    <CPLOpened type="string">Sat Jun  2 18:20:26 2018</CPLOpened>
     <Created type="string">Mon Sep 11 20:01:26 2017</Created>
     <DisplayAsserts type="bool">false</DisplayAsserts>
     <DisplayBrightness type="integer">6</DisplayBrightness>
@@ -848,12 +848,12 @@
                         <Options type="integer">32784</Options>
                         <OverlapArea type="map">
                           <Extent type="map">
-                            <X type="integer">55733</X>
-                            <Y type="integer">14250</Y>
+                            <X type="integer">15200</X>
+                            <Y type="integer">9500</Y>
                             <Z type="integer">0</Z>
                           </Extent>
                           <Origin type="map">
-                            <X type="integer">-40533</X>
+                            <X type="integer">0</X>
                             <Y type="integer">0</Y>
                             <Z type="integer">0</Z>
                           </Origin>
@@ -911,26 +911,26 @@
                         <Options type="integer">32784</Options>
                         <OverlapArea type="map">
                           <Extent type="map">
-                            <X type="integer">29465</X>
-                            <Y type="integer">7533</Y>
+                            <X type="integer">8211</X>
+                            <Y type="integer">5102</Y>
                             <Z type="integer">0</Z>
                           </Extent>
                           <Origin type="map">
-                            <X type="integer">-21429</X>
-                            <Y type="integer">527</Y>
+                            <X type="integer">0</X>
+                            <Y type="integer">351</Y>
                             <Z type="integer">0</Z>
                           </Origin>
                         </OverlapArea>
                         <PacketRate type="integer">100</PacketRate>
                         <TabletInputArea type="map">
                           <Extent type="map">
-                            <X type="integer">8036</X>
-                            <Y type="integer">4750</Y>
+                            <X type="integer">8211</X>
+                            <Y type="integer">5102</Y>
                             <Z type="integer">0</Z>
                           </Extent>
                           <Origin type="map">
                             <X type="integer">0</X>
-                            <Y type="integer">527</Y>
+                            <Y type="integer">351</Y>
                             <Z type="integer">0</Z>
                           </Origin>
                         </TabletInputArea>
@@ -1731,12 +1731,12 @@
                         <Options type="integer">1</Options>
                         <ScreenOutputArea type="map">
                           <Extent type="map">
-                            <X type="integer">1920</X>
-                            <Y type="integer">1080</Y>
+                            <X type="integer">7040</X>
+                            <Y type="integer">1800</Y>
                             <Z type="integer">0</Z>
                           </Extent>
                           <Origin type="map">
-                            <X type="integer">0</X>
+                            <X type="integer">-5120</X>
                             <Y type="integer">0</Y>
                             <Z type="integer">0</Z>
                           </Origin>
@@ -1758,12 +1758,12 @@
                         <Options type="integer">32784</Options>
                         <OverlapArea type="map">
                           <Extent type="map">
-                            <X type="integer">55733</X>
-                            <Y type="integer">14250</Y>
+                            <X type="integer">15200</X>
+                            <Y type="integer">9500</Y>
                             <Z type="integer">0</Z>
                           </Extent>
                           <Origin type="map">
-                            <X type="integer">-40533</X>
+                            <X type="integer">0</X>
                             <Y type="integer">0</Y>
                             <Z type="integer">0</Z>
                           </Origin>
@@ -1794,12 +1794,12 @@
                         <Options type="integer">1</Options>
                         <ScreenOutputArea type="map">
                           <Extent type="map">
-                            <X type="integer">1920</X>
-                            <Y type="integer">1080</Y>
+                            <X type="integer">7040</X>
+                            <Y type="integer">1800</Y>
                             <Z type="integer">0</Z>
                           </Extent>
                           <Origin type="map">
-                            <X type="integer">0</X>
+                            <X type="integer">-5120</X>
                             <Y type="integer">0</Y>
                             <Z type="integer">0</Z>
                           </Origin>
@@ -1821,12 +1821,12 @@
                         <Options type="integer">32784</Options>
                         <OverlapArea type="map">
                           <Extent type="map">
-                            <X type="integer">30748</X>
-                            <Y type="integer">7861</Y>
+                            <X type="integer">8386</X>
+                            <Y type="integer">4926</Y>
                             <Z type="integer">0</Z>
                           </Extent>
                           <Origin type="map">
-                            <X type="integer">-20615</X>
+                            <X type="integer">1747</X>
                             <Y type="integer">527</Y>
                             <Z type="integer">0</Z>
                           </Origin>
@@ -1857,12 +1857,12 @@
                         <Options type="integer">1</Options>
                         <ScreenOutputArea type="map">
                           <Extent type="map">
-                            <X type="integer">1920</X>
-                            <Y type="integer">1080</Y>
+                            <X type="integer">7040</X>
+                            <Y type="integer">1800</Y>
                             <Z type="integer">0</Z>
                           </Extent>
                           <Origin type="map">
-                            <X type="integer">0</X>
+                            <X type="integer">-5120</X>
                             <Y type="integer">0</Y>
                             <Z type="integer">0</Z>
                           </Origin>
@@ -2389,6 +2389,7 @@
         <LowPowerTimeout type="double">120.000000</LowPowerTimeout>
         <MaxDataRateOn type="bool">true</MaxDataRateOn>
         <PenButtonPanScrollingFactor type="double">3.000000</PenButtonPanScrollingFactor>
+        <PenButtonZoomFactor type="double">1.000000</PenButtonZoomFactor>
         <PortraitMultiPointCalibration type="map">
           <IsSet type="bool">false</IsSet>
           <MatrixColumnCount type="integer">5</MatrixColumnCount>
@@ -2548,6 +2549,7 @@
         </PortraitMultiPointCalibration>
         <ReduceTouchSensitivity type="bool">false</ReduceTouchSensitivity>
         <RotateScale type="double">1.000000</RotateScale>
+        <ScrollScale type="double">3.000000</ScrollScale>
         <SensorID type="integer">90833678</SensorID>
         <TabletAppTouchFunctions type="array"/>
         <TabletCommInterface type="map">
@@ -2777,7 +2779,7 @@
                   <Last type="string">Fri Dec 15 19:37:35 2017</Last>
                 </ENone>
                 <MaxForStroke type="map">
-                  <L25 type="integer">99</L25>
+                  <L25 type="integer">104</L25>
                   <L33 type="integer">5</L33>
                   <L50 type="integer">8</L50>
                   <L60 type="integer">4</L60>
@@ -2786,7 +2788,7 @@
                   <L85 type="integer">6</L85>
                   <L90 type="integer">2</L90>
                   <L95 type="integer">1</L95>
-                  <Last type="string">Sat May 26 11:50:47 2018</Last>
+                  <Last type="string">Sat Jun  2 18:48:31 2018</Last>
                   <M95 type="integer">7</M95>
                 </MaxForStroke>
               </Usage>
@@ -2818,8 +2820,8 @@
                   <Last type="string">Sun Dec 17 21:57:52 2017</Last>
                 </ELeftClick>
                 <ENone type="map">
-                  <Count type="integer">15238</Count>
-                  <Last type="string">Sun May 27 00:27:38 2018</Last>
+                  <Count type="integer">15266</Count>
+                  <Last type="string">Sat Jun  2 18:50:55 2018</Last>
                 </ENone>
                 <EPenRotate type="map">
                   <Count type="integer">19</Count>
@@ -2847,21 +2849,21 @@
                   <Last type="string">Sun Dec 10 13:20:34 2017</Last>
                 </ELeftClick>
                 <ENone type="map">
-                  <Count type="integer">11729</Count>
-                  <Last type="string">Sun May 27 00:28:02 2018</Last>
+                  <Count type="integer">12342</Count>
+                  <Last type="string">Sat Jun  2 18:51:48 2018</Last>
                 </ENone>
                 <MaxForStroke type="map">
-                  <L25 type="integer">1588</L25>
-                  <L33 type="integer">143</L33>
-                  <L50 type="integer">296</L50>
-                  <L60 type="integer">329</L60>
-                  <L70 type="integer">408</L70>
-                  <L80 type="integer">579</L80>
-                  <L85 type="integer">343</L85>
-                  <L90 type="integer">404</L90>
-                  <L95 type="integer">527</L95>
-                  <Last type="string">Sun May 27 00:28:02 2018</Last>
-                  <M95 type="integer">2239</M95>
+                  <L25 type="integer">1616</L25>
+                  <L33 type="integer">147</L33>
+                  <L50 type="integer">309</L50>
+                  <L60 type="integer">346</L60>
+                  <L70 type="integer">430</L70>
+                  <L80 type="integer">612</L80>
+                  <L85 type="integer">355</L85>
+                  <L90 type="integer">436</L90>
+                  <L95 type="integer">565</L95>
+                  <Last type="string">Sat Jun  2 18:51:48 2018</Last>
+                  <M95 type="integer">2266</M95>
                 </MaxForStroke>
               </Usage>
             </TransducerTipButtonSettings>
@@ -2884,8 +2886,8 @@
                   <Last type="string">Fri Dec 15 19:34:52 2017</Last>
                 </EMiddleClick>
                 <ENone type="map">
-                  <Count type="integer">3572</Count>
-                  <Last type="string">Sun May 27 00:23:31 2018</Last>
+                  <Count type="integer">3892</Count>
+                  <Last type="string">Sat Jun  2 18:50:01 2018</Last>
                 </ENone>
                 <EPenRotate type="map">
                   <Count type="integer">0</Count>
