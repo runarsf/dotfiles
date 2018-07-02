@@ -361,7 +361,7 @@ Note:        I don't claim any ownership of this theme. It is merely a replica o
             <WordsStyle name="OPERATOR" styleID="10" fgColor="9B9B9B" bgColor="1E1E1E" fontName="" fontStyle="0" fontSize="" />
             <WordsStyle name="FUNC1" styleID="13" fgColor="C8C8C8" bgColor="1E1E1E" fontName="" fontStyle="0" fontSize="" keywordClass="instre2" />
             <WordsStyle name="FUNC2" styleID="14" fgColor="C8C8C8" bgColor="1E1E1E" fontName="" fontStyle="0" fontSize="" keywordClass="type1" />
-            <WordsStyle name="FUNC3" styleID="15" fgColor="C8C8C8" bgColor="1E1E1E" fontName="" fontStyle="0" fontSize="" keywordClass="type2" />
+            <WordsStyle name="FUNC3" styleID="15" fgColor="C8C8C8" bgColor="1E1E1E" fontName="" fontStyle="0" fontSize="" keywordClass="type2">param @projectDescription projectDescription @param</WordsStyle>
         </LexerType>
         <LexerType name="tex" desc="TeX" ext="">
             <WordsStyle name="DEFAULT" styleID="0" fgColor="C8C8C8" bgColor="1E1E1E" fontName="" fontStyle="0" fontSize="" />
@@ -714,7 +714,7 @@ Note:        I don't claim any ownership of this theme. It is merely a replica o
             <WordsStyle name="Search Header" styleID="1" fgColor="569CD6" bgColor="1E1E1E" fontName="" fontStyle="1" fontSize="" />
             <WordsStyle name="File Header" styleID="2" fgColor="92CAF4" bgColor="1E1E1E" fontName="" fontStyle="1" fontSize="" />
             <WordsStyle name="Line Number" styleID="3" fgColor="2B91AF" bgColor="1E1E1E" fontName="" fontStyle="0" fontSize="" />
-            <WordsStyle name="Hit Word" styleID="4" fgColor="C8C8C8" bgColor="113D6F" fontName="" fontStyle="0" fontSize="" />
+            <WordsStyle name="Hit Word" styleID="4" fgColor="C8C8C8" bgColor="113D6F" fontName="" fontStyle="0" fontSize="">if else for while</WordsStyle>
             <WordsStyle name="Selected Line" styleID="5" fgColor="C8C8C8" bgColor="000000" fontName="" fontStyle="0" fontSize="">if else for while</WordsStyle>
             <WordsStyle name="Current line background colour" styleID="6" fgColor="C8C8C8" bgColor="000000" fontStyle="0" fontSize="">bool long int char</WordsStyle>
         </LexerType>
@@ -724,8 +724,8 @@ Note:        I don't claim any ownership of this theme. It is merely a replica o
             <WordsStyle name="KEYWORD" styleID="3" fgColor="92CAF4" bgColor="1E1E1E" fontName="" fontStyle="0" fontSize="" />
             <WordsStyle name="NUMBER" styleID="4" fgColor="D69D85" bgColor="1E1E1E" fontName="" fontStyle="0" fontSize="">true false TRUE FALSE False True</WordsStyle>
             <WordsStyle name="REFERENCE" styleID="5" fgColor="CB4141" bgColor="1E1E1E" fontName="" fontStyle="0" fontSize="" />
-            <WordsStyle name="DOCUMENT HEADER" styleID="6" fgColor="559CD6" bgColor="1E1E1E" fontName="" fontStyle="1" fontSize="" />
-            <WordsStyle name="SCALAR" styleID="7" fgColor="D69D85" bgColor="1E1E1E" fontName="" fontStyle="0" fontSize="" />
+            <WordsStyle name="DOCUMENT HEADER" styleID="6" fgColor="559CD6" bgColor="1E1E1E" fontName="" fontStyle="1" fontSize="">if else for while</WordsStyle>
+            <WordsStyle name="SCALAR" styleID="7" fgColor="D69D85" bgColor="1E1E1E" fontName="" fontStyle="0" fontSize="">bool long int char</WordsStyle>
             <WordsStyle name="TEXT" styleID="8" fgColor="D69D85" bgColor="1E1E1E" fontName="" fontStyle="0" fontSize="" />
             <WordsStyle name="OPERATOR" styleID="9" fgColor="B4B4B4" bgColor="1E1E1E" fontName="" fontStyle="0" fontSize="" />
             <WordsStyle name="DEFAULT" styleID="0" fgColor="D69D85" bgColor="1E1E1E" fontName="" fontStyle="0" fontSize="" />
@@ -735,8 +735,8 @@ Note:        I don't claim any ownership of this theme. It is merely a replica o
             <WordsStyle name="COLOR_DEBUG" styleID="1" fgColor="B6DAA7" bgColor="1E1E1E" fontName="" fontStyle="0" fontSize="" keywordClass="1" />
             <WordsStyle name="COLOR_INFO" styleID="2" fgColor="ABA7DA" bgColor="1E1E1E" fontName="" fontStyle="0" fontSize="" keywordClass="2" />
             <WordsStyle name="COLOR_WARNING" styleID="3" fgColor="FFC600" bgColor="1E1E1E" fontName="" fontStyle="0" fontSize="" keywordClass="3" />
-            <WordsStyle name="COLOR_ERROR" styleID="4" fgColor="FF4F4F" bgColor="1E1E1E" fontName="" fontStyle="1" fontSize="" keywordClass="4" />
-            <WordsStyle name="COLOR_USER_LEVEL" styleID="5" fgColor="FF0000" bgColor="1E1E1E" fontName="" fontStyle="0" fontSize="" keywordClass="5" />
+            <WordsStyle name="COLOR_ERROR" styleID="4" fgColor="FF4F4F" bgColor="1E1E1E" fontName="" fontStyle="1" fontSize="" keywordClass="4">if else for while</WordsStyle>
+            <WordsStyle name="COLOR_USER_LEVEL" styleID="5" fgColor="FF0000" bgColor="1E1E1E" fontName="" fontStyle="0" fontSize="" keywordClass="5">bool long int char</WordsStyle>
             <WordsStyle name="COLOR_USER_TAG1" styleID="6" fgColor="FF4F4F" bgColor="1E1E1E" fontName="" fontStyle="1" fontSize="" keywordClass="6">XXX</WordsStyle>
             <WordsStyle name="COLOR_USER_TAG2" styleID="7" fgColor="FF4F4F" bgColor="1E1E1E" fontName="" fontStyle="1" fontSize="" keywordClass="7" />
             <WordsStyle name="COLOR_USER_TAG3" styleID="8" fgColor="FFC600" bgColor="1E1E1E" fontName="" fontStyle="0" fontSize="" keywordClass="8" />
@@ -744,7 +744,7 @@ Note:        I don't claim any ownership of this theme. It is merely a replica o
     </LexerStyles>
     <GlobalStyles>
         <!-- Attention : Don't modify the name of styleID="0" -->
-        <WidgetStyle name="Global override" styleID="0" fgColor="F1F2F3" bgColor="1E1E1E" fontName="Source Code Pro" fontStyle="0" fontSize="11" />
+        <WidgetStyle name="Global override" styleID="0" fgColor="F1F2F3" bgColor="1E1E1E" fontName="Consolas" fontStyle="0" fontSize="11" />
         <WidgetStyle name="Default Style" styleID="32" fgColor="F1F2F3" bgColor="1E1E1E" fontName="Consolas" fontStyle="0" fontSize="10" />
         <WidgetStyle name="Indent guideline style" styleID="37" fgColor="696969" bgColor="1E1E1E" fontName="" fontStyle="0" fontSize="" />
         <WidgetStyle name="Brace highlight style" styleID="34" fgColor="DCDCDC" bgColor="264F78" fontName="" fontStyle="1" fontSize="" />
