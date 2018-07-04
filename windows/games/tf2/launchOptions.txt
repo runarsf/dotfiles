@@ -1,1 +1,0 @@
--dxlevel 81 -windowed -noborder -noipx -novid -nojoy -sw -w 1920 -h 1080 -tickrate 128 +exec autoexec -console -high -nosteamcontroller
