@@ -1,0 +1,42 @@
+URxvt*background:			#142c33
+URxvt*foreground:			#c9b9b9
+URxvt*cursorColor:			#c9b9b9
+
+URxvt*scrollColor:			#d6d6d6
+URxvt*highlightColor:			#3B758C
+URxvt*highlightTextColor:		#43a5d5
+
+URxvt*color0:				#142c33
+URxvt*color1:				#e58e5d
+URxvt*color2:				#5f8262
+URxvt*color3:				#c1b141
+URxvt*color4:				#3a6a92
+URxvt*color5:				#bd6598
+URxvt*color6:				#4a9dad
+URxvt*color7:				#c9b9b9
+URxvt*color8:				#666666
+URxvt*color9:				#e59e5d
+URxvt*color10:				#5f9262
+URxvt*color11:				#c1b141
+URxvt*color12:				#3a6a92
+URxvt*color13:				#bd6598
+URxvt*color14:				#4a9dad
+URxvt*color15:				#c9b9b9
+
+
+URxvt*color16:				#db7b55
+URxvt*color17:				#8a553f
+URxvt*color18:				#8ec43d
+URxvt*color19:				#3B758C
+URxvt*color20:				#43a5d5
+URxvt*color21:				#eeeeee
+
+Xcursor.size:				16W
+URxvt.urgentOnBell:			true
+URxvt.scrollBar:			false
+URxvt.font:				xft:DejaVu Sans Mono:size=11
+URxvt.depth:				15
+URxvt.url-launcher:			/usr/bin/firefox
+URxvt.matcher.button:			1
+URxvt.letterSpace:			-1
+URxvt.perl-ext-common:			default,matcher,vtwheel
