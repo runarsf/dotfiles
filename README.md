@@ -1,30 +1,14 @@
-# DotFiles
+# dotfiles
 
-A collection of my dotfiles where:
-
-* vim is the editor
-* fish is the shell
-* terminator is the terminal emulator
-* cinnamon is the desktop environment
-
-## PreReq
-
-Install these packges before you run the script:
+## Prerequisites && Requirements
 
 * vim
-* fish
-* terminator
+* zsh
+* oh-my-zsh
+* rofi
+* rxvt-unicode
 * git
 * curl
-* cinnamon
-
-Or if on Ubuntu, fire of the init/ubuntu.sh script to install various software
-
-## Install / Usage
-
-```bash
-git clone https://github.com/gtufte/dotfiles.git
-cd dotfiles
-./dotfiles --help
-```
-
+* i3
+* i3blocks
+* i3lock
