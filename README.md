@@ -3,8 +3,7 @@
 ## Prerequisites && Requirements
 
 * vim
-* zsh
-* oh-my-zsh
+* fish
 * rofi
 * rxvt-unicode
 * git
