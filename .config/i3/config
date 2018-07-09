@@ -89,6 +89,7 @@ assign [class="Firefox"] $ws1
 assign [class="Thunar"] $ws5
 assign [class="Trello"] $ws8
 assign [class="Anydesk"] $ws9
+assign [class="TeamViewer"] $ws9
 assign [class="Rhythmbox"] $ws10
 for_window [class="Spotify"] move to workspace $ws10
 
@@ -143,7 +144,7 @@ hide_edge_borders both
 
 # bar
 bar {
-        status_command i3status
+        status_command i3blocks -c ~/.config/i3/i3blocks.conf
 	colors {
 		background $bg-color
 		separator #757575
@@ -152,13 +153,15 @@ bar {
 		inactive_workspace	$inactive-bg-color	$inactive-bg-color	$inactive-text-color
 		urgent_workspace	$urgent-bg-color	$urgent-bg-color	$text-color
 	}
+	position top
+	separator_symbol "|"
 }
 
 bindsym $mod+d exec rofi -show run -lines 3 -eh 2 -width 100 -padding 450 -opacity "50" -color-enabled -bw 0 -bc "$bg-color" -color-window "$bg-color" -fg "$text-color" -hlbg "$bg-color" -hlfg "#9575cd" -font "System San Francisco Display 18" #rofi
 
-bindsym $mod+Shift+x exec i3lock --color "$bg-color"
+bindsym $mod+Shift+x exec /home/rufus/bin/i3lock.sh
 
 exec anydesk
-exec_always dompton -f
+exec_always compton -f
 exec snap run spotify
 exec_always feh --bg-scale /home/rufus/Pictures/forest.jpg
