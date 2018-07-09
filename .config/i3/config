@@ -92,6 +92,7 @@ assign [class="Anydesk"] $ws9
 assign [class="TeamViewer"] $ws9
 assign [class="Rhythmbox"] $ws10
 for_window [class="Spotify"] move to workspace $ws10
+for_window [class="^.*"] border pixel 0
 
 # reload the configuration file
 bindsym $mod+Shift+c reload
@@ -159,9 +160,13 @@ bar {
 
 bindsym $mod+d exec rofi -show run -lines 3 -eh 2 -width 100 -padding 450 -opacity "50" -color-enabled -bw 0 -bc "$bg-color" -color-window "$bg-color" -fg "$text-color" -hlbg "$bg-color" -hlfg "#9575cd" -font "System San Francisco Display 18" #rofi
 
+gaps inner 5
+gaps outer 1 
+
 bindsym $mod+Shift+x exec /home/rufus/bin/i3lock.sh
 
 exec anydesk
 exec_always compton -f
 exec snap run spotify
+exec_always xrdb -load ~/.Xresources
 exec_always feh --bg-scale /home/rufus/Pictures/forest.jpg

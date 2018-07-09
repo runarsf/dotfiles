@@ -1,6 +1,6 @@
 # ============================================== #
 #
-# PERSONAL ~/.zshrc FILE for UBUNTU
+# PERSONAL ~/.zshrc FILE for FEDORA
 #+ by Runar Fredagsvik [runarsf@protonmail.com]
 #
 # ============================================== #
@@ -14,7 +14,7 @@ esac
 # Path to your oh-my-zsh installation.
   export ZSH=/home/rufus/.oh-my-zsh
 
-ZSH_THEME="robbyrussell"
+ZSH_THEME="muse"
 COMPLETION_WAITING_DOTS="true"
 HIST_STAMPS="dd.mm.yyyy"
 
