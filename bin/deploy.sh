@@ -14,7 +14,8 @@ case $1 in
 		cp ~/.vimrc .
 		cp -r ~/.vim/ .
 		cp -r ~/.urxvt/ .
-		cp -r ~/.fonts/ .
+		cp ~/.fonts/*.ttf ./.fonts/
+		cp ~/.fonts/*.otf ./.fonts/
 
 		cp ~/bin/deploy.sh ./bin/
 		cp ~/bin/i3lock-custom.sh ./bin/
