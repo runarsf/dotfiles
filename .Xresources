@@ -60,8 +60,7 @@ URxvt*cursorColor:  #c5c8c6
 
 !! Transparency
 URxvt*transparent: true
-URxvt*shading: 50
-! URxvt.background: [90]#000000
+URxvt*shading: 40
 
 !! Xft
 Xft.autohint:				0
@@ -96,31 +95,3 @@ URxvt.keysum.M-Escape:			perl:keyboard-select:activate
 !! resize-font
 URxvt.resize-font.smaller:		C-j
 URxvt.resize-font.bigger:		C-k
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
