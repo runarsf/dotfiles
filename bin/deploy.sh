@@ -17,10 +17,7 @@ case $1 in
 		cp ~/.fonts/*.ttf ./.fonts/
 		cp ~/.fonts/*.otf ./.fonts/
 
-		cp ~/bin/deploy.sh ./bin/
-		cp ~/bin/i3lock-custom.sh ./bin/
-		cp ~/bin/loadtheme.sh ./bin/
-		cp ~/bin/prompt.sh ./bin/
+		cp ~/bin/*.sh ./bin/
 
 		cp ~/.config/i3/config ./.config/i3/
 		cp ~/.config/rofi/config ./.config/rofi/

@@ -1,4 +1,4 @@
-#include "~/.xres/urxvt"
+#include "/home/rufus/.xres/urxvt"
 
 ! Common
 #define S_yellow        #b58900
@@ -52,6 +52,7 @@ URxvt*pointerColorForeground:  S_base1
 *color7:       #707880
 *color15:      #c5c8c6
 
+# URxvt*blurRadius: 5
 
 URxvt*foreground:   #c5c8c6
 URxvt*depth: 32
