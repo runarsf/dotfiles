@@ -1,4 +1,8 @@
+
+# Definitions
 set $mod Mod4
+set $hibernate sudo systemctl suspend
+set $shutdown shutdown 0
 
 # Font for window titles.
 font pango:System San Francisco 7
@@ -95,7 +99,6 @@ assign [class="Anydesk"] $ws9
 assign [class="TeamViewer"] $ws9
 assign [class="Rhythmbox"] $ws10
 for_window [class="Spotify"] move to workspace $ws10
-for_window [class="^.*"] border pixel 0
 
 # reload the configuration file
 bindsym $mod+Shift+c reload
@@ -131,18 +134,31 @@ mode "resize" {
 
 bindsym $mod+r mode "resize"
 
+for_window [class="^.*"] border pixel 2
+
 set $bg-color			#2f343f
 set $inactive-bg-color		#2f343f
 set $text-color			#f3f4f5
 set $inactive-text-color	#676E7D
 set $urgent-bg-color		#E53935
+set $active-indicator		#11857D
+set $inactive-indicator		#004742
 
 # window colors
-#			border 			background		text			indicator
-client.focused		$bg-color		$bg-color		$text-color		#00ff00
-client.unfocused	$inactive-bg-color	$inactive-bg-color	$inactive-text-color	#00ff00
-client.focused_inactive	$inactive-bg-color	$inactive-bg-color	$inactive-text-color	#00ff00
-client.urgent		$urgent-bg-color	$urgent-bg-color	$text-color		#00ff00
+#			BORDER 			BACKGROUND		TEXT			INDICATOR		CHILD_BORDER
+client.focused		$bg-color		$bg-color		$text-color		$active-indicator	#3E5B77
+client.unfocused	$inactive-bg-color	$inactive-bg-color	$inactive-text-color	$inactive-indicator	#121212
+client.focused_inactive	$inactive-bg-color	$inactive-bg-color	$inactive-text-color	$inactive-indicator	#121212
+client.urgent		$urgent-bg-color	$urgent-bg-color	$text-color		$active-indicator	#FF8888
+client.background #000000
+
+#                       	BORDER		BACKGROUND	TEXT		INDICATOR   	CHILD_BORDER
+#client.focused			$red		$red		$magenta	$darkmagenta	$darkblue
+#client.unfocused		$transparent	$blue		$white		$darkblue	$darkblack
+#client.focused_inactive	$transparent	$blue		$white		$darkblue	$darkblack
+#client.urgent			$darkred	$darkred	$black		$darkred	$darkred
+#
+
 
 hide_edge_borders both
 
@@ -166,11 +182,9 @@ bindsym $mod+d exec rofi -show run -lines 3 -eh 2 -width 100 -padding 450 -opaci
 gaps inner 5
 gaps outer 5
 
-set $shutdown shutdown 0
-
 bindsym Mod1+Tab exec rofi -show window
 
-bindsym $mod+x exec /home/rufus/bin/i3lock.sh
+bindsym $mod+x exec /home/rufus/bin/i3lock-custom.sh
 bindsym $mod+Shift+x exec /home/rufus/bin/prompt.sh "Are you sure you want to shutdown?" "$shutdown"
 
 exec --no-startup-id "setxkbmap -v no" # sets keymap to norwegian

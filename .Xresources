@@ -1,3 +1,5 @@
+#include "~/.xres/urxvt"
+
 ! Common
 #define S_yellow        #b58900
 #define S_orange        #cb4b16
@@ -26,31 +28,29 @@ URxvt*pointerColorBackground:  S_base01
 URxvt*pointerColorForeground:  S_base1
 
 ! black
-URxvt*color0:       #282a2e
-URxvt*color8:       #373b41
+*color0:       #282a2e
+*color8:       #373b41
 ! red
-URxvt*color1:       #a54242
-URxvt*color9:       #cc6666
+*color1:       #a54242
+*color9:       #cc6666
 ! green
-URxvt*color2:       #8c9440
-URxvt*color10:      #b5bd68
+*color2:       #8c9440
+*color10:      #b5bd68
 ! yellow
-URxvt*color3:       #de935f
-URxvt*color11:      #f0c674
+*color3:       #de935f
+*color11:      #f0c674
 ! blue
-URxvt*color4:       #5f819d
-URxvt*color12:      #81a2be
+*color4:       #5f819d
+*color12:      #81a2be
 ! magenta
-URxvt*color5:       #85678f
-URxvt*color13:      #b294bb
+*color5:       #85678f
+*color13:      #b294bb
 ! cyan
-URxvt*color6:       #5e8d87
-URxvt*color14:      #8abeb7
+*color6:       #5e8d87
+*color14:      #8abeb7
 ! white
-URxvt*color7:       #707880
-URxvt*color15:      #c5c8c6
-
-!! URxvt*blurRadius: 10
+*color7:       #707880
+*color15:      #c5c8c6
 
 
 URxvt*foreground:   #c5c8c6
