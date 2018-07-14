@@ -4,11 +4,6 @@
 "  \ V /| | | | | | | | | (__
 "   \_/ |_|_| |_| |_|_|  \___|
 
-let mapleader =" "
-" Load Pathogen for plugins:
-	execute pathogen#infect()
-	execute pathogen#helptags()
-
 " Some basics:
 	set nocompatible
 	filetype plugin on
@@ -67,11 +62,6 @@ let mapleader =" "
 " C-T for new tab
 	nnoremap <C-t> :tabnew<cr>
 
-" Navigating with guides
-	" inoremap <Space><Tab> <Esc>/<++><Enter>"_c4l
-	" vnoremap <Space><Tab> <Esc>/<++><Enter>"_c4l
-	" map <Space><Tab> <Esc>/<++><Enter>"_c4l
-
 " For normal mode when in terminals (in X I have caps mapped to esc, this replaces it when I don't have X)
 	inoremap jw <Esc>
 	inoremap wj <Esc>
@@ -82,5 +72,3 @@ vnoremap K xkP`[V`]
 vnoremap J xp`[V`]
 vnoremap L >gv
 vnoremap H <gv
-
-map <enter><enter> yi[:e <c-r>"<cr>

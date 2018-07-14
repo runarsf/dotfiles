@@ -1,5 +1,6 @@
 #!/bin/sh
-ICON=$HOME/.xlock/icon.png
+
+ICON=$HOME/.config/klock.png
 TMPBG=/tmp/screen.png
 scrot /tmp/screen.png
 convert $TMPBG -scale 10% -scale 1000% $TMPBG

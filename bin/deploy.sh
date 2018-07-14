@@ -12,7 +12,6 @@ case $1 in
 		cp ~/.Xresources .
 		cp -r ~/.xres/ .
 		cp ~/.vimrc .
-		cp -r ~/.vim/ .
 		cp -r ~/.urxvt/ .
 		cp ~/.fonts/*.ttf ./.fonts/
 		cp ~/.fonts/*.otf ./.fonts/

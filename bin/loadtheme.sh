@@ -9,12 +9,28 @@ case $1 in
 		echo "loadtheme [theme]"
 		exit
 		;;
+	-r|--reload)
+		xrdb -load ~/.Xresources
+		echo "Reloaded .Xresources"
+		exit
+		;;
+	-a|--append)
+		if [ ! -f ./$1 ]; then
+			echo "No file with the name $1 found."
+			exit
+		else
+			cat ./$1 >> ~/.xres/urxvt
+			xrdb -load ~/.Xresources
+			echo "Appended the file $1 to .Xresources"
+		fi
+		exit
+		;;
 	*)
 		if [ ! -f ./$1 ]; then
 			echo "No theme with the name $1 found."
 			exit
 		else
-			cat $1 > ~/.xres/urxvt
+			cat ./$1 > ~/.xres/urxvt
 			xrdb -load ~/.Xresources
 			echo "Color scheme applied. [ $1 ]"
 		fi
