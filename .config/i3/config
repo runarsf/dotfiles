@@ -1,4 +1,3 @@
-
 # Definitions
 set $mod Mod4
 set $hibernate sudo systemctl suspend
@@ -33,23 +32,21 @@ bindsym $mod+Shift+Right move right
 
 # split in horizontal orientation
 bindsym $mod+h split h
+bindsym $mod+Mod1+Up split h
 bindsym $mod+Mod1+Right split h
-bindsym $mod+Mod1+Left split h
 
 # split in vertical orientation
 bindsym $mod+v split v
 bindsym $mod+Mod1+Down split v
-bindsym $mod+Mod1+Up split v
+bindsym $mod+Mod1+Left split v
 
-# enter fullscreen mode for the focused container
+# Fullscreen
 bindsym $mod+f fullscreen toggle
 
 # change container layout (stacked, tabbed, toggle split)
 bindsym $mod+s layout stacking
 bindsym $mod+w layout tabbed
 bindsym $mod+e layout toggle split
-
-bindsym $mod+i exec urxvt -e vim ~/.config/i3/config
 
 # tiling / floating
 bindsym $mod+Shift+space floating toggle
@@ -95,6 +92,7 @@ bindsym $mod+Shift+9 move container to workspace $ws9
 bindsym $mod+Shift+0 move container to workspace $ws10
 
 # use xprop to find class
+assign [class="qutebrowser"] $ws1
 assign [class="Firefox"] $ws1
 assign [class="Thunar"] $ws4
 assign [class="discord"] $ws5
@@ -166,20 +164,19 @@ client.background #000000
 
 hide_edge_borders both
 
-# bar
-bar {
-        status_command i3blocks -c ~/.config/i3/i3blocks.conf
-	colors {
-		background $bg-color
-		separator #757575
-		#			border			background		text
-		focused_workspace	$bg-color		$bg-color		$text-color
-		inactive_workspace	$inactive-bg-color	$inactive-bg-color	$inactive-text-color
-		urgent_workspace	$urgent-bg-color	$urgent-bg-color	$text-color
-	}
-	position top
-	separator_symbol "|"
-}
+# bar {
+#        # status_command i3blocks -c ~/.config/i3/i3blocks.conf
+#	colors {
+#		background $bg-color
+#		separator #757575
+#		#			border			background		text
+#		focused_workspace	$bg-color		$bg-color		$text-color
+#		inactive_workspace	$inactive-bg-color	$inactive-bg-color	$inactive-text-color
+#		urgent_workspace	$urgent-bg-color	$urgent-bg-color	$text-color
+#	}
+#	position top
+#	separator_symbol "|"
+#}
 
 bindsym $mod+d exec rofi -show run -lines 3 -eh 2 -width 100 -padding 450 -opacity "50" -color-enabled -bw 0 -bc "$bg-color" -color-window "$bg-color" -fg "$text-color" -hlbg "$bg-color" -hlfg "#9575cd" -font "System San Francisco Display 18" #rofi
 
@@ -191,9 +188,11 @@ bindsym Mod1+Tab exec rofi -show window
 bindsym $mod+x exec /home/rufus/bin/i3lock-custom.sh
 bindsym $mod+Shift+x exec /home/rufus/bin/prompt.sh "Are you sure you want to shutdown?" "$shutdown"
 
+exec xdg-settings set default-web-browser firefox.desktop
 exec --no-startup-id "setxkbmap -v no" # sets keymap to norwegian
 exec xrandr --output eDP-1 --off
 exec_always compton -f
+exec_always --no-startup-id $HOME/.config/polybar/launch.sh
 exec_always xrdb -load ~/.Xresources
 exec_always feh --bg-scale ~/.config/wall.png
 exec synergy-tray

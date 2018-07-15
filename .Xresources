@@ -38,7 +38,7 @@ URxvt.perl-ext-common:			keyboard-select,resize-font,url-select
 URxvt.colorUL:				#4682B4
 !! url-select
 URxvt.keysum.M-u:			perl:url-select:select_next
-URxvt.url-select.launcher:		/usr/bin/firefox
+URxvt.url-select.launcher:		/usr/bin/qutebrowser
 URxvt.url-select.underline:		true
 !! keyboard-select
 URxvt.keysum.M-Escape:			perl:keyboard-select:activate
