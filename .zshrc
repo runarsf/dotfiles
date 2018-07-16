@@ -39,8 +39,7 @@ alias ohmyzsh="mate ~/.oh-my-zsh"
 alias please='sudo $(fc -ln -1)'
 alias ..='cd ..'
 alias cls='clear'
-alias zshrc='cat ~/.zshrc'
-alias zshcfg='vim ~/.zshrc'
+alias zshrc='vim ~/.zshrc'
 alias reload='. ~/.zshrc'
 alias path='echo -e ${PATH//:/\\n}'
 alias libpath='echo -e ${LD_LIBRARY_PATH//:/\\n}'
@@ -51,6 +50,7 @@ alias lt='ls -ltr'         #  Sort by date, most recent last.
 alias lc='ls -ltcr'        #  Sort by/show change time,most recent last.
 alias lu='ls -ltur'        #  Sort by/show access time,most recent last.
 alias rr='ranger'
+alias dot='cd ~/dotfiles/'
 
 /usr/lib/python2.7/site-packages/powerline/bindings/zsh/powerline.zsh
 

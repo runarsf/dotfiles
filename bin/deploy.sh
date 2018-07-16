@@ -18,6 +18,8 @@ case $1 in
 
 		cp ~/bin/*.sh ./bin/
 
+		cp /usr/share/X11/xorg.conf.d/50-mouse-acceleration.conf ~/dotfiles/root/usr/share/X11/xorg.conf.d/
+
 		cp ~/.config/i3/config ./.config/i3/
 		cp ~/.config/rofi/config ./.config/rofi/
 		cp ~/.config/wall.png ./.config/

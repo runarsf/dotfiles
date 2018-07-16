@@ -1,7 +1,7 @@
 # Definitions
 set $mod Mod4
 set $hibernate sudo systemctl suspend
-set $shutdown shutdown 0
+set $shutdown shutdown -h now
 
 # Font for window titles.
 font pango:System San Francisco 7
@@ -95,7 +95,6 @@ bindsym $mod+Shift+0 move container to workspace $ws10
 assign [class="qutebrowser"] $ws1
 assign [class="Firefox"] $ws1
 assign [class="Thunar"] $ws4
-assign [class="discord"] $ws5
 assign [class="Trello"] $ws8
 assign [class="Anydesk"] $ws9
 assign [class="TeamViewer"] $ws9
@@ -188,9 +187,11 @@ bindsym Mod1+Tab exec rofi -show window
 bindsym $mod+x exec /home/rufus/bin/i3lock-custom.sh
 bindsym $mod+Shift+x exec /home/rufus/bin/prompt.sh "Are you sure you want to shutdown?" "$shutdown"
 
-exec xdg-settings set default-web-browser firefox.desktop
+
+exec xrandr --output DP-3 --primary --mode 1920x1080 --pos 0x0 --rotate normal --output DVI-I-1 --mode 1920x1080 --pos 1920x0 --rotate normal --output DP-1 --off --output DP-2 --off --output HDMI-1 --off
+exec xdg-settings set default-web-browser qutebrowser.desktop
 exec --no-startup-id "setxkbmap -v no" # sets keymap to norwegian
-exec xrandr --output eDP-1 --off
+# exec xrandr --output eDP-1 --off
 exec_always compton -f
 exec_always --no-startup-id $HOME/.config/polybar/launch.sh
 exec_always xrdb -load ~/.Xresources
