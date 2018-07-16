@@ -179,8 +179,8 @@ hide_edge_borders both
 
 bindsym $mod+d exec rofi -show run -lines 3 -eh 2 -width 100 -padding 450 -opacity "50" -color-enabled -bw 0 -bc "$bg-color" -color-window "$bg-color" -fg "$text-color" -hlbg "$bg-color" -hlfg "#9575cd" -font "System San Francisco Display 18" #rofi
 
-gaps inner 5
-gaps outer 5
+gaps inner 10
+gaps outer 10
 
 bindsym Mod1+Tab exec rofi -show window
 
@@ -193,6 +193,7 @@ exec xdg-settings set default-web-browser qutebrowser.desktop
 exec --no-startup-id "setxkbmap -v no" # sets keymap to norwegian
 # exec xrandr --output eDP-1 --off
 exec_always compton -f
+exec_always /home/rufus/bin/polybar.sh
 exec_always --no-startup-id $HOME/.config/polybar/launch.sh
 exec_always xrdb -load ~/.Xresources
 exec_always feh --bg-scale ~/.config/wall.png

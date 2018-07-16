@@ -1,6 +1,6 @@
 # ============================================== #
 #
-# PERSONAL ~/.zshrc FILE for FEDORA
+# PERSONAL ~/.zshrc FILE for ARCH
 #+ by Runar Fredagsvik [runarsf@protonmail.com]
 #
 # ============================================== #
@@ -51,6 +51,8 @@ alias lc='ls -ltcr'        #  Sort by/show change time,most recent last.
 alias lu='ls -ltur'        #  Sort by/show access time,most recent last.
 alias rr='ranger'
 alias dot='cd ~/dotfiles/'
+alias killpoly='killall -q polybar'
+alias i3cfg='vim ~/.config/i3/config'
 
 /usr/lib/python2.7/site-packages/powerline/bindings/zsh/powerline.zsh
 
