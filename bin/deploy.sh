@@ -19,6 +19,9 @@ case $1 in
 		cp ~/bin/*.sh ./bin/
 
 		cp /usr/share/X11/xorg.conf.d/50-mouse-acceleration.conf ./root/usr/share/X11/xorg.conf.d/
+		cp /etc/security/limits.conf ./root/etc/security/
+		cp /etc/pulse/daemon.conf.d/10-better-latency.conf ./root/etc/pulse/daemon.conf.d/
+		cp /etc/pulse/default.pa ./root/etc/pulse/
 
 		cp ~/.config/i3/config ./.config/i3/
 		cp ~/.config/rofi/config ./.config/rofi/
