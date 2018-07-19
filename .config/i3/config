@@ -1,7 +1,8 @@
 # Definitions
 set $mod Mod4
 set $hibernate sudo systemctl suspend
-set $shutdown shutdown -h now
+set $shutdown sudo shutdown -h now
+set $reboot sudo reboot
 
 # Font for window titles.
 font pango:System San Francisco 7
@@ -200,7 +201,7 @@ exec_always --no-startup-id xsetwacom --set "Wacom Intuos S Pen stylus" Button 3
 
 exec_always xrandr --output $(sed '1!d' $HOME/.monitor) --primary --mode 1920x1080 --pos 0x0 --rotate normal --output $(sed '2!d' $HOME/.monitor) --mode 1920x1080 --pos 1920x0 --rotate normal
 
-exec xdg-settings set default-web-browser qutebrowser.desktop
+exec xdg-settings set default-web-browser firefox.desktop
 exec --no-startup-id "setxkbmap -v no" # sets keymap to norwegian
 # exec xrandr --output eDP-1 --off
 exec_always compton -f

@@ -23,6 +23,7 @@ case $1 in
 		cp /etc/pulse/daemon.conf.d/10-better-latency.conf ./root/etc/pulse/daemon.conf.d/
 		cp /etc/pulse/default.pa ./root/etc/pulse/
 
+		cp ~/.config/compton.conf ./.config/
 		cp ~/.config/i3/config ./.config/i3/
 		cp ~/.config/rofi/config ./.config/rofi/
 		cp ~/.config/wall.png ./.config/
