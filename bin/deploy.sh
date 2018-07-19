@@ -26,6 +26,8 @@ case $1 in
 		cp ~/.config/i3/config ./.config/i3/
 		cp ~/.config/rofi/config ./.config/rofi/
 		cp ~/.config/wall.png ./.config/
+		cp ~/.config/i4lock.png ./.config/
+		cp ~/.config/klock.png ./.config/
 		cp ~/.config/ranger/rc.conf ./.config/ranger/
 
 		cp ~/.config/polybar/config ./.config/polybar/
