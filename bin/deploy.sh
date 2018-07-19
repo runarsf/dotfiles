@@ -16,7 +16,7 @@ case $1 in
 		cp ~/.fonts/*.ttf ./.fonts/
 		cp ~/.fonts/*.otf ./.fonts/
 
-		cp ~/bin/*.sh ./bin/
+		cp ~/bin/* ./bin/
 
 		cp /usr/share/X11/xorg.conf.d/50-mouse-acceleration.conf ./root/usr/share/X11/xorg.conf.d/
 		cp /etc/security/limits.conf ./root/etc/security/

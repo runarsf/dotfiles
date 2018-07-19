@@ -97,13 +97,13 @@ set $MON2 "$(sed '2!d' $HOME/.monitor)"
 
 workspace $ws1 output DVI-I-1
 workspace $ws3 output DVI-I-1
+workspace $ws4 output DVI-I-1
 workspace $ws5 output DVI-I-1
-workspace $ws7 output DVI-I-1
-workspace $ws9 output DVI-I-1
+workspace $ws6 output DVI-I-1
 workspace $ws2 output DP-5
-workspace $ws4 output DP-5
-workspace $ws6 output DP-5
+workspace $ws7 output DP-5
 workspace $ws8 output DP-5
+workspace $ws9 output DP-5
 workspace $ws0 output DP-5
 
 # use xprop to find class
