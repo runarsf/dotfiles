@@ -11,6 +11,13 @@ case $- in
       *) return;;
 esac
 
+export WINEPREFIX="$HOME/.wine_osu" # This is the path to a hidden folder in your home folder.
+export WINEARCH=win32 # Only needed when executing the first command with that WINEPREFIX
+
+# Arch Linux/wine-osu users should uncomment next line
+# to update PATH to make sure we're using the right Wine binary
+export PATH=/opt/wine-osu/bin:$PATH
+
 # Path to your oh-my-zsh installation.
 export ZSH=/home/rufus/.oh-my-zsh
 
@@ -43,7 +50,7 @@ alias zshrc='vim ~/.zshrc'
 alias reload='. ~/.zshrc'
 alias path='echo -e ${PATH//:/\\n}'
 alias libpath='echo -e ${LD_LIBRARY_PATH//:/\\n}'
-alias ls='ls -la $* --color'
+alias ls='ls -la --color'
 alias lx='ls -lXB'         #  Sort by extension.
 alias lk='ls -lSr'         #  Sort by size, biggest last.
 alias lt='ls -ltr'         #  Sort by date, most recent last.

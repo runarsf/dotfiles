@@ -7,8 +7,8 @@ margin-top = 1
 margin-bottom = 1
 
 [bar/polybarbar]
-monitor = ${env:MONITOR:DVI-I-1}
-monitor-fallback = ${env:MONITOR:DP-3}
+monitor = ${env:MONITOR:$(sed '2!d' $HOME/.monitor)}
+monitor-fallback = ${env:MONITOR:$(sed '1!d' $HOME/.monitor)}
 override-redirect = true
 wm-restack = i3
 
@@ -20,7 +20,7 @@ tray-background = #cc131313
 ; #cc131313
 background = #cc131313
 foreground = #ccD0D0D0
-linecolor = ${bar/bar1.background}
+linecolor = ${bar/polybarbar.background}
 locale = en_US.UTF-8
 tray-position = right
 spacing = 4
@@ -38,8 +38,8 @@ modules-left = i3 title
 modules-right = volume date
 
 [bar/bottom]
-monitor = ${env:MONITOR:DVI-D-0}
-monitor-fallback =
+monitor = ${env:MONITOR:$(sed '1!d' $HOME/.monitor)}
+monitor-fallback = ${env:MONITOR:$(sed '2!d' $HOME/.monitor)}
 override-redirect = true
 wm-restack = i3
 
@@ -255,7 +255,7 @@ ramp-signal-4 = 
 animation-packetloss-0 = 
 animation-packetloss-0-foreground = #ffa64c
 animation-packetloss-1 = 
-animation-packetloss-1-foreground = ${bar/bar1.foreground}
+animation-packetloss-1-foreground = ${bar/polybarbar.foreground}
 animation-packetloss-framerate_ms = 500
 
 [module/music]
@@ -289,7 +289,7 @@ type = custom/script
 interval = 1
 format-prefix = " "
 format = <label>
-exec = python  /home/rufus/repos/polybar-spotify/spotify_status.py -f '{song} - {artist}'
+exec = python /home/rufus/repos/polybar-spotify/spotify_status.py -f '{song} - {artist}'
 format-underline = #1db954
 
 [module/title]
