@@ -1,7 +1,7 @@
 # Definitions
 set $mod Mod4
 set $hibernate sudo systemctl suspend
-set $shutdown sudo shutdown -h now
+set $shutdown shutdown -h now
 set $reboot sudo reboot
 
 # Font for window titles.
@@ -99,9 +99,9 @@ workspace $ws1 output DVI-I-1
 workspace $ws3 output DVI-I-1
 workspace $ws4 output DVI-I-1
 workspace $ws5 output DVI-I-1
-workspace $ws6 output DVI-I-1
+workspace $ws7 output DVI-I-1
 workspace $ws2 output DP-5
-workspace $ws7 output DP-5
+workspace $ws6 output DP-5
 workspace $ws8 output DP-5
 workspace $ws9 output DP-5
 workspace $ws0 output DP-5
@@ -118,7 +118,7 @@ assign [class="Rhythmbox"] $ws10
 for_window [class="Spotify"] move to workspace $ws10
 
 # reload the configuration file
-bindsym $mod+Shift+c reload
+bindsym $mod+Shift+i reload
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
 bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
@@ -176,6 +176,7 @@ client.background #000000
 #client.urgent			$darkred	$darkred	$black		$darkred	$darkred
 #
 
+bindsym $mod+Shift+c exec puush -b
 bindsym Ctrl+Shift+c exec ~/sharenix/sharenix-section -n -c #sharenix-section
 
 hide_edge_borders both

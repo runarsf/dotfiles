@@ -9,7 +9,7 @@ URxvt*cursorColor:  #c5c8c6
 URxvt*transparent: true
 URxvt*shading: 40
 URxvt*fading: 25
-URxvt*blurRadius: 5
+URxvt*blurRadius: 10
 
 !! Xft
 Xft.autohint:				0
