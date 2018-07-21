@@ -96,19 +96,19 @@ set $MON1 "$(sed '1!d' $HOME/.monitor)"
 set $MON2 "$(sed '2!d' $HOME/.monitor)"
 
 workspace $ws1 output DVI-I-1
-workspace $ws3 output DVI-I-1
-workspace $ws4 output DVI-I-1
-workspace $ws5 output DVI-I-1
-workspace $ws7 output DVI-I-1
 workspace $ws2 output DP-5
+workspace $ws3 output DVI-I-1
+workspace $ws4 output DP-5
+workspace $ws5 output DVI-I-1
 workspace $ws6 output DP-5
+workspace $ws7 output DVI-I-1
 workspace $ws8 output DP-5
 workspace $ws9 output DP-5
 workspace $ws0 output DP-5
 
 # use xprop to find class
 assign [class="qutebrowser"] $ws3
-assign [class="Firefox"] $ws3
+# assign [class="Firefox"] $ws3
 assign [class="discord"] $ws2
 assign [class="Thunar"] $ws4
 assign [class="Trello"] $ws8
