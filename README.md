@@ -22,3 +22,7 @@
 * neofetch
 * mpv
 * lxappearance
+* python (python3)
+* pip (python-pip)
+* r
+* rtv

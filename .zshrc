@@ -60,6 +60,7 @@ alias rr='ranger'
 alias dot='cd ~/dotfiles/'
 alias killpoly='killall -q polybar'
 alias i3cfg='vim ~/.config/i3/config'
+alias gi3cfg='gedit ~/.config/i3/config'
 
 /usr/lib/python2.7/site-packages/powerline/bindings/zsh/powerline.zsh
 

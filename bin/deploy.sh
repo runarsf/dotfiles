@@ -32,7 +32,7 @@ case $1 in
 		cp ~/.config/ranger/rc.conf ./.config/ranger/
 		cp ~/.config/polybar/config ./.config/polybar/
 
-		cd ~/dotfiles/
+		cp ~/.monitor .
 		exit
 		;;
 	*)
