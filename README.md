@@ -21,3 +21,4 @@
 * compton
 * neofetch
 * mpv
+* lxappearance
