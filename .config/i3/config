@@ -17,15 +17,20 @@ for_window [instance="dropdown"] floating enable
 for_window [instance="dropdown"] resize set 875 560
 for_window [instance="dropdown"] move position center
 for_window [instance="dropdown"] move scratchpad
-#exec_always --no-startup-id pkill -f dropdown
 exec --no-startup-id $term -name dropdown -e tmux
+
+#tmux, $mod+b
+for_window [instance="bot"] floating enable
+for_window [instance="bot"] resize set 875 560
+for_window [instance="bot"] move position center
+for_window [instance="bot"] move scratchpad
+exec --no-startup-id $term -name bot -e tmux
 
 #R, $mod+a
 for_window [instance="math"] floating enable
 for_window [instance="math"] resize set 1120 420
 for_window [instance="math"] move position center
 for_window [instance="math"] move scratchpad
-#exec_always --no-startup-id pkill -f math
 exec --no-startup-id $term -fn "xft:mono:pixelsize=24" -name math -e R -q
 
 
@@ -35,7 +40,7 @@ floating_modifier $mod
 
 bindsym $mod+Return exec urxvt
 
-bindsym $mod+q		 					kill
+bindsym $mod+q		 			kill
 bindsym $mod+Shift+q 				kill
 
 bindsym $mod+j focus left
@@ -60,6 +65,7 @@ bindsym $mod+Shift+l [instance="math"] pkill
 
 bindsym $mod+a					[instance="math"] scratchpad show; move position center
 bindsym $mod+u					[instance="dropdown"] scratchpad show; move position center
+bindsym $mod+b					[instance="bot"] scratchpad show; move position center
 
 # split in horizontal orientation
 bindsym $mod+h split h
