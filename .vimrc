@@ -1,5 +1,5 @@
 " Some basics:
-	set nocompatible
+" 	set nocompatible
 	filetype plugin on
 	syntax on
 	set encoding=utf-8

@@ -8,9 +8,9 @@ while pgrep -x polybar >/dev/null; do sleep 1; done
 
 # Launch bar1 and bar2
 DISPLAY1="$(xrandr -q | grep $(sed '1!d' $HOME/.monitor) | cut -d ' ' -f1)"
-[[ ! -z "$DISPLAY1" ]] && MONITOR="$DISPLAY1" polybar polybarbar &
+[[ ! -z "$DISPLAY1" ]] && MONITOR="$DISPLAY1" polybar $1 &
 
 DISPLAY2="$(xrandr -q | grep $(sed '2!d' $HOME/.monitor) | cut -d ' ' -f1)"
-[[ ! -z $DISPLAY2 ]] && MONITOR=$DISPLAY2 polybar polybarbar &
+[[ ! -z $DISPLAY2 ]] && MONITOR=$DISPLAY2 polybar $1 &
 
 echo "Bars launched..."

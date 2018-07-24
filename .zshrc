@@ -61,6 +61,8 @@ alias dot='cd ~/dotfiles/'
 alias killpoly='killall -q polybar'
 alias i3cfg='vim ~/.config/i3/config'
 alias gi3cfg='gedit ~/.config/i3/config'
+alias polycfg='gedit ~/.config/polybar/config'
+alias firefoxcss='cd ~/.mozilla/firefox/uv4gtk2c.default/chrome/'
 
 /usr/lib/python2.7/site-packages/powerline/bindings/zsh/powerline.zsh
 

@@ -1,12 +1,16 @@
-; [settings]
-; throttle_ms = 50
-; throttle_limit = 3
+[settings]
+throttle_ms = 50
+throttle_limit = 3
+
+
 
 [global/wm]
 margin-top = 1
 margin-bottom = 1
 
-[bar/polybarbar]
+
+
+[bar/top]
 monitor = ${env:MONITOR:$(sed '2!d' $HOME/.monitor)}
 monitor-fallback = ${env:MONITOR:$(sed '1!d' $HOME/.monitor)}
 ; wm-restack = i3
@@ -37,6 +41,8 @@ modules-center = mpd spotify
 modules-left = i3 title
 modules-right = volume date
 
+
+
 [module/cpu]
 type = internal/cpu
 interval = 1
@@ -65,9 +71,13 @@ bar-load-empty = ─
 bar-load-empty-font = 4
 bar-load-empty-foreground = #444444
 
+
+
 [module/date]
 type = internal/date
 date = %%{F#999}%a %e %b%%{F-}  %%{F#fff}%H:%M%%{F-}
+
+
 
 [module/i3]
 type = internal/i3
@@ -105,6 +115,7 @@ label-urgent-background = #bd2c40
 label-urgent-padding = 2
 
 
+
 [module/memory]
 type = internal/memory
 
@@ -140,6 +151,8 @@ bar-used-fill = ▐
 bar-used-empty = ▐
 bar-used-empty-foreground = #444444
 
+
+
 [module/powermenu]
 type = custom/menu
 
@@ -173,6 +186,8 @@ menu-2-1 = Cancel
 menu-2-1-foreground = #fba922
 menu-2-1-exec = menu_open-0
 
+
+
 [module/volume]
 type = internal/volume
 ; speaker_mixer = Speaker
@@ -202,9 +217,13 @@ bar-volume-empty = ─
 bar-volume-empty-font = 4
 bar-volume-empty-foreground = #444444
 
+
+
 [module/wired-network]
 type = internal/network
 interface = enp0s25
+
+
 
 [module/wireless-network]
 type = internal/network
@@ -229,12 +248,16 @@ animation-packetloss-1 = 
 animation-packetloss-1-foreground = ${bar/polybarbar.foreground}
 animation-packetloss-framerate_ms = 500
 
+
+
 [module/music]
 type = custom/script
 interval = 2
 
 label = %output:0:45:...%
 exec = ~/.config/polybar/mpris.sh
+
+
 
 [module/mpd]
 type = internal/mpd
@@ -255,6 +278,8 @@ icon-prev = 
 icon-next = 
 icon-random = 
 
+
+
 [module/spotify]
 type = custom/script
 interval = 1
@@ -262,6 +287,8 @@ format-prefix = " "
 format = <label>
 exec = python /home/rufus/repos/polybar-spotify/spotify_status.py -f '{song} - {artist}'
 format-underline = #1db954
+
+
 
 [module/title]
 type = internal/xwindow
@@ -279,4 +306,5 @@ label = %title%
 label-maxlen = 50
 
 ; vim:ft=dosini
+
 

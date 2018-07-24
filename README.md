@@ -2,7 +2,7 @@
 
 ## Prerequisites && Requirements
 
-* vim
+* gvim (vim)
 * zsh (oh-my-zsh)
 * rofi
 * rxvt-unicode
@@ -26,3 +26,8 @@
 * pip (python-pip)
 * r
 * rtv
+* arc-gtk-theme
+* arc-icon-theme
+* w3m
+* visual-studio-code-bin (AUR)
+* playerctl
