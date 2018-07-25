@@ -1,10 +1,10 @@
 #!/bin/bash
 
-set -e
+# set -e
 
-# First install oh-my-zsh
+# First install zsh and oh-my-zsh
 if [ ! -d ~/.oh-my-zsh ]; then
-    echo "Cloning oh-myzsh"
+    echo "Cloning oh-my-zsh"
     git clone https://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh
 fi
 
