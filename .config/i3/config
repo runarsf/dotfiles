@@ -17,7 +17,7 @@ for_window [instance="dropdown"] floating enable
 for_window [instance="dropdown"] resize set 875 560
 for_window [instance="dropdown"] move position center
 for_window [instance="dropdown"] move scratchpad
-exec --no-startup-id $term -name dropdown -e neofetch | lolcat
+exec --no-startup-id $term -name dropdown -e zsh
 
 #tmux, $mod+b
 for_window [instance="bot"] floating enable
@@ -234,6 +234,7 @@ client.background #000000
 gaps inner 50
 gaps outer -15
 for_window [class="firefox"] gaps outer 0; gaps inner 0
+for_window [class="Stremio"] gaps outer 0; gaps inner 0
 
 # wacom settings
 exec_always --no-startup-id xsetwacom --set "Wacom Intuos S Pen stylus" Suppress 2
