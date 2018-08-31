@@ -1,40 +1,86 @@
-#!/bin/bash
+#!/bin/sh
+set -e
+#set -o verbose
 
-# set -e
+COLOR_RED='\033[0;31m'
+COLOR_GREEN='\033[1;32m'
+COLOR_ORANGE='\033[0;33m'
+COLOR_YELLOW='\033[1;33m'
+COLOR_PURPLE='\033[1;35m'
+COLOR_CYAN='\033[1;36m'
+COLOR_NONE='\033[0m'
 
-# First install zsh and oh-my-zsh
-if [ ! -d ~/.oh-my-zsh ]; then
-    echo "Cloning oh-my-zsh"
-    git clone https://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh
+helpme () {
+	printf "\n\t ${COLOR_GREEN}"
+	printf "\n\t    ███████╗██╗██╗     ███████╗███████╗"
+	printf "\n\t    ██╔════╝██║██║     ██╔════╝██╔════╝"
+	printf "\n\t    █████╗  ██║██║     █████╗  ███████╗"
+	printf "\n\t    ██╔══╝  ██║██║     ██╔══╝  ╚════██║"
+	printf "\n\t ██╗██║     ██║███████╗███████╗███████║"
+	printf "\n\t ╚═╝╚═╝     ╚═╝╚══════╝╚══════╝╚══════╝"
+	printf "${COLOR_NONE}"
+	printf "\n\n\t ${COLOR_ORANGE}This script may install other related prerequisites/versions of the listed packages"
+	printf "\n\n\t ${COLOR_CYAN}./deploy desktop"
+	printf "\n\t\t ${COLOR_PURPLE}zsh | gvim | git | rofi | urxvt | curl | i3 | polybar | ranger | compton | python(pip)"
+	printf "\n\n\t ${COLOR_CYAN}./deploy server"
+	printf "\n\t\t ${COLOR_PURPLE}zsh | vim | git"
+	printf "\n\n"
+}
+
+desktop () {
+	zsh
+}
+server () {
+	zsh
+}
+
+check () {
+	pkg=`pacman -Qs $1`
+	if [ -n "$pkg" ]
+		then exit 0
+		else exit 1
+	fi
+}
+
+zsh () {
+	exit 1
+}
+
+# deploy the config files
+configs () {
+	for f in `\ls -a .`
+	do
+		if [[ $f == "README.md" ]] || [[ $f == "deploy.sh" ]] || [[$f == "."]] || [[$f == ".."]] || [[ $f == "games" ]]; then
+			continue
+		fi
+		if [ -d $f ]; then
+			# mkdir -p $HOME/.${f}
+			echo "mkdir -p $HOME/.${f}"
+		fi
+	done
+}
+
+# make sure the script is run correctly
+if [ "$#" -gt 1 ]; then
+	printf "\n${COLOR_RED}Too many arguments!${COLOR_NONE}\n\n"
+	exit 1
 fi
+# arguments
+case $1 in
+	-c|--config)
+		configs
+		exit 0;;
+	-d|desktop)
+		desktop
+		exit 0;;
+	-m|min|minimal)
+		minimal
+		exit 0;;
+	--help|-h)
+		helpme
+		exit 0;;
+	*)
+		printf "\n${COLOR_RED}Invalid argument: '$1'${COLOR_NONE}\n\n"
+		exit 1;;
+esac
 
-# Deploy each app config file.
-for f in `ls . `
-do
-    if [[ $f == "README.md" ]] || [[ $f == "deploy.sh" ]] ; then
-        continue
-    fi
-
-    if [ -d $f ]; then
-        mkdir -p ~/.${f}
-        cp -f -r ${f}/* ~/.${f}
-    else
-        rm -f ~/.${f} # handles overwriting symlinks
-        cp -f $f ~/.${f}
-    fi
-done
-
-# Setup vim.
-mkdir -p ~/.vim/backup ~/.vim/tmp
-if [ ! -d ~/.vim/bundle/vundle ]; then
-    echo "Cloning vundle"
-    git clone https://github.com/gmarik/vundle.git ~/.vim/bundle/vundle
-fi
-vim +BundleInstall +qall
-
-# Set up git.
-git config --global core.excludesfile ~/.gitignore
-if [[ -n $1  &&  -n $2 ]] ; then
-    git config --global user.name "$1"
-    git config --global user.email "$2"
-fi
