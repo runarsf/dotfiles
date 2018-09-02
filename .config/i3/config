@@ -69,7 +69,7 @@ bindsym $mod+b					[instance="bot"] scratchpad show; move position center
 
 bindsym $mod+Shift+a				exec --no-startup-id $term -fn "xft:mono:pixelsize=24" -name math -e python3 -q
 bindsym $mod+Shift+u				exec --no-startup-id $term -name dropdown -e zsh
-bindsym $mod+Shift+b				exec --no-startup-id $term -name bot -e tmux
+bindsym $mod+Shift+b				exec --no-startup-id $term -name bot -e tmux attach
 
 # split in horizontal orientation
 bindsym $mod+h split h
@@ -148,6 +148,7 @@ bindsym $mod+7 workspace $ws7
 bindsym $mod+8 workspace $ws8
 bindsym $mod+9 workspace $ws9
 bindsym $mod+0 workspace $ws10
+bindsym $mod+Tab workspace back_and_forth
 
 # move focused container to workspace
 bindsym $mod+Shift+1 move container to workspace $ws1
@@ -223,23 +224,24 @@ set $active-indicator		#11857D
 set $inactive-indicator		#004742
 
 # window colors
-#			BORDER 			BACKGROUND		TEXT			INDICATOR		CHILD_BORDER
-client.focused		$bg-color		$bg-color		$text-color		$active-indicator	#3E5B77
-client.unfocused	$inactive-bg-color	$inactive-bg-color	$inactive-text-color	$inactive-indicator	#121212
+#												BORDER 							BACKGROUND					TEXT									INDICATOR						CHILD_BORDER
+client.focused					$bg-color						$bg-color						$text-color						$active-indicator		#3E5B77
+client.unfocused				$inactive-bg-color	$inactive-bg-color	$inactive-text-color	$inactive-indicator	#121212
 client.focused_inactive	$inactive-bg-color	$inactive-bg-color	$inactive-text-color	$inactive-indicator	#121212
-client.urgent		$urgent-bg-color	$urgent-bg-color	$text-color		$active-indicator	#FF8888
+client.urgent						$urgent-bg-color		$urgent-bg-color		$text-color						$active-indicator		#FF8888
 client.background #000000
 
 
 gaps inner 50
 gaps outer -15
-for_window [class="firefox"] gaps outer 0; gaps inner 0
-for_window [class="Stremio"] gaps outer 0; gaps inner 0
+for_window [class="firefox"] gaps outer 0 ; gaps inner 0
+for_window [class="Stremio"] gaps outer 0 ; gaps inner 0
 
 # wacom settings
 exec_always --no-startup-id xsetwacom --set "Wacom Intuos S Pen stylus" Suppress 2
 exec_always --no-startup-id xsetwacom --set "Wacom Intuos S Pen stylus" Rawsample 4
-exec_always --no-startup-id xsetwacom --set "Wacom Intuos S Pen stylus" Area 0 351 8211 5453
+# exec_always --no-startup-id xsetwacom --set "Wacom Intuos S Pen stylus" Area 0 351 8211 5453
+exec_always --no-startup-id xsetwacom --set "Wacom Intuos S Pen stylus" Area 2000 2351 10210 7453
 exec_always --no-startup-id xsetwacom --set "Wacom Intuos S Pen stylus" MapToOutput HEAD-0
 exec_always --no-startup-id xsetwacom --set "Wacom Intuos S Pen stylus" Button 1 '0'
 exec_always --no-startup-id xsetwacom --set "Wacom Intuos S Pen stylus" Button 2 '0'
@@ -247,11 +249,13 @@ exec_always --no-startup-id xsetwacom --set "Wacom Intuos S Pen stylus" Button 3
 
 exec_always --no-startup-id xrandr --output $(sed '1!d' $HOME/.monitor) --mode 1920x1080 --pos 0x0 --rotate normal --output $(sed '2!d' $HOME/.monitor) --primary --mode 1920x1080 --pos 1920x0 --rotate normal
 
+exec_always --no-startup-id nm-applet
 exec_always --no-startup-id compton -f
 exec_always --no-startup-id $HOME/bin/polybar.sh top
 exec_always --no-startup-id xrdb -load ~/.Xresources
 exec_always --no-startup-id feh --bg-scale $HOME/.config/wall.png
 exec xdg-settings set default-web-browser firefox.desktop
+exec --no-startup-id ifconfig eno1 up
 exec --no-startup-id "setxkbmap -v no" # sets keymap to norwegian
 exec discord-canary
 exec spotify
