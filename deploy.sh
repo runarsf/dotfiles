@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -e
 #set -o verbose
 
@@ -20,10 +20,10 @@ helpme () {
 	printf "\n\t ╚═╝╚═╝     ╚═╝╚══════╝╚══════╝╚══════╝"
 	printf "${COLOR_NONE}"
 	printf "\n\n\t ${COLOR_ORANGE}This script may install other related prerequisites/versions of the listed packages"
-	printf "\n\n\t ${COLOR_CYAN}./deploy desktop"
-	printf "\n\t\t ${COLOR_PURPLE}zsh | gvim | git | rofi | urxvt | curl | i3 | polybar | ranger | compton | python(pip)"
-	printf "\n\n\t ${COLOR_CYAN}./deploy server"
-	printf "\n\t\t ${COLOR_PURPLE}zsh | vim | git"
+	printf "\n\n\t ${COLOR_CYAN}./deploy.sh desktop"
+	printf "\n\t\t ${COLOR_PURPLE}zsh | gvim | git | rofi | urxvt | i3 | polybar | ranger | compton | python(pip) | tmux"
+	printf "\n\n\t ${COLOR_CYAN}./deploy.sh server"
+	printf "\n\t\t ${COLOR_PURPLE}zsh | vim | git | tmux"
 	printf "\n\n"
 }
 
@@ -32,21 +32,64 @@ desktop () {
 }
 server () {
 	zsh
+	tmux
+	vim
 }
 
-check () {
-	pkg=`pacman -Qs $1`
-	if [ -n "$pkg" ]
-		then exit 0
-		else exit 1
+check() {
+	pkg=`dpkg -s $1 | grep Status`
+	if [[ $pkg == *installed ]]; then
+		return 0
+	else
+		return 1
 	fi
 }
 
-zsh () {
-	exit 1
+late() {
+	printf "\n${COLOR_CYAN} $1 ${COLOR_PURPLE}already installed.${COLOR_NONE}\n\n"
 }
 
-# deploy the config files
+zsh() {
+	check zsh
+  if [ $? -eq 0 ]; then
+  	late zsh
+  else
+  	sudo apt-get install zsh
+  fi
+
+	if [ ! -d "$HOME/.oh-my-zsh/" ]; then
+		check curl
+		if [ $? -eq 0 ]
+			then
+				sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+			else
+				sh -c "$(wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)"
+		fi
+	else
+		late oh-my-zsh
+	fi
+}
+
+vim() {
+	check vim
+	if [ $? -eq 0 ]; then
+		late vim
+	else
+		sudo apt-get install vim
+	fi
+}
+
+tmux() {
+	pkg=`dpkg -s $1 | grep Status`
+  if [[ $pkg == *installed ]]; then
+		late tmux
+	else
+		sudo apt-get install tmux
+	fi
+}
+
+
+
 configs () {
 	for f in `\ls -a .`
 	do
@@ -60,27 +103,29 @@ configs () {
 	done
 }
 
+
 # make sure the script is run correctly
 if [ "$#" -gt 1 ]; then
 	printf "\n${COLOR_RED}Too many arguments!${COLOR_NONE}\n\n"
 	exit 1
 fi
+if [ "$#" -lt 1 ]; then
+	printf "\n${COLOR_RED}Too few arguments!${COLOR_NONE}\n\n"
+	exit 1
+fi
 # arguments
 case $1 in
-	-c|--config)
-		configs
-		exit 0;;
 	-d|desktop)
 		desktop
-		exit 0;;
-	-m|min|minimal)
-		minimal
-		exit 0;;
-	--help|-h)
+		exit;;
+	-s|server)
+		server
+		exit;;
+	-h|help)
 		helpme
-		exit 0;;
+		exit;;
 	*)
 		printf "\n${COLOR_RED}Invalid argument: '$1'${COLOR_NONE}\n\n"
-		exit 1;;
+		exit;;
 esac
 

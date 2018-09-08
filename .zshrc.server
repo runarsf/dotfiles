@@ -1,0 +1,40 @@
+# ============================================== #
+#
+# PERSONAL ~/.zshrc FILE for UBUNTU SERVER
+#+ by Runar Fredagsvik [runarsf@protonmail.com]
+#
+# ============================================== #
+
+# If not running interactively, don't do anything
+[ -z "$PS1" ] && return
+
+PATH=$PATH:$HOME/bin/
+ZSH_THEME="miloshadzic"
+COMPLETION_WAITING_DOTS="true"
+HIST_STAMPS="dd.mm.yyyy"
+
+plugins=(
+  git
+  zsh-autosuggestions
+  zsh-history-substring-search
+  zsh-syntax-highlighting
+)
+
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=white'
+
+source $ZSH/oh-my-zsh.sh
+# Personal Aliases
+alias please='sudo $(fc -ln -1)'
+alias ..='cd ..'
+alias cls='clear'
+alias zshrc='vim ~/.zshrc'
+alias reload='. ~/.zshrc'
+alias path='echo -e ${PATH//:/\\n}'
+alias libpath='echo -e ${LD_LIBRARY_PATH//:/\\n}'
+alias ls='ls -la --color'
+alias rr='ranger'
+
+# chmod u=rwx,g=rwx,o=rwx ~/.zshrc
+
+clear
+
