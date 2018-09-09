@@ -28,6 +28,8 @@ PATH=$PATH:$HOME/bin/
 ZSH_THEME="robbyrussell"
 COMPLETION_WAITING_DOTS="true"
 HIST_STAMPS="dd.mm.yyyy"
+export VISUAL=vim
+export EDITOR="$VISUAL"
 
 plugins=(
   git
