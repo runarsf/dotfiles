@@ -45,7 +45,7 @@ server() {
 os=`cat /etc/os-release | grep NAME`
 if [[ $os == *Ubuntu* ]]; then
 	pkgmgr='apt-get install'
-elif [[ $os == *Antergos* ]]; then
+elif [[ $os == *Antergos* ]] || [[ $os == *Arch* ]]; then
 	pkgmgr='pacman -S'
 fi
 
