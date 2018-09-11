@@ -31,17 +31,19 @@ desktop () {
 	zsh
 }
 server () {
-	zsh
-	vim
-	tmux
+	check zsh
+	oh-my-zsh
+	check vim
+	check tmux
 }
 
 check() {
 	pkg=`dpkg -s $1 | grep Status`
-	if [[ $pkg == *installed ]]; then
+	if [[ $pkg == *installed ]]; then	
 		late $1
 	else
 		sudo apt-get install $1
+		printf "\n${COLOR_PURPLE} Installed ${COLOR_GREEN}$1${COLOR_NONE}\n\n"
 	fi
 }
 
@@ -49,14 +51,7 @@ late() {
 	printf "\n${COLOR_CYAN} $1 ${COLOR_PURPLE}already installed.${COLOR_NONE}\n\n"
 }
 
-zsh() {
-	pkg=`dpkg -s zsh | grep Status`
-	if [[ $pkg == *installed ]]; then
-		late zsh
-	else
-		sudo apt-get install zsh
-	fi
-
+oh-my-zsh() {
 	if [ ! -d "$HOME/.oh-my-zsh/" ]; then
 		pkg=`dpkg -s curl | grep Status`
 		if [[ $pkg == *installed ]]; then
@@ -68,26 +63,6 @@ zsh() {
 		late oh-my-zsh
 	fi
 }
-
-vim() {
-	pkg=`dpkg -s vim | grep Status`
-	if [[ $pkg == *installed ]]; then
-		late vim
-	else
-		sudo apt-get install vim
-	fi
-}
-
-tmux() {
-	pkg=`dpkg -s tmux | grep Status`
-	if [[ $pkg == *installed ]]; then
-		late tmux
-	else
-		sudo apt-get install tmux
-	fi
-}
-
-
 
 configs () {
 	for f in `\ls -a .`
@@ -127,4 +102,3 @@ case $1 in
 		printf "\n${COLOR_RED}Invalid argument: '$1'${COLOR_NONE}\n\n"
 		exit;;
 esac
-
