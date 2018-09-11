@@ -32,16 +32,16 @@ desktop () {
 }
 server () {
 	zsh
-	tmux
 	vim
+	tmux
 }
 
 check() {
 	pkg=`dpkg -s $1 | grep Status`
 	if [[ $pkg == *installed ]]; then
-		return 0
+		late $1
 	else
-		return 1
+		sudo apt-get install $1
 	fi
 }
 
@@ -50,17 +50,16 @@ late() {
 }
 
 zsh() {
-	check zsh
-  if [ $? -eq 0 ]; then
-  	late zsh
-  else
-  	sudo apt-get install zsh
-  fi
+	pkg=`dpkg -s zsh | grep Status`
+	if [[ $pkg == *installed ]]; then
+		late zsh
+	else
+		sudo apt-get install zsh
+	fi
 
 	if [ ! -d "$HOME/.oh-my-zsh/" ]; then
-		check curl
-		if [ $? -eq 0 ]
-			then
+		pkg=`dpkg -s curl | grep Status`
+		if [[ $pkg == *installed ]]; then
 				sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
 			else
 				sh -c "$(wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)"
@@ -71,8 +70,8 @@ zsh() {
 }
 
 vim() {
-	check vim
-	if [ $? -eq 0 ]; then
+	pkg=`dpkg -s vim | grep Status`
+	if [[ $pkg == *installed ]]; then
 		late vim
 	else
 		sudo apt-get install vim
@@ -80,8 +79,8 @@ vim() {
 }
 
 tmux() {
-	pkg=`dpkg -s $1 | grep Status`
-  if [[ $pkg == *installed ]]; then
+	pkg=`dpkg -s tmux | grep Status`
+	if [[ $pkg == *installed ]]; then
 		late tmux
 	else
 		sudo apt-get install tmux
@@ -106,11 +105,11 @@ configs () {
 
 # make sure the script is run correctly
 if [ "$#" -gt 1 ]; then
-	printf "\n${COLOR_RED}Too many arguments!${COLOR_NONE}\n\n"
+	printf "\n${COLOR_RED}Too ${COLOR_ORANGE}many ${COLOR_RED}arguments!${COLOR_NONE}\n\n"
 	exit 1
 fi
 if [ "$#" -lt 1 ]; then
-	printf "\n${COLOR_RED}Too few arguments!${COLOR_NONE}\n\n"
+	printf "\n${COLOR_RED}Too ${COLOR_ORANGE}few ${COLOR_RED}arguments!${COLOR_NONE}\n\n"
 	exit 1
 fi
 # arguments
