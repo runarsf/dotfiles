@@ -27,22 +27,34 @@ helpme () {
 	printf "\n\n"
 }
 
-desktop () {
-	zsh
+desktop() {
+	check git
+	check zsh
+	oh-my-zsh
+	check gvim
+	check rofi
 }
-server () {
+server() {
+	check git
 	check zsh
 	oh-my-zsh
 	check vim
 	check tmux
 }
 
+os=`cat /etc/os-release | grep NAME`
+if [[ $os == *Ubuntu* ]]; then
+	pkgmgr='apt-get install'
+elif [[ $os == *Antergos* ]]; then
+	pkgmgr='pacman -S'
+fi
+
 check() {
 	pkg=`dpkg -s $1 | grep Status`
 	if [[ $pkg == *installed ]]; then	
 		late $1
 	else
-		sudo apt-get install $1
+		sudo $pkgmgr $1
 		printf "\n${COLOR_PURPLE} Installed ${COLOR_GREEN}$1${COLOR_NONE}\n\n"
 	fi
 }
@@ -64,7 +76,7 @@ oh-my-zsh() {
 	fi
 }
 
-configs () {
+configs() {
 	for f in `\ls -a .`
 	do
 		if [[ $f == "README.md" ]] || [[ $f == "deploy.sh" ]] || [[$f == "."]] || [[$f == ".."]] || [[ $f == "games" ]]; then
@@ -95,7 +107,7 @@ case $1 in
 	-s|server)
 		server
 		exit;;
-	-h|help)
+	-h|--help)
 		helpme
 		exit;;
 	*)
