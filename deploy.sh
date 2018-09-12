@@ -1,5 +1,7 @@
 #!/bin/bash
-set -e
+start=`date`
+printf "\n${start}\n\n"
+set -e 
 #set -o verbose
 
 COLOR_RED='\033[0;31m'
@@ -12,12 +14,12 @@ COLOR_NONE='\033[0m'
 
 helpme () {
 	printf "\n\t ${COLOR_GREEN}"
-	printf "\n\t    ███████╗██╗██╗     ███████╗███████╗"
-	printf "\n\t    ██╔════╝██║██║     ██╔════╝██╔════╝"
-	printf "\n\t    █████╗  ██║██║     █████╗  ███████╗"
-	printf "\n\t    ██╔══╝  ██║██║     ██╔══╝  ╚════██║"
-	printf "\n\t ██╗██║     ██║███████╗███████╗███████║"
-	printf "\n\t ╚═╝╚═╝     ╚═╝╚══════╝╚══════╝╚══════╝"
+	printf                            "\n\t    ███████╗██╗██╗     ███████╗███████╗"
+	printf                            "\n\t    ██╔════╝██║██║     ██╔════╝██╔════╝"
+	printf                            "\n\t    █████╗  ██║██║     █████╗  ███████╗"
+	printf                            "\n\t    ██╔══╝  ██║██║     ██╔══╝  ╚════██║"
+	printf "\n\t ${COLOR_CYAN}██╗${COLOR_GREEN}██║     ██║███████╗███████╗███████║"
+	printf "\n\t ${COLOR_CYAN}╚═╝${COLOR_GREEN}╚═╝     ╚═╝╚══════╝╚══════╝╚══════╝"
 	printf "${COLOR_NONE}"
 	printf "\n\n\t ${COLOR_ORANGE}This script may install other related prerequisites/versions of the listed packages"
 	printf "\n\n\t ${COLOR_CYAN}./deploy.sh desktop"
@@ -33,6 +35,13 @@ desktop() {
 	oh-my-zsh
 	check gvim
 	check rofi
+	check rxvt-unicode
+	check i3
+	check polybar
+	check ranger
+	check compton
+	check python
+	check tmux
 }
 server() {
 	check git
@@ -47,15 +56,28 @@ if [[ $os == *Ubuntu* ]]; then
 	pkgmgr='apt-get install'
 elif [[ $os == *Antergos* ]] || [[ $os == *Arch* ]]; then
 	pkgmgr='pacman -S'
+else
+	printf "${COLOR_RED}No supported OS or WSL detected. Check ${COLOR_ORANGE}/etc/os-release ${COLOR_RED}for more info.${COLOR_NONE}"
+	exit 1
 fi
 
 check() {
-	pkg=`dpkg -s $1 | grep Status`
-	if [[ $pkg == *installed ]]; then	
-		late $1
-	else
-		sudo $pkgmgr $1
-		printf "\n${COLOR_PURPLE} Installed ${COLOR_GREEN}$1${COLOR_NONE}\n\n"
+	if [[ $os == *Ubuntu* ]]; then
+		pkg=`dpkg -s $1 | grep Status`
+		if [[ $pkg == *installed ]]; then	
+			late $1
+		else
+			sudo $pkgmgr $1
+			printf "\n${COLOR_PURPLE} Installed ${COLOR_GREEN}$1${COLOR_PURPLE}.${COLOR_NONE}\n\n"
+		fi
+	elif [[ $os == *Antergos* ]] || [[ $os == *Arch* ]]; then
+		pkg=`pacman -Qs $1`
+		if [ $pgk == "" ]; then
+			sudo $pgkmgr $1
+			printf "\n${COLOR_PURPLE} Installed ${COLOR_GREEN}$1${COLOR_PURPLE}.${COLOR_NONE}\n\n"
+		else
+			late $1
+		fi
 	fi
 }
 
@@ -79,12 +101,14 @@ oh-my-zsh() {
 configs() {
 	for f in `\ls -a .`
 	do
-		if [[ $f == "README.md" ]] || [[ $f == "deploy.sh" ]] || [[$f == "."]] || [[$f == ".."]] || [[ $f == "games" ]]; then
+		if [[ $f == "." ]] || [[ $f == ".." ]] || [[ $f == "README.md" ]] || [[ $f == "deploy.sh" ]] || [[ $f == "games" ]]; then
 			continue
-		fi
-		if [ -d $f ]; then
-			# mkdir -p $HOME/.${f}
-			echo "mkdir -p $HOME/.${f}"
+		elif [[ $f == "root" ]]; then
+			echo "cp -r -p -n ./root/* /"
+		elif [ -d $f ]; then
+			echo "cp -r -p -n ./$f $HOME/${f}"		
+		elif [ -f $f ]; then
+			echo "cp ./$f $HOME/"
 		fi
 	done
 }
@@ -92,25 +116,38 @@ configs() {
 
 # make sure the script is run correctly
 if [ "$#" -gt 1 ]; then
-	printf "\n${COLOR_RED}Too ${COLOR_ORANGE}many ${COLOR_RED}arguments!${COLOR_NONE}\n\n"
+	printf "\n${COLOR_RED}Too ${COLOR_ORANGE}many ${COLOR_RED}arguments!${COLOR_NONE}"
+	helpme
 	exit 1
 fi
 if [ "$#" -lt 1 ]; then
-	printf "\n${COLOR_RED}Too ${COLOR_ORANGE}few ${COLOR_RED}arguments!${COLOR_NONE}\n\n"
+	printf "\n${COLOR_RED}Too ${COLOR_ORANGE}few ${COLOR_RED}arguments!${COLOR_NONE}"
+	helpme	
 	exit 1
 fi
 # arguments
 case $1 in
+	-c|--config)
+		configs
+		exit 0;;
 	-d|desktop)
 		desktop
-		exit;;
+		exit 0;;
 	-s|server)
 		server
-		exit;;
+		exit 0;;
 	-h|--help)
 		helpme
-		exit;;
+		exit 0;;
 	*)
-		printf "\n${COLOR_RED}Invalid argument: '$1'${COLOR_NONE}\n\n"
-		exit;;
+		printf "\n${COLOR_RED}Invalid argument: '$1'${COLOR_NONE}"
+		helpme
+		exit 0;;
 esac
+
+function end {
+	stop=`date`
+	printf "${stop}"
+}
+
+trap end EXIT
