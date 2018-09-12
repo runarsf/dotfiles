@@ -1,6 +1,6 @@
 #!/bin/bash
-start=`date`
-printf "\n${start}\n\n"
+printf "\n`date`\n\n"
+
 set -e 
 #set -o verbose
 
@@ -87,12 +87,27 @@ late() {
 
 oh-my-zsh() {
 	if [ ! -d "$HOME/.oh-my-zsh/" ]; then
-		pkg=`dpkg -s curl | grep Status`
-		if [[ $pkg == *installed ]]; then
-				sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+		if [[ $os == *Ubuntu* ]]; then
+			pkg=`dpkg -s curl | grep Status`
+			if [[ $pkg == *installed ]]; then
+				crwg="true"
 			else
-				sh -c "$(wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)"
+				crwg="false"
+			fi
+		elif [[ $os == *Antergos* ]] || [[ $os == *Arch* ]]; then
+			pkg=`pacman -Qs curl`
+			if [ $pkg == "" ]; then
+				crwg="false"
+			else			
+				crwg="true"
+			fi
 		fi
+		if [$crwg == "true"]; then
+			sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+		else
+			sh -c "$(wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)"
+		fi
+	
 	else
 		late oh-my-zsh
 	fi
@@ -145,9 +160,9 @@ case $1 in
 		exit 0;;
 esac
 
-function end {
+function exit() {
 	stop=`date`
-	printf "${stop}"
+	printf "\n${stop}\n\n"
 }
 
-trap end EXIT
+trap exit EXIT
