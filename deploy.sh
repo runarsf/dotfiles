@@ -1,8 +1,18 @@
 #!/bin/bash
 printf "\n`date`\n\n"
 
-set -e 
+set -e
 #set -o verbose
+
+read -p "Are you sure? This will override your config files. [y/n] " -n 1 -r
+printf "\n\n"
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+	printf "\n\n"
+elif [[ $REPLY =~ ^[Nn]$ ]]; then
+	printf "\n"
+	exit 0
+else exit 0
+fi
 
 COLOR_RED='\033[0;31m'
 COLOR_GREEN='\033[1;32m'
@@ -23,9 +33,9 @@ helpme () {
 	printf "${COLOR_NONE}"
 	printf "\n\n\t ${COLOR_ORANGE}This script may install other related prerequisites/versions of the listed packages"
 	printf "\n\n\t ${COLOR_CYAN}./deploy.sh desktop"
-	printf "\n\t\t ${COLOR_PURPLE}zsh | gvim | git | rofi | urxvt | i3 | polybar | ranger | compton | python(pip) | tmux"
+	printf "\n\t\t ${COLOR_PURPLE}zsh | gvim | git | rofi | urxvt | i3 | polybar | ranger | compton | python(pip) | tmux | dos2unix"
 	printf "\n\n\t ${COLOR_CYAN}./deploy.sh server"
-	printf "\n\t\t ${COLOR_PURPLE}zsh | vim | git | tmux"
+	printf "\n\t\t ${COLOR_PURPLE}zsh | vim | git | tmux | dos2unix"
 	printf "\n\n"
 }
 
@@ -42,6 +52,7 @@ desktop() {
 	check compton
 	check python
 	check tmux
+	check dos2unix
 }
 server() {
 	check git
@@ -49,6 +60,7 @@ server() {
 	oh-my-zsh
 	check vim
 	check tmux
+	check dos2unix
 }
 
 os=`cat /etc/os-release | grep NAME`
@@ -64,7 +76,7 @@ fi
 check() {
 	if [[ $os == *Ubuntu* ]]; then
 		pkg=`dpkg -s $1 | grep Status`
-		if [[ $pkg == *installed ]]; then	
+		if [[ $pkg == *installed ]]; then
 			late $1
 		else
 			sudo $pkgmgr $1
@@ -98,7 +110,7 @@ oh-my-zsh() {
 			pkg=`pacman -Qs curl`
 			if [ $pkg == "" ]; then
 				crwg="false"
-			else			
+			else
 				crwg="true"
 			fi
 		fi
@@ -107,7 +119,7 @@ oh-my-zsh() {
 		else
 			sh -c "$(wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)"
 		fi
-	
+
 	else
 		late oh-my-zsh
 	fi
@@ -119,11 +131,11 @@ configs() {
 		if [[ $f == "." ]] || [[ $f == ".." ]] || [[ $f == "README.md" ]] || [[ $f == "deploy.sh" ]] || [[ $f == "games" ]]; then
 			continue
 		elif [[ $f == "root" ]]; then
-			echo "cp -r -p -n ./root/* /"
+			cp -r -p -n ./root/* /
 		elif [ -d $f ]; then
-			echo "cp -r -p -n ./$f $HOME/${f}"		
+			cp -r -p -n ./$f $HOME/${f}
 		elif [ -f $f ]; then
-			echo "cp ./$f $HOME/"
+			cp ./$f $HOME/
 		fi
 	done
 }
@@ -137,7 +149,7 @@ if [ "$#" -gt 1 ]; then
 fi
 if [ "$#" -lt 1 ]; then
 	printf "\n${COLOR_RED}Too ${COLOR_ORANGE}few ${COLOR_RED}arguments!${COLOR_NONE}"
-	helpme	
+	helpme
 	exit 1
 fi
 # arguments
