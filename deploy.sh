@@ -25,7 +25,9 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
 elif [[ $REPLY =~ ^[Nn]$ ]]; then
 	printf "Exiting...\n\n"
 	exit 0
-else exit 0
+else
+	printf "Exiting...\n\n"
+	exit 1
 fi
 
 helpme () {
@@ -59,6 +61,8 @@ desktop() {
 	check python
 	check tmux
 	check dos2unix
+	configs
+	rm $HOME/.zshrc.server
 }
 server() {
 	check git
