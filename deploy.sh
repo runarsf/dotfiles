@@ -110,10 +110,9 @@ check() {
 			late $1
 		fi
 	elif [[ $os == *CentOS* ]]; then
-		pkg=`yum list installed "$1"`
-		if [[ $pkg == *"Installed Packages"* ]]; then
+		if yum list installed "$1" >/dev/null 2>&1; then
 			late $1
-		else
+  		else
 			sudo $pkgmgr $1
 			printf "\n${COLOR_PURPLE} Installed ${COLOR_GREEN}$1${COLOR_PURPLE}.${COLOR_NONE}\n\n"
 		fi
