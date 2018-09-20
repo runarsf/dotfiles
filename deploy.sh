@@ -49,6 +49,30 @@ helpme () {
 	printf "\n\t\t ${COLOR_PURPLE}zsh | gvim | git | rofi | urxvt | i3 | polybar | ranger | compton | python(pip) | tmux | dos2unix"
 	printf "\n\n\t ${COLOR_CYAN}./deploy.sh server"
 	printf "\n\t\t ${COLOR_PURPLE}zsh | vim | git | tmux | dos2unix"
+	printf "\n\n\t ${COLOR_CYAN}./deploy.sh --help"
+	printf "\n\t\t ${COLOR_PURPLE}show this dialogue"
+	printf "\n\n\t ${COLOR_CYAN}./deploy.sh --os"
+	printf "\n\t\t ${COLOR_PURPLE}show supported operating systems/distros"
+	printf "\n\n ${COLOR_NONE}"
+}
+
+os () {
+	printf "\n\t ${COLOR_GREEN}"
+	printf "\n\t ████████ ███████╗"
+	printf "\n\t ██╔═══██╗██╔════╝"
+	printf "\n\t ██║   ██║███████╗"
+	printf "\n\t ██║   ██║╚════██║"
+	printf "\n\t ████████║███████║"
+	printf "\n\t   ╚═════╝╚══════╝"
+	printf "${COLOR_NONE}"
+	printf "\n\n\t ${COLOR_ORANGE}This is a list of all tested and supported distr${COLOR_YELLOW}os${COLOR_ORANGE}."
+	printf "\n\n\t ${COLOR_ORANGE}Don't see your OS/distro? Submit an issue at the github repo!"
+	printf "\n\t ${COLOR_YELLOW}https://github.com/runarsf/dotfiles"
+	printf "\n\n\t ${COLOR_CYAN}- Arch"
+	printf "\n\t\t ${COLOR_PURPLE}- Antergos"
+	printf "\n\n\t ${COLOR_CYAN}- Ubuntu"
+	printf "\n\t\t ${COLOR_PURPLE}- Windows Subsystem for Linux"
+	printf "\n\n\t ${COLOR_CYAN}- CentOS"
 	printf "\n\n ${COLOR_NONE}"
 }
 
@@ -196,6 +220,9 @@ case $1 in
 		exit 0;;
 	-h|--help)
 		helpme
+		exit 0;;
+	-o|--os)
+		os
 		exit 0;;
 	*)
 		printf "\n${COLOR_RED}Invalid argument: '$1'${COLOR_NONE}"
