@@ -58,12 +58,12 @@ helpme () {
 
 os () {
 	printf "\n\t ${COLOR_GREEN}"
-	printf "\n\t ████████ ███████╗"
-	printf "\n\t ██╔═══██╗██╔════╝"
+	printf "\n\t ████████╗███████╗"
+	printf "\n\t ██╔═══██║██╔════╝"
 	printf "\n\t ██║   ██║███████╗"
 	printf "\n\t ██║   ██║╚════██║"
 	printf "\n\t ████████║███████║"
-	printf "\n\t   ╚═════╝╚══════╝"
+	printf "\n\t  ╚══════╝╚══════╝"
 	printf "${COLOR_NONE}"
 	printf "\n\n\t ${COLOR_ORANGE}This is a list of all tested and supported distr${COLOR_YELLOW}os${COLOR_ORANGE}."
 	printf "\n\n\t ${COLOR_ORANGE}Don't see your OS/distro? Submit an issue at the github repo!"
