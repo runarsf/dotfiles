@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-PS4='+${LINENO}: '
+trap 'printf "%3d: " "$LINENO"' DEBUG
 #set -o verbose
 
 COLOR_RED='\033[0;31m'
