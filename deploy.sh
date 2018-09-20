@@ -18,15 +18,15 @@ COLOR_CYAN='\033[1;36m'
 COLOR_NONE='\033[0m'
 
 printf "\n${COLOR_RED}This script will ask for sudo rights at one point, this is to make sure all configs are deployed correctly.\n\n${COLOR_ORANGE}"
-read -p "Are you sure? This will override your config files. [y/n] " -n 1 -r
+read -p "Are you sure? This will override your current config files. [y/n] " -n 1 -r
 printf "\n\n"
 if [[ $REPLY =~ ^[Yy]$ ]]; then
-	printf "\n\n"
+	printf "${COLOR_NONE}\n\n"
 elif [[ $REPLY =~ ^[Nn]$ ]]; then
-	printf "Exiting...\n\n"
+	printf "${COLOR_NONE}Exiting...\n\n"
 	exit 0
 else
-	printf "Exiting...\n\n"
+	printf "${COLOR_NONE}Exiting...\n\n"
 	exit 1
 fi
 
@@ -81,7 +81,7 @@ if [[ $os == *Ubuntu* ]]; then
 elif [[ $os == *Antergos* ]] || [[ $os == *Arch* ]]; then
 	pkgmgr='pacman -S'
 else
-	printf "${COLOR_RED}No supported OS or WSL detected. Check ${COLOR_ORANGE}/etc/os-release ${COLOR_RED}for more info.${COLOR_NONE}"
+	printf "${COLOR_RED}No supported OS or WSL detected. Check ${COLOR_ORANGE}/etc/os-release ${COLOR_RED}for more info.${COLOR_NONE}\n\n"
 	exit 1
 fi
 
