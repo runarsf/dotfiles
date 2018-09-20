@@ -55,7 +55,6 @@ helpme () {
 desktop() {
 	check git
 	check zsh
-	oh-my-zsh
 	check gvim
 	check rofi
 	check rxvt-unicode
@@ -68,16 +67,17 @@ desktop() {
 	check dos2unix
 	configs
 	rm $HOME/.zshrc.server
+	oh-my-zsh # exits entire script, has to be last
 }
 server() {
 	check git
 	check zsh
-	oh-my-zsh
 	check vim
 	check tmux
 	check dos2unix
 	configs
 	mv $HOME/.zshrc.server $HOME/.zshrc
+	oh-my-zsh # exits entire script, has to be last
 }
 
 os=`cat /etc/os-release | grep NAME`
