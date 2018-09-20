@@ -12,25 +12,27 @@ COLOR_PURPLE='\033[1;35m'
 COLOR_CYAN='\033[1;36m'
 COLOR_NONE='\033[0m'
 
-if [ $EUID != 0 ]; then
-	sudo "$0" "$@"
-	exit $?
-fi
+run () {
+	if [ $EUID != 0 ]; then
+		sudo "$0" "$@"
+		exit $?
+	fi
 
-printf "\n${COLOR_RED}This script will ask for ${COLOR_ORANGE}sudo${COLOR_RED} rights at one point, this is to make sure all configs are deployed correctly."
-printf "\nIf the current terminal has sudo rights, you will not get a sudo-prompt."
-printf "\nIf this dialogue appears when running with the ${COLOR_ORANGE}--help${COLOR_RED}(or any other non-deployment args), click ${COLOR_ORANGE}y${COLOR_RED}.${COLOR_ORANGE}\n\n"
-read -p "Are you sure? This will override your current config files. [y/n] " -n 1 -r
-printf "\n\n"
-if [[ $REPLY =~ ^[Yy]$ ]]; then
-	printf "${COLOR_NONE}\n\n"
-elif [[ $REPLY =~ ^[Nn]$ ]]; then
-	printf "${COLOR_NONE}Exiting...\n\n"
-	exit 0
-else
-	printf "${COLOR_NONE}Exiting...\n\n"
-	exit 1
-fi
+	printf "\n${COLOR_RED}This script will ask for ${COLOR_ORANGE}sudo${COLOR_RED} rights at one point, this is to make sure all configs are deployed correctly."
+	printf "\nIf the current terminal has sudo rights, you will not get a sudo-prompt."
+	printf "\nIf this dialogue appears when running with the ${COLOR_ORANGE}--help${COLOR_RED}(or any other non-deployment args), click ${COLOR_ORANGE}y${COLOR_RED}.${COLOR_ORANGE}\n\n"
+	read -p "Are you sure? This will override your current config files. [y/n] " -n 1 -r
+	printf "\n\n"
+	if [[ $REPLY =~ ^[Yy]$ ]]; then
+		printf "${COLOR_NONE}\n\n"
+	elif [[ $REPLY =~ ^[Nn]$ ]]; then
+		printf "${COLOR_NONE}Exiting...\n\n"
+		exit 0
+	else
+		printf "${COLOR_NONE}Exiting...\n\n"
+		exit 1
+	fi
+}
 
 helpme () {
 	printf "\n\t ${COLOR_GREEN}"
@@ -171,12 +173,15 @@ fi
 # arguments
 case $1 in
 	-c|--config)
+		run
 		configs
 		exit 0;;
 	-d|desktop)
+		run
 		desktop
 		exit 0;;
 	-s|server)
+		run
 		server
 		exit 0;;
 	-h|--help)
