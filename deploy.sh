@@ -2,8 +2,6 @@
 set -e
 #set -o verbose
 
-printf "\n`date`\n\n"
-
 COLOR_RED='\033[0;31m'
 COLOR_GREEN='\033[1;32m'
 COLOR_ORANGE='\033[0;33m'
@@ -11,6 +9,8 @@ COLOR_YELLOW='\033[1;33m'
 COLOR_PURPLE='\033[1;35m'
 COLOR_CYAN='\033[1;36m'
 COLOR_NONE='\033[0m'
+
+printf "${COLOR_YELLOW}\n`date`\n\n"
 
 run () {
 	if [ $EUID != 0 ]; then
