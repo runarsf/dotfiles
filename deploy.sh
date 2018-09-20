@@ -110,7 +110,7 @@ check() {
 		fi
 	elif [[ $os == *CentOS* ]]; then
 		pkg=`rpm -q $1`
-		if [[ $pkg == *not installed ]]; then
+		if [[ $pkg == *not* ]]; then
 			sudo $pkgmgr $1
 			printf "\n${COLOR_PURPLE} Installed ${COLOR_GREEN}$1${COLOR_PURPLE}.${COLOR_NONE}\n\n"
 		else
