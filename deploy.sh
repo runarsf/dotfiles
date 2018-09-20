@@ -116,6 +116,8 @@ check() {
 		else
 			late $1
 		fi
+	else
+		exit 1
 	fi
 }
 
@@ -140,7 +142,7 @@ oh-my-zsh() {
 				crwg="true"
 			fi
 		fi
-		if [$crwg == "true"]; then
+		if [ $crwg == "true" ]; then
 			sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
 		else
 			sh -c "$(wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)"
