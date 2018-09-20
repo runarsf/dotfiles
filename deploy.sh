@@ -1,5 +1,6 @@
-#!/bin/bash
+#!/bin/bash -x
 set -e
+set -x
 trap 'printf "%3d: " "$LINENO"' DEBUG
 #set -o verbose
 
