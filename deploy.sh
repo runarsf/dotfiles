@@ -195,7 +195,7 @@ esac
 
 function exit() {
 	stop=`date`
-	printf "\n${stop}\n\n"
+	printf "${COLOR_NONE}\n${stop}\n\n"
 }
 
 trap exit EXIT
