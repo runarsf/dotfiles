@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 set -e
 set -x
 trap 'printf "%3d: " "$LINENO"' DEBUG
