@@ -17,7 +17,8 @@ COLOR_PURPLE='\033[1;35m'
 COLOR_CYAN='\033[1;36m'
 COLOR_NONE='\033[0m'
 
-printf "\n${COLOR_RED}This script will ask for sudo rights at one point, this is to make sure all configs are deployed correctly.\n\n${COLOR_ORANGE}"
+printf "\n${COLOR_RED}This script will ask for sudo rights at one point, this is to make sure all configs are deployed correctly."
+printf "\n - - If this dialogue appears when running '--help', click 'y'${COLOR_ORANGE}\n\n"
 read -p "Are you sure? This will override your current config files. [y/n] " -n 1 -r
 printf "\n\n"
 if [[ $REPLY =~ ^[Yy]$ ]]; then
