@@ -2,11 +2,6 @@
 set -e
 #set -o verbose
 
-if [ $EUID != 0 ]; then
-	sudo "$0" "$@"
-	exit $?
-fi
-
 printf "\n`date`\n\n"
 
 COLOR_RED='\033[0;31m'
@@ -17,9 +12,14 @@ COLOR_PURPLE='\033[1;35m'
 COLOR_CYAN='\033[1;36m'
 COLOR_NONE='\033[0m'
 
+if [ $EUID != 0 ]; then
+	sudo "$0" "$@"
+	exit $?
+fi
+
 printf "\n${COLOR_RED}This script will ask for ${COLOR_ORANGE}sudo${COLOR_RED} rights at one point, this is to make sure all configs are deployed correctly."
 printf "\nIf the current terminal has sudo rights, you will not get a sudo-prompt."
-printf "\nIf this dialogue appears when running ${COLOR_ORANGE}--help${COLOR_RED}, click ${COLOR_ORANGE}y${COLOR_RED}.${COLOR_ORANGE}\n\n"
+printf "\nIf this dialogue appears when running with the ${COLOR_ORANGE}--help${COLOR_RED}(or any other non-deployment args), click ${COLOR_ORANGE}y${COLOR_RED}.${COLOR_ORANGE}\n\n"
 read -p "Are you sure? This will override your current config files. [y/n] " -n 1 -r
 printf "\n\n"
 if [[ $REPLY =~ ^[Yy]$ ]]; then
@@ -41,7 +41,7 @@ helpme () {
 	printf "\n\t ${COLOR_CYAN}██╗${COLOR_GREEN}██║     ██║███████╗███████╗███████║"
 	printf "\n\t ${COLOR_CYAN}╚═╝${COLOR_GREEN}╚═╝     ╚═╝╚══════╝╚══════╝╚══════╝"
 	printf "${COLOR_NONE}"
-	printf "\n\n\t ${COLOR_ORANGE}This script may install other related prerequisites/versions of the listed packages"
+	printf "\n\n\t ${COLOR_ORANGE}This script may install other related prerequisites/versions of the listed packages..."
 	printf "\n\n\t ${COLOR_CYAN}./deploy.sh desktop"
 	printf "\n\t\t ${COLOR_PURPLE}zsh | gvim | git | rofi | urxvt | i3 | polybar | ranger | compton | python(pip) | tmux | dos2unix"
 	printf "\n\n\t ${COLOR_CYAN}./deploy.sh server"
