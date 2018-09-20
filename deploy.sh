@@ -1,5 +1,6 @@
 #!/bin/bash
 set -e
+PS4='+${LINENO}: '
 #set -o verbose
 
 COLOR_RED='\033[0;31m'
@@ -116,6 +117,8 @@ check() {
 		else
 			late $1
 		fi
+	else
+		exit 1
 	fi
 }
 
