@@ -1,8 +1,7 @@
 #!/bin/bash
 set -e
-set -x
-trap 'printf "%3d: " "$LINENO"' DEBUG
-#set -o verbose
+#(debug) set -x
+#(debug) trap 'printf "%3d: " "$LINENO"' DEBUG
 
 COLOR_RED='\033[0;31m'
 COLOR_GREEN='\033[1;32m'
@@ -111,8 +110,8 @@ check() {
 			late $1
 		fi
 	elif [[ $os == *CentOS* ]]; then
-		pkg=`rpm -q $1`
-		if [[ $pkg == *not* ]]; then
+		pkg=`yum list installed "$1"`
+		if [[ $pkg == *Error:* ]]; then
 			sudo $pkgmgr $1
 			printf "\n${COLOR_PURPLE} Installed ${COLOR_GREEN}$1${COLOR_PURPLE}.${COLOR_NONE}\n\n"
 		else
