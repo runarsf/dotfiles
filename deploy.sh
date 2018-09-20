@@ -18,7 +18,8 @@ COLOR_CYAN='\033[1;36m'
 COLOR_NONE='\033[0m'
 
 printf "\n${COLOR_RED}This script will ask for sudo rights at one point, this is to make sure all configs are deployed correctly."
-printf "\n - If this dialogue appears when running '--help', click 'y'${COLOR_ORANGE}\n\n"
+printf "\nIf the current terminal has sudo rights, you will not get a sudo-prompt.\n"
+printf "\n - If this dialogue appears when running ${COLOR_ORANGE}--help${COLOR_RED}, click ${COLOR_ORANGE}y${COLOR_RED}.${COLOR_ORANGE}\n\n"
 read -p "Are you sure? This will override your current config files. [y/n] " -n 1 -r
 printf "\n\n"
 if [[ $REPLY =~ ^[Yy]$ ]]; then
@@ -45,7 +46,7 @@ helpme () {
 	printf "\n\t\t ${COLOR_PURPLE}zsh | gvim | git | rofi | urxvt | i3 | polybar | ranger | compton | python(pip) | tmux | dos2unix"
 	printf "\n\n\t ${COLOR_CYAN}./deploy.sh server"
 	printf "\n\t\t ${COLOR_PURPLE}zsh | vim | git | tmux | dos2unix"
-	printf "\n\n"
+	printf "\n\n ${COLOR_NONE}"
 }
 
 desktop() {
