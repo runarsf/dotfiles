@@ -18,7 +18,7 @@ COLOR_CYAN='\033[1;36m'
 COLOR_NONE='\033[0m'
 
 printf "\n${COLOR_RED}This script will ask for sudo rights at one point, this is to make sure all configs are deployed correctly."
-printf "\n - - If this dialogue appears when running '--help', click 'y'${COLOR_ORANGE}\n\n"
+printf "\n - If this dialogue appears when running '--help', click 'y'${COLOR_ORANGE}\n\n"
 read -p "Are you sure? This will override your current config files. [y/n] " -n 1 -r
 printf "\n\n"
 if [[ $REPLY =~ ^[Yy]$ ]]; then
@@ -81,6 +81,8 @@ if [[ $os == *Ubuntu* ]]; then
 	pkgmgr='apt-get install'
 elif [[ $os == *Antergos* ]] || [[ $os == *Arch* ]]; then
 	pkgmgr='pacman -S'
+elif [[ $os == *CentOS* ]]; then
+	pkgmgr='yum install'
 else
 	printf "${COLOR_RED}No supported OS or WSL detected. Check ${COLOR_ORANGE}/etc/os-release ${COLOR_RED}for more info.${COLOR_NONE}\n\n"
 	exit 1
