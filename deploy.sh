@@ -22,14 +22,14 @@ run () {
 	printf "\nIf the current terminal has sudo rights, you will not get a sudo-prompt."
 	printf "\nIf this dialogue appears when running with the ${COLOR_ORANGE}--help${COLOR_RED}(or any other non-deployment args), click ${COLOR_ORANGE}y${COLOR_RED}.${COLOR_ORANGE}\n\n"
 	read -p "Are you sure? This will override your current config files. [y/n] " -n 1 -r
-	printf "\n\n"
+	printf "${COLOR_NONE}\n\n"
 	if [[ $REPLY =~ ^[Yy]$ ]]; then
-		printf "${COLOR_NONE}\n\n"
+		printf "\n\n"
 	elif [[ $REPLY =~ ^[Nn]$ ]]; then
-		printf "${COLOR_NONE}Exiting...\n\n"
+		printf "Exiting...\n\n"
 		exit 0
 	else
-		printf "${COLOR_NONE}Exiting...\n\n"
+		printf "Exiting...\n\n"
 		exit 1
 	fi
 }
