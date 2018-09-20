@@ -116,8 +116,6 @@ check() {
 		else
 			late $1
 		fi
-	else
-		exit 1
 	fi
 }
 
