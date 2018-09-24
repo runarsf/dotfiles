@@ -11,21 +11,15 @@ case $- in
       *) return;;
 esac
 
-export WINEPREFIX="$HOME/.wine_osu" # This is the path to a hidden folder in your home folder.
-export WINEARCH=win32 # Only needed when executing the first command with that WINEPREFIX
-
-# Arch Linux/wine-osu users should uncomment next line
-# to update PATH to make sure we're using the right Wine binary
+export WINEPREFIX="$HOME/.wine_osu"
+export WINEARCH=win32
 export PATH=/opt/wine-osu/bin:$PATH
-
-# Path to your oh-my-zsh installation.
-export ZSH=/home/rufus/.oh-my-zsh
 
 # Path
 PATH=$PATH:$HOME/bin/
 
-# ZSH_THEME="powerlevel9k/powerlevel9k"
-ZSH_THEME="robbyrussell"
+ZSH_THEME_RANDOM_CANDIDATES=( "nicoulaj" "miloshadzic" "af-magic" "agnoster" "refined" "emotty" "wedisagree" "imajes" "mh" "pure"  )
+ZSH_THEME="random"
 COMPLETION_WAITING_DOTS="true"
 HIST_STAMPS="dd.mm.yyyy"
 export VISUAL=vim
@@ -40,6 +34,7 @@ plugins=(
 
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=white'
 
+export ZSH=$HOME/.oh-my-zsh
 source $ZSH/oh-my-zsh.sh
 alias zshconfig="mate ~/.zshrc"
 alias ohmyzsh="mate ~/.oh-my-zsh"
@@ -62,11 +57,8 @@ alias rr='ranger'
 alias dot='cd ~/dotfiles/'
 alias killpoly='killall -q polybar'
 alias i3cfg='vim ~/.config/i3/config'
-alias gi3cfg='gedit ~/.config/i3/config'
 alias polycfg='gedit ~/.config/polybar/config'
-alias firefoxcss='cd ~/.mozilla/firefox/uv4gtk2c.default/chrome/'
-
-/usr/lib/python2.7/site-packages/powerline/bindings/zsh/powerline.zsh
+alias rtheme='print $RANDOM_THEME'
 
 # chmod u=rwx,g=rwx,o=rwx ~/.zshrc
 

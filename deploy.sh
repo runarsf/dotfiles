@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
-#(debug) set -x
-#(debug) trap 'printf "%3d: " "$LINENO"' DEBUG
+#set -x
+#trap 'printf "%3d: " "$LINENO"' DEBUG
 
 COLOR_RED='\033[0;31m'
 COLOR_GREEN='\033[1;32m'
@@ -14,10 +14,10 @@ COLOR_NONE='\033[0m'
 printf "${COLOR_YELLOW}\n`date`\n\n"
 
 run () {
-	if [ $EUID != 0 ]; then
-		sudo "$0" "$@"
-		exit $?
-	fi
+	#if [ $EUID != 0 ]; then
+	#	sudo "$0" "$@"
+	#	exit $?
+	#fi
 
 	printf "\n${COLOR_RED}This script will ask for ${COLOR_ORANGE}sudo${COLOR_RED} rights at one point, this is to make sure all configs are deployed correctly."
 	printf "\nIf the current terminal has sudo rights, you will not get a sudo-prompt."
@@ -77,7 +77,7 @@ os () {
 }
 
 desktop() {
-	check git
+	#check git
 	check zsh
 	check gvim
 	check rofi
@@ -126,8 +126,8 @@ check() {
 			printf "\n${COLOR_PURPLE} Installed ${COLOR_GREEN}$1${COLOR_PURPLE}.${COLOR_NONE}\n\n"
 		fi
 	elif [[ $os == *Antergos* ]] || [[ $os == *Arch* ]]; then
-		pkg=`pacman -Qs $1`
-		if [ $pgk == "" ]; then
+		pkg=`pacman -Qs $1 > /dev/null`
+		if [[ $pgk == "" ]]; then
 			sudo $pgkmgr $1
 			printf "\n${COLOR_PURPLE} Installed ${COLOR_GREEN}$1${COLOR_PURPLE}.${COLOR_NONE}\n\n"
 		else
