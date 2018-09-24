@@ -20,6 +20,7 @@ PATH=$PATH:$HOME/bin/
 
 ZSH_THEME_RANDOM_CANDIDATES=( "nicoulaj" "miloshadzic" "af-magic" "agnoster" "refined" "emotty" "wedisagree" "imajes" "mh" "pure"  )
 ZSH_THEME="random"
+#ZSH_THEME="af-magic"
 COMPLETION_WAITING_DOTS="true"
 HIST_STAMPS="dd.mm.yyyy"
 export VISUAL=vim
