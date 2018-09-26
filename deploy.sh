@@ -14,10 +14,10 @@ COLOR_NONE='\033[0m'
 printf "${COLOR_YELLOW}\n`date`\n\n"
 
 run () {
-	#if [ $EUID != 0 ]; then
-	#	sudo "$0" "$@"
-	#	exit $?
-	#fi
+	if [ $EUID != 0 ]; then
+		sudo "$0" "$@"
+		exit $?
+	fi
 
 	printf "\n${COLOR_RED}This script will ask for ${COLOR_ORANGE}sudo${COLOR_RED} rights at one point, this is to make sure all configs are deployed correctly."
 	printf "\nIf the current terminal has sudo rights, you will not get a sudo-prompt."
@@ -77,7 +77,7 @@ os () {
 }
 
 desktop() {
-	#check git
+	check git
 	check zsh
 	check gvim
 	check rofi
