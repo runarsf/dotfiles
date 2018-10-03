@@ -6,6 +6,7 @@ set $reboot sudo reboot
 set $term urxvt
 set $MON1 "$(sed '1!d' $HOME/.monitor)"
 set $MON2 "$(sed '2!d' $HOME/.monitor)"
+set $MON3 "$(sed '3!d' $HOME/.monitor"
 
 # Font for window titles.
 font pango:System San Francisco 7
@@ -19,12 +20,12 @@ for_window [instance="dropdown"] move position center
 for_window [instance="dropdown"] move scratchpad
 exec --no-startup-id $term -name dropdown -e zsh
 
-#tmux, $mod+b
-for_window [instance="bot"] floating enable
-for_window [instance="bot"] resize set 875 560
-for_window [instance="bot"] move position center
-for_window [instance="bot"] move scratchpad
-exec --no-startup-id $term -name bot -e tmux
+#notepad, $mod+n
+for_window [instance="notepad"] floating enable
+for_window [instance="notepad"] resize set 1920 1100
+for_window [instance="notepad"] move position center
+for_window [instance="notepad"] move scratchpad
+exec --no-startup-id $term -fn "xft:mono:pixelsize=24" -name notepad -e zsh
 
 #Python, $mod+a
 for_window [instance="math"] floating enable
@@ -32,7 +33,6 @@ for_window [instance="math"] resize set 1120 420
 for_window [instance="math"] move position center
 for_window [instance="math"] move scratchpad
 exec --no-startup-id $term -fn "xft:mono:pixelsize=24" -name math -e python3 -q
-
 
 ###---Basic Bindings---###
 # Use Mouse+$mod to drag floating windows to their wanted position
@@ -65,11 +65,11 @@ bindsym $mod+Shift+l [instance="math"] pkill
 
 bindsym $mod+a					[instance="math"] scratchpad show; move position center
 bindsym $mod+u					[instance="dropdown"] scratchpad show; move position center
-bindsym $mod+b					[instance="bot"] scratchpad show; move position center
+bindsym $mod+n					[instance="notepad"] scratchpad show
 
 bindsym $mod+Shift+a				exec --no-startup-id $term -fn "xft:mono:pixelsize=24" -name math -e python3 -q
 bindsym $mod+Shift+u				exec --no-startup-id $term -name dropdown -e zsh
-bindsym $mod+Shift+b				exec --no-startup-id $term -name bot -e tmux attach
+bindsym $mod+Shift+n				exec --no-startup-id "$term -fn 'xft:mono:pixelsize=24' -name notepad -e zsh && zsh loadtheme.sh home"
 
 # split in horizontal orientation
 bindsym $mod+h split h
@@ -107,8 +107,8 @@ bindsym $mod+Shift+z 				gaps outer current minus 5
 
 bindsym Mod1+Tab exec rofi -show window
 
-bindsym $mod+x exec /home/rufus/bin/i3lock-custom.sh
-bindsym $mod+Shift+x exec /home/rufus/bin/prompt.sh "Are you sure you want to shutdown?" "$shutdown"
+bindsym $mod+x exec /home/runar/bin/i3lock-custom.sh
+bindsym $mod+Shift+x exec /home/runar/bin/prompt.sh "Are you sure you want to shutdown?" "$shutdown"
 
 bindsym $mod+Shift+c exec puush -b
 bindsym Ctrl+Shift+c exec ~/sharenix/sharenix-section -n -c #sharenix-section
@@ -122,7 +122,7 @@ bindsym XF86AudioPause exec --no-startup-id playerctl play-pause
 bindsym XF86AudioNext exec --no-startup-id playerctl next
 bindsym XF86AudioPrev exec --no-startup-id playerctl previous
 
-bindsym $mod+d exec rofi -show run -lines 3 -eh 2 -width 100 -padding 450 -opacity "50" -color-enabled -bw 0 -bc "$bg-color" -color-window "$bg-color" -fg "$text-color" -hlbg "$bg-color" -hlfg "#9575cd" -font "System San Francisco Display 18" #rofi
+bindsym $mod+d exec rofi -show run -lines 3 -eh 2 -width 100 -padding 625 -opacity "50" -color-enabled -bw 0 -bc "$bg-color" -color-window "$bg-color" -fg "$text-color" -hlbg "$bg-color" -hlfg "#9575cd" -font "System San Francisco Display 18" #rofi
 
 ###---Workspaces---###
 #Define workspace name/variable
@@ -162,25 +162,27 @@ bindsym $mod+Shift+8 move container to workspace $ws8
 bindsym $mod+Shift+9 move container to workspace $ws9
 bindsym $mod+Shift+0 move container to workspace $ws10
 
-workspace $ws1 output DVI-I-1
-workspace $ws2 output DP-5
-workspace $ws3 output DVI-I-1
-workspace $ws4 output DP-5
-workspace $ws5 output DVI-I-1
-workspace $ws6 output DP-5
-workspace $ws7 output DVI-I-1
-workspace $ws8 output DP-5
-workspace $ws9 output DP-5
-workspace $ws0 output DP-5
+workspace $ws1 output DP1-2
+workspace $ws2 output DP1-1
+workspace $ws3 output DP1-2
+workspace $ws4 output DP1-1
+workspace $ws5 output DP1-2
+workspace $ws6 output DP1-1
+workspace $ws7 output DP1-2
+workspace $ws8 output DP1-1
+workspace $ws9 output eDP1
+workspace $ws0 output eDP1
 
 # use xprop to find class
 assign [class="discord"] $ws2
+assign [class="Mattermost"] $ws2
 assign [class="qutebrowser"] $ws3
 # assign [class="Firefox"] $ws3
 assign [class="Thunar"] $ws4
 assign [class="Trello"] $ws8
 assign [class="Anydesk"] $ws9
-assign [class="TeamViewer"] $ws9
+assign [class="Thunderbird"] $ws9
+#assign [class="TeamViewer"] $ws9
 assign [class="Rhythmbox"] $ws10
 for_window [class="Spotify"] move to workspace $ws10
 
@@ -232,10 +234,9 @@ client.urgent						$urgent-bg-color		$urgent-bg-color		$text-color						$active-
 client.background #000000
 
 
-gaps inner 50
-gaps outer -15
+gaps inner 25
+gaps outer 0
 for_window [class="firefox"] gaps outer 0 ; gaps inner 0
-for_window [class="Stremio"] gaps outer 0 ; gaps inner 0
 
 # wacom settings
 exec_always --no-startup-id xsetwacom --set "Wacom Intuos S Pen stylus" Suppress 2
@@ -247,7 +248,7 @@ exec_always --no-startup-id xsetwacom --set "Wacom Intuos S Pen stylus" Button 1
 exec_always --no-startup-id xsetwacom --set "Wacom Intuos S Pen stylus" Button 2 '0'
 exec_always --no-startup-id xsetwacom --set "Wacom Intuos S Pen stylus" Button 3 '0'
 
-exec_always --no-startup-id xrandr --output $(sed '1!d' $HOME/.monitor) --mode 1920x1080 --pos 0x0 --rotate normal --output $(sed '2!d' $HOME/.monitor) --primary --mode 1920x1080 --pos 1920x0 --rotate normal
+exec_always --no-startup-id xrandr --output $(sed '1!d' $HOME/.monitor) --output $(sed '2!d' $HOME/.monitor) --primary --output $(sed '3!d' $HOME/.monitor)
 
 exec_always --no-startup-id nm-applet
 exec_always --no-startup-id compton -f

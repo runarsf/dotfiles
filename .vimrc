@@ -1,10 +1,19 @@
 " Some basics:
-" 	set nocompatible
+ 	set nocompatible
 	filetype plugin on
 	syntax on
 	set encoding=utf-8
 	set number
 	set relativenumber
+
+	" map <ESC>[Od <C-Left>
+	" map <ESC>[Oc <C-Right>
+	" map <ESC>[Oa <C-Up>
+	" map <ESC>[Ob <C-down>
+	" map! <ESC>[Od <C-Left>
+	" map! <ESC>[Oc <C-Right>
+	" map! <ESC>[Oa <C-Up>
+	" map! <ESC>[Ob <C-down>
 
 " Tab settings
 	set tabstop=2

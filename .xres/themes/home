@@ -18,6 +18,15 @@
 #define S_base2         #eee8d5
 #define S_base3         #fdf6e3
 
+URxvt*foreground: #c5c8c6
+URxvt*background: rgba:0000/0000/0200/aaaa
+URxvt*cursorColor: #c5c8c6
+
+URxvt*transparent: true
+URxvt*shading: 20
+URxvt*fading: 25
+URxvt*blurRadius: 10
+
 URxvt*fadeColor:               S_base03
 URxvt*pointerColorBackground:  S_base01
 URxvt*pointerColorForeground:  S_base1

@@ -285,7 +285,7 @@ type = custom/script
 interval = 1
 format-prefix = " "
 format = <label>
-exec = python /home/rufus/repos/polybar-spotify/spotify_status.py -f '{song} - {artist}'
+exec = python /home/runar/bin/spotify_status.py -f '{song} - {artist}'
 format-underline = #1db954
 
 

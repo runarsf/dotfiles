@@ -18,9 +18,9 @@ export PATH=/opt/wine-osu/bin:$PATH
 # Path
 PATH=$PATH:$HOME/bin/
 
-ZSH_THEME_RANDOM_CANDIDATES=( "nicoulaj" "miloshadzic" "af-magic" "agnoster" "refined" "emotty" "wedisagree" "imajes" "mh" "pure"  )
-ZSH_THEME="random"
-#ZSH_THEME="af-magic"
+ZSH_THEME_RANDOM_CANDIDATES=( "nicoulaj" "miloshadzic" "af-magic" "agnoster" "refined" "wedisagree" "imajes" "mh" "pure"  )
+# ZSH_THEME="random"
+ZSH_THEME="rufus"
 COMPLETION_WAITING_DOTS="true"
 HIST_STAMPS="dd.mm.yyyy"
 export VISUAL=vim
@@ -58,8 +58,14 @@ alias rr='ranger'
 alias dot='cd ~/dotfiles/'
 alias killpoly='killall -q polybar'
 alias i3cfg='vim ~/.config/i3/config'
-alias polycfg='gedit ~/.config/polybar/config'
+alias polycfg='vim ~/.config/polybar/config'
 alias rtheme='print $RANDOM_THEME'
+alias nagios='ssh root@nagios.kantega.lan'
+alias nagiosA='ssh root@nagios.kantega.lan -A'
+alias bim='vim'
+alias vi='vim'
+alias notes='cd ~/notes/ && clear && ls | grep -v "\." | grep -v "total " && printf "\n"'
+alias ns='cd ~/notes/ && clear && ls | grep -v "\." | grep -v "total " && printf "\n"'
 
 # chmod u=rwx,g=rwx,o=rwx ~/.zshrc
 

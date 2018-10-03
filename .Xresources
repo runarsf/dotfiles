@@ -1,15 +1,15 @@
-#include "/home/rufus/.xres/urxvt"
+#include "/home/runar/.xres/urxvt"
 
 !! ---
-URxvt*foreground:   #c5c8c6
-URxvt*background: rgba:0000/0000/0200/aaaa
-URxvt*cursorColor:  #c5c8c6
+!!URxvt*foreground:   #c5c8c6
+!!URxvt*background: rgba:0000/0000/0200/aaaa
+!!URxvt*cursorColor:  #c5c8c6
 
 !! Transparency and blur
-URxvt*transparent: true
-URxvt*shading: 20
-URxvt*fading: 25
-URxvt*blurRadius: 10
+!!URxvt*transparent: true
+!!URxvt*shading: 20
+!!URxvt*fading: 25
+!!URxvt*blurRadius: 10
 
 !! Xft
 Xft.autohint:				0
