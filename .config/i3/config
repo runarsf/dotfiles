@@ -6,7 +6,7 @@ set $reboot sudo reboot
 set $term urxvt
 set $MON1 "$(sed '1!d' $HOME/.monitor)"
 set $MON2 "$(sed '2!d' $HOME/.monitor)"
-set $MON3 "$(sed '3!d' $HOME/.monitor"
+set $MON3 "$(sed '3!d' $HOME/.monitor)"
 
 # Font for window titles.
 font pango:System San Francisco 7
@@ -54,14 +54,12 @@ bindsym $mod+Right focus right
 
 bindsym $mod+Shift+j move left
 bindsym $mod+Shift+k move down
-# bindsym $mod+Shift+l move up
+bindsym $mod+Shift+l move up
 bindsym $mod+Shift+oslash move right
 bindsym $mod+Shift+Left move left
 bindsym $mod+Shift+Down move down
 bindsym $mod+Shift+Up move up
 bindsym $mod+Shift+Right move right
-
-bindsym $mod+Shift+l [instance="math"] pkill
 
 bindsym $mod+a					[instance="math"] scratchpad show; move position center
 bindsym $mod+u					[instance="dropdown"] scratchpad show; move position center
@@ -105,7 +103,7 @@ bindsym $mod+Shift+s 				gaps inner current minus 5
 bindsym $mod+z					gaps outer current plus 5
 bindsym $mod+Shift+z 				gaps outer current minus 5
 
-bindsym Mod1+Tab exec rofi -show window
+bindsym $mod+Tab exec rofi -show window
 
 bindsym $mod+x exec /home/runar/bin/i3lock-custom.sh
 bindsym $mod+Shift+x exec /home/runar/bin/prompt.sh "Are you sure you want to shutdown?" "$shutdown"
@@ -148,7 +146,7 @@ bindsym $mod+7 workspace $ws7
 bindsym $mod+8 workspace $ws8
 bindsym $mod+9 workspace $ws9
 bindsym $mod+0 workspace $ws10
-bindsym $mod+Tab workspace back_and_forth
+#bindsym $mod+Tab workspace back_and_forth
 
 # move focused container to workspace
 bindsym $mod+Shift+1 move container to workspace $ws1
@@ -248,7 +246,7 @@ exec_always --no-startup-id xsetwacom --set "Wacom Intuos S Pen stylus" Button 1
 exec_always --no-startup-id xsetwacom --set "Wacom Intuos S Pen stylus" Button 2 '0'
 exec_always --no-startup-id xsetwacom --set "Wacom Intuos S Pen stylus" Button 3 '0'
 
-exec_always --no-startup-id xrandr --output $(sed '1!d' $HOME/.monitor) --output $(sed '2!d' $HOME/.monitor) --primary --output $(sed '3!d' $HOME/.monitor)
+exec_always --no-startup-id xrandr --output $(sed '1!d' $HOME/.monitor) --mode 1920x1080 --pos 0x0 --rotate normal --output $(sed '2!d' $HOME/.monitor) --mode 2560x1440 --pos 1920x0 --primary --rotate normal --output $(sed '3!d' $HOME/.monitor) --mode 2560x1440 --pos 4480x0 --rotate normal
 
 exec_always --no-startup-id nm-applet
 exec_always --no-startup-id compton -f
@@ -258,6 +256,5 @@ exec_always --no-startup-id feh --bg-scale $HOME/.config/wall.png
 exec xdg-settings set default-web-browser firefox.desktop
 exec --no-startup-id ifconfig eno1 up
 exec --no-startup-id "setxkbmap -v no" # sets keymap to norwegian
-exec discord-canary
 exec spotify
 # exec --no-startup-id i3-msg workspace $ws9
