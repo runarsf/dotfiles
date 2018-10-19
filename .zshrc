@@ -5,6 +5,8 @@
 #
 # ============================================== #
 
+PYTHONDONTWRITEBYTECODE=1 python -m pytest -p no:cacheprovider
+
 # If not running interactively, don't do anything
 case $- in
     *i*) ;;
@@ -23,6 +25,7 @@ ZSH_THEME_RANDOM_CANDIDATES=( "nicoulaj" "miloshadzic" "af-magic" "agnoster" "re
 ZSH_THEME="rufus"
 COMPLETION_WAITING_DOTS="true"
 HIST_STAMPS="dd.mm.yyyy"
+PROMPT_EOL_MARK=''
 export VISUAL=vim
 export EDITOR="$VISUAL"
 
@@ -39,6 +42,8 @@ export ZSH=$HOME/.oh-my-zsh
 source $ZSH/oh-my-zsh.sh
 alias zshconfig="mate ~/.zshrc"
 alias ohmyzsh="mate ~/.oh-my-zsh"
+
+# alias punct='cd ~/git/punct/src/ && python punct.py'
 
 # Personal Aliases
 alias please='sudo $(fc -ln -1)'

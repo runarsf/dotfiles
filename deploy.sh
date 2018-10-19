@@ -89,8 +89,6 @@ desktop() {
 	check python
 	check tmux
 	check dos2unix
-	configs
-	rm $HOME/.zshrc.server
 	oh-my-zsh # exits entire script, has to be last
 }
 server() {
@@ -100,7 +98,6 @@ server() {
 	check tmux
 	check dos2unix
 	configs
-	mv $HOME/.zshrc.server $HOME/.zshrc
 	oh-my-zsh # exits entire script, has to be last
 }
 
@@ -230,9 +227,3 @@ case $1 in
 		exit 0;;
 esac
 
-function exit() {
-	stop=`date`
-	printf "${COLOR_NONE}\n${stop}\n\n"
-}
-
-trap exit EXIT
