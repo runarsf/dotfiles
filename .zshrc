@@ -1,7 +1,7 @@
 # ============================================== #
 #
 # PERSONAL ~/.zshrc FILE for ARCH
-#+ by Runar Fredagsvik [runarsf@protonmail.com]
+#+ by runarsf [runarsf@protonmail.com]
 #
 # ============================================== #
 
