@@ -4,7 +4,7 @@
 ##   qute://help/settings.html
 
 ## Homepage
-homepage = 'https://runarsf.github.io/startpage'
+homepage = 'https://admin.kantega.org/'
 startpages = [homepage]
 
 ## This is here so configs done via the GUI are still loaded.

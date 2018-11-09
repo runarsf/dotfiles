@@ -5,6 +5,8 @@
 #
 # ============================================== #
 
+alias pserver="cd ~/git/adminportal/src && livereload -p 5500"
+
 PYTHONDONTWRITEBYTECODE=1 python -m pytest -p no:cacheprovider
 
 # If not running interactively, don't do anything
@@ -17,12 +19,14 @@ export WINEPREFIX="$HOME/.wine_osu"
 export WINEARCH=win32
 export PATH=/opt/wine-osu/bin:$PATH
 
+export BROWSER=/usr/bin/firefox
+
 # Path
 PATH=$PATH:$HOME/bin/
 
 ZSH_THEME_RANDOM_CANDIDATES=( "nicoulaj" "miloshadzic" "af-magic" "agnoster" "refined" "wedisagree" "imajes" "mh" "pure"  )
 # ZSH_THEME="random"
-ZSH_THEME="rufus"
+ZSH_THEME="rufus-minimal"
 COMPLETION_WAITING_DOTS="true"
 HIST_STAMPS="dd.mm.yyyy"
 PROMPT_EOL_MARK=''

@@ -11,7 +11,6 @@ set $MON3 "$(sed '3!d' $HOME/.monitor)"
 # Font for window titles.
 font pango:System San Francisco 7
 
-
 ###---Dropdown/Scratchpad Windows---###
 #tmux, $mod+u
 for_window [instance="dropdown"] floating enable
@@ -163,24 +162,21 @@ bindsym $mod+Shift+0 move container to workspace $ws10
 workspace $ws1 output DP1-2
 workspace $ws2 output DP1-1
 workspace $ws3 output DP1-2
-workspace $ws4 output DP1-1
+workspace $ws4 output DP1-2
 workspace $ws5 output DP1-2
-workspace $ws6 output DP1-1
-workspace $ws7 output DP1-2
+workspace $ws6 output DP1-2
+workspace $ws7 output DP1-1
 workspace $ws8 output DP1-1
-workspace $ws9 output eDP1
-workspace $ws0 output eDP1
+workspace $ws9 output DP1-1
+workspace $ws10 output eDP1
 
 # use xprop to find class
 assign [class="discord"] $ws2
 assign [class="Mattermost"] $ws2
 assign [class="qutebrowser"] $ws3
 # assign [class="Firefox"] $ws3
-assign [class="Thunar"] $ws4
-assign [class="Trello"] $ws8
-assign [class="Anydesk"] $ws9
 assign [class="Thunderbird"] $ws9
-#assign [class="TeamViewer"] $ws9
+# assign [class="TeamViewer"] $ws9
 assign [class="Rhythmbox"] $ws10
 for_window [class="Spotify"] move to workspace $ws10
 
@@ -253,7 +249,7 @@ exec_always --no-startup-id compton -f
 exec_always --no-startup-id $HOME/bin/polybar.sh top
 exec_always --no-startup-id xrdb -load ~/.Xresources
 exec_always --no-startup-id feh --bg-scale $HOME/.config/wall.png
-exec xdg-settings set default-web-browser firefox.desktop
+exec_always --no-startup-id xdg-settings set default-web-browser firefox.desktop
 exec --no-startup-id ifconfig eno1 up
 exec --no-startup-id "setxkbmap -v no" # sets keymap to norwegian
 exec spotify
