@@ -6,6 +6,7 @@
 "    -> Status line
 "    -> Editing
 "    -> Tabs
+"    -> Colors
 "    -> Misc
 "    -> Helper functions / Utilities
 "
@@ -153,8 +154,20 @@ map <leader>s? z=
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Tabs
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" C-T for new tab
+" Control-t for new tab
 	nnoremap <C-t> :tabnew<cr>
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Colors
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Tab colors
+highlight TabLineFill ctermfg=LightGreen ctermbg=DarkGreen
+highlight TabLine ctermfg=Blue ctermbg=Yellow
+highlight TabLineSel ctermfg=Red ctermbg=Yellow
+
+" Colorscheme
+set background=dark
+color desertink
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Misc
@@ -167,11 +180,6 @@ set guioptions-=r
 set guioptions-=R
 set guioptions-=l
 set guioptions-=L
-
-" Colorscheme
-"set background=dark
-"colorscheme industry
-"colorscheme torte
 
 " Turn persistent undo on
 "    means that you can undo even when you close a buffer/VIM
