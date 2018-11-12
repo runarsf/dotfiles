@@ -101,7 +101,7 @@ server() {
 	oh-my-zsh # exits entire script, has to be last
 }
 
-os=`cat /etc/os-release | grep NAME`
+os=`cat /etc/os-release | grep ^NAME`
 if [[ $os == *Ubuntu* ]]; then
 	pkgmgr='apt-get install'
 elif [[ $os == *Antergos* ]] || [[ $os == *Arch* ]]; then
@@ -109,7 +109,7 @@ elif [[ $os == *Antergos* ]] || [[ $os == *Arch* ]]; then
 elif [[ $os == *CentOS* ]]; then
 	pkgmgr='yum install'
 else
-	printf "${COLOR_RED}No supported OS or WSL detected. Check ${COLOR_ORANGE}/etc/os-release ${COLOR_RED}for more info.${COLOR_NONE}\n\n"
+	printf "${COLOR_RED}No supported OS detected. Check ${COLOR_ORANGE}/etc/os-release ${COLOR_RED}and ${COLOR_ORANGE}./deploy.sh -os  ${COLOR_RED}for more info.${COLOR_NONE}\n\n"
 	exit 1
 fi
 
@@ -123,8 +123,8 @@ check() {
 			printf "\n${COLOR_PURPLE} Installed ${COLOR_GREEN}$1${COLOR_PURPLE}.${COLOR_NONE}\n\n"
 		fi
 	elif [[ $os == *Antergos* ]] || [[ $os == *Arch* ]]; then
-		pkg=`pacman -Qs $1 > /dev/null`
-		if [[ $pgk == "" ]]; then
+		pkg=`pacman -Qi $1 > /dev/null`
+		if [[ $pgk == "error: package * was not found" ]]; then
 			sudo $pgkmgr $1
 			printf "\n${COLOR_PURPLE} Installed ${COLOR_GREEN}$1${COLOR_PURPLE}.${COLOR_NONE}\n\n"
 		else
@@ -133,7 +133,7 @@ check() {
 	elif [[ $os == *CentOS* ]]; then
 		if yum list installed "$1" >/dev/null 2>&1; then
 			late $1
-  		else
+  	else
 			sudo $pkgmgr $1
 			printf "\n${COLOR_PURPLE} Installed ${COLOR_GREEN}$1${COLOR_PURPLE}.${COLOR_NONE}\n\n"
 		fi

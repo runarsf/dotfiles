@@ -179,7 +179,7 @@ assign [class="Thunderbird"] $ws9
 # assign [class="TeamViewer"] $ws9
 assign [class="Rhythmbox"] $ws10
 for_window [class="Spotify"] move to workspace $ws10
-
+for_window [class="TeamViewer"] floating on
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
