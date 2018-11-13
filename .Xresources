@@ -19,7 +19,7 @@ Xft.hinting:				1
 Xft.antialias:				1
 Xft.dpi:				96
 Xft.rgba:				rgb
-URxvt.font:				xft:DejaVu Sans Mono for Powerline:size=12
+URxvt.font:				xft:DejaVu Sans Mono for Powerline:size=18
 
 URxvt*internalBorder: 			10
 URxvt.clipboard.autocopy:		true
@@ -31,6 +31,9 @@ URxvt.url-launcher:			/usr/bin/firefox
 URxvt.matcher.button:			1
 URxvt.letterSpace:			-1
 
+!! disable keycap picture insert mode
+URxvt.iso14755: false
+URxvt.iso14755_52: false
 
 !! Extensions
 URxvt.perl-lib:				~/.urxvt/ext/

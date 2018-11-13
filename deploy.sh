@@ -11,7 +11,7 @@ COLOR_PURPLE='\033[1;35m'
 COLOR_CYAN='\033[1;36m'
 COLOR_NONE='\033[0m'
 
-printf "${COLOR_YELLOW}\n`date`\n\n"
+printf "${COLOR_YELLOW}\n`date`\n\n${COLOR_NONE}"
 
 run () {
 	if [ $EUID != 0 ]; then
@@ -88,6 +88,7 @@ desktop() {
 	check compton
 	check python
 	check tmux
+	check blueman
 	check dos2unix
 	oh-my-zsh # exits entire script, has to be last
 }
@@ -109,7 +110,7 @@ elif [[ $os == *Antergos* ]] || [[ $os == *Arch* ]]; then
 elif [[ $os == *CentOS* ]]; then
 	pkgmgr='yum install'
 else
-	printf "${COLOR_RED}No supported OS detected. Check ${COLOR_ORANGE}/etc/os-release ${COLOR_RED}and ${COLOR_ORANGE}./deploy.sh -os  ${COLOR_RED}for more info.${COLOR_NONE}\n\n"
+	printf "${COLOR_RED}No supported OS detected. Check ${COLOR_ORANGE}/etc/os-release ${COLOR_RED}and ${COLOR_ORANGE}./deploy.sh --os  ${COLOR_RED}for more info.${COLOR_NONE}\n\n"
 	exit 1
 fi
 
@@ -190,46 +191,50 @@ configs() {
 }
 
 
-# make sure the script is run correctly
-if [ "$#" -gt 1 ]; then
-	printf "\n${COLOR_RED}Too ${COLOR_ORANGE}many ${COLOR_RED}arguments!${COLOR_NONE}"
-	helpme
-	exit 1
-fi
-if [ "$#" -lt 1 ]; then
-	printf "\n${COLOR_RED}Too ${COLOR_ORANGE}few ${COLOR_RED}arguments!${COLOR_NONE}"
-	helpme
-	exit 1
-fi
+# make sure the script is run correctly (disabled, reason: getopts)
+#if [ "$#" -gt 1 ]; then
+#	printf "\n${COLOR_RED}Too ${COLOR_ORANGE}many ${COLOR_RED}arguments!${COLOR_NONE}"
+#	helpme
+#	exit 1
+#fi
+#if [ "$#" -lt 1 ]; then
+#	printf "\n${COLOR_RED}Too ${COLOR_ORANGE}few ${COLOR_RED}arguments!${COLOR_NONE}"
+#	helpme
+#	exit 1
+#fi
+
 # arguments
-
-#while getopts "cdsho" arg; do
-#	case "${arg}" in
-#	esac
-#done
-
-case $1 in
-	-c|--config)
-		run
-		configs
-		exit 0;;
-	-d|desktop)
-		run
-		desktop
-		exit 0;;
-	-s|server)
-		run
-		server
-		exit 0;;
-	-h|--help)
-		helpme
-		exit 0;;
-	-o|--os)
-		os
-		exit 0;;
-	*)
-		printf "\n${COLOR_RED}Invalid argument: '$1'${COLOR_NONE}"
-		helpme
-		exit 0;;
-esac
+while getopts "e:cdsho" arg; do
+	case ${arg} in
+		e)
+			printf "${arg} - ${OPTARG} - ${OPTIND}"
+			exit 0;;
+		c)
+			run
+			configs
+			#shift $((OPTIND -1))
+			exit 0;;
+		d)
+			run
+			desktop
+			#shift $((OPTIND -1))
+			exit 0;;
+		s)
+			run
+			server
+			#shift $((OPTIND -1))
+			exit 0;;
+		h)
+			helpme
+			#shift $((OPTIND -1))
+			exit 0;;
+		o)
+			os
+			#shift $((OPTIND -1))
+			exit 0;;
+		*)
+			helpme
+			exit 1;;
+	esac
+done
 

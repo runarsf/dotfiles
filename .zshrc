@@ -5,33 +5,40 @@
 #
 # ============================================== #
 
-alias pserver="cd ~/git/adminportal/src && livereload -p 5500"
-
-PYTHONDONTWRITEBYTECODE=1 python -m pytest -p no:cacheprovider
-
-# If not running interactively, don't do anything
+# ============================== #
+# If not running interactively
+#+ don't do anything
+# ============================== #
 case $- in
     *i*) ;;
       *) return;;
 esac
 
-export WINEPREFIX="$HOME/.wine_osu"
-export WINEARCH=win32
-export PATH=/opt/wine-osu/bin:$PATH
-
-export BROWSER=/usr/bin/firefox
-
+# ============================== #
 # Path
+# ============================== #
 PATH=$PATH:$HOME/bin/
 
+# ============================== #
+# Variables
+# ============================== #
 ZSH_THEME_RANDOM_CANDIDATES=( "nicoulaj" "miloshadzic" "af-magic" "agnoster" "refined" "wedisagree" "imajes" "mh" "pure"  )
 # ZSH_THEME="random"
 ZSH_THEME="rufus-minimal"
 COMPLETION_WAITING_DOTS="true"
 HIST_STAMPS="dd.mm.yyyy"
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=white'
 PROMPT_EOL_MARK=''
+PYTHONDONTWRITEBYTECODE=1 python -m pytest -p no:cacheprovider
+export BROWSER=/usr/bin/firefox
 export VISUAL=vim
 export EDITOR="$VISUAL"
+export TERM=xterm-256color
+export ZSH=$HOME/.oh-my-zsh
+# wine/osu!
+export WINEPREFIX="$HOME/.wine_osu"
+export WINEARCH=win32
+export PATH=/opt/wine-osu/bin:$PATH
 
 plugins=(
   git
@@ -40,18 +47,15 @@ plugins=(
   zsh-syntax-highlighting
 )
 
-ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=white'
-
-export ZSH=$HOME/.oh-my-zsh
+# variables have to be loaded before source
 source $ZSH/oh-my-zsh.sh
-alias zshconfig="mate ~/.zshrc"
-alias ohmyzsh="mate ~/.oh-my-zsh"
 
-# alias punct='cd ~/git/punct/src/ && python punct.py'
-
+# ============================== #
 # Personal Aliases
+# ============================== #
 alias please='sudo $(fc -ln -1)'
 alias ..='cd ..'
+alias pserver="livereload -p 5500"
 alias cls='clear'
 alias zshrc='vim ~/.zshrc'
 alias reload='. ~/.zshrc'
@@ -75,8 +79,6 @@ alias bim='vim'
 alias vi='vim'
 alias notes='cd ~/notes/ && clear && ls | grep -v "\." | grep -v "total " && printf "\n"'
 alias ns='cd ~/notes/ && clear && ls | grep -v "\." | grep -v "total " && printf "\n"'
-
-# chmod u=rwx,g=rwx,o=rwx ~/.zshrc
 
 clear
 

@@ -24,7 +24,8 @@ for_window [instance="notepad"] floating enable
 for_window [instance="notepad"] resize set 1920 1100
 for_window [instance="notepad"] move position center
 for_window [instance="notepad"] move scratchpad
-exec --no-startup-id $term -fn "xft:mono:pixelsize=24" -name notepad -e zsh
+exec --no-startup-id $term -name notepad -e zsh
+#exec --no-startup-id $term -name notepad -e zsh
 
 #Python, $mod+a
 for_window [instance="math"] floating enable
@@ -35,6 +36,14 @@ exec --no-startup-id $term -fn "xft:mono:pixelsize=24" -name math -e python3 -q
 
 ###---Basic Bindings---###
 # Use Mouse+$mod to drag floating windows to their wanted position
+bindsym $mod+a					[instance="math"] scratchpad show; move position center
+bindsym $mod+u					[instance="dropdown"] scratchpad show; move position center
+bindsym $mod+n					[instance="notepad"] scratchpad show; move position center
+
+bindsym $mod+Shift+a				exec --no-startup-id $term -fn "xft:mono:pixelsize=24" -name math -e python3 -q
+bindsym $mod+Shift+u				exec --no-startup-id $term -name dropdown -e zsh
+bindsym $mod+Shift+n				exec --no-startup-id $term -name notepad -e zsh
+
 floating_modifier $mod
 
 bindsym $mod+Return exec urxvt
@@ -59,14 +68,6 @@ bindsym $mod+Shift+Left move left
 bindsym $mod+Shift+Down move down
 bindsym $mod+Shift+Up move up
 bindsym $mod+Shift+Right move right
-
-bindsym $mod+a					[instance="math"] scratchpad show; move position center
-bindsym $mod+u					[instance="dropdown"] scratchpad show; move position center
-bindsym $mod+n					[instance="notepad"] scratchpad show
-
-bindsym $mod+Shift+a				exec --no-startup-id $term -fn "xft:mono:pixelsize=24" -name math -e python3 -q
-bindsym $mod+Shift+u				exec --no-startup-id $term -name dropdown -e zsh
-bindsym $mod+Shift+n				exec --no-startup-id "$term -fn 'xft:mono:pixelsize=24' -name notepad -e zsh && zsh loadtheme.sh home"
 
 # split in horizontal orientation
 bindsym $mod+h split h
