@@ -34,15 +34,24 @@ for_window [instance="math"] move position center
 for_window [instance="math"] move scratchpad
 exec --no-startup-id $term -fn "xft:mono:pixelsize=24" -name math -e python3 -q
 
+#Processing, $mod+p
+for_window [class="Processing"] floating enable
+for_window [class="Processing"] resize set 1920 1100
+for_window [class="Processing"] move position center
+for_window [class="Processing"] move scratchpad
+exec --no-startup-id $HOME/processing/processing
+
 ###---Basic Bindings---###
 # Use Mouse+$mod to drag floating windows to their wanted position
 bindsym $mod+a					[instance="math"] scratchpad show; move position center
 bindsym $mod+u					[instance="dropdown"] scratchpad show; move position center
 bindsym $mod+n					[instance="notepad"] scratchpad show; move position center
+bindsym $mod+p 					[class="Processing"] scratchpad show; move position center
 
 bindsym $mod+Shift+a				exec --no-startup-id $term -fn "xft:mono:pixelsize=24" -name math -e python3 -q
 bindsym $mod+Shift+u				exec --no-startup-id $term -name dropdown -e zsh
 bindsym $mod+Shift+n				exec --no-startup-id $term -name notepad -e zsh
+bindsym $mod+Shift+p 				exec --no-startup-id $HOME/processing/processing
 
 floating_modifier $mod
 
@@ -83,7 +92,7 @@ bindsym $mod+Mod1+Left split v
 bindsym $mod+f fullscreen toggle
 
 #bindsym $mod+s layout stacking
-#bindsym $mod+w layout tabbed
+#bindsym $mod+t layout tabbed
 #bindsym $mod+e layout toggle split
 
 # tiling / floating
