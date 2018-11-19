@@ -21,8 +21,9 @@ set history=500
 " Set to auto read when a file is changed from the outside
 set autoread
 
-" Disable text wrapping
-set nowrap
+" Text wrapping
+"set nowrap
+set wrap
 
 " :W sudo saves the file
 " (useful for handling the permission-denied error)
