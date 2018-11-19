@@ -72,7 +72,7 @@ Plugin 'ervandew/supertab'
 Plugin 'gbigwood/Clippo'
 Plugin 'sjl/badwolf'
 Plugin 'vim-scripts/IndentAnything'
-Plugin 'wincent/terminus'
+Plugin 'wincent/terminus'  " buggy
 call vundle#end() " ^^^ PLUGINS ^^^
 
 filetype plugin indent on " required for vundle
@@ -287,6 +287,7 @@ set noerrorbells
 set novisualbell
 set t_vb=
 set tm=500
+
 " Set extra options when running in GUI mode
 if has("gui_running")
     set guioptions-=T
@@ -295,10 +296,7 @@ if has("gui_running")
     set guitablabel=%M\ %t
 endif
 
-" Readmes autowrap text:
-autocmd BufRead,BufNewFile *.md set tw=79
-
-" Automatically deletes all trailing whitespace on save.
+" Automatically deletes all trailing whitespace on save
 autocmd BufWritePre * %s/\s\+$//e
 
 " Disables automatic commenting on newline:

@@ -33,7 +33,7 @@ PYTHONDONTWRITEBYTECODE=1 python -m pytest -p no:cacheprovider
 export BROWSER=/usr/bin/firefox
 export VISUAL=vim
 export EDITOR="$VISUAL"
-export TERM=xterm-256color
+#export TERM=xterm-256color
 export ZSH=$HOME/.oh-my-zsh
 # wine/osu!
 export WINEPREFIX="$HOME/.wine_osu"
