@@ -72,7 +72,7 @@ Plugin 'ervandew/supertab'
 Plugin 'gbigwood/Clippo'
 Plugin 'sjl/badwolf'
 Plugin 'vim-scripts/IndentAnything'
-Plugin 'wincent/terminus'  " buggy
+"Plugin 'wincent/terminus'  " buggy
 call vundle#end() " ^^^ PLUGINS ^^^
 
 filetype plugin indent on " required for vundle
