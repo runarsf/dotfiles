@@ -1,5 +1,6 @@
 #!/bin/bash
 set -e
+# Debugging
 #set -x
 #trap 'printf "%3d: " "$LINENO"' DEBUG
 
@@ -11,18 +12,20 @@ COLOR_PURPLE='\033[1;35m'
 COLOR_CYAN='\033[1;36m'
 COLOR_NONE='\033[0m'
 
-printf "${COLOR_YELLOW}\n`date`\n\n${COLOR_NONE}"
-
 run () {
 	if [ $EUID != 0 ]; then
-		sudo "$0" "$@"
+		sudo "$0" "-${arg}"
 		exit $?
 	fi
 
+	printf "${COLOR_YELLOW}\n`date`\n\n${COLOR_NONE}"
+
 	printf "\n${COLOR_RED}This script will ask for ${COLOR_ORANGE}sudo${COLOR_RED} rights at one point, this is to make sure all configs are deployed correctly."
 	printf "\nIf the current terminal has sudo rights, you will not get a sudo-prompt."
-	printf "\nIf this dialogue appears when running with the ${COLOR_ORANGE}--help${COLOR_RED}(or any other non-deployment args), click ${COLOR_ORANGE}y${COLOR_RED}.${COLOR_ORANGE}\n\n"
-	read -p "Are you sure? This will override your current config files. [y/n] " -n 1 -r
+	printf "\nIf this dialog appears when running with the ${COLOR_ORANGE}--help${COLOR_RED}(or any other non-deployment args), click ${COLOR_ORANGE}y${COLOR_RED}."
+	printf "\nWhen deploying configs, you will be asked for each existing file if you want to overwrite them, simply answer ${COLOR_ORANGE}y${COLOR_RED}/${COLOR_ORANGE}n${COLOR_RED}."
+	printf "\n\n${COLOR_ORANGE}"
+	read -p "Are you sure? This will overwrite your current config files. [y/N] " -n 1 -r
 	printf "${COLOR_NONE}\n\n"
 	if [[ $REPLY =~ ^[Yy]$ ]]; then
 		printf "\n\n"
@@ -176,16 +179,22 @@ oh-my-zsh() {
 }
 
 configs() {
-	for f in `\ls -a .`
-	do
-		if [[ $f == "." ]] || [[ $f == ".." ]] || [[ $f == "README.md" ]] || [[ $ == ".git" ]] || [[ $f == ".gitignore" ]] || [[ $f == "deploy.sh" ]] || [[ $f == "games" ]]; then
-			continue
-		elif [[ $f == "root" ]]; then
-			cp -r -p -n ./root/* /
-		elif [ -d $f ]; then
-			cp -r -p -n ./$f $HOME/${f}
-		elif [ -f $f ]; then
-			cp ./$f $HOME/
+	for f in *; do
+		if [[ "$f" == "." ]] ||
+			 [[ "$f" == ".." ]] ||
+			 [[ "$f" == "README.rst" ]] ||
+			 [[ "$f" == ".git" ]] ||
+			 [[ "$f" == ".gitignore" ]] ||
+			 [[ "$f" == "deploy.sh" ]] ||
+			 [[ "$f" == "games" ]]
+				 then
+					 continue
+		elif [[ "$f" == "root" ]]; then
+			printf "cp -r -p -i ./root/* /\n"
+		elif [[ -d "$f" ]]; then
+			printf "cp -r -p -i ./$f $HOME/\n"
+		elif [[ -f "$f" ]]; then
+			printf "cp -i ./$f $HOME/\n"
 		fi
 	done
 }
