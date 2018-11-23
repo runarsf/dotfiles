@@ -11,20 +11,42 @@
 !!URxvt*fading: 25
 !!URxvt*blurRadius: 10
 
-!! Xft
-Xft.autohint:				0
-Xft.lcdfilter:				lcddefault
-Xft.hintstyle:				hintfull
-Xft.hinting:				1
-Xft.antialias:				1
-Xft.dpi:				96
-Xft.rgba:				rgb
-URxvt.font:				xft:DejaVu Sans Mono for Powerline:size=18
+! cause shell to be started as login shell
+URxvt*loginShell: true
+
+! do not scroll with output
+URxvt*scrollTtyOutput: false
+
+! scroll in relation to buffer (with mouse scroll or Shift+Page Up)
+URxvt*scrollWithBuffer: true
+
+! scroll back to the bottom on keypress
+URxvt*scrollTtyKeypress: true
+
+URxvt.geometry:             90x30
+URxvt.fading:               0
+URxvt.urgentOnBell:         true
+URxvt.visualBell:           true
+URxvt.loginShell:           true
+URxvt.saveLines:            50
+URxvt.internalBorder:       3
+URxvt.lineSpace:            0
+
+!!XFT settings
+URxvt*letterSpace: -1
+Xft.autohint:	0
+Xft.lcdfilter: lcddefault
+Xft.hintstyle: hintslight
+Xft.hinting: full
+Xft.antialias: true
+Xft.dpi: 96
+Xft.rgba: rgb
+URxvt.font: xft:DejaVu Sans Mono for Powerline:size=18
+
 
 URxvt*internalBorder: 			10
 URxvt.clipboard.autocopy:		true
 Xcursor.size:				15W
-URxvt.urgentOnBell:			true
 URxvt.scrollBar:			false
 URxvt.depth:				32
 URxvt.url-launcher:			/usr/bin/firefox
@@ -39,12 +61,15 @@ URxvt.iso14755_52: false
 URxvt.perl-lib:				~/.urxvt/ext/
 URxvt.perl-ext-common:			keyboard-select,resize-font,url-select
 URxvt.colorUL:				#4682B4
+
 !! url-select
 URxvt.keysum.M-u:			perl:url-select:select_next
 URxvt.url-select.launcher:		/usr/bin/qutebrowser
 URxvt.url-select.underline:		true
+
 !! keyboard-select
 URxvt.keysum.M-Escape:			perl:keyboard-select:activate
+
 !! resize-font
 URxvt.resize-font.smaller:		C-j
 URxvt.resize-font.bigger:		C-k

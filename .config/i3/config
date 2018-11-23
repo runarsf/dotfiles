@@ -25,7 +25,6 @@ for_window [instance="notepad"] resize set 1920 1100
 for_window [instance="notepad"] move position center
 for_window [instance="notepad"] move scratchpad
 exec --no-startup-id $term -name notepad -e zsh
-#exec --no-startup-id $term -name notepad -e zsh
 
 #Python, $mod+a
 for_window [instance="math"] floating enable
@@ -41,7 +40,7 @@ for_window [class="Processing"] move position center
 for_window [class="Processing"] move scratchpad
 exec --no-startup-id $HOME/processing/processing
 
-#Sublime, $mod+h
+#Sublime, $mod+g
 for_window [class="Sublime_text"] floating enable
 for_window [class="Sublime_text"] resize set 1920 1100
 for_window [class="Sublime_text"] move position center
@@ -54,13 +53,14 @@ bindsym $mod+a					[instance="math"] scratchpad show; move position center
 bindsym $mod+u					[instance="dropdown"] scratchpad show; move position center
 bindsym $mod+n					[instance="notepad"] scratchpad show; move position center
 bindsym $mod+p 					[class="Processing"] scratchpad show; move position center
-bindsym $mod+h 					[class="Sublime_text"] scratchpad show; move position center
+bindsym $mod+g 					[class="Sublime_text"] scratchpad show; move position center
 
 bindsym $mod+Shift+a				exec --no-startup-id $term -fn "xft:mono:pixelsize=24" -name math -e python3 -q
+bindsym $mod+Shift+Mod1+a		exec --no-startup-id $term -fn "xft:mono:pixelsize=24" -name math -e R -q
 bindsym $mod+Shift+u				exec --no-startup-id $term -name dropdown -e zsh
 bindsym $mod+Shift+n				exec --no-startup-id $term -name notepad -e zsh
 bindsym $mod+Shift+p 				exec --no-startup-id $HOME/processing/processing
-bindsym $mod+Shift+h 				exec --no-startup-id subl
+bindsym $mod+Shift+g 				exec --no-startup-id subl
 
 floating_modifier $mod
 
@@ -186,19 +186,17 @@ workspace $ws5 output DP1-2
 workspace $ws6 output DP1-2
 workspace $ws7 output DP1-1
 workspace $ws8 output DP1-1
-workspace $ws9 output DP1-1
+workspace $ws9 output eDP1
 workspace $ws10 output eDP1
 
 # use xprop to find class
 assign [class="discord"] $ws2
 assign [class="Mattermost"] $ws2
 assign [class="qutebrowser"] $ws3
-# assign [class="Firefox"] $ws3
-assign [class="Thunderbird"] $ws9
-# assign [class="TeamViewer"] $ws9
-assign [class="Rhythmbox"] $ws10
+assign [class="Thunderbird"] $ws8
 for_window [class="Spotify"] move to workspace $ws10
-for_window [class="TeamViewer"] floating on
+assign [class="nagstamon"] $ws9
+for_window [class="*.py"] floating enable
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
@@ -225,7 +223,12 @@ mode "resize" {
         bindsym $mod+r mode "default"
 }
 
-bindsym $mod+r mode "resize"
+#bindsym $mod+r mode "resize"
+
+bindsym $mod+Ctrl+Right resize shrink width 10 px or 10 ppt
+bindsym $mod+Ctrl+Up resize grow height 10 px or 10 ppt
+bindsym $mod+Ctrl+Down resize shrink height 10 px or 10 ppt
+bindsym $mod+Ctrl+Left resize grow width 10 px or 10 ppt
 
 for_window [class="^.*"] border pixel 2
 hide_edge_borders both

@@ -6,7 +6,7 @@ killall -q polybar
 # Wait until the processes have been shut down
 while pgrep -x polybar >/dev/null; do sleep 1; done
 
-# Launch bar1 and bar2
+# Launch bars (main monitor must be called first)
 DISPLAY2="$(xrandr -q | grep $(sed '2!d' $HOME/.monitor) | cut -d ' ' -f1)"
 [[ ! -z $DISPLAY2 ]] && MONITOR=$DISPLAY2 polybar $1 &
 
