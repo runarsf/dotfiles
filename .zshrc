@@ -33,12 +33,14 @@ PYTHONDONTWRITEBYTECODE=1 python -m pytest -p no:cacheprovider
 export BROWSER=/usr/bin/firefox
 export VISUAL=vim
 export EDITOR="$VISUAL"
+export TERM=rxvt
 #export TERM=xterm-256color
 export ZSH=$HOME/.oh-my-zsh
 # wine/osu!
 export WINEPREFIX="$HOME/.wine_osu"
 export WINEARCH=win32
 export PATH=/opt/wine-osu/bin:$PATH
+export PATH="`ruby -e 'puts Gem.user_dir'`/bin:$PATH"
 
 plugins=(
   git
@@ -78,7 +80,7 @@ alias nagiosA='ssh root@nagios.kantega.lan -A'
 alias bim='vim'
 alias vi='vim'
 alias notes='cd ~/notes/ && clear && ls | grep -v "\." | grep -v "total " && printf "\n"'
-alias ns='cd ~/notes/ && clear && ls | grep -v "\." | grep -v "total " && printf "\n"'
+alias ns='cd ~/notes/ && clear && ls | grep -v "\." | grep -v "total " && printf "\n" && ranger'
 
 clear
 

@@ -17,7 +17,7 @@ for_window [instance="dropdown"] floating enable
 for_window [instance="dropdown"] resize set 875 560
 for_window [instance="dropdown"] move position center
 for_window [instance="dropdown"] move scratchpad
-exec --no-startup-id $term -name dropdown -e zsh
+exec --no-startup-id $term -fn "xft:mono:pixelsize=14" -name dropdown -e zsh
 
 #notepad, $mod+n
 for_window [instance="notepad"] floating enable
@@ -33,34 +33,34 @@ for_window [instance="math"] move position center
 for_window [instance="math"] move scratchpad
 exec --no-startup-id $term -fn "xft:mono:pixelsize=24" -name math -e python3 -q
 
-#Processing, $mod+p
-for_window [class="Processing"] floating enable
-for_window [class="Processing"] resize set 1920 1100
-for_window [class="Processing"] move position center
-for_window [class="Processing"] move scratchpad
-exec --no-startup-id $HOME/processing/processing
+#Simplenote, $mod+p
+for_window [class="Simplenote"] floating enable
+for_window [class="Simplenote"] resize set 1920 1100
+for_window [class="Simplenote"] move position center
+for_window [class="Simplenote"] move scratchpad
+exec --no-startup-id simplenote
 
 #Sublime, $mod+g
-for_window [class="Sublime_text"] floating enable
-for_window [class="Sublime_text"] resize set 1920 1100
-for_window [class="Sublime_text"] move position center
-for_window [class="Sublime_text"] move scratchpad
-exec --no-startup-id subl
+#for_window [class="Sublime_text"] floating enable
+#for_window [class="Sublime_text"] resize set 1920 1100
+#for_window [class="Sublime_text"] move position center
+#for_window [class="Sublime_text"] move scratchpad
+#exec --no-startup-id subl
 
 ###---Basic Bindings---###
 # Use Mouse+$mod to drag floating windows to their wanted position
 bindsym $mod+a					[instance="math"] scratchpad show; move position center
 bindsym $mod+u					[instance="dropdown"] scratchpad show; move position center
 bindsym $mod+n					[instance="notepad"] scratchpad show; move position center
-bindsym $mod+p 					[class="Processing"] scratchpad show; move position center
-bindsym $mod+g 					[class="Sublime_text"] scratchpad show; move position center
+bindsym $mod+p 					[class="Simplenote"] scratchpad show; move position center
+#bindsym $mod+g 					[class="Sublime_text"] scratchpad show; move position center
 
 bindsym $mod+Shift+a				exec --no-startup-id $term -fn "xft:mono:pixelsize=24" -name math -e python3 -q
 bindsym $mod+Shift+Mod1+a		exec --no-startup-id $term -fn "xft:mono:pixelsize=24" -name math -e R -q
-bindsym $mod+Shift+u				exec --no-startup-id $term -name dropdown -e zsh
+bindsym $mod+Shift+u				exec --no-startup-id $term -fn "xft:mono:pixelsize=14" -name dropdown -e zsh
 bindsym $mod+Shift+n				exec --no-startup-id $term -name notepad -e zsh
-bindsym $mod+Shift+p 				exec --no-startup-id $HOME/processing/processing
-bindsym $mod+Shift+g 				exec --no-startup-id subl
+bindsym $mod+Shift+p 				exec --no-startup-id simplenote
+#bindsym $mod+Shift+g 				exec --no-startup-id subl
 
 floating_modifier $mod
 
@@ -183,7 +183,7 @@ workspace $ws2 output DP1-1
 workspace $ws3 output DP1-2
 workspace $ws4 output DP1-2
 workspace $ws5 output DP1-2
-workspace $ws6 output DP1-2
+workspace $ws6 output DP1-1
 workspace $ws7 output DP1-1
 workspace $ws8 output DP1-1
 workspace $ws9 output eDP1
@@ -195,8 +195,10 @@ assign [class="Mattermost"] $ws2
 assign [class="qutebrowser"] $ws3
 assign [class="Thunderbird"] $ws8
 for_window [class="Spotify"] move to workspace $ws10
-assign [class="nagstamon"] $ws9
+assign [class="nagstamon"] $ws10
 for_window [class="*.py"] floating enable
+assign [class="Atom"] $ws4
+assign [class="Sublime_text"] $ws4
 
 # resize window (you can also use the mouse for that)
 mode "resize" {
@@ -249,10 +251,8 @@ client.focused_inactive	$inactive-bg-color	$inactive-bg-color	$inactive-text-col
 client.urgent						$urgent-bg-color		$urgent-bg-color		$text-color						$active-indicator		#FF8888
 client.background #000000
 
-
-gaps inner 25
-gaps outer 0
-for_window [class="firefox"] gaps outer 0 ; gaps inner 0
+gaps inner 5
+gaps outer 5
 
 # wacom settings
 exec_always --no-startup-id xsetwacom --set "Wacom Intuos S Pen stylus" Suppress 2
@@ -268,11 +268,11 @@ exec_always --no-startup-id xrandr --output $(sed '1!d' $HOME/.monitor) --mode 1
 
 exec_always --no-startup-id nm-applet
 exec_always --no-startup-id compton -f
-exec_always --no-startup-id $HOME/bin/polybar.sh top
+exec_always --no-startup-id $HOME/bin/polybar.sh top bottom
 exec_always --no-startup-id xrdb -load ~/.Xresources
 exec_always --no-startup-id feh --bg-scale $HOME/.config/wall.png
 exec_always --no-startup-id xdg-settings set default-web-browser firefox.desktop
-exec --no-startup-id ifconfig eno1 up
+#exec --no-startup-id ifconfig eno1 up
 exec --no-startup-id "setxkbmap -v no" # sets keymap to norwegian
-exec spotify
+#exec --no-startup-id spotify
 # exec --no-startup-id i3-msg workspace $ws9
