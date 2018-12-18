@@ -33,34 +33,24 @@ for_window [instance="math"] move position center
 for_window [instance="math"] move scratchpad
 exec --no-startup-id $term -fn "xft:mono:pixelsize=24" -name math -e python3 -q
 
-#Simplenote, $mod+p
-for_window [class="Simplenote"] floating enable
-for_window [class="Simplenote"] resize set 1920 1100
-for_window [class="Simplenote"] move position center
-for_window [class="Simplenote"] move scratchpad
-exec --no-startup-id simplenote
-
-#Sublime, $mod+g
-#for_window [class="Sublime_text"] floating enable
-#for_window [class="Sublime_text"] resize set 1920 1100
-#for_window [class="Sublime_text"] move position center
-#for_window [class="Sublime_text"] move scratchpad
-#exec --no-startup-id subl
+#Remmina, $mod+p
+#for_window [class="org.remmina.Remmina"] floating enable
+#for_window [class="org.remmina.Remmina"] resize set 1920 1100
+#for_window [class="org.remmina.Remmina"] move position center
+#for_window [class="org.remmina.Remmina"] move scratchpad
 
 ###---Basic Bindings---###
 # Use Mouse+$mod to drag floating windows to their wanted position
 bindsym $mod+a					[instance="math"] scratchpad show; move position center
 bindsym $mod+u					[instance="dropdown"] scratchpad show; move position center
 bindsym $mod+n					[instance="notepad"] scratchpad show; move position center
-bindsym $mod+p 					[class="Simplenote"] scratchpad show; move position center
-#bindsym $mod+g 					[class="Sublime_text"] scratchpad show; move position center
+#bindsym $mod+p 					[class="org.remmina.Remmina"] scratchpad show; move position center
 
 bindsym $mod+Shift+a				exec --no-startup-id $term -fn "xft:mono:pixelsize=24" -name math -e python3 -q
 bindsym $mod+Shift+Mod1+a		exec --no-startup-id $term -fn "xft:mono:pixelsize=24" -name math -e R -q
 bindsym $mod+Shift+u				exec --no-startup-id $term -fn "xft:mono:pixelsize=14" -name dropdown -e zsh
 bindsym $mod+Shift+n				exec --no-startup-id $term -name notepad -e zsh
-bindsym $mod+Shift+p 				exec --no-startup-id simplenote
-#bindsym $mod+Shift+g 				exec --no-startup-id subl
+#bindsym $mod+Shift+p 				exec --no-startup-id remmina
 
 floating_modifier $mod
 
@@ -178,14 +168,14 @@ bindsym $mod+Shift+8 move container to workspace $ws8
 bindsym $mod+Shift+9 move container to workspace $ws9
 bindsym $mod+Shift+0 move container to workspace $ws10
 
-workspace $ws1 output DP1-2
-workspace $ws2 output DP1-1
-workspace $ws3 output DP1-2
-workspace $ws4 output DP1-2
-workspace $ws5 output DP1-2
-workspace $ws6 output DP1-1
-workspace $ws7 output DP1-1
-workspace $ws8 output DP1-1
+workspace $ws1 output HDMI2
+workspace $ws2 output DP1
+workspace $ws3 output HDMI2
+workspace $ws4 output HDMI2
+workspace $ws5 output HDMI2
+workspace $ws6 output DP1
+workspace $ws7 output DP1
+workspace $ws8 output DP1
 workspace $ws9 output eDP1
 workspace $ws10 output eDP1
 

@@ -49,7 +49,7 @@ helpme () {
 	printf "${COLOR_NONE}"
 	printf "\n\n\t ${COLOR_ORANGE}This script may install other related prerequisites/versions of the listed packages..."
 	printf "\n\n\t ${COLOR_CYAN}./deploy.sh desktop"
-	printf "\n\t\t ${COLOR_PURPLE}zsh | gvim | git | rofi | urxvt | i3 | polybar | ranger | compton | python(pip) | tmux | dos2unix"
+	printf "\n\t\t ${COLOR_PURPLE}zsh | gvim | git | rofi | urxvt | i3 | polybar | ranger | compton | python(pip) | tmux | dos2unix | irssi"
 	printf "\n\n\t ${COLOR_CYAN}./deploy.sh server"
 	printf "\n\t\t ${COLOR_PURPLE}zsh | vim | git | tmux | dos2unix"
 	printf "\n\n\t ${COLOR_CYAN}./deploy.sh --help"
@@ -93,6 +93,7 @@ desktop() {
 	check tmux
 	check blueman
 	check dos2unix
+	check irssi
 	oh-my-zsh # exits entire script, has to be last
 }
 server() {
@@ -199,6 +200,20 @@ configs() {
 	done
 }
 
+monitors() {
+	xmonLines=`xrandr | grep " connected" | while read line ; do echo 'i' ; done`
+	regex="^(\w+)\s+.+$"
+	let "int=1"
+	#echo "" > $HOME/.monitor
+	for i in $xmonLines; do
+		xmon=`xrandr | grep " connected" | sed $int!d`
+		if [[ $xmon =~ $regex ]]; then
+    		echo "${BASH_REMATCH[1]}"
+			echo "${BASH_REMATCH[1]}" > $HOME/.monitor
+		fi
+		let "int++"
+	done
+}
 
 # make sure the script is run correctly (disabled, reason: getopts)
 #if [ "$#" -gt 1 ]; then
@@ -213,37 +228,37 @@ configs() {
 #fi
 
 # arguments
-while getopts "e:cdsho" arg; do
+while getopts "e:cdmsho" arg; do
 	case ${arg} in
-		e)
-			printf "${arg} - ${OPTARG} - ${OPTIND}"
+		m)
+			monitors
+			shift $((OPTIND -1))
 			exit 0;;
 		c)
 			run
 			configs
-			#shift $((OPTIND -1))
+			shift $((OPTIND -1))
 			exit 0;;
 		d)
 			run
 			desktop
-			#shift $((OPTIND -1))
+			shift $((OPTIND -1))
 			exit 0;;
 		s)
 			run
 			server
-			#shift $((OPTIND -1))
+			shift $((OPTIND -1))
 			exit 0;;
 		h)
 			helpme
-			#shift $((OPTIND -1))
+			shift $((OPTIND -1))
 			exit 0;;
 		o)
 			os
-			#shift $((OPTIND -1))
+			shift $((OPTIND -1))
 			exit 0;;
 		*)
 			helpme
 			exit 1;;
 	esac
 done
-

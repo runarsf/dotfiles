@@ -15,13 +15,11 @@ case $- in
 esac
 
 # ============================== #
-# Path
+# Path and Variables
 # ============================== #
 PATH=$PATH:$HOME/bin/
+export PATH="`ruby -e 'puts Gem.user_dir'`/bin:$PATH"
 
-# ============================== #
-# Variables
-# ============================== #
 ZSH_THEME_RANDOM_CANDIDATES=( "nicoulaj" "miloshadzic" "af-magic" "agnoster" "refined" "wedisagree" "imajes" "mh" "pure"  )
 # ZSH_THEME="random"
 ZSH_THEME="rufus-minimal"
@@ -40,7 +38,6 @@ export ZSH=$HOME/.oh-my-zsh
 export WINEPREFIX="$HOME/.wine_osu"
 export WINEARCH=win32
 export PATH=/opt/wine-osu/bin:$PATH
-export PATH="`ruby -e 'puts Gem.user_dir'`/bin:$PATH"
 
 plugins=(
   git
@@ -56,6 +53,7 @@ source $ZSH/oh-my-zsh.sh
 # Personal Aliases
 # ============================== #
 alias please='sudo $(fc -ln -1)'
+alias whereami='pwd'
 alias ..='cd ..'
 alias pserver="livereload -p 5500"
 alias cls='clear'
@@ -84,3 +82,5 @@ alias ns='cd ~/notes/ && clear && ls | grep -v "\." | grep -v "total " && printf
 
 clear
 
+# added by travis gem
+[ -f $HOME/.travis/travis.sh ] && source $HOME/.travis/travis.sh
