@@ -204,12 +204,12 @@ monitors() {
 	xmonLines=`xrandr | grep " connected" | while read line ; do echo 'i' ; done`
 	regex="^(\w+)\s+.+$"
 	let "int=1"
-	#echo "" > $HOME/.monitor
+	rm ~/.monitor
 	for i in $xmonLines; do
 		xmon=`xrandr | grep " connected" | sed $int!d`
 		if [[ $xmon =~ $regex ]]; then
     		echo "${BASH_REMATCH[1]}"
-			echo "${BASH_REMATCH[1]}" > $HOME/.monitor
+			echo "${BASH_REMATCH[1]}" >> ~/.monitor
 		fi
 		let "int++"
 	done
