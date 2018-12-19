@@ -100,7 +100,7 @@ function desktop {
 	check gvim
 	check rofi
 	check rxvt-unicode
-	check i3-wm
+	check i3-gaps
 	check polybar
 	check ranger
 	check compton
@@ -193,6 +193,10 @@ function configs {
 				ln -s $wd/$f ~/$f
 			fi
 		fi
+	if ! [[ -d ~/.fonts ]]; then
+		mkdir ~/.fonts
+	fi
+	git clone https://github.com/runarsf/fonts ~/.fonts/
 	done
 }
 
