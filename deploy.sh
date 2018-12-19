@@ -129,7 +129,7 @@ function check {
 			printf "\n${COLOR_PURPLE} Installed ${COLOR_GREEN}$1${COLOR_PURPLE}.${COLOR_NONE}\n\n"
 		fi
 	elif [[ $os == *Antergos* ]] || [[ $os == *Arch* ]]; then
-		if [[ "$1" == "polybar" ]]; then
+		if [[ "$1" == "polybar" ]] && ! [[ `pacman -Qm polybar` ]] > /dev/null; then
 			yay -S $1
 		elif pacman -Qs $1 > /dev/null; then
 			late $1
