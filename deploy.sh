@@ -182,10 +182,13 @@ function configs {
 			if [[ "$f" == "root" ]]; then
 				ln -s $wd/$f/* /
 			elif [[ -d "$f" ]]; then
+				if [[ -d ~/$f ]]; then
+					mv ~/$f ~/deployBackup/$now/
+				fi
 				ln -s $wd/$f/ ~/$f
 			elif [[ -f "$f" ]]; then
 				if [[ -f ~/$f ]]; then
-					mv ~/$f ~/deployBackup/$now
+					mv ~/$f ~/deployBackup/$now/
 				fi
 				ln -s $wd/$f ~/$f
 			fi
