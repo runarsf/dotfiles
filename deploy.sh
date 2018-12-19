@@ -171,6 +171,11 @@ function configs {
 	# ln -s fromFolderOrFileFullPath toThisLocationPathToFolderOrFile
 	# ln -s ~/git/fonts/ ~/.fonts
 	wd=`pwd`
+	now="$(date +"%a_%d_%b_%Y_%H_%M_%S")"
+	if ! [[ -d ~/deployBackup ]]; then
+		mkdir ~/deployBackup
+	fi
+	mkdir ~/deployBackup/$now
 	for f in * .*; do
 		if ! [[ "$f" =~ ^(\.|\.\.|README\.md|\.git|\.gitignore|deploy\.sh|games|root)$ ]]; then
 			printf "\n$f"
@@ -180,10 +185,7 @@ function configs {
 				ln -s $wd/$f/ ~/$f
 			elif [[ -f "$f" ]]; then
 				if [[ -f ~/$f ]]; then
-					if ! [[ -d ~/deployBackup ]]; then
-						mkdir ~/deployBackup
-					fi
-					mv ~/$f ~/deployBackup
+					mv ~/$f ~/deployBackup/$now
 				fi
 				ln -s $wd/$f ~/$f
 			fi
