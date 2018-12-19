@@ -168,20 +168,15 @@ function configs {
 	# ln -s fromFolderOrFileFullPath toThisLocationPathToFolderOrFile
 	# ln -s ~/git/fonts/ ~/.fonts
 	wd=`pwd`
-	for f in *; do
-		if ! [[ "$f" == "." ]] ||
-			 [[ "$f" == ".." ]] ||
-			 [[ "$f" == "README.md" ]] ||
-			 [[ "$f" == ".git" ]] ||
-			 [[ "$f" == ".gitignore" ]] ||
-			 [[ "$f" == "deploy.sh" ]] ||
-			 [[ "$f" == "games" ]]; then
+	for f in * .*; do
+		if ! [[ "$f" =~ ^(\.|\.\.|README\.md|\.git|\.gitignore|deploy\.sh|games)$ ]]; then
+			printf "\n$f"
 			if [[ "$f" == "root" ]]; then
-				printf "ln -s $wd/root/* /\n"
+				printf "\nln -s $wd/$f/* /"
 			elif [[ -d "$f" ]]; then
-				printf "ln -s $wd/$f $HOME/\n"
+				printf "\nln -s $wd/$f/ ~/$f"
 			elif [[ -f "$f" ]]; then
-				printf "ln -s $wd/$f $HOME/\n"
+				printf "\nln -s $wd/$f ~/$f"
 			fi
 		fi
 	done
