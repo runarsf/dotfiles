@@ -126,7 +126,7 @@ function check {
 			late $1
 		else
 			printf "sudo apt-get install $1"
-			printf "\n${COLOR_PURPLE} Installed ${COLOR_GREEN}$1${COLOR_PURPLE}.${COLOR_NONE}\n\n"
+			printf "\n${COLOR_PURPLE}Installed ${COLOR_GREEN}$1${COLOR_PURPLE}.${COLOR_NONE}\n\n"
 		fi
 	elif [[ $os == *Antergos* ]] || [[ $os == *Arch* ]]; then
 		if [[ "$1" == "polybar" ]] && ! [[ `pacman -Qm polybar` ]] > /dev/null; then
@@ -135,14 +135,14 @@ function check {
 			late $1
 		else
 			sudo pacman -S $1 --noconfirm
-			printf "\n${COLOR_PURPLE} Installed ${COLOR_GREEN}$1${COLOR_PURPLE}.${COLOR_NONE}\n\n"
+			printf "\n${COLOR_PURPLE}Installed ${COLOR_GREEN}$1${COLOR_PURPLE}.${COLOR_NONE}\n\n"
 		fi
 	elif [[ $os == *CentOS* ]]; then
 		if yum list installed "$1" >/dev/null 2>&1; then
 			late $1
   		else
 			printf "sudo yum instal $1"
-			printf "\n${COLOR_PURPLE} Installed ${COLOR_GREEN}$1${COLOR_PURPLE}.${COLOR_NONE}\n\n"
+			printf "\n${COLOR_PURPLE}Installed ${COLOR_GREEN}$1${COLOR_PURPLE}.${COLOR_NONE}\n\n"
 		fi
 	else
 		exit 1
