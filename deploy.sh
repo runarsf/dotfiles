@@ -150,7 +150,7 @@ function check {
 }
 
 function late {
-	printf "${COLOR_CYAN} $1 ${COLOR_PURPLE}already installed.${COLOR_NONE}\n"
+	printf "${COLOR_CYAN}$1 ${COLOR_PURPLE}already installed.${COLOR_NONE}\n"
 }
 
 function oh-my-zsh {
