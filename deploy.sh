@@ -189,7 +189,9 @@ function monitors {
 	xmonLines=`xrandr | grep " connected" | while read line ; do echo 'i' ; done`
 	regex="^(\w+)\s+.+$"
 	let "int=1"
-	rm ~/.monitor
+	if [[ -f "~/.monitor" ]]; then
+		rm ~/.monitor
+	fi
 	for i in $xmonLines; do
 		xmon=`xrandr | grep " connected" | sed $int!d`
 		if [[ $xmon =~ $regex ]]; then
