@@ -96,6 +96,7 @@ function desktop {
 	check yaourt
 	check git
 	check zsh
+	check yay
 	check gvim
 	check rofi
 	check rxvt-unicode
@@ -128,7 +129,9 @@ function check {
 			printf "\n${COLOR_PURPLE} Installed ${COLOR_GREEN}$1${COLOR_PURPLE}.${COLOR_NONE}\n\n"
 		fi
 	elif [[ $os == *Antergos* ]] || [[ $os == *Arch* ]]; then
-		if pacman -Qs $1 > /dev/null; then
+		if [[ "$1" == "polybar" ]]; then
+			yay -S $1
+		elif pacman -Qs $1 > /dev/null; then
 			late $1
 		else
 			sudo pacman -S $1 --noconfirm
