@@ -172,7 +172,7 @@ function configs {
 	# ln -s ~/git/fonts/ ~/.fonts
 	wd=`pwd`
 	for f in * .*; do
-		if ! [[ "$f" =~ ^(\.|\.\.|README\.md|\.git|\.gitignore|deploy\.sh|games)$ ]]; then
+		if ! [[ "$f" =~ ^(\.|\.\.|README\.md|\.git|\.gitignore|deploy\.sh|games|root)$ ]]; then
 			printf "\n$f"
 			if [[ "$f" == "root" ]]; then
 				ln -s $wd/$f/* /
