@@ -258,7 +258,7 @@ exec_always --no-startup-id xrandr --output $(sed '1!d' $HOME/.monitor) --mode 1
 
 exec_always --no-startup-id nm-applet
 exec_always --no-startup-id compton -f
-exec_always --no-startup-id $HOME/bin/polybar.sh top bottom
+exec_always --no-startup-id $HOME/bin/polybar.sh
 exec_always --no-startup-id xrdb -load ~/.Xresources
 exec_always --no-startup-id feh --bg-scale $HOME/.config/wall.png
 exec_always --no-startup-id xdg-settings set default-web-browser firefox.desktop

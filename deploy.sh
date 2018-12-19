@@ -12,6 +12,13 @@ COLOR_PURPLE='\033[1;35m'
 COLOR_CYAN='\033[1;36m'
 COLOR_NONE='\033[0m'
 
+os=`cat /etc/os-release | grep ^NAME`
+if ! [[ $os == *Antergos* ]] || [[ $os == *Arch* ]] || [[ $os == *Ubuntu* ]] || [[ $os == *CentOS* ]]; then
+	printf "${COLOR_RED}No supported OS detected, terminating script."
+	printf "\nPlease refer to ${COLOR_ORANGE}/etc/os-release${COLOR_RED}, ${COLOR_ORANGE}./deploy.sh -o ${COLOR_RED}and ${COLOR_ORANGE}./deploy.sh -h ${COLOR_RED}for more info.${COLOR_NONE}\n\n"
+	exit 1
+fi
+
 function run {
 	#if [ $EUID != 0 ]; then
 	#	sudo "$0" "-${arg}"
@@ -27,7 +34,7 @@ function run {
 	read -p "Are you sure? This will overwrite your current config files. [y/N] " -n 1 -r
 	printf "${COLOR_NONE}\n\n"
 	if [[ $REPLY =~ ^[Yy]$ ]]; then
-		printf "\n\n"
+		printf "\n"
 	elif [[ $REPLY =~ ^[Nn]$ ]]; then
 		printf "Exiting...\n\n"
 		exit 0
@@ -47,14 +54,21 @@ function helpme {
 	printf "\n\t ${COLOR_CYAN}╚═╝${COLOR_GREEN}╚═╝     ╚═╝╚══════╝╚══════╝╚══════╝"
 	printf "${COLOR_NONE}"
 	printf "\n\n\t ${COLOR_ORANGE}This script may install other related prerequisites/versions of the listed packages..."
-	printf "\n\n\t ${COLOR_CYAN}./deploy.sh -d"
+	printf "\n\n\t ${COLOR_CYAN}./deploy.sh [-d | --desktop]"
 	printf "\n\t\t ${COLOR_PURPLE}zsh | gvim | git | rofi | urxvt | i3 | polybar | ranger | compton | python(pip) | tmux | dos2unix | irssi"
-	printf "\n\n\t ${COLOR_CYAN}./deploy.sh -s"
+	printf "\n\n\t ${COLOR_CYAN}./deploy.sh [-s | --server]"
 	printf "\n\t\t ${COLOR_PURPLE}zsh | vim | git | tmux | dos2unix"
-	printf "\n\n\t ${COLOR_CYAN}./deploy.sh -h"
-	printf "\n\t\t ${COLOR_PURPLE}show this dialogue"
-	printf "\n\n\t ${COLOR_CYAN}./deploy.sh -o"
-	printf "\n\t\t ${COLOR_PURPLE}show supported operating systems/distros"
+	printf "\n\n\t ${COLOR_CYAN}./deploy.sh [-f | --full]"
+	printf "\n\t\t ${COLOR_PURPLE}Run every setup step automatically."
+	printf "\n\n\t ${COLOR_CYAN}./deploy.sh [-m | --monitors]"
+	printf "\n\t\t ${COLOR_PURPLE}Set up monitors for use with configs. Currently only 1-3 monitors are supported."
+	printf "\n\t\t ${COLOR_PURPLE}Rearrange may be needed, edit ~/.monitors to your liking. Main monitor on line 2."
+	printf "\n\n\t ${COLOR_CYAN}./deploy.sh [-c | --configs]"
+	printf "\n\t\t ${COLOR_PURPLE}Deploy configs."
+	printf "\n\n\t ${COLOR_CYAN}./deploy.sh [-h | --help]"
+	printf "\n\t\t ${COLOR_PURPLE}Show this dialog."
+	printf "\n\n\t ${COLOR_CYAN}./deploy.sh [-o | --os]"
+	printf "\n\t\t ${COLOR_PURPLE}Show supported operating systems/distros."
 	printf "\n\n ${COLOR_NONE}"
 }
 
@@ -94,7 +108,7 @@ function desktop {
 	check blueman
 	check dos2unix
 	check irssi
-	#oh-my-zsh # exits entire script, has to be last
+	oh-my-zsh
 }
 function server {
 	check git
@@ -102,17 +116,8 @@ function server {
 	check vim
 	check tmux
 	check dos2unix
-	configs
-	oh-my-zsh # exits entire script, has to be last
+	oh-my-zsh
 }
-
-os=`cat /etc/os-release | grep ^NAME`
-if [[ $os == *Antergos* ]] || [[ $os == *Arch* ]] || [[ $os == *Ubuntu* ]] || [[ $os == *CentOS* ]]; then
-	continue
-else
-	printf "${COLOR_RED}No supported OS detected, terminating script. See ${COLOR_ORANGE}/etc/os-release ${COLOR_RED}and ${COLOR_ORANGE}./deploy.sh --os  ${COLOR_RED}for more info.${COLOR_NONE}\n\n"
-	exit 1
-fi
 
 function check {
 	if [[ $os == *Ubuntu* ]]; then
@@ -147,49 +152,37 @@ function late {
 
 function oh-my-zsh {
 	if [ ! -d "$HOME/.oh-my-zsh/" ]; then
-		if [[ $os == *Ubuntu* ]]; then
-			pkg=`dpkg -s curl | grep Status`
-			if [[ $pkg == *installed ]]; then
-				crwg="true"
-			else
-				crwg="false"
-			fi
-		elif [[ $os == *Antergos* ]] || [[ $os == *Arch* ]]; then
-			pkg=`pacman -Qs curl`
-			if [ $pkg == "" ]; then
-				crwg="false"
-			else
-				crwg="true"
-			fi
-		fi
-		if [ $crwg == "true" ]; then
+		check curl
+		check wget
+		if pacman -Qs curl > /dev/null; then
 			sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
 		else
 			sh -c "$(wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)"
 		fi
-
 	else
 		late oh-my-zsh
 	fi
 }
 
 function configs {
+	# ln -s fromFolderOrFileFullPath toThisLocationPathToFolderOrFile
+	# ln -s ~/git/fonts/ ~/.fonts
+	wd=`pwd`
 	for f in *; do
-		if [[ "$f" == "." ]] ||
+		if ! [[ "$f" == "." ]] ||
 			 [[ "$f" == ".." ]] ||
-			 [[ "$f" == "README.rst" ]] ||
+			 [[ "$f" == "README.md" ]] ||
 			 [[ "$f" == ".git" ]] ||
 			 [[ "$f" == ".gitignore" ]] ||
 			 [[ "$f" == "deploy.sh" ]] ||
-			 [[ "$f" == "games" ]]
-				 then
-					 continue
-		elif [[ "$f" == "root" ]]; then
-			printf "cp -r -p -i ./root/* /\n"
-		elif [[ -d "$f" ]]; then
-			printf "cp -r -p -i ./$f $HOME/\n"
-		elif [[ -f "$f" ]]; then
-			printf "cp -i ./$f $HOME/\n"
+			 [[ "$f" == "games" ]]; then
+			if [[ "$f" == "root" ]]; then
+				printf "ln -s $wd/root/* /\n"
+			elif [[ -d "$f" ]]; then
+				printf "ln -s $wd/$f $HOME/\n"
+			elif [[ -f "$f" ]]; then
+				printf "ln -s $wd/$f $HOME/\n"
+			fi
 		fi
 	done
 }
@@ -209,50 +202,55 @@ function monitors {
 	done
 }
 
-# make sure the script is run correctly (disabled, reason: getopts)
-#if [ "$#" -gt 1 ]; then
-#	printf "\n${COLOR_RED}Too ${COLOR_ORANGE}many ${COLOR_RED}arguments!${COLOR_NONE}"
-#	helpme
-#	exit 1
-#fi
-#if [ "$#" -lt 1 ]; then
-#	printf "\n${COLOR_RED}Too ${COLOR_ORANGE}few ${COLOR_RED}arguments!${COLOR_NONE}"
-#	helpme
-#	exit 1
-#fi
-
 # arguments
-while getopts "e:cdmsho" arg; do
-	case ${arg} in
-		m)
-			monitors
-			shift $((OPTIND -1))
-			exit 0;;
-		c)
-			run
-			configs
-			shift $((OPTIND -1))
-			exit 0;;
-		d)
-			run
-			desktop
-			shift $((OPTIND -1))
-			exit 0;;
-		s)
-			run
-			server
-			shift $((OPTIND -1))
-			exit 0;;
-		h)
-			helpme
-			shift $((OPTIND -1))
-			exit 0;;
-		o)
-			os
-			shift $((OPTIND -1))
-			exit 0;;
-		*)
-			helpme
-			exit 1;;
-	esac
-done
+#while getopts "e:cdmsho" arg; do
+#	case ${arg} in
+#		m)
+#			shift $((OPTIND -1))
+#			exit 0;;
+#	esac
+#done
+# make sure the script is run correctly
+if [ "$#" -gt 1 ]; then
+	helpme
+	printf "${COLOR_RED}Too ${COLOR_ORANGE}many ${COLOR_RED}arguments!${COLOR_NONE}\n\n"
+	exit 1
+fi
+if [ "$#" -lt 1 ]; then
+	helpme
+	printf "${COLOR_RED}Too ${COLOR_ORANGE}few ${COLOR_RED}arguments!${COLOR_NONE}\n\n"
+	exit 1
+fi
+
+if [[ $1 == "" ]]; then exit 1
+elif [[ $1 == "-m" ]] || [[ $1 == "--monitors" ]]; then
+	monitors
+	exit 0
+elif [[ $1 == "-c" ]] || [[ $1 == "--configs" ]]; then
+	run
+	configs
+	exit 0
+elif [[ $1 == "-d" ]] || [[ $1 == "--desktop" ]]; then
+	run
+	desktop
+	exit 0
+elif [[ $1 == "-s" ]] || [[ $1 == "--server" ]]; then
+	run
+	server
+	exit 0
+elif [[ $1 == "-f" ]] || [[ $1 == "--full" ]]; then
+	run
+	desktop
+	monitors
+	configs
+	exit 0
+elif [[ $1 == "-h" ]] || [[ $1 == "--help" ]]; then
+	helpme
+	exit 0
+elif [[ $1 == "-o" ]] || [[ $1 == "--os" ]]; then
+	os
+	exit 0
+else
+	helpme
+	exit 1
+fi
