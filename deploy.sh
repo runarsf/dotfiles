@@ -178,7 +178,7 @@ function configs {
 	mkdir ~/deployBackup/$now
 	for f in * .*; do
 		if ! [[ "$f" =~ ^(\.|\.\.|README\.md|\.git|\.gitignore|deploy\.sh|games|root)$ ]]; then
-			printf "\n$f"
+			printf "\n${COLOR_GREEN}$f"
 			if [[ "$f" == "root" ]]; then
 				ln -s $wd/$f/* /
 			elif [[ -d "$f" ]]; then
@@ -206,7 +206,7 @@ function monitors {
 	for i in $xmonLines; do
 		xmon=`xrandr | grep " connected" | sed $int!d`
 		if [[ $xmon =~ $regex ]]; then
-    		echo "${BASH_REMATCH[1]}"
+    		printf "\n${COLOR_GREEN}${BASH_REMATCH[1]}"
 			echo "${BASH_REMATCH[1]}" >> ~/.monitor
 		fi
 		let "int++"
