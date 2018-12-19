@@ -197,6 +197,9 @@ function configs {
 		mkdir ~/.fonts
 	fi
 	git clone https://github.com/runarsf/fonts ~/.fonts/
+	git clone https://github.com/zsh-users/zsh-autosuggestions ~/.oh-my-zsh/custom/plugins/
+	git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+	vim +PluginInstall +qall
 	done
 }
 
