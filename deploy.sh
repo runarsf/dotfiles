@@ -193,16 +193,23 @@ function configs {
 				ln -s $wd/$f ~/$f
 			fi
 		fi
+	done
+}
+
+function rest {
 	if ! [[ -d ~/.fonts ]]; then
 		mkdir ~/.fonts
 	fi
-	cd ~/.fonts/ && git clone https://github.com/runarsf/fonts
-	mv ~/.fonts/fonts/*.* ../
-	rm -rf fonts ~/.fonts/fonts
-	cd ~/.oh-my-zsh/custom/plugins/ && git clone https://github.com/zsh-users/zsh-autosuggestions
-	git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
-	vim +PluginInstall +qall
-	done
+	git clone https://github.com/runarsf/fonts.git ~/.fonts/
+	mv ~/.fonts/fonts/*.* ~/.fonts/
+	rm -rf ~/.fonts/fonts
+	if [[ ! -f ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions ]]; then
+		git clone https://github.com/zsh-users/zsh-autosuggestions.git ~/.oh-my-zsh/custom/plugins/
+	fi
+	if [[ ! -f ~/.vim/bundle/Vundle.vim ]]; then
+		git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+		vim +PluginInstall +qall
+	fi
 }
 
 function monitors {
@@ -263,6 +270,7 @@ elif [[ $1 == "-f" ]] || [[ $1 == "--full" ]]; then
 	desktop
 	monitors
 	configs
+	rest
 	exit 0
 elif [[ $1 == "-h" ]] || [[ $1 == "--help" ]]; then
 	helpme
