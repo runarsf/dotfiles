@@ -200,11 +200,11 @@ function rest {
 	if ! [[ -d ~/.fonts ]]; then
 		mkdir ~/.fonts
 	fi
-	git clone https://github.com/runarsf/fonts.git ~/.fonts/
+	git clone https://github.com/runarsf/fonts.git ~/.fonts/fonts
 	mv ~/.fonts/fonts/*.* ~/.fonts/
 	rm -rf ~/.fonts/fonts
 	if [[ ! -f ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions ]]; then
-		git clone https://github.com/zsh-users/zsh-autosuggestions.git ~/.oh-my-zsh/custom/plugins/
+		git clone https://github.com/zsh-users/zsh-autosuggestions.git ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
 	fi
 	if [[ ! -f ~/.vim/bundle/Vundle.vim ]]; then
 		git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
