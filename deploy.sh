@@ -175,11 +175,11 @@ function configs {
 		if ! [[ "$f" =~ ^(\.|\.\.|README\.md|\.git|\.gitignore|deploy\.sh|games)$ ]]; then
 			printf "\n$f"
 			if [[ "$f" == "root" ]]; then
-				printf "\nln -s $wd/$f/* /"
+				ln -s $wd/$f/* /
 			elif [[ -d "$f" ]]; then
-				printf "\nln -s $wd/$f/ ~/$f"
+				ln -s $wd/$f/ ~/$f
 			elif [[ -f "$f" ]]; then
-				printf "\nln -s $wd/$f ~/$f"
+				ln -s $wd/$f ~/$f
 			fi
 		fi
 	done
