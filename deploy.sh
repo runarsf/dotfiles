@@ -196,8 +196,10 @@ function configs {
 	if ! [[ -d ~/.fonts ]]; then
 		mkdir ~/.fonts
 	fi
-	cd ~/.fonts && git clone https://github.com/runarsf/fonts && cd fonts && mv *.* ../ && rm -rf fonts
-	git clone https://github.com/zsh-users/zsh-autosuggestions ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+	cd ~/.fonts/ && git clone https://github.com/runarsf/fonts
+	mv ~/.fonts/fonts/*.* ../
+	rm -rf fonts ~/.fonts/fonts
+	cd ~/.oh-my-zsh/custom/plugins/ && git clone https://github.com/zsh-users/zsh-autosuggestions
 	git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 	vim +PluginInstall +qall
 	done
