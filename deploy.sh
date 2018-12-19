@@ -179,6 +179,12 @@ function configs {
 			elif [[ -d "$f" ]]; then
 				ln -s $wd/$f/ ~/$f
 			elif [[ -f "$f" ]]; then
+				if [[ -f ~/$f ]]; then
+					if ! [[ -d ~/deployBackup ]]; then
+						mkdir ~/deployBackup
+					fi
+					mv ~/$f ~/deployBackup
+				fi
 				ln -s $wd/$f ~/$f
 			fi
 		fi
