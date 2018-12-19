@@ -12,18 +12,17 @@ COLOR_PURPLE='\033[1;35m'
 COLOR_CYAN='\033[1;36m'
 COLOR_NONE='\033[0m'
 
-run () {
-	if [ $EUID != 0 ]; then
-		sudo "$0" "-${arg}"
-		exit $?
-	fi
+function run {
+	#if [ $EUID != 0 ]; then
+	#	sudo "$0" "-${arg}"
+	#	exit $?
+	#fi
 
 	printf "${COLOR_YELLOW}\n`date`\n\n${COLOR_NONE}"
 
-	printf "\n${COLOR_RED}This script will ask for ${COLOR_ORANGE}sudo${COLOR_RED} rights at one point, this is to make sure all configs are deployed correctly."
+	printf "\n${COLOR_RED}This script may ask for ${COLOR_ORANGE}sudo${COLOR_RED} rights at one point, this is to make sure all configs and packages are deployed correctly."
 	printf "\nIf the current terminal has sudo rights, you will not get a sudo-prompt."
-	printf "\nIf this dialog appears when running with the ${COLOR_ORANGE}--help${COLOR_RED}(or any other non-deployment args), click ${COLOR_ORANGE}y${COLOR_RED}."
-	printf "\nWhen deploying configs, you will be asked for each existing file if you want to overwrite them, simply answer ${COLOR_ORANGE}y${COLOR_RED}/${COLOR_ORANGE}n${COLOR_RED}."
+	printf "\nIf this dialog appears when running with ${COLOR_ORANGE}-h${COLOR_RED}(or any other non-deployment args), click ${COLOR_ORANGE}y${COLOR_RED}."
 	printf "\n\n${COLOR_ORANGE}"
 	read -p "Are you sure? This will overwrite your current config files. [y/N] " -n 1 -r
 	printf "${COLOR_NONE}\n\n"
@@ -38,7 +37,7 @@ run () {
 	fi
 }
 
-helpme () {
+function helpme {
 	printf "\n\t ${COLOR_GREEN}"
 	printf                            "\n\t    ███████╗██╗██╗     ███████╗███████╗"
 	printf                            "\n\t    ██╔════╝██║██║     ██╔════╝██╔════╝"
@@ -48,18 +47,18 @@ helpme () {
 	printf "\n\t ${COLOR_CYAN}╚═╝${COLOR_GREEN}╚═╝     ╚═╝╚══════╝╚══════╝╚══════╝"
 	printf "${COLOR_NONE}"
 	printf "\n\n\t ${COLOR_ORANGE}This script may install other related prerequisites/versions of the listed packages..."
-	printf "\n\n\t ${COLOR_CYAN}./deploy.sh desktop"
+	printf "\n\n\t ${COLOR_CYAN}./deploy.sh -d"
 	printf "\n\t\t ${COLOR_PURPLE}zsh | gvim | git | rofi | urxvt | i3 | polybar | ranger | compton | python(pip) | tmux | dos2unix | irssi"
-	printf "\n\n\t ${COLOR_CYAN}./deploy.sh server"
+	printf "\n\n\t ${COLOR_CYAN}./deploy.sh -s"
 	printf "\n\t\t ${COLOR_PURPLE}zsh | vim | git | tmux | dos2unix"
-	printf "\n\n\t ${COLOR_CYAN}./deploy.sh --help"
+	printf "\n\n\t ${COLOR_CYAN}./deploy.sh -h"
 	printf "\n\t\t ${COLOR_PURPLE}show this dialogue"
-	printf "\n\n\t ${COLOR_CYAN}./deploy.sh --os"
+	printf "\n\n\t ${COLOR_CYAN}./deploy.sh -o"
 	printf "\n\t\t ${COLOR_PURPLE}show supported operating systems/distros"
 	printf "\n\n ${COLOR_NONE}"
 }
 
-os () {
+function os {
 	printf "\n\t ${COLOR_GREEN}"
 	printf "\n\t ████████╗███████╗"
 	printf "\n\t ██╔═══██║██╔════╝"
@@ -79,13 +78,14 @@ os () {
 	printf "\n\n ${COLOR_NONE}"
 }
 
-desktop() {
+function desktop {
+	check yaourt
 	check git
 	check zsh
 	check gvim
 	check rofi
 	check rxvt-unicode
-	check i3
+	check i3-wm
 	check polybar
 	check ranger
 	check compton
@@ -94,9 +94,9 @@ desktop() {
 	check blueman
 	check dos2unix
 	check irssi
-	oh-my-zsh # exits entire script, has to be last
+	#oh-my-zsh # exits entire script, has to be last
 }
-server() {
+function server {
 	check git
 	check zsh
 	check vim
@@ -107,39 +107,33 @@ server() {
 }
 
 os=`cat /etc/os-release | grep ^NAME`
-if [[ $os == *Ubuntu* ]]; then
-	pkgmgr='apt-get install'
-elif [[ $os == *Antergos* ]] || [[ $os == *Arch* ]]; then
-	pkgmgr='pacman -S'
-elif [[ $os == *CentOS* ]]; then
-	pkgmgr='yum install'
+if [[ $os == *Antergos* ]] || [[ $os == *Arch* ]] || [[ $os == *Ubuntu* ]] || [[ $os == *CentOS* ]]; then
+	continue
 else
-	printf "${COLOR_RED}No supported OS detected. Check ${COLOR_ORANGE}/etc/os-release ${COLOR_RED}and ${COLOR_ORANGE}./deploy.sh --os  ${COLOR_RED}for more info.${COLOR_NONE}\n\n"
+	printf "${COLOR_RED}No supported OS detected, terminating script. See ${COLOR_ORANGE}/etc/os-release ${COLOR_RED}and ${COLOR_ORANGE}./deploy.sh --os  ${COLOR_RED}for more info.${COLOR_NONE}\n\n"
 	exit 1
 fi
 
-check() {
+function check {
 	if [[ $os == *Ubuntu* ]]; then
-		pkg=`dpkg -s $1 | grep Status`
-		if [[ $pkg == *installed ]]; then
+		if dpkg -s $1 | grep Status; then
 			late $1
 		else
-			sudo $pkgmgr $1
+			printf "sudo apt-get install $1"
 			printf "\n${COLOR_PURPLE} Installed ${COLOR_GREEN}$1${COLOR_PURPLE}.${COLOR_NONE}\n\n"
 		fi
 	elif [[ $os == *Antergos* ]] || [[ $os == *Arch* ]]; then
-		pkg=`pacman -Qi $1 > /dev/null`
-		if [[ $pgk == "error: package * was not found" ]]; then
-			sudo $pgkmgr $1
-			printf "\n${COLOR_PURPLE} Installed ${COLOR_GREEN}$1${COLOR_PURPLE}.${COLOR_NONE}\n\n"
-		else
+		if pacman -Qs $1 > /dev/null; then
 			late $1
+		else
+			sudo pacman -S $1 --noconfirm
+			printf "\n${COLOR_PURPLE} Installed ${COLOR_GREEN}$1${COLOR_PURPLE}.${COLOR_NONE}\n\n"
 		fi
 	elif [[ $os == *CentOS* ]]; then
 		if yum list installed "$1" >/dev/null 2>&1; then
 			late $1
-  	else
-			sudo $pkgmgr $1
+  		else
+			printf "sudo yum instal $1"
 			printf "\n${COLOR_PURPLE} Installed ${COLOR_GREEN}$1${COLOR_PURPLE}.${COLOR_NONE}\n\n"
 		fi
 	else
@@ -147,11 +141,11 @@ check() {
 	fi
 }
 
-late() {
-	printf "\n${COLOR_CYAN} $1 ${COLOR_PURPLE}already installed.${COLOR_NONE}\n\n"
+function late {
+	printf "${COLOR_CYAN} $1 ${COLOR_PURPLE}already installed.${COLOR_NONE}\n"
 }
 
-oh-my-zsh() {
+function oh-my-zsh {
 	if [ ! -d "$HOME/.oh-my-zsh/" ]; then
 		if [[ $os == *Ubuntu* ]]; then
 			pkg=`dpkg -s curl | grep Status`
@@ -179,7 +173,7 @@ oh-my-zsh() {
 	fi
 }
 
-configs() {
+function configs {
 	for f in *; do
 		if [[ "$f" == "." ]] ||
 			 [[ "$f" == ".." ]] ||
@@ -200,7 +194,7 @@ configs() {
 	done
 }
 
-monitors() {
+function monitors {
 	xmonLines=`xrandr | grep " connected" | while read line ; do echo 'i' ; done`
 	regex="^(\w+)\s+.+$"
 	let "int=1"
