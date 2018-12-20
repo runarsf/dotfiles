@@ -203,10 +203,10 @@ function rest {
 	git clone https://github.com/runarsf/fonts.git ~/.fonts/fonts
 	mv ~/.fonts/fonts/*.* ~/.fonts/
 	rm -rf ~/.fonts/fonts
-	if [ ! -f ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions ] || [ ! -d ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions ]; then
+	if [ ! -d ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions ]; then
 		git clone https://github.com/zsh-users/zsh-autosuggestions.git ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
 	fi
-	if [ ! -f ~/.oh-my-zsh/custom/themes/rufus-zsh-theme ] || [ ! -d ~/.oh-my-zsh/custom/themes/rufus-zsh-theme ]; then
+	if [ ! -f ~/.oh-my-zsh/custom/themes/rufus.zsh-theme ]; then
 		git clone https://github.com/runarsf/rufus-zsh-theme.git ~/.oh-my-zsh/custom/themes/rufus-zsh-theme
 		mv ~/.oh-my-zsh/custom/themes/rufus-zsh-theme/*.zsh-theme ~/.oh-my-zsh/custom/themes/
 		rm ~/.oh-my-zsh/custom/themes/rufus-zsh-theme
