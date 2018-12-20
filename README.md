@@ -9,5 +9,3 @@
 - don't have git?
     - [Download](https://github.com/runarsf/dotfiles/archive/master.zip) the repo as a zip
 - **./deploy.sh --help** for more info
-
-## Prerequisites && Requirements

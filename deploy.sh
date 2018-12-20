@@ -101,7 +101,8 @@ function desktop {
 	check rofi
 	check rxvt-unicode
 	check i3-gaps
-	check polybar
+	check polybar aur
+	check ttf-font-awesome-4 aur
 	check ranger
 	check compton
 	check python
@@ -129,7 +130,7 @@ function check {
 			printf "\n${COLOR_PURPLE}Installed ${COLOR_GREEN}$1${COLOR_PURPLE}.${COLOR_NONE}\n\n"
 		fi
 	elif [[ $os == *Antergos* ]] || [[ $os == *Arch* ]]; then
-		if [[ "$1" == "polybar" ]] && ! [[ `pacman -Qm polybar` ]] > /dev/null; then
+		if [[ "$2" == "aur" ]] && ! [[ `pacman -Qm $1` ]] > /dev/null; then
 			yay -S $1
 		elif pacman -Qs $1 > /dev/null; then
 			late $1
@@ -234,7 +235,7 @@ function monitors {
 	done
 }
 
-function finished {
+function finishedb {
 	printf "${COLOR_CYAN}D${COLOR_GREEN}O${COLOR_CYAN}N${COLOR_GREEN}E${COLOR_CYAN}!${COLOR_NONE}"
 }
 
