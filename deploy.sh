@@ -234,6 +234,10 @@ function monitors {
 	done
 }
 
+function done {
+	printf "${COLOR_CYAN}D${COLOR_GREEN}O${COLOR_CYAN}N${COLOR_GREEN}E${COLOR_CYAN}!${COLOR_NONE}"
+}
+
 # arguments
 #while getopts "e:cdmsho" arg; do
 #	case ${arg} in
@@ -276,6 +280,7 @@ elif [[ $1 == "-f" ]] || [[ $1 == "--full" ]]; then
 	monitors
 	configs
 	rest
+	done
 	exit 0
 elif [[ $1 == "-h" ]] || [[ $1 == "--help" ]]; then
 	helpme
