@@ -107,6 +107,9 @@ function desktop {
 	check compton
 	check python
 	check tmux
+	check xrandr
+	check arandr
+	check rofi
 	check blueman
 	check dos2unix
 	check irssi
