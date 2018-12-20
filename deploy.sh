@@ -122,7 +122,7 @@ function server {
 }
 
 function check {
-	if [[ $os == *Ubuntu* ]]; then
+	if [[ $os == *Ubuntu* ]] && ! [[ "$2" == "aur" ]]; then
 		if dpkg -s $1 | grep Status; then
 			late $1
 		else
@@ -138,7 +138,7 @@ function check {
 			sudo pacman -S $1 --noconfirm
 			printf "\n${COLOR_PURPLE}Installed ${COLOR_GREEN}$1${COLOR_PURPLE}.${COLOR_NONE}\n\n"
 		fi
-	elif [[ $os == *CentOS* ]]; then
+	elif [[ $os == *CentOS* ]] && ! [[ "$2" == "aur" ]]; then
 		if yum list installed "$1" >/dev/null 2>&1; then
 			late $1
   		else
