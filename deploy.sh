@@ -235,7 +235,7 @@ function monitors {
 	done
 }
 
-function finishedb {
+function finished {
 	printf "${COLOR_CYAN}D${COLOR_GREEN}O${COLOR_CYAN}N${COLOR_GREEN}E${COLOR_CYAN}!${COLOR_NONE}"
 }
 
