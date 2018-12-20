@@ -234,7 +234,7 @@ function monitors {
 	done
 }
 
-function done {
+function finished {
 	printf "${COLOR_CYAN}D${COLOR_GREEN}O${COLOR_CYAN}N${COLOR_GREEN}E${COLOR_CYAN}!${COLOR_NONE}"
 }
 
@@ -280,7 +280,7 @@ elif [[ $1 == "-f" ]] || [[ $1 == "--full" ]]; then
 	monitors
 	configs
 	rest
-	done
+	finished
 	exit 0
 elif [[ $1 == "-h" ]] || [[ $1 == "--help" ]]; then
 	helpme
