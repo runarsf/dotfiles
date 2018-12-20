@@ -209,7 +209,7 @@ function rest {
 	if [ ! -f ~/.oh-my-zsh/custom/themes/rufus.zsh-theme ]; then
 		git clone https://github.com/runarsf/rufus-zsh-theme.git ~/.oh-my-zsh/custom/themes/rufus-zsh-theme
 		mv ~/.oh-my-zsh/custom/themes/rufus-zsh-theme/*.zsh-theme ~/.oh-my-zsh/custom/themes/
-		rm ~/.oh-my-zsh/custom/themes/rufus-zsh-theme
+		rm -rf ~/.oh-my-zsh/custom/themes/rufus-zsh-theme
 	fi
 	if [ ! -f ~/.vim/bundle/Vundle.vim ]; then
 		git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
