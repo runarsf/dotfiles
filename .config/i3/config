@@ -102,35 +102,40 @@ bindsym $mod+Shift+space floating toggle
 bindsym $mod+Shift+i reload
 # restart i3 inplace
 bindsym $mod+Shift+r restart
-# exit i3'
-bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3?' -b 'Yes, exit i3' 'i3-msg exit'"
+# exit i3
+#bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3?' -b 'Yes, exit i3' 'i3-msg exit'"
+bindsym $mod+Shift+e exec /home/runar/bin/prompt.sh "You pressed the exit shortcut. Do you really want to exit i3?" "i3-msg exit"
 
-bindsym $mod+s					gaps inner current plus 5
+# gap hotkeys
+bindsym $mod+s							gaps inner current plus 5
 bindsym $mod+Shift+s 				gaps inner current minus 5
-
-bindsym $mod+z					gaps outer current plus 5
+bindsym $mod+z							gaps outer current plus 5
 bindsym $mod+Shift+z 				gaps outer current minus 5
 
+# show running applications
 bindsym $mod+Tab exec rofi -show window
 
+# lock and shutdown
 bindsym $mod+x exec /home/runar/bin/i3lock-custom.sh
 bindsym $mod+Shift+x exec /home/runar/bin/prompt.sh "Are you sure you want to shutdown?" "$shutdown"
 
-bindsym $mod+Shift+c exec puush -b
+#bindsym $mod+Shift+c exec puush -b
 bindsym Ctrl+Shift+c exec ~/sharenix/sharenix-section -n -c #sharenix-section
 
+# simulated media keys
 bindsym Ctrl+$mod+j exec --no-startup-id playerctl previous
 bindsym Ctrl+$mod+k exec --no-startup-id playerctl play-pause
 bindsym Ctrl+$mod+l exec --no-startup-id playerctl next
 
+# media keys
 bindsym XF86AudioPlay exec --no-startup-id playerctl play-pause
 bindsym XF86AudioPause exec --no-startup-id playerctl play-pause
 bindsym XF86AudioNext exec --no-startup-id playerctl next
 bindsym XF86AudioPrev exec --no-startup-id playerctl previous
 
+# rofi
 bindsym $mod+d exec rofi -show run -lines 3 -eh 2 -width 100 -padding 625 -opacity "50" -color-enabled -bw 0 -bc "$bg-color" -color-window "$bg-color" -fg "$text-color" -hlbg "$bg-color" -hlfg "#9575cd" -font "System San Francisco Display 18" #rofi
 
-###---Workspaces---###
 #Define workspace name/variable
 set $ws1 "1"
 set $ws2 "2"
@@ -168,6 +173,7 @@ bindsym $mod+Shift+8 move container to workspace $ws8
 bindsym $mod+Shift+9 move container to workspace $ws9
 bindsym $mod+Shift+0 move container to workspace $ws10
 
+# workspace monitor assignment
 workspace $ws1 output HDMI2
 workspace $ws2 output DP1
 workspace $ws3 output HDMI2
@@ -179,31 +185,24 @@ workspace $ws8 output DP1
 workspace $ws9 output eDP1
 workspace $ws10 output eDP1
 
-# use xprop to find class
+# app workspace assignments, ordered by ws number, use xprop to find class
 assign [class="discord"] $ws2
 assign [class="Mattermost"] $ws2
 assign [class="qutebrowser"] $ws3
+assign [class="Atom"] $ws4
+assign [class="Sublime_text"] $ws4
 assign [class="Thunderbird"] $ws8
 for_window [class="Spotify"] move to workspace $ws10
 assign [class="nagstamon"] $ws10
-for_window [class="*.py"] floating enable
-assign [class="Atom"] $ws4
-assign [class="Sublime_text"] $ws4
 
-# resize window (you can also use the mouse for that)
+# resize window
 mode "resize" {
         # These bindings trigger as soon as you enter the resize mode
-
-        # Pressing left will shrink the window’s width.
-        # Pressing right will grow the window’s width.
-        # Pressing up will shrink thYaye window’s height.
-        # Pressing down will grow the window’s height.
         bindsym j resize shrink width 10 px or 10 ppt
         bindsym k resize grow height 10 px or 10 ppt
         bindsym l resize shrink height 10 px or 10 ppt
         bindsym oslash resize grow width 10 px or 10 ppt
 
-        # same bindings, but for the arrow keys
         bindsym Left resize shrink width 10 px or 10 ppt
         bindsym Down resize grow height 10 px or 10 ppt
         bindsym Up resize shrink height 10 px or 10 ppt
@@ -215,13 +214,14 @@ mode "resize" {
         bindsym $mod+r mode "default"
 }
 
+# resize binds
 #bindsym $mod+r mode "resize"
+bindsym $mod+Ctrl+Left resize shrink width 10 px or 10 ppt
+bindsym $mod+Ctrl+Down resize grow height 10 px or 10 ppt
+bindsym $mod+Ctrl+Up resize shrink height 10 px or 10 ppt
+bindsym $mod+Ctrl+Right resize grow width 10 px or 10 ppt
 
-bindsym $mod+Ctrl+Right resize shrink width 10 px or 10 ppt
-bindsym $mod+Ctrl+Up resize grow height 10 px or 10 ppt
-bindsym $mod+Ctrl+Down resize shrink height 10 px or 10 ppt
-bindsym $mod+Ctrl+Left resize grow width 10 px or 10 ppt
-
+# border size
 for_window [class="^.*"] border pixel 2
 hide_edge_borders both
 
