@@ -19,3 +19,5 @@
 - Click *enter* on queries regarding aur packages
 - When zsh opens, type `exit` and click *enter*, the installation will continue
 - When the script is done, log out, and log in with `i3`
+- Hotfix; urxvt colors: (automatically applied in deploy script):
+    - ``sed -i "1 s/^.*$/#include \"\/home\/$USER\/.xres\/urxvt\"/" ~/.Xresources``

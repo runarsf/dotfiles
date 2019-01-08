@@ -201,24 +201,30 @@ function configs {
 }
 
 function rest {
+	# set up .fonts firectory
 	if [ ! -d ~/.fonts ]; then
 		mkdir ~/.fonts
 	fi
 	git clone https://github.com/runarsf/fonts.git ~/.fonts/fonts
 	mv ~/.fonts/fonts/*.* ~/.fonts/
 	rm -rf ~/.fonts/fonts
+	# install zsh-autosuggestions plugin
 	if [ ! -d ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions ]; then
 		git clone https://github.com/zsh-users/zsh-autosuggestions.git ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
 	fi
+	# install rufus-zsh-theme
 	if [ ! -f ~/.oh-my-zsh/custom/themes/rufus.zsh-theme ]; then
 		git clone https://github.com/runarsf/rufus-zsh-theme.git ~/.oh-my-zsh/custom/themes/rufus-zsh-theme
 		mv ~/.oh-my-zsh/custom/themes/rufus-zsh-theme/*.zsh-theme ~/.oh-my-zsh/custom/themes/
 		rm -rf ~/.oh-my-zsh/custom/themes/rufus-zsh-theme
 	fi
+	# install vundle plugins (defined in ~/.vimrc)
 	if [ ! -d ~/.vim/bundle/Vundle.vim ]; then
 		git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 		vim +PluginInstall +qall
 	fi
+	# fix ~/.Xresources include
+	sed -i "1 s/^.*$/#include \"\/home\/$USER\/.xres\/urxvt\"/" ~/.Xresources
 }
 
 function monitors {
