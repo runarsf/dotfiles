@@ -27,7 +27,7 @@ COMPLETION_WAITING_DOTS="true"
 HIST_STAMPS="dd.mm.yyyy"
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=white'
 PROMPT_EOL_MARK=''
-PYTHONDONTWRITEBYTECODE=1 python -m pytest -p no:cacheprovider
+#PYTHONDONTWRITEBYTECODE=1 python -m pytest -p no:cacheprovider
 export BROWSER=/usr/bin/firefox
 export VISUAL=vim
 export EDITOR="$VISUAL"

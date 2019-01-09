@@ -80,6 +80,7 @@ Plugin 'justinmk/vim-sneak'
 Plugin 'zefei/vim-colortuner'
 Plugin 'junegunn/fzf'
 Plugin 'osyo-manga/vim-hopping'
+Plugin 'ryanoasis/vim-devicons'
 "Plugin 'wincent/terminus'  " buggy
 
 "|> Synax highlighting
@@ -87,11 +88,11 @@ Plugin 'vim-scripts/nginx.vim'
 Plugin 'octol/vim-cpp-enhanced-highlight'
 
 "|> colorschemes
-Plugin 'reedes/vim-colors-pencil'
 Plugin 'sjl/badwolf'
 Plugin 'xero/sourcerer.vim'
 Plugin 'AlessandroYorba/Sierra'
 Plugin 'altercation/vim-colors-solarized'
+Plugin 'morhetz/gruvbox'
 call vundle#end() " Vundle end
 
 filetype plugin indent on " required for vundle
@@ -110,6 +111,9 @@ let g:sneak#label = 1
 let g:sierra_Midnight = 1
 "let g:sierra_Pitch = 1
 
+"|> gruvbox config
+let g:gruvbox_contrast_dark="hard"
+
 "|> NERDTree config
 "|> open a NERDTree automatically when vim starts up if no files were specified
 autocmd StdinReadPre * let s:std_in=1
@@ -120,7 +124,7 @@ autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in
 "|> close vim if the only window left open is a NERDTree
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 "|> open NERDTree on right
-let g:NERDTreeWinPos = "right"
+let g:NERDTreeWinPos = "left"
 "|> Toggle NERDTree
 map <C-o> :NERDTreeToggle<CR>
 
@@ -287,7 +291,8 @@ map <C-p> "+P
 
 "|> Colorscheme
 set background=dark
-colorscheme sierra
+"colorscheme sierra
+colorscheme gruvbox
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Misc
@@ -343,12 +348,11 @@ augroup END
 
 "|> Switch colorscheme with Goyo
 function! s:goyo_enter()
-    colorscheme pencil
-		set background=dark
+    colorscheme sierra
 endfunction
 
 function! s:goyo_leave()
-    colorscheme sierra
+		colorscheme gruvbox
 endfunction
 
 autocmd! User GoyoEnter nested call <SID>goyo_enter()

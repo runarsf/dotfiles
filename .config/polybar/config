@@ -194,7 +194,7 @@ label-focused-padding = 2
 
 ; unfocused = Inactive workspace on any monitor
 ;label-unfocused = %index%
-label-unfocused = %icon%
+label-unfocused = %index%
 label-unfocused-padding = 2
 
 ; visible = Active workspace on unfocused monitor
@@ -206,7 +206,7 @@ label-visible-padding = 2
 
 ; urgent = Workspace with urgency hint set
 ;label-urgent = %index%
-label-urgent = %icon%
+label-urgent = %index% %icon%
 label-urgent-foreground =  ${colors.label-focused-foreground}
 label-urgent-background = ${colors.alert}
 label-urgent-padding = 2
