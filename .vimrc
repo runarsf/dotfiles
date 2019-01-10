@@ -122,7 +122,7 @@ autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | endif
 "|> close vim if the only window left open is a NERDTree
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+"autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 "|> open NERDTree on right
 let g:NERDTreeWinPos = "left"
 "|> Toggle NERDTree
@@ -185,8 +185,8 @@ set showmatch
 "|> How many tenths of a second to blink when matching brackets
 set mat=2
 
-"|> Add a bit extra margin to the left
-"set foldcolumn=1
+"|> Margin to the left
+set foldcolumn=0
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Status line / Tabs
@@ -249,9 +249,6 @@ nmap <M-k> mz:m-2<cr>`z
 vmap <M-j> :m'>+<cr>`<my`>mzgv`yo`z
 vmap <M-k> :m'<-2<cr>`>my`<mzgv`yo`z
 
-"|> Pressing ,ss will toggle and untoggle spell checking
-map <leader>ss :setlocal spell!<cr>
-
 "|> Splits navigation.
 set splitbelow
 set splitright
@@ -266,13 +263,16 @@ map <silent> <leader><cr> :noh<cr>
 "|> Visual mode pressing * or # searches for the current selection
 "'> Super useful! From an idea by Michael Naumann
 vnoremap <silent> * :<C-u>call VisualSelection('', '')<CR>/<C-R>=@/<CR><CR>
-vnoremap <silent> # :<C-u>call VisualSelection('', '')<CR>?<C-R>=@/<CR><CR>
+"vnoremap <silent> # :<C-u>call VisualSelection('', '')<CR>?<C-R>=@/<CR><CR>
 
 "|> Get line, word and character counts with F3:
 map <F3> :!wc %<CR>
 
 "|> Spell-check set to F6:
 map <F6> :setlocal spell! spelllang=en_us,es<CR>
+
+"|> Pressing ,ss will toggle and untoggle spell checking
+map <leader>ss :setlocal spell!<cr>
 
 "|> Remove the Windows ^M - when the encodings gets messed up
 noremap <Leader>m mmHmt:%s/<C-V><cr>//ge<cr>'tzt'm
@@ -285,13 +285,12 @@ map <C-p> "+P
 " => Colors
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "|> Tab colors
-"highlight TabLineFill ctermfg=LightGreen ctermbg=DarkGreen
-"highlight TabLine ctermfg=Blue ctermbg=Yellow
-"highlight TabLineSel ctermfg=Red ctermbg=Yellow
+highlight TabLineFill ctermfg=LightGreen ctermbg=DarkGreen
+highlight TabLine ctermfg=Blue ctermbg=Yellow
+highlight TabLineSel ctermfg=Red ctermbg=Yellow
 
 "|> Colorscheme
 set background=dark
-"colorscheme sierra
 colorscheme gruvbox
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
