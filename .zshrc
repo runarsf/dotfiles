@@ -15,6 +15,12 @@ case $- in
 esac
 
 # ============================== #
+# Inclue .keys file
+# ============================== #
+if [ -f ~/.travkeys ]; then
+    source ~/.travkeys
+
+# ============================== #
 # Path and Variables
 # ============================== #
 PATH=$PATH:$HOME/bin/

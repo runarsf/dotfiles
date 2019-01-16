@@ -283,6 +283,7 @@ elif [[ $1 == "-d" ]] || [[ $1 == "--desktop" ]]; then
 elif [[ $1 == "-s" ]] || [[ $1 == "--server" ]]; then
 	run
 	server
+	rest
 	exit 0
 elif [[ $1 == "-f" ]] || [[ $1 == "--full" ]]; then
 	run

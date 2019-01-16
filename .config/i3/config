@@ -21,7 +21,7 @@ exec --no-startup-id $term -fn "xft:mono:pixelsize=14" -name dropdown -e zsh
 
 #notepad, $mod+n
 for_window [instance="notepad"] floating enable
-for_window [instance="notepad"] resize set 1920 1100
+for_window [instance="notepad"] resize set 1600 900
 for_window [instance="notepad"] move position center
 for_window [instance="notepad"] move scratchpad
 exec --no-startup-id $term -name notepad -e zsh
@@ -174,16 +174,16 @@ bindsym $mod+Shift+9 move container to workspace $ws9
 bindsym $mod+Shift+0 move container to workspace $ws10
 
 # workspace monitor assignment
-workspace $ws1 output HDMI2
-workspace $ws2 output DP1
-workspace $ws3 output HDMI2
-workspace $ws4 output HDMI2
-workspace $ws5 output HDMI2
-workspace $ws6 output DP1
-workspace $ws7 output DP1
-workspace $ws8 output DP1
-workspace $ws9 output eDP1
-workspace $ws10 output eDP1
+#workspace $ws1 output HDMI2
+#workspace $ws2 output DP1
+#workspace $ws3 output HDMI2
+#workspace $ws4 output HDMI2
+#workspace $ws5 output HDMI2
+#workspace $ws6 output DP1
+#workspace $ws7 output DP1
+#workspace $ws8 output DP1
+#workspace $ws9 output eDP1
+#workspace $ws10 output eDP1
 
 # app workspace assignments, ordered by ws number, use xprop to find class
 assign [class="discord"] $ws2
@@ -194,6 +194,7 @@ assign [class="Sublime_text"] $ws4
 assign [class="Thunderbird"] $ws8
 for_window [class="Spotify"] move to workspace $ws10
 assign [class="nagstamon"] $ws10
+for_window [class="Tk"] floating enable
 
 # resize window
 mode "resize" {

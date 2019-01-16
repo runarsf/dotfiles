@@ -52,7 +52,7 @@ font-2 = siji:pixelsize=10;1
 
 modules-left = i3
 modules-center = title
-modules-right = volume memory cpu temperature date kernel-version
+modules-right = volume memory cpu temperature battery date
 
 tray-position = right
 tray-padding = 2
