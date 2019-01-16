@@ -15,9 +15,9 @@ case $- in
 esac
 
 # ============================== #
-# Include .keys file
+# Include .travkeys file
 # ============================== #
-[ -f ~/.keys ] && source ~/.keys
+[ -f ~/.travkeys ] && source ~/.travkeys
 
 # ============================== #
 # Path and Variables
