@@ -174,16 +174,16 @@ bindsym $mod+Shift+9 move container to workspace $ws9
 bindsym $mod+Shift+0 move container to workspace $ws10
 
 # workspace monitor assignment
-#workspace $ws1 output HDMI2
-#workspace $ws2 output DP1
-#workspace $ws3 output HDMI2
-#workspace $ws4 output HDMI2
-#workspace $ws5 output HDMI2
-#workspace $ws6 output DP1
-#workspace $ws7 output DP1
-#workspace $ws8 output DP1
-#workspace $ws9 output eDP1
-#workspace $ws10 output eDP1
+workspace $ws1 output HDMI2
+workspace $ws2 output DP1
+workspace $ws3 output HDMI2
+workspace $ws4 output HDMI2
+workspace $ws5 output HDMI2
+workspace $ws6 output DP1
+workspace $ws7 output DP1
+workspace $ws8 output DP1
+workspace $ws9 output eDP1
+workspace $ws10 output eDP1
 
 # app workspace assignments, ordered by ws number, use xprop to find class
 assign [class="discord"] $ws2
