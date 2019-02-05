@@ -12,10 +12,10 @@ COLOR_PURPLE='\033[1;35m'
 COLOR_CYAN='\033[1;36m'
 COLOR_NONE='\033[0m'
 
-os=`cat /etc/os-release | grep ^NAME`
+os=`cat /etc/*-release | grep ^NAME`
 if ! [[ $os = *"Antergos"* || $os = *"Arch"* || $os = *"Ubuntu"* || $os = *"CentOS"* ]]; then
 	printf "${COLOR_RED}No supported OS detected, terminating script."
-	printf "\nPlease refer to ${COLOR_ORANGE}/etc/os-release${COLOR_RED}, ${COLOR_ORANGE}./deploy.sh -o ${COLOR_RED}and ${COLOR_ORANGE}./deploy.sh -h ${COLOR_RED}for more info.${COLOR_NONE}\n\n"
+	printf "\nPlease refer to ${COLOR_ORANGE}/etc/*-release${COLOR_RED}, ${COLOR_ORANGE}./deploy.sh -o ${COLOR_RED}and ${COLOR_ORANGE}./deploy.sh -h ${COLOR_RED}for more info.${COLOR_NONE}\n\n"
 	exit 1
 fi
 

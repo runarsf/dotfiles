@@ -51,17 +51,19 @@ font-1 = FontAwesome:pixelsize=11;1
 font-2 = siji:pixelsize=10;1
 
 modules-left = i3
-modules-center = title
+modules-center = lastsh title
 modules-right = volume memory cpu temperature battery date
-
-tray-position = right
-tray-padding = 2
-tray-background = ${colors.background}
 
 wm-restack = i3
 
 scroll-up = i3wm-wsnext
 scroll-down = i3wm-wsprev
+
+[bar/tray]
+inherit = bar/top
+tray-position = right
+tray-padding = 2
+tray-background = ${colors.background}
 
 [bar/minimal]
 monitor = ${env:MONITOR:}
@@ -100,7 +102,7 @@ format-prefix = " "
 #format-prefix = " "
 format = <label>
 exec = $HOME/git/last.sh/last.sh -p
-format-underline = #1db954
+;format-underline = #1db954
 
 [module/title]
 type = internal/xwindow
@@ -326,7 +328,7 @@ format-underline =  #456771
 label = %date% %time%
 
 [module/volume]
-type = internal/volume
+type = internal/alsa
 
 format-volume = <label-volume> <bar-volume>
 label-volume = VOL 
@@ -354,7 +356,7 @@ bar-volume-empty-font = 2
 bar-volume-empty-foreground = ${colors.foreground-alt}
 
 [module/minvolume]
-type = internal/volume
+type = internal/alsa
 ; speaker_mixer = Speaker
 ; headphone_mixer = Headphone
 ; headphone_control_numid = 9
@@ -429,8 +431,8 @@ format-underline =  #456771
 format-warn = <ramp> <label-warn>
 format-warn-underline = ${self.format-underline}
 
-label = %temperature%
-label-warn = %temperature%
+label = %temperature-c%
+label-warn = %temperature-c%
 label-warn-foreground = ${colors.secondary}
 
 ramp-0 = 

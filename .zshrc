@@ -57,6 +57,7 @@ source $ZSH/oh-my-zsh.sh
 # ============================== #
 # Personal Aliases
 # ============================== #
+alias dline='cd ~/git/dline && /root/.local/bin/dline'
 alias please='sudo $(fc -ln -1)'
 alias whereami='pwd'
 alias ..='cd ..'
