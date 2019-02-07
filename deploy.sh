@@ -4,6 +4,7 @@ set -e
 #set -x
 #trap 'printf "%3d: " "$LINENO"' DEBUG
 
+# terminal color variables from gtufte/dotfiles
 COLOR_RED='\033[0;31m'
 COLOR_GREEN='\033[1;32m'
 COLOR_ORANGE='\033[0;33m'

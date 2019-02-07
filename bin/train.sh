@@ -2,5 +2,6 @@
 trap "exit" INT
 while :
 do
-    sl -e | lolcat
+	clear
+	sl -e | lolcat
 done

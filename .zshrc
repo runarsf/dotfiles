@@ -57,6 +57,8 @@ source $ZSH/oh-my-zsh.sh
 # ============================== #
 # Personal Aliases
 # ============================== #
+alias c='clip'
+alias clip='xclip -selection clipboard'
 alias dline='cd ~/git/dline && /root/.local/bin/dline'
 alias please='sudo $(fc -ln -1)'
 alias whereami='pwd'
