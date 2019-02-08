@@ -15,9 +15,14 @@ case $- in
 esac
 
 # ============================== #
-# Include .travkeys file
+# Include files
+#+ .travkeys: travis-ci/deploy keys
+#+ .zsh_aliases: private zsh aliases
+#+ travis.sh: added by travis gem
 # ============================== #
-[ -f ~/.travkeys ] && source ~/.travkeys
+[ -f $HOME/.travkeys ]           && source $HOME/.travkeys
+[ -f $HOME/.zsh_aliases ]        && source $HOME/.zsh_aliases
+[ -f $HOME/.travis/travis.sh ]   && source $HOME/.travis/travis.sh
 
 # ============================== #
 # Path and Variables
@@ -26,8 +31,7 @@ PATH=$PATH:$HOME/bin/
 export PATH="`ruby -e 'puts Gem.user_dir'`/bin:$PATH"
 
 ZSH_THEME_RANDOM_CANDIDATES=( "nicoulaj" "miloshadzic" "af-magic" "agnoster" "refined" "wedisagree" "imajes" "mh" "pure"  )
-# ZSH_THEME="random"
-ZSH_THEME="rufus-minimal"
+ZSH_THEME="rufus-minimal" # "random"
 COMPLETION_WAITING_DOTS="true"
 HIST_STAMPS="dd.mm.yyyy"
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=white'
@@ -37,7 +41,6 @@ export BROWSER=/usr/bin/firefox
 export VISUAL=vim
 export EDITOR="$VISUAL"
 export TERM=rxvt
-#export TERM=xterm-256color
 export ZSH=$HOME/.oh-my-zsh
 # wine/osu!
 export WINEPREFIX="$HOME/.wine_osu"
@@ -57,16 +60,18 @@ source $ZSH/oh-my-zsh.sh
 # ============================== #
 # Personal Aliases
 # ============================== #
+alias status='cls && echo "" && neofetch | lolcat && last.sh -u' #"runarsf"
 alias c='clip'
 alias clip='xclip -selection clipboard'
-alias dline='cd ~/git/dline && /root/.local/bin/dline'
+alias dline='cd $HOME/git/dline && /root/.local/bin/dline'
 alias please='sudo $(fc -ln -1)'
+alias fuck='sudo $(fc -ln -1)'
 alias whereami='pwd'
 alias ..='cd ..'
-alias pserver="livereload -p 5500"
+alias pserver='livereload -p 5500'
 alias cls='clear'
-alias zshrc='vim ~/.zshrc'
-alias reload='. ~/.zshrc'
+alias zshrc='vim $HOME/.zshrc'
+alias reload='. $HOME/.zshrc'
 alias path='echo -e ${PATH//:/\\n}'
 alias libpath='echo -e ${LD_LIBRARY_PATH//:/\\n}'
 alias ls='ls -la --color'
@@ -76,19 +81,11 @@ alias lt='ls -ltr'         #  Sort by date, most recent last.
 alias lc='ls -ltcr'        #  Sort by/show change time,most recent last.
 alias lu='ls -ltur'        #  Sort by/show access time,most recent last.
 alias rr='ranger'
-alias dot='cd ~/dotfiles/'
-alias killpoly='killall -q polybar'
-alias i3cfg='vim ~/.config/i3/config'
-alias polycfg='vim ~/.config/polybar/config'
+alias i3cfg='vim $HOME/.config/i3/config'
+alias polycfg='vim $HOME/.config/polybar/config'
 alias rtheme='print $RANDOM_THEME'
-alias nagios='ssh root@nagios.kantega.lan'
-alias nagiosA='ssh root@nagios.kantega.lan -A'
 alias bim='vim'
 alias vi='vim'
-alias notes='cd ~/notes/ && clear && ls | grep -v "\." | grep -v "total " && printf "\n"'
-alias ns='cd ~/notes/ && clear && ls | grep -v "\." | grep -v "total " && printf "\n" && ranger'
+alias ns='cd $HOME/notes/ && clear && ls | grep -v "\." | grep -v "total " && printf "\n" && ranger'
 
 clear
-
-# added by travis gem
-[ -f $HOME/.travis/travis.sh ] && source $HOME/.travis/travis.sh

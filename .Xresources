@@ -1,4 +1,4 @@
-#include "/home/runar/.xres/urxvt"
+#include "./.xres/urxvt"
 
 !! general settings
 URxvt*scrollTtyKeypress:    true

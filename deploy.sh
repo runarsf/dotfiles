@@ -107,6 +107,7 @@ function desktop {
 	check ranger
 	check compton
 	check python
+	check feh
 	check tmux
 	check xrandr
 	check arandr
@@ -114,6 +115,7 @@ function desktop {
 	check blueman
 	check dos2unix
 	check irssi
+	check xclip
 	oh-my-zsh
 }
 function server {
@@ -224,8 +226,11 @@ function rest {
 		git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 		vim +PluginInstall +qall
 	fi
-	# fix ~/.Xresources include
-	sed -i "1 s/^.*$/#include \"\/home\/$USER\/.xres\/urxvt\"/" ~/.Xresources
+	# fix .Xresources include
+	# .Xresources doesn't support variables, which means $HOME won't work,
+	# currently fixed on other way by just using ./ instead of $HOME
+	# Uncomment the following line if it doesn't work;
+	#sed -i "1 s/^.*$/#include \"\/home\/$USER\/.xres\/urxvt\"/" ~/.Xresources
 }
 
 function monitors {

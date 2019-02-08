@@ -12,45 +12,37 @@ set $MON3 "$(sed '3!d' $HOME/.monitor)"
 font pango:System San Francisco 7
 
 ###---Dropdown/Scratchpad Windows---###
-#tmux, $mod+u
+# smaller terminal, $mod+u
 for_window [instance="dropdown"] floating enable
-for_window [instance="dropdown"] resize set 875 560
+for_window [instance="dropdown"] resize set 575 500
 for_window [instance="dropdown"] move position center
 for_window [instance="dropdown"] move scratchpad
-exec --no-startup-id $term -fn "xft:mono:pixelsize=14" -name dropdown -e zsh
+exec --no-startup-id $term -name dropdown -e zsh
 
-#notepad, $mod+n
+# larger terminal, $mod+n
 for_window [instance="notepad"] floating enable
 for_window [instance="notepad"] resize set 1600 900
 for_window [instance="notepad"] move position center
 for_window [instance="notepad"] move scratchpad
 exec --no-startup-id $term -name notepad -e zsh
 
-#Python, $mod+a
+# python, $mod+a
 for_window [instance="math"] floating enable
 for_window [instance="math"] resize set 1120 420
 for_window [instance="math"] move position center
 for_window [instance="math"] move scratchpad
 exec --no-startup-id $term -fn "xft:mono:pixelsize=24" -name math -e python3 -q
 
-#Remmina, $mod+p
-#for_window [class="org.remmina.Remmina"] floating enable
-#for_window [class="org.remmina.Remmina"] resize set 1920 1100
-#for_window [class="org.remmina.Remmina"] move position center
-#for_window [class="org.remmina.Remmina"] move scratchpad
-
 ###---Basic Bindings---###
 # Use Mouse+$mod to drag floating windows to their wanted position
 bindsym $mod+a					[instance="math"] scratchpad show; move position center
-bindsym $mod+u					[instance="dropdown"] scratchpad show; move position center
+bindsym $mod+u					[instance="dropdown"] scratchpad show
 bindsym $mod+n					[instance="notepad"] scratchpad show; move position center
-#bindsym $mod+p 					[class="org.remmina.Remmina"] scratchpad show; move position center
 
 bindsym $mod+Shift+a				exec --no-startup-id $term -fn "xft:mono:pixelsize=24" -name math -e python3 -q
 bindsym $mod+Shift+Mod1+a		exec --no-startup-id $term -fn "xft:mono:pixelsize=24" -name math -e R -q
 bindsym $mod+Shift+u				exec --no-startup-id $term -fn "xft:mono:pixelsize=14" -name dropdown -e zsh
 bindsym $mod+Shift+n				exec --no-startup-id $term -name notepad -e zsh
-#bindsym $mod+Shift+p 				exec --no-startup-id remmina
 
 floating_modifier $mod
 
@@ -104,7 +96,7 @@ bindsym $mod+Shift+i reload
 bindsym $mod+Shift+r restart
 # exit i3
 #bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3?' -b 'Yes, exit i3' 'i3-msg exit'"
-bindsym $mod+Shift+e exec /home/runar/bin/prompt.sh "You pressed the exit shortcut. Do you really want to exit i3?" "i3-msg exit"
+bindsym $mod+Shift+e exec $HOME/bin/prompt.sh "You pressed the exit shortcut. Do you really want to exit i3?" "i3-msg exit"
 
 # gap hotkeys
 bindsym $mod+s							gaps inner current plus 5
@@ -116,8 +108,8 @@ bindsym $mod+Shift+z 				gaps outer current minus 5
 bindsym $mod+Tab exec rofi -show window
 
 # lock and shutdown
-bindsym $mod+x exec /home/runar/bin/i3lock-custom.sh
-bindsym $mod+Shift+x exec /home/runar/bin/prompt.sh "Are you sure you want to shutdown?" "$shutdown"
+bindsym $mod+x exec $HOME/bin/i3lock-custom.sh
+bindsym $mod+Shift+x exec $HOME/bin/prompt.sh "Are you sure you want to shutdown?" "$shutdown"
 
 #bindsym $mod+Shift+c exec puush -b
 bindsym Ctrl+Shift+c exec ~/sharenix/sharenix-section -n -c #sharenix-section
