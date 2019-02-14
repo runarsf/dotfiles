@@ -51,7 +51,7 @@ font-1 = FontAwesome:pixelsize=11;1
 font-2 = siji:pixelsize=10;1
 
 modules-left = i3
-modules-center = lastsh title
+modules-center = title
 modules-right = volume memory cpu temperature battery date
 
 wm-restack = i3
@@ -231,7 +231,7 @@ type = custom/script
 interval = 1
 format-prefix = " "
 format = <label>
-exec = python $HOME/bin/spotify_status.py -f '{song} - {artist}'
+exec = python $HOME/bin/python/spotify_status.py -f '{song} - {artist}'
 format-underline = #1db954
 
 [module/xbacklight]

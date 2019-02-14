@@ -5,18 +5,18 @@ set -e
 #trap 'printf "%3d: " "$LINENO"' DEBUG
 
 # terminal color variables from gtufte/dotfiles
-COLOR_RED='\033[0;31m'
-COLOR_GREEN='\033[1;32m'
-COLOR_ORANGE='\033[0;33m'
-COLOR_YELLOW='\033[1;33m'
-COLOR_PURPLE='\033[1;35m'
-COLOR_CYAN='\033[1;36m'
-COLOR_NONE='\033[0m'
+C_RED='\033[0;31m'
+C_GREEN='\033[1;32m'
+C_ORANGE='\033[0;33m'
+C_YELLOW='\033[1;33m'
+C_PURPLE='\033[1;35m'
+C_CYAN='\033[1;36m'
+C_NONE='\033[0m'
 
 os=`cat /etc/*-release | grep ^NAME`
 if ! [[ $os = *"Antergos"* || $os = *"Arch"* || $os = *"Ubuntu"* || $os = *"CentOS"* ]]; then
-	printf "${COLOR_RED}No supported OS detected, terminating script."
-	printf "\nPlease refer to ${COLOR_ORANGE}/etc/*-release${COLOR_RED}, ${COLOR_ORANGE}./deploy.sh -o ${COLOR_RED}and ${COLOR_ORANGE}./deploy.sh -h ${COLOR_RED}for more info.${COLOR_NONE}\n\n"
+	printf "${C_RED}No supported OS detected, terminating script."
+	printf "\nPlease refer to ${C_ORANGE}/etc/*-release${C_RED}, ${C_ORANGE}./deploy.sh -o ${C_RED}and ${C_ORANGE}./deploy.sh -h ${C_RED}for more info.${C_NONE}\n\n"
 	exit 1
 fi
 
@@ -26,14 +26,14 @@ function run {
 	#	exit $?
 	#fi
 
-	printf "${COLOR_YELLOW}\n`date`\n\n${COLOR_NONE}"
+	printf "${C_YELLOW}\n`date`\n\n${C_NONE}"
 
-	printf "\n${COLOR_RED}This script may ask for ${COLOR_ORANGE}sudo${COLOR_RED} rights at one point, this is to make sure all configs and packages are deployed correctly."
+	printf "\n${C_RED}This script may ask for ${C_ORANGE}sudo${C_RED} rights at one point, this is to make sure all configs and packages are deployed correctly."
 	printf "\nIf the current terminal has sudo rights, you will not get a sudo-prompt."
-	printf "\nIf this dialog appears when running with ${COLOR_ORANGE}-h${COLOR_RED}(or any other non-deployment args), click ${COLOR_ORANGE}y${COLOR_RED}."
-	printf "\n\n${COLOR_ORANGE}"
+	printf "\nIf this dialog appears when running with ${C_ORANGE}-h${C_RED}(or any other non-deployment args), click ${C_ORANGE}y${C_RED}."
+	printf "\n\n${C_ORANGE}"
 	read -p "Are you sure? This will overwrite your current config files. [y/N] " -n 1 -r
-	printf "${COLOR_NONE}\n\n"
+	printf "${C_NONE}\n\n"
 	if [[ $REPLY =~ ^[Yy]$ ]]; then
 		printf "\n"
 	elif [[ $REPLY =~ ^[Nn]$ ]]; then
@@ -46,51 +46,51 @@ function run {
 }
 
 function helpme {
-	printf "\n\t ${COLOR_GREEN}"
+	printf "\n\t ${C_GREEN}"
 	printf                            "\n\t    ███████╗██╗██╗     ███████╗███████╗"
 	printf                            "\n\t    ██╔════╝██║██║     ██╔════╝██╔════╝"
 	printf                            "\n\t    █████╗  ██║██║     █████╗  ███████╗"
 	printf                            "\n\t    ██╔══╝  ██║██║     ██╔══╝  ╚════██║"
-	printf "\n\t ${COLOR_CYAN}██╗${COLOR_GREEN}██║     ██║███████╗███████╗███████║"
-	printf "\n\t ${COLOR_CYAN}╚═╝${COLOR_GREEN}╚═╝     ╚═╝╚══════╝╚══════╝╚══════╝"
-	printf "${COLOR_NONE}"
-	printf "\n\n\t ${COLOR_ORANGE}This script may install other related prerequisites/versions of the listed packages..."
-	printf "\n\n\t ${COLOR_CYAN}./deploy.sh [-d | --desktop]"
-	printf "\n\t\t ${COLOR_PURPLE}zsh | gvim | git | rofi | urxvt | i3 | polybar | ranger | compton | python(pip) | tmux | dos2unix | irssi"
-	printf "\n\n\t ${COLOR_CYAN}./deploy.sh [-s | --server]"
-	printf "\n\t\t ${COLOR_PURPLE}zsh | vim | git | tmux | dos2unix"
-	printf "\n\n\t ${COLOR_CYAN}./deploy.sh [-f | --full]"
-	printf "\n\t\t ${COLOR_PURPLE}Run every setup step automatically."
-	printf "\n\n\t ${COLOR_CYAN}./deploy.sh [-m | --monitors]"
-	printf "\n\t\t ${COLOR_PURPLE}Set up monitors for use with configs. Currently only 1-3 monitors are supported."
-	printf "\n\t\t ${COLOR_PURPLE}Rearrange may be needed, edit ~/.monitors to your liking. Main monitor on line 2."
-	printf "\n\n\t ${COLOR_CYAN}./deploy.sh [-c | --configs]"
-	printf "\n\t\t ${COLOR_PURPLE}Deploy configs."
-	printf "\n\n\t ${COLOR_CYAN}./deploy.sh [-h | --help]"
-	printf "\n\t\t ${COLOR_PURPLE}Show this dialog."
-	printf "\n\n\t ${COLOR_CYAN}./deploy.sh [-o | --os]"
-	printf "\n\t\t ${COLOR_PURPLE}Show supported operating systems/distros."
-	printf "\n\n ${COLOR_NONE}"
+	printf "\n\t ${C_CYAN}██╗${C_GREEN}██║     ██║███████╗███████╗███████║"
+	printf "\n\t ${C_CYAN}╚═╝${C_GREEN}╚═╝     ╚═╝╚══════╝╚══════╝╚══════╝"
+	printf "${C_NONE}"
+	printf "\n\n\t ${C_ORANGE}This script may install other related prerequisites/versions of the listed packages..."
+	printf "\n\n\t ${C_CYAN}./deploy.sh [-d | --desktop]"
+	printf "\n\t\t ${C_PURPLE}zsh | gvim | git | rofi | urxvt | i3 | polybar | ranger | compton | python(pip) | tmux | dos2unix | irssi"
+	printf "\n\n\t ${C_CYAN}./deploy.sh [-s | --server]"
+	printf "\n\t\t ${C_PURPLE}zsh | vim | git | tmux | dos2unix"
+	printf "\n\n\t ${C_CYAN}./deploy.sh [-f | --full]"
+	printf "\n\t\t ${C_PURPLE}Run every setup step automatically."
+	printf "\n\n\t ${C_CYAN}./deploy.sh [-m | --monitors]"
+	printf "\n\t\t ${C_PURPLE}Set up monitors for use with configs. Currently only 1-3 monitors are supported."
+	printf "\n\t\t ${C_PURPLE}Rearrange may be needed, edit ~/.monitors to your liking. Main monitor on line 2."
+	printf "\n\n\t ${C_CYAN}./deploy.sh [-c | --configs]"
+	printf "\n\t\t ${C_PURPLE}Deploy configs."
+	printf "\n\n\t ${C_CYAN}./deploy.sh [-h | --help]"
+	printf "\n\t\t ${C_PURPLE}Show this dialog."
+	printf "\n\n\t ${C_CYAN}./deploy.sh [-o | --os]"
+	printf "\n\t\t ${C_PURPLE}Show supported operating systems/distros."
+	printf "\n\n ${C_NONE}"
 }
 
 function os {
-	printf "\n\t ${COLOR_GREEN}"
+	printf "\n\t ${C_GREEN}"
 	printf "\n\t ████████╗███████╗"
 	printf "\n\t ██╔═══██║██╔════╝"
 	printf "\n\t ██║   ██║███████╗"
 	printf "\n\t ██║   ██║╚════██║"
 	printf "\n\t ████████║███████║"
 	printf "\n\t  ╚══════╝╚══════╝"
-	printf "${COLOR_NONE}"
-	printf "\n\n\t ${COLOR_ORANGE}This is a list of supported distr${COLOR_YELLOW}os${COLOR_ORANGE}."
-	printf "\n\n\t ${COLOR_ORANGE}Don't see your OS/distro? Submit an issue at the github repo!"
-	printf "\n\t ${COLOR_YELLOW}https://github.com/runarsf/dotfiles"
-	printf "\n\n\t ${COLOR_CYAN}- Arch"
-	printf "\n\t\t ${COLOR_PURPLE}- Antergos"
-	printf "\n\n\t ${COLOR_CYAN}- Ubuntu"
-	printf "\n\t\t ${COLOR_PURPLE}- Windows Subsystem for Linux"
-	printf "\n\n\t ${COLOR_CYAN}- CentOS"
-	printf "\n\n ${COLOR_NONE}"
+	printf "${C_NONE}"
+	printf "\n\n\t ${C_ORANGE}This is a list of supported distr${C_YELLOW}os${C_ORANGE}."
+	printf "\n\n\t ${C_ORANGE}Don't see your OS/distro? Submit an issue at the github repo!"
+	printf "\n\t ${C_YELLOW}https://github.com/runarsf/dotfiles"
+	printf "\n\n\t ${C_CYAN}- Arch"
+	printf "\n\t\t ${C_PURPLE}- Antergos"
+	printf "\n\n\t ${C_CYAN}- Ubuntu"
+	printf "\n\t\t ${C_PURPLE}- Windows Subsystem for Linux"
+	printf "\n\n\t ${C_CYAN}- CentOS"
+	printf "\n\n ${C_NONE}"
 }
 
 function desktop {
@@ -133,7 +133,7 @@ function check {
 			late $1
 		else
 			printf "sudo apt-get install $1"
-			printf "\n${COLOR_PURPLE}Installed ${COLOR_GREEN}$1${COLOR_PURPLE}.${COLOR_NONE}\n\n"
+			printf "\n${C_PURPLE}Installed ${C_GREEN}$1${C_PURPLE}.${C_NONE}\n\n"
 		fi
 	elif [[ $os == *Antergos* ]] || [[ $os == *Arch* ]]; then
 		if [[ "$2" == "aur" ]] && ! [[ `pacman -Qm $1` ]] > /dev/null; then
@@ -142,14 +142,14 @@ function check {
 			late $1
 		else
 			sudo pacman -S $1 --noconfirm
-			printf "\n${COLOR_PURPLE}Installed ${COLOR_GREEN}$1${COLOR_PURPLE}.${COLOR_NONE}\n\n"
+			printf "\n${C_PURPLE}Installed ${C_GREEN}$1${C_PURPLE}.${C_NONE}\n\n"
 		fi
 	elif [[ $os == *CentOS* ]] && ! [[ "$2" == "aur" ]]; then
 		if yum list installed "$1" >/dev/null 2>&1; then
 			late $1
   		else
 			printf "sudo yum instal $1"
-			printf "\n${COLOR_PURPLE}Installed ${COLOR_GREEN}$1${COLOR_PURPLE}.${COLOR_NONE}\n\n"
+			printf "\n${C_PURPLE}Installed ${C_GREEN}$1${C_PURPLE}.${C_NONE}\n\n"
 		fi
 	else
 		exit 1
@@ -157,7 +157,7 @@ function check {
 }
 
 function late {
-	printf "${COLOR_CYAN}$1 ${COLOR_PURPLE}already installed.${COLOR_NONE}\n"
+	printf "${C_CYAN}$1 ${C_PURPLE}already installed.${C_NONE}\n"
 }
 
 function oh-my-zsh {
@@ -185,7 +185,7 @@ function configs {
 	mkdir ~/deployBackup/$now
 	for f in * .*; do
 		if ! [[ "$f" =~ ^(\.|\.\.|README\.md|\.git|\.gitignore|deploy\.sh|games|root)$ ]]; then
-			printf "${COLOR_GREEN}$f${COLOR_NONE}\n"
+			printf "${C_GREEN}$f${C_NONE}\n"
 			if [[ "$f" == "root" ]]; then
 				ln -s $wd/$f/* /
 			elif [[ -d "$f" ]]; then
@@ -233,25 +233,56 @@ function rest {
 	#sed -i "1 s/^.*$/#include \"\/home\/$USER\/.xres\/urxvt\"/" ~/.Xresources
 }
 
+function swap_lines {
+	# thanks to: https://www.reddit.com/r/commandline/comments/48md67/swapping_lines_in_a_file_with_sed/d0ur8ls
+	file_name=${1}
+	v1=${2} # to_be_swapped_1st_line
+	v2=${3} # to_be_swapped_2nd_line
+	sed -i "$v1,$v2"'{'"$v2"'{ x; s/\([^\n]\+\)\(\n\)\(.*\)/\3\2\1/g; H; x };'"$v1"'{h;d};'"$v1"'!{'"$v2"'!{H;d}}}' ${file_name}
+}
+
 function monitors {
-	xmonLines=`xrandr | grep " connected" | while read line ; do echo 'i' ; done`
-	regex="^(\w+)\s+.+$"
-	let "int=1"
-	if [[ -f ~/.monitor ]]; then
-		rm ~/.monitor
+	regex="(\w+\-*\w*)\s{1}connected"
+	printf "${C_RED}"
+	[ -e ~/.monitor ] && read -p "Screen layout already exists, do you want to modify it? [y/N] " -n 1 -r
+	printf "${C_NONE}\n"
+	if [[ $REPLY =~ ^[Yy]$ ]] || [ ! -e ~/.monitor ]; then
+		[ -e ~/.monitor ] && rm ~/.monitor
+		touch ~/.monitor
+		let "int=1"
+		printf "${C_RED}Current screen layout (~/.monitor):\n"
+		xrandr | grep " connected" | while read line; do
+			xmon=`xrandr | grep " connected" | sed $int!d`
+			printf "${C_ORANGE} $int ${C_RED} $xmon ${C_NONE}"
+			if [[ $xmon =~ $regex ]]; then
+				printf "${C_GREEN}${BASH_REMATCH[1]}${C_NONE}\n"
+				echo "${BASH_REMATCH[1]}" >> ~/.monitor
+			fi
+			let "int++"
+		done
 	fi
-	for i in $xmonLines; do
-		xmon=`xrandr | grep " connected" | sed $int!d`
-		if [[ $xmon =~ $regex ]]; then
-    		printf "${COLOR_GREEN}${BASH_REMATCH[1]}${COLOR_NONE}\n"
-			echo "${BASH_REMATCH[1]}" >> ~/.monitor
-		fi
-		let "int++"
-	done
+	printf "${C_RED}"
+	read -p "Do you want to reposition your screens? [y/N] " -n 1 -r
+	printf "${C_NONE}\n"
+	if [[ $REPLY =~ ^[Yy]$ ]]; then
+		printf "\n"
+		printf "${C_GREEN}Enter 'q' at any time to exit.${C_NONE}\n"
+		while [ "$position" != "q" ]; do
+			printf "${C_ORANGE}Select screen to reposition (1-$(cat ~/.monitor | wc -l)): ${C_RED}"
+			read selected </dev/tty
+			[ "$selected" = "q" ] && break
+			printf "${C_ORANGE}Where do you want to put it? (1-$(cat ~/.monitor | wc -l)): ${C_RED}"
+			read position </dev/tty
+			[ "$position" != "q" ] && swap_lines ~/.monitor $selected $position
+		done
+		printf "${C_RED}Final screen layout (~/.monitor):\n"
+		cat ~/.monitor
+		printf "${C_NONE}"
+	fi
 }
 
 function finished {
-	printf "${COLOR_CYAN}D${COLOR_GREEN}O${COLOR_CYAN}N${COLOR_GREEN}E${COLOR_CYAN}!${COLOR_NONE}"
+	printf "${C_CYAN}Deploy script finished!${C_NONE}"
 }
 
 # arguments
@@ -265,12 +296,12 @@ function finished {
 # make sure the script is run correctly
 if [ "$#" -gt 1 ]; then
 	helpme
-	printf "${COLOR_RED}Too ${COLOR_ORANGE}many ${COLOR_RED}arguments!${COLOR_NONE}\n\n"
+	printf "${C_RED}Too ${C_ORANGE}many ${C_RED}arguments!${C_NONE}\n\n"
 	exit 1
 fi
 if [ "$#" -lt 1 ]; then
 	helpme
-	printf "${COLOR_RED}Too ${COLOR_ORANGE}few ${COLOR_RED}arguments!${COLOR_NONE}\n\n"
+	printf "${C_RED}Too ${C_ORANGE}few ${C_RED}arguments!${C_NONE}\n\n"
 	exit 1
 fi
 

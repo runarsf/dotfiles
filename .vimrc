@@ -207,8 +207,8 @@ set softtabstop=0 noexpandtab
 set smarttab
 
 "|> tab size
-set shiftwidth=2
-set tabstop=2
+set shiftwidth=4
+set tabstop=4
 
 "|> Tab navigation like Firefox.
 nnoremap <C-S-tab> :tabprevious<CR>
@@ -233,6 +233,9 @@ inoremap <C-t>     <Esc>:tabnew<CR>
 "|> With a map leader it's possible to do extra key combinations
 "'> like <leader>w saves the current file
 let mapleader = ","
+
+"|> Run python file
+nnoremap <F5> :echo system('python3 "' . expand('%') . '"')<cr>
 
 "|> Fast saving
 nmap <leader>w :w!<cr>
@@ -311,8 +314,8 @@ set mouse=a
 "|> Turn persistent undo on
 "'> Undo even when you close a buffer/VIM
 try
-    set undodir=~/.vim_runtime/temp_dirs/undodir
-    set undofile
+	set undodir=~/.vim_runtime/temp_dirs/undodir
+	set undofile
 catch
 endtry
 
@@ -324,10 +327,10 @@ set tm=500
 
 "|> Set extra options when running in GUI mode
 if has("gui_running")
-    set guioptions-=T
-    set guioptions-=e
-    set t_Co=256
-    set guitablabel=%M\ %t
+	set guioptions-=T
+	set guioptions-=e
+	set t_Co=256
+	set guitablabel=%M\ %t
 endif
 
 "|> Automatically deletes all trailing whitespace on save
@@ -341,17 +344,17 @@ autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "|> autoreload .vimrc
 augroup myvimrchooks
-    au!
-    autocmd bufwritepost .vimrc source ~/.vimrc
+	au!
+	autocmd bufwritepost .vimrc source ~/.vimrc
 augroup END
 
 "|> Switch colorscheme with Goyo
 function! s:goyo_enter()
-    colorscheme sierra
+	colorscheme sierra
 endfunction
 
 function! s:goyo_leave()
-		colorscheme gruvbox
+	colorscheme gruvbox
 endfunction
 
 function! s:DiffWithSaved()
