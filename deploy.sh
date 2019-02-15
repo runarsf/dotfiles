@@ -31,9 +31,8 @@ function run {
 	printf "\n${C_RED}This script may ask for ${C_ORANGE}sudo${C_RED} rights at one point, this is to make sure all configs and packages are deployed correctly."
 	printf "\nIf the current terminal has sudo rights, you will not get a sudo-prompt."
 	printf "\nIf this dialog appears when running with ${C_ORANGE}-h${C_RED}(or any other non-deployment args), click ${C_ORANGE}y${C_RED}."
-	printf "\n\n${C_ORANGE}"
-	read -p "Are you sure? This will overwrite your current config files. [y/N] " -n 1 -r
-	printf "${C_NONE}\n\n"
+	printf "\nIMPORTANT! This script must be run in a shell that supports bash builtins, e.g. bash / zsh / ksh"
+	printf "\n\n${C_ORANGE}Are you sure? This will overwrite your current config files. [y/N] " && read -n 1 -r && printf "${C_NONE}\n\n"
 	if [[ $REPLY =~ ^[Yy]$ ]]; then
 		printf "\n"
 	elif [[ $REPLY =~ ^[Nn]$ ]]; then
@@ -127,13 +126,14 @@ function server {
 	oh-my-zsh
 }
 
+#/*FIXME*/
 function check {
 	if [[ $os == *Ubuntu* ]] && ! [[ "$2" == "aur" ]]; then
 		if dpkg -s $1 | grep Status; then
 			late $1
 		else
 			printf "sudo apt-get install $1"
-			printf "\n${C_PURPLE}Installed ${C_GREEN}$1${C_PURPLE}.${C_NONE}\n\n"
+			printf "${C_PURPLE}Installed ${C_GREEN}$1${C_PURPLE}.${C_NONE}\n"
 		fi
 	elif [[ $os == *Antergos* ]] || [[ $os == *Arch* ]]; then
 		if [[ "$2" == "aur" ]] && ! [[ `pacman -Qm $1` ]] > /dev/null; then
@@ -142,14 +142,14 @@ function check {
 			late $1
 		else
 			sudo pacman -S $1 --noconfirm
-			printf "\n${C_PURPLE}Installed ${C_GREEN}$1${C_PURPLE}.${C_NONE}\n\n"
+			printf "${C_PURPLE}Installed ${C_GREEN}$1${C_PURPLE}.${C_NONE}\n"
 		fi
 	elif [[ $os == *CentOS* ]] && ! [[ "$2" == "aur" ]]; then
 		if yum list installed "$1" >/dev/null 2>&1; then
 			late $1
   		else
 			printf "sudo yum instal $1"
-			printf "\n${C_PURPLE}Installed ${C_GREEN}$1${C_PURPLE}.${C_NONE}\n\n"
+			printf "${C_PURPLE}Installed ${C_GREEN}$1${C_PURPLE}.${C_NONE}\n"
 		fi
 	else
 		exit 1
@@ -242,15 +242,18 @@ function swap_lines {
 }
 
 function monitors {
+	printf "${C_RED}Update package list? [Y/n] " && read -n 1 -r && printf "${C_NONE}\n"
+	if [[ $REPLY =~ ^[Yy]$ ]] || [[ ! $REPLY =~ ^[Nn]$ ]]; then
+		check xrandr
+		check wmctrl
+	fi
 	regex="(\w+\-*\w*)\s{1}connected"
-	printf "${C_RED}"
-	[ -e ~/.monitor ] && read -p "Screen layout already exists, do you want to modify it? [y/N] " -n 1 -r
-	printf "${C_NONE}\n"
+	[ -e ~/.monitor ] && printf "${C_RED}Screen layout already exists, do you want to modify it? [y/N] " && read -n 1 -r && printf "${C_NONE}\n"
 	if [[ $REPLY =~ ^[Yy]$ ]] || [ ! -e ~/.monitor ]; then
 		[ -e ~/.monitor ] && rm ~/.monitor
 		touch ~/.monitor
 		let "int=1"
-		printf "${C_RED}Current screen layout (~/.monitor):\n"
+		printf "\n${C_RED}Current screen layout (~/.monitor):\n"
 		xrandr | grep " connected" | while read line; do
 			xmon=`xrandr | grep " connected" | sed $int!d`
 			printf "${C_ORANGE} $int ${C_RED} $xmon ${C_NONE}"
@@ -261,9 +264,7 @@ function monitors {
 			let "int++"
 		done
 	fi
-	printf "${C_RED}"
-	read -p "Do you want to reposition your screens? [y/N] " -n 1 -r
-	printf "${C_NONE}\n"
+	printf "${C_RED}Do you want to reposition your screens? [y/N] " && read -n 1 -r && printf "${C_NONE}\n"
 	if [[ $REPLY =~ ^[Yy]$ ]]; then
 		printf "\n"
 		printf "${C_GREEN}Enter 'q' at any time to exit.${C_NONE}\n"
@@ -273,11 +274,29 @@ function monitors {
 			[ "$selected" = "q" ] && break
 			printf "${C_ORANGE}Where do you want to put it? (1-$(cat ~/.monitor | wc -l)): ${C_RED}"
 			read position </dev/tty
-			[ "$position" != "q" ] && swap_lines ~/.monitor $selected $position
+			[ "$position" != "q" ] && [ "$selected" != "$position" ] && [[ ! $selected -gt $(cat ~/.monitor | wc -l) ]] && [[ ! "$position" -gt $(cat ~/.monitor | wc -l) ]] && [[ ! $selected -lt 1 ]] && [[ ! $position -lt 1 ]] && swap_lines ~/.monitor $selected $position
 		done
 		printf "${C_RED}Final screen layout (~/.monitor):\n"
 		cat ~/.monitor
 		printf "${C_NONE}"
+	fi
+	if [[ $(wmctrl -m | grep Name) =~ .*i3$ ]]; then
+		printf "${C_RED}Running i3 instance detected, do you want to apply configs? [y/N] " && read -n 1 -r && printf "${C_NONE}"
+		if [[ $REPLY =~ ^[Yy]$ ]]; then
+			mon1="$(sed '1!d' ~/.monitor)"
+			mon2="$(sed '2!d' ~/.monitor)"
+			mon3="$(sed '$!d' ~/.monitor)"
+			sed "/workspace \$ws1 output/c\workspace \$ws1 output ${mon1}" ~/.config/i3/config > ~/.mtt
+			sed -i "/workspace \$ws2 output/c\workspace \$ws2 output ${mon2}" ~/.mtt
+			sed -i "/workspace \$ws3 output/c\workspace \$ws3 output ${mon1}" ~/.mtt
+			sed -i "/workspace \$ws4 output/c\workspace \$ws4 output ${mon1}" ~/.mtt
+			sed -i "/workspace \$ws5 output/c\workspace \$ws5 output ${mon1}" ~/.mtt
+			sed -i "/workspace \$ws6 output/c\workspace \$ws6 output ${mon1}" ~/.mtt
+			sed -i "/workspace \$ws7 output/c\workspace \$ws7 output ${mon2}" ~/.mtt
+			sed -i "/workspace \$ws8 output/c\workspace \$ws8 output ${mon2}" ~/.mtt
+			sed -i "/workspace \$ws9 output/c\workspace \$ws9 output ${mon3}" ~/.mtt
+			sed -i "/workspace \$ws10 output/c\workspace \$ws10 output ${mon3}" ~/.mtt
+		fi
 	fi
 }
 
