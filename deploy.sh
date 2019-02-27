@@ -108,6 +108,7 @@ function desktop {
 	check python
 	check feh
 	check tmux
+	check firefox
 	check xrandr
 	check arandr
 	check rofi
@@ -231,6 +232,10 @@ function rest {
 	# currently fixed on other way by just using ./ instead of $HOME
 	# Uncomment the following line if it doesn't work;
 	#sed -i "1 s/^.*$/#include \"\/home\/$USER\/.xres\/urxvt\"/" ~/.Xresources
+	# firefox theme
+	if [ ! -d ~/.mozilla/firefox/*.default/chrome ]; then
+		git clone https://github.com/runarsf/chrome ~/.mozilla/firefox/*.default/chrome
+	fi
 }
 
 function swap_lines {

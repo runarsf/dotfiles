@@ -81,11 +81,13 @@ Plugin 'zefei/vim-colortuner'
 Plugin 'junegunn/fzf'
 Plugin 'osyo-manga/vim-hopping'
 Plugin 'ryanoasis/vim-devicons'
+Plugin 'lifepillar/vim-cheat40'
 "Plugin 'wincent/terminus'  " buggy
 
 "|> Synax highlighting
 Plugin 'vim-scripts/nginx.vim'
 Plugin 'octol/vim-cpp-enhanced-highlight'
+Plugin 'ekalinin/Dockerfile.vim'
 
 "|> colorschemes
 Plugin 'sjl/badwolf'
@@ -110,6 +112,11 @@ let g:sneak#label = 1
 "let g:sierra_Twilight = 1
 let g:sierra_Midnight = 1
 "let g:sierra_Pitch = 1
+
+"|> cheat40 config
+let g:cheat40_use_default = 1
+nmap <F1> :Cheat40<CR>
+imap <F1> :Cheat40<CR>
 
 "|> gruvbox config
 let g:gruvbox_contrast_dark="hard"

@@ -60,12 +60,11 @@ source $ZSH/oh-my-zsh.sh
 # ============================== #
 # Personal Aliases
 # ============================== #
-alias status='cls && echo "" && neofetch | lolcat && last.sh -u' #"runarsf"
 alias c='clip'
 alias clip='xclip -selection clipboard'
+alias status='cls && echo "" && neofetch | lolcat && last.sh -u' #"runarsf"
 alias dline='cd $HOME/git/dline && /root/.local/bin/dline'
 alias please='sudo $(fc -ln -1)'
-alias fuck='sudo $(fc -ln -1)'
 alias whereami='pwd'
 alias ..='cd ..'
 alias paccheck='pacman -Qi | grep Name | grep $1 | less'
