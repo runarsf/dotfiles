@@ -4,6 +4,7 @@
 #+ by runarsf [runarsf@protonmail.com]
 #
 # ============================================== #
+clear
 
 # ============================== #
 # If not running interactively
@@ -31,7 +32,7 @@ PATH=$PATH:$HOME/bin/
 export PATH="`ruby -e 'puts Gem.user_dir'`/bin:$PATH"
 
 ZSH_THEME_RANDOM_CANDIDATES=( "nicoulaj" "miloshadzic" "af-magic" "agnoster" "refined" "wedisagree" "imajes" "mh" "pure"  )
-ZSH_THEME="rufus-minimal" # "random"
+ZSH_THEME="rufus" # "random"
 COMPLETION_WAITING_DOTS="true"
 HIST_STAMPS="dd.mm.yyyy"
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=white'
@@ -62,11 +63,8 @@ source $ZSH/oh-my-zsh.sh
 # ============================== #
 alias c='clip'
 alias clip='xclip -selection clipboard'
-alias status='cls && echo "" && neofetch | lolcat && last.sh -u' #"runarsf"
-alias dline='cd $HOME/git/dline && /root/.local/bin/dline'
+alias npp='flatpak run org.notepad_plus_plus.Notepad-plus-plus'
 alias please='sudo $(fc -ln -1)'
-alias whereami='pwd'
-alias ..='cd ..'
 alias paccheck='pacman -Qi | grep Name | grep $1 | less'
 alias pserver='livereload -p 5500'
 alias cls='clear'
@@ -75,11 +73,6 @@ alias reload='. $HOME/.zshrc'
 alias path='echo -e ${PATH//:/\\n}'
 alias libpath='echo -e ${LD_LIBRARY_PATH//:/\\n}'
 alias ls='ls -la --color'
-alias lx='ls -lXB'         #  Sort by extension.
-alias lk='ls -lSr'         #  Sort by size, biggest last.
-alias lt='ls -ltr'         #  Sort by date, most recent last.
-alias lc='ls -ltcr'        #  Sort by/show change time,most recent last.
-alias lu='ls -ltur'        #  Sort by/show access time,most recent last.
 alias rr='ranger'
 alias i3cfg='vim $HOME/.config/i3/config'
 alias polycfg='vim $HOME/.config/polybar/config'
@@ -88,4 +81,5 @@ alias bim='vim'
 alias vi='vim'
 alias ns='cd $HOME/notes/ && clear && ls | grep -v "\." | grep -v "total " && printf "\n" && ranger'
 
-clear
+# Adding this would be like ignoring all errors, not recommended
+#clear

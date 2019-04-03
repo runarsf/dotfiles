@@ -21,6 +21,7 @@ if ! [[ $os = *"Antergos"* || $os = *"Arch"* || $os = *"Ubuntu"* || $os = *"Cent
 fi
 
 function run {
+	# Make sure script is run with suo
 	#if [ $EUID != 0 ]; then
 	#	sudo "$0" "-${arg}"
 	#	exit $?
@@ -62,33 +63,11 @@ function helpme {
 	printf "\n\t\t ${C_PURPLE}Run every setup step automatically."
 	printf "\n\n\t ${C_CYAN}./deploy.sh [-m | --monitors]"
 	printf "\n\t\t ${C_PURPLE}Set up monitors for use with configs. Currently only 1-3 monitors are supported."
-	printf "\n\t\t ${C_PURPLE}Rearrange may be needed, edit ~/.monitors to your liking. Main monitor on line 2."
+	printf "\n\t\t ${C_PURPLE}Rearrange may be needed, edit ~/.monitors to your liking. Main monitor on line 1."
 	printf "\n\n\t ${C_CYAN}./deploy.sh [-c | --configs]"
 	printf "\n\t\t ${C_PURPLE}Deploy configs."
 	printf "\n\n\t ${C_CYAN}./deploy.sh [-h | --help]"
 	printf "\n\t\t ${C_PURPLE}Show this dialog."
-	printf "\n\n\t ${C_CYAN}./deploy.sh [-o | --os]"
-	printf "\n\t\t ${C_PURPLE}Show supported operating systems/distros."
-	printf "\n\n ${C_NONE}"
-}
-
-function os {
-	printf "\n\t ${C_GREEN}"
-	printf "\n\t ████████╗███████╗"
-	printf "\n\t ██╔═══██║██╔════╝"
-	printf "\n\t ██║   ██║███████╗"
-	printf "\n\t ██║   ██║╚════██║"
-	printf "\n\t ████████║███████║"
-	printf "\n\t  ╚══════╝╚══════╝"
-	printf "${C_NONE}"
-	printf "\n\n\t ${C_ORANGE}This is a list of supported distr${C_YELLOW}os${C_ORANGE}."
-	printf "\n\n\t ${C_ORANGE}Don't see your OS/distro? Submit an issue at the github repo!"
-	printf "\n\t ${C_YELLOW}https://github.com/runarsf/dotfiles"
-	printf "\n\n\t ${C_CYAN}- Arch"
-	printf "\n\t\t ${C_PURPLE}- Antergos"
-	printf "\n\n\t ${C_CYAN}- Ubuntu"
-	printf "\n\t\t ${C_PURPLE}- Windows Subsystem for Linux"
-	printf "\n\n\t ${C_CYAN}- CentOS"
 	printf "\n\n ${C_NONE}"
 }
 
@@ -216,6 +195,14 @@ function rest {
 	if [ ! -d ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions ]; then
 		git clone https://github.com/zsh-users/zsh-autosuggestions.git ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions
 	fi
+	# install zsh-history-substring-search
+	if [ ! -d ~/.oh-my-zsh/custom/plugins/zsh-history-substring-search ]; then
+		git clone https://github.com/zsh-users/zsh-history-substring-search.git ~/.oh-my-zsh/custom/plugins/zsh-history-substring-search
+	fi
+	# install zsh-syntax-highlighting
+	if [ ! -d ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting ]; then
+		git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+	fi
 	# install rufus-zsh-theme
 	if [ ! -f ~/.oh-my-zsh/custom/themes/rufus.zsh-theme ]; then
 		git clone https://github.com/runarsf/rufus-zsh-theme.git ~/.oh-my-zsh/custom/themes/rufus-zsh-theme
@@ -227,15 +214,15 @@ function rest {
 		git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 		vim +PluginInstall +qall
 	fi
+	# firefox theme
+	if [ ! -d ~/.mozilla/firefox/*.default/chrome ]; then
+		git clone https://github.com/runarsf/chrome ~/.mozilla/firefox/*.default/chrome
+	fi
 	# fix .Xresources include
 	# .Xresources doesn't support variables, which means $HOME won't work,
 	# currently fixed on other way by just using ./ instead of $HOME
 	# Uncomment the following line if it doesn't work;
 	#sed -i "1 s/^.*$/#include \"\/home\/$USER\/.xres\/urxvt\"/" ~/.Xresources
-	# firefox theme
-	if [ ! -d ~/.mozilla/firefox/*.default/chrome ]; then
-		git clone https://github.com/runarsf/chrome ~/.mozilla/firefox/*.default/chrome
-	fi
 }
 
 function swap_lines {
@@ -356,9 +343,6 @@ elif [[ $1 == "-f" ]] || [[ $1 == "--full" ]]; then
 	exit 0
 elif [[ $1 == "-h" ]] || [[ $1 == "--help" ]]; then
 	helpme
-	exit 0
-elif [[ $1 == "-o" ]] || [[ $1 == "--os" ]]; then
-	os
 	exit 0
 else
 	helpme

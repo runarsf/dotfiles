@@ -17,11 +17,11 @@ for_window [instance="dropdown"] move scratchpad
 exec --no-startup-id $term -name dropdown -e zsh
 
 # larger terminal, $mod+n
-for_window [instance="notepad"] floating enable
-for_window [instance="notepad"] resize set 1600 900
-for_window [instance="notepad"] move position center
-for_window [instance="notepad"] move scratchpad
-exec --no-startup-id $term -name notepad -e zsh
+for_window [instance="scratch"] floating enable
+for_window [instance="scratch"] resize set 1600 900
+for_window [instance="scratch"] move position center
+for_window [instance="scratch"] move scratchpad
+exec --no-startup-id $term -name scratch -e zsh
 
 # python, $mod+a
 for_window [instance="math"] floating enable
@@ -34,12 +34,12 @@ exec --no-startup-id $term -fn "xft:mono:pixelsize=24" -name math -e python3 -q
 # Use Mouse+$mod to drag floating windows to their wanted position
 bindsym $mod+a					[instance="math"] scratchpad show; move position center
 bindsym $mod+u					[instance="dropdown"] scratchpad show
-bindsym $mod+n					[instance="notepad"] scratchpad show; move position center
+bindsym $mod+n					[instance="scratch"] scratchpad show; move position center
 
 bindsym $mod+Shift+a				exec --no-startup-id $term -fn "xft:mono:pixelsize=24" -name math -e python3 -q
 bindsym $mod+Shift+Mod1+a		exec --no-startup-id $term -fn "xft:mono:pixelsize=24" -name math -e R -q
 bindsym $mod+Shift+u				exec --no-startup-id $term -fn "xft:mono:pixelsize=14" -name dropdown -e zsh
-bindsym $mod+Shift+n				exec --no-startup-id $term -name notepad -e zsh
+bindsym $mod+Shift+n				exec --no-startup-id $term -name scratch -e zsh
 
 floating_modifier $mod
 
@@ -244,6 +244,7 @@ exec_always --no-startup-id xsetwacom --set "Wacom Intuos S Pen stylus" Button 1
 exec_always --no-startup-id xsetwacom --set "Wacom Intuos S Pen stylus" Button 2 '0'
 exec_always --no-startup-id xsetwacom --set "Wacom Intuos S Pen stylus" Button 3 '0'
 
+exec_always --no-startup-id xrandr --output VIRTUAL1 --off --output eDP1 --primary --mode 1920x1080 --pos 0x0 --rotate normal --output DP1 --off --output HDMI2 --off --output HDMI1 --off --output DP1-3 --off --output DP1-2 --mode 2560x1440 --pos 4480x0 --rotate normal --output DP1-1 --mode 2560x1440 --pos 1920x0 --rotate normal --output DP2 --off
 #exec_always --no-startup-id xrandr --output VIRTUAL1 --off --output eDP1 --mode 1920x1080 --pos 0x0 --rotate normal --output DP1 --off --output HDMI2 --off --output HDMI1 --off --output DP1-3 --off --output DP1-2 --mode 2560x1440 --pos 4480x0 --rotate normal --output DP1-1 --primary --mode 2560x1440 --pos 1920x0 --rotate normal --output DP2 --off
 #exec_always --no-startup-id xrandr --output $(sed '1!d' $HOME/.monitor) --mode 1920x1080 --pos 0x0 --rotate normal --output $(sed '2!d' $HOME/.monitor) --mode 2560x1440 --pos 1920x0 --rotate normal --output $(sed '3!d' $HOME/.monitor) --mode 2560x1440 --pos 4480x0 --rotate normal
 
