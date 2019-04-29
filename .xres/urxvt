@@ -1,37 +1,57 @@
-! special
-*.foreground:   #c0b18b
-*.background:   #1f1f1f
-*.cursorColor:  #c0b18b
+! Common
+#define S_yellow        #b58900
+#define S_orange        #cb4b16
+#define S_red           #dc322f
+#define S_magenta       #d33682
+#define S_violet        #6c71c4
+#define S_blue          #268bd2
+#define S_cyan          #2aa198
+#define S_green         #859900
+
+! Dark
+#define S_base03        #002b36
+#define S_base02        #073642
+#define S_base01        #586e75
+#define S_base00        #657b83
+#define S_base0         #839496
+#define S_base1         #93a1a1
+#define S_base2         #eee8d5
+#define S_base3         #fdf6e3
+
+URxvt*foreground: #c5c8c6
+URxvt*background: rgba:0000/0000/0200/aaaa
+URxvt*cursorColor: #c5c8c6
+
+URxvt*transparent: true
+URxvt*shading: 20
+URxvt*fading: 25
+URxvt*blurRadius: 10
+
+URxvt*fadeColor:               S_base03
+URxvt*pointerColorBackground:  S_base01
+URxvt*pointerColorForeground:  S_base1
 
 ! black
-*.color0:       #4a3637
-*.color8:       #402e2e
-
+*color0:       #282a2e
+*color8:       #373b41
 ! red
-*.color1:       #d17b49
-*.color9:       #ac5d2f
-
+*color1:       #a54242
+*color9:       #cc6666
 ! green
-*.color2:       #7b8748
-*.color10:      #647035
-
+*color2:       #8c9440
+*color10:      #b5bd68
 ! yellow
-*.color3:       #af865a
-*.color11:      #8f6840
-
+*color3:       #de935f
+*color11:      #f0c674
 ! blue
-*.color4:       #535c5c
-*.color12:      #444b4b
-
+*color4:       #5f819d
+*color12:      #81a2be
 ! magenta
-*.color5:       #775759
-*.color13:      #614445
-
+*color5:       #85678f
+*color13:      #b294bb
 ! cyan
-*.color6:       #6d715e
-*.color14:      #585c49
-
+*color6:       #5e8d87
+*color14:      #8abeb7
 ! white
-*.color7:       #c0b18b
-*.color15:      #978965
-
+*color7:       #707880
+*color15:      #c5c8c6
