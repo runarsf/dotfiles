@@ -30,7 +30,7 @@ PATH=$PATH:$HOME/bin/
 export PATH="`ruby -e 'puts Gem.user_dir'`/bin:$PATH"
 
 ZSH_THEME_RANDOM_CANDIDATES=( "nicoulaj" "miloshadzic" "af-magic" "agnoster" "refined" "wedisagree" "imajes" "mh" "pure"  )
-ZSH_THEME="rufus-minimal" # "random"
+ZSH_THEME="rufus-experimental" # "random"
 COMPLETION_WAITING_DOTS="true"
 HIST_STAMPS="dd.mm.yyyy"
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=white'
