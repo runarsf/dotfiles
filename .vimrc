@@ -22,8 +22,11 @@ set history=500
 set autoread
 
 " Text wrapping
-"set nowrap
-set wrap
+"set wrap
+
+" Disable wrapping
+"set textwidth=0
+"set wrapmargin=0
 
 " :W sudo saves the file
 " (useful for handling the permission-denied error)
@@ -31,6 +34,9 @@ command! W w !sudo tee % > /dev/null
 
 " Enables VI iMproved enhancements
 set nocompatible
+
+" GUI Font
+set guifont=Source\ Code\ Pro
 
 " Enable syntax highlighting
 syntax on

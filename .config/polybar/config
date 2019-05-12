@@ -29,7 +29,7 @@ monitor = ${env:MONITOR:}
 
 width = 100%
 height = 30
-radius-bottom = 3.0
+radius-bottom = 0
 fixed-center = false
 
 background = ${colors.background}

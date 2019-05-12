@@ -26,25 +26,20 @@ esac
 # ============================== #
 # Path and Variables
 # ============================== #
-PATH=$PATH:$HOME/bin/
-export PATH="`ruby -e 'puts Gem.user_dir'`/bin:$PATH"
+export PATH=$PATH:$HOME/bin/:"`ruby -e 'puts Gem.user_dir'`/bin:$PATH"
 
 ZSH_THEME_RANDOM_CANDIDATES=( "nicoulaj" "miloshadzic" "af-magic" "agnoster" "refined" "wedisagree" "imajes" "mh" "pure"  )
-ZSH_THEME="rufus-experimental" # "random"
-COMPLETION_WAITING_DOTS="true"
+ZSH_THEME="rufus"
+#COMPLETION_WAITING_DOTS="true"
 HIST_STAMPS="dd.mm.yyyy"
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=white'
 PROMPT_EOL_MARK=''
-#PYTHONDONTWRITEBYTECODE=1 python -m pytest -p no:cacheprovider
+#PYTHONDONTWRITEBYTECODE=1 python -m pytest -p no:cacheprovider # disable pycache
 export BROWSER=/usr/bin/firefox
 export VISUAL=vim
 export EDITOR="$VISUAL"
-export TERM=rxvt
+export TERM=st
 export ZSH=$HOME/.oh-my-zsh
-# wine/osu!
-#export WINEPREFIX="$HOME/.wine_osu"
-#export WINEARCH=win32
-#export PATH=/opt/wine-osu/bin:$PATH
 
 plugins=(
   git
@@ -81,3 +76,6 @@ alias ns='cd $HOME/notes/ && clear && ls | grep -v "\." | grep -v "total " && pr
 
 # Adding this would be like ignoring all errors, not recommended
 #clear
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm

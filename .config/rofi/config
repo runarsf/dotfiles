@@ -17,3 +17,5 @@ rofi.padding:			400
 rofi.width:			100
 rofi.bw:			2
 rofi.opacity:			85
+# rofi.theme: /usr/share/rofi/themes/Arc-Dark.rasi
+rofi.theme: ./sidetab.rasi
