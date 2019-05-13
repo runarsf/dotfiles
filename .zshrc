@@ -27,6 +27,11 @@ esac
 # Path and Variables
 # ============================== #
 export PATH=$PATH:$HOME/bin/:"`ruby -e 'puts Gem.user_dir'`/bin:$PATH"
+export BROWSER=/usr/bin/firefox
+export VISUAL=vim
+export EDITOR="$VISUAL"
+export TERM=st
+export ZSH=$HOME/.oh-my-zsh
 
 ZSH_THEME_RANDOM_CANDIDATES=( "nicoulaj" "miloshadzic" "af-magic" "agnoster" "refined" "wedisagree" "imajes" "mh" "pure"  )
 ZSH_THEME="rufus"
@@ -35,11 +40,6 @@ HIST_STAMPS="dd.mm.yyyy"
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=white'
 PROMPT_EOL_MARK=''
 #PYTHONDONTWRITEBYTECODE=1 python -m pytest -p no:cacheprovider # disable pycache
-export BROWSER=/usr/bin/firefox
-export VISUAL=vim
-export EDITOR="$VISUAL"
-export TERM=st
-export ZSH=$HOME/.oh-my-zsh
 
 plugins=(
   git
