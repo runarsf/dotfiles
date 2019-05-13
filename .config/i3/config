@@ -113,54 +113,42 @@ bindsym XF86AudioPrev 	exec --no-startup-id playerctl previous
 # rofi
 bindsym $mod+d exec rofi -show run -lines 3 -eh 2 -width 100 -padding 625 -opacity "50" -color-enabled -bw 0 -bc "$bg-color" -color-window "$bg-color" -fg "$text-color" -hlbg "$bg-color" -hlfg "#9575cd" -font "System San Francisco Display 18" #rofi
 
-#Define workspace name/variable
-set $ws1 "1"
-set $ws2 "2"
-set $ws3 "3"
-set $ws4 "4"
-set $ws5 "5"
-set $ws6 "6"
-set $ws7 "7"
-set $ws8 "8"
-set $ws9 "9"
-set $ws10 "10"
-
 # switch to workspace
-bindsym $mod+1 workspace $ws1
-bindsym $mod+2 workspace $ws2
-bindsym $mod+3 workspace $ws3
-bindsym $mod+4 workspace $ws4
-bindsym $mod+5 workspace $ws5
-bindsym $mod+6 workspace $ws6
-bindsym $mod+7 workspace $ws7
-bindsym $mod+8 workspace $ws8
-bindsym $mod+9 workspace $ws9
-bindsym $mod+0 workspace $ws10
+bindsym $mod+1 workspace 1
+bindsym $mod+2 workspace 2
+bindsym $mod+3 workspace 3
+bindsym $mod+4 workspace 4
+bindsym $mod+5 workspace 5
+bindsym $mod+6 workspace 6
+bindsym $mod+7 workspace 7
+bindsym $mod+8 workspace 8
+bindsym $mod+9 workspace 9
+bindsym $mod+0 workspace 0
 #bindsym $mod+Tab workspace back_and_forth
 
 # move focused container to workspace
-bindsym $mod+Shift+1 move container to workspace $ws1
-bindsym $mod+Shift+2 move container to workspace $ws2
-bindsym $mod+Shift+3 move container to workspace $ws3
-bindsym $mod+Shift+4 move container to workspace $ws4
-bindsym $mod+Shift+5 move container to workspace $ws5
-bindsym $mod+Shift+6 move container to workspace $ws6
-bindsym $mod+Shift+7 move container to workspace $ws7
-bindsym $mod+Shift+8 move container to workspace $ws8
-bindsym $mod+Shift+9 move container to workspace $ws9
-bindsym $mod+Shift+0 move container to workspace $ws10
+bindsym $mod+Shift+1 move container to workspace 1
+bindsym $mod+Shift+2 move container to workspace 2
+bindsym $mod+Shift+3 move container to workspace 3
+bindsym $mod+Shift+4 move container to workspace 4
+bindsym $mod+Shift+5 move container to workspace 5
+bindsym $mod+Shift+6 move container to workspace 6
+bindsym $mod+Shift+7 move container to workspace 7
+bindsym $mod+Shift+8 move container to workspace 8
+bindsym $mod+Shift+9 move container to workspace 9
+bindsym $mod+Shift+0 move container to workspace 0
 
 # workspace monitor assignment
-workspace $ws1 output DP-1-1
-workspace $ws2 output DP-1-2
-workspace $ws3 output DP-1-1
-workspace $ws4 output DP-1-1
-workspace $ws5 output DP-1-1
-workspace $ws6 output DP-1-1
-workspace $ws7 output DP-1-2
-workspace $ws8 output DP-1-2
-workspace $ws9 output eDP-1
-workspace $ws10 output eDP-1
+workspace 1 output DP-1-1
+workspace 2 output DP-1-2
+workspace 3 output DP-1-1
+workspace 4 output DP-1-1
+workspace 5 output DP-1-1
+workspace 6 output DP-1-1
+workspace 7 output DP-1-2
+workspace 8 output DP-1-2
+workspace 9 output eDP-1
+workspace 0 output eDP-1
 
 # app workspace assignments, ordered by ws number, use xprop to find class
 assign [class="discord"] $ws2

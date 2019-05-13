@@ -34,7 +34,7 @@ export TERM=st
 export ZSH=$HOME/.oh-my-zsh
 
 ZSH_THEME_RANDOM_CANDIDATES=( "nicoulaj" "miloshadzic" "af-magic" "agnoster" "refined" "wedisagree" "imajes" "mh" "pure"  )
-ZSH_THEME="rufus"
+[ -z $ZSH_THEME ] && ZSH_THEME="rufus"
 #COMPLETION_WAITING_DOTS="true"
 HIST_STAMPS="dd.mm.yyyy"
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=white'
