@@ -219,10 +219,10 @@ exec_always --no-startup-id xsetwacom --set "Wacom Intuos S Pen stylus" Button 3
 exec_always --no-startup-id $HOME/.screen
 
 exec_always --no-startup-id nm-applet
-exec_always --no-startup-id compton -f
+#exec_always --no-startup-id compton -f
 exec_always --no-startup-id $HOME/bin/polybar.sh
 exec_always --no-startup-id xrdb -load ~/.Xresources
 exec_always --no-startup-id feh --bg-scale $HOME/.config/wall.png
 exec_always --no-startup-id xdg-settings set default-web-browser firefox.desktop
 exec --no-startup-id "setxkbmap -v no" # sets keymap to norwegian
-# exec --no-startup-id i3-msg workspace $ws9
+#exec --no-startup-id i3-msg workspace $ws9
