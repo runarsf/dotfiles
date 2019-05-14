@@ -151,10 +151,10 @@ workspace 9 output eDP-1
 workspace 0 output eDP-1
 
 # app workspace assignments, ordered by ws number, use xprop to find class
-assign [class="discord"] $ws2
-assign [class="Mattermost"] $ws2
-for_window [class="Spotify"] move to workspace $ws10
-assign [class="nagstamon"] $ws10
+assign [class="discord"] 2
+assign [class="Mattermost"] 2
+for_window [class="Spotify"] move to workspace 0
+assign [class="nagstamon"] 0
 #for_window [class="Tk"] floating enable
 
 # resize window

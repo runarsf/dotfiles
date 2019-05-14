@@ -1,15 +1,15 @@
 {
-  "DefaultFileUploader": "url.tld",
-  "DefaultImageUploader": "url.tld",
+  "DefaultFileUploader": "i.regex.no",
+  "DefaultImageUploader": "i.regex.no",
 
   "Services": [
       {
-         "Name": "url.tld",
+         "Name": "i.regex.no",
          "RequestType": "POST",
-         "RequestURL": "https://url.tld/api/upload",
+         "RequestURL": "https://i.regex.no/api/upload",
 	 "FileFormName": "files[]",
 	 "Headers": {
-	      "token": $sharenix_token
+	      "token": "5up3r53cr37-70k3n"
 	 },
 	 "ResponseType": "Text",
 	 "URL": "$json:files[0].url$"
