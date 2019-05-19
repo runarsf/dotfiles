@@ -1,0 +1,48 @@
+super + x
+	$HOME/bin/i3lock-custom.sh
+super + shift + x
+	$HOME/bin/prompt.sh "Are you sure you want to shutdown?" "$shutdown"
+
+alt + p
+	sharenix-section -n -c
+alt + shift + p
+	$HOME/git/pyshare/pyshare-runner.py -s -u -c -d
+
+#super + Return
+#	$TERMINAL
+#super + q
+#	xkill
+
+super + d
+	rofi -show run -lines 3 -eh 2
+super + Tab
+	rofi -show window
+
+Caps_Lock + less
+	<
+Caps_Lock + greater
+	>
+
+# super + {_,shift + }{1-9,0,F1,F2,F3,F4}
+# 	i3-msg {_,move container to }workspace number {1-9,10,11,12,13,14}
+# super + {x,b,v,m}
+# 	i3-msg workspace {prev,prev,next,next}_on_output
+# super + Escape
+# 	i3-msg workspace back_and_forth
+# super + ctrl + {_,shift + } o
+# 	i3-msg move workspace to output {right,left}
+
+# super + {_,shift +} p
+# 	lmc {toggle,pause}
+# super + {less,greater}
+# 	lmc {prev,next}
+# super + shift + less
+# 	lmc replay
+# super + {equal,plus}
+# 	lmc up {5,15}
+# super + {_,shift +} + minus
+# 	lmc down {5,15}
+# super + {_,shift +} bracketright
+# 	lmc forward {10,120}
+# super + {_,shift +} bracketleft
+# 	lmc back {10,120}

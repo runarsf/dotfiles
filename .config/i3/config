@@ -3,7 +3,7 @@ set $mod Mod4
 set $hibernate sudo systemctl suspend
 set $shutdown shutdown -h now
 set $reboot sudo reboot
-set $term st
+set $terminal st
 set $font pango:System San Francisco
 
 # Font for window titles.
@@ -26,15 +26,17 @@ for_window [instance="sc_st"] resize set 1600 900
 for_window [instance="sc_st"] move position center
 for_window [instance="sc_st"] move scratchpad
 bindsym $mod+n 			[instance="sc_st"] scratchpad show; move position center
-bindsym $mod+Shift+n 	exec --no-startup-id $term -n sc_st -e zsh
+bindsym $mod+Shift+n 	exec --no-startup-id $terminal -n sc_st -e zsh
 
 ###---Basic Bindings---###
 floating_modifier $mod
 
-bindsym $mod+Return exec $term
+bindsym $mod+Return exec $terminal
+bindsym $mod+d exec rofi -show run -lines 3 -eh 2 -width 200
+
+bindsym Mod1+p exec sharenix-section -n -c
 
 bindsym $mod+q			kill
-bindsym $mod+Shift+q 	kill
 
 bindsym $mod+j 		focus left
 bindsym $mod+k 		focus down
@@ -71,47 +73,19 @@ bindsym $mod+f fullscreen toggle
 #bindsym $mod+t layout tabbed
 #bindsym $mod+e layout toggle split
 
-# tiling / floating
-bindsym $mod+space 			floating toggle
-bindsym $mod+Shift+space 	floating toggle
+bindsym $mod+space floating toggle
+bindsym $mod+Shift+space floating toggle
 
-# reload the configuration file
 bindsym $mod+Shift+i reload
-# restart i3 inplace
 bindsym $mod+Shift+r restart
-# exit i3
-#bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3?' -b 'Yes, exit i3' 'i3-msg exit'"
+
 bindsym $mod+Shift+e exec $HOME/bin/prompt.sh "You pressed the exit shortcut. Do you really want to exit i3?" "i3-msg exit"
+bindsym $mod+Shift+Mod1+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3?' -b 'Yes, exit i3' 'i3-msg exit'"
 
-# gap hotkeys
-bindsym $mod+s							gaps inner current plus 5
-bindsym $mod+Shift+s 					gaps inner current minus 5
-bindsym $mod+z							gaps outer current plus 5
-bindsym $mod+Shift+z 					gaps outer current minus 5
-
-# show running applications
-bindsym $mod+Tab exec rofi -show window
-
-# lock and shutdown
-bindsym $mod+x exec $HOME/bin/i3lock-custom.sh
-bindsym $mod+Shift+x exec $HOME/bin/prompt.sh "Are you sure you want to shutdown?" "$shutdown"
-
-#bindsym $mod+Shift+c exec puush -b
-bindsym Mod1+p exec sharenix-section -n -c #sharenix-section
-
-# simulated media keys
-bindsym Ctrl+$mod+j exec --no-startup-id playerctl previous
-bindsym Ctrl+$mod+k exec --no-startup-id playerctl play-pause
-bindsym Ctrl+$mod+l exec --no-startup-id playerctl next
-
-# media keys
-bindsym XF86AudioPlay 	exec --no-startup-id playerctl play-pause
-bindsym XF86AudioPause 	exec --no-startup-id playerctl play-pause
-bindsym XF86AudioNext 	exec --no-startup-id playerctl next
-bindsym XF86AudioPrev 	exec --no-startup-id playerctl previous
-
-# rofi
-bindsym $mod+d exec rofi -show run -lines 3 -eh 2 -width 100 -padding 625 -opacity "50" -color-enabled -bw 0 -bc "$bg-color" -color-window "$bg-color" -fg "$text-color" -hlbg "$bg-color" -hlfg "#9575cd" -font "System San Francisco Display 18" #rofi
+bindsym $mod+s gaps inner current plus 5
+bindsym $mod+Shift+s gaps inner current minus 5
+bindsym $mod+z gaps outer current plus 5
+bindsym $mod+Shift+z gaps outer current minus 5
 
 # switch to workspace
 bindsym $mod+1 workspace 1
@@ -187,24 +161,23 @@ bindsym $mod+Ctrl+Right resize grow width 10 px or 10 ppt
 for_window [class="^.*"] border pixel 2
 hide_edge_borders both
 
-set $bg-color			#2f343f
-set $inactive-bg-color		#2f343f
-set $text-color			#f3f4f5
-set $inactive-text-color	#676E7D
-set $urgent-bg-color		#E53935
-set $active-indicator		#11857D
-set $inactive-indicator		#004742
+set $bg-color #2f343f
+set $inactive-bg-color #2f343f
+set $text-color #f3f4f5
+set $inactive-text-color #676E7D
+set $urgent-bg-color #E53935
+set $active-indicator #11857D
+set $inactive-indicator #004742
 
-# window colors
-#												BORDER 							BACKGROUND					TEXT									INDICATOR						CHILD_BORDER
-client.focused					$bg-color						$bg-color						$text-color						$active-indicator		#3E5B77
-client.unfocused				$inactive-bg-color	$inactive-bg-color	$inactive-text-color	$inactive-indicator	#121212
-client.focused_inactive	$inactive-bg-color	$inactive-bg-color	$inactive-text-color	$inactive-indicator	#121212
-client.urgent						$urgent-bg-color		$urgent-bg-color		$text-color						$active-indicator		#FF8888
+# window colors ( BORDER, BACKGROUND, TEXT, INDICATOR, CHILD_BORDER )
+client.focused $bg-color $bg-color $text-color $active-indicator #3E5B77
+client.unfocused $inactive-bg-color $inactive-bg-color $inactive-text-color $inactive-indicator #121212
+client.focused_inactive $inactive-bg-color $inactive-bg-color $inactive-text-color $inactive-indicator #121212
+client.urgent $urgent-bg-color $urgent-bg-color $text-color $active-indicator #FF8888
 client.background #000000
 
-gaps inner 5
-gaps outer 5
+gaps inner 10
+gaps outer 10
 
 # wacom settings
 exec_always --no-startup-id xsetwacom --set "Wacom Intuos S Pen stylus" Suppress 2
@@ -216,13 +189,13 @@ exec_always --no-startup-id xsetwacom --set "Wacom Intuos S Pen stylus" Button 1
 exec_always --no-startup-id xsetwacom --set "Wacom Intuos S Pen stylus" Button 2 '0'
 exec_always --no-startup-id xsetwacom --set "Wacom Intuos S Pen stylus" Button 3 '0'
 
-exec_always --no-startup-id $HOME/.screen
+exec_always --no-startup-id $HOME/bin/monitors.sh
 
-exec_always --no-startup-id nm-applet
-#exec_always --no-startup-id compton -f
+exec_always --no-startup-id pkill sxhkd && sxhkd &
+exec_always --no-startup-id xcompmgr &
 exec_always --no-startup-id $HOME/bin/polybar.sh
 exec_always --no-startup-id xrdb -load ~/.Xresources
 exec_always --no-startup-id feh --bg-scale $HOME/.config/wall.png
 exec_always --no-startup-id xdg-settings set default-web-browser firefox.desktop
-exec --no-startup-id "setxkbmap -v no" # sets keymap to norwegian
+#exec --no-startup-id "setxkbmap -v no" # sets keymap to norwegian
 #exec --no-startup-id i3-msg workspace $ws9

@@ -56,6 +56,7 @@ set noswapfile
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Plugins
 " -> Plugin configs
+" -> Plugin manager: Vundle
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Filetype plugins
 "filetype plugin on
@@ -64,10 +65,9 @@ filetype off " required for vundle
 
 set rtp+=~/.vim/bundle/Vundle.vim " required for vundle
 
-" Plugin manager (vundle)
 " All plugins have to be between the vundle begin and end
 " Syntax: Plugin 'git_username/git_repo'
-call vundle#begin() " Vundle begin
+call vundle#begin()
 " General
 Plugin 'VundleVim/Vundle.vim'
 Plugin 'tpope/vim-eunuch'
@@ -79,22 +79,19 @@ Plugin 'junegunn/goyo.vim'
 Plugin 'ervandew/supertab'
 Plugin 'gbigwood/Clippo'
 Plugin 'vim-scripts/IndentAnything'
-"Plugin 'paroxayte/vwm.vim'
-"Plugin 'zealdocs/zeal'
-"Plugin 'KabbAmine/zeavim.vim'
-"Plugin 'lambdalisue/lista.nvim'
 Plugin 'justinmk/vim-sneak'
 Plugin 'zefei/vim-colortuner'
 Plugin 'junegunn/fzf'
 Plugin 'osyo-manga/vim-hopping'
 Plugin 'ryanoasis/vim-devicons'
 Plugin 'lifepillar/vim-cheat40'
-"Plugin 'wincent/terminus'  " buggy
 
 " Synax highlighting
 Plugin 'vim-scripts/nginx.vim'
 Plugin 'octol/vim-cpp-enhanced-highlight'
 Plugin 'ekalinin/Dockerfile.vim'
+Plugin 'kovetskiy/sxhkd-vim'
+Plugin 'baskerville/vim-sxhkdrc'
 
 " Colorschemes
 Plugin 'sjl/badwolf'
@@ -102,14 +99,12 @@ Plugin 'xero/sourcerer.vim'
 Plugin 'AlessandroYorba/Sierra'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'morhetz/gruvbox'
-call vundle#end() " Vundle end
+call vundle#end()
 
 filetype plugin indent on " required for vundle
 
 " Lightline config
-let g:lightline = {
-      \ 'colorscheme': 'seoul256',
-      \ }
+let g:lightline = { 'colorscheme': 'seoul256' }
 
 " Vim-sneak config
 let g:sneak#label = 1
@@ -360,7 +355,7 @@ highlight TabLineSel ctermfg=Red ctermbg=Yellow
 
 " Colorscheme
 set background=dark
-colorscheme gruvbox
+colorscheme default
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Misc
@@ -416,11 +411,12 @@ augroup END
 
 " Switch colorscheme with Goyo
 function! s:goyo_enter()
-	colorscheme sierra
+	set background=dark
+	colorscheme gruvbox
 endfunction
 
 function! s:goyo_leave()
-	colorscheme gruvbox
+	colorscheme default
 endfunction
 
 function! s:DiffWithSaved()
