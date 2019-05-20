@@ -30,7 +30,7 @@ export PATH=$PATH:$HOME/bin/:"`ruby -e 'puts Gem.user_dir'`/bin:$PATH"
 export BROWSER=/usr/bin/firefox
 export VISUAL=vim
 export EDITOR="$VISUAL"
-export TERMINAL=st
+export TERMINAL='st'
 export TERM=$TERMINAL
 export ZSH=$HOME/.oh-my-zsh
 

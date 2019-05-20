@@ -19,14 +19,10 @@ super + Tab
 	rofi -show window
 
 
-#ctrl + comma
-#	sleep 0.2s && xdotool key less
-#ctrl + @comma
-#	xdotool key --window $(xdotool getactivewindow) less
-#ctrl + @comma
-#	xdotool windowactivate --sync $(xdotool getactivewindow) key less
+ctrl + @comma
+	xdotool keyup ctrl && xdotool key less && xdotool keydown ctrl
 ctrl + @period
-	exec xdotool key greater
+	xdotool keyup ctrl && xdotool key greater && xdotool keydown ctrl
 
 # super + {_,shift + }{1-9,0,F1,F2,F3,F4}
 # 	i3-msg {_,move container to }workspace number {1-9,10,11,12,13,14}

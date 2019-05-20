@@ -181,7 +181,7 @@ gaps outer 10
 
 exec_always --no-startup-id $HOME/bin/monitors.sh
 exec_always --no-startup-id $HOME/bin/polybar.sh
-exec_always --no-startup-id pkill sxhkd && exec sxhkd
+exec_always --no-startup-id exec sxhkd
 #exec_always --no-startup-id compton -f > /dev/null 2>&1 &
 #exec_always --no-startup-id xrdb -load ~/.Xresources
 #exec_always --no-startup-id feh --bg-scale $HOME/.config/wall.png
