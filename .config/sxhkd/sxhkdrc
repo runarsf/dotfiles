@@ -8,10 +8,10 @@ alt + p
 alt + shift + p
 	$HOME/git/pyshare/pyshare-runner.py -s -u -c -d
 
-#super + Return
-#	$TERMINAL
-#super + q
-#	xkill
+super + Return
+	exec $TERMINAL
+super + shift + q
+	xkill
 
 super + d
 	rofi -show run -lines 3 -eh 2
