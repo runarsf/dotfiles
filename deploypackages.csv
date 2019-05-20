@@ -13,6 +13,7 @@ ttf-font-awesome-4,aur
 ranger,pacman
 compton,pacman
 python3,CUSTOM-----------------------
+python36,aur
 feh,pacman
 tmux,pacman
 byobu,pacman
