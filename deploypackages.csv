@@ -24,3 +24,4 @@ blueman,pacman
 dos2unix,pacman
 irssi,pacman
 xclip,pacman
+xdotool,pacman
