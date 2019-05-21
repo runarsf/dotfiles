@@ -1,3 +1,7 @@
+super + Return
+	$TERMINAL
+super + shift + q
+	xkill
 super + x
 	$HOME/bin/i3lock-custom.sh
 super + shift + x
@@ -7,11 +11,6 @@ alt + p
 	sharenix-section -n -c
 alt + shift + p
 	$HOME/git/pyshare/pyshare-runner.py -s -u -c -d
-
-super + Return
-	exec $TERMINAL
-super + shift + q
-	xkill
 
 super + d
 	rofi -show run -lines 3 -eh 2
