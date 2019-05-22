@@ -1,5 +1,5 @@
 super + Return
-	$TERMINAL
+	exec st
 super + shift + q
 	xkill
 super + x
@@ -16,7 +16,6 @@ super + d
 	rofi -show run -lines 3 -eh 2
 super + Tab
 	rofi -show window
-
 
 ctrl + @comma
 	xdotool keyup ctrl && xdotool key less && xdotool keydown ctrl

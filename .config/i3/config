@@ -190,7 +190,7 @@ exec_always --no-startup-id xsetwacom --set "Wacom Intuos S Pen stylus" MapToOut
 
 exec_always --no-startup-id $HOME/bin/monitors.sh
 exec_always --no-startup-id $HOME/bin/polybar.sh
-exec_always --no-startup-id sxhkd &
+exec_always sxhkd
 exec_always --no-startup-id feh --bg-scale $HOME/.config/wall.png
 exec_always --no-startup-id xrdb -load ~/.Xresources
 exec_always --no-startup-id compton -fcCG --xrender-sync-fence > /dev/null 2>&1 &

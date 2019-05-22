@@ -11,7 +11,11 @@
     - Extract it (e.g. with `unzip`)
 - `./deploy.sh --help` for more info
 
+## Known issues
+- `.xinitrc` does not work with Xbox One Wired controllers
+
 ## Installation
+Old:
 - Go to the folder containing the deploy script (typically ~/git/dotfiles/)
 - `chmod +x deploy.sh`
 - Read all the information

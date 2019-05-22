@@ -22,6 +22,7 @@ esac
 # ============================== #
 [ -f $HOME/.zsh_aliases ]        && source $HOME/.zsh_aliases
 [ -f $HOME/.travis/travis.sh ]   && source $HOME/.travis/travis.sh
+[ -f $HOME/.profile ] 			 && source $HOME/.profile
 
 # ============================== #
 # Path and Variables
