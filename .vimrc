@@ -58,6 +58,22 @@ set noswapfile
 " -> Plugin configs
 " -> Plugin manager: Vundle
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"if ! filereadable(expand('~/.vim/bundle/Vundle.vim/autoload/vundle.vim'))
+""	echo "Downloading VundleVim/Vundle.Vim to manage plugins..."
+"	" Prefix commands with 'silent' to not show output
+"	!mkdir -p ~/.vim/bundle/
+"	!git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+"	autocmd VimEnter * PluginInstall | source ~/.vimrc
+"endif
+let vundlePreInstalled=1
+if !filereadable(expand('~/.vim/bundle/Vundle.vim/README.md'))
+	echo "Installing Vundle.."
+	echo ""
+	silent !mkdir -p ~/.vim/bundle
+	silent !git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+	let vundlePreInstalled=0
+endif
+
 " Filetype plugins
 "filetype plugin on
 "filetype indent on
@@ -102,6 +118,13 @@ Plugin 'morhetz/gruvbox'
 call vundle#end()
 
 filetype plugin indent on " required for vundle
+
+" Install plugins if vundle was recently installed, part of Vundle installation
+if vundlePreInstalled == 0
+	echo "Installing plugins..."
+	echo ""
+	:PluginInstall
+endif
 
 " Lightline config
 let g:lightline = { 'colorscheme': 'seoul256' }
