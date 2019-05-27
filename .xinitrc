@@ -27,4 +27,10 @@ xsetwacom --set "Wacom Intuos S Pen stylus" Button 3 '0'
 xsetwacom --set "Wacom Intuos S Pen stylus" MapToOutput HEAD-0
 
 #exec i3
+
+# dwm
+while xsetroot -name "`date` `uptime | sed 's/.*,//'`"
+do
+	sleep 1
+done &
 exec dwm
