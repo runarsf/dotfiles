@@ -55,7 +55,7 @@ alias please='sudo $(fc -ln -1)'
 alias cls='clear'
 alias reload='. $HOME/.zshrc'
 alias path='echo -e ${PATH//:/\\n}'
-alias ls='ls -la --color'
+alias ls='ls -lAF --color'
 alias rr='ranger'
 
 alias zshrc='vim $HOME/.zshrc'

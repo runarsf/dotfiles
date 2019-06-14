@@ -25,8 +25,8 @@ set autoread
 "set wrap
 
 " Disable wrapping
-"set textwidth=0
-"set wrapmargin=0
+set textwidth=0
+set wrapmargin=0
 
 " :W sudo saves the file
 " (useful for handling the permission-denied error)
@@ -362,8 +362,8 @@ autocmd FileType bib inoremap ,c @incollection{<Enter>author<Space>=<Space>{<++>
 
 " .py
 autocmd FileType python set expandtab
-autocmd FileType python set textwidth=79
-autocmd FileType python set tabstop=8
+"autocmd FileType python set textwidth=79
+autocmd FileType python set tabstop=4
 autocmd FileType python set softtabstop=4
 autocmd FileType python set shiftwidth=4
 autocmd FileType python set autoindent

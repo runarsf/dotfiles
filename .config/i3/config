@@ -28,6 +28,25 @@ for_window [instance="sc_st"] move scratchpad
 bindsym $mod+n 			[instance="sc_st"] scratchpad show; move position center
 bindsym $mod+Shift+n 	exec --no-startup-id $terminal -n sc_st -e zsh
 
+# sc_stsmall, $mod+u
+for_window [instance="sc_small"] floating enable
+for_window [instance="sc_small"] resize set 800 450
+for_window [instance="sc_small"] move position center
+for_window [instance="sc_small"] move scratchpad
+bindsym $mod+u 			[instance="sc_small"] scratchpad show; move position center
+bindsym $mod+Shift+u 	exec --no-startup-id $terminal -n sc_small -e zsh
+
+# spotify, $mod+p
+for_window [instance="spotify"] floating enable
+for_window [instance="spotify"] resize set 800 1080
+for_window [instance="spotify"] move position center
+for_window [instance="spotify"] move scratchpad
+bindsym $mod+p 			[instance="spotify"] scratchpad show; move position center
+bindsym $mod+Shift+p 	exec --no-startup-id spotify
+
+bindsym Mod1+Right exec xdotool click 3
+bindsym Mod1+Left exec xdotool click 1
+
 ###---Basic Bindings---###
 floating_modifier $mod
 
