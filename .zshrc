@@ -57,6 +57,7 @@ alias reload='. $HOME/.zshrc'
 alias path='echo -e ${PATH//:/\\n}'
 alias ls='ls -lAF --color'
 alias rr='ranger'
+alias kbdisplay='gkbd-keyboard-display -l dvorak'
 
 alias zshrc='vim $HOME/.zshrc'
 alias i3cfg='vim $HOME/.config/i3/config'

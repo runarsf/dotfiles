@@ -92,6 +92,9 @@ bindsym $mod+f fullscreen toggle
 #bindsym $mod+t layout tabbed
 #bindsym $mod+e layout toggle split
 
+bindsym Mod1+space exec $HOME/bin/dvorak.sh status
+bindsym Ctrl+space exec $HOME/bin/dvorak.sh toggle
+
 bindsym $mod+space floating toggle
 bindsym $mod+Shift+space floating toggle
 

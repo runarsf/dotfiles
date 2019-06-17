@@ -3,7 +3,7 @@ super + Return
 super + shift + q
 	xkill
 super + x
-	$HOME/bin/i3lock-custom.sh
+	$HOME/bin/customlock.sh "gllock"
 super + shift + x
 	$HOME/bin/prompt.sh "Are you sure you want to shutdown?" "$shutdown"
 
