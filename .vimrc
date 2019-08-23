@@ -81,14 +81,16 @@ filetype off " required for vundle
 
 set rtp+=~/.vim/bundle/Vundle.vim " required for vundle
 
-" All plugins have to be between the vundle begin and end
+" All plugins have to be between the vundle begin and end statements
 " Syntax: Plugin 'git_username/git_repo'
 call vundle#begin()
 " General
 Plugin 'VundleVim/Vundle.vim'
 Plugin 'tpope/vim-eunuch'
 Plugin 'terryma/vim-multiple-cursors'
-Plugin 'itchyny/lightline.vim'
+"Plugin 'itchyny/lightline.vim'
+Plugin 'vim-airline/vim-airline'
+Plugin 'vim-airline/vim-airline-themes'
 Plugin 'scrooloose/nerdtree'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'junegunn/goyo.vim'
@@ -108,6 +110,7 @@ Plugin 'octol/vim-cpp-enhanced-highlight'
 Plugin 'ekalinin/Dockerfile.vim'
 Plugin 'kovetskiy/sxhkd-vim'
 Plugin 'baskerville/vim-sxhkdrc'
+Plugin 'dense-analysis/ale'
 
 " Colorschemes
 Plugin 'sjl/badwolf'
@@ -126,27 +129,31 @@ if vundlePreInstalled == 0
 	:PluginInstall
 endif
 
-" Lightline config
-let g:lightline = { 'colorscheme': 'seoul256' }
+" Lightline
+"let g:lightline = { 'colorscheme': 'seoul256' }
 
-" Vim-sneak config
+" Airline
+let g:airline_theme='raven'
+let g:airline#extensions#ale#enabled = 1 " ale
+
+" Vim-sneak
 let g:sneak#label = 1
 
-" Sierra config
+" Sierra
 "let g:sierra_Sunset = 1
 "let g:sierra_Twilight = 1
 let g:sierra_Midnight = 1
 "let g:sierra_Pitch = 1
 
-" Cheat40 config
+" Cheat40
 let g:cheat40_use_default = 1
 nmap <F1> :Cheat40<CR>
 imap <F1> :Cheat40<CR>
 
-" Gruvbox config
+" Gruvbox
 let g:gruvbox_contrast_dark="hard"
 
-" NERDTree config
+" NERDTree
 " Open a NERDTree automatically when vim starts up if no files were specified
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
