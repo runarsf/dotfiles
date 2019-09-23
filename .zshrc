@@ -24,6 +24,7 @@ plugins=(
   zsh-autosuggestions
   zsh-history-substring-search
   zsh-syntax-highlighting
+  jump
 )
 
 source $ZSH/oh-my-zsh.sh
@@ -37,6 +38,8 @@ alias ls='ls -lAF --color'
 alias kbdisplay='gkbd-keyboard-display -l dvorak'
 alias zshrc='vim $HOME/.zshrc'
 alias i3cfg='vim $HOME/.config/i3/config'
+alias countryroads='cd ~'
+alias j='jump'
 
 dirtygit() {
   printf "\n\e[94m| ADDING \e[0;39m\n\n"
