@@ -242,12 +242,13 @@ if !has('gui_running')
 endif
 
 " Tab settings
-set softtabstop=0 noexpandtab
-set smarttab
+set softtabstop=0
+set expandtab " expand tabs to spaces (opposite of noexpandtab)
+"set nosmarttab
 
 " Tab size
-set shiftwidth=4
-set tabstop=4
+set shiftwidth=2
+set tabstop=2
 
 " Tab navigation like Firefox.
 nnoremap <C-S-tab> :tabprevious<CR>
