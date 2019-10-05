@@ -111,6 +111,7 @@ Plugin 'ekalinin/Dockerfile.vim'
 Plugin 'kovetskiy/sxhkd-vim'
 Plugin 'baskerville/vim-sxhkdrc'
 Plugin 'dense-analysis/ale'
+Plugin 'posva/vim-vue'
 
 " Colorschemes
 Plugin 'sjl/badwolf'

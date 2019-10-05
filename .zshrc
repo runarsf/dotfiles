@@ -40,6 +40,7 @@ alias zshrc='vim $HOME/.zshrc'
 alias i3cfg='vim $HOME/.config/i3/config'
 alias countryroads='cd ~'
 alias j='jump'
+#eval "$(thefuck --alias)"
 
 dirtygit() {
   printf "\n\e[94m| ADDING \e[0;39m\n\n"
@@ -61,3 +62,4 @@ dirtygit() {
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
