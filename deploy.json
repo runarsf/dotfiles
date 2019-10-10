@@ -1,6 +1,6 @@
 {
   "prefix": "apt install -y ",
-  "suffix": "",
+  "suffix": " --no-install-recommends",
   "packages": [
     {"package": "zsh"},
     {"package": "git"},
@@ -10,17 +10,16 @@
     {"package": "byobu"},
     {"package": "firefox"},
     {
-		"package": "thefuck",
-		"prefix": "sudo apt install ",
-		"suffix": " -y"
-	},
-    {"package": "lf"},
+		  "package": "thefuck",
+		  "prefix": "sudo apt install ",
+		  "suffix": " -y"
+    },
     {"package": "compton"},
     {"package": "vim"},
-    {"package": "polybar"},
     {"package": "ranger"},
     {"package": "rofi"},
-    {"package": "i3-gaps"},
+    {"package": "i3"},
+    {"package": "i3lock-fancy"},
     {"package": "feh"},
     {"package": "firefox"},
     {"package": "blueman"},
@@ -29,7 +28,7 @@
     {"package": "xclip"},
     {"package": "xdotool"},
     {"package": "sxhkd"},
-    {"package": "xorg-xinit"},
+    {"package": "xinit"},
     {"package": "sshfs"},
     {"package": "dmenu"},
     {"package": "gpick"}
