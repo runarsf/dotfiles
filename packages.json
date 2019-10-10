@@ -1,0 +1,37 @@
+{
+  "prefix": "apt install -y ",
+  "suffix": "",
+  "packages": [
+    {"package": "zsh"},
+    {"package": "git"},
+    {"package": "curl"},
+    {"package": "feh"},
+    {"package": "tmux"},
+    {"package": "byobu"},
+    {"package": "firefox"},
+    {
+		"package": "thefuck",
+		"prefix": "sudo apt install ",
+		"suffix": " -y"
+	},
+    {"package": "lf"},
+    {"package": "compton"},
+    {"package": "vim"},
+    {"package": "polybar"},
+    {"package": "ranger"},
+    {"package": "rofi"},
+    {"package": "i3-gaps"},
+    {"package": "feh"},
+    {"package": "firefox"},
+    {"package": "blueman"},
+    {"package": "dos2unix"},
+    {"package": "irssi"},
+    {"package": "xclip"},
+    {"package": "xdotool"},
+    {"package": "sxhkd"},
+    {"package": "xorg-xinit"},
+    {"package": "sshfs"},
+    {"package": "dmenu"},
+    {"package": "gpick"}
+  ]
+}
