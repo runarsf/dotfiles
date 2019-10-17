@@ -1,6 +1,7 @@
 {
-  "prefix": "apt install -y ",
-  "suffix": " --no-install-recommends",
+  "update": "apt update",
+  "prefix": "apt install -y",
+  "suffix": "--no-install-recommends",
   "packages": [
     {"package": "zsh"},
     {"package": "git"},
@@ -11,8 +12,7 @@
     {"package": "firefox"},
     {
 		  "package": "thefuck",
-		  "prefix": "sudo apt install ",
-		  "suffix": " -y"
+		  "suffix": "--install-recommends"
     },
     {"package": "compton"},
     {"package": "vim"},
@@ -31,6 +31,7 @@
     {"package": "xinit"},
     {"package": "sshfs"},
     {"package": "dmenu"},
-    {"package": "gpick"}
+    {"package": "gpick"},
+    {"package": "libxft-dev"}
   ]
 }

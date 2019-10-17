@@ -42,7 +42,7 @@ for_window [instance="spotify"] resize set 800 1080
 for_window [instance="spotify"] move position center
 for_window [instance="spotify"] move scratchpad
 bindsym $mod+p 			[instance="spotify"] scratchpad show; move position center
-bindsym $mod+Shift+p 	exec --no-startup-id spotify
+bindsym $mod+Shift+p 	exec --no-startup-id snap run spotify
 
 bindsym Mod1+Right exec xdotool click 3
 bindsym Mod1+Left exec xdotool click 1

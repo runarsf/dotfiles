@@ -1,0 +1,70 @@
+{
+  "update": "pacman -Syyu",
+  "prefix": "pacman -S --noconfirm",
+  "suffix": "",
+  "packages": [
+    {"package": "yay"},
+    {"package": "git"},
+    {"package": "curl"},
+    {"package": "zsh"},
+    {
+      "package": "lf",
+      "prefix": "yay -S --noconfirm"
+    },
+    {"package": "vim"},
+    {"package": "rofi"},
+    {"package": "rxvt-unicode"},
+    {"package": "i3-gaps"},
+    {
+      "package": "polybar",
+      "prefix": "yay -S --noconfirm"
+    },
+    {
+      "package": "ttf-font-awesome-4",
+      "prefix": "yay -S --noconfirm"
+    },
+    {"package": "ranger"},
+    {"package": "compton"},
+    {"package": "feh"},
+    {"package": "tmux"},
+    {"package": "byobu"},
+    {"package": "firefox"},
+    {"package": "xrandr"},
+    {"package": "arandr"},
+    {"package": "blueman"},
+    {"package": "dos2unix"},
+    {"package": "irssi"},
+    {"package": "xclip"},
+    {"package": "xdotool"},
+    {"package": "zathura"},
+    {"package": "xorg-xinit"},
+    {"package": "sshfs"},
+    {"package": "i3lock"},
+    {"package": "gpick"},
+    {"package": "dmenu"},
+    {
+      "package": "discord",
+      "prefix": "yay -S --noconfirm"
+    },
+    {
+      "package": "lib32-libwacom",
+      "prefix": "yay -S --noconfirm"
+    },
+    {
+      "package": "wacom-utility",
+      "prefix": "yay -S --noconfirm"
+    },
+    {
+      "package": "minecraft-launcher",
+      "prefix": "yay -S --noconfirm"
+    },
+    {
+      "package": "input-wacom-dkms",
+      "prefix": "yay -S --noconfirm"
+    },
+    {
+      "package": "discord-canary",
+      "prefix": "yay -S --noconfirm"
+    }
+  ]
+}

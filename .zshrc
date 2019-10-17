@@ -24,6 +24,7 @@ if [[ -f $ANTIGEN/antigen.zsh ]]; then
   antigen bundle zsh-users/zsh-autosuggestions
   antigen bundle zsh-users/zsh-history-substring-search
   antigen bundle jump
+  antigen bundle lol
   antigen bundle thefuck
 
   antigen theme romkatv/powerlevel10k
@@ -46,7 +47,13 @@ alias i3cfg='vim $HOME/.config/i3/config'
 alias countryroads='cd ~'
 alias j='jump'
 alias paste='nc termbin.com 9999'
-eval "$(thefuck --alias fuck)"
+eval "$(thefuck --alias heck)"
+
+case "$(hostname)" in
+  runfre-t480s)
+    alias fix-monitor='xrandr --output DP-1-2 --mode 2560x1440 --output DP-1-1 --mode 2560x1440 --right-of DP-1-2 --output eDP-1 --mode 1920x1080 --right-of DP-1-1'
+    ;;
+esac
 
 dirtygit() {
   printf "\n\e[94m| ADDING \e[0;39m\n\n"
