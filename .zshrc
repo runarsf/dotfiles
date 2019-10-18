@@ -49,11 +49,9 @@ alias j='jump'
 alias paste='nc termbin.com 9999'
 eval "$(thefuck --alias heck)"
 
-case "$(hostname)" in
-  runfre-t480s)
-    alias fix-monitor='xrandr --output DP-1-2 --mode 2560x1440 --output DP-1-1 --mode 2560x1440 --right-of DP-1-2 --output eDP-1 --mode 1920x1080 --right-of DP-1-1'
-    ;;
-esac
+rmln() {
+  [ -L "$1" ] && cp --remove-destination "$(readlink "$1")" "$1"
+}
 
 dirtygit() {
   printf "\n\e[94m| ADDING \e[0;39m\n\n"
@@ -66,6 +64,12 @@ dirtygit() {
   git push
   printf "\n\e[32m| DONE! \e[0;39m\n\n"
 }
+
+case "$(hostname)" in
+  runfre-t480s)
+    alias fix-monitor='xrandr --output DP-1-2 --mode 2560x1440 --output DP-1-1 --mode 2560x1440 --right-of DP-1-2 --output eDP-1 --mode 1920x1080 --right-of DP-1-1'
+    ;;
+esac
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
