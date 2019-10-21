@@ -1,56 +1,62 @@
 clear
 
 case $- in
-    *i*) ;;
-      *) return;;
+  *i*) ;;
+  *) return;;
 esac
 
-[ -f $HOME/.zsh_aliases ] && source $HOME/.zsh_aliases
-[ -f $HOME/.profile ] && source $HOME/.profile
-
-export TERM="xterm-256color"
-
-ANTIGEN=$HOME/.antigen/
-[ -f $ANTIGEN/antigen.zsh ] || git clone\
-    https://github.com/zsh-users/antigen.git $ANTIGEN
-if [[ -f $ANTIGEN/antigen.zsh ]]; then
-  source $ANTIGEN/antigen.zsh
-  antigen use oh-my-zsh
-  antigen bundle git
-  antigen bundle git-extras
-  antigen bundle colorize
-  antigen bundle command-not-found
-  antigen bundle zsh-users/zsh-syntax-highlighting
-  antigen bundle zsh-users/zsh-autosuggestions
-  antigen bundle zsh-users/zsh-history-substring-search
-  antigen bundle jump
-  antigen bundle lol
-  antigen bundle thefuck
-
-  antigen theme romkatv/powerlevel10k
-
-  #antigen theme runarsf/rufus-zsh-theme
-  #antigen theme rufus-minimal
-
-  antigen apply
+# p10k instant prompt
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=white'
-HIST_STAMPS="dd.mm.yyyy"
-PROMPT_EOL_MARK=''
+command -v antibody > /dev/null 2>&1 \
+  || (echo "Installing Antibody."; curl -sfL git.io/antibody | sudo sh -s - -b /usr/local/bin) \
+  && source <(antibody init)
+antibody bundle <<-EOBUNDLES
+	robbyrussell/oh-my-zsh path:plugins/git
+	robbyrussell/oh-my-zsh path:plugins/git-extras
+	robbyrussell/oh-my-zsh path:plugins/colorize
+	robbyrussell/oh-my-zsh path:plugins/colored-man-pages
+	robbyrussell/oh-my-zsh path:plugins/command-not-found
+	robbyrussell/oh-my-zsh path:plugins/jump
+	robbyrussell/oh-my-zsh path:plugins/lol
+	robbyrussell/oh-my-zsh path:plugins/emoji
+	robbyrussell/oh-my-zsh path:plugins/thefuck
+	robbyrussell/oh-my-zsh path:plugins/common-aliases
+	robbyrussell/oh-my-zsh path:plugins/docker
+	robbyrussell/oh-my-zsh path:plugins/systemd
+	robbyrussell/oh-my-zsh path:plugins/tmux
+	zsh-users/zsh-autosuggestions
+	zsh-users/zsh-history-substring-search
+	zsh-users/zsh-completions
+	# zsh-users/zsh-syntax-highlighting
+	# djui/alias-tips
+	# desyncr/auto-ls
+	chrissicool/zsh-256color
+	zdharma/fast-syntax-highlighting
+	mollifier/cd-gitroot
+	romkatv/powerlevel10k
+EOBUNDLES
 
+alias ls='ls -lAF --color'
+alias grep='grep --color'
 alias c='xclip -selection clipboard'
+alias paste='nc termbin.com 9999'
 alias please='sudo $(fc -ln -1)'
 alias reload='source $HOME/.zshrc'
-alias ls='ls -lAF --color'
-alias i3cfg='vim $HOME/.config/i3/config'
-alias countryroads='cd ~'
-alias j='jump'
-alias paste='nc termbin.com 9999'
 eval "$(thefuck --alias heck)"
 
 rmln() {
-  [ -L "$1" ] && cp --remove-destination "$(readlink "$1")" "$1"
+  [ -L "$1" ] \
+    && cp --remove-destination "$(readlink "$1")" "$1" \
+    || echo "$1: Not a symlink."
+}
+
+goto() {
+  [ -L "$1" ] \
+    && cd $(dirname $(readlink -f "$1")) \
+    || echo "$1: Not a symlink."
 }
 
 dirtygit() {
@@ -68,13 +74,24 @@ dirtygit() {
 case "$(hostname)" in
   runfre-t480s)
     alias fix-monitor='xrandr --output DP-1-2 --mode 2560x1440 --output DP-1-1 --mode 2560x1440 --right-of DP-1-2 --output eDP-1 --mode 1920x1080 --right-of DP-1-1'
+    export PATH="$PATH:/home/runar/git/flutter/bin"
     ;;
 esac
 
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+[ -f $HOME/.zsh_aliases ] && source $HOME/.zsh_aliases
+[ -f $HOME/.profile ] && source $HOME/.profile
+PROMPT_EOL_MARK=''
+# Fix history
+HISTFILE=~/.zsh_history
+HISTSIZE=10000
+SAVEHIST=10000
+HIST_STAMPS="dd.mm.yyyy"
+# SHARE_HISTORY INC_APPEND_HISTORY_TIME appendhistory
+setopt INC_APPEND_HISTORY_TIME
 
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ -f ~/.p10k.zsh ]] && source ~/.p10k.zsh
+bindkey "$terminfo[kcuu1]" history-substring-search-up
+bindkey "$terminfo[kcud1]" history-substring-search-down
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && source "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] && source "$NVM_DIR/bash_completion"
+[ -f ~/.p10k.zsh ] && source "$HOME/.p10k.zsh"
