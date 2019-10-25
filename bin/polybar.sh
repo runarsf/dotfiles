@@ -8,6 +8,7 @@ killall -q polybar
 
 # Loop through all connected monitors, launch bar with tray on $mainmon and normal on others
 mainmon=$(sed '1!d' $HOME/.monitor)
+mainmon='eDP-1'
 for m in $(polybar --list-monitors | cut -d":" -f1); do
 	if [ "$m" = "$mainmon" ]; then
 	   	MONITOR=$m polybar --reload tray &

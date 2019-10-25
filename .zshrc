@@ -73,8 +73,13 @@ dirtygit() {
 
 case "$(hostname)" in
   runfre-t480s)
-    alias fix-monitor='xrandr --output DP-1-2 --mode 2560x1440 --output DP-1-1 --mode 2560x1440 --right-of DP-1-2 --output eDP-1 --mode 1920x1080 --right-of DP-1-1'
+    #alias fix-monitor='xrandr --output DP-1-2 --mode 2560x1440 --output DP-1-1 --mode 2560x1440 --right-of DP-1-2 --output eDP-1 --mode 1920x1080 --right-of DP-1-1'
+    alias fix-monitor='xrandr --output eDP-1 --mode 1920x1080 --output DP-1-1 --mode 2560x1440 --right-of eDP-1 --output DP-1-2 --mode 2560x1440 --right-of DP-1-1'
+    alias kill-monitor='xrandr --output DP-1-2 --off --output DP-1-1 --off'
     export PATH="$PATH:/home/runar/git/flutter/bin"
+    export ANDROID_HOME=/home/runar/Android/Sdk
+    export PATH="${PATH}:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools"
+    export JAVA_HOME=/usr/java/jre1.8.0_231
     ;;
 esac
 
