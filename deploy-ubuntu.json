@@ -1,7 +1,7 @@
 {
   "update": "apt update",
   "prefix": "apt install -y",
-  "suffix": "--no-install-recommends",
+  "suffix": "",
   "packages": [
     {"package": "zsh"},
     {"package": "git"},
@@ -10,10 +10,7 @@
     {"package": "tmux"},
     {"package": "byobu"},
     {"package": "firefox"},
-    {
-		  "package": "thefuck",
-		  "suffix": "--install-recommends"
-    },
+    {"package": "thefuck"},
     {"package": "compton"},
     {"package": "vim"},
     {"package": "ranger"},
