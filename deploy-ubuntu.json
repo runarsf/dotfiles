@@ -1,7 +1,7 @@
 {
   "update": "apt update",
   "prefix": "apt install -y",
-  "suffix": "",
+  "suffix": "--no-install-recommends",
   "packages": [
     {"package": "zsh"},
     {"package": "git"},
