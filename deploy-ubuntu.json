@@ -1,7 +1,7 @@
 {
   "update": "apt update",
   "prefix": "apt install -y",
-  "suffix": "--no-install-recommends",
+  "suffix": "",
   "packages": [
     {"package": "zsh"},
     {"package": "git"},
@@ -19,10 +19,6 @@
     {"package": "i3lock-fancy"},
     {"package": "feh"},
     {"package": "firefox"},
-    {
-      "package": "blueman",
-      "prefix": "#"
-    },
     {"package": "dos2unix"},
     {"package": "irssi"},
     {"package": "xclip"},
