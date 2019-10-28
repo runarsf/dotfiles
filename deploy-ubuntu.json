@@ -19,7 +19,10 @@
     {"package": "i3lock-fancy"},
     {"package": "feh"},
     {"package": "firefox"},
-    {"package": "blueman"},
+    {
+      "package": "blueman",
+      "prefix": "#"
+    },
     {"package": "dos2unix"},
     {"package": "irssi"},
     {"package": "xclip"},
