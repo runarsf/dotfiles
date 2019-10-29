@@ -21,7 +21,6 @@
     {"package": "dos2unix"},
     {"package": "irssi"},
     {"package": "xclip"},
-    {"package": "blueman"},
     {"package": "xdotool"},
     {"package": "sxhkd"},
     {"package": "xinit"},
