@@ -1,6 +1,6 @@
 {
-  "update": "export DEBIAN_FRONTEND=noninteractive && apt-get update",
-  "prefix": "export DEBIAN_FRONTEND=noninteractive && apt-get -yq install",
+  "update": "apt-get update",
+  "prefix": "apt-get -yq install",
   "suffix": "",
   "packages": [
     {"package": "zsh"},
