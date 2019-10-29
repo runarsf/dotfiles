@@ -28,7 +28,6 @@ antibody bundle <<-EOBUNDLES
 	robbyrussell/oh-my-zsh path:plugins/systemd
 	robbyrussell/oh-my-zsh path:plugins/tmux
 	robbyrussell/oh-my-zsh path:plugins/bgnotify
-	robbyrussell/oh-my-zsh path:plugins/jira
 	robbyrussell/oh-my-zsh path:plugins/magic-enter
 	robbyrussell/oh-my-zsh path:plugins/fzf
 	robbyrussell/oh-my-zsh path:plugins/sudo
@@ -41,15 +40,16 @@ antibody bundle <<-EOBUNDLES
 	# djui/alias-tips
 	# desyncr/auto-ls
 	# walesmd/caniuse.plugin.zsh
+	# molovo/revolver
+	# mollifier/cd-gitroot
 	chrissicool/zsh-256color
 	zdharma/fast-syntax-highlighting
-	mollifier/cd-gitroot
 	akarzim/zsh-docker-aliases
 	skx/sysadmin-util
 	zdharma/zsh-diff-so-fancy
 	sroze/docker-compose-zsh-plugin
 	b4b4r07/emoji-cli
-	molovo/revolver
+	#runarsf/rufus-zsh-theme path:rufus-minimal.zsh-theme
 	romkatv/powerlevel10k
 EOBUNDLES
 
@@ -66,17 +66,21 @@ alias paste='nc termbin.com 9999'
 alias please='sudo $(fc -ln -1)'
 alias reload='source $HOME/.zshrc'
 alias zshrc='$EDITOR $HOME/.zshrc'
+alias back='cd "$OLDPWD"'
 eval "$(thefuck --alias heck)"
+
 rmln() {
   test -L "$1" \
     && cp --remove-destination "$(readlink "$1")" "$1" \
     || echo "$1: Not a symlink."
 }
+
 goto() {
   test -L "$1" \
     && cd $(dirname $(readlink -f "$1")) \
     || echo "$1: Not a symlink."
 }
+
 dirtygit() {
   printf "\n\e[94m| ADDING \e[0;39m\n\n"
   git add .

@@ -1,6 +1,6 @@
 {
-  "update": "apt update",
-  "prefix": "apt install -y",
+  "update": "DEBIAN_FRONTEND=noninteractive apt-get update",
+  "prefix": "DEBIAN_FRONTEND=noninteractive apt-get -yq install",
   "suffix": "",
   "packages": [
     {"package": "zsh"},
@@ -18,16 +18,32 @@
     {"package": "i3"},
     {"package": "i3lock-fancy"},
     {"package": "feh"},
-    {"package": "firefox"},
     {"package": "dos2unix"},
     {"package": "irssi"},
     {"package": "xclip"},
+    {"package": "blueman"},
     {"package": "xdotool"},
     {"package": "sxhkd"},
     {"package": "xinit"},
     {"package": "sshfs"},
     {"package": "dmenu"},
     {"package": "gpick"},
-    {"package": "libxft-dev"}
+    {"package": "libxft-dev"},
+    {"package": "build-essential"},
+    {"package": "libssl-dev"},
+    {
+      "package": "https://raw.githubusercontent.com/creationix/nvm/v0.35.0/install.sh",
+      "prefix": "curl",
+      "suffix": "| bash"
+    },
+    {
+      "package": "node",
+      "prefix": "nvm install"
+    },
+    {
+      "package": "gh",
+      "prefix": "npm install",
+      "suffix": "-g"
+    }
   ]
 }

@@ -251,6 +251,13 @@ set expandtab " expand tabs to spaces (opposite of noexpandtab)
 set shiftwidth=2
 set tabstop=2
 
+" Display whitespace characters
+set list
+"set listchars=eol:⏎,tab:␉·,trail:␠,nbsp:⎵
+"set listchars=tab:␉·
+"set listchars=tab:>-
+set listchars=tab:␉·
+
 " Tab navigation like Firefox.
 nnoremap <C-S-tab> :tabprevious<CR>
 nnoremap <C-tab>   :tabnext<CR>
