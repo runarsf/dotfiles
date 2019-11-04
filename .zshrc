@@ -37,13 +37,13 @@ antibody bundle <<-EOBUNDLES
 	zsh-users/zsh-history-substring-search
 	zsh-users/zsh-completions
 	# zsh-users/zsh-syntax-highlighting
-	# djui/alias-tips
+	djui/alias-tips
 	# desyncr/auto-ls
 	# walesmd/caniuse.plugin.zsh
 	# molovo/revolver
 	# mollifier/cd-gitroot
-	chrissicool/zsh-256color
 	zdharma/fast-syntax-highlighting
+	chrissicool/zsh-256color
 	akarzim/zsh-docker-aliases
 	skx/sysadmin-util
 	zdharma/zsh-diff-so-fancy
@@ -60,6 +60,7 @@ else
 fi
 
 alias ls='ls -lAF --color'
+alias a='alias'
 alias grep='grep --color'
 alias c='xclip -selection clipboard'
 alias paste='nc termbin.com 9999'
@@ -109,25 +110,35 @@ case "$(hostname)" in
     ;;
 esac
 
-test -f "$HOME/.zsh_aliases" && source $HOME/.zsh_aliases
-test -f "$HOME/.profile" && source $HOME/.profile
+export BROWSER=/usr/bin/google-chrome-stable
 MAGIC_ENTER_GIT_COMMAND='git status -u .'
 MAGIC_ENTER_OTHER_COMMAND='ls -lah .'
 PROMPT_EOL_MARK=''
-CASE_SENSITIVE="false"
-HYPHEN_INSENSITIVE="true"
-JIRA_RAPID_BOARD="true"
+# setopt MENU_COMPLETE
+# CASE_SENSITIVE='false'
+# HYPHEN_INSENSITIVE='true'
+JIRA_RAPID_BOARD='true'
 HISTFILE=~/.zsh_history
 HISTSIZE=10000
 SAVEHIST=10000
-HIST_STAMPS="dd.mm.yyyy"
+HIST_STAMPS='dd.mm.yyyy'
 setopt INC_APPEND_HISTORY_TIME # SHARE_HISTORY INC_APPEND_HISTORY_TIME appendhistory
+
+# Tab completion match beginning and middle of words
+bindkey '\CI' expand-or-complete-prefix
+#zstyle ':completion:*' completer _complete
+#zstyle ':completion:*' matcher-list '' 'm:{[:lower:][:upper:]}={[:upper:][:lower:]}' '+l:|=* r:|=*'
+# zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z}={A-Za-z}'
+#autoload -Uz compinit
+#compinit
 
 bindkey "$terminfo[kcuu1]" history-substring-search-up
 bindkey "$terminfo[kcud1]" history-substring-search-down
 export NVM_DIR="$HOME/.nvm"
 export FZF_BASE="$HOME/.fzf"
 export LANG=en_US.UTF-8
+test -f "$HOME/.zsh_aliases" && source $HOME/.zsh_aliases
+test -f "$HOME/.profile" && source $HOME/.profile
 test -s "$NVM_DIR/nvm.sh" && source "$NVM_DIR/nvm.sh"
 test -s "$NVM_DIR/bash_completion" && source "$NVM_DIR/bash_completion"
 test -f "$HOME/.p10k.zsh" && source "$HOME/.p10k.zsh"
