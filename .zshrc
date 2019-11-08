@@ -20,7 +20,6 @@ antibody bundle <<-EOBUNDLES
 	robbyrussell/oh-my-zsh path:plugins/colored-man-pages
 	robbyrussell/oh-my-zsh path:plugins/command-not-found
 	robbyrussell/oh-my-zsh path:plugins/jump
-	robbyrussell/oh-my-zsh path:plugins/lol
 	robbyrussell/oh-my-zsh path:plugins/emoji
 	robbyrussell/oh-my-zsh path:plugins/thefuck
 	robbyrussell/oh-my-zsh path:plugins/common-aliases
@@ -31,6 +30,7 @@ antibody bundle <<-EOBUNDLES
 	robbyrussell/oh-my-zsh path:plugins/magic-enter
 	robbyrussell/oh-my-zsh path:plugins/fzf
 	robbyrussell/oh-my-zsh path:plugins/sudo
+	# robbyrussell/oh-my-zsh path:plugins/lol
 	# robbyrussell/oh-my-zsh path:plugins/per-directory-history
 	# robbyrussell/oh-my-zsh path:plugins/ssh-agent
 	zsh-users/zsh-autosuggestions
@@ -60,7 +60,6 @@ else
 fi
 
 alias ls='ls -lAF --color'
-alias a='alias'
 alias grep='grep --color'
 alias c='xclip -selection clipboard'
 alias paste='nc termbin.com 9999'
