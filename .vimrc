@@ -1,14 +1,14 @@
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "
 " Sections:
-"    -> General
-"    -> Plugins
-"    -> VIM user interface
-"    -> Status line / Tabs
-"    -> Editing / Binds
-"    -> Colors
-"    -> Misc
-"    -> Functions / Utilities
+"  - General
+"  - Plugins
+"  - VIM user interface
+"  - Status line / Tabs
+"  - Editing / Binds
+"  - Colors
+"  - Misc
+"  - Functions / Utilities
 "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
@@ -42,8 +42,8 @@ set guifont=Source\ Code\ Pro
 syntax on
 syntax enable
 
-" Set utf8 as standard encoding and en_US as the standard language
-set encoding=utf-8
+" Set utf-8 as standard encoding and en_US as the standard language
+set encoding=utf-8 " en_US.utf8 (?)
 
 " Use Unix as the standard file type
 set ffs=unix,dos,mac
@@ -54,24 +54,25 @@ set nowb
 set noswapfile
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Plugins
-" -> Plugin configs
-" -> Plugin manager: Vundle
+" Plugins
+"   Plugin configs
+"   Plugin manager: Vundle
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "if ! filereadable(expand('~/.vim/bundle/Vundle.vim/autoload/vundle.vim'))
-""	echo "Downloading VundleVim/Vundle.Vim to manage plugins..."
-"	" Prefix commands with 'silent' to not show output
-"	!mkdir -p ~/.vim/bundle/
-"	!git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
-"	autocmd VimEnter * PluginInstall | source ~/.vimrc
+"  echo "Downloading VundleVim/Vundle.Vim to manage plugins..."
+"  " Prefix commands with 'silent' to not show output
+"  !mkdir -p ~/.vim/bundle/
+"  !git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+"  autocmd VimEnter * PluginInstall | source ~/.vimrc
 "endif
+" Automatically install Vundle
 let vundlePreInstalled=1
 if !filereadable(expand('~/.vim/bundle/Vundle.vim/README.md'))
-	echo "Installing Vundle.."
-	echo ""
-	silent !mkdir -p ~/.vim/bundle
-	silent !git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
-	let vundlePreInstalled=0
+  echo "Installing Vundle.."
+  echo ""
+  silent !mkdir -p ~/.vim/bundle
+  silent !git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
+  let vundlePreInstalled=0
 endif
 
 " Filetype plugins
@@ -103,15 +104,16 @@ Plugin 'junegunn/fzf'
 Plugin 'osyo-manga/vim-hopping'
 Plugin 'ryanoasis/vim-devicons'
 Plugin 'lifepillar/vim-cheat40'
+Plugin 'Raimondi/delimitMate'
 
 " Synax highlighting
-Plugin 'vim-scripts/nginx.vim'
+Plugin 'chr4/nginx.vim' " 'vim-scripts/nginx.vim' doesn't work with /etc/nginx/sites-available/default
+Plugin 'storyn26383/vim-vue' " 'posva/vim-vue' doesn't work as well with inline component css
 Plugin 'octol/vim-cpp-enhanced-highlight'
 Plugin 'ekalinin/Dockerfile.vim'
 Plugin 'kovetskiy/sxhkd-vim'
 Plugin 'baskerville/vim-sxhkdrc'
 Plugin 'dense-analysis/ale'
-Plugin 'posva/vim-vue'
 
 " Colorschemes
 Plugin 'sjl/badwolf'
@@ -119,15 +121,19 @@ Plugin 'xero/sourcerer.vim'
 Plugin 'AlessandroYorba/Sierra'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'morhetz/gruvbox'
+Plugin 'mhartington/oceanic-next'
+Plugin 'rakr/vim-one'
+Plugin 'liuchengxu/space-vim-dark'
+Plugin 'jacoborus/tender.vim'
 call vundle#end()
 
 filetype plugin indent on " required for vundle
 
 " Install plugins if vundle was recently installed, part of Vundle installation
 if vundlePreInstalled == 0
-	echo "Installing plugins..."
-	echo ""
-	:PluginInstall
+  echo "Installing plugins..."
+  echo ""
+  :PluginInstall
 endif
 
 " Lightline
@@ -169,7 +175,7 @@ let g:NERDTreeWinPos = "left"
 map <C-o> :NERDTreeToggle<CR>
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => VIM user interface
+" VIM user interface
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Enable line numbers and set them to relative
 set number
@@ -229,7 +235,7 @@ set mat=2
 set foldcolumn=0
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Status line / Tabs
+" Status line / Tabs
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Always show the status line
 set laststatus=2
@@ -253,12 +259,12 @@ set tabstop=2
 
 " Display whitespace characters
 set list
-"set listchars=eol:⏎,tab:␉·,trail:␠,nbsp:⎵
-"set listchars=tab:␉·
-"set listchars=tab:>-
-set listchars=tab:␉·
+set listchars=trail:·,nbsp:⎵,tab:¦\ " This comment is required for the escaped space character, eol:⏎
 
-" Tab navigation like Firefox.
+" Tab navigation
+nnoremap H gT
+nnoremap L gt
+
 nnoremap <C-S-tab> :tabprevious<CR>
 nnoremap <C-tab>   :tabnext<CR>
 nnoremap <C-t>     :tabnew<CR>
@@ -266,17 +272,29 @@ inoremap <C-S-tab> <Esc>:tabprevious<CR>i
 inoremap <C-tab>   <Esc>:tabnext<CR>i
 inoremap <C-t>     <Esc>:tabnew<CR>
 
+noremap <leader>1 :tabfirst<cr>
+noremap <leader>2 2gt
+noremap <leader>3 3gt
+noremap <leader>4 4gt
+noremap <leader>5 5gt
+noremap <leader>6 6gt
+noremap <leader>7 7gt
+noremap <leader>8 8gt
+noremap <leader>9 9gt
+noremap <leader>0 :tablast<cr>
+
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Editing / Binds
+" Editing / Binds
+"
+" Map types:
+"  :nmap - Display normal mode maps
+"  :imap - Display insert mode maps
+"  :vmap - Display visual and select mode maps
+"  :smap - Display select mode maps
+"  :xmap - Display visual mode maps
+"  :cmap - Display command-line mode maps
+"  :omap - Display operator pending mode maps
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"|> Map types
-"|=> :nmap - Display normal mode maps
-"|=> :imap - Display insert mode maps
-"|=> :vmap - Display visual and select mode maps
-"|=> :smap - Display select mode maps
-"|=> :xmap - Display visual mode maps
-"|=> :cmap - Display command-line mode maps
-"'=> :omap - Display operator pending mode maps
 
 " With a map leader it's possible to do extra key combinations
 " e.g. <leader>w saves the current file
@@ -385,19 +403,29 @@ autocmd FileType python set shiftwidth=4
 autocmd FileType python set autoindent
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Colors
+" Colors
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Tab colors
 highlight TabLineFill ctermfg=LightGreen ctermbg=DarkGreen
 highlight TabLine ctermfg=Blue ctermbg=Yellow
 highlight TabLineSel ctermfg=Red ctermbg=Yellow
 
+" Enable termguicolors
+"if (has("termguicolors"))
+"  set termguicolors
+"endif
+
 " Colorscheme
+colorscheme space-vim-dark
 set background=dark
-colorscheme default
+
+hi Comment cterm=italic
+hi Normal     ctermbg=NONE guibg=NONE
+"hi LineNr     ctermbg=NONE guibg=NONE
+"hi SignColumn ctermbg=NONE guibg=NONE
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Misc
+" Misc
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Return to last edit position when opening files
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
@@ -414,8 +442,8 @@ set mouse=a
 " Turn persistent undo on
 " Undo even when you close a buffer/VIM
 try
-	set undodir=~/.vim_runtime/temp_dirs/undodir
-	set undofile
+  set undodir=~/.vim_runtime/temp_dirs/undodir
+  set undofile
 catch
 endtry
 
@@ -427,10 +455,10 @@ set tm=500
 
 " Set extra options when running in GUI mode
 if has("gui_running")
-	set guioptions-=T
-	set guioptions-=e
-	set t_Co=256
-	set guitablabel=%M\ %t
+  set guioptions-=T
+  set guioptions-=e
+  set t_Co=256
+  set guitablabel=%M\ %t
 endif
 
 " Automatically deletes all trailing whitespace on save
@@ -440,30 +468,29 @@ autocmd BufWritePre * %s/\s\+$//e
 autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Functions / Utilities
+" Functions / Utilities
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Autoreload .vimrc
 augroup myvimrchooks
-	au!
-	autocmd bufwritepost .vimrc source ~/.vimrc
+  au!
+  autocmd bufwritepost .vimrc source ~/.vimrc
 augroup END
 
 " Switch colorscheme with Goyo
 function! s:goyo_enter()
-	set background=dark
-	colorscheme gruvbox
+  colorscheme sierra
 endfunction
 
 function! s:goyo_leave()
-	colorscheme default
+  colorscheme space-vim-dark
 endfunction
 
 function! s:DiffWithSaved()
-	let filetype=&ft
-	diffthis
-	vnew | r # | normal! 1Gdd
-	diffthis
-	exe "setlocal bt=nofile bh=wipe nobl noswf ro ft=" . filetype
+  let filetype=&ft
+  diffthis
+  vnew | r # | normal! 1Gdd
+  diffthis
+  exe "setlocal bt=nofile bh=wipe nobl noswf ro ft=" . filetype
 endfunction
 com! DiffSaved call s:DiffWithSaved()
 
