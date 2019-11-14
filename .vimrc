@@ -1,20 +1,33 @@
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" vim: set foldmethod=marker foldlevel=0 nomodeline:
+" ==================================================
+" runarsf's .vimrc {{{
+" ==================================================
+"  zo - Open a fold at cursor position.
+"  zO - Open all fold at cursor position.
+"  zc - Close a fold at cursor position.
+"  zm - Increase foldlevel by 1.
+"  zM - Close all folds.
+"  zr - Decrease foldlevel by 1.
+"  zR - Decrease foldlevel to 0; all folds will open.
 "
-" Sections:
-"  - General
-"  - Plugins
-"  - VIM user interface
-"  - Status line / Tabs
-"  - Editing / Binds
-"  - Colors
-"  - Misc
-"  - Functions / Utilities
+"  h  - Left
+"  j  - Down
+"  k  - Up
+"  l  - Right
 "
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" General
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"  K  - Open help page for keyword under cursor.
+"  /  - Search for text in current file.
+"  :  - Prefix for executing commands.
+"
+"  :%s/foo/bar/g - Change "foo" to "bar".
+"  :s/foo/bar/g - Change "foo" to "bar" on the current line.
+"  :%s/foo/bar/gc - Change "foo" to "bar", but ask for confirmation.
+"  :%s/\<foo\>/bar/gc - Change whole words matching "foo" to "bar".
+"  :%s/foo/bar/gci - Change "foo" to "bar", case sensitive.
+" }}}
+" ==================================================
+" General {{{
+" ==================================================
 " Sets how many lines of history VIM has to remember
 set history=500
 
@@ -31,6 +44,8 @@ set wrapmargin=0
 " :W sudo saves the file
 " (useful for handling the permission-denied error)
 command! W w !sudo tee % > /dev/null
+
+set foldlevelstart=99
 
 " Enables VI iMproved enhancements
 set nocompatible
@@ -53,98 +68,122 @@ set nobackup
 set nowb
 set noswapfile
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Plugins
-"   Plugin configs
-"   Plugin manager: Vundle
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"if ! filereadable(expand('~/.vim/bundle/Vundle.vim/autoload/vundle.vim'))
-"  echo "Downloading VundleVim/Vundle.Vim to manage plugins..."
-"  " Prefix commands with 'silent' to not show output
-"  !mkdir -p ~/.vim/bundle/
-"  !git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
-"  autocmd VimEnter * PluginInstall | source ~/.vimrc
-"endif
-" Automatically install Vundle
-let vundlePreInstalled=1
-if !filereadable(expand('~/.vim/bundle/Vundle.vim/README.md'))
-  echo "Installing Vundle.."
-  echo ""
-  silent !mkdir -p ~/.vim/bundle
-  silent !git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
-  let vundlePreInstalled=0
+" }}}
+" ==================================================
+" Plugins {{{
+" ============================================================================
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 
-" Filetype plugins
-"filetype plugin on
-"filetype indent on
-filetype off " required for vundle
-
-set rtp+=~/.vim/bundle/Vundle.vim " required for vundle
-
-" All plugins have to be between the vundle begin and end statements
-" Syntax: Plugin 'git_username/git_repo'
-call vundle#begin()
+silent! if plug#begin('~/.vim/plugged')
 " General
-Plugin 'VundleVim/Vundle.vim'
-Plugin 'tpope/vim-eunuch'
-Plugin 'terryma/vim-multiple-cursors'
-"Plugin 'itchyny/lightline.vim'
-Plugin 'vim-airline/vim-airline'
-Plugin 'vim-airline/vim-airline-themes'
-Plugin 'scrooloose/nerdtree'
-Plugin 'airblade/vim-gitgutter'
-Plugin 'junegunn/goyo.vim'
-Plugin 'ervandew/supertab'
-Plugin 'gbigwood/Clippo'
-Plugin 'vim-scripts/IndentAnything'
-Plugin 'justinmk/vim-sneak'
-Plugin 'zefei/vim-colortuner'
-Plugin 'junegunn/fzf'
-Plugin 'osyo-manga/vim-hopping'
-Plugin 'ryanoasis/vim-devicons'
-Plugin 'lifepillar/vim-cheat40'
-Plugin 'Raimondi/delimitMate'
+Plug 'tpope/vim-eunuch'
+Plug 'terryma/vim-multiple-cursors'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'scrooloose/nerdtree'
+Plug 'airblade/vim-gitgutter'
+Plug 'junegunn/goyo.vim'
+Plug 'ervandew/supertab'
+Plug 'gbigwood/Clippo'
+Plug 'vim-scripts/IndentAnything'
+Plug 'justinmk/vim-sneak'
+Plug 'zefei/vim-colortuner'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
+Plug 'osyo-manga/vim-hopping'
+Plug 'ryanoasis/vim-devicons'
+Plug 'lifepillar/vim-cheat40'
+Plug 'Raimondi/delimitMate'
+Plug 'nathanaelkane/vim-indent-guides'
+Plug 'Xuyuanp/nerdtree-git-plugin'
+Plug 'junegunn/vim-easy-align'
+Plug 'junegunn/vim-github-dashboard'
+Plug 'junegunn/vim-emoji'
+Plug 'junegunn/vim-peekaboo'
+Plug 'junegunn/limelight.vim'
+Plug 'vimwiki/vimwiki'
+Plug 'tpope/vim-commentary'
+Plug 'FredKSchott/CoVim' " pip install twisted argparse service_identity
+"Plug 'junegunn/vim-journal'
+"Plug 'dixonary/vimty'
 
 " Synax highlighting
-Plugin 'chr4/nginx.vim' " 'vim-scripts/nginx.vim' doesn't work with /etc/nginx/sites-available/default
-Plugin 'storyn26383/vim-vue' " 'posva/vim-vue' doesn't work as well with inline component css
-Plugin 'octol/vim-cpp-enhanced-highlight'
-Plugin 'ekalinin/Dockerfile.vim'
-Plugin 'kovetskiy/sxhkd-vim'
-Plugin 'baskerville/vim-sxhkdrc'
-Plugin 'dense-analysis/ale'
+Plug 'chr4/nginx.vim'
+Plug 'storyn26383/vim-vue'
+Plug 'octol/vim-cpp-enhanced-highlight'
+Plug 'ekalinin/Dockerfile.vim'
+Plug 'kovetskiy/sxhkd-vim'
+Plug 'baskerville/vim-sxhkdrc'
+Plug 'dense-analysis/ale'
+Plug 'mboughaba/i3config.vim'
+Plug 'Glench/Vim-Jinja2-Syntax'
+Plug 'scrooloose/syntastic'
+"Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
 
 " Colorschemes
-Plugin 'sjl/badwolf'
-Plugin 'xero/sourcerer.vim'
-Plugin 'AlessandroYorba/Sierra'
-Plugin 'altercation/vim-colors-solarized'
-Plugin 'morhetz/gruvbox'
-Plugin 'mhartington/oceanic-next'
-Plugin 'rakr/vim-one'
-Plugin 'liuchengxu/space-vim-dark'
-Plugin 'jacoborus/tender.vim'
-call vundle#end()
-
-filetype plugin indent on " required for vundle
-
-" Install plugins if vundle was recently installed, part of Vundle installation
-if vundlePreInstalled == 0
-  echo "Installing plugins..."
-  echo ""
-  :PluginInstall
+Plug 'tomasr/molokai'
+Plug 'AlessandroYorba/Despacio'
+Plug 'nightsense/cosmic_latte'
+Plug 'nightsense/snow'
+Plug 'nightsense/stellarized'
+Plug 'junegunn/seoul256.vim'
+Plug 'sjl/badwolf'
+Plug 'xero/sourcerer.vim'
+Plug 'AlessandroYorba/Sierra'
+Plug 'altercation/vim-colors-solarized'
+Plug 'morhetz/gruvbox'
+Plug 'mhartington/oceanic-next'
+Plug 'rakr/vim-one'
+Plug 'liuchengxu/space-vim-dark'
+Plug 'jacoborus/tender.vim'
+call plug#end()
 endif
 
-" Lightline
-"let g:lightline = { 'colorscheme': 'seoul256' }
+" function! BuildYCM(info)
+"   if a:info.status == 'installed' || a:info.force
+"     !./install.py --clang-completer --gocode-completer
+"   endif
+" endfunction
+" Plug 'Valloric/YouCompleteMe', { 'for': ['c', 'cpp'], 'do': function('BuildYCM') }
+
+" autocmd vimrc FileType c,cpp,go nnoremap <buffer> ]d :YcmCompleter GoTo<CR>
+" autocmd vimrc FileType c,cpp    nnoremap <buffer> K  :YcmCompleter GetType<CR>
+
+filetype plugin indent on
+
+" Limelight
+" Color name (:help cterm-colors) or ANSI code
+let g:limelight_conceal_ctermfg = 'gray'
+let g:limelight_conceal_ctermfg = 240
+" Color name (:help gui-colors) or RGB color
+let g:limelight_conceal_guifg = 'DarkGray'
+let g:limelight_conceal_guifg = '#777777'
+" Default: 0.5
+"let g:limelight_default_coefficient = 0.7
+" Number of preceding/following paragraphs to include (default: 0)
+"let g:limelight_paragraph_span = 1
+" Beginning/end of paragraph
+"   When there's no empty line between the paragraphs
+"   and each paragraph starts with indentation
+"let g:limelight_bop = '^\s'
+"let g:limelight_eop = '\ze\n^\s'
+" Highlighting priority (default: 10)
+"   Set it to -1 not to overrule hlsearch
+"let g:limelight_priority = 10
 
 " Airline
 let g:airline_theme='raven'
-let g:airline#extensions#ale#enabled = 1 " ale
+let g:airline#extensions#ale#enabled = 1
 
 " Vim-sneak
 let g:sneak#label = 1
+
+" Indent-guides
+let g:indent_guides_enable_on_vim_startup = 0
 
 " Sierra
 "let g:sierra_Sunset = 1
@@ -174,9 +213,33 @@ let g:NERDTreeWinPos = "left"
 " Toggle NERDTree
 map <C-o> :NERDTreeToggle<CR>
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" VIM user interface
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" }}}
+" ==================================================
+" A E S T H E T I C S {{{
+" ============================================================================
+" Tab colors
+highlight TabLineFill ctermfg=LightGreen ctermbg=DarkGreen
+highlight TabLine ctermfg=Blue ctermbg=Yellow
+highlight TabLineSel ctermfg=Red ctermbg=Yellow
+
+" Enable termguicolors
+"if (has("termguicolors"))
+"  set termguicolors
+"endif
+
+" Colorscheme
+colorscheme space-vim-dark
+set background=dark
+
+hi Comment cterm=italic
+hi Normal     ctermbg=NONE guibg=NONE
+"hi LineNr     ctermbg=NONE guibg=NONE
+"hi SignColumn ctermbg=NONE guibg=NONE
+
+" }}}
+" ==================================================
+" VIM user interface {{{
+" ============================================================================
 " Enable line numbers and set them to relative
 set number
 set ruler
@@ -234,9 +297,10 @@ set mat=2
 " Margin to the left
 set foldcolumn=0
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Status line / Tabs
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" }}}
+" ==================================================
+" Status line / Tabs {{{
+" ============================================================================
 " Always show the status line
 set laststatus=2
 
@@ -251,7 +315,13 @@ endif
 " Tab settings
 set softtabstop=0
 set expandtab " expand tabs to spaces (opposite of noexpandtab)
-"set nosmarttab
+" set nosmarttab
+" autocmd FileType python set expandtab
+" autocmd FileType python set textwidth=79
+" autocmd FileType python set tabstop=4
+" autocmd FileType python set softtabstop=4
+" autocmd FileType python set shiftwidth=4
+" autocmd FileType python set autoindent
 
 " Tab size
 set shiftwidth=2
@@ -259,7 +329,8 @@ set tabstop=2
 
 " Display whitespace characters
 set list
-set listchars=trail:·,nbsp:⎵,tab:¦\ " This comment is required for the escaped space character, eol:⏎
+set listchars=trail:·,nbsp:⎵,tab:┊\ " This comment is required for the escaped space character, |¦┆┊, eol:⏎
+set fillchars=vert:\|,fold:-
 
 " Tab navigation
 nnoremap H gT
@@ -283,9 +354,10 @@ noremap <leader>8 8gt
 noremap <leader>9 9gt
 noremap <leader>0 :tablast<cr>
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Editing / Binds
-"
+" }}}
+" ==================================================
+" Editing / Binds {{{
+" ============================================================================
 " Map types:
 "  :nmap - Display normal mode maps
 "  :imap - Display insert mode maps
@@ -294,7 +366,6 @@ noremap <leader>0 :tablast<cr>
 "  :xmap - Display visual mode maps
 "  :cmap - Display command-line mode maps
 "  :omap - Display operator pending mode maps
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " With a map leader it's possible to do extra key combinations
 " e.g. <leader>w saves the current file
@@ -337,7 +408,7 @@ vnoremap <silent> * :<C-u>call VisualSelection('', '')<CR>/<C-R>=@/<CR><CR>
 map <F3> :!wc %<CR>
 
 " Spell-check set to F6:
-map <F6> :setlocal spell! spelllang=en_us,es<CR>
+map <F6> :setlocal spell! spelllang=en_us,no<CR>
 
 " Pressing ,ss will toggle and untoggle spell checking
 map <leader>ss :setlocal spell!<cr>
@@ -394,39 +465,13 @@ autocmd FileType bib inoremap ,a @article{<Enter>author<Space>=<Space>{<++>},<En
 autocmd FileType bib inoremap ,b @book{<Enter>author<Space>=<Space>{<++>},<Enter>year<Space>=<Space>{<++>},<Enter>title<Space>=<Space>{<++>},<Enter>publisher<Space>=<Space>{<++>},<Enter>}<Enter><++><Esc>6kA,<Esc>i
 autocmd FileType bib inoremap ,c @incollection{<Enter>author<Space>=<Space>{<++>},<Enter>title<Space>=<Space>{<++>},<Enter>booktitle<Space>=<Space>{<++>},<Enter>editor<Space>=<Space>{<++>},<Enter>year<Space>=<Space>{<++>},<Enter>publisher<Space>=<Space>{<++>},<Enter>}<Enter><++><Esc>8kA,<Esc>i
 
-" .py
-autocmd FileType python set expandtab
-"autocmd FileType python set textwidth=79
-autocmd FileType python set tabstop=4
-autocmd FileType python set softtabstop=4
-autocmd FileType python set shiftwidth=4
-autocmd FileType python set autoindent
+" }}}
+" ==================================================
+" Misc {{{
+" ============================================================================
+" Enable completions
+set complete-=i
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Colors
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Tab colors
-highlight TabLineFill ctermfg=LightGreen ctermbg=DarkGreen
-highlight TabLine ctermfg=Blue ctermbg=Yellow
-highlight TabLineSel ctermfg=Red ctermbg=Yellow
-
-" Enable termguicolors
-"if (has("termguicolors"))
-"  set termguicolors
-"endif
-
-" Colorscheme
-colorscheme space-vim-dark
-set background=dark
-
-hi Comment cterm=italic
-hi Normal     ctermbg=NONE guibg=NONE
-"hi LineNr     ctermbg=NONE guibg=NONE
-"hi SignColumn ctermbg=NONE guibg=NONE
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Misc
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Return to last edit position when opening files
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 
@@ -467,23 +512,29 @@ autocmd BufWritePre * %s/\s\+$//e
 " Disables automatic commenting on newline:
 autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Functions / Utilities
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" }}}
+" ==================================================
+" Functions / Utilities {{{
+" ============================================================================
 " Autoreload .vimrc
 augroup myvimrchooks
   au!
   autocmd bufwritepost .vimrc source ~/.vimrc
 augroup END
 
-" Switch colorscheme with Goyo
+" Switch colorscheme and enable limelight with Goyo
 function! s:goyo_enter()
   colorscheme sierra
+  Limelight
 endfunction
 
 function! s:goyo_leave()
   colorscheme space-vim-dark
+  Limelight!
 endfunction
+
+autocmd! User GoyoEnter nested call <SID>goyo_enter()
+autocmd! User GoyoLeave nested call <SID>goyo_leave()
 
 function! s:DiffWithSaved()
   let filetype=&ft
@@ -493,6 +544,3 @@ function! s:DiffWithSaved()
   exe "setlocal bt=nofile bh=wipe nobl noswf ro ft=" . filetype
 endfunction
 com! DiffSaved call s:DiffWithSaved()
-
-autocmd! User GoyoEnter nested call <SID>goyo_enter()
-autocmd! User GoyoLeave nested call <SID>goyo_leave()
