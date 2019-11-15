@@ -1,7 +1,4 @@
-" vim: set foldmethod=marker foldlevel=0 nomodeline:
-" ==================================================
 " runarsf's .vimrc {{{
-" ==================================================
 "  zo - Open a fold at cursor position.
 "  zO - Open all fold at cursor position.
 "  zc - Close a fold at cursor position.
@@ -25,53 +22,61 @@
 "  :%s/\<foo\>/bar/gc - Change whole words matching "foo" to "bar".
 "  :%s/foo/bar/gci - Change "foo" to "bar", case sensitive.
 " }}}
-" ==================================================
 " General {{{
-" ==================================================
-" Sets how many lines of history VIM has to remember
-set history=500
-
-" Set to auto read when a file is changed from the outside
-set autoread
-
-" Text wrapping
-"set wrap
-
-" Disable wrapping
-set textwidth=0
+set history=500                                               " Sets how many lines of history VIM has to remember
+set autoread                                                  " Set to auto read when a file is changed from the outside
+" set wrap                                                    " Enables wrapping
+set textwidth=0                                               " Disable wrapping
 set wrapmargin=0
-
-" :W sudo saves the file
-" (useful for handling the permission-denied error)
-command! W w !sudo tee % > /dev/null
-
-set foldlevelstart=99
-
-" Enables VI iMproved enhancements
-set nocompatible
-
-" GUI Font
-set guifont=Source\ Code\ Pro
-
-" Enable syntax highlighting
-syntax on
+set nowrap
+command! W w !sudo tee % > /dev/null " :W sudo saves the file
+"set foldlevelstart=99                                        " Start with fold level 99 at launch (all folds closed)
+set nocompatible                                              " Enables VI iMproved enhancements
+set guifont=Source\ Code\ Pro                                 " GUI Font
+syntax on                                                     " Enable syntax highlighting
 syntax enable
-
-" Set utf-8 as standard encoding and en_US as the standard language
-set encoding=utf-8 " en_US.utf8 (?)
-
-" Use Unix as the standard file type
-set ffs=unix,dos,mac
-
-" Turn backup off, since most stuff is in SVN, git et.c anyway...
-set nobackup
+set encoding=utf-8                                            " Set utf-8 as standard encoding
+set ffs=unix,dos,mac                                          " Use Unix as the standard file type
+set nobackup                                                  " Turn backup off, since most stuff is in git
 set nowb
 set noswapfile
-
+set complete-=i                                               " Enable completions
+set mouse=c                                                   " a, disable mouse support
+set guioptions-=r                                             " Disable scrollbars
+set guioptions-=R
+set guioptions-=l
+set guioptions-=L
+set noerrorbells                                              " No annoying sound on errors
+set novisualbell
+set t_vb=
+set tm=500
+set cursorline                                                " Highlight current line
+set number                                                    " Enable line numbers
+set ruler
+set relativenumber                                            " Set line numbers to relatives
+set so=7                                                      " Set lines to the cursor - when moving vertically
+"set numberwidth=8                                            " Left margin
+let $LANG='en'                                                " Avoid garbled characters in Chinese language in Windows
+set langmenu=en
+source $VIMRUNTIME/delmenu.vim
+source $VIMRUNTIME/menu.vim
+set wildmenu                                                  " Turn on the Wild menu for cycling through command options
+set wildmode=longest:full,full                                " longest:list,full
+set cmdheight=1                                               " Height of the command bar
+set hid                                                       " A buffer becomes hidden when it is abandoned
+set backspace=eol,start,indent                                " Configure backspace so it acts as it should act
+set whichwrap+=<,>,h,l
+set ignorecase                                                " Make search case insensitive
+set smartcase                                                 " When searching try to be smart about cases
+set hlsearch                                                  " Highlight search results
+set incsearch                                                 " Makes search act like search in modern browsers
+set lazyredraw                                                " Don't redraw while executing macros (good performance config)
+set magic                                                     " For regular expressions turn magic on
+set showmatch                                                 " Show matching brackets when text indicator is over them
+set mat=2                                                     " How many tenths of a second to blink when matching brackets
+set foldcolumn=0                                              " Left margin
 " }}}
-" ==================================================
 " Plugins {{{
-" ============================================================================
 if empty(glob('~/.vim/autoload/plug.vim'))
   silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
     \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
@@ -108,6 +113,12 @@ Plug 'junegunn/limelight.vim'
 Plug 'vimwiki/vimwiki'
 Plug 'tpope/vim-commentary'
 Plug 'FredKSchott/CoVim' " pip install twisted argparse service_identity
+Plug 'dbmrq/vim-redacted'
+Plug 'kshenoy/vim-origami'
+Plug 'vim-scripts/mru.vim'
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-fugitive'
+Plug 'terryma/vim-multiple-cursors'
 "Plug 'junegunn/vim-journal'
 "Plug 'dixonary/vimty'
 
@@ -175,6 +186,9 @@ let g:limelight_conceal_guifg = '#777777'
 "   Set it to -1 not to overrule hlsearch
 "let g:limelight_priority = 10
 
+" GitHub dashboard
+let g:github_dashboard = { 'username': 'runarsf' }
+
 " Airline
 let g:airline_theme='raven'
 let g:airline#extensions#ale#enabled = 1
@@ -185,11 +199,20 @@ let g:sneak#label = 1
 " Indent-guides
 let g:indent_guides_enable_on_vim_startup = 0
 
+" vim-emoji :dog: :cat: :rabbit:!
+command! -range EmojiReplace <line1>,<line2>s/:\([^:]\+\):/\=emoji#for(submatch(1), submatch(0))/g
+
 " Sierra
 "let g:sierra_Sunset = 1
 "let g:sierra_Twilight = 1
 let g:sierra_Midnight = 1
 "let g:sierra_Pitch = 1
+
+" easy-align
+" Start interactive EasyAlign in visual mode (e.g. vipga)
+xmap ga <Plug>(EasyAlign)
+" Start interactive EasyAlign for a motion/text object (e.g. gaip)
+nmap ga <Plug>(EasyAlign)
 
 " Cheat40
 let g:cheat40_use_default = 1
@@ -214,9 +237,7 @@ let g:NERDTreeWinPos = "left"
 map <C-o> :NERDTreeToggle<CR>
 
 " }}}
-" ==================================================
 " A E S T H E T I C S {{{
-" ============================================================================
 " Tab colors
 highlight TabLineFill ctermfg=LightGreen ctermbg=DarkGreen
 highlight TabLine ctermfg=Blue ctermbg=Yellow
@@ -237,70 +258,7 @@ hi Normal     ctermbg=NONE guibg=NONE
 "hi SignColumn ctermbg=NONE guibg=NONE
 
 " }}}
-" ==================================================
-" VIM user interface {{{
-" ============================================================================
-" Enable line numbers and set them to relative
-set number
-set ruler
-set relativenumber
-
-" Set lines to the cursor - when moving vertically
-set so=7
-
-" Avoid garbled characters in Chinese language windows OS
-let $LANG='en'
-set langmenu=en
-source $VIMRUNTIME/delmenu.vim
-source $VIMRUNTIME/menu.vim
-
-" Turn on the Wild menu
-set wildmenu
-
-" Markdown file interpreting
-let g:vimwiki_ext2syntax = {'.Rmd': 'markdown', '.rmd': 'markdown','.md': 'markdown', '.markdown': 'markdown', '.mdown': 'markdown'}
-
-" Height of the command bar
-set cmdheight=1
-
-" A buffer becomes hidden when it is abandoned
-set hid
-
-" Configure backspace so it acts as it should act
-set backspace=eol,start,indent
-set whichwrap+=<,>,h,l
-
-" Ignore case when searching
-set ignorecase
-
-" When searching try to be smart about cases
-set smartcase
-
-" Highlight search results
-set hlsearch
-
-" Makes search act like search in modern browsers
-set incsearch
-
-" Don't redraw while executing macros (good performance config)
-set lazyredraw
-
-" For regular expressions turn magic on
-set magic
-
-" Show matching brackets when text indicator is over them
-set showmatch
-
-" How many tenths of a second to blink when matching brackets
-set mat=2
-
-" Margin to the left
-set foldcolumn=0
-
-" }}}
-" ==================================================
 " Status line / Tabs {{{
-" ============================================================================
 " Always show the status line
 set laststatus=2
 
@@ -330,7 +288,7 @@ set tabstop=2
 " Display whitespace characters
 set list
 set listchars=trail:·,nbsp:⎵,tab:┊\ " This comment is required for the escaped space character, |¦┆┊, eol:⏎
-set fillchars=vert:\|,fold:-
+"set fillchars=vert:\|,fold:-
 
 " Tab navigation
 nnoremap H gT
@@ -355,9 +313,7 @@ noremap <leader>9 9gt
 noremap <leader>0 :tablast<cr>
 
 " }}}
-" ==================================================
 " Editing / Binds {{{
-" ============================================================================
 " Map types:
 "  :nmap - Display normal mode maps
 "  :imap - Display insert mode maps
@@ -466,37 +422,15 @@ autocmd FileType bib inoremap ,b @book{<Enter>author<Space>=<Space>{<++>},<Enter
 autocmd FileType bib inoremap ,c @incollection{<Enter>author<Space>=<Space>{<++>},<Enter>title<Space>=<Space>{<++>},<Enter>booktitle<Space>=<Space>{<++>},<Enter>editor<Space>=<Space>{<++>},<Enter>year<Space>=<Space>{<++>},<Enter>publisher<Space>=<Space>{<++>},<Enter>}<Enter><++><Esc>8kA,<Esc>i
 
 " }}}
-" ==================================================
 " Misc {{{
-" ============================================================================
-" Enable completions
-set complete-=i
+" Space space goto
+"inoremap <Space><Space> <Esc>/<++><Enter>"_c4l
 
 " Return to last edit position when opening files
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 
-" Disable scrollbars (real hackers don't use scrollbars for navigation!)
-set guioptions-=r
-set guioptions-=R
-set guioptions-=l
-set guioptions-=L
-
-" Enable mouse support
-set mouse=a
-
-" Turn persistent undo on
-" Undo even when you close a buffer/VIM
-try
-  set undodir=~/.vim_runtime/temp_dirs/undodir
-  set undofile
-catch
-endtry
-
-" No annoying sound on errors
-set noerrorbells
-set novisualbell
-set t_vb=
-set tm=500
+" #!! shebang
+inoreabbrev <expr> #!! "#!/usr/bin/env" . (empty(&filetype) ? '' : ' '.&filetype)
 
 " Set extra options when running in GUI mode
 if has("gui_running")
@@ -506,16 +440,29 @@ if has("gui_running")
   set guitablabel=%M\ %t
 endif
 
+" Markdown file interpreting
+let g:vimwiki_ext2syntax = {'.Rmd': 'markdown', '.rmd': 'markdown','.md': 'markdown', '.markdown': 'markdown', '.mdown': 'markdown'}
+
+" Turn persistent undo on
+" Undo even when you close a buffer/VIM
+try
+  set undodir=~/.vim_runtime/temp_dirs/undodir
+  set undofile
+catch
+endtry
+
 " Automatically deletes all trailing whitespace on save
 autocmd BufWritePre * %s/\s\+$//e
+
+" Save and restore code folding
+autocmd BufWinLeave *.* mkview
+autocmd BufWinEnter *.* silent loadview
 
 " Disables automatic commenting on newline:
 autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 
 " }}}
-" ==================================================
 " Functions / Utilities {{{
-" ============================================================================
 " Autoreload .vimrc
 augroup myvimrchooks
   au!
@@ -536,6 +483,20 @@ endfunction
 autocmd! User GoyoEnter nested call <SID>goyo_enter()
 autocmd! User GoyoLeave nested call <SID>goyo_leave()
 
+" Colour scheme selector <F8>
+function! s:rotate_colors()
+  if !exists('s:colors')
+    let s:colors = s:colors()
+  endif
+  let name = remove(s:colors, 0)
+  call add(s:colors, name)
+  execute 'colorscheme' name
+  redraw
+  echo name
+endfunction
+nnoremap <silent> <F8> :call <SID>rotate_colors()<cr>
+
+" :DiffSaved to show file modifications in diff format
 function! s:DiffWithSaved()
   let filetype=&ft
   diffthis
@@ -544,3 +505,51 @@ function! s:DiffWithSaved()
   exe "setlocal bt=nofile bh=wipe nobl noswf ro ft=" . filetype
 endfunction
 com! DiffSaved call s:DiffWithSaved()
+
+" :root to change directory to git repo root
+function! s:root()
+  let root = systemlist('git rev-parse --show-toplevel')[0]
+  if v:shell_error
+    echo 'Not in git repo'
+  else
+    execute 'lcd' root
+    echo 'Changed directory to: '.root
+  endif
+endfunction
+command! Root call s:root()
+
+" Fancy folding
+" «»¶§ƒ×λ⌈⌋⟦⟧⦃⦄⨾ https://www.compart.com/en/unicode/mirrored
+function! FoldText()
+  set fillchars=fold:\ "
+  let line = ' ' . substitute(getline(v:foldstart), '^\s*"\?\s*\|\s*"\?\s*{{' . '{\d*\s*', '', 'g') . ' '
+  let lines_count = v:foldend - v:foldstart + 1
+  let lines_count_text = '⦃ ' . printf("%10s", lines_count . ' lines') . ' ⦄'
+  let foldchar = matchstr(&fillchars, 'fold:\zs.')
+  let foldtextstart = strpart('⨾' . repeat(foldchar, v:foldlevel-1) . line, 0, (winwidth(0)*2)/3)
+  "let foldtextstart = strpart('+' . repeat(foldchar, v:foldlevel*2) . line, 0, (winwidth(0)*2)/3)
+  let foldtextend = lines_count_text . repeat(foldchar, 8)
+  let foldtextlength = strlen(substitute(foldtextstart . foldtextend, '.', 'x', 'g')) + &foldcolumn
+  return foldtextstart . repeat(foldchar, winwidth(0)-foldtextlength) . foldtextend
+endfunction
+set foldtext=FoldText()
+
+"function! FoldText()
+"    let line = getline(v:foldstart)
+
+"    let nucolwidth = &fdc + &number * &numberwidth
+"    let windowwidth = winwidth(0) - nucolwidth - 3
+"    let foldedlinecount = v:foldend - v:foldstart
+
+"    " expand tabs into spaces
+"    "let onetab = strpart('          ', 0, &tabstop)
+"    "let line = substitute(line, '\t', onetab, 'g')
+"    let fillcharcount = windowwidth - strdisplaywidth(line) - len(foldedlinecount)
+
+"    let line = strpart(line, 0, windowwidth - 2 -len(foldedlinecount))
+"    let fillcharcount = windowwidth - len(line) - len(foldedlinecount)
+"    return line . '…' . repeat(" ",fillcharcount) . foldedlinecount . '…' . ' '
+"endfunction
+"set foldtext=FoldText()
+
+" vim: set foldmethod=marker foldlevel=0 nomodeline:
