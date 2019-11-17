@@ -30,7 +30,7 @@ set textwidth=0                                               " Disable wrapping
 set wrapmargin=0
 set nowrap
 command! W w !sudo tee % > /dev/null " :W sudo saves the file
-"set foldlevelstart=99                                        " Start with fold level 99 at launch (all folds closed)
+set foldlevelstart=99                                        " Start with fold level 99 at launch (all folds closed)
 set nocompatible                                              " Enables VI iMproved enhancements
 set guifont=Source\ Code\ Pro                                 " GUI Font
 syntax on                                                     " Enable syntax highlighting
@@ -38,9 +38,9 @@ syntax enable
 set encoding=utf-8                                            " Set utf-8 as standard encoding
 set ffs=unix,dos,mac                                          " Use Unix as the standard file type
 set nobackup                                                  " Turn backup off, since most stuff is in git
-set nowb
+set nowritebackup
 set noswapfile
-set complete-=i                                               " Enable completions
+"set complete-=i                                               " Enable completions
 set mouse=c                                                   " a, disable mouse support
 set guioptions-=r                                             " Disable scrollbars
 set guioptions-=R
@@ -52,8 +52,8 @@ set t_vb=
 set tm=500
 set cursorline                                                " Highlight current line
 set number                                                    " Enable line numbers
-set ruler
 set relativenumber                                            " Set line numbers to relatives
+set ruler
 set so=7                                                      " Set lines to the cursor - when moving vertically
 "set numberwidth=8                                            " Left margin
 let $LANG='en'                                                " Avoid garbled characters in Chinese language in Windows
@@ -62,8 +62,8 @@ source $VIMRUNTIME/delmenu.vim
 source $VIMRUNTIME/menu.vim
 set wildmenu                                                  " Turn on the Wild menu for cycling through command options
 set wildmode=longest:full,full                                " longest:list,full
-set cmdheight=1                                               " Height of the command bar
-set hid                                                       " A buffer becomes hidden when it is abandoned
+set cmdheight=2                                               " Height of the command bar
+set hidden                                                    " A buffer becomes hidden when it is abandoned, recommended for coc
 set backspace=eol,start,indent                                " Configure backspace so it acts as it should act
 set whichwrap+=<,>,h,l
 set ignorecase                                                " Make search case insensitive
@@ -75,6 +75,9 @@ set magic                                                     " For regular expr
 set showmatch                                                 " Show matching brackets when text indicator is over them
 set mat=2                                                     " How many tenths of a second to blink when matching brackets
 set foldcolumn=0                                              " Left margin
+set updatetime=300                                            " Default 4000
+set shortmess+=c                                              " don't give |ins-completion-menu| messages.
+set signcolumn=yes                                            " always show signcolumns
 " }}}
 " Plugins {{{
 if empty(glob('~/.vim/autoload/plug.vim'))
@@ -87,12 +90,12 @@ silent! if plug#begin('~/.vim/plugged')
 " General
 Plug 'tpope/vim-eunuch'
 Plug 'terryma/vim-multiple-cursors'
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
+"Plug 'vim-airline/vim-airline'
+"Plug 'vim-airline/vim-airline-themes'
 Plug 'scrooloose/nerdtree'
 Plug 'airblade/vim-gitgutter'
 Plug 'junegunn/goyo.vim'
-Plug 'ervandew/supertab'
+"Plug 'ervandew/supertab'
 Plug 'gbigwood/Clippo'
 Plug 'vim-scripts/IndentAnything'
 Plug 'justinmk/vim-sneak'
@@ -119,6 +122,9 @@ Plug 'vim-scripts/mru.vim'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 Plug 'terryma/vim-multiple-cursors'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'anned20/vimsence'
+"Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
 "Plug 'junegunn/vim-journal'
 "Plug 'dixonary/vimty'
 
@@ -133,7 +139,6 @@ Plug 'dense-analysis/ale'
 Plug 'mboughaba/i3config.vim'
 Plug 'Glench/Vim-Jinja2-Syntax'
 Plug 'scrooloose/syntastic'
-"Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
 
 " Colorschemes
 Plug 'tomasr/molokai'
@@ -145,24 +150,13 @@ Plug 'junegunn/seoul256.vim'
 Plug 'sjl/badwolf'
 Plug 'xero/sourcerer.vim'
 Plug 'AlessandroYorba/Sierra'
-Plug 'altercation/vim-colors-solarized'
-Plug 'morhetz/gruvbox'
 Plug 'mhartington/oceanic-next'
 Plug 'rakr/vim-one'
 Plug 'liuchengxu/space-vim-dark'
 Plug 'jacoborus/tender.vim'
+"Plug 'morhetz/gruvbox'
 call plug#end()
 endif
-
-" function! BuildYCM(info)
-"   if a:info.status == 'installed' || a:info.force
-"     !./install.py --clang-completer --gocode-completer
-"   endif
-" endfunction
-" Plug 'Valloric/YouCompleteMe', { 'for': ['c', 'cpp'], 'do': function('BuildYCM') }
-
-" autocmd vimrc FileType c,cpp,go nnoremap <buffer> ]d :YcmCompleter GoTo<CR>
-" autocmd vimrc FileType c,cpp    nnoremap <buffer> K  :YcmCompleter GetType<CR>
 
 filetype plugin indent on
 
@@ -186,12 +180,39 @@ let g:limelight_conceal_guifg = '#777777'
 "   Set it to -1 not to overrule hlsearch
 "let g:limelight_priority = 10
 
+" coc
+" Use `[g` and `]g` to navigate diagnostics
+nmap <silent> [g <Plug>(coc-diagnostic-prev)
+nmap <silent> ]g <Plug>(coc-diagnostic-next)
+" Remap keys for gotos
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+" Using CocList
+" Show all diagnostics
+nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
+" Manage extensions
+nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
+" Show commands
+nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
+" Find symbol of current document
+nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
+" Search workspace symbols
+nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
+" Do default action for next item.
+nnoremap <silent> <space>j  :<C-u>CocNext<CR>
+" Do default action for previous item.
+nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
+" Resume latest coc list
+nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
+
 " GitHub dashboard
 let g:github_dashboard = { 'username': 'runarsf' }
 
 " Airline
-let g:airline_theme='raven'
-let g:airline#extensions#ale#enabled = 1
+"let g:airline_theme='raven'
+"let g:airline#extensions#ale#enabled = 1
 
 " Vim-sneak
 let g:sneak#label = 1
@@ -220,7 +241,7 @@ nmap <F1> :Cheat40<CR>
 imap <F1> :Cheat40<CR>
 
 " Gruvbox
-let g:gruvbox_contrast_dark="hard"
+"let g:gruvbox_contrast_dark="hard"
 
 " NERDTree
 " Open a NERDTree automatically when vim starts up if no files were specified
@@ -261,9 +282,18 @@ hi Normal     ctermbg=NONE guibg=NONE
 " Status line / Tabs {{{
 " Always show the status line
 set laststatus=2
+function! HasPaste()
+  if &paste
+    return 'PASTE  '
+  else
+    return ''
+  endif
+endfunction
 
 " Format the status line
-"set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ %l\ \ Column:\ %c
+"set statusline=%F%m%r%h%w[%L][%{&ff}]%y[%p%%][%04l,%04v]
+"set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ CWD:\ %r%{getcwd()}%h\ \ Line:\ %l\ \ Column:\ %c
+"set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')} " Add status line support, for integration with other plugin, checkout `:h coc-status`
 
 " Status line color
 if !has('gui_running')
@@ -311,7 +341,6 @@ noremap <leader>7 7gt
 noremap <leader>8 8gt
 noremap <leader>9 9gt
 noremap <leader>0 :tablast<cr>
-
 " }}}
 " Editing / Binds {{{
 " Map types:
@@ -326,6 +355,37 @@ noremap <leader>0 :tablast<cr>
 " With a map leader it's possible to do extra key combinations
 " e.g. <leader>w saves the current file
 let mapleader = ","
+
+" Used by coc
+" Use tab for trigger completion with characters ahead and navigate.
+" Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+inoremap <silent><expr> <c-space> coc#refresh() " Use <c-space> to trigger completion.
+
+" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current position.
+" Coc only does snippet and additional edit on confirm.
+inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+" Or use `complete_info` if your vim support it, like:
+" inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
+
+" Use K to show documentation in preview window
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  else
+    call CocAction('doHover')
+  endif
+endfunction
 
 " Run python file
 nnoremap <F5> :echo system('python3 "' . expand('%') . '"')<cr>
@@ -353,6 +413,15 @@ map <C-j> <C-w>j
 map <C-k> <C-w>k
 map <C-l> <C-w>l
 
+" Completions
+"inoremap <silent> ,f <C-x><C-f>
+"inoremap <silent> ,i <C-x><C-i>
+"inoremap <silent> ,l <C-x><C-l>
+"inoremap <silent> ,n <C-x><C-n>
+"inoremap <silent> ,o <C-x><C-o>
+"inoremap <silent> ,t <C-x><C-]>
+"inoremap <silent> ,u <C-x><C-u>
+
 " Disable highlight when <leader><cr> is pressed
 map <silent> <leader><cr> :noh<cr>
 
@@ -375,52 +444,6 @@ noremap <Leader>m mmHmt:%s/<C-V><cr>//ge<cr>'tzt'm
 " Copy selected text to system clipboard (requires gvim installed):
 vnoremap <C-c> "*Y :let @+=@*<CR>
 map <C-p> "+P
-
-" LaTeX
-" Word count:
-autocmd FileType tex map <leader>w :w !detex \| wc -w<CR>
-" Code snippets
-autocmd FileType tex inoremap ,fr \begin{frame}<Enter>\frametitle{}<Enter><Enter><++><Enter><Enter>\end{frame}<Enter><Enter><++><Esc>6kf}i
-autocmd FileType tex inoremap ,fi \begin{fitch}<Enter><Enter>\end{fitch}<Enter><Enter><++><Esc>3kA
-autocmd FileType tex inoremap ,exe \begin{exe}<Enter>\ex<Space><Enter>\end{exe}<Enter><Enter><++><Esc>3kA
-autocmd FileType tex inoremap ,em \emph{}<++><Esc>T{i
-autocmd FileType tex inoremap ,bf \textbf{}<++><Esc>T{i
-autocmd FileType tex vnoremap , <ESC>`<i\{<ESC>`>2la}<ESC>?\\{<Enter>a
-autocmd FileType tex inoremap ,it \textit{}<++><Esc>T{i
-autocmd FileType tex inoremap ,ct \textcite{}<++><Esc>T{i
-autocmd FileType tex inoremap ,cp \parencite{}<++><Esc>T{i
-autocmd FileType tex inoremap ,glos {\gll<Space><++><Space>\\<Enter><++><Space>\\<Enter>\trans{``<++>''}}<Esc>2k2bcw
-autocmd FileType tex inoremap ,x \begin{xlist}<Enter>\ex<Space><Enter>\end{xlist}<Esc>kA<Space>
-autocmd FileType tex inoremap ,ol \begin{enumerate}<Enter><Enter>\end{enumerate}<Enter><Enter><++><Esc>3kA\item<Space>
-autocmd FileType tex inoremap ,ul \begin{itemize}<Enter><Enter>\end{itemize}<Enter><Enter><++><Esc>3kA\item<Space>
-autocmd FileType tex inoremap ,li <Enter>\item<Space>
-autocmd FileType tex inoremap ,ref \ref{}<Space><++><Esc>T{i
-autocmd FileType tex inoremap ,tab \begin{tabular}<Enter><++><Enter>\end{tabular}<Enter><Enter><++><Esc>4kA{}<Esc>i
-autocmd FileType tex inoremap ,ot \begin{tableau}<Enter>\inp{<++>}<Tab>\const{<++>}<Tab><++><Enter><++><Enter>\end{tableau}<Enter><Enter><++><Esc>5kA{}<Esc>i
-autocmd FileType tex inoremap ,can \cand{}<Tab><++><Esc>T{i
-autocmd FileType tex inoremap ,con \const{}<Tab><++><Esc>T{i
-autocmd FileType tex inoremap ,v \vio{}<Tab><++><Esc>T{i
-autocmd FileType tex inoremap ,a \href{}{<++>}<Space><++><Esc>2T{i
-autocmd FileType tex inoremap ,sc \textsc{}<Space><++><Esc>T{i
-autocmd FileType tex inoremap ,chap \chapter{}<Enter><Enter><++><Esc>2kf}i
-autocmd FileType tex inoremap ,sec \section{}<Enter><Enter><++><Esc>2kf}i
-autocmd FileType tex inoremap ,ssec \subsection{}<Enter><Enter><++><Esc>2kf}i
-autocmd FileType tex inoremap ,sssec \subsubsection{}<Enter><Enter><++><Esc>2kf}i
-autocmd FileType tex inoremap ,st <Esc>F{i*<Esc>f}i
-autocmd FileType tex inoremap ,beg \begin{DELRN}<Enter><++><Enter>\end{DELRN}<Enter><Enter><++><Esc>4k0fR:MultipleCursorsFind<Space>DELRN<Enter>c
-autocmd FileType tex inoremap ,up <Esc>/usepackage<Enter>o\usepackage{}<Esc>i
-autocmd FileType tex nnoremap ,up /usepackage<Enter>o\usepackage{}<Esc>i
-autocmd FileType tex inoremap ,tt \texttt{}<Space><++><Esc>T{i
-autocmd FileType tex inoremap ,bt {\blindtext}
-autocmd FileType tex inoremap ,nu $\varnothing$
-autocmd FileType tex inoremap ,col \begin{columns}[T]<Enter>\begin{column}{.5\textwidth}<Enter><Enter>\end{column}<Enter>\begin{column}{.5\textwidth}<Enter><++><Enter>\end{column}<Enter>\end{columns}<Esc>5kA
-autocmd FileType tex inoremap ,rn (\ref{})<++><Esc>F}i
-
-" .bib
-autocmd FileType bib inoremap ,a @article{<Enter>author<Space>=<Space>{<++>},<Enter>year<Space>=<Space>{<++>},<Enter>title<Space>=<Space>{<++>},<Enter>journal<Space>=<Space>{<++>},<Enter>volume<Space>=<Space>{<++>},<Enter>pages<Space>=<Space>{<++>},<Enter>}<Enter><++><Esc>8kA,<Esc>i
-autocmd FileType bib inoremap ,b @book{<Enter>author<Space>=<Space>{<++>},<Enter>year<Space>=<Space>{<++>},<Enter>title<Space>=<Space>{<++>},<Enter>publisher<Space>=<Space>{<++>},<Enter>}<Enter><++><Esc>6kA,<Esc>i
-autocmd FileType bib inoremap ,c @incollection{<Enter>author<Space>=<Space>{<++>},<Enter>title<Space>=<Space>{<++>},<Enter>booktitle<Space>=<Space>{<++>},<Enter>editor<Space>=<Space>{<++>},<Enter>year<Space>=<Space>{<++>},<Enter>publisher<Space>=<Space>{<++>},<Enter>}<Enter><++><Esc>8kA,<Esc>i
-
 " }}}
 " Misc {{{
 " Space space goto
@@ -534,22 +557,15 @@ function! FoldText()
 endfunction
 set foldtext=FoldText()
 
-"function! FoldText()
-"    let line = getline(v:foldstart)
-
-"    let nucolwidth = &fdc + &number * &numberwidth
-"    let windowwidth = winwidth(0) - nucolwidth - 3
-"    let foldedlinecount = v:foldend - v:foldstart
-
-"    " expand tabs into spaces
-"    "let onetab = strpart('          ', 0, &tabstop)
-"    "let line = substitute(line, '\t', onetab, 'g')
-"    let fillcharcount = windowwidth - strdisplaywidth(line) - len(foldedlinecount)
-
-"    let line = strpart(line, 0, windowwidth - 2 -len(foldedlinecount))
-"    let fillcharcount = windowwidth - len(line) - len(foldedlinecount)
-"    return line . '…' . repeat(" ",fillcharcount) . foldedlinecount . '…' . ' '
+" Better whitespace
+"function! StripTrailingWhitespace()
+"  if !&binary && &filetype != 'diff'
+"    normal mz
+"    normal Hmy
+"    %s/\s\+$//e
+"    normal 'yz<CR>
+"    normal `z
+"  endif
 "endfunction
-"set foldtext=FoldText()
 
 " vim: set foldmethod=marker foldlevel=0 nomodeline:
