@@ -77,7 +77,7 @@ set mat=2                                                     " How many tenths 
 set foldcolumn=0                                              " Left margin
 set updatetime=300                                            " Default 4000
 set shortmess+=c                                              " don't give |ins-completion-menu| messages.
-set signcolumn=yes                                            " always show signcolumns
+"set signcolumn=yes                                            " always show signcolumns
 " }}}
 " Plugins {{{
 if empty(glob('~/.vim/autoload/plug.vim'))
