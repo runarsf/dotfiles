@@ -54,11 +54,13 @@ antibody bundle <<-EOBUNDLES
 EOBUNDLES
 
 if test -n "$SSH_CONNECTION"; then
-  export EDITOR='vim'
+  export EDITOR=/usr/bin/nvim
 else
-  export EDITOR='vim'
+  export EDITOR=/usr/bin/nvim
 fi
+export VISUAL="${EDITOR}"
 
+alias vim='nvim'
 alias ls='ls -lAF --color'
 alias grep='grep --color'
 alias c='xclip -selection clipboard'
@@ -68,6 +70,11 @@ alias reload='source $HOME/.zshrc'
 alias zshrc='$EDITOR $HOME/.zshrc'
 alias back='cd "$OLDPWD"'
 eval "$(thefuck --alias heck)"
+
+alias i3cfg='${EDITOR} ${HOME}/.config/i3/config'
+alias polycfg='${EDITOR} ${HOME}/.config/polybar/config'
+alias zshrc='${EDITOR} ${HOME}/.zshrc'
+alias vimrc='${EDITOR} ${HOME}/.vimrc'
 
 rmln() {
   test -L "$1" \
@@ -137,7 +144,6 @@ export NVM_DIR="$HOME/.nvm"
 export FZF_BASE="$HOME/.fzf"
 export LANG=en_US.UTF-8
 test -f "$HOME/.zsh_aliases" && source $HOME/.zsh_aliases
-test -f "$HOME/.profile" && source $HOME/.profile
 test -s "$NVM_DIR/nvm.sh" && source "$NVM_DIR/nvm.sh"
 test -s "$NVM_DIR/bash_completion" && source "$NVM_DIR/bash_completion"
 test -f "$HOME/.p10k.zsh" && source "$HOME/.p10k.zsh"

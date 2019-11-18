@@ -1,4 +1,5 @@
 " runarsf's .vimrc {{{
+" =========================
 "  zo - Open a fold at cursor position.
 "  zO - Open all fold at cursor position.
 "  zc - Close a fold at cursor position.
@@ -21,8 +22,9 @@
 "  :%s/foo/bar/gc - Change "foo" to "bar", but ask for confirmation.
 "  :%s/\<foo\>/bar/gc - Change whole words matching "foo" to "bar".
 "  :%s/foo/bar/gci - Change "foo" to "bar", case sensitive.
-" }}}
+" }}}======================
 " General {{{
+" =========================
 set history=500                                               " Sets how many lines of history VIM has to remember
 set autoread                                                  " Set to auto read when a file is changed from the outside
 " set wrap                                                    " Enables wrapping
@@ -30,7 +32,7 @@ set textwidth=0                                               " Disable wrapping
 set wrapmargin=0
 set nowrap
 command! W w !sudo tee % > /dev/null " :W sudo saves the file
-set foldlevelstart=99                                         " Start with fold level 99 at launch (all folds closed)
+"set foldlevelstart=99                                        " Start with fold level 99 at launch (all folds closed)
 set nocompatible                                              " Enables VI iMproved enhancements
 set guifont=Source\ Code\ Pro                                 " GUI Font
 syntax on                                                     " Enable syntax highlighting
@@ -51,8 +53,8 @@ set novisualbell
 set t_vb=
 set tm=500
 set cursorline                                                " Highlight current line
-set number                                                    " Enable line numbers
-set relativenumber                                            " Set line numbers to relatives
+"set number                                                   " Enable line numbers
+set relativenumber                                            " Set line numbers to relative
 set ruler
 set so=7                                                      " Set lines to the cursor - when moving vertically
 "set numberwidth=8                                            " Left margin
@@ -78,8 +80,9 @@ set foldcolumn=0                                              " Left margin
 set updatetime=300                                            " Default 4000
 set shortmess+=c                                              " don't give |ins-completion-menu| messages.
 "set signcolumn=yes                                            " always show signcolumns
-" }}}
+" }}}======================
 " Plugins {{{
+" =========================
 if empty(glob('~/.vim/autoload/plug.vim'))
   silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
     \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
@@ -89,7 +92,6 @@ endif
 silent! if plug#begin('~/.vim/plugged')
 " General
 Plug 'tpope/vim-eunuch'
-Plug 'terryma/vim-multiple-cursors'
 Plug 'scrooloose/nerdtree'
 Plug 'airblade/vim-gitgutter'
 Plug 'junegunn/goyo.vim'
@@ -118,9 +120,15 @@ Plug 'vim-scripts/mru.vim'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 Plug 'terryma/vim-multiple-cursors'
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'anned20/vimsence'
 Plug 'mechatroner/rainbow_csv'
+if has('nvim')
+  Plug 'aurieh/discord.nvim', { 'do': ':UpdateRemotePlugins'}
+endif
+if v:version >= 703
+  Plug 'neoclide/coc.nvim', {'branch': 'release'}
+endif
+"Plug 'terryma/vim-multiple-cursors'
 "Plug 'vim-airline/vim-airline'
 "Plug 'vim-airline/vim-airline-themes'
 "Plug 'ervandew/supertab'
@@ -258,9 +266,9 @@ autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in
 let g:NERDTreeWinPos = "left"
 " Toggle NERDTree
 map <C-o> :NERDTreeToggle<CR>
-
-" }}}
+" }}}======================
 " A E S T H E T I C S {{{
+" =========================
 " Tab colors
 highlight TabLineFill ctermfg=LightGreen ctermbg=DarkGreen
 highlight TabLine ctermfg=Blue ctermbg=Yellow
@@ -280,22 +288,54 @@ hi Normal     ctermbg=NONE guibg=NONE
 "hi LineNr     ctermbg=NONE guibg=NONE
 "hi SignColumn ctermbg=NONE guibg=NONE
 
-" }}}
+if has('nvim')
+  " https://github.com/neovim/neovim/issues/2897#issuecomment-115464516
+  let g:terminal_color_0 = '#4e4e4e'
+  let g:terminal_color_1 = '#d68787'
+  let g:terminal_color_2 = '#5f865f'
+  let g:terminal_color_3 = '#d8af5f'
+  let g:terminal_color_4 = '#85add4'
+  let g:terminal_color_5 = '#d7afaf'
+  let g:terminal_color_6 = '#87afaf'
+  let g:terminal_color_7 = '#d0d0d0'
+  let g:terminal_color_8 = '#626262'
+  let g:terminal_color_9 = '#d75f87'
+  let g:terminal_color_10 = '#87af87'
+  let g:terminal_color_11 = '#ffd787'
+  let g:terminal_color_12 = '#add4fb'
+  let g:terminal_color_13 = '#ffafaf'
+  let g:terminal_color_14 = '#87d7d7'
+  let g:terminal_color_15 = '#e4e4e4'
+
+  autocmd BufReadPost *
+    \ if line("'\"") >= 1 && line("'\"") <= line("$") |
+    \   exe "normal! g`\"" |
+    \ endif
+endif
+" }}}======================
 " Status line / Tabs {{{
+" =========================
 " Always show the status line
 set laststatus=2
-function! HasPaste()
-  if &paste
-    return 'PASTE  '
-  else
-    return ''
-  endif
-endfunction
 
 " Format the status line
 "set statusline=%F%m%r%h%w[%L][%{&ff}]%y[%p%%][%04l,%04v]
 "set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ CWD:\ %r%{getcwd()}%h\ \ Line:\ %l\ \ Column:\ %c
 "set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')} " Add status line support, for integration with other plugin, checkout `:h coc-status`
+
+function! s:statusline_expr()
+  let pst = "%{&paste ? '[P] ' : ''}"
+  let mod = "%{&modified ? '[+] ' : !&modifiable ? '[x] ' : ''}"
+  let ro  = "%{&readonly ? '[RO] ' : ''}"
+  let ft  = "%{len(&filetype) ? '['.&filetype.'] ' : ''}"
+  let fug = "%{exists('g:loaded_fugitive') ? fugitive#statusline() : ''}"
+  let sep = ' %= '
+  let pos = ' %-12(%l : %c%V%) '
+  let pct = ' %P'
+
+  return '[%n] %F %<'.pst.mod.ro.ft.fug.sep.pos.'%*'.pct
+endfunction
+let &statusline = s:statusline_expr()
 
 " Status line color
 if !has('gui_running')
@@ -343,8 +383,9 @@ noremap <leader>7 7gt
 noremap <leader>8 8gt
 noremap <leader>9 9gt
 noremap <leader>0 :tablast<cr>
-" }}}
+" }}}======================
 " Editing / Binds {{{
+" =========================
 " Map types:
 "  :nmap - Display normal mode maps
 "  :imap - Display insert mode maps
@@ -356,7 +397,17 @@ noremap <leader>0 :tablast<cr>
 
 " With a map leader it's possible to do extra key combinations
 " e.g. <leader>w saves the current file
-let mapleader = ","
+let mapleader = ','
+let maplocalleader = ','
+
+" Disable CTRL-A on tmux or on screen
+if $TERM =~ 'screen'
+  nnoremap <C-a> <nop>
+  nnoremap <Leader><C-a> <C-a>
+endif
+
+" qq to record, Q to replay
+nnoremap Q @q
 
 " Used by coc
 " Use tab for trigger completion with characters ahead and navigate.
@@ -391,6 +442,10 @@ endfunction
 
 " Run python file
 nnoremap <F5> :echo system('python3 "' . expand('%') . '"')<cr>
+
+" Toggle line numbers
+nmap <leader>n :set relativenumber!<cr>
+nmap <leader>N :set number!<cr>
 
 " Fast saving
 nmap <leader>w :w!<cr>
@@ -446,8 +501,9 @@ noremap <Leader>m mmHmt:%s/<C-V><cr>//ge<cr>'tzt'm
 " Copy selected text to system clipboard (requires gvim installed):
 vnoremap <C-c> "*Y :let @+=@*<CR>
 map <C-p> "+P
-" }}}
+" }}}======================
 " Misc {{{
+" =========================
 " Space space goto
 "inoremap <Space><Space> <Esc>/<++><Enter>"_c4l
 
@@ -481,13 +537,13 @@ autocmd BufWritePre * %s/\s\+$//e
 
 " Save and restore code folding
 autocmd BufWinLeave *.* mkview
-autocmd BufWinEnter *.* silent loadview
+autocmd BufWinEnter *.* silent! loadview
 
 " Disables automatic commenting on newline:
 autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
-
-" }}}
+" }}}======================
 " Functions / Utilities {{{
+" =========================
 " Autoreload .vimrc
 augroup myvimrchooks
   au!
@@ -559,16 +615,5 @@ function! FoldText()
 endfunction
 set foldtext=FoldText()
 
-" Better whitespace
-"function! StripTrailingWhitespace()
-"  if !&binary && &filetype != 'diff'
-"    normal mz
-"    normal Hmy
-"    %s/\s\+$//e
-"    normal 'yz<CR>
-"    normal `z
-"  endif
-"endfunction
-
-" foldmethod=marker,syntax,indent
+" foldmethod=marker, syntax, indent
 " vim: set foldmethod=marker foldlevel=0 nomodeline:
