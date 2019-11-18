@@ -30,7 +30,7 @@ set textwidth=0                                               " Disable wrapping
 set wrapmargin=0
 set nowrap
 command! W w !sudo tee % > /dev/null " :W sudo saves the file
-set foldlevelstart=99                                        " Start with fold level 99 at launch (all folds closed)
+set foldlevelstart=99                                         " Start with fold level 99 at launch (all folds closed)
 set nocompatible                                              " Enables VI iMproved enhancements
 set guifont=Source\ Code\ Pro                                 " GUI Font
 syntax on                                                     " Enable syntax highlighting
@@ -90,12 +90,9 @@ silent! if plug#begin('~/.vim/plugged')
 " General
 Plug 'tpope/vim-eunuch'
 Plug 'terryma/vim-multiple-cursors'
-"Plug 'vim-airline/vim-airline'
-"Plug 'vim-airline/vim-airline-themes'
 Plug 'scrooloose/nerdtree'
 Plug 'airblade/vim-gitgutter'
 Plug 'junegunn/goyo.vim'
-"Plug 'ervandew/supertab'
 Plug 'gbigwood/Clippo'
 Plug 'vim-scripts/IndentAnything'
 Plug 'justinmk/vim-sneak'
@@ -115,7 +112,6 @@ Plug 'junegunn/vim-peekaboo'
 Plug 'junegunn/limelight.vim'
 Plug 'vimwiki/vimwiki'
 Plug 'tpope/vim-commentary'
-Plug 'FredKSchott/CoVim' " pip install twisted argparse service_identity
 Plug 'dbmrq/vim-redacted'
 Plug 'kshenoy/vim-origami'
 Plug 'vim-scripts/mru.vim'
@@ -124,11 +120,17 @@ Plug 'tpope/vim-fugitive'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'anned20/vimsence'
+Plug 'mechatroner/rainbow_csv'
+"Plug 'vim-airline/vim-airline'
+"Plug 'vim-airline/vim-airline-themes'
+"Plug 'ervandew/supertab'
+"Plug 'FredKSchott/CoVim' " pip install twisted argparse service_identity
 "Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
 "Plug 'junegunn/vim-journal'
 "Plug 'dixonary/vimty'
 
 " Synax highlighting
+Plug 'ObserverOfTime/coloresque.vim'
 Plug 'chr4/nginx.vim'
 Plug 'storyn26383/vim-vue'
 Plug 'octol/vim-cpp-enhanced-highlight'
@@ -568,4 +570,5 @@ set foldtext=FoldText()
 "  endif
 "endfunction
 
+" foldmethod=marker,syntax,indent
 " vim: set foldmethod=marker foldlevel=0 nomodeline:
