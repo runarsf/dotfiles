@@ -26,7 +26,8 @@
 " }}}======================
 " Plugins {{{
 " =========================
-if empty(glob('~/.vim/autoload/plug.vim'))
+
+if empty(glob('~/.vim/autoload/plug.vim')) && has('unix')
   silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
     \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
   autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
@@ -35,7 +36,6 @@ endif
 silent! if plug#begin('~/.vim/plugged')
 " General
 Plug 'junegunn/vim-peekaboo'
-Plug 'psliwka/vim-smoothie'
 Plug 'tpope/vim-eunuch'
 Plug 'scrooloose/nerdtree'
 Plug 'Xuyuanp/nerdtree-git-plugin'
@@ -52,6 +52,12 @@ Plug 'Raimondi/delimitMate'
 Plug 'nathanaelkane/vim-indent-guides'
 Plug 'junegunn/limelight.vim'
 Plug 'mechatroner/rainbow_csv'
+Plug 'sheerun/vim-polyglot'
+Plug 'yuttie/comfortable-motion.vim'
+Plug 'mbbill/undotree'
+Plug 'luochen1990/rainbow'
+Plug 'tyru/open-browser.vim', {'on': 'RunningX'}
+Plug 'danro/rename.vim'
 if has('nvim')
   Plug 'aurieh/discord.nvim', { 'do': ':UpdateRemotePlugins'}
 endif
@@ -59,6 +65,13 @@ if v:version >= 703
   Plug 'neoclide/coc.nvim', {'branch': 'release'}
   "Plug 'neoclide/coc.nvim', {'branch': 'release', 'do': { -> coc#util#install() }}
 endif
+"Plug 'myusuf3/numbers.vim'
+"Plug 'psliwka/vim-smoothie'
+"Plug 'thaerkh/vim-workspace'
+"Plug 'tpope/vim-sensible'
+"Plug 'prabirshrestha/async.vim'
+"Plug 'christoomey/vim-tmux-navigator'
+"Plug 'davidhalter/jedi-vim'
 "Plug 'gbigwood/Clippo'
 "Plug 'vim-scripts/IndentAnything'
 "Plug 'junegunn/vim-github-dashboard'
@@ -91,6 +104,8 @@ Plug 'dense-analysis/ale'
 Plug 'mboughaba/i3config.vim'
 Plug 'Glench/Vim-Jinja2-Syntax'
 Plug 'scrooloose/syntastic'
+Plug 'rodjek/vim-puppet'
+Plug 'nono/jquery.vim'
 
 " Colorschemes
 Plug 'tomasr/molokai'
@@ -417,6 +432,7 @@ set laststatus=2
 
 function! s:statusline_expr()
   let pst = "%{&paste ? '[P] ' : ''}"
+  let mse = "%{&mouse == 'a' ? '[M] ' : ''}"
   let mod = "%{&modified ? '[+] ' : !&modifiable ? '[x] ' : ''}"
   let ro  = "%{&readonly ? '[RO] ' : ''}"
   let ft  = "%{len(&filetype) ? '['.&filetype.'] ' : ''}"
@@ -425,7 +441,7 @@ function! s:statusline_expr()
   let pos = ' %-12(%l : %c%V%) '
   let pct = ' %P'
 
-  return '[%n] %F %<'.pst.mod.ro.ft.fug.sep.pos.'%*'.pct
+  return '[%n] %F %<'.pst.mse.mod.ro.ft.fug.sep.pos.'%*'.pct
 endfunction
 let &statusline = s:statusline_expr()
 
@@ -520,7 +536,7 @@ function! ToggleMouse()
         set mouse=a
     endif
 endfunc
-nmap <leader>m :call ToggleMouse()<CR>
+nmap <silent> <leader>m :call ToggleMouse()<CR>
 
 " Fast saving
 nmap <leader>w :w!<cr>
