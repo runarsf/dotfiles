@@ -147,3 +147,5 @@ test -f "$HOME/.zsh_aliases" && source $HOME/.zsh_aliases
 test -s "$NVM_DIR/nvm.sh" && source "$NVM_DIR/nvm.sh"
 test -s "$NVM_DIR/bash_completion" && source "$NVM_DIR/bash_completion"
 test -f "$HOME/.p10k.zsh" && source "$HOME/.p10k.zsh"
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
