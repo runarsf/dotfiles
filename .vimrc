@@ -1,35 +1,68 @@
 " runarsf's .vimrc {{{
 " =========================
-"  zo - Open a fold at cursor position.
-"  zO - Open all fold at cursor position.
-"  zc - Close a fold at cursor position.
-"  zm - Increase foldlevel by 1.
-"  zM - Close all folds.
-"  zr - Decrease foldlevel by 1.
-"  zR - Decrease foldlevel to 0; all folds will open.
+"  vim scp://root@domain.tld//home/root/.vimrc
+"  vim scp://root@domain.tld/.vimrc
 "
-"  h  - Left
-"  j  - Down
-"  k  - Up
-"  l  - Right
+"  vim ~/.ssh/config
+"  <<host shortname
+"  <<  User root
+"  <<  Hostname domain.tld
+"  <<  Port 22
+"  vim scp://shortname/.vimrc
+"
+"  zo  Open a fold at cursor position.
+"  zO  Open all fold at cursor position.
+"  zc  Close a fold at cursor position.
+"  zm  Increase foldlevel by 1.
+"  zM  Close all folds.
+"  zr  Decrease foldlevel by 1.
+"  zR  Decrease foldlevel to 0; all folds will open.
+"
+"  h   Left
+"  j   Down
+"  k   Up
+"  l   Right
 "
 "  K  - Open help page for keyword under cursor.
 "  /  - Search for text in current file.
 "  :  - Prefix for executing commands.
 "
-"  :%s/foo/bar/g - Change "foo" to "bar".
-"  :s/foo/bar/g - Change "foo" to "bar" on the current line.
-"  :%s/foo/bar/gc - Change "foo" to "bar", but ask for confirmation.
-"  :%s/\<foo\>/bar/gc - Change whole words matching "foo" to "bar".
-"  :%s/foo/bar/gci - Change "foo" to "bar", case sensitive.
+"  :%s/foo/bar/g       Change "foo" to "bar".
+"  :s/foo/bar/g        Change "foo" to "bar" on the current line.
+"  :%s/foo/bar/gc      Change "foo" to "bar", but ask for confirmation.
+"  :%s/\<foo\>/bar/gc  Change whole words matching "foo" to "bar".
+"  :%s/foo/bar/gci     Change "foo" to "bar", case sensitive.
 "
 " }}}======================
 " Plugins {{{
 " =========================
-
-if empty(glob('~/.vim/autoload/plug.vim')) && has('unix')
+" TODO: Automatically set up nvim config files to point at vim files
+if empty(glob('~/.vim/autoload/plug.vim')) && (has('unix') || has('win32unix'))
   silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
     \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
+
+if empty(glob('~\vimfiles\autoload\plug.vim')) && empty(glob('~\AppData\Local\nvim\autoload\plug.vim')) && has('win32')
+  if has('nvim')
+    md ~\AppData\Local\nvim\autoload
+    $uri = 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+    (New-Object Net.WebClient).DownloadFile(
+      $uri,
+      $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath(
+        "~\AppData\Local\nvim\autoload\plug.vim"
+      )
+    )
+  else
+    md ~\vimfiles\autoload
+    $uri = 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+    (New-Object Net.WebClient).DownloadFile(
+      $uri,
+      $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath(
+        "~\vimfiles\autoload\plug.vim"
+      )
+    )
+  endif
   autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 
@@ -58,7 +91,13 @@ Plug 'mbbill/undotree'
 Plug 'luochen1990/rainbow'
 Plug 'tyru/open-browser.vim', {'on': 'RunningX'}
 Plug 'danro/rename.vim'
-if has('nvim')
+if has('python3')
+  Plug 'Shougo/denite.nvim'
+endif
+if &rtp =~ 'denite.nvim'
+  Plug 'Shougo/vimfiler.vim'
+endif
+if has('nvim') && !empty($DISPLAY)
   Plug 'aurieh/discord.nvim', { 'do': ':UpdateRemotePlugins'}
 endif
 if v:version >= 703
@@ -126,19 +165,6 @@ call plug#end()
 endif
 
 filetype plugin indent on
-
-" Add: {'on': 'RunningX'} or {'on': 'NotRunningX'} to plugin
-function! NotRunningX()
-  return
-endfunction
-function! RunningX()
-  return
-endfunction
-if ($DISPLAY != '')
-  call RunningX()
-else
-  call NotRunningX()
-endif
 
 " -------------------------
 " deoplete.nvim
@@ -467,7 +493,7 @@ set tabstop=2
 
 " Display whitespace characters
 set list
-set listchars=trail:·,nbsp:⎵,tab:┊\ " This comment is required for the escaped space character, |¦┆┊, eol:⏎
+set listchars=trail:·,nbsp:⎵,tab:┊» " ¦┆┊ eol:⏎ (		)
 "set fillchars=vert:\|,fold:-
 
 " Tab navigation
@@ -526,7 +552,9 @@ nmap <leader>n :set relativenumber!<cr>
 nmap <leader>N :set number!<cr>
 
 " Toggle paste
-nmap <leader>p :set pastetoggle<cr>
+"nnoremap <leader>p :set invpaste<CR>
+" Breaks if '<leader>p' is in the pasted string
+set pastetoggle=<leader>p
 
 " Toggle mouse
 function! ToggleMouse()
@@ -696,6 +724,28 @@ function! s:root()
   endif
 endfunction
 command! Root call s:root()
+
+function! CheckGitRev()
+  " $(git rev-parse HEAD) == $(git rev-parse @{u})
+  " rev-pase --short also works
+  " git ls-remote origin -h refs/heads/master
+
+  if expand('%:t') == '.vimrc'              " if filename = .vimrc
+    call system('test -L ' . expand('%:p')) " if file = symlink
+    if v:shell_error != 0                   " if file != symlink
+      return
+    endif
+  else                                      " if filename != .vimrc
+    return
+  endif
+  let repo = system("dirname " . system("readlink -f " . expand("%:p")))
+  if (system('git -C ' . repo . ' rev-parse HEAD') != system('git -C ' . repo . ' rev-parse @{u}'))
+    if confirm("Dotfiles are not up to date, would you like to fetch the latest update?", "&yes\n&No", 2) == 1
+      system('git -C ' . repo . ' pull')
+    endif
+  endif
+endfunction
+autocmd VimEnter * call CheckGitRev()
 
 " Fancy folding
 " «»¶§ƒ×λ⌈⌋⟦⟧⦃⦄⨾ https://www.compart.com/en/unicode/mirrored
