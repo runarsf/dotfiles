@@ -91,6 +91,7 @@ Plug 'mbbill/undotree'
 Plug 'luochen1990/rainbow'
 Plug 'tyru/open-browser.vim', {'on': 'RunningX'}
 Plug 'danro/rename.vim'
+Plug 'junegunn/vim-easy-align'
 if has('python3')
   Plug 'Shougo/denite.nvim'
 endif
@@ -115,7 +116,6 @@ endif
 "Plug 'vim-scripts/IndentAnything'
 "Plug 'junegunn/vim-github-dashboard'
 "Plug 'junegunn/vim-emoji'
-"Plug 'junegunn/vim-easy-align'
 "Plug 'vimwiki/vimwiki'
 "Plug 'dbmrq/vim-redacted'
 "Plug 'vim-scripts/mru.vim'
@@ -231,9 +231,9 @@ let g:sierra_Midnight = 1
 " vim-easy-align
 " -------------------------
 " Start interactive EasyAlign in visual mode (e.g. vipga)
-"xmap ga <Plug>(EasyAlign)
+xmap ga <Plug>(EasyAlign)
 " Start interactive EasyAlign for a motion/text object (e.g. gaip)
-"nmap ga <Plug>(EasyAlign)
+nmap ga <Plug>(EasyAlign)
 
 " -------------------------
 " vim-cheat40
@@ -361,17 +361,13 @@ set nowritebackup
 set noswapfile
 "set complete-=i                                              " Enable completions
 set mouse=c                                                   " a, disable mouse support
-set guioptions-=r                                             " Disable scrollbars
-set guioptions-=R
-set guioptions-=l
-set guioptions-=L
 set noerrorbells                                              " No annoying sound on errors
 set novisualbell
 set t_vb=
 set tm=500
-set cursorline                                                " Highlight current line
+"set cursorline                                               " Highlight current line
 "set number                                                   " Enable line numbers
-set relativenumber                                            " Set line numbers to relative
+"set relativenumber                                            " Set line numbers to relative
 set ruler
 set showcmd                                                   " Display incomplete commands
 set so=7                                                      " Set lines to the cursor - when moving vertically
@@ -471,14 +467,10 @@ function! s:statusline_expr()
 endfunction
 let &statusline = s:statusline_expr()
 
-" Status line color
-if !has('gui_running')
-  set t_Co=256
-endif
-
 " Tab settings
 set softtabstop=0
 set expandtab " expand tabs to spaces (opposite of noexpandtab)
+set smarttab
 " set nosmarttab
 " autocmd FileType python set expandtab
 " autocmd FileType python set textwidth=79
@@ -507,16 +499,16 @@ inoremap <C-S-tab> <Esc>:tabprevious<CR>i
 inoremap <C-tab>   <Esc>:tabnext<CR>i
 inoremap <C-t>     <Esc>:tabnew<CR>
 
-noremap <leader>1 :tabfirst<cr>
-noremap <leader>2 2gt
-noremap <leader>3 3gt
-noremap <leader>4 4gt
-noremap <leader>5 5gt
-noremap <leader>6 6gt
-noremap <leader>7 7gt
-noremap <leader>8 8gt
-noremap <leader>9 9gt
-noremap <leader>0 :tablast<cr>
+nmap <leader>1 :tabfirst<cr>
+nmap <leader>2 2gt
+nmap <leader>3 3gt
+nmap <leader>4 4gt
+nmap <leader>5 5gt
+nmap <leader>6 6gt
+nmap <leader>7 7gt
+nmap <leader>8 8gt
+nmap <leader>9 9gt
+nmap <leader>0 :tablast<cr>
 
 " }}}======================
 " Editing / Binds {{{
@@ -546,10 +538,6 @@ nnoremap Q @q
 
 " Run python file
 nnoremap <F5> :echo system('python3 "' . expand('%') . '"')<cr>
-
-" Toggle line numbers
-nmap <leader>n :set relativenumber!<cr>
-nmap <leader>N :set number!<cr>
 
 " Toggle paste
 "nnoremap <leader>p :set invpaste<CR>
@@ -637,8 +625,13 @@ inoreabbrev <expr> #!! "#!/usr/bin/env" . (empty(&filetype) ? '' : ' '.&filetype
 if has("gui_running")
   set guioptions-=T
   set guioptions-=e
-  set t_Co=256
   set guitablabel=%M\ %t
+  set guioptions-=r                " Disable scrollbars
+  set guioptions-=R
+  set guioptions-=l
+  set guioptions-=L
+else
+  set t_Co=256
 endif
 
 " Markdown file interpreting
@@ -676,17 +669,45 @@ augroup myvimrchooks
   autocmd bufwritepost .vimrc source ~/.vimrc
 augroup END
 
+" Toggle line numbers
+function! ToggleNumbers()
+  if &number || &relativenumber
+    call EnterInsert()
+    set nonumber
+    set norelativenumber
+  else
+    call LeaveInsert()
+  endif
+endfunction
+nmap <silent> <leader>n :call ToggleNumbers()<CR>
+
+function! EnterInsert()
+  GitGutterDisable
+  set cursorline
+  set norelativenumber
+  set number
+endfunction
+function! LeaveInsert()
+  GitGutterEnable
+  set nocursorline
+  set relativenumber
+  set number
+endfunction
+autocmd InsertEnter * call EnterInsert()
+autocmd FocusLost * call EnterInsert()
+autocmd InsertLeave * call LeaveInsert()
+autocmd FocusGained * call LeaveInsert()
+autocmd VimEnter * call LeaveInsert()
+
 " Switch colorscheme and enable limelight with Goyo
 function! s:goyo_enter()
   colorscheme sierra
   Limelight
 endfunction
-
 function! s:goyo_leave()
   colorscheme space-vim-dark
   Limelight!
 endfunction
-
 autocmd! User GoyoEnter nested call <SID>goyo_enter()
 autocmd! User GoyoLeave nested call <SID>goyo_leave()
 

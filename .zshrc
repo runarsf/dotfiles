@@ -70,6 +70,7 @@ alias reload='source $HOME/.zshrc'
 alias zshrc='$EDITOR $HOME/.zshrc'
 alias back='cd "$OLDPWD"'
 eval "$(thefuck --alias heck)"
+# TODO: If previous command failed, <Enter> should run thefuck
 
 alias i3cfg='${EDITOR} ${HOME}/.config/i3/config'
 alias polycfg='${EDITOR} ${HOME}/.config/polybar/config'
