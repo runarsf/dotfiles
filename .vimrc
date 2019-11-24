@@ -92,6 +92,11 @@ Plug 'luochen1990/rainbow'
 Plug 'tyru/open-browser.vim', {'on': 'RunningX'}
 Plug 'danro/rename.vim'
 Plug 'junegunn/vim-easy-align'
+Plug 'terryma/vim-multiple-cursors'
+Plug 'unblevable/quick-scope'
+Plug 'vim-scripts/loremipsum'
+Plug 'robcsi/viewmaps.vim'
+Plug 'tpope/vim-fugitive'
 if has('python3')
   Plug 'Shougo/denite.nvim'
 endif
@@ -105,6 +110,8 @@ if v:version >= 703
   Plug 'neoclide/coc.nvim', {'branch': 'release'}
   "Plug 'neoclide/coc.nvim', {'branch': 'release', 'do': { -> coc#util#install() }}
 endif
+"Plug 'fmoralesc/vim-pad'
+"Plug 'metakirby5/codi.vim'
 "Plug 'myusuf3/numbers.vim'
 "Plug 'psliwka/vim-smoothie'
 "Plug 'thaerkh/vim-workspace'
@@ -120,7 +127,6 @@ endif
 "Plug 'dbmrq/vim-redacted'
 "Plug 'vim-scripts/mru.vim'
 "Plug 'tpope/vim-commentary'
-"Plug 'tpope/vim-fugitive'
 "Plug 'kshenoy/vim-origami'
 "Plug 'terryma/vim-multiple-cursors'
 "Plug 'vim-airline/vim-airline'
@@ -142,9 +148,11 @@ Plug 'baskerville/vim-sxhkdrc'
 Plug 'dense-analysis/ale'
 Plug 'mboughaba/i3config.vim'
 Plug 'Glench/Vim-Jinja2-Syntax'
-Plug 'scrooloose/syntastic'
 Plug 'rodjek/vim-puppet'
 Plug 'nono/jquery.vim'
+if v:version >= 703
+  Plug 'scrooloose/syntastic'
+endif
 
 " Colorschemes
 Plug 'tomasr/molokai'

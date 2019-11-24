@@ -10,48 +10,60 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-command -v antibody > /dev/null 2>&1 \
-  || (echo "Installing Antibody."; curl -sfL git.io/antibody | sudo sh -s - -b /usr/local/bin) \
-  && source <(antibody init)
-antibody bundle <<-EOBUNDLES
-	robbyrussell/oh-my-zsh path:plugins/git
-	robbyrussell/oh-my-zsh path:plugins/git-extras
-	robbyrussell/oh-my-zsh path:plugins/colorize
-	robbyrussell/oh-my-zsh path:plugins/colored-man-pages
-	robbyrussell/oh-my-zsh path:plugins/command-not-found
-	robbyrussell/oh-my-zsh path:plugins/jump
-	robbyrussell/oh-my-zsh path:plugins/emoji
-	robbyrussell/oh-my-zsh path:plugins/thefuck
-	robbyrussell/oh-my-zsh path:plugins/common-aliases
-	robbyrussell/oh-my-zsh path:plugins/docker
-	robbyrussell/oh-my-zsh path:plugins/systemd
-	robbyrussell/oh-my-zsh path:plugins/tmux
-	robbyrussell/oh-my-zsh path:plugins/bgnotify
-	robbyrussell/oh-my-zsh path:plugins/magic-enter
-	robbyrussell/oh-my-zsh path:plugins/fzf
-	robbyrussell/oh-my-zsh path:plugins/sudo
-	# robbyrussell/oh-my-zsh path:plugins/lol
-	# robbyrussell/oh-my-zsh path:plugins/per-directory-history
-	# robbyrussell/oh-my-zsh path:plugins/ssh-agent
-	zsh-users/zsh-autosuggestions
-	zsh-users/zsh-history-substring-search
-	zsh-users/zsh-completions
-	# zsh-users/zsh-syntax-highlighting
-	djui/alias-tips
-	# desyncr/auto-ls
-	# walesmd/caniuse.plugin.zsh
-	# molovo/revolver
-	# mollifier/cd-gitroot
-	zdharma/fast-syntax-highlighting
-	chrissicool/zsh-256color
-	akarzim/zsh-docker-aliases
-	skx/sysadmin-util
-	zdharma/zsh-diff-so-fancy
-	sroze/docker-compose-zsh-plugin
-	b4b4r07/emoji-cli
-	#runarsf/rufus-zsh-theme path:rufus-minimal.zsh-theme
-	romkatv/powerlevel10k
-EOBUNDLES
+#zstyle :compinstall filename "$HOME/.zshrc"
+#autoload -Uz compinit
+#compinit
+
+#command -v antibody > /dev/null 2>&1 \
+#  || (echo "Installing Antibody."; curl -sfL git.io/antibody | sudo sh -s - -b /usr/local/bin) \
+#  && source <(antibody init)
+#antibody bundle <<-EOBUNDLES
+#	robbyrussell/oh-my-zsh path:lib
+#	robbyrussell/oh-my-zsh path:plugins/git
+#	robbyrussell/oh-my-zsh path:plugins/git-extras
+#	robbyrussell/oh-my-zsh path:plugins/colorize
+#	robbyrussell/oh-my-zsh path:plugins/colored-man-pages
+#	robbyrussell/oh-my-zsh path:plugins/command-not-found
+#	robbyrussell/oh-my-zsh path:plugins/jump
+#	robbyrussell/oh-my-zsh path:plugins/emoji
+#	robbyrussell/oh-my-zsh path:plugins/thefuck
+#	robbyrussell/oh-my-zsh path:plugins/common-aliases
+#	robbyrussell/oh-my-zsh path:plugins/docker
+#	robbyrussell/oh-my-zsh path:plugins/systemd
+#	robbyrussell/oh-my-zsh path:plugins/tmux
+#	robbyrussell/oh-my-zsh path:plugins/bgnotify
+#	robbyrussell/oh-my-zsh path:plugins/magic-enter
+#	robbyrussell/oh-my-zsh path:plugins/fzf
+#	robbyrussell/oh-my-zsh path:plugins/sudo
+#	# robbyrussell/oh-my-zsh path:plugins/lol
+#	# robbyrussell/oh-my-zsh path:plugins/per-directory-history
+#	# robbyrussell/oh-my-zsh path:plugins/ssh-agent
+#	zsh-users/zsh-autosuggestions
+#	zsh-users/zsh-history-substring-search
+#	zsh-users/zsh-completions
+#	# zsh-users/zsh-syntax-highlighting
+#	djui/alias-tips
+#	# desyncr/auto-ls
+#	# walesmd/caniuse.plugin.zsh
+#	# molovo/revolver
+#	# mollifier/cd-gitroot
+#	zdharma/fast-syntax-highlighting
+#	chrissicool/zsh-256color
+#	akarzim/zsh-docker-aliases
+#	skx/sysadmin-util
+#	zdharma/zsh-diff-so-fancy
+#	sroze/docker-compose-zsh-plugin
+#	b4b4r07/emoji-cli
+#	# runarsf/rufus-zsh-theme
+#	# robbyrussell/oh-my-zsh path:themes/miloshadzic.zsh-theme
+#	# romkatv/powerlevel10k
+#	dracula/zsh
+#EOBUNDLES
+
+
+export ZSH="${HOME}/.oh-my-zsh"
+ZSH_THEME='rufus'
+source $ZSH/oh-my-zsh.sh
 
 if test -n "$SSH_CONNECTION"; then
   export EDITOR=/usr/bin/nvim
@@ -101,10 +113,10 @@ dirtygit() {
   printf "\n\e[32m| DONE! \e[0;39m\n\n"
 }
 
-if ! command -v fzf > /dev/null 2>&1; then
-  git clone --depth 1 https://github.com/junegunn/fzf.git $HOME/.fzf
-  $HOME/.fzf/install
-fi
+#if ! command -v fzf > /dev/null 2>&1; then
+#  git clone --depth 1 https://github.com/junegunn/fzf.git $HOME/.fzf
+#  $HOME/.fzf/install
+#fi
 
 case "$(hostname)" in
   runfre-t480s)
@@ -141,12 +153,12 @@ bindkey '\CI' expand-or-complete-prefix
 
 bindkey "$terminfo[kcuu1]" history-substring-search-up
 bindkey "$terminfo[kcud1]" history-substring-search-down
-export NVM_DIR="$HOME/.nvm"
-export FZF_BASE="$HOME/.fzf"
+#export NVM_DIR="$HOME/.nvm"
+#export FZF_BASE="$HOME/.fzf"
 export LANG=en_US.UTF-8
 test -f "$HOME/.zsh_aliases" && source $HOME/.zsh_aliases
 test -s "$NVM_DIR/nvm.sh" && source "$NVM_DIR/nvm.sh"
 test -s "$NVM_DIR/bash_completion" && source "$NVM_DIR/bash_completion"
-test -f "$HOME/.p10k.zsh" && source "$HOME/.p10k.zsh"
+#test -f "$HOME/.p10k.zsh" && source "$HOME/.p10k.zsh"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

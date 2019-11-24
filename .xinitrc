@@ -14,9 +14,10 @@ sxhkd &
 nm-applet &
 eval $(ssh-agent)
 xrdb ~/.Xresources
+systemctl --user import-environment DISPLAY
 compton -fcCG --xrender-sync-fence > /dev/null 2>&1 &
 feh --bg-scale $HOME/.config/wall.png
-xdg-settings set default-web-browser firefox.desktop
+#xdg-settings set default-web-browser firefox.desktop
 
 xsetwacom --set "Wacom Intuos S Pen stylus" Suppress 2
 xsetwacom --set "Wacom Intuos S Pen stylus" Rawsample 4
