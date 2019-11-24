@@ -1,3 +1,4 @@
+" vim: set foldmethod=marker foldlevel=0 nomodeline:
 " runarsf's .vimrc {{{
 " =========================
 "  vim scp://root@domain.tld//home/root/.vimrc
@@ -541,6 +542,14 @@ if $TERM =~ 'screen'
   nnoremap <Leader><C-a> <C-a>
 endif
 
+" esc in insert mode, consider using kj instead, as it's no-op (up-down)
+inoremap jh <esc>
+" esc in command mode
+cnoremap jh <C-C>
+" Note: In command mode mappings to esc run the command for some odd
+" historical vi compatibility reason. We use the alternate method of
+" existing which is Ctrl-C
+
 " qq to record, Q to replay
 nnoremap Q @q
 
@@ -552,6 +561,12 @@ nnoremap <F5> :echo system('python3 "' . expand('%') . '"')<cr>
 " Breaks if '<leader>p' is in the pasted string
 set pastetoggle=<leader>p
 
+" Rebind CapsLock to Escape in X-Sessions
+if has('unix') && !empty($DISPLAY)
+  au VimEnter * silent! !xmodmap -e 'clear Lock' -e 'keycode 0x42 = Escape'
+  au VimLeave * silent! !xmodmap -e 'clear Lock' -e 'keycode 0x42 = Caps_Lock'
+endif
+
 " Toggle mouse
 function! ToggleMouse()
     if &mouse == 'a'
@@ -562,11 +577,15 @@ function! ToggleMouse()
 endfunc
 nmap <silent> <leader>m :call ToggleMouse()<CR>
 
+" Fast config edit
+nmap <leader>cfg :e ~/.vimrc<cr>
+
 " Fast saving
 nmap <leader>w :w!<cr>
 
 " Fast quit
 nmap <leader>q :q<cr>
+nmap <leader>Q :q!<cr>
 
 " Toggle Zen mode / Goyo
 nmap <leader>z :Goyo<cr>
