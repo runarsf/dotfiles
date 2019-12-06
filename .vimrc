@@ -82,7 +82,6 @@ Plug 'junegunn/fzf.vim'
 Plug 'osyo-manga/vim-hopping'
 Plug 'ryanoasis/vim-devicons'
 Plug 'lifepillar/vim-cheat40'
-Plug 'Raimondi/delimitMate'
 Plug 'nathanaelkane/vim-indent-guides'
 Plug 'junegunn/limelight.vim'
 Plug 'mechatroner/rainbow_csv'
@@ -98,6 +97,8 @@ Plug 'unblevable/quick-scope'
 Plug 'vim-scripts/loremipsum'
 Plug 'robcsi/viewmaps.vim'
 Plug 'tpope/vim-fugitive'
+Plug 'editorconfig/editorconfig-vim'
+Plug 'tpope/vim-surround'
 if has('python3')
   Plug 'Shougo/denite.nvim'
 endif
@@ -111,6 +112,8 @@ if v:version >= 703
   Plug 'neoclide/coc.nvim', {'branch': 'release'}
   "Plug 'neoclide/coc.nvim', {'branch': 'release', 'do': { -> coc#util#install() }}
 endif
+"Plug 'Raimondi/delimitMate'
+"Plug 'AshleyF/VimSpeak'
 "Plug 'fmoralesc/vim-pad'
 "Plug 'metakirby5/codi.vim'
 "Plug 'myusuf3/numbers.vim'
@@ -539,13 +542,13 @@ let maplocalleader = ','
 " Disable CTRL-A on tmux or on screen
 if $TERM =~ 'screen'
   nnoremap <C-a> <nop>
-  nnoremap <Leader><C-a> <C-a>
+  nnoremap <leader><C-a> <C-a>
 endif
 
 " esc in insert mode, consider using kj instead, as it's no-op (up-down)
-inoremap jh <esc>
+inoremap jk <esc>
 " esc in command mode
-cnoremap jh <C-C>
+cnoremap jk <C-C>
 " Note: In command mode mappings to esc run the command for some odd
 " historical vi compatibility reason. We use the alternate method of
 " existing which is Ctrl-C
@@ -576,6 +579,8 @@ function! ToggleMouse()
     endif
 endfunc
 nmap <silent> <leader>m :call ToggleMouse()<CR>
+
+nnoremap <silent> <leader><space> :nohlsearch<CR>
 
 " Fast config edit
 nmap <leader>cfg :e ~/.vimrc<cr>
@@ -665,7 +670,7 @@ endif
 let g:vimwiki_ext2syntax = {'.Rmd': 'markdown', '.rmd': 'markdown','.md': 'markdown', '.markdown': 'markdown', '.mdown': 'markdown'}
 autocmd BufRead,BufNewFile *.md set filetype=markdown
 autocmd BufRead,BufNewFile .{jscs,jshint,eslint}rc set filetype=json
-autocmd BufRead,BufNewFile aliases.local,zshrc.local,*/zsh/configs/* set filetype=sh
+autocmd BufRead,BufNewFile *.zsh-theme,aliases.local,zshrc.local,*/zsh/configs/* set filetype=zsh
 autocmd BufRead,BufNewFile gitconfig.local set filetype=gitconfig
 autocmd BufRead,BufNewFile tmux.conf.local set filetype=tmux
 autocmd BufRead,BufNewFile vimrc.local set filetype=vim
