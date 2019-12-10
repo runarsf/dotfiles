@@ -1,11 +1,17 @@
-#!/bin/sh
 # Profile file. Runs on login.
 
-export PATH=$PATH:$HOME/bin/:"`ruby -e 'puts Gem.user_dir'`/bin:$PATH"
+# Adds `~/bin` to $PATH
+export PATH="$PATH:$(du "$HOME/bin/" | cut -f2 | tr '\n' ':' | sed 's/:*$//')"
 
-export EDITOR="vim"
-export VISUAL="$EDITOR"
+export LANG=en_US.UTF-8
+
+test -n "${SSH_CONNECTION}" \
+  && export EDITOR=/usr/bin/nvim \
+  || export EDITOR=/usr/bin/nvim
+export VISUAL="${EDITOR}"
+export FILE="${EDITOR}"
 export TERMINAL="st"
 export BROWSER="firefox"
-export READER="zathura"
-export FILE="vim"
+
+# Start graphical server on tty1 if not already running.
+[ "$(tty)" = "/dev/tty1" ] && ! pgrep -x Xorg >/dev/null && exec startx

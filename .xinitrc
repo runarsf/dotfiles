@@ -1,38 +1,21 @@
-#!/bin/bash
+#!/usr/bin/env sh
 
-if [ -d /etc/X11/xinit/xinitrc.d ]; then
-  for f in /etc/X11/xinit/xinitrc.d/*; do
-    [ -x "$f" ] && . "$f"
-  done
-  unset f
+# xinitrc runs automatically when you run startx.
+
+# There are some small but important commands that need to be run when we start
+# the graphical environment. I keep those commands in ~/.xprofile because that
+# file is run automatically if someone uses a display manager (login screen)
+# and so they are needed there. To prevent doubling up commands, I source them
+# here with the line below.
+
+[ -f ~/.xprofile ] && . ~/.xprofile
+
+if command -v bspwm >/dev/null 2>&1; then
+  exec bspwm
+elif command -v i3 >/dev/null 2>&1; then
+  exec i3
+elif command -v dwm >/dev/null 2>&1; then
+  exec dwm
+else
+  echo "No valid window manager found."
 fi
-
-setxkbmap -option caps:super -v no
-pulseaudio --start &
-#pulseaudio --log-level=4 --log-target=stderr &
-sxhkd &
-nm-applet &
-eval $(ssh-agent)
-xrdb ~/.Xresources
-systemctl --user import-environment DISPLAY
-compton -fcCG --xrender-sync-fence > /dev/null 2>&1 &
-feh --bg-scale $HOME/.config/wall.png
-#xdg-settings set default-web-browser firefox.desktop
-
-xsetwacom --set "Wacom Intuos S Pen stylus" Suppress 2
-xsetwacom --set "Wacom Intuos S Pen stylus" Rawsample 4
-#xsetwacom --set "Wacom Intuos S Pen stylus" Area 0 351 8211 5453
-xsetwacom --set "Wacom Intuos S Pen stylus" Area 2000 2351 10210 7453
-xsetwacom --set "Wacom Intuos S Pen stylus" Button 1 '0'
-xsetwacom --set "Wacom Intuos S Pen stylus" Button 2 '0'
-xsetwacom --set "Wacom Intuos S Pen stylus" Button 3 '0'
-xsetwacom --set "Wacom Intuos S Pen stylus" MapToOutput HEAD-0
-
-exec i3
-
-# dwm
-#while xsetroot -name "`date` `uptime | sed 's/.*,//'`"
-#do
-#	sleep 1
-#done &
-#exec dwm

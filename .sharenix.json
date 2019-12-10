@@ -1,18 +1,18 @@
 {
-  "DefaultFileUploader": "i.regex.no",
-  "DefaultImageUploader": "i.regex.no",
+  "DefaultFileUploader": "i.runarsf.dev",
+  "DefaultImageUploader": "i.runarsf.dev",
 
   "Services": [
-      {
-         "Name": "i.regex.no",
-         "RequestType": "POST",
-         "RequestURL": "https://i.regex.no/api/upload",
-	 "FileFormName": "files[]",
-	 "Headers": {
-	      "token": "5up3r53cr37-70k3n"
-	 },
-	 "ResponseType": "Text",
-	 "URL": "$json:files[0].url$"
-      }
+    {
+      "Name": "i.runarsf.dev",
+      "RequestType": "POST",
+      "RequestURL": "https://i.runarsf.dev/api/upload",
+      "FileFormName": "files[]",
+      "Headers": {
+        "token": "5up3r53cr37-70k3n"
+      },
+      "ResponseType": "Text",
+      "URL": "$json:files[0].url$"
+    }
   ]
 }

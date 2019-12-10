@@ -112,7 +112,6 @@ if v:version >= 703
   Plug 'neoclide/coc.nvim', {'branch': 'release'}
   "Plug 'neoclide/coc.nvim', {'branch': 'release', 'do': { -> coc#util#install() }}
 endif
-"Plug 'Raimondi/delimitMate'
 "Plug 'AshleyF/VimSpeak'
 "Plug 'fmoralesc/vim-pad'
 "Plug 'metakirby5/codi.vim'

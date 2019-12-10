@@ -1,27 +1,32 @@
 super + Return
-	exec st
+	$TERMINAL
 super + shift + q
-	xkill
+	kill -9 `xdotool getwindowfocus getwindowpid`
 super + x
 	$HOME/bin/customlock.sh "gllock"
 super + shift + x
 	$HOME/bin/prompt.sh "Are you sure you want to shutdown?" "$shutdown"
+super + v
+	$TERMINAL -e nvim
+super + d
+	rofi -show run -lines 3 -eh 2
+super + Tab
+	rofi -show window
+super + shift + w
+	$BROWSER
 
 alt + p
 	sharenix-section -n -c
 alt + shift + p
 	$HOME/git/pyshare/pyshare-runner.py -s -u -c -d
 
-super + d
-	rofi -show run -lines 3 -eh 2
-super + Tab
-	rofi -show window
 
-#ctrl + @comma
-#	xdotool keyup ctrl && xdotool key less && xdotool keydown ctrl
-#ctrl + @period
-#	xdotool keyup ctrl && xdotool key greater && xdotool keydown ctrl
+ctrl + @comma
+	xdotool keyup ctrl && xdotool key less && xdotool keydown ctrl
+ctrl + @period
+	xdotool keyup ctrl && xdotool key greater && xdotool keydown ctrl
 
+# i3 stuff that I don't use
 # super + {_,shift + }{1-9,0,F1,F2,F3,F4}
 # 	i3-msg {_,move container to }workspace number {1-9,10,11,12,13,14}
 # super + {x,b,v,m}
@@ -30,18 +35,3 @@ super + Tab
 # 	i3-msg workspace back_and_forth
 # super + ctrl + {_,shift + } o
 # 	i3-msg move workspace to output {right,left}
-
-# super + {_,shift +} p
-# 	lmc {toggle,pause}
-# super + {less,greater}
-# 	lmc {prev,next}
-# super + shift + less
-# 	lmc replay
-# super + {equal,plus}
-# 	lmc up {5,15}
-# super + {_,shift +} + minus
-# 	lmc down {5,15}
-# super + {_,shift +} bracketright
-# 	lmc forward {10,120}
-# super + {_,shift +} bracketleft
-# 	lmc back {10,120}
