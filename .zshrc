@@ -1,3 +1,4 @@
+echo "$(basename "$0") @ $(date +%T.%N)" >> /home/drift/bootorder
 # runarsf's Zoomer SHell config
 clear
 

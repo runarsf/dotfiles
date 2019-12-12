@@ -93,7 +93,6 @@ Plug 'tyru/open-browser.vim', {'on': 'RunningX'}
 Plug 'danro/rename.vim'
 Plug 'junegunn/vim-easy-align'
 Plug 'terryma/vim-multiple-cursors'
-Plug 'unblevable/quick-scope'
 Plug 'vim-scripts/loremipsum'
 Plug 'robcsi/viewmaps.vim'
 Plug 'tpope/vim-fugitive'
@@ -112,6 +111,7 @@ if v:version >= 703
   Plug 'neoclide/coc.nvim', {'branch': 'release'}
   "Plug 'neoclide/coc.nvim', {'branch': 'release', 'do': { -> coc#util#install() }}
 endif
+"Plug 'unblevable/quick-scope'
 "Plug 'AshleyF/VimSpeak'
 "Plug 'fmoralesc/vim-pad'
 "Plug 'metakirby5/codi.vim'

@@ -1,4 +1,5 @@
 #!/usr/bin/env sh
+echo "$(basename "$0") @ $(date +%T.%N)" >> /home/drift/bootorder
 
 # xinitrc runs automatically when you run startx.
 
