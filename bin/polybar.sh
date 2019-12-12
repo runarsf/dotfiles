@@ -10,9 +10,9 @@ killall -q polybar
 mainmon=$(sed '1!d' $HOME/.monitor)
 mainmon='eDP-1'
 for m in $(polybar --list-monitors | cut -d":" -f1); do
-	if [ "$m" = "$mainmon" ]; then
-	   	MONITOR=$m polybar --reload tray &
-	else
-    	MONITOR=$m polybar --reload top &
-	fi
+  if [ "$m" = "$mainmon" ]; then
+    MONITOR=$m polybar --reload tray &
+  else
+    MONITOR=$m polybar --reload top &
+  fi
 done

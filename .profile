@@ -1,4 +1,4 @@
-echo "$(basename "$0") @ $(date +%T.%N)" >> /home/drift/bootorder
+echo ".(z)profile @ $(date +%T.%N)" >> /tmp/bootorder
 # Profile file. Runs on login.
 
 # Adds `~/bin` to $PATH

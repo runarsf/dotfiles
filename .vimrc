@@ -107,7 +107,7 @@ endif
 if has('nvim') && !empty($DISPLAY)
   Plug 'aurieh/discord.nvim', { 'do': ':UpdateRemotePlugins'}
 endif
-if v:version >= 703
+if v:version >= 703 " FIXME: Find out how to check for has('node')
   Plug 'neoclide/coc.nvim', {'branch': 'release'}
   "Plug 'neoclide/coc.nvim', {'branch': 'release', 'do': { -> coc#util#install() }}
 endif

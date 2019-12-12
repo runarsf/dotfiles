@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
-echo "$(basename "$0") @ $(date +%T.%N)" >> /home/drift/bootorder
+echo ".xinitrc @ $(date +%T.%N)" >> /tmp/bootorder
 
 # xinitrc runs automatically when you run startx.
 
@@ -9,7 +9,7 @@ echo "$(basename "$0") @ $(date +%T.%N)" >> /home/drift/bootorder
 # and so they are needed there. To prevent doubling up commands, I source them
 # here with the line below.
 
-[ -f ~/.xprofile ] && . ~/.xprofile
+test -f ~/.xprofile && source ~/.xprofile
 
 if command -v bspwm >/dev/null 2>&1; then
   exec bspwm
