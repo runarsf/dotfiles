@@ -1,6 +1,6 @@
 {
-  "update": "apt-get update",
-  "prefix": "apt-get -yq install",
+  "update": "sudo apt-get update",
+  "prefix": "sudo apt-get -yq install",
   "suffix": "",
   "packages": [
     {"package": "zsh"},
@@ -29,20 +29,6 @@
     {"package": "gpick"},
     {"package": "libxft-dev"},
     {"package": "build-essential"},
-    {"package": "libssl-dev"},
-    {
-      "package": "https://raw.githubusercontent.com/creationix/nvm/v0.35.0/install.sh",
-      "prefix": "curl",
-      "suffix": "| bash"
-    },
-    {
-      "package": "node",
-      "prefix": "nvm install"
-    },
-    {
-      "package": "gh",
-      "prefix": "npm install",
-      "suffix": "-g"
-    }
+    {"package": "libssl-dev"}
   ]
 }
