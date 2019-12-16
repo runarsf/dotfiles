@@ -1,4 +1,3 @@
-echo ".zshrc @ $(date +%T.%N)" >> /tmp/bootorder
 # runarsf's Zoomer SHell config
 clear
 
