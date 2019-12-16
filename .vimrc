@@ -104,7 +104,8 @@ endif
 if &rtp =~ 'denite.nvim'
   Plug 'Shougo/vimfiler.vim'
 endif
-if has('nvim') && !empty($DISPLAY)
+let node_ver = system('node -v') " either check for !v:shell_error or if node_ver starts with v{num}
+if !v:shell_error && has('nvim') && !empty($DISPLAY)
   Plug 'aurieh/discord.nvim', { 'do': ':UpdateRemotePlugins'}
 endif
 if v:version >= 703 " FIXME: Find out how to check for has('node')
