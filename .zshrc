@@ -25,16 +25,16 @@ if [ -z ${noplug+x} ]; then
 		robbyrussell/oh-my-zsh path:plugins/colored-man-pages
 		robbyrussell/oh-my-zsh path:plugins/command-not-found
 		robbyrussell/oh-my-zsh path:plugins/jump
-		robbyrussell/oh-my-zsh path:plugins/emoji
 		robbyrussell/oh-my-zsh path:plugins/thefuck
 		robbyrussell/oh-my-zsh path:plugins/common-aliases
 		robbyrussell/oh-my-zsh path:plugins/docker
 		robbyrussell/oh-my-zsh path:plugins/systemd
 		robbyrussell/oh-my-zsh path:plugins/tmux
-		robbyrussell/oh-my-zsh path:plugins/bgnotify
-		robbyrussell/oh-my-zsh path:plugins/fzf
-		robbyrussell/oh-my-zsh path:plugins/sudo
-		robbyrussell/oh-my-zsh path:plugins/ssh-agent
+		# robbyrussell/oh-my-zsh path:plugins/bgnotify
+		# robbyrussell/oh-my-zsh path:plugins/sudo
+		# robbyrussell/oh-my-zsh path:plugins/ssh-agent
+		# robbyrussell/oh-my-zsh path:plugins/fzf
+		# robbyrussell/oh-my-zsh path:plugins/emoji
 		zsh-users/zsh-autosuggestions
 		zsh-users/zsh-history-substring-search
 		zsh-users/zsh-completions

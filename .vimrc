@@ -105,14 +105,13 @@ if &rtp =~ 'denite.nvim'
   Plug 'Shougo/vimfiler.vim'
 endif
 let node_ver = system('node -v') " either check for !v:shell_error or if node_ver starts with v{num}
-if !v:shell_error && has('nvim') && !empty($DISPLAY)
-  Plug 'aurieh/discord.nvim', { 'do': ':UpdateRemotePlugins'}
-endif
-let node_ver = system('node -v') " either check for !v:shell_error or if node_ver starts with v{num}
 if !v:shell_error && v:version >= 703 " FIXME: Find out how to check for has('node')
-  Plug 'neoclide/coc.nvim', {'branch': 'release'}
-  "Plug 'neoclide/coc.nvim', {'branch': 'release', 'do': { -> coc#util#install() }}
+  Plug 'neoclide/coc.nvim', {'branch': 'release'} " 'do': { -> coc#util#install() }}
 endif
+"let node_ver = system('node -v') " either check for !v:shell_error or if node_ver starts with v{num}
+"if !v:shell_error && has('nvim') && !empty($DISPLAY)
+"  Plug 'aurieh/discord.nvim', { 'do': ':UpdateRemotePlugins'}
+"endif
 "Plug 'unblevable/quick-scope'
 "Plug 'AshleyF/VimSpeak'
 "Plug 'fmoralesc/vim-pad'
