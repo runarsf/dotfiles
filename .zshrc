@@ -196,6 +196,6 @@ debug() {
 	EODUCK
 }
 
-#test -s "${HOME}/.nvm/nvm.sh" && source "${HOME}/.nvm/nvm.sh"
+test -s "${HOME}/.nvm/nvm.sh" && source "${HOME}/.nvm/nvm.sh"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
