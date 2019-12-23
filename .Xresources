@@ -1,109 +1,114 @@
-! Common
-#define S_yellow        #b58900
-#define S_orange        #cb4b16
-#define S_red           #dc322f
-#define S_magenta       #d33682
-#define S_violet        #6c71c4
-#define S_blue          #268bd2
-#define S_cyan          #2aa198
-#define S_green         #859900
+!! Colorscheme
 
-! Dark
-#define S_base03        #002b36
-#define S_base02        #073642
-#define S_base01        #586e75
-#define S_base00        #657b83
-#define S_base0         #839496
-#define S_base1         #93a1a1
-#define S_base2         #eee8d5
-#define S_base3         #fdf6e3
-
-URxvt*foreground: #c5c8c6
-URxvt*background: rgba:0000/0000/0200/aaaa
-URxvt*cursorColor: #c5c8c6
-
-URxvt*transparent: true
-URxvt*shading: 20
-URxvt*fading: 25
-URxvt*blurRadius: 10
-
-URxvt*fadeColor:               S_base03
-URxvt*pointerColorBackground:  S_base01
-URxvt*pointerColorForeground:  S_base1
+! special
+*.foreground: #93a1a1
+*.background: #141c21
+!*background: rgba:0000/0000/0000/AAAA
+!*background: [50]#AAAA
+*.cursorColor: #afbfbf
 
 ! black
-*color0:       #282a2e
-*color8:       #373b41
+*.color0: #263640
+*.color8: #4a697d
+
 ! red
-*color1:       #a54242
-*color9:       #cc6666
+*.color1: #d12f2c
+*.color9: #fa3935
+
 ! green
-*color2:       #8c9440
-*color10:      #b5bd68
+*.color2: #819400
+*.color10: #a4bd00
+
 ! yellow
-*color3:       #de935f
-*color11:      #f0c674
+*.color3: #b08500
+*.color11: #d9a400
+
 ! blue
-*color4:       #5f819d
-*color12:      #81a2be
+*.color4: #2587cc
+*.color12: #2ca2f5
+
 ! magenta
-*color5:       #85678f
-*color13:      #b294bb
+*.color5: #696ebf
+*.color13: #8086e8
+
 ! cyan
-*color6:       #5e8d87
-*color14:      #8abeb7
+*.color6: #289c93
+*.color14: #33c5ba
+
 ! white
-*color7:       #707880
-*color15:      #c5c8c6
+*.color7: #bfbaac
+*.color15: #fdf6e3
 
-# start of tested config
-!! general settings
-URxvt*scrollTtyKeypress:    true
-URxvt*scrollWithBuffer:     true
-URxvt*scrollTtyOutput:      false
-URxvt*internalBorder:       0
-URxvt*urgentOnBell:         true
-URxvt*visualBell:           true
-URxvt*loginShell:           true
-URxvt*saveLines:            100
-URxvt*lineSpace:            0
-URxvt*fading:               25
+!! URxvt Appearance
+URxvt.font: xft:Iosevka Term:size=14
+URxvt.boldFont: xft:Iosevka Term:size=14
+URxvt.italicFont: xft:Iosevka Term:size=14
+URxvt.boldItalicfont: xft:Iosevka Term:size=14
+!URxvt.letterSpace: 0
+URxvt.letterSpace: -1
+URxvt.lineSpace: 0
+URxvt.geometry: 92x24
+!URxvt.internalBorder: 24
+URxvt.internalBorder: 0
+URxvt.cursorBlink: true
+URxvt.cursorUnderline: false
+URxvt.saveline: 2048
+URxvt.scrollBar: false
+URxvt.scrollBar_right: false
+URxvt.urgentOnBell: true
+URxvt.iso14755: false
 
-!! XFT settings
-URxvt*letterSpace:          -1
-Xft*autohint:               0
-Xft*lcdfilter:              lcddefault
-Xft*hintstyle:              hintslight
-Xft*hinting:                full
-Xft*antialias:              true
-Xft*dpi:                    96
-Xft*rgba:                   rgb
-URxvt*font:                 xft:Iosevka Term:size=18
+!! Xft
+Xft*autohint: 0
+Xft*lcdfilter: lcddefault
+Xft*hintstyle: hintslight
+Xft*hinting: full
+Xft*antialias: true
+Xft*dpi: 96
+Xft*rgba: rgb
 
-Xcursor*size:               15W
-URxvt*clipboard.autocopy:   true
-URxvt*scrollBar:            false
-URxvt*depth:                32
-URxvt*url-launcher:         $BROWSER
-URxvt*matcher.button:       1
+Xcursor*size: 15W
+URxvt*depth: 32
+!URxvt*depth: 24
+URxvt*transparent: true
+URxvt*shading: 18
+!URxvt*fading: 25
+URxvt*fading: 0
+!URxvt*blurRadius: 10
 
-!! disable keycap picture insert mode
-URxvt*iso14755:             false
-URxvt*iso14755_52:          false
+!! Common Keybinds for Navigations
+URxvt.keysym.Shift-Up: command:\033]720;1\007
+URxvt.keysym.Shift-Down: command:\033]721;1\007
+URxvt.keysym.Control-Up: \033[1;5A
+URxvt.keysym.Control-Down: \033[1;5B
+URxvt.keysym.Control-Right: \033[1;5C
+URxvt.keysym.Control-Left: \033[1;5D
 
-!! Extensions
-URxvt*perl-lib:             ~/.config/.urxvt/ext/
-URxvt*perl-ext-common:      keyboard-select,resize-font,url-select
-URxvt*colorUL:              #4682B4
+!! Copy Paste & Other Extensions
+URxvt.perl-lib: ~/.config/.urxvt/ext/
+URxvt.perl-ext-common: default,keyboard-select,resize-font,url-select
+!URxvt.perl-ext-common: default,clipboard,url-select,keyboard-select
+URxvt.copyCommand: xclip -i -selection clipboard
+URxvt.pasteCommand: xclip -o -selection clipboard
+URxvt.clipboard.autocopy: true
+URxvt.keysym.M-c: perl:clipboard:copy
+URxvt.keysym.M-v: perl:clipboard:paste
+URxvt.keysym.M-C-v: perl:clipboard:paste_escaped
+URxvt.keysym.M-Escape: perl:keyboard-select:activate
+URxvt.keysym.M-s: perl:keyboard-select:search
+URxvt.keysym.M-u: perl:url-select:select_next
 
-!! url-select
-URxvt*keysum.M-u:           perl:url-select:select_next
-URxvt*url-select.launcher:  $BROWSER
-URxvt*url-select.underline: true
+! url-select
+URxvt.keysum.M-u: perl:url-select:select_next
+!URxvt*url-select.launcher: $BROWSER
+URxvt.urlLauncher: $BROWSER
+!URxvt*url-select.underline: true
+URxvt.underlineURLs: true
+URxvt.urlButton: 1
 
-!! keyboard-select
-URxvt*keysum.M-Escape:      perl:keyboard-select:activate
+! keyboard-select
+URxvt*keysum.M-Escape: perl:keyboard-select:activate
 
-!! resize-font
-URxvt*resize-font.smaller:  C-j
-URxvt*resize-font.bigger:   C-k
+! resize-font
+URxvt*resize-font.smaller: C-j
+URxvt*resize-font.bigger: C-k

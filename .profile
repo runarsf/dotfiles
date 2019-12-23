@@ -11,8 +11,9 @@ test -n "${SSH_CONNECTION}" \
   || export EDITOR=/usr/bin/nvim
 export VISUAL="${EDITOR}"
 export FILE="${EDITOR}"
-export TERMINAL="st"
+export TERMINAL="urxvt"
 export BROWSER="firefox"
+export PYTHONDONTWRITEBYTECODE=1
 
 # Start graphical server on tty1 if not already running.
 [ "$(tty)" = "/dev/tty1" ] && ! pgrep -x Xorg >/dev/null && exec startx
