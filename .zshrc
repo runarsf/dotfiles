@@ -88,7 +88,7 @@ esac
 #bindkey 'jk' vi-cmd-mode
 PROMPT_EOL_MARK=''
 alias vim='nvim'
-alias ls='ls -lAF --color'
+alias ls='ls -lAFh --color'
 alias grep='grep --color'
 alias c='xclip -selection clipboard'
 alias paste='nc termbin.com 9999'
