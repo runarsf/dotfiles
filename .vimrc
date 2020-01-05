@@ -1,14 +1,19 @@
-" vim: set foldmethod=marker foldlevel=0 nomodeline:
+" vim: set foldmethod=marker foldlevel=0 nomodeline: {{{
+let mapleader = ','
+let maplocalleader = ','
+" }}}
 " runarsf's .vimrc {{{
 " =========================
 "  vim scp://root@domain.tld//home/root/.vimrc
 "  vim scp://root@domain.tld/.vimrc
 "
 "  vim ~/.ssh/config
-"  <<host shortname
-"  <<  User root
-"  <<  Hostname domain.tld
-"  <<  Port 22
+"  ---
+"  host shortname
+"    User root
+"    Hostname domain.tld
+"    Port 22
+"  ---
 "  vim scp://shortname/.vimrc
 "
 "  zo  Open a fold at cursor position.
@@ -67,12 +72,14 @@ if empty(glob('~\vimfiles\autoload\plug.vim')) && empty(glob('~\AppData\Local\nv
   autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 
+let has_node = (system('node -v') =~ '^v')
+
 silent! if plug#begin('~/.vim/plugged')
 " General
 Plug 'junegunn/vim-peekaboo'
 Plug 'tpope/vim-eunuch'
 Plug 'scrooloose/nerdtree'
-Plug 'Xuyuanp/nerdtree-git-plugin'
+Plug 'Xuyuanp/nerdtree-git-plugin', { 'on': 'NERDTreeToggle' }
 Plug 'airblade/vim-gitgutter'
 Plug 'junegunn/goyo.vim'
 Plug 'justinmk/vim-sneak'
@@ -83,14 +90,13 @@ Plug 'osyo-manga/vim-hopping'
 Plug 'ryanoasis/vim-devicons'
 Plug 'lifepillar/vim-cheat40'
 Plug 'nathanaelkane/vim-indent-guides'
-Plug 'junegunn/limelight.vim'
+Plug 'junegunn/limelight.vim', { 'on': 'Limelight' }
 Plug 'mechatroner/rainbow_csv'
 Plug 'sheerun/vim-polyglot'
-Plug 'yuttie/comfortable-motion.vim'
+"Plug 'yuttie/comfortable-motion.vim'
 Plug 'mbbill/undotree'
-Plug 'luochen1990/rainbow'
-Plug 'tyru/open-browser.vim', {'on': 'RunningX'}
-Plug 'danro/rename.vim'
+Plug 'tyru/open-browser.vim', { 'on': 'RunningX' }
+Plug 'danro/rename.vim', { 'on': 'Rename' }
 Plug 'junegunn/vim-easy-align'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'vim-scripts/loremipsum'
@@ -98,26 +104,37 @@ Plug 'robcsi/viewmaps.vim'
 Plug 'tpope/vim-fugitive'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'tpope/vim-surround'
-if has('python3')
-  Plug 'Shougo/denite.nvim'
+"Plug 'psliwka/vim-smoothie'
+"Plug 'vimwiki/vimwiki', { 'for': ['markdown'] }
+Plug 'inkarkat/vim-ingo-library', { 'branch': 'stable' }
+Plug 'inkarkat/vim-ModelineCommands', { 'branch': 'stable' }
+"if &rtp =~ 'vim-ingo-library'
+"endif
+let g:ModelineCommands_CommandValidator = ''
+"Plug 'michal-h21/vim-zettel'
+"Plug 'michal-h21/vimwiki-sync'
+if has_node && v:version >= 703
+  Plug 'neoclide/coc.nvim', { 'branch': 'release' } " 'do': { -> coc#util#install() }}
 endif
-if &rtp =~ 'denite.nvim'
-  Plug 'Shougo/vimfiler.vim'
-endif
-let node_ver = system('node -v') " either check for !v:shell_error or if node_ver starts with v{num}
-if !v:shell_error && v:version >= 703 " FIXME: Find out how to check for has('node')
-  Plug 'neoclide/coc.nvim', {'branch': 'release'} " 'do': { -> coc#util#install() }}
-endif
-"let node_ver = system('node -v') " either check for !v:shell_error or if node_ver starts with v{num}
-"if !v:shell_error && has('nvim') && !empty($DISPLAY)
+"if has_node && has('nvim') && !empty($DISPLAY)
 "  Plug 'aurieh/discord.nvim', { 'do': ':UpdateRemotePlugins'}
 "endif
+"if has('python3') && has('nvim')
+"  Plug 'Shougo/denite.nvim', { 'do': ':UpdateRemotePlugins' }
+"else
+"  Plug 'Shougo/denite.nvim'
+"  Plug 'roxma/nvim-yarp'
+"  Plug 'roxma/vim-hug-neovim-rpc'
+"endif
+"if &rtp =~ 'denite.nvim'
+"  Plug 'Shougo/vimfiler.vim'
+"endif
+"Plug 'SirVer/ultisnips'
 "Plug 'unblevable/quick-scope'
 "Plug 'AshleyF/VimSpeak'
 "Plug 'fmoralesc/vim-pad'
 "Plug 'metakirby5/codi.vim'
 "Plug 'myusuf3/numbers.vim'
-"Plug 'psliwka/vim-smoothie'
 "Plug 'thaerkh/vim-workspace'
 "Plug 'tpope/vim-sensible'
 "Plug 'prabirshrestha/async.vim'
@@ -127,7 +144,6 @@ endif
 "Plug 'vim-scripts/IndentAnything'
 "Plug 'junegunn/vim-github-dashboard'
 "Plug 'junegunn/vim-emoji'
-"Plug 'vimwiki/vimwiki'
 "Plug 'dbmrq/vim-redacted'
 "Plug 'vim-scripts/mru.vim'
 "Plug 'tpope/vim-commentary'
@@ -140,20 +156,28 @@ endif
 "Plug 'Valloric/YouCompleteMe', { 'do': './install.py' }
 "Plug 'junegunn/vim-journal'
 "Plug 'dixonary/vimty' " :source vimty.vim
+"if has('nvim')
+"  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+"else
+"  Plug 'Shougo/deoplete.nvim'
+"  Plug 'roxma/nvim-yarp'
+"  Plug 'roxma/vim-hug-neovim-rpc'
+"endif
+"let g:deoplete#enable_at_startup = 1
 
 " Syntax highlighting
-Plug 'ObserverOfTime/coloresque.vim'
-Plug 'chr4/nginx.vim'
-Plug 'storyn26383/vim-vue'
-Plug 'octol/vim-cpp-enhanced-highlight'
-Plug 'ekalinin/Dockerfile.vim'
-Plug 'kovetskiy/sxhkd-vim'
-Plug 'baskerville/vim-sxhkdrc'
+"Plug 'ObserverOfTime/coloresque.vim'
+Plug 'gko/vim-coloresque', { 'for': ['css', 'html', 'markdown', 'javascript', 'python'] }
+Plug 'chr4/nginx.vim', { 'for': 'nginx' }
+Plug 'storyn26383/vim-vue', { 'for': 'vue' }
+Plug 'octol/vim-cpp-enhanced-highlight', { 'for': 'cpp' }
+Plug 'ekalinin/Dockerfile.vim', { 'for': 'Dockerfile' }
+Plug 'kovetskiy/sxhkd-vim', { 'for': 'sxhkdrc' }
+Plug 'mboughaba/i3config.vim', { 'for': 'conf' }
+Plug 'Glench/Vim-Jinja2-Syntax', { 'for': 'jinja' }
+Plug 'rodjek/vim-puppet', { 'for': 'puppet' }
+Plug 'nono/jquery.vim', { 'for': 'javascript' }
 Plug 'dense-analysis/ale'
-Plug 'mboughaba/i3config.vim'
-Plug 'Glench/Vim-Jinja2-Syntax'
-Plug 'rodjek/vim-puppet'
-Plug 'nono/jquery.vim'
 if v:version >= 703
   Plug 'scrooloose/syntastic'
 endif
@@ -179,9 +203,42 @@ endif
 filetype plugin indent on
 
 " -------------------------
+" vim-indent-guides
+" -------------------------
+"let g:indent_guides_enable_on_vim_startup = 1
+"let g:indent_guides_auto_colors = 0
+"autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=red   ctermbg=3
+"autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=green ctermbg=4
+
+
+" -------------------------
 " deoplete.nvim
 " -------------------------
 "let g:deoplete#enable_at_startup = 1
+
+" -------------------------
+" denite.nvim
+" -------------------------
+"autocmd FileType denite call s:denite_my_settings()
+"function! s:denite_my_settings() abort
+"  nnoremap <silent><buffer><expr> <CR>
+"  \ denite#do_map('do_action')
+"  nnoremap <silent><buffer><expr> d
+"  \ denite#do_map('do_action', 'delete')
+"  nnoremap <silent><buffer><expr> p
+"  \ denite#do_map('do_action', 'preview')
+"  nnoremap <silent><buffer><expr> q
+"  \ denite#do_map('quit')
+"  nnoremap <silent><buffer><expr> i
+"  \ denite#do_map('open_filter_buffer')
+"  nnoremap <silent><buffer><expr> <Space>
+"  \ denite#do_map('toggle_select').'j'
+"endfunction
+
+" -------------------------
+" fzf
+" -------------------------
+nmap <leader>f :FZF<cr>
 
 " -------------------------
 " limelight.vim
@@ -352,16 +409,18 @@ set history=50                                                " Sets how many li
 set autoread                                                  " Set to auto read when a file is changed from the outside
 set clipboard+=unnamedplus
 "set wrap                                                     " Enables wrapping
+set nowrap
 set textwidth=0                                               " Disable wrapping
 set wrapmargin=0
-set nowrap
 command! W w !sudo tee % > /dev/null " :W sudo saves the file
 "set foldlevelstart=99                                        " Start with fold level 99 at launch (all folds closed)
-set foldmethod=syntax
-if expand('%:t') == '.vimrc' | set foldmethod=marker | else | set foldmethod=syntax | endif
-set foldlevel=0
-set modelines=0                                               " Disable modelines as a security precaution<Paste>
-set nomodeline
+"set foldmethod=syntax
+"if expand('%:t') == '.vimrc' | set foldmethod=marker | else | set foldmethod=syntax | endif
+"set foldlevel=0
+"set modelines=0                                               " Disable modelines as a security precaution<Paste>
+"set nomodeline
+set modeline
+set modelines=5
 set nocompatible                                              " Enables VI iMproved enhancements
 set guifont=Source\ Code\ Pro                                 " GUI Font
 syntax on                                                     " Enable syntax highlighting
@@ -382,15 +441,14 @@ set tm=500
 "set relativenumber                                            " Set line numbers to relative
 set ruler
 set showcmd                                                   " Display incomplete commands
-set so=7                                                      " Set lines to the cursor - when moving vertically
-"set numberwidth=8                                            " Left margin
+set so=5                                                      " Set lines to the cursor - when moving vertically
 let $LANG='en'                                                " Avoid garbled characters in Chinese language in Windows
 set langmenu=en
 source $VIMRUNTIME/delmenu.vim
 source $VIMRUNTIME/menu.vim
 set wildmenu                                                  " Turn on the Wild menu for cycling through command options
 set wildmode=longest:full,full                                " longest:list,full
-set cmdheight=2                                               " Height of the command bar
+set cmdheight=1                                               " Height of the command bar
 set hidden                                                    " A buffer becomes hidden when it is abandoned, recommended for coc
 set backspace=eol,start,indent                                " Configure backspace so it acts as it should act
 set whichwrap+=<,>,h,l
@@ -403,6 +461,7 @@ set magic                                                     " For regular expr
 set showmatch                                                 " Show matching brackets when text indicator is over them
 set mat=2                                                     " How many tenths of a second to blink when matching brackets
 set foldcolumn=0                                              " Left margin
+set numberwidth=1                                             " Left margin
 set updatetime=300                                            " Default 4000
 set shortmess+=c                                              " don't give |ins-completion-menu| messages.
 "set signcolumn=yes                                           " always show signcolumns
@@ -534,10 +593,9 @@ nmap <leader>0 :tablast<cr>
 "  :cmap - Display command-line mode maps
 "  :omap - Display operator pending mode maps
 
-" With a map leader it's possible to do extra key combinations
-" e.g. <leader>w saves the current file
-let mapleader = ','
-let maplocalleader = ','
+" Insert tab (i CTRL+v TAB)
+"nmap <leader>t i	<ESC>
+"imap <leader>t
 
 " Disable CTRL-A on tmux or on screen
 if $TERM =~ 'screen'
@@ -738,6 +796,7 @@ function! s:goyo_enter()
 endfunction
 function! s:goyo_leave()
   colorscheme space-vim-dark
+  highlight Normal     ctermbg=NONE guibg=NONE
   Limelight!
 endfunction
 autocmd! User GoyoEnter nested call <SID>goyo_enter()
@@ -806,16 +865,37 @@ function! FoldText()
   set fillchars=fold:\ "
   let line = ' ' . substitute(getline(v:foldstart), '^\s*"\?\s*\|\s*"\?\s*{{' . '{\d*\s*', '', 'g') . ' '
   let lines_count = v:foldend - v:foldstart + 1
-  let lines_count_text = '⦃ ' . printf("%10s", lines_count . ' lines') . ' ⦄'
+  let lines_count_text = '{' . printf("%10s", lines_count . ' lines') . ' }'
   let foldchar = matchstr(&fillchars, 'fold:\zs.')
-  let foldtextstart = strpart('⨾' . repeat(foldchar, v:foldlevel-1) . line, 0, (winwidth(0)*2)/3)
+  let foldtextstart = strpart('»' . repeat(foldchar, v:foldlevel-1) . line, 0, (winwidth(0)*2)/3)
   "let foldtextstart = strpart('+' . repeat(foldchar, v:foldlevel*2) . line, 0, (winwidth(0)*2)/3)
   let foldtextend = lines_count_text . repeat(foldchar, 8)
   let foldtextlength = strlen(substitute(foldtextstart . foldtextend, '.', 'x', 'g')) + &foldcolumn
   return foldtextstart . repeat(foldchar, winwidth(0)-foldtextlength) . foldtextend
 endfunction
 set foldtext=FoldText()
+" }}}======================
+" Zettelkasten {{{
+" =========================
+"command! -nargs=* Zet call Zetteledit(<f-args>)
 
-" foldmethod=marker, syntax, indent
-" vim: set foldmethod=marker foldlevel=0 nomodeline:
+"func! Zetteledit(...)
+
+  " build the file name
+"  let l:sep = ''
+"  if len(a:000) > 0
+"    let l:sep = '-'
+"  endif
+"  let l:fname = expand('~/wiki/') . strftime("%F-%H%M") . l:sep . join(a:000, '-') . '.md'
+
+  " edit the new file
+"  exec "e " . l:fname
+
+  " enter the title and timestamp (using ultisnips) in the new file
+"  if len(a:000) > 0
+"    exec "normal ggO\<c-r>=strftime('%Y-%m-%d %H:%M')\<cr> " . join(a:000) . "\<cr>\<esc>G"
+"  else
+"    exec "normal ggO\<c-r>=strftime('%Y-%m-%d %H:%M')\<cr>\<cr>\<esc>G"
+"  endif
+"endfunc
 " }}}======================
