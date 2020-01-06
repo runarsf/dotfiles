@@ -142,6 +142,7 @@ silent! if plug#begin('~/.vim/plugged')
 "endif
 "let g:deoplete#enable_at_startup = 1
 " }}}
+Plug 'majutsushi/tagbar'
 Plug 'vimwiki/vimwiki'
 Plug 'junegunn/vim-peekaboo'
 Plug 'tpope/vim-eunuch'
@@ -219,6 +220,10 @@ Plug 'arcticicestudio/nord-vim'
 call plug#end()
 endif
 
+" tagbar {{{
+" -------------------------
+nmap <F8> :TagbarToggle<CR>
+" }}}----------------------
 " vim-wiki {{{
 " -------------------------
 let g:vimwiki_ext2syntax = {'.Rmd': 'markdown', '.rmd': 'markdown','.md': 'markdown', '.markdown': 'markdown', '.mdown': 'markdown'}
@@ -772,6 +777,12 @@ autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 " :W sudo saves file
 command! W w !sudo tee % > /dev/null
 
+" Wiki
+execute "autocmd VimEnter " . expand(g:vimwiki_list[0]['path'] . "index.wiki") . " call system('git pull')"
+execute "autocmd VimLeave " . expand(g:vimwiki_list[0]['path'] . "index.wiki") . " call system('git add .; git commit -m\"auto push\"; git push origin master')"
+"autocmd VimEnter /home/drift/wiki/index.wiki echo 'hello'
+"autocmd VimLeave  echom 'goodbye'
+
 " Autoreload .vimrc {{{
 augroup myvimrchooks
   au!
@@ -911,9 +922,9 @@ endfunction
 " }}}
 
 " When term starts, auto go into insert mode
-autocmd TermOpen * startinsert
+"autocmd TermOpen * startinsert
 " Turn off line numbers etc
-autocmd TermOpen * setlocal listchars= nonumber norelativenumber
+"autocmd TermOpen * setlocal listchars= nonumber norelativenumber
 
 function! OpenTerm(cmd)
   call CreateCenteredFloatingWindow()

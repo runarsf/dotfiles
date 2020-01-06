@@ -48,8 +48,8 @@ if [ -z ${noplug+x} ]; then
 		zdharma/zsh-diff-so-fancy
 		sroze/docker-compose-zsh-plugin
 		b4b4r07/emoji-cli
-		runarsf/rufus-zsh-theme
-		# robbyrussell/oh-my-zsh path:themes/miloshadzic.zsh-theme
+		# runarsf/rufus-zsh-theme
+		robbyrussell/oh-my-zsh path:themes/miloshadzic.zsh-theme
 	EOBUNDLES
   bindkey "$terminfo[kcuu1]" history-substring-search-up
   bindkey "$terminfo[kcud1]" history-substring-search-down
@@ -97,6 +97,7 @@ alias please='sudo $(fc -ln -1)'
 alias reload='source $HOME/.zshrc'
 alias back='cd $OLDPWD'
 eval "$(thefuck --alias heck)"
+export PATH="${PATH}:/snap/bin"
 
 # Change cursor shape for different vi modes.
 #function zle-keymap-select {
