@@ -88,6 +88,7 @@ esac
 #bindkey 'jk' vi-cmd-mode
 PROMPT_EOL_MARK=''
 alias vim='nvim'
+alias wiki='vim ~/wiki/index.wiki'
 alias ls='ls -lAFh --color'
 alias grep='grep --color'
 alias c='xclip -selection clipboard'
@@ -169,19 +170,6 @@ dirtygit() {
   git push
   printf "\n\e[32m| DONE! \e[0;39m\n\n"
 }
-
-#duck() {
-#  # https://en.wikipedia.org/wiki/ANSI_escape_code#8-bit
-#  D_BEAK=$(tput setaf 202) # 1
-#  D_EYE=$(tput setaf 15) # 7
-#  D_BODY=$(tput setaf 11) # 3
-#	cat <<-EODUCK
-#
-#	  ${D_BEAK}>${D_EYE}o${D_BODY})
-#	  (_>
-#
-#	EODUCK
-#}
 
 debug() {
   D_BEAK=$(tput setaf 202) # 1

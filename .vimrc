@@ -43,12 +43,15 @@ let maplocalleader = ','
 " Plugins {{{
 " =========================
 " TODO: Automatically set up nvim config files to point at vim files
+" vim-plug linux installation {{{
 if empty(glob('~/.vim/autoload/plug.vim')) && (has('unix') || has('win32unix'))
   silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
     \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
   autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
+" }}}
 
+" vim-plug windows installation {{{
 if empty(glob('~\vimfiles\autoload\plug.vim')) && empty(glob('~\AppData\Local\nvim\autoload\plug.vim')) && has('win32')
   if has('nvim')
     md ~\AppData\Local\nvim\autoload
@@ -71,51 +74,25 @@ if empty(glob('~\vimfiles\autoload\plug.vim')) && empty(glob('~\AppData\Local\nv
   endif
   autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
+" }}}
+
+"filetype plugin indent on
+filetype plugin on
 
 let has_node = (system('node -v') =~ '^v')
 
 silent! if plug#begin('~/.vim/plugged')
-" General
-Plug 'junegunn/vim-peekaboo'
-Plug 'tpope/vim-eunuch'
-Plug 'scrooloose/nerdtree'
-Plug 'Xuyuanp/nerdtree-git-plugin', { 'on': 'NERDTreeToggle' }
-Plug 'airblade/vim-gitgutter'
-Plug 'junegunn/goyo.vim'
-Plug 'justinmk/vim-sneak'
-Plug 'zefei/vim-colortuner'
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-Plug 'junegunn/fzf.vim'
-Plug 'osyo-manga/vim-hopping'
-Plug 'ryanoasis/vim-devicons'
-Plug 'lifepillar/vim-cheat40'
-Plug 'nathanaelkane/vim-indent-guides'
-Plug 'junegunn/limelight.vim', { 'on': 'Limelight' }
-Plug 'mechatroner/rainbow_csv'
-Plug 'sheerun/vim-polyglot'
+" General {{{
+" Disabled General {{{
+"Plug 'airblade/vim-gitgutter'
+"Plug 'fcpg/vim-waikiki'
+"Plug 'lervag/wiki.vim'
 "Plug 'yuttie/comfortable-motion.vim'
-Plug 'mbbill/undotree'
-Plug 'tyru/open-browser.vim', { 'on': 'RunningX' }
-Plug 'danro/rename.vim', { 'on': 'Rename' }
-Plug 'junegunn/vim-easy-align'
-Plug 'terryma/vim-multiple-cursors'
-Plug 'vim-scripts/loremipsum'
-Plug 'robcsi/viewmaps.vim'
-Plug 'tpope/vim-fugitive'
-Plug 'editorconfig/editorconfig-vim'
-Plug 'tpope/vim-surround'
 "Plug 'psliwka/vim-smoothie'
-"Plug 'vimwiki/vimwiki', { 'for': ['markdown'] }
-Plug 'inkarkat/vim-ingo-library', { 'branch': 'stable' }
-Plug 'inkarkat/vim-ModelineCommands', { 'branch': 'stable' }
-"if &rtp =~ 'vim-ingo-library'
-"endif
-let g:ModelineCommands_CommandValidator = ''
+"Plug 'tpope/vim-repeat'
+"Plug 'svermeulen/vim-macrobatics'
 "Plug 'michal-h21/vim-zettel'
-"Plug 'michal-h21/vimwiki-sync'
-if has_node && v:version >= 703
-  Plug 'neoclide/coc.nvim', { 'branch': 'release' } " 'do': { -> coc#util#install() }}
-endif
+"Plug 'michal-h21/vimwiki-sync' " Doesn't work for neovim
 "if has_node && has('nvim') && !empty($DISPLAY)
 "  Plug 'aurieh/discord.nvim', { 'do': ':UpdateRemotePlugins'}
 "endif
@@ -164,9 +141,47 @@ endif
 "  Plug 'roxma/vim-hug-neovim-rpc'
 "endif
 "let g:deoplete#enable_at_startup = 1
-
-" Syntax highlighting
+" }}}
+Plug 'vimwiki/vimwiki'
+Plug 'junegunn/vim-peekaboo'
+Plug 'tpope/vim-eunuch'
+Plug 'scrooloose/nerdtree'
+Plug 'Xuyuanp/nerdtree-git-plugin', { 'on': 'NERDTreeToggle' }
+Plug 'junegunn/goyo.vim'
+Plug 'justinmk/vim-sneak'
+Plug 'zefei/vim-colortuner'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
+Plug 'osyo-manga/vim-hopping'
+Plug 'ryanoasis/vim-devicons'
+Plug 'lifepillar/vim-cheat40'
+Plug 'nathanaelkane/vim-indent-guides'
+Plug 'junegunn/limelight.vim', { 'on': 'Limelight' }
+Plug 'mechatroner/rainbow_csv'
+Plug 'sheerun/vim-polyglot'
+Plug 'mbbill/undotree'
+Plug 'tyru/open-browser.vim', { 'on': 'RunningX' }
+Plug 'danro/rename.vim', { 'on': 'Rename' }
+Plug 'junegunn/vim-easy-align'
+Plug 'terryma/vim-multiple-cursors'
+Plug 'vim-scripts/loremipsum'
+Plug 'robcsi/viewmaps.vim'
+Plug 'tpope/vim-fugitive'
+Plug 'editorconfig/editorconfig-vim'
+Plug 'tpope/vim-surround'
+Plug 'voldikss/vim-codelf'
+if has_node && v:version >= 703
+  Plug 'neoclide/coc.nvim', { 'branch': 'release' } " 'do': { -> coc#util#install() }}
+endif
+Plug 'inkarkat/vim-ingo-library', { 'branch': 'stable' }
+if &rtp =~ 'vim-ingo-library'
+  Plug 'inkarkat/vim-ModelineCommands', { 'branch': 'stable' }
+endif
+" }}}
+" Syntax highlighting {{{
+" Disabled Syntax highlighting {{{
 "Plug 'ObserverOfTime/coloresque.vim'
+" }}}
 Plug 'gko/vim-coloresque', { 'for': ['css', 'html', 'markdown', 'javascript', 'python'] }
 Plug 'chr4/nginx.vim', { 'for': 'nginx' }
 Plug 'storyn26383/vim-vue', { 'for': 'vue' }
@@ -181,8 +196,11 @@ Plug 'dense-analysis/ale'
 if v:version >= 703
   Plug 'scrooloose/syntastic'
 endif
-
-" Colorschemes
+" }}}
+" Colorschemes {{{
+" Disabled Colorschemes {{{
+"Plug 'morhetz/gruvbox'
+" }}}
 Plug 'tomasr/molokai'
 Plug 'AlessandroYorba/Despacio'
 Plug 'nightsense/cosmic_latte'
@@ -196,28 +214,36 @@ Plug 'mhartington/oceanic-next'
 Plug 'rakr/vim-one'
 Plug 'liuchengxu/space-vim-dark'
 Plug 'jacoborus/tender.vim'
-"Plug 'morhetz/gruvbox'
+Plug 'arcticicestudio/nord-vim'
+" }}}
 call plug#end()
 endif
 
-filetype plugin indent on
-
+" vim-wiki {{{
 " -------------------------
-" vim-indent-guides
+let g:vimwiki_ext2syntax = {'.Rmd': 'markdown', '.rmd': 'markdown','.md': 'markdown', '.markdown': 'markdown', '.mdown': 'markdown'}
+let g:vimwiki_list = [{'path': '~/wiki/'}]
+"let g:vimwiki_list = [{'path': '~/vimwiki/',
+"                      \ 'syntax': 'markdown', 'ext': '.md'}]<Paste>
+" }}}----------------------
+" vim-indent-guides {{{
 " -------------------------
 "let g:indent_guides_enable_on_vim_startup = 1
 "let g:indent_guides_auto_colors = 0
 "autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=red   ctermbg=3
 "autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=green ctermbg=4
-
-
+" }}}----------------------
+" vim-codelf {{{
 " -------------------------
-" deoplete.nvim
+inoremap <silent> <leader>ce <C-R>=codelf#start()<CR>
+nnoremap <silent> <leader>ce :call codelf#start()<CR>
+let g:codelf_enable_popup_menu = v:true
+" }}}----------------------
+" deoplete.nvim {{{
 " -------------------------
 "let g:deoplete#enable_at_startup = 1
-
-" -------------------------
-" denite.nvim
+" }}}----------------------
+" denite.nvim {{{
 " -------------------------
 "autocmd FileType denite call s:denite_my_settings()
 "function! s:denite_my_settings() abort
@@ -234,14 +260,12 @@ filetype plugin indent on
 "  nnoremap <silent><buffer><expr> <Space>
 "  \ denite#do_map('toggle_select').'j'
 "endfunction
-
-" -------------------------
-" fzf
+" }}}----------------------
+" fzf {{{
 " -------------------------
 nmap <leader>f :FZF<cr>
-
-" -------------------------
-" limelight.vim
+" }}}----------------------
+" limelight.vim {{{
 " -------------------------
 " Color name (:help cterm-colors) or ANSI code
 let g:limelight_conceal_ctermfg = 'gray'
@@ -261,69 +285,62 @@ let g:limelight_conceal_guifg = '#777777'
 " Highlighting priority (default: 10)
 "   Set it to -1 not to overrule hlsearch
 "let g:limelight_priority = 10
-
-" -------------------------
-" vim-github-dashboard
+" }}}----------------------
+" vim-github-dashboard {{{
 " -------------------------
 "let g:github_dashboard = { 'username': 'runarsf' }
-
-" -------------------------
-" vim-airline
+" }}}----------------------
+" vim-airline {{{
 " -------------------------
 "let g:airline_theme='raven'
 "let g:airline#extensions#ale#enabled = 1
-
-" -------------------------
-" vim-sneak
+" }}}----------------------
+" vim-sneak {{{
 " -------------------------
 let g:sneak#label = 1
-
-" -------------------------
-" vim-indent-guides
+" }}}----------------------
+" vim-indent-guides {{{
 " -------------------------
 let g:indent_guides_enable_on_vim_startup = 0
-
-" -------------------------
-" vim-emoji
+" }}}----------------------
+" vim-emoji {{{
 " -------------------------
 "command! -range EmojiReplace <line1>,<line2>s/:\([^:]\+\):/\=emoji#for(submatch(1), submatch(0))/g
-
-" -------------------------
-" Sierra
+" }}}----------------------
+" Sierra {{{
 " -------------------------
 "let g:sierra_Sunset = 1
 "let g:sierra_Twilight = 1
 let g:sierra_Midnight = 1
 "let g:sierra_Pitch = 1
-
-" -------------------------
-" vim-easy-align
+" }}}----------------------
+" vim-easy-align {{{
 " -------------------------
 " Start interactive EasyAlign in visual mode (e.g. vipga)
 xmap ga <Plug>(EasyAlign)
 " Start interactive EasyAlign for a motion/text object (e.g. gaip)
 nmap ga <Plug>(EasyAlign)
-
-" -------------------------
-" vim-cheat40
+" }}}----------------------
+" vim-cheat40 {{{
 " -------------------------
 let g:cheat40_use_default = 1
 "nmap <F1> :Cheat40<CR>
 "imap <F1> :Cheat40<CR>
 function! Cheat()
-  if (g:loaded_cheatsheet)
+  "if (g:loaded_cheatsheet)
+  if empty(bufname('~/.vim/plugged/vim-cheat40/cheat40.txt'))
     Cheat40
+  else
+    bd
   endif
 endfunction
 nnoremap <F1> :call Cheat()<CR>
-
-" -------------------------
-" gruvbox
+" }}}----------------------
+" gruvbox {{{
 " -------------------------
 "let g:gruvbox_contrast_dark="hard"
-
-" -------------------------
-" nerdtree
+" }}}----------------------
+" nerdtree {{{
 " -------------------------
 " Open a NERDTree automatically when vim starts up if no files were specified
 autocmd StdinReadPre * let s:std_in=1
@@ -336,10 +353,9 @@ autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in
 " Open NERDTree on right
 let g:NERDTreeWinPos = "left"
 " Toggle NERDTree
-map <C-o> :NERDTreeToggle<CR>
-
-" -------------------------
-" coc.nvim
+map <silent> <C-o> :NERDTreeToggle<CR>
+" }}}----------------------
+" coc.nvim {{{
 " -------------------------
 "let g:coc_force_debug = 1
 "set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')} " Add status line support, for integration with other plugin, checkout `:h coc-status`
@@ -398,21 +414,20 @@ function! s:show_documentation()
     call CocAction('doHover')
   endif
 endfunction
-
+" }}}----------------------
 " }}}======================
 " General {{{
 " =========================
 "set textwidth=80                                             " Make it obvious where 80 characters is
 "set colorcolumn=+1
 "set nojoinspaces                                             " Use one space, not two, after punctuation.
-set history=50                                                " Sets how many lines of history VIM has to remember
+set history=200                                               " Sets how many lines of history VIM has to remember
 set autoread                                                  " Set to auto read when a file is changed from the outside
 set clipboard+=unnamedplus
 "set wrap                                                     " Enables wrapping
 set nowrap
 set textwidth=0                                               " Disable wrapping
 set wrapmargin=0
-command! W w !sudo tee % > /dev/null " :W sudo saves the file
 "set foldlevelstart=99                                        " Start with fold level 99 at launch (all folds closed)
 "set foldmethod=syntax
 "if expand('%:t') == '.vimrc' | set foldmethod=marker | else | set foldmethod=syntax | endif
@@ -465,7 +480,6 @@ set numberwidth=1                                             " Left margin
 set updatetime=300                                            " Default 4000
 set shortmess+=c                                              " don't give |ins-completion-menu| messages.
 "set signcolumn=yes                                           " always show signcolumns
-
 " }}}======================
 " A E S T H E T I C S {{{
 " =========================
@@ -484,7 +498,7 @@ colorscheme space-vim-dark
 set background=dark
 
 highlight Comment cterm=italic
-highlight Normal     ctermbg=NONE guibg=NONE
+"highlight Normal     ctermbg=NONE guibg=NONE
 "highlight LineNr     ctermbg=NONE guibg=NONE
 "highlight SignColumn ctermbg=NONE guibg=NONE
 
@@ -641,17 +655,20 @@ nmap <silent> <leader>m :call ToggleMouse()<CR>
 nnoremap <silent> <leader><space> :nohlsearch<CR>
 
 " Fast config edit
-nmap <leader>cfg :e ~/.vimrc<cr>
+nmap <leader>cfg :e ~/.vimrc<CR>
 
 " Fast saving
-nmap <leader>w :w!<cr>
+nmap <leader>w :w!<CR>
+
+" Write quit
+nmap <leader>wq :wq<CR>
 
 " Fast quit
-nmap <leader>q :q<cr>
-nmap <leader>Q :q!<cr>
+nmap <leader>q :q<CR>
+nmap <leader>Q :q!<CR>
 
 " Toggle Zen mode / Goyo
-nmap <leader>z :Goyo<cr>
+nmap <leader>z :Goyo<CR>
 
 " Move a line of text using ALT+[jk] or Command+[jk] on mac
 nmap <M-j> mz:m+<cr>`z
@@ -725,7 +742,6 @@ else
 endif
 
 " Markdown file interpreting
-let g:vimwiki_ext2syntax = {'.Rmd': 'markdown', '.rmd': 'markdown','.md': 'markdown', '.markdown': 'markdown', '.mdown': 'markdown'}
 autocmd BufRead,BufNewFile *.md set filetype=markdown
 autocmd BufRead,BufNewFile .{jscs,jshint,eslint}rc set filetype=json
 autocmd BufRead,BufNewFile *.zsh-theme,aliases.local,zshrc.local,*/zsh/configs/* set filetype=zsh
@@ -753,13 +769,17 @@ autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 " }}}======================
 " Functions / Utilities {{{
 " =========================
-" Autoreload .vimrc
+" :W sudo saves file
+command! W w !sudo tee % > /dev/null
+
+" Autoreload .vimrc {{{
 augroup myvimrchooks
   au!
   autocmd bufwritepost .vimrc source ~/.vimrc
 augroup END
+" }}}
 
-" Toggle line numbers
+" Dynamic line numbers {{{
 function! ToggleNumbers()
   if &number || &relativenumber
     call EnterInsert()
@@ -772,13 +792,13 @@ endfunction
 nmap <silent> <leader>n :call ToggleNumbers()<CR>
 
 function! EnterInsert()
-  GitGutterDisable
+  "GitGutterDisable
   set cursorline
   set norelativenumber
   set number
 endfunction
 function! LeaveInsert()
-  GitGutterEnable
+  "GitGutterEnable
   set nocursorline
   set relativenumber
   set number
@@ -788,34 +808,37 @@ autocmd FocusLost * call EnterInsert()
 autocmd InsertLeave * call LeaveInsert()
 autocmd FocusGained * call LeaveInsert()
 autocmd VimEnter * call LeaveInsert()
+" }}}
 
-" Switch colorscheme and enable limelight with Goyo
+" Switch colorscheme and enable limelight with Goyo {{{
 function! s:goyo_enter()
   colorscheme sierra
   Limelight
 endfunction
 function! s:goyo_leave()
   colorscheme space-vim-dark
-  highlight Normal     ctermbg=NONE guibg=NONE
+  "highlight Normal     ctermbg=NONE guibg=NONE
   Limelight!
 endfunction
 autocmd! User GoyoEnter nested call <SID>goyo_enter()
 autocmd! User GoyoLeave nested call <SID>goyo_leave()
+" }}}
 
-" Colour scheme selector <F8>
-function! s:rotate_colors()
-  if !exists('s:colors')
-    let s:colors = s:colors()
-  endif
-  let name = remove(s:colors, 0)
-  call add(s:colors, name)
-  execute 'colorscheme' name
-  redraw
-  echo name
-endfunction
-nnoremap <silent> <F8> :call <SID>rotate_colors()<cr>
+" Colour scheme selector <F8> {{{
+"function! s:rotate_colors()
+"  if !exists('s:colors')
+"    let s:colors = s:colors()
+"  endif
+"  let name = remove(s:colors, 0)
+"  call add(s:colors, name)
+"  execute 'colorscheme' name
+"  redraw
+"  echo name
+"endfunction
+"nnoremap <silent> <F8> :call <SID>rotate_colors()<cr>
+" }}}
 
-" :DiffSaved to show file modifications in diff format
+" :DiffSaved to show file modifications in diff format {{{
 function! s:DiffWithSaved()
   let filetype=&ft
   diffthis
@@ -824,8 +847,9 @@ function! s:DiffWithSaved()
   exe "setlocal bt=nofile bh=wipe nobl noswf ro ft=" . filetype
 endfunction
 com! DiffSaved call s:DiffWithSaved()
+" }}}
 
-" :root to change directory to git repo root
+" :root to change directory to git repo root {{{
 function! s:root()
   let root = systemlist('git rev-parse --show-toplevel')[0]
   if v:shell_error
@@ -836,31 +860,9 @@ function! s:root()
   endif
 endfunction
 command! Root call s:root()
+" }}}
 
-function! CheckGitRev()
-  " $(git rev-parse HEAD) == $(git rev-parse @{u})
-  " rev-pase --short also works
-  " git ls-remote origin -h refs/heads/master
-
-  if expand('%:t') == '.vimrc'              " if filename = .vimrc
-    call system('test -L ' . expand('%:p')) " if file = symlink
-    if v:shell_error != 0                   " if file != symlink
-      return
-    endif
-  else                                      " if filename != .vimrc
-    return
-  endif
-  let repo = system("dirname " . system("readlink -f " . expand("%:p")))
-  if (system('git -C ' . repo . ' rev-parse HEAD') != system('git -C ' . repo . ' rev-parse @{u}'))
-    if confirm("Dotfiles are not up to date, would you like to fetch the latest update?", "&yes\n&No", 2) == 1
-      system('git -C ' . repo . ' pull')
-    endif
-  endif
-endfunction
-autocmd VimEnter * call CheckGitRev()
-
-" Fancy folding
-" «»¶§ƒ×λ⌈⌋⟦⟧⦃⦄⨾ https://www.compart.com/en/unicode/mirrored
+" Fancy folding {{{
 function! FoldText()
   set fillchars=fold:\ "
   let line = ' ' . substitute(getline(v:foldstart), '^\s*"\?\s*\|\s*"\?\s*{{' . '{\d*\s*', '', 'g') . ' '
@@ -874,28 +876,70 @@ function! FoldText()
   return foldtextstart . repeat(foldchar, winwidth(0)-foldtextlength) . foldtextend
 endfunction
 set foldtext=FoldText()
+" }}}
 " }}}======================
-" Zettelkasten {{{
+" Terminal handling {{{
 " =========================
-"command! -nargs=* Zet call Zetteledit(<f-args>)
+" Set login shell for :terminal command so aliases work
+set shell=/bin/zsh
 
-"func! Zetteledit(...)
+" Creates a floating window with a most recent buffer to be used https://github.com/camspiers/dotfiles/blob/master/files/.config/nvim/init.vim#L446-L468 {{{
+function! CreateCenteredFloatingWindow()
+  let width = float2nr(&columns * 0.6)
+  let height = float2nr(&lines * 0.6)
+  let top = ((&lines - height) / 2) - 1
+  let left = (&columns - width) / 2
+  let opts = {'relative': 'editor', 'row': top, 'col': left, 'width': width, 'height': height, 'style': 'minimal'}
 
-  " build the file name
-"  let l:sep = ''
-"  if len(a:000) > 0
-"    let l:sep = '-'
-"  endif
-"  let l:fname = expand('~/wiki/') . strftime("%F-%H%M") . l:sep . join(a:000, '-') . '.md'
+  let top = "┌" . repeat("─", width - 2) . "┐"
+  "let top = "╭" . repeat("─", width - 2) . "╮"
+  let mid = "│" . repeat(" ", width - 2) . "│"
+  "let bot = "╰" . repeat("─", width - 2) . "╯"
+  let bot = "└" . repeat("─", width - 2) . "┘"
+  let lines = [top] + repeat([mid], height - 2) + [bot]
+  let s:buf = nvim_create_buf(v:false, v:true)
+  call nvim_buf_set_lines(s:buf, 0, -1, v:true, lines)
+  call nvim_open_win(s:buf, v:true, opts)
+  set winhl=Normal:Floating
+  let opts.row += 1
+  let opts.height -= 2
+  let opts.col += 2
+  let opts.width -= 4
+  call nvim_open_win(nvim_create_buf(v:false, v:true), v:true, opts)
+  au BufWipeout <buffer> exe 'bw '.s:buf
+endfunction
+" }}}
 
-  " edit the new file
-"  exec "e " . l:fname
+" When term starts, auto go into insert mode
+autocmd TermOpen * startinsert
+" Turn off line numbers etc
+autocmd TermOpen * setlocal listchars= nonumber norelativenumber
 
-  " enter the title and timestamp (using ultisnips) in the new file
-"  if len(a:000) > 0
-"    exec "normal ggO\<c-r>=strftime('%Y-%m-%d %H:%M')\<cr> " . join(a:000) . "\<cr>\<esc>G"
-"  else
-"    exec "normal ggO\<c-r>=strftime('%Y-%m-%d %H:%M')\<cr>\<cr>\<esc>G"
-"  endif
-"endfunc
+function! OpenTerm(cmd)
+  call CreateCenteredFloatingWindow()
+  call termopen(a:cmd, { 'on_exit': function('TermExitCallback') })
+endfunction
+
+function! TermExitCallback(job_id, code, event) dict
+  if a:code == 0
+    bd!
+  endif
+endfunction
+
+"nnoremap <C-n> :call ToggleScratchTerm()<CR>
+function! ToggleScratchTerm()
+  if empty(bufname('/bin/zsh'))
+    call OpenTerm('/bin/zsh')
+  else
+    bd!
+  endif
+endfunction
+
+function! ToggleLazyGit()
+  if empty(bufname('lazygit'))
+    call OpenTerm('lazygit')
+  else
+    bd!
+  endif
+endfunction
 " }}}======================

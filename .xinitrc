@@ -1,5 +1,4 @@
 #!/usr/bin/env sh
-echo ".xinitrc @ $(date +%T.%N)" > /tmp/bootorder
 
 # xinitrc runs automatically when you run startx.
 

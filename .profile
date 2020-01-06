@@ -1,9 +1,9 @@
-echo ".(z)profile @ $(date +%T.%N)" >> /tmp/bootorder
 # Profile file. Runs on login.
 
 # Adds `~/bin` to $PATH
 export PATH="${PATH}:$(du "${HOME}/bin/" | cut -f2 | tr '\n' ':' | sed 's/:*$//')"
 export PATH="${PATH}:${HOME}/.local/bin"
+export PATH="${PATH}:/snap/bin"
 
 export LANG=en_US.UTF-8
 

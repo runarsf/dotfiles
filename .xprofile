@@ -1,5 +1,4 @@
 #!/usr/bin/env sh
-echo ".xprofile @ $(date +%T.%N)" >> /tmp/bootorder
 
 setxkbmap -option caps:escape -v no
 pulseaudio --start &

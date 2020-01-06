@@ -1,4 +1,3 @@
-echo ".(z)profile @ $(date +%T.%N)" >> /tmp/bootorder
 # Profile file. Runs on login.
 
 # Adds `~/bin` to $PATH
