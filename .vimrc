@@ -77,9 +77,9 @@ endif
 " }}}
 
 "filetype plugin indent on
-filetype plugin on
-
-let has_node = (system('node -v') =~ '^v')
+filetype plugin indent on
+let g:colorscheme = 'one'
+let g:has_node = (system('node -v') =~ '^v')
 
 silent! if plug#begin('~/.vim/plugged')
 " General {{{
@@ -171,7 +171,7 @@ Plug 'tpope/vim-fugitive'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'tpope/vim-surround'
 Plug 'voldikss/vim-codelf'
-if has_node && v:version >= 703
+if g:has_node && v:version >= 703
   Plug 'neoclide/coc.nvim', { 'branch': 'release' } " 'do': { -> coc#util#install() }}
 endif
 Plug 'inkarkat/vim-ingo-library', { 'branch': 'stable' }
@@ -200,8 +200,10 @@ endif
 " }}}
 " Colorschemes {{{
 " Disabled Colorschemes {{{
+"Plug 'ayu-theme/ayu-vim'
 "Plug 'morhetz/gruvbox'
 " }}}
+Plug 'sainnhe/edge'
 Plug 'tomasr/molokai'
 Plug 'AlessandroYorba/Despacio'
 Plug 'nightsense/cosmic_latte'
@@ -216,40 +218,48 @@ Plug 'rakr/vim-one'
 Plug 'liuchengxu/space-vim-dark'
 Plug 'jacoborus/tender.vim'
 Plug 'arcticicestudio/nord-vim'
+Plug 'joshdick/onedark.vim'
+Plug 'flrnd/plastic.vim'
+Plug 'kaicataldo/material.vim'
 " }}}
 call plug#end()
 endif
 
+" edge {{{
+let g:edge_style = 'neon'
+let g:edge_disable_italic_comment = 0
+" }}}
+" material.vim {{{
+let g:material_theme_style = 'default' " 'default' | 'palenight' | 'ocean' | 'lighter' | 'darker'
+let g:material_terminal_italics = 1
+" }}}
+" vim-one {{{
+let g:one_allow_italics = 1
+" }}}
 " tagbar {{{
-" -------------------------
 nmap <F8> :TagbarToggle<CR>
-" }}}----------------------
+" }}}
 " vim-wiki {{{
-" -------------------------
-let g:vimwiki_ext2syntax = {'.Rmd': 'markdown', '.rmd': 'markdown','.md': 'markdown', '.markdown': 'markdown', '.mdown': 'markdown'}
-let g:vimwiki_list = [{'path': '~/wiki/'}]
-"let g:vimwiki_list = [{'path': '~/vimwiki/',
-"                      \ 'syntax': 'markdown', 'ext': '.md'}]<Paste>
-" }}}----------------------
+"let g:vimwiki_ext2syntax = {'.Rmd': 'markdown', '.rmd': 'markdown','.md': 'markdown', '.markdown': 'markdown', '.mdown': 'markdown'}
+let g:vimwiki_list = [{'path': '~/wiki/', 'path_html': '~/wiki/src/templates/'}]
+"let g:vimwiki_list = [{'path': '~/wiki/',
+"                      \ 'syntax': 'markdown', 'ext': '.md'}]
+" }}}
 " vim-indent-guides {{{
-" -------------------------
 "let g:indent_guides_enable_on_vim_startup = 1
 "let g:indent_guides_auto_colors = 0
 "autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=red   ctermbg=3
 "autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=green ctermbg=4
-" }}}----------------------
+" }}}
 " vim-codelf {{{
-" -------------------------
 inoremap <silent> <leader>ce <C-R>=codelf#start()<CR>
 nnoremap <silent> <leader>ce :call codelf#start()<CR>
 let g:codelf_enable_popup_menu = v:true
-" }}}----------------------
+" }}}
 " deoplete.nvim {{{
-" -------------------------
 "let g:deoplete#enable_at_startup = 1
-" }}}----------------------
+" }}}
 " denite.nvim {{{
-" -------------------------
 "autocmd FileType denite call s:denite_my_settings()
 "function! s:denite_my_settings() abort
 "  nnoremap <silent><buffer><expr> <CR>
@@ -265,19 +275,17 @@ let g:codelf_enable_popup_menu = v:true
 "  nnoremap <silent><buffer><expr> <Space>
 "  \ denite#do_map('toggle_select').'j'
 "endfunction
-" }}}----------------------
+" }}}
 " fzf {{{
-" -------------------------
 nmap <leader>f :FZF<cr>
-" }}}----------------------
+" }}}
 " limelight.vim {{{
-" -------------------------
 " Color name (:help cterm-colors) or ANSI code
-let g:limelight_conceal_ctermfg = 'gray'
-let g:limelight_conceal_ctermfg = 240
+"-"let g:limelight_conceal_ctermfg = 'gray'
+"-"let g:limelight_conceal_ctermfg = 240
 " Color name (:help gui-colors) or RGB color
-let g:limelight_conceal_guifg = 'DarkGray'
-let g:limelight_conceal_guifg = '#777777'
+"-"let g:limelight_conceal_guifg = 'DarkGray'
+"-"let g:limelight_conceal_guifg = '#777777'
 " Default: 0.5
 "let g:limelight_default_coefficient = 0.7
 " Number of preceding/following paragraphs to include (default: 0)
@@ -290,44 +298,33 @@ let g:limelight_conceal_guifg = '#777777'
 " Highlighting priority (default: 10)
 "   Set it to -1 not to overrule hlsearch
 "let g:limelight_priority = 10
-" }}}----------------------
+" }}}
 " vim-github-dashboard {{{
-" -------------------------
 "let g:github_dashboard = { 'username': 'runarsf' }
-" }}}----------------------
+" }}}
 " vim-airline {{{
-" -------------------------
 "let g:airline_theme='raven'
 "let g:airline#extensions#ale#enabled = 1
-" }}}----------------------
+" }}}
 " vim-sneak {{{
-" -------------------------
 let g:sneak#label = 1
-" }}}----------------------
-" vim-indent-guides {{{
-" -------------------------
-let g:indent_guides_enable_on_vim_startup = 0
-" }}}----------------------
+" }}}
 " vim-emoji {{{
-" -------------------------
 "command! -range EmojiReplace <line1>,<line2>s/:\([^:]\+\):/\=emoji#for(submatch(1), submatch(0))/g
-" }}}----------------------
+" }}}
 " Sierra {{{
-" -------------------------
 "let g:sierra_Sunset = 1
 "let g:sierra_Twilight = 1
 let g:sierra_Midnight = 1
 "let g:sierra_Pitch = 1
-" }}}----------------------
+" }}}
 " vim-easy-align {{{
-" -------------------------
 " Start interactive EasyAlign in visual mode (e.g. vipga)
-xmap ga <Plug>(EasyAlign)
+"xmap ga <Plug>(EasyAlign)
 " Start interactive EasyAlign for a motion/text object (e.g. gaip)
-nmap ga <Plug>(EasyAlign)
-" }}}----------------------
+"nmap ga <Plug>(EasyAlign)
+" }}}
 " vim-cheat40 {{{
-" -------------------------
 let g:cheat40_use_default = 1
 "nmap <F1> :Cheat40<CR>
 "imap <F1> :Cheat40<CR>
@@ -340,13 +337,11 @@ function! Cheat()
   endif
 endfunction
 nnoremap <F1> :call Cheat()<CR>
-" }}}----------------------
+" }}}
 " gruvbox {{{
-" -------------------------
 "let g:gruvbox_contrast_dark="hard"
-" }}}----------------------
+" }}}
 " nerdtree {{{
-" -------------------------
 " Open a NERDTree automatically when vim starts up if no files were specified
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
@@ -359,9 +354,8 @@ autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in
 let g:NERDTreeWinPos = "left"
 " Toggle NERDTree
 map <silent> <C-o> :NERDTreeToggle<CR>
-" }}}----------------------
+" }}}
 " coc.nvim {{{
-" -------------------------
 "let g:coc_force_debug = 1
 "set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')} " Add status line support, for integration with other plugin, checkout `:h coc-status`
 " Use `[g` and `]g` to navigate diagnostics
@@ -419,72 +413,7 @@ function! s:show_documentation()
     call CocAction('doHover')
   endif
 endfunction
-" }}}----------------------
-" }}}======================
-" General {{{
-" =========================
-"set textwidth=80                                             " Make it obvious where 80 characters is
-"set colorcolumn=+1
-"set nojoinspaces                                             " Use one space, not two, after punctuation.
-set history=200                                               " Sets how many lines of history VIM has to remember
-set autoread                                                  " Set to auto read when a file is changed from the outside
-set clipboard+=unnamedplus
-"set wrap                                                     " Enables wrapping
-set nowrap
-set textwidth=0                                               " Disable wrapping
-set wrapmargin=0
-"set foldlevelstart=99                                        " Start with fold level 99 at launch (all folds closed)
-"set foldmethod=syntax
-"if expand('%:t') == '.vimrc' | set foldmethod=marker | else | set foldmethod=syntax | endif
-"set foldlevel=0
-"set modelines=0                                               " Disable modelines as a security precaution<Paste>
-"set nomodeline
-set modeline
-set modelines=5
-set nocompatible                                              " Enables VI iMproved enhancements
-set guifont=Source\ Code\ Pro                                 " GUI Font
-syntax on                                                     " Enable syntax highlighting
-syntax enable
-set encoding=utf-8                                            " Set utf-8 as standard encoding
-set ffs=unix,dos,mac                                          " Use Unix as the standard file type
-set nobackup                                                  " Turn backup off, since most stuff is in git
-set nowritebackup
-set noswapfile
-"set complete-=i                                              " Enable completions
-set mouse=c                                                   " a, disable mouse support
-set noerrorbells                                              " No annoying sound on errors
-set novisualbell
-set t_vb=
-set tm=500
-"set cursorline                                               " Highlight current line
-"set number                                                   " Enable line numbers
-"set relativenumber                                            " Set line numbers to relative
-set ruler
-set showcmd                                                   " Display incomplete commands
-set so=5                                                      " Set lines to the cursor - when moving vertically
-let $LANG='en'                                                " Avoid garbled characters in Chinese language in Windows
-set langmenu=en
-source $VIMRUNTIME/delmenu.vim
-source $VIMRUNTIME/menu.vim
-set wildmenu                                                  " Turn on the Wild menu for cycling through command options
-set wildmode=longest:full,full                                " longest:list,full
-set cmdheight=1                                               " Height of the command bar
-set hidden                                                    " A buffer becomes hidden when it is abandoned, recommended for coc
-set backspace=eol,start,indent                                " Configure backspace so it acts as it should act
-set whichwrap+=<,>,h,l
-set ignorecase                                                " Make search case insensitive
-set smartcase                                                 " When searching try to be smart about cases
-set hlsearch                                                  " Highlight search results
-set incsearch                                                 " Makes search act like search in modern browsers
-set lazyredraw                                                " Don't redraw while executing macros (good performance config)
-set magic                                                     " For regular expressions turn magic on
-set showmatch                                                 " Show matching brackets when text indicator is over them
-set mat=2                                                     " How many tenths of a second to blink when matching brackets
-set foldcolumn=0                                              " Left margin
-set numberwidth=1                                             " Left margin
-set updatetime=300                                            " Default 4000
-set shortmess+=c                                              " don't give |ins-completion-menu| messages.
-"set signcolumn=yes                                           " always show signcolumns
+" }}}
 " }}}======================
 " A E S T H E T I C S {{{
 " =========================
@@ -493,14 +422,26 @@ highlight TabLineFill ctermfg=LightGreen ctermbg=DarkGreen
 highlight TabLine ctermfg=Blue ctermbg=Yellow
 highlight TabLineSel ctermfg=Red ctermbg=Yellow
 
-" Enable termguicolors
-"if (has("termguicolors"))
-"  set termguicolors
-"endif
+" For Neovim 0.1.3 and 0.1.4 - https://github.com/neovim/neovim/pull/2198
+if (has('nvim'))
+  let $NVIM_TUI_ENABLE_TRUE_COLOR = 1
+endif
+
+" For Neovim > 0.1.5 and Vim > patch 7.4.1799 - https://github.com/vim/vim/commit/61be73bb0f965a895bfb064ea3e55476ac175162
+" Based on Vim patch 7.4.1770 (`guicolors` option) - https://github.com/vim/vim/commit/8a633e3427b47286869aa4b96f2bfc1fe65b25cd
+" https://github.com/neovim/neovim/wiki/Following-HEAD#20160511
+if (has('termguicolors'))
+  set termguicolors
+endif
+
+" Enable 256-colors, has to be set before colorscheme
+set t_Co=256
+set t_AB=^[[48;5;%dm
+set t_AF=^[[38;5;%dm
 
 " Colorscheme
-colorscheme space-vim-dark
 set background=dark
+execute "colorscheme " . g:colorscheme
 
 highlight Comment cterm=italic
 "highlight Normal     ctermbg=NONE guibg=NONE
@@ -508,7 +449,7 @@ highlight Comment cterm=italic
 "highlight SignColumn ctermbg=NONE guibg=NONE
 
 "if has('nvim')
-"  " https://github.com/neovim/neovim/issues/2897#issuecomment-115464516
+  " https://github.com/neovim/neovim/issues/2897#issuecomment-115464516
 "  let g:terminal_color_0 = '#4e4e4e'
 "  let g:terminal_color_1 = '#d68787'
 "  let g:terminal_color_2 = '#5f865f'
@@ -532,6 +473,71 @@ highlight Comment cterm=italic
 "    \ endif
 "endif
 
+" }}}======================
+" General {{{
+" =========================
+"set textwidth=80                                             " Make it obvious where 80 characters is
+"set colorcolumn=+1
+"set nojoinspaces                                             " Use one space, not two, after punctuation.
+set history=200                                               " Sets how many lines of history VIM has to remember
+set autoread                                                  " Set to auto read when a file is changed from the outside
+set clipboard+=unnamedplus
+"set wrap                                                     " Enables wrapping
+set nowrap
+set textwidth=0                                               " Disable wrapping
+set wrapmargin=0
+"set foldlevelstart=99                                        " Start with fold level 99 at launch (all folds closed)
+"set foldmethod=syntax
+"if expand('%:t') == '.vimrc' | set foldmethod=marker | else | set foldmethod=syntax | endif
+"set foldlevel=0
+"set modelines=0                                               " Disable modelines as a security precaution<Paste>
+"set nomodeline
+set modeline
+set modelines=5
+set nocompatible                                              " Enables VI iMproved enhancements
+set guifont=Source\ Code\ Pro                                  " GUI Font
+"syntax on                                                     " Enable syntax highlighting
+syntax enable
+set encoding=utf-8                                            " Set utf-8 as standard encoding
+set ffs=unix,dos,mac                                          " Use Unix as the standard file type
+set nobackup                                                  " Turn backup off, since most stuff is in git
+set nowritebackup
+set noswapfile
+"set complete-=i                                              " Enable completions
+set mouse=c                                                   " a, disable mouse support
+set noerrorbells                                              " No annoying sound on errors
+set novisualbell
+set t_vb=
+set tm=500
+"set cursorline                                               " Highlight current line
+"set number                                                   " Enable line numbers
+"set relativenumber                                            " Set line numbers to relative
+set ruler
+set showcmd                                                   " Display incomplete commands
+set so=5                                                      " Set lines to the cursor - when moving vertically
+let $LANG='en'                                                " Avoid garbled characters in Chinese language in Windows
+set langmenu=en
+set wildmenu                                                  " Turn on the Wild menu for cycling through command options
+set wildmode=longest:full,full                                " longest:list,full
+set cmdheight=1                                               " Height of the command bar
+set hidden                                                    " A buffer becomes hidden when it is abandoned, recommended for coc
+set backspace=indent,eol,start                                " Configure backspace so it acts as it should act
+set whichwrap+=<,>,h,l
+set ignorecase                                                " Make search case insensitive
+set smartcase                                                 " When searching try to be smart about cases
+set lazyredraw                                                " Don't redraw while executing macros (good performance config)
+set magic                                                     " For regular expressions turn magic on
+set incsearch                                                 " Makes search act like search in modern browsers
+set showmatch                                                 " Show matching brackets when text indicator is over them
+set hlsearch                                                  " Highlight search results
+set mat=2                                                     " How many tenths of a second to blink when matching brackets
+set foldcolumn=0                                              " Left margin
+set numberwidth=1                                             " Left margin
+set updatetime=300                                            " Default 4000
+set shortmess+=c                                              " don't give |ins-completion-menu| messages.
+"set signcolumn=yes                                           " always show signcolumns
+source $VIMRUNTIME/delmenu.vim
+source $VIMRUNTIME/menu.vim
 " }}}======================
 " Status line / Tabs {{{
 " =========================
@@ -622,6 +628,9 @@ if $TERM =~ 'screen'
   nnoremap <leader><C-a> <C-a>
 endif
 
+" space open/closes folds
+nnoremap <space> za
+
 " esc in insert mode, consider using kj instead, as it's no-op (up-down)
 inoremap jk <esc>
 " esc in command mode
@@ -634,7 +643,7 @@ cnoremap jk <C-C>
 nnoremap Q @q
 
 " Run python file
-nnoremap <F5> :echo system('python3 "' . expand('%') . '"')<cr>
+"nnoremap <F5> :echo system('python3 "' . expand('%') . '"')<cr>
 
 " Toggle paste
 "nnoremap <leader>p :set invpaste<CR>
@@ -643,8 +652,8 @@ set pastetoggle=<leader>p
 
 " Rebind CapsLock to Escape in X-Sessions
 if has('unix') && !empty($DISPLAY)
-  au VimEnter * silent! !xmodmap -e 'clear Lock' -e 'keycode 0x42 = Escape'
-  au VimLeave * silent! !xmodmap -e 'clear Lock' -e 'keycode 0x42 = Caps_Lock'
+  autocmd VimEnter * silent! !xmodmap -e 'clear Lock' -e 'keycode 0x42 = Escape'
+  autocmd VimLeave * silent! !xmodmap -e 'clear Lock' -e 'keycode 0x42 = Caps_Lock'
 endif
 
 " Toggle mouse
@@ -698,9 +707,6 @@ map <C-l> <C-w>l
 "inoremap <silent> ,t <C-x><C-]>
 "inoremap <silent> ,u <C-x><C-u>
 
-" Disable highlight when <leader><cr> is pressed
-map <silent> <leader><cr> :noh<cr>
-
 " Visual mode pressing * or # searches for the current selection
 vnoremap <silent> * :<C-u>call VisualSelection('', '')<CR>/<C-R>=@/<CR><CR>
 "vnoremap <silent> # :<C-u>call VisualSelection('', '')<CR>?<C-R>=@/<CR><CR>
@@ -718,8 +724,8 @@ map <leader>ss :setlocal spell!<cr>
 "noremap <Leader>m mmHmt:%s/<C-V><cr>//ge<cr>'tzt'm
 
 " Copy selected text to system clipboard (requires gvim installed):
-vnoremap <C-c> "*Y :let @+=@*<CR>
-map <C-p> "+P
+"vnoremap <C-c> "*Y :let @+=@*<CR>
+"map <C-p> "+P
 
 " }}}======================
 " Misc {{{
@@ -734,25 +740,26 @@ au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g
 inoreabbrev <expr> #!! "#!/usr/bin/env" . (empty(&filetype) ? '' : ' '.&filetype)
 
 " Set extra options when running in GUI mode
-if has("gui_running")
-  set guioptions-=T
-  set guioptions-=e
-  set guitablabel=%M\ %t
-  set guioptions-=r                " Disable scrollbars
-  set guioptions-=R
-  set guioptions-=l
-  set guioptions-=L
-else
-  set t_Co=256
-endif
+"if has("gui_running")
+"  set guioptions-=T
+"  set guioptions-=e
+"  set guitablabel=%M\ %t
+"  set guioptions-=r                " Disable scrollbars
+"  set guioptions-=R
+"  set guioptions-=l
+"  set guioptions-=L
+"else
+"  set t_Co=256
+"endif
 
-" Markdown file interpreting
+" File interpreting
 autocmd BufRead,BufNewFile *.md set filetype=markdown
 autocmd BufRead,BufNewFile .{jscs,jshint,eslint}rc set filetype=json
 autocmd BufRead,BufNewFile *.zsh-theme,aliases.local,zshrc.local,*/zsh/configs/* set filetype=zsh
 autocmd BufRead,BufNewFile gitconfig.local set filetype=gitconfig
 autocmd BufRead,BufNewFile tmux.conf.local set filetype=tmux
 autocmd BufRead,BufNewFile vimrc.local set filetype=vim
+autocmd BufRead,BufNewFile *.rss set filetype=xml
 
 " Turn persistent undo on
 " Undo even when you close a buffer/VIM
@@ -763,7 +770,7 @@ catch
 endtry
 
 " Automatically deletes all trailing whitespace on save
-autocmd BufWritePre * %s/\s\+$//e
+"autocmd BufWritePre * %s/\s\+$//e
 
 " Save and restore code folding
 autocmd BufWinLeave *.* mkview
@@ -777,11 +784,31 @@ autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 " :W sudo saves file
 command! W w !sudo tee % > /dev/null
 
+" Run line under cursor
+"nnoremap <leader>o mmI:<esc>v$h"oy@o<CR>x`m
+nnoremap <leader>o "oyy:exe @o<CR>
+
+function! WikiSyncPull()
+  let l:wd = expand(g:vimwiki_list[0]['path'])
+  call system("git -C " . l:wd . " pull")
+endfunction
+
+function! WikiSyncPush()
+  let l:wd = expand(g:vimwiki_list[0]['path'])
+  " https://github.com/vimwiki/vimwiki/blob/master/ftplugin/vimwiki.vim#L252
+  "call vimwiki#html#WikiAll2HTML(expand(l:wd . "src/templates/"))
+  "call system("git -C " . l:wd . " add .")
+  "call system("git -C " . l:wd . " commit -m\'auto push\'")
+  "call system("git -C " . l:wd . " push origin master")
+endfunction
+
 " Wiki
-execute "autocmd VimEnter " . expand(g:vimwiki_list[0]['path'] . "index.wiki") . " call system('git pull')"
-execute "autocmd VimLeave " . expand(g:vimwiki_list[0]['path'] . "index.wiki") . " call system('git add .; git commit -m\"auto push\"; git push origin master')"
-"autocmd VimEnter /home/drift/wiki/index.wiki echo 'hello'
-"autocmd VimLeave  echom 'goodbye'
+augroup vimwikiSync
+  autocmd!
+  "execute "autocmd BufWinEnter " . expand(g:vimwiki_list[0]['path'] . "index.wiki") . " call WikiSyncPull()"
+  "execute "autocmd BufWinLeave " . expand(g:vimwiki_list[0]['path'] . "index.wiki") . " call WikiSyncPush()"
+  ""execute "autocmd BufWritePost,FileWritePost " . expand(g:vimwiki_list[0]['path'] . "index.wiki") . " call WikiSyncPush()"
+augroup END
 
 " Autoreload .vimrc {{{
 augroup myvimrchooks
@@ -827,26 +854,12 @@ function! s:goyo_enter()
   Limelight
 endfunction
 function! s:goyo_leave()
-  colorscheme space-vim-dark
+  execute "colorscheme " . g:colorscheme
   "highlight Normal     ctermbg=NONE guibg=NONE
   Limelight!
 endfunction
 autocmd! User GoyoEnter nested call <SID>goyo_enter()
 autocmd! User GoyoLeave nested call <SID>goyo_leave()
-" }}}
-
-" Colour scheme selector <F8> {{{
-"function! s:rotate_colors()
-"  if !exists('s:colors')
-"    let s:colors = s:colors()
-"  endif
-"  let name = remove(s:colors, 0)
-"  call add(s:colors, name)
-"  execute 'colorscheme' name
-"  redraw
-"  echo name
-"endfunction
-"nnoremap <silent> <F8> :call <SID>rotate_colors()<cr>
 " }}}
 
 " :DiffSaved to show file modifications in diff format {{{

@@ -29,6 +29,8 @@
 *.color7: #bfbaac
 *.color15: #fdf6e3
 
+XTerm*termName: xterm-256color
+
 ! Appearance
 URxvt.letterSpace: -1
 URxvt.lineSpace: 0
