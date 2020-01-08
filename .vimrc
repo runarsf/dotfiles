@@ -203,6 +203,7 @@ endif
 "Plug 'ayu-theme/ayu-vim'
 "Plug 'morhetz/gruvbox'
 " }}}
+Plug 'chriskempson/base16-vim'
 Plug 'sainnhe/edge'
 Plug 'tomasr/molokai'
 Plug 'AlessandroYorba/Despacio'
@@ -225,6 +226,12 @@ Plug 'kaicataldo/material.vim'
 call plug#end()
 endif
 
+" netrw {{{
+let loaded_netrwPlugin = 1  " disable netrw
+" }}}
+" base16-vim {{{
+let base16colorspace=256  " Access colors present in 256 colorspace
+" }}}
 " edge {{{
 let g:edge_style = 'neon'
 let g:edge_disable_italic_comment = 0
@@ -514,7 +521,7 @@ set tm=500
 "set relativenumber                                            " Set line numbers to relative
 set ruler
 set showcmd                                                   " Display incomplete commands
-set so=5                                                      " Set lines to the cursor - when moving vertically
+set scrolloff=5                                                      " Set lines to the cursor - when moving vertically
 let $LANG='en'                                                " Avoid garbled characters in Chinese language in Windows
 set langmenu=en
 set wildmenu                                                  " Turn on the Wild menu for cycling through command options

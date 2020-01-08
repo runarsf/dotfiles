@@ -12,7 +12,7 @@ test -n "${SSH_CONNECTION}" \
   || export EDITOR=/usr/bin/nvim
 export VISUAL="${EDITOR}"
 export FILE="${EDITOR}"
-export TERMINAL="urxvt"
+export TERMINAL="terminator"
 export BROWSER="firefox"
 export PYTHONDONTWRITEBYTECODE=1
 
