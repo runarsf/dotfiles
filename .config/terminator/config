@@ -11,6 +11,8 @@
   title_transmit_bg_color = "#C1FFC1"
   scroll_tabbar = True
   focus = mouse
+  title_use_system_font = False
+  title_font = Ubuntu Mono 12
 [keybindings]
   go_down = <Ctrl>Down
   go_left = <Ctrl>Left
@@ -18,13 +20,19 @@
   go_up = <Ctrl>Up
   copy = <Alt>c
   paste = <Alt>v
+  line_down = <Alt>Down
+  line_up = <Alt>Up
+  page_down = <Alt>Page_Down
+  page_down_half = <Shift><Alt>Page_Down
+  page_up = <Alt>Page_Up
+  page_up_half = <Shift><Alt>Page_Up
   resize_down = <Ctrl><Shift>Down
   resize_left = <Ctrl><Shift>Left
   resize_right = <Ctrl><Shift>Right
   resize_up = <Ctrl><Shift>Up
-  search = <Ctrl>F
-  split_horiz = <Ctrl>T
-  split_vert = <Ctrl>E
+  search = <Ctrl><Shift>F
+  split_horiz = <Ctrl><Alt>t
+  split_vert = <Ctrl><Shift>t
   zoom_in = <Ctrl>plus
   zoom_out = <Ctrl>minus
 [profiles]

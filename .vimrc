@@ -502,7 +502,7 @@ set wrapmargin=0
 set modeline
 set modelines=5
 set nocompatible                                              " Enables VI iMproved enhancements
-set guifont=Source\ Code\ Pro                                  " GUI Font
+"set guifont=Source\ Code\ Pro                                  " GUI Font
 "syntax on                                                     " Enable syntax highlighting
 syntax enable
 set encoding=utf-8                                            " Set utf-8 as standard encoding
@@ -791,6 +791,13 @@ autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 " :W sudo saves file
 command! W w !sudo tee % > /dev/null
 
+"fun! SetupCommandAlias(from, to)
+"  exec 'cnoreabbrev <expr> '.a:from
+"        \ .' ((getcmdtype() is# ":" && getcmdline() is# "'.a:from.'")'
+"        \ .'? ("'.a:to.'") : ("'.a:from.'"))'
+"endfun
+" call SetupCommandAlias('W','w')
+
 " Run line under cursor
 "nnoremap <leader>o mmI:<esc>v$h"oy@o<CR>x`m
 nnoremap <leader>o "oyy:exe @o<CR>
@@ -803,18 +810,20 @@ endfunction
 function! WikiSyncPush()
   let l:wd = expand(g:vimwiki_list[0]['path'])
   " https://github.com/vimwiki/vimwiki/blob/master/ftplugin/vimwiki.vim#L252
-  "call vimwiki#html#WikiAll2HTML(expand(l:wd . "src/templates/"))
-  "call system("git -C " . l:wd . " add .")
-  "call system("git -C " . l:wd . " commit -m\'auto push\'")
-  "call system("git -C " . l:wd . " push origin master")
+  call vimwiki#html#WikiAll2HTML(expand(l:wd . "src/templates/"))
+  sleep 500ms
+  call system("git -C " . l:wd . " add .")
+  call system("git -C " . l:wd . " commit -m\'auto push\'")
+  call system("git -C " . l:wd . " push origin master")
 endfunction
 
 " Wiki
 augroup vimwikiSync
   autocmd!
-  "execute "autocmd BufWinEnter " . expand(g:vimwiki_list[0]['path'] . "index.wiki") . " call WikiSyncPull()"
-  "execute "autocmd BufWinLeave " . expand(g:vimwiki_list[0]['path'] . "index.wiki") . " call WikiSyncPush()"
-  ""execute "autocmd BufWritePost,FileWritePost " . expand(g:vimwiki_list[0]['path'] . "index.wiki") . " call WikiSyncPush()"
+  execute "autocmd BufWinEnter " . expand(g:vimwiki_list[0]['path'] . "index.wiki") . " call WikiSyncPull()"
+  " Syncs on :w , not :wq , try to cnoreabbrev wq to write; then quit
+  execute "autocmd BufWritePost,FileWritePost " . expand(g:vimwiki_list[0]['path'] . "index.wiki") . " call WikiSyncPush()"
+  ""execute "autocmd BufWinLeave,BufWritePost,FileWritePost " . expand(g:vimwiki_list[0]['path'] . "index.wiki") . " call WikiSyncPush()"
 augroup END
 
 " Autoreload .vimrc {{{
