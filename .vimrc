@@ -142,35 +142,35 @@ silent! if plug#begin('~/.vim/plugged')
 "endif
 "let g:deoplete#enable_at_startup = 1
 " }}}
-Plug 'majutsushi/tagbar'
+Plug 'majutsushi/tagbar', { 'on': 'TagbarToggle' }
 Plug 'vimwiki/vimwiki'
-Plug 'junegunn/vim-peekaboo'
-Plug 'tpope/vim-eunuch'
-Plug 'scrooloose/nerdtree'
-Plug 'Xuyuanp/nerdtree-git-plugin', { 'on': 'NERDTreeToggle' }
+"Plug 'junegunn/vim-peekaboo'
+Plug 'jlanzarotta/bufexplorer'
+"Plug 'tpope/vim-eunuch'
+Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
+"Plug 'Xuyuanp/nerdtree-git-plugin', { 'on': 'NERDTreeToggle' }
 Plug 'junegunn/goyo.vim'
 Plug 'justinmk/vim-sneak'
-Plug 'zefei/vim-colortuner'
+"Plug 'zefei/vim-colortuner'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
-Plug 'osyo-manga/vim-hopping'
-Plug 'ryanoasis/vim-devicons'
-Plug 'lifepillar/vim-cheat40'
-Plug 'nathanaelkane/vim-indent-guides'
+"Plug 'osyo-manga/vim-hopping'
+Plug 'lifepillar/vim-cheat40', { 'on': 'Cheat40' }
+"Plug 'nathanaelkane/vim-indent-guides'
 Plug 'junegunn/limelight.vim', { 'on': 'Limelight' }
-Plug 'mechatroner/rainbow_csv'
-Plug 'sheerun/vim-polyglot'
-Plug 'mbbill/undotree'
+"Plug 'mechatroner/rainbow_csv'
+"Plug 'sheerun/vim-polyglot'
+"Plug 'mbbill/undotree'
 Plug 'tyru/open-browser.vim', { 'on': 'RunningX' }
-Plug 'danro/rename.vim', { 'on': 'Rename' }
-Plug 'junegunn/vim-easy-align'
-Plug 'terryma/vim-multiple-cursors'
-Plug 'vim-scripts/loremipsum'
-Plug 'robcsi/viewmaps.vim'
-Plug 'tpope/vim-fugitive'
-Plug 'editorconfig/editorconfig-vim'
-Plug 'tpope/vim-surround'
-Plug 'voldikss/vim-codelf'
+"Plug 'danro/rename.vim', { 'on': 'Rename' }
+"Plug 'junegunn/vim-easy-align'
+"Plug 'terryma/vim-multiple-cursors'
+"Plug 'vim-scripts/loremipsum'
+"Plug 'robcsi/viewmaps.vim'
+"Plug 'tpope/vim-fugitive'
+"Plug 'editorconfig/editorconfig-vim'
+"Plug 'tpope/vim-surround'
+"Plug 'voldikss/vim-codelf', { 'on': 'Codelf' }
 if g:has_node && v:version >= 703
   Plug 'neoclide/coc.nvim', { 'branch': 'release' } " 'do': { -> coc#util#install() }}
 endif
@@ -178,50 +178,51 @@ Plug 'inkarkat/vim-ingo-library', { 'branch': 'stable' }
 if &rtp =~ 'vim-ingo-library'
   Plug 'inkarkat/vim-ModelineCommands', { 'branch': 'stable' }
 endif
+Plug 'ryanoasis/vim-devicons'
 " }}}
 " Syntax highlighting {{{
 " Disabled Syntax highlighting {{{
 "Plug 'ObserverOfTime/coloresque.vim'
+"if v:version >= 703
+"  Plug 'scrooloose/syntastic'
+"endif
+"Plug 'octol/vim-cpp-enhanced-highlight', { 'for': 'cpp' }
+"Plug 'nono/jquery.vim', { 'for': 'javascript' }
 " }}}
 Plug 'gko/vim-coloresque', { 'for': ['css', 'html', 'markdown', 'javascript', 'python'] }
 Plug 'chr4/nginx.vim', { 'for': 'nginx' }
 Plug 'storyn26383/vim-vue', { 'for': 'vue' }
-Plug 'octol/vim-cpp-enhanced-highlight', { 'for': 'cpp' }
 Plug 'ekalinin/Dockerfile.vim', { 'for': 'Dockerfile' }
 Plug 'kovetskiy/sxhkd-vim', { 'for': 'sxhkdrc' }
 Plug 'mboughaba/i3config.vim', { 'for': 'conf' }
 Plug 'Glench/Vim-Jinja2-Syntax', { 'for': 'jinja' }
 Plug 'rodjek/vim-puppet', { 'for': 'puppet' }
-Plug 'nono/jquery.vim', { 'for': 'javascript' }
 Plug 'dense-analysis/ale'
-if v:version >= 703
-  Plug 'scrooloose/syntastic'
-endif
 " }}}
 " Colorschemes {{{
 " Disabled Colorschemes {{{
 "Plug 'ayu-theme/ayu-vim'
 "Plug 'morhetz/gruvbox'
+"Plug 'chriskempson/base16-vim'
+"Plug 'sainnhe/edge'
+"Plug 'tomasr/molokai'
+"Plug 'AlessandroYorba/Despacio'
+"Plug 'nightsense/cosmic_latte'
+"Plug 'nightsense/snow'
+"Plug 'nightsense/stellarized'
+"Plug 'junegunn/seoul256.vim'
+"Plug 'sjl/badwolf'
+"Plug 'xero/sourcerer.vim'
+"Plug 'mhartington/oceanic-next'
+"Plug 'jacoborus/tender.vim'
+"Plug 'joshdick/onedark.vim'
+"Plug 'flrnd/plastic.vim'
+"Plug 'kaicataldo/material.vim'
 " }}}
-Plug 'chriskempson/base16-vim'
-Plug 'sainnhe/edge'
-Plug 'tomasr/molokai'
-Plug 'AlessandroYorba/Despacio'
-Plug 'nightsense/cosmic_latte'
-Plug 'nightsense/snow'
-Plug 'nightsense/stellarized'
-Plug 'junegunn/seoul256.vim'
-Plug 'sjl/badwolf'
-Plug 'xero/sourcerer.vim'
 Plug 'AlessandroYorba/Sierra'
-Plug 'mhartington/oceanic-next'
 Plug 'rakr/vim-one'
 Plug 'liuchengxu/space-vim-dark'
-Plug 'jacoborus/tender.vim'
 Plug 'arcticicestudio/nord-vim'
-Plug 'joshdick/onedark.vim'
-Plug 'flrnd/plastic.vim'
-Plug 'kaicataldo/material.vim'
 " }}}
 call plug#end()
 endif
@@ -510,9 +511,12 @@ set noerrorbells                                              " No annoying soun
 set novisualbell
 set t_vb=
 set tm=500
-"set cursorline                                               " Highlight current line
+set synmaxcol=180
+set scrolljump=5
+set nocursorline                                              " Highlight current line
+set nocursorcolumn
 "set number                                                   " Enable line numbers
-"set relativenumber                                            " Set line numbers to relative
+set relativenumber                                            " Set line numbers to relative
 set ruler
 set showcmd                                                   " Display incomplete commands
 set scrolloff=5                                                      " Set lines to the cursor - when moving vertically
@@ -529,7 +533,7 @@ set smartcase                                                 " When searching t
 set lazyredraw                                                " Don't redraw while executing macros (good performance config)
 set magic                                                     " For regular expressions turn magic on
 set incsearch                                                 " Makes search act like search in modern browsers
-set showmatch                                                 " Show matching brackets when text indicator is over them
+set noshowmatch                                                 " Show matching brackets when text indicator is over them
 set hlsearch                                                  " Highlight search results
 set mat=2                                                     " How many tenths of a second to blink when matching brackets
 set foldcolumn=0                                              " Left margin
@@ -808,34 +812,34 @@ augroup END
 " }}}
 
 " Dynamic line numbers {{{
-function! ToggleNumbers()
-  if &number || &relativenumber
-    call EnterInsert()
-    set nonumber
-    set norelativenumber
-  else
-    call LeaveInsert()
-  endif
-endfunction
-nmap <silent> <leader>n :call ToggleNumbers()<CR>
+"function! ToggleNumbers()
+"  if &number || &relativenumber
+"    call EnterInsert()
+"    set nonumber
+"    set norelativenumber
+"  else
+"    call LeaveInsert()
+"  endif
+"endfunction
+"nmap <silent> <leader>n :call ToggleNumbers()<CR>
 
-function! EnterInsert()
-  "GitGutterDisable
-  set cursorline
-  set norelativenumber
-  set number
-endfunction
-function! LeaveInsert()
-  "GitGutterEnable
-  set nocursorline
-  set relativenumber
-  set number
-endfunction
-autocmd InsertEnter * call EnterInsert()
-autocmd FocusLost * call EnterInsert()
-autocmd InsertLeave * call LeaveInsert()
-autocmd FocusGained * call LeaveInsert()
-autocmd VimEnter * call LeaveInsert()
+"function! EnterInsert()
+"  "GitGutterDisable
+"  set cursorline
+"  set norelativenumber
+"  set number
+"endfunction
+"function! LeaveInsert()
+"  "GitGutterEnable
+"  set nocursorline
+"  set relativenumber
+"  set number
+"endfunction
+"autocmd InsertEnter * call EnterInsert()
+"autocmd FocusLost * call EnterInsert()
+"autocmd InsertLeave * call LeaveInsert()
+"autocmd FocusGained * call LeaveInsert()
+"autocmd VimEnter * call LeaveInsert()
 " }}}
 
 " Switch colorscheme and enable limelight with Goyo {{{
@@ -870,7 +874,7 @@ function! s:root()
     echo 'Not in git repo'
   else
     execute 'lcd' root
-    echo 'Changed directory to: '.root
+    echo 'Changed directory to: ' . root
   endif
 endfunction
 command! Root call s:root()
