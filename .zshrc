@@ -97,7 +97,7 @@ alias please='sudo $(fc -ln -1)'
 alias reload='source $HOME/.zshrc'
 alias back='cd $OLDPWD'
 eval "$(thefuck --alias heck)"
-export PATH="${PATH}:/snap/bin"
+export PATH="${PATH}:/snap/bin" # This shoudn't be here but is required for snap (should be in .profile)
 
 # Change cursor shape for different vi modes.
 #function zle-keymap-select {

@@ -246,12 +246,6 @@ let g:one_allow_italics = 1
 " tagbar {{{
 nmap <F8> :TagbarToggle<CR>
 " }}}
-" vim-wiki {{{
-"let g:vimwiki_ext2syntax = {'.Rmd': 'markdown', '.rmd': 'markdown','.md': 'markdown', '.markdown': 'markdown', '.mdown': 'markdown'}
-let g:vimwiki_list = [{'path': '~/wiki/', 'path_html': '~/wiki/src/templates/'}]
-"let g:vimwiki_list = [{'path': '~/wiki/',
-"                      \ 'syntax': 'markdown', 'ext': '.md'}]
-" }}}
 " vim-indent-guides {{{
 "let g:indent_guides_enable_on_vim_startup = 1
 "let g:indent_guides_auto_colors = 0
@@ -788,43 +782,23 @@ autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 " }}}======================
 " Functions / Utilities {{{
 " =========================
-" :W sudo saves file
+" :W sudo saves file {{{
 command! W w !sudo tee % > /dev/null
+" }}}
 
-"fun! SetupCommandAlias(from, to)
-"  exec 'cnoreabbrev <expr> '.a:from
-"        \ .' ((getcmdtype() is# ":" && getcmdline() is# "'.a:from.'")'
-"        \ .'? ("'.a:to.'") : ("'.a:from.'"))'
-"endfun
+" Create command aliases {{{
+fun! SetupCommandAlias(from, to)
+  exec 'cnoreabbrev <expr> '.a:from
+        \ .' ((getcmdtype() is# ":" && getcmdline() is# "'.a:from.'")'
+        \ .'? ("'.a:to.'") : ("'.a:from.'"))'
+endfun
 " call SetupCommandAlias('W','w')
+" }}}
 
-" Run line under cursor
+" Run line under cursor {{{
 "nnoremap <leader>o mmI:<esc>v$h"oy@o<CR>x`m
 nnoremap <leader>o "oyy:exe @o<CR>
-
-function! WikiSyncPull()
-  let l:wd = expand(g:vimwiki_list[0]['path'])
-  call system("git -C " . l:wd . " pull")
-endfunction
-
-function! WikiSyncPush()
-  let l:wd = expand(g:vimwiki_list[0]['path'])
-  " https://github.com/vimwiki/vimwiki/blob/master/ftplugin/vimwiki.vim#L252
-  call vimwiki#html#WikiAll2HTML(expand(l:wd . "src/templates/"))
-  sleep 500ms
-  call system("git -C " . l:wd . " add .")
-  call system("git -C " . l:wd . " commit -m\'auto push\'")
-  call system("git -C " . l:wd . " push origin master")
-endfunction
-
-" Wiki
-augroup vimwikiSync
-  autocmd!
-  execute "autocmd BufWinEnter " . expand(g:vimwiki_list[0]['path'] . "index.wiki") . " call WikiSyncPull()"
-  " Syncs on :w , not :wq , try to cnoreabbrev wq to write; then quit
-  execute "autocmd BufWritePost,FileWritePost " . expand(g:vimwiki_list[0]['path'] . "index.wiki") . " call WikiSyncPush()"
-  ""execute "autocmd BufWinLeave,BufWritePost,FileWritePost " . expand(g:vimwiki_list[0]['path'] . "index.wiki") . " call WikiSyncPush()"
-augroup END
+" }}}
 
 " Autoreload .vimrc {{{
 augroup myvimrchooks
@@ -982,4 +956,51 @@ function! ToggleLazyGit()
     bd!
   endif
 endfunction
+" }}}======================
+" Vimwiki (sync) {{{
+" =========================
+" vim-wiki (plugin settings) {{{
+"let g:vimwiki_ext2syntax = {'.Rmd': 'markdown', '.rmd': 'markdown','.md': 'markdown', '.markdown': 'markdown', '.mdown': 'markdown'}
+let g:vimwiki_list = [{'path': '~/wiki/', 'path_html': '~/wiki/src/templates/'}]
+"let g:vimwiki_list = [{'path': '~/wiki/',
+"                      \ 'syntax': 'markdown', 'ext': '.md'}]
+" }}}
+
+function! WikiSyncPull()
+  let l:wd = expand(g:vimwiki_list[0]['path'])
+  silent execute "!git -C " . l:wd . " pull"
+endfunction
+
+" Requires ssh-agent to be added for push to work
+" `eval "$(ssh-agent)" && ssh-add`
+function! WikiSyncPush()
+  let l:wd = expand(g:vimwiki_list[0]['path'])
+  let l:htmlwd = expand(g:vimwiki_list[0]['path_html'])
+  " Compile Wiki to HTML - https://github.com/vimwiki/vimwiki/blob/master/ftplugin/vimwiki.vim#L252
+  call vimwiki#html#WikiAll2HTML(expand(l:htmlwd))
+  " Push changes to git (`call system('command')` doesn't show output) and check that it succeeded
+  if confirm("Push changes to git?", "&Yes\n&No", 1) == 1
+    silent execute "!git -C " . l:wd . " pull"
+    silent execute "!git -C " . l:wd . " add ."
+    silent execute "!git -C " . l:wd . " commit -m\'auto push\'"
+    silent execute "!git -C " . l:wd . " push origin master"
+
+    if !(system("git -C " . l:wd . " status") =~ "up to date")
+      if confirm("Could not push to git, retry and add ssh-agent?", "&Yes\n&No", 2) == 1
+        execute '!eval "$(ssh-agent)" && ssh-add'
+        call WikiSyncPush()
+      endif
+    endif
+  endif
+endfunction
+
+augroup vimwikiSync
+  autocmd!
+  " Pull changes when entering wiki/index.wiki
+  execute "autocmd BufWinEnter " . expand(g:vimwiki_list[0]['path'] . "index.wiki") . " call WikiSyncPull()"
+  " Alias :wq to :w :q when entering wiki/index.wiki (note: this will still be set if you open a new tab/buffer (?))
+  execute "autocmd BufWinEnter " . expand(g:vimwiki_list[0]['path'] . "index.wiki") . " cnoreabbrev wq write <bar> quit"
+  " Compile HTML and push changes when writing to wiki/index.wiki
+  execute "autocmd BufWritePost,FileWritePost " . expand(g:vimwiki_list[0]['path'] . "index.wiki") . " call WikiSyncPush()"
+augroup END
 " }}}======================
