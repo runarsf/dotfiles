@@ -144,24 +144,24 @@ silent! if plug#begin('~/.vim/plugged')
 " }}}
 Plug 'majutsushi/tagbar', { 'on': 'TagbarToggle' }
 Plug 'vimwiki/vimwiki'
-"Plug 'junegunn/vim-peekaboo'
 Plug 'jlanzarotta/bufexplorer'
-"Plug 'tpope/vim-eunuch'
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
-"Plug 'Xuyuanp/nerdtree-git-plugin', { 'on': 'NERDTreeToggle' }
 Plug 'junegunn/goyo.vim'
 Plug 'justinmk/vim-sneak'
-"Plug 'zefei/vim-colortuner'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
-"Plug 'osyo-manga/vim-hopping'
 Plug 'lifepillar/vim-cheat40', { 'on': 'Cheat40' }
-"Plug 'nathanaelkane/vim-indent-guides'
 Plug 'junegunn/limelight.vim', { 'on': 'Limelight' }
+Plug 'tyru/open-browser.vim', { 'on': 'RunningX' }
 "Plug 'mechatroner/rainbow_csv'
 "Plug 'sheerun/vim-polyglot'
 "Plug 'mbbill/undotree'
-Plug 'tyru/open-browser.vim', { 'on': 'RunningX' }
+"Plug 'nathanaelkane/vim-indent-guides'
+"Plug 'junegunn/vim-peekaboo'
+"Plug 'tpope/vim-eunuch'
+"Plug 'Xuyuanp/nerdtree-git-plugin', { 'on': 'NERDTreeToggle' }
+"Plug 'zefei/vim-colortuner'
+"Plug 'osyo-manga/vim-hopping'
 "Plug 'danro/rename.vim', { 'on': 'Rename' }
 "Plug 'junegunn/vim-easy-align'
 "Plug 'terryma/vim-multiple-cursors'
@@ -515,7 +515,7 @@ set synmaxcol=180
 set scrolljump=5
 set nocursorline                                              " Highlight current line
 set nocursorcolumn
-"set number                                                   " Enable line numbers
+set number                                                    " Enable line numbers (or absolute line number on current line with relativenumber)
 set relativenumber                                            " Set line numbers to relative
 set ruler
 set showcmd                                                   " Display incomplete commands

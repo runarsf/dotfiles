@@ -11,12 +11,12 @@ font $font 7
 
 ###---Scratchpad Windows---###
 # sc_termlarge
-for_window [instance="sc_term"] floating enable
-for_window [instance="sc_term"] resize set 1600 900
-for_window [instance="sc_term"] move position center
-for_window [instance="sc_term"] move scratchpad
-bindsym $mod+n [instance="sc_term"] scratchpad show; move position center
-bindsym $mod+Shift+n exec --no-startup-id urxvt -name sc_term -e zsh
+for_window [instance="Alacritty"] floating enable
+for_window [instance="Alacritty"] resize set 1600 900
+for_window [instance="Alacritty"] move position center
+for_window [instance="Alacritty"] move scratchpad
+bindsym $mod+n [instance="Alacritty"] scratchpad show; move position center
+bindsym $mod+Shift+n exec --no-startup-id alacritty --title Alacritty -e zsh
 
 # sc_math
 for_window [instance="sc_math"] floating enable
