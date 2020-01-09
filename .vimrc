@@ -141,18 +141,6 @@ silent! if plug#begin('~/.vim/plugged')
 "  Plug 'roxma/vim-hug-neovim-rpc'
 "endif
 "let g:deoplete#enable_at_startup = 1
-" }}}
-Plug 'majutsushi/tagbar', { 'on': 'TagbarToggle' }
-Plug 'vimwiki/vimwiki'
-Plug 'jlanzarotta/bufexplorer'
-Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
-Plug 'junegunn/goyo.vim'
-Plug 'justinmk/vim-sneak'
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-Plug 'junegunn/fzf.vim'
-Plug 'lifepillar/vim-cheat40', { 'on': 'Cheat40' }
-Plug 'junegunn/limelight.vim', { 'on': 'Limelight' }
-Plug 'tyru/open-browser.vim', { 'on': 'RunningX' }
 "Plug 'mechatroner/rainbow_csv'
 "Plug 'sheerun/vim-polyglot'
 "Plug 'mbbill/undotree'
@@ -171,12 +159,22 @@ Plug 'tyru/open-browser.vim', { 'on': 'RunningX' }
 "Plug 'editorconfig/editorconfig-vim'
 "Plug 'tpope/vim-surround'
 "Plug 'voldikss/vim-codelf', { 'on': 'Codelf' }
+" }}}
+Plug 'majutsushi/tagbar', { 'on': 'TagbarToggle' }
+Plug 'vimwiki/vimwiki'
+Plug 'jlanzarotta/bufexplorer'
+Plug 'scrooloose/nerdtree'
+Plug 'junegunn/goyo.vim'
+Plug 'justinmk/vim-sneak'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
+Plug 'lifepillar/vim-cheat40', { 'on': 'Cheat40' }
+Plug 'junegunn/limelight.vim', { 'on': 'Limelight' }
+Plug 'tyru/open-browser.vim', { 'on': 'RunningX' }
+Plug 'inkarkat/vim-ingo-library', { 'branch': 'stable' }
+Plug 'inkarkat/vim-ModelineCommands', { 'branch': 'stable' }
 if g:has_node && v:version >= 703
   Plug 'neoclide/coc.nvim', { 'branch': 'release' } " 'do': { -> coc#util#install() }}
-endif
-Plug 'inkarkat/vim-ingo-library', { 'branch': 'stable' }
-if &rtp =~ 'vim-ingo-library'
-  Plug 'inkarkat/vim-ModelineCommands', { 'branch': 'stable' }
 endif
 Plug 'ryanoasis/vim-devicons'
 " }}}
@@ -510,9 +508,9 @@ set mouse=c                                                   " a, disable mouse
 set noerrorbells                                              " No annoying sound on errors
 set novisualbell
 set t_vb=
-set tm=500
+set timeoutlen=500
 set synmaxcol=180
-set scrolljump=5
+set scrolljump=0
 set nocursorline                                              " Highlight current line
 set nocursorcolumn
 set number                                                    " Enable line numbers (or absolute line number on current line with relativenumber)
@@ -626,6 +624,13 @@ nmap <leader>0 :tablast<cr>
 " Insert tab (i CTRL+v TAB)
 "nmap <leader>t i	<ESC>
 "imap <leader>t
+
+" Buffer navigation
+nnoremap <Leader>h :bprevious<CR>
+nnoremap <Leader>l :bnext<CR>
+nnoremap <Leader>k :bfirst<CR>
+nnoremap <Leader>j :blast<CR>
+map bf :BufExplorer<CR>
 
 " Disable CTRL-A on tmux or on screen
 if $TERM =~ 'screen'
@@ -791,7 +796,7 @@ command! W w !sudo tee % > /dev/null
 " }}}
 
 " Create command aliases {{{
-fun! SetupCommandAlias(from, to)
+function! SetupCommandAlias(from, to)
   exec 'cnoreabbrev <expr> '.a:from
         \ .' ((getcmdtype() is# ":" && getcmdline() is# "'.a:from.'")'
         \ .'? ("'.a:to.'") : ("'.a:from.'"))'
@@ -929,16 +934,21 @@ endfunction
 " }}}
 
 " When term starts, auto go into insert mode
-"autocmd TermOpen * startinsert
+autocmd TermOpen * startinsert
 " Turn off line numbers etc
-"autocmd TermOpen * setlocal listchars= nonumber norelativenumber
+autocmd TermOpen * setlocal listchars= nonumber norelativenumber
+
+" Maps ESC to exit terminal's insert mode
+if has('nvim')
+  tnoremap <Esc> <C-\><C-n>
+endif
 
 function! OpenTerm(cmd)
   call CreateCenteredFloatingWindow()
-  call termopen(a:cmd, { 'on_exit': function('TermExitCallback') })
+  call termopen(a:cmd, { 'on_exit': function('TermCallback') })
 endfunction
 
-function! TermExitCallback(job_id, code, event) dict
+function! TermCallback(job_id, code, event) dict
   if a:code == 0
     bd!
   endif
@@ -960,6 +970,15 @@ function! ToggleLazyGit()
     bd!
   endif
 endfunction
+
+" Usage: call Scratchpad('zsh')
+function! Scratchpad(command)
+  if empty(bufname(a:command))
+    call OpenTerm(a:command)
+  else
+    bd!
+  endif
+endfunction
 " }}}======================
 " Vimwiki (sync) {{{
 " =========================
@@ -970,8 +989,32 @@ let g:vimwiki_list = [{'path': '~/wiki/', 'path_html': '~/wiki/src/templates/'}]
 "                      \ 'syntax': 'markdown', 'ext': '.md'}]
 " }}}
 
+function! CallbackTest()
+  echomsg 'Callback executed successfully!'
+endfunction
+function! CheckSSHAgent(callback)
+  if !($SSH_AGENT_PID)
+    if confirm("SSH_AGENT_PID unset, try adding ssh-agent?", "&Yes\n&No", 2) != 1
+      return 1
+    endif
+  endif
+
+  silent !if test -z "${SSH_AGENT_PID+x}"; then
+    \ eval "$(ssh-agent)";
+  \ fi;
+  \ if test "$(ssh-add -L | grep id_rsa | wc -l)" -le 0; then
+  \   ssh-add;
+  \   exit 69;
+  \ fi
+
+  "if v:shell_error == 69
+  "  execute "call " . a:callback
+  "endif
+endfunction
+
 function! WikiSyncPull()
   let l:wd = expand(g:vimwiki_list[0]['path'])
+  call CheckSSHAgent('WikiSyncPull()')
   silent execute "!git -C " . l:wd . " pull"
 endfunction
 
@@ -984,17 +1027,18 @@ function! WikiSyncPush()
   call vimwiki#html#WikiAll2HTML(expand(l:htmlwd))
   " Push changes to git (`call system('command')` doesn't show output) and check that it succeeded
   if confirm("Push changes to git?", "&Yes\n&No", 1) == 1
+    call CheckSSHAgent('WikiSyncPush()')
     silent execute "!git -C " . l:wd . " pull"
     silent execute "!git -C " . l:wd . " add ."
     silent execute "!git -C " . l:wd . " commit -m\'auto push\'"
     silent execute "!git -C " . l:wd . " push origin master"
 
-    if !(system("git -C " . l:wd . " status") =~ "up to date")
-      if confirm("Could not push to git, retry and add ssh-agent?", "&Yes\n&No", 2) == 1
-        execute '!eval "$(ssh-agent)" && ssh-add'
-        call WikiSyncPush()
-      endif
-    endif
+    "if !(system("git -C " . l:wd . " status") =~ "up to date")
+    "  if confirm("Could not push to git, retry and add ssh-agent?", "&Yes\n&No", 2) == 1
+    "    execute '!eval "$(ssh-agent)" && ssh-add'
+    "    call WikiSyncPush()
+    "  endif
+    "endif
   endif
 endfunction
 
