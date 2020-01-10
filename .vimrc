@@ -50,7 +50,6 @@ if empty(glob('~/.vim/autoload/plug.vim')) && (has('unix') || has('win32unix'))
   autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 " }}}
-
 " vim-plug windows installation {{{
 if empty(glob('~\vimfiles\autoload\plug.vim')) && empty(glob('~\AppData\Local\nvim\autoload\plug.vim')) && has('win32')
   if has('nvim')
@@ -76,7 +75,6 @@ if empty(glob('~\vimfiles\autoload\plug.vim')) && empty(glob('~\AppData\Local\nv
 endif
 " }}}
 
-"filetype plugin indent on
 filetype plugin indent on
 let g:colorscheme = 'one'
 let g:has_node = (system('node -v') =~ '^v')
@@ -84,6 +82,11 @@ let g:has_node = (system('node -v') =~ '^v')
 silent! if plug#begin('~/.vim/plugged')
 " General {{{
 " Disabled General {{{
+"Plug 'bagrat/vim-buffet'
+"plug 'zefei/vim-wintabs'
+"plug 'zefei/vim-wintabs-powerline'
+"Plug 'b4b4r07/vim-buftabs'
+"Plug 'bling/vim-bufferline'
 "Plug 'airblade/vim-gitgutter'
 "Plug 'fcpg/vim-waikiki'
 "Plug 'lervag/wiki.vim'
@@ -160,6 +163,9 @@ silent! if plug#begin('~/.vim/plugged')
 "Plug 'tpope/vim-surround'
 "Plug 'voldikss/vim-codelf', { 'on': 'Codelf' }
 " }}}
+Plug 'jonrad/vim-hu-hue'
+Plug 'ap/vim-buftabline'
+Plug 'pbrisbin/vim-mkdir'
 Plug 'majutsushi/tagbar', { 'on': 'TagbarToggle' }
 Plug 'vimwiki/vimwiki'
 Plug 'jlanzarotta/bufexplorer'
@@ -225,19 +231,91 @@ Plug 'arcticicestudio/nord-vim'
 call plug#end()
 endif
 
+" vim-buftabs {{{
+"let g:buftabs_enabled = 1
+"let g:buftabs_in_statusline = 1
+"let g:buftabs_in_cmdline = 0
+"let g:buftabs_only_basename = 1
+"let g:buftabs_active_highlight_group = "Visual"
+"let g:buftabs_inactive_highlight_group = ""
+"let g:buftabs_statusline_highlight_group = ""
+"let g:buftabs_marker_start = "["
+"let g:buftabs_marker_end = "]"
+"let g:buftabs_separator = "-"
+"let g:buftabs_marker_modified = "!"
+" }}}
+" vim-buftabline {{{
+"set hidden
+"buffer binds
+" }}}
+" vim-wintabs {{{
+" commands             | mapping keys                 | replacing Vim commands
+" ---------------------+------------------------------+-----------------------
+" :WintabsNext         | <Plug>(wintabs_next)         | :bnext!
+" :WintabsPrevious     | <Plug>(wintabs_previous)     | :bprevious!
+" :WintabsClose        | <Plug>(wintabs_close)        | :bdelete
+" :WintabsUndo         | <Plug>(wintabs_undo)         |
+" :WintabsOnly         | <Plug>(wintabs_only)         |
+" :WintabsCloseWindow  | <Plug>(wintabs_close_window) | :close, CTRL-W c
+" :WintabsOnlyWindow   | <Plug>(wintabs_only_window)  | :only, CTRL-W o
+" :WintabsCloseVimtab  | <Plug>(wintabs_close_vimtab) | :tabclose
+" :WintabsOnlyVimtab   | <Plug>(wintabs_only_vimtab)  | :tabonly
+" :help wintabs-commands
+
+"map <C-H> <Plug>(wintabs_previous)
+"map <C-L> <Plug>(wintabs_next)
+"map <C-T>c <Plug>(wintabs_close)
+"map <C-T>u <Plug>(wintabs_undo)
+"map <C-T>o <Plug>(wintabs_only)
+"map <C-W>c <Plug>(wintabs_close_window)
+"map <C-W>o <Plug>(wintabs_only_window)
+"command! Tabc WintabsCloseVimtab
+"command! Tabo WintabsOnlyVimtab
+" }}}
+" vim-buffet {{{
+"noremap <Tab> :bn<CR>
+"noremap <S-Tab> :bp<CR>
+"noremap <Leader><Tab> :Bw<CR>
+"noremap <Leader><S-Tab> :Bw!<CR>
+"noremap <C-t> :tabnew split<CR>
+"nmap <leader>1 <Plug>BuffetSwitch(1)
+"nmap <leader>2 <Plug>BuffetSwitch(2)
+"nmap <leader>3 <Plug>BuffetSwitch(3)
+"nmap <leader>4 <Plug>BuffetSwitch(4)
+"nmap <leader>5 <Plug>BuffetSwitch(5)
+"nmap <leader>6 <Plug>BuffetSwitch(6)
+"nmap <leader>7 <Plug>BuffetSwitch(7)
+"nmap <leader>8 <Plug>BuffetSwitch(8)
+"nmap <leader>9 <Plug>BuffetSwitch(9)
+"nmap <leader>0 <Plug>BuffetSwitch(10)
+"let g:buffet_always_show_tabline = 1
+"let g:buffet_powerline_separators = 0
+"let g:buffet_separator = ""
+"let g:buffet_show_index = 0
+"let g:buffet_max_plug = 10
+"let g:buffet_use_devicons = 1
+"let g:buffet_tab_icon = "#"
+"let g:buffet_new_buffer_name = "*"
+"let g:buffet_modified_icon = "+"
+"let g:buffet_left_trunc_icon = "<"
+"let g:buffet_right_trunc_icon = ">"
+"function! g:BuffetSetCustomColors()
+"  highlight! BuffetCurrentBuffer cterm=NONE ctermbg=5 ctermfg=8 guibg=#00FF00 guifg=#000000
+"endfunction
+" }}}
 " netrw {{{
-let loaded_netrwPlugin = 1  " disable netrw
+"let loaded_netrwPlugin = 1  " disable netrw
 " }}}
 " base16-vim {{{
-let base16colorspace=256  " Access colors present in 256 colorspace
+"let base16colorspace=256  " Access colors present in 256 colorspace
 " }}}
 " edge {{{
-let g:edge_style = 'neon'
-let g:edge_disable_italic_comment = 0
+"let g:edge_style = 'neon'
+"let g:edge_disable_italic_comment = 0
 " }}}
 " material.vim {{{
-let g:material_theme_style = 'default' " 'default' | 'palenight' | 'ocean' | 'lighter' | 'darker'
-let g:material_terminal_italics = 1
+"let g:material_theme_style = 'default' " 'default' | 'palenight' | 'ocean' | 'lighter' | 'darker'
+"let g:material_terminal_italics = 1
 " }}}
 " vim-one {{{
 let g:one_allow_italics = 1
@@ -252,9 +330,9 @@ nmap <F8> :TagbarToggle<CR>
 "autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=green ctermbg=4
 " }}}
 " vim-codelf {{{
-inoremap <silent> <leader>ce <C-R>=codelf#start()<CR>
-nnoremap <silent> <leader>ce :call codelf#start()<CR>
-let g:codelf_enable_popup_menu = v:true
+"inoremap <silent> <leader>ce <C-R>=codelf#start()<CR>
+"nnoremap <silent> <leader>ce :call codelf#start()<CR>
+"let g:codelf_enable_popup_menu = v:true
 " }}}
 " deoplete.nvim {{{
 "let g:deoplete#enable_at_startup = 1
@@ -281,11 +359,11 @@ nmap <leader>f :FZF<cr>
 " }}}
 " limelight.vim {{{
 " Color name (:help cterm-colors) or ANSI code
-"-"let g:limelight_conceal_ctermfg = 'gray'
-"-"let g:limelight_conceal_ctermfg = 240
+let g:limelight_conceal_ctermfg = 'gray'
+let g:limelight_conceal_ctermfg = 240
 " Color name (:help gui-colors) or RGB color
-"-"let g:limelight_conceal_guifg = 'DarkGray'
-"-"let g:limelight_conceal_guifg = '#777777'
+let g:limelight_conceal_guifg = 'DarkGray'
+let g:limelight_conceal_guifg = '#777777'
 " Default: 0.5
 "let g:limelight_default_coefficient = 0.7
 " Number of preceding/following paragraphs to include (default: 0)
@@ -301,6 +379,9 @@ nmap <leader>f :FZF<cr>
 " }}}
 " vim-github-dashboard {{{
 "let g:github_dashboard = { 'username': 'runarsf' }
+" }}}
+" lightline {{{
+"let g:lightline.enable.tabline = 0
 " }}}
 " vim-airline {{{
 "let g:airline_theme='raven'
@@ -350,9 +431,7 @@ autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | endif
 " Close vim if the only window left open is a NERDTree
 "autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-" Open NERDTree on right
 let g:NERDTreeWinPos = "left"
-" Toggle NERDTree
 map <silent> <C-o> :NERDTreeToggle<CR>
 " }}}
 " coc.nvim {{{
@@ -418,9 +497,9 @@ endfunction
 " A E S T H E T I C S {{{
 " =========================
 " Tab colors
-highlight TabLineFill ctermfg=LightGreen ctermbg=DarkGreen
-highlight TabLine ctermfg=Blue ctermbg=Yellow
-highlight TabLineSel ctermfg=Red ctermbg=Yellow
+"highlight TabLineFill ctermfg=LightGreen ctermbg=DarkGreen
+"highlight TabLine ctermfg=Blue ctermbg=Yellow
+"highlight TabLineSel ctermfg=Red ctermbg=Yellow
 
 " For Neovim 0.1.3 and 0.1.4 - https://github.com/neovim/neovim/pull/2198
 if (has('nvim'))
@@ -496,8 +575,8 @@ set modeline
 set modelines=5
 set nocompatible                                              " Enables VI iMproved enhancements
 "set guifont=Source\ Code\ Pro                                  " GUI Font
-"syntax on                                                     " Enable syntax highlighting
-syntax enable
+syntax on                                                     " Enable syntax highlighting
+"syntax enable
 set encoding=utf-8                                            " Set utf-8 as standard encoding
 set ffs=unix,dos,mac                                          " Use Unix as the standard file type
 set nobackup                                                  " Turn backup off, since most stuff is in git
@@ -539,76 +618,18 @@ set numberwidth=1                                             " Left margin
 set updatetime=300                                            " Default 4000
 set shortmess+=c                                              " don't give |ins-completion-menu| messages.
 "set signcolumn=yes                                           " always show signcolumns
-source $VIMRUNTIME/delmenu.vim
-source $VIMRUNTIME/menu.vim
-" }}}======================
-" Status line / Tabs {{{
-" =========================
-" Always show the status line
-set laststatus=2
-
-" Format the status line
-"set statusline=%F%m%r%h%w[%L][%{&ff}]%y[%p%%][%04l,%04v]
-"set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ CWD:\ %r%{getcwd()}%h\ \ Line:\ %l\ \ Column:\ %c
-
-function! s:statusline_expr()
-  let pst = "%{&paste ? '[P] ' : ''}"
-  let mse = "%{&mouse == 'a' ? '[M] ' : ''}"
-  let mod = "%{&modified ? '[+] ' : !&modifiable ? '[x] ' : ''}"
-  let ro  = "%{&readonly ? '[RO] ' : ''}"
-  let ft  = "%{len(&filetype) ? '['.&filetype.'] ' : ''}"
-  let fug = "%{exists('g:loaded_fugitive') ? fugitive#statusline() : ''}"
-  let sep = ' %= '
-  let pos = ' %-12(%l : %c%V%) '
-  let pct = ' %P'
-
-  return '[%n] %F %<'.pst.mse.mod.ro.ft.fug.sep.pos.'%*'.pct
-endfunction
-let &statusline = s:statusline_expr()
-
-" Tab settings
+set laststatus=2 " Always show the status line
 set softtabstop=0
 set expandtab " expand tabs to spaces (opposite of noexpandtab)
 set smarttab
-" set nosmarttab
-" autocmd FileType python set expandtab
-" autocmd FileType python set textwidth=79
-" autocmd FileType python set tabstop=4
-" autocmd FileType python set softtabstop=4
-" autocmd FileType python set shiftwidth=4
-" autocmd FileType python set autoindent
-
-" Tab size
 set shiftwidth=2
 set tabstop=2
-
-" Display whitespace characters
 set list
 set listchars=trail:·,nbsp:⎵,tab:┊» " ¦┆┊ eol:⏎ (		)
 "set fillchars=vert:\|,fold:-
 
-" Tab navigation
-nnoremap H gT
-nnoremap L gt
-
-nnoremap <C-S-tab> :tabprevious<CR>
-nnoremap <C-tab>   :tabnext<CR>
-nnoremap <C-t>     :tabnew<CR>
-inoremap <C-S-tab> <Esc>:tabprevious<CR>i
-inoremap <C-tab>   <Esc>:tabnext<CR>i
-inoremap <C-t>     <Esc>:tabnew<CR>
-
-nmap <leader>1 :tabfirst<cr>
-nmap <leader>2 2gt
-nmap <leader>3 3gt
-nmap <leader>4 4gt
-nmap <leader>5 5gt
-nmap <leader>6 6gt
-nmap <leader>7 7gt
-nmap <leader>8 8gt
-nmap <leader>9 9gt
-nmap <leader>0 :tablast<cr>
-
+source $VIMRUNTIME/delmenu.vim
+source $VIMRUNTIME/menu.vim
 " }}}======================
 " Editing / Binds {{{
 " =========================
@@ -625,11 +646,34 @@ nmap <leader>0 :tablast<cr>
 "nmap <leader>t i	<ESC>
 "imap <leader>t
 
+" Tab navigation {{{
+nnoremap H gT
+nnoremap L gt
+
+nnoremap <C-S-tab> :tabprevious<CR>
+nnoremap <C-tab>   :tabnext<CR>
+nnoremap <C-t>     :tabnew<CR>
+inoremap <C-S-tab> <Esc>:tabprevious<CR>i
+inoremap <C-tab>   <Esc>:tabnext<CR>i
+inoremap <C-t>     <Esc>:tabnew<CR>
+
+"nmap <leader>1 :tabfirst<cr>
+"nmap <leader>2 2gt
+"nmap <leader>3 3gt
+"nmap <leader>4 4gt
+"nmap <leader>5 5gt
+"nmap <leader>6 6gt
+"nmap <leader>7 7gt
+"nmap <leader>8 8gt
+"nmap <leader>9 9gt
+"nmap <leader>0 :tablast<cr>
+" }}}
+
 " Buffer navigation
 nnoremap <Leader>h :bprevious<CR>
-nnoremap <Leader>l :bnext<CR>
-nnoremap <Leader>k :bfirst<CR>
 nnoremap <Leader>j :blast<CR>
+nnoremap <Leader>k :bfirst<CR>
+nnoremap <Leader>l :bnext<CR>
 map bf :BufExplorer<CR>
 
 " Disable CTRL-A on tmux or on screen
@@ -791,6 +835,26 @@ autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 " }}}======================
 " Functions / Utilities {{{
 " =========================
+" Statusline {{{
+"function! s:statusline_expr()
+"  let pst = "%{&paste ? '[P] ' : ''}"
+"  let mse = "%{&mouse == 'a' ? '[M] ' : ''}"
+"  let mod = "%{&modified ? '[+] ' : !&modifiable ? '[x] ' : ''}"
+"  let ro  = "%{&readonly ? '[RO] ' : ''}"
+"  let ft  = "%{len(&filetype) ? '['.&filetype.'] ' : ''}"
+"  let fug = "%{exists('g:loaded_fugitive') ? fugitive#statusline() : ''}"
+"  let sep = ' %= '
+"  let pos = ' %-12(%l : %c%V%) '
+"  let pct = ' %P'
+"  return '[%n] %F %<'.pst.mse.mod.ro.ft.fug.sep.pos.'%*'.pct
+"endfunction
+"let &statusline = s:statusline_expr()
+
+" Format the status line
+"set statusline=%F%m%r%h%w[%L][%{&ff}]%y[%p%%][%04l,%04v]
+"set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ CWD:\ %r%{getcwd()}%h\ \ Line:\ %l\ \ Column:\ %c
+" }}}
+
 " :W sudo saves file {{{
 command! W w !sudo tee % > /dev/null
 " }}}
@@ -883,6 +947,15 @@ function! s:root()
   endif
 endfunction
 command! Root call s:root()
+" }}}
+
+" Separate python indents {{{
+" autocmd FileType python set expandtab
+" autocmd FileType python set textwidth=79
+" autocmd FileType python set tabstop=4
+" autocmd FileType python set softtabstop=4
+" autocmd FileType python set shiftwidth=4
+" autocmd FileType python set autoindent
 " }}}
 
 " Fancy folding {{{
@@ -980,12 +1053,12 @@ function! Scratchpad(command)
   endif
 endfunction
 " }}}======================
-" Vimwiki (sync) {{{
+" Vimwiki {{{
 " =========================
 " vim-wiki (plugin settings) {{{
 "let g:vimwiki_ext2syntax = {'.Rmd': 'markdown', '.rmd': 'markdown','.md': 'markdown', '.markdown': 'markdown', '.mdown': 'markdown'}
 let g:vimwiki_list = [{'path': '~/wiki/', 'path_html': '~/wiki/src/templates/'}]
-"let g:vimwiki_list = [{'path': '~/wiki/',
+"let g:vimwiki_list = [{'path': g:vimwiki_list[0]['path'],
 "                      \ 'syntax': 'markdown', 'ext': '.md'}]
 " }}}
 
@@ -995,12 +1068,12 @@ endfunction
 function! CheckSSHAgent(callback)
   if !($SSH_AGENT_PID)
     if confirm("SSH_AGENT_PID unset, try adding ssh-agent?", "&Yes\n&No", 2) != 1
-      return 1
+      return 2
     endif
   endif
 
   silent !if test -z "${SSH_AGENT_PID+x}"; then
-    \ eval "$(ssh-agent)";
+  \   eval "$(ssh-agent)";
   \ fi;
   \ if test "$(ssh-add -L | grep id_rsa | wc -l)" -le 0; then
   \   ssh-add;
@@ -1013,42 +1086,57 @@ function! CheckSSHAgent(callback)
 endfunction
 
 function! WikiSyncPull()
+  if !(&ft =~ 'vimwiki')
+    return
+  endif
+
   let l:wd = expand(g:vimwiki_list[0]['path'])
-  call CheckSSHAgent('WikiSyncPull()')
+  "call CheckSSHAgent('WikiSyncPull()')
   silent execute "!git -C " . l:wd . " pull"
 endfunction
 
-" Requires ssh-agent to be added for push to work
-" `eval "$(ssh-agent)" && ssh-add`
 function! WikiSyncPush()
+  if !(&ft =~ 'vimwiki')
+    return
+  endif
+
   let l:wd = expand(g:vimwiki_list[0]['path'])
   let l:htmlwd = expand(g:vimwiki_list[0]['path_html'])
-  " Compile Wiki to HTML - https://github.com/vimwiki/vimwiki/blob/master/ftplugin/vimwiki.vim#L252
   call vimwiki#html#WikiAll2HTML(expand(l:htmlwd))
-  " Push changes to git (`call system('command')` doesn't show output) and check that it succeeded
   if confirm("Push changes to git?", "&Yes\n&No", 1) == 1
-    call CheckSSHAgent('WikiSyncPush()')
-    silent execute "!git -C " . l:wd . " pull"
-    silent execute "!git -C " . l:wd . " add ."
-    silent execute "!git -C " . l:wd . " commit -m\'auto push\'"
-    silent execute "!git -C " . l:wd . " push origin master"
-
-    "if !(system("git -C " . l:wd . " status") =~ "up to date")
-    "  if confirm("Could not push to git, retry and add ssh-agent?", "&Yes\n&No", 2) == 1
-    "    execute '!eval "$(ssh-agent)" && ssh-add'
-    "    call WikiSyncPush()
-    "  endif
-    "endif
+    "call CheckSSHAgent('WikiSyncPush()')
+    silent execute '!git -C ' . l:wd . ' pull'
+    silent execute '!git -C ' . l:wd . ' add .'
+    silent execute '!git -C ' . l:wd . ' commit -m"Auto push of %:t"'
+    silent execute '!git -C ' . l:wd . ' push origin master'
   endif
 endfunction
 
 augroup vimwikiSync
-  autocmd!
-  " Pull changes when entering wiki/index.wiki
-  execute "autocmd BufWinEnter " . expand(g:vimwiki_list[0]['path'] . "index.wiki") . " call WikiSyncPull()"
-  " Alias :wq to :w :q when entering wiki/index.wiki (note: this will still be set if you open a new tab/buffer (?))
-  execute "autocmd BufWinEnter " . expand(g:vimwiki_list[0]['path'] . "index.wiki") . " cnoreabbrev wq write <bar> quit"
-  " Compile HTML and push changes when writing to wiki/index.wiki
-  execute "autocmd BufWritePost,FileWritePost " . expand(g:vimwiki_list[0]['path'] . "index.wiki") . " call WikiSyncPush()"
+  "autocmd!
+  " Solution 1
+  " BufWinEnter,BufRead,BufNewFile,BufWritePost,BufWritePre,FileType vimwiki,
+  "execute "autocmd BufRead,BufNewFile " . expand(g:vimwiki_list[0]['path']) . "** call WikiSyncPull()"
+  "execute "autocmd BufRead,BufNewFile " . expand(g:vimwiki_list[0]['path']) . "** cnoreabbrev wq write <bar> quit"
+  autocmd FileType vimwiki call WikiSyncPull()
+  autocmd FileType vimwiki cabbrev wq write <bar> quit
+  execute "autocmd BufWritePost " . expand(g:vimwiki_list[0]['path']) . "** call WikiSyncPush()"
+
+  " Solution 2 - not working
+  "autocmd FileType vimwiki let b:runWikiSync=1
+  "autocmd BufReadPost * call WikiSyncPull()
+  "autocmd BufWritePost * call WikiSyncPush()
+  " Inside Pull and Push functions:
+  "  if !exists('b:runWikiSync')
+  "    return
+  "  endif
+
+  " if !(&ft =~ 'vimwiki')
+  "   return
+  " endif
+
+  " Solution 3
+  "autocmd FileType vimwiki call WikiSyncPull()
+  "autocmd FileType vimwiki call WikiSyncPull()
 augroup END
 " }}}======================
