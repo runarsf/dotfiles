@@ -78,10 +78,16 @@ endif
 filetype plugin indent on
 let g:colorscheme = 'one'
 let g:has_node = (system('node -v') =~ '^v')
+let g:has_adoc = (system('asciidoctor --version') =~ '^A')
+"let g:has_rgrep = (system('rgrep --version') =~ '^g')
 
 silent! if plug#begin('~/.vim/plugged')
 " General {{{
 " Disabled General {{{
+"if has('python3') && g:has_rgrep
+"  Plug 'alok/notational-fzf-vim'
+"endif
+"Plug 'jonrad/vim-hi-hue'
 "Plug 'bagrat/vim-buffet'
 "plug 'zefei/vim-wintabs'
 "plug 'zefei/vim-wintabs-powerline'
@@ -163,11 +169,11 @@ silent! if plug#begin('~/.vim/plugged')
 "Plug 'tpope/vim-surround'
 "Plug 'voldikss/vim-codelf', { 'on': 'Codelf' }
 " }}}
-Plug 'jonrad/vim-hu-hue'
+Plug 'vimwiki/vimwiki'
+Plug 'habamax/vim-asciidoctor'
 Plug 'ap/vim-buftabline'
 Plug 'pbrisbin/vim-mkdir'
 Plug 'majutsushi/tagbar', { 'on': 'TagbarToggle' }
-Plug 'vimwiki/vimwiki'
 Plug 'jlanzarotta/bufexplorer'
 Plug 'scrooloose/nerdtree'
 Plug 'junegunn/goyo.vim'
@@ -1055,13 +1061,37 @@ endfunction
 " }}}======================
 " Vimwiki {{{
 " =========================
+let g:wikidir = expand('~/wiki/')
+
 " vim-wiki (plugin settings) {{{
 "let g:vimwiki_ext2syntax = {'.Rmd': 'markdown', '.rmd': 'markdown','.md': 'markdown', '.markdown': 'markdown', '.mdown': 'markdown'}
-let g:vimwiki_list = [{'path': '~/wiki/', 'path_html': '~/wiki/src/templates/'}]
+let g:vimwiki_list = [{'path': g:wikidir, 'path_html': g:wikidir}]
 "let g:vimwiki_list = [{'path': g:vimwiki_list[0]['path'],
 "                      \ 'syntax': 'markdown', 'ext': '.md'}]
 " }}}
+" vim-asciidoctor (plugin settings) {{{
+let g:asciidoctor_folding = 1
+let g:asciidoctor_fenced_languages = ['python', 'c', 'javascript']
+" }}}
 
+" Underline current line (asciidoc) {{{
+function! s:underline(chars)
+  let nextnr = line('.') + 1
+  let underline = repeat(a:chars[0], strchars(getline('.')))
+  if index(a:chars, trim(getline(nextnr))[0]) != -1
+    call setline(nextnr, underline)
+  else
+    call append('.', underline)
+  endif
+endfunc
+nnoremap <silent> <leader>- :call <SID>underline(['-', '=', '~', '^', '+'])<CR>
+nnoremap <silent> <leader>= :call <SID>underline(['=', '-', '~', '^', '+'])<CR>
+nnoremap <silent> <leader>~ :call <SID>underline(['~', '=', '-', '^', '+'])<CR>
+nnoremap <silent> <leader>^ :call <SID>underline(['^', '=', '-', '~', '+'])<CR>
+nnoremap <silent> <leader>+ :call <SID>underline(['+', '=', '-', '~', '^'])<CR>
+" }}}
+
+" Run ssh-agent if it's not running {{{
 function! CallbackTest()
   echomsg 'Callback executed successfully!'
 endfunction
@@ -1084,59 +1114,46 @@ function! CheckSSHAgent(callback)
   "  execute "call " . a:callback
   "endif
 endfunction
+" }}}
 
+" WikiSyncPull {{{
 function! WikiSyncPull()
-  if !(&ft =~ 'vimwiki')
-    return
-  endif
-
-  let l:wd = expand(g:vimwiki_list[0]['path'])
-  "call CheckSSHAgent('WikiSyncPull()')
-  silent execute "!git -C " . l:wd . " pull"
+  silent execute "!git -C " . g:wikidir . " pull"
 endfunction
-
+" }}}
+" WikiSyncSave {{{
+function! WikiSyncSave()
+  if &ft =~ 'asciidoctor'
+    silent Asciidoctor2HTML
+  elseif &ft =~ 'vimwiki'
+    silent VimwikiAll2HTML
+    "call vimwiki#html#WikiAll2HTML(g:wikidir)
+  endif
+  let g:has_modified = 1
+endfunction
+" }}}
+" WikiSyncPush {{{
 function! WikiSyncPush()
-  if !(&ft =~ 'vimwiki')
-    return
-  endif
-
-  let l:wd = expand(g:vimwiki_list[0]['path'])
-  let l:htmlwd = expand(g:vimwiki_list[0]['path_html'])
-  call vimwiki#html#WikiAll2HTML(expand(l:htmlwd))
-  if confirm("Push changes to git?", "&Yes\n&No", 1) == 1
-    "call CheckSSHAgent('WikiSyncPush()')
-    silent execute '!git -C ' . l:wd . ' pull'
-    silent execute '!git -C ' . l:wd . ' add .'
-    silent execute '!git -C ' . l:wd . ' commit -m"Auto push of %:t"'
-    silent execute '!git -C ' . l:wd . ' push origin master'
+  if exists('g:has_modified')
+    silent execute '!git -C ' . g:wikidir . ' pull'
+    silent execute '!git -C ' . g:wikidir . ' add .'
+    silent execute '!git -C ' . g:wikidir . ' commit -m"Auto push of %:t"'
+    silent execute '!git -C ' . g:wikidir . ' push origin master'
+    unlet g:has_modified
   endif
 endfunction
+" }}}
 
-augroup vimwikiSync
-  "autocmd!
-  " Solution 1
-  " BufWinEnter,BufRead,BufNewFile,BufWritePost,BufWritePre,FileType vimwiki,
-  "execute "autocmd BufRead,BufNewFile " . expand(g:vimwiki_list[0]['path']) . "** call WikiSyncPull()"
-  "execute "autocmd BufRead,BufNewFile " . expand(g:vimwiki_list[0]['path']) . "** cnoreabbrev wq write <bar> quit"
+augroup WikiSync | autocmd!
+  autocmd FileType asciidoctor call WikiSyncPull()
+  autocmd FileType asciidoctor cabbrev wq write <bar> quit
   autocmd FileType vimwiki call WikiSyncPull()
   autocmd FileType vimwiki cabbrev wq write <bar> quit
-  execute "autocmd BufWritePost " . expand(g:vimwiki_list[0]['path']) . "** call WikiSyncPush()"
 
-  " Solution 2 - not working
-  "autocmd FileType vimwiki let b:runWikiSync=1
-  "autocmd BufReadPost * call WikiSyncPull()
-  "autocmd BufWritePost * call WikiSyncPush()
-  " Inside Pull and Push functions:
-  "  if !exists('b:runWikiSync')
-  "    return
-  "  endif
+  autocmd BufWritePost *.adoc :call WikiSyncSave()
+  autocmd BufWritePost *.wiki :call WikiSyncSave()
 
-  " if !(&ft =~ 'vimwiki')
-  "   return
-  " endif
-
-  " Solution 3
-  "autocmd FileType vimwiki call WikiSyncPull()
-  "autocmd FileType vimwiki call WikiSyncPull()
+  autocmd BufWinLeave *.adoc :call WikiSyncPush()
+  autocmd BufWinLeave *.wiki :call WikiSyncPush()
 augroup END
 " }}}======================
