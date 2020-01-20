@@ -8,8 +8,8 @@ export PATH="${PATH}:/snap/bin"
 export LANG=en_US.UTF-8
 
 test -n "${SSH_CONNECTION}" \
-  && export EDITOR=/usr/bin/nvim \
-  || export EDITOR=/usr/bin/nvim
+  && export EDITOR='nvim' \
+  || export EDITOR='nvim'
 export VISUAL="${EDITOR}"
 export FILE="${EDITOR}"
 export TERMINAL="alacritty"

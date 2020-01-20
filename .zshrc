@@ -128,7 +128,7 @@ magic-enter () {
   MAGIC_ENTER_OTHER_COMMAND="ls -lh ."
   if test -z $BUFFER; then
     echo ""
-    echo "Ret: ${RET}"
+    #echo "Ret: ${RET}"
     #if test "${?}" -ne "0"; then
     #  heck
     if git rev-parse --is-inside-work-tree &>/dev/null; then

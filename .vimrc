@@ -84,6 +84,14 @@ let g:has_adoc = (system('asciidoctor --version') =~ '^A')
 silent! if plug#begin('~/.vim/plugged')
 " General {{{
 " Disabled General {{{
+"if has('nvim') || has('patch-8.0.902')
+"  Plug 'mhinz/vim-signify'
+"else
+"  Plug 'mhinz/vim-signify', { 'branch': 'legacy' }
+"endif
+"Plug 'vimwiki/vimwiki'
+"Plug 'jceb/vim-orgmode'
+"Plug 'justinmk/vim-dirvish'
 "if has('python3') && g:has_rgrep
 "  Plug 'alok/notational-fzf-vim'
 "endif
@@ -169,7 +177,9 @@ silent! if plug#begin('~/.vim/plugged')
 "Plug 'tpope/vim-surround'
 "Plug 'voldikss/vim-codelf', { 'on': 'Codelf' }
 " }}}
-Plug 'vimwiki/vimwiki'
+Plug 'kien/ctrlp.vim'
+Plug 'fcpg/vim-waikiki'
+Plug 'tpope/vim-dispatch'
 Plug 'habamax/vim-asciidoctor'
 Plug 'ap/vim-buftabline'
 Plug 'pbrisbin/vim-mkdir'
@@ -581,8 +591,11 @@ set modeline
 set modelines=5
 set nocompatible                                              " Enables VI iMproved enhancements
 "set guifont=Source\ Code\ Pro                                  " GUI Font
-syntax on                                                     " Enable syntax highlighting
+"syntax on                                                     " Enable syntax highlighting
 "syntax enable
+if !exists("g:syntax_on")
+  syntax enable
+endif
 set encoding=utf-8                                            " Set utf-8 as standard encoding
 set ffs=unix,dos,mac                                          " Use Unix as the standard file type
 set nobackup                                                  " Turn backup off, since most stuff is in git
@@ -842,19 +855,19 @@ autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 " Functions / Utilities {{{
 " =========================
 " Statusline {{{
-"function! s:statusline_expr()
-"  let pst = "%{&paste ? '[P] ' : ''}"
-"  let mse = "%{&mouse == 'a' ? '[M] ' : ''}"
-"  let mod = "%{&modified ? '[+] ' : !&modifiable ? '[x] ' : ''}"
-"  let ro  = "%{&readonly ? '[RO] ' : ''}"
-"  let ft  = "%{len(&filetype) ? '['.&filetype.'] ' : ''}"
-"  let fug = "%{exists('g:loaded_fugitive') ? fugitive#statusline() : ''}"
-"  let sep = ' %= '
-"  let pos = ' %-12(%l : %c%V%) '
-"  let pct = ' %P'
-"  return '[%n] %F %<'.pst.mse.mod.ro.ft.fug.sep.pos.'%*'.pct
-"endfunction
-"let &statusline = s:statusline_expr()
+function! s:statusline_expr()
+  let pst = "%{&paste ? '[P] ' : ''}"
+  let mse = "%{&mouse == 'a' ? '[M] ' : ''}"
+  let mod = "%{&modified ? '[+] ' : !&modifiable ? '[x] ' : ''}"
+  let ro  = "%{&readonly ? '[RO] ' : ''}"
+  let ft  = "%{len(&filetype) ? '['.&filetype.'] ' : ''}"
+  let fug = "%{exists('g:loaded_fugitive') ? fugitive#statusline() : ''}"
+  let sep = ' %= '
+  let pos = ' %-12(%l : %c%V%) '
+  let pct = ' %P'
+  return '[%n] %F %<'.pst.mse.mod.ro.ft.fug.sep.pos.'%*'.pct
+endfunction
+let &statusline = s:statusline_expr()
 
 " Format the status line
 "set statusline=%F%m%r%h%w[%L][%{&ff}]%y[%p%%][%04l,%04v]
@@ -1052,20 +1065,23 @@ endfunction
 
 " Usage: call Scratchpad('zsh')
 function! Scratchpad(command)
-  if empty(bufname(a:command))
-    call OpenTerm(a:command)
+  if empty(bufname('zsh -c ' . a:command . '; read _'))
+    call OpenTerm('zsh -c ' . a:command . '; read _')
   else
     bd!
   endif
 endfunction
+
+command! -nargs=1 Scratch call Scratchpad(<f-args>)
 " }}}======================
-" Vimwiki {{{
+" Wiki {{{
 " =========================
 let g:wikidir = expand('~/wiki/')
 
 " vim-wiki (plugin settings) {{{
 "let g:vimwiki_ext2syntax = {'.Rmd': 'markdown', '.rmd': 'markdown','.md': 'markdown', '.markdown': 'markdown', '.mdown': 'markdown'}
-let g:vimwiki_list = [{'path': g:wikidir, 'path_html': g:wikidir}]
+let g:vimwiki_list = [{'path': g:wikidir,
+                     \ 'path_html': g:wikidir . 'html'}]
 "let g:vimwiki_list = [{'path': g:vimwiki_list[0]['path'],
 "                      \ 'syntax': 'markdown', 'ext': '.md'}]
 " }}}
@@ -1125,6 +1141,7 @@ endfunction
 function! WikiSyncSave()
   if &ft =~ 'asciidoctor'
     silent Asciidoctor2HTML
+    "silent execute '!mv ' . g:wikidir . '%:t ' . g:wikidir . 'html/'
   elseif &ft =~ 'vimwiki'
     silent VimwikiAll2HTML
     "call vimwiki#html#WikiAll2HTML(g:wikidir)
@@ -1137,23 +1154,36 @@ function! WikiSyncPush()
   if exists('g:has_modified')
     silent execute '!git -C ' . g:wikidir . ' pull'
     silent execute '!git -C ' . g:wikidir . ' add .'
-    silent execute '!git -C ' . g:wikidir . ' commit -m"Auto push of %:t"'
-    silent execute '!git -C ' . g:wikidir . ' push origin master'
+    silent execute '!git -C ' . g:wikidir . ' commit -m"Auto push of %:t at ' . strftime('%a-%FT%T%z') .'"'
+    execute '!git -C ' . g:wikidir . ' push origin master'
     unlet g:has_modified
+
+    "while true
+    "  if (system('git status')) =~ 'ahead of'
+    "    if confirm("Could not push changes, add ssh-agent and retry?", "&Yes\n&No", 1) == 1
+    "      !eval "$(ssh-agent)" && ssh-add
+    "      call WikiSyncPush()
+    "    else
+    "      break
+    "    endif
+    "  endif
+    "endwhile
   endif
 endfunction
 " }}}
 
-augroup WikiSync | autocmd!
-  autocmd FileType asciidoctor call WikiSyncPull()
-  autocmd FileType asciidoctor cabbrev wq write <bar> quit
-  autocmd FileType vimwiki call WikiSyncPull()
-  autocmd FileType vimwiki cabbrev wq write <bar> quit
+" augroup WikiSync {{{
+"!!augroup WikiSync | autocmd!
+"!!  autocmd FileType asciidoctor call WikiSyncPull()
+"!!  autocmd FileType asciidoctor cabbrev wq write <bar> quit
+"!!  autocmd FileType vimwiki call WikiSyncPull()
+"!!  autocmd FileType vimwiki cabbrev wq write <bar> quit
 
-  autocmd BufWritePost *.adoc :call WikiSyncSave()
-  autocmd BufWritePost *.wiki :call WikiSyncSave()
+"!!  autocmd BufWritePost *.adoc :call WikiSyncSave()
+"!!  autocmd BufWritePost *.wiki :call WikiSyncSave()
 
-  autocmd BufWinLeave *.adoc :call WikiSyncPush()
-  autocmd BufWinLeave *.wiki :call WikiSyncPush()
-augroup END
+"!!  autocmd BufWinLeave *.adoc :call WikiSyncPush()
+"!!  autocmd BufWinLeave *.wiki :call WikiSyncPush()
+"!!augroup END
+" }}}
 " }}}======================
