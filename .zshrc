@@ -148,19 +148,29 @@ magic-enter () {
 zle -N magic-enter
 bindkey "^M" magic-enter
 
-rmln() {
+showme () {
+  dir="${1}"
+  term="${2}"
+  if test ! -e "${dir}"; then
+    term="${dir}"
+    dir="."
+  fi
+  grep -winR "${dir}" -e "${term}"
+}
+
+rmln () {
   test -L "$1" \
     && cp --remove-destination "$(readlink "$1")" "$1" \
     || echo "$1: Not a symlink."
 }
 
-goto() {
+goto () {
   test -L "$1" \
     && cd $(dirname $(readlink -f "$1")) \
     || echo "$1: Not a symlink."
 }
 
-dirtygit() {
+dirtygit () {
   printf "\n\e[94m| ADDING \e[0;39m\n\n"
   git add .
   printf "\n\e[94m| COMMITTING \e[0;39m'$*'\n\n"
@@ -172,7 +182,7 @@ dirtygit() {
   printf "\n\e[32m| DONE! \e[0;39m\n\n"
 }
 
-debug() {
+debug () {
   D_BEAK=$(tput setaf 202) # 1
   D_EYE=$(tput setaf 15) # 7
   D_BODY=$(tput setaf 11) # 3
@@ -186,5 +196,4 @@ debug() {
 }
 
 test -s "${HOME}/.nvm/nvm.sh" && source "${HOME}/.nvm/nvm.sh"
-
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+test -f ~/.fzf.zsh && source ~/.fzf.zsh

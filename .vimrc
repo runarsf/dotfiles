@@ -84,6 +84,7 @@ let g:has_adoc = (system('asciidoctor --version') =~ '^A')
 silent! if plug#begin('~/.vim/plugged')
 " General {{{
 " Disabled General {{{
+"Plug 'kien/ctrlp.vim'
 "if has('nvim') || has('patch-8.0.902')
 "  Plug 'mhinz/vim-signify'
 "else
@@ -177,7 +178,10 @@ silent! if plug#begin('~/.vim/plugged')
 "Plug 'tpope/vim-surround'
 "Plug 'voldikss/vim-codelf', { 'on': 'Codelf' }
 " }}}
-Plug 'kien/ctrlp.vim'
+Plug 'liuchengxu/vim-clap'
+Plug 'dstein64/vim-startuptime'
+"Plug 'pedrohdz/vim-yaml-folds'
+"Plug 'ctrlpvim/ctrlp.vim'
 Plug 'fcpg/vim-waikiki'
 Plug 'tpope/vim-dispatch'
 Plug 'habamax/vim-asciidoctor'
@@ -1026,9 +1030,9 @@ endfunction
 " }}}
 
 " When term starts, auto go into insert mode
-autocmd TermOpen * startinsert
+"autocmd TermOpen * startinsert
 " Turn off line numbers etc
-autocmd TermOpen * setlocal listchars= nonumber norelativenumber
+"autocmd TermOpen * setlocal listchars= nonumber norelativenumber
 
 " Maps ESC to exit terminal's insert mode
 if has('nvim')
@@ -1076,87 +1080,87 @@ command! -nargs=1 Scratch call Scratchpad(<f-args>)
 " }}}======================
 " Wiki {{{
 " =========================
-let g:wikidir = expand('~/wiki/')
+"let g:wikidir = expand('~/wiki/')
 
 " vim-wiki (plugin settings) {{{
 "let g:vimwiki_ext2syntax = {'.Rmd': 'markdown', '.rmd': 'markdown','.md': 'markdown', '.markdown': 'markdown', '.mdown': 'markdown'}
-let g:vimwiki_list = [{'path': g:wikidir,
-                     \ 'path_html': g:wikidir . 'html'}]
+"let g:vimwiki_list = [{'path': g:wikidir,
+"                     \ 'path_html': g:wikidir . 'html'}]
 "let g:vimwiki_list = [{'path': g:vimwiki_list[0]['path'],
 "                      \ 'syntax': 'markdown', 'ext': '.md'}]
 " }}}
 " vim-asciidoctor (plugin settings) {{{
-let g:asciidoctor_folding = 1
-let g:asciidoctor_fenced_languages = ['python', 'c', 'javascript']
+"let g:asciidoctor_folding = 1
+"let g:asciidoctor_fenced_languages = ['python', 'c', 'javascript']
 " }}}
 
 " Underline current line (asciidoc) {{{
-function! s:underline(chars)
-  let nextnr = line('.') + 1
-  let underline = repeat(a:chars[0], strchars(getline('.')))
-  if index(a:chars, trim(getline(nextnr))[0]) != -1
-    call setline(nextnr, underline)
-  else
-    call append('.', underline)
-  endif
-endfunc
-nnoremap <silent> <leader>- :call <SID>underline(['-', '=', '~', '^', '+'])<CR>
-nnoremap <silent> <leader>= :call <SID>underline(['=', '-', '~', '^', '+'])<CR>
-nnoremap <silent> <leader>~ :call <SID>underline(['~', '=', '-', '^', '+'])<CR>
-nnoremap <silent> <leader>^ :call <SID>underline(['^', '=', '-', '~', '+'])<CR>
-nnoremap <silent> <leader>+ :call <SID>underline(['+', '=', '-', '~', '^'])<CR>
+"function! s:underline(chars)
+"  let nextnr = line('.') + 1
+"  let underline = repeat(a:chars[0], strchars(getline('.')))
+"  if index(a:chars, trim(getline(nextnr))[0]) != -1
+"    call setline(nextnr, underline)
+"  else
+"    call append('.', underline)
+"  endif
+"endfunc
+"nnoremap <silent> <leader>- :call <SID>underline(['-', '=', '~', '^', '+'])<CR>
+"nnoremap <silent> <leader>= :call <SID>underline(['=', '-', '~', '^', '+'])<CR>
+"nnoremap <silent> <leader>~ :call <SID>underline(['~', '=', '-', '^', '+'])<CR>
+"nnoremap <silent> <leader>^ :call <SID>underline(['^', '=', '-', '~', '+'])<CR>
+"nnoremap <silent> <leader>+ :call <SID>underline(['+', '=', '-', '~', '^'])<CR>
 " }}}
 
 " Run ssh-agent if it's not running {{{
-function! CallbackTest()
-  echomsg 'Callback executed successfully!'
-endfunction
-function! CheckSSHAgent(callback)
-  if !($SSH_AGENT_PID)
-    if confirm("SSH_AGENT_PID unset, try adding ssh-agent?", "&Yes\n&No", 2) != 1
-      return 2
-    endif
-  endif
+"function! CallbackTest()
+"  echomsg 'Callback executed successfully!'
+"endfunction
+"function! CheckSSHAgent(callback)
+"  if !($SSH_AGENT_PID)
+"    if confirm("SSH_AGENT_PID unset, try adding ssh-agent?", "&Yes\n&No", 2) != 1
+"      return 2
+"    endif
+"  endif
 
-  silent !if test -z "${SSH_AGENT_PID+x}"; then
-  \   eval "$(ssh-agent)";
-  \ fi;
-  \ if test "$(ssh-add -L | grep id_rsa | wc -l)" -le 0; then
-  \   ssh-add;
-  \   exit 69;
-  \ fi
+"  silent !if test -z "${SSH_AGENT_PID+x}"; then
+"  \   eval "$(ssh-agent)";
+"  \ fi;
+"  \ if test "$(ssh-add -L | grep id_rsa | wc -l)" -le 0; then
+"  \   ssh-add;
+"  \   exit 69;
+"  \ fi
 
   "if v:shell_error == 69
   "  execute "call " . a:callback
   "endif
-endfunction
+"endfunction
 " }}}
 
 " WikiSyncPull {{{
-function! WikiSyncPull()
-  silent execute "!git -C " . g:wikidir . " pull"
-endfunction
+"function! WikiSyncPull()
+"  silent execute "!git -C " . g:wikidir . " pull"
+"endfunction
 " }}}
 " WikiSyncSave {{{
-function! WikiSyncSave()
-  if &ft =~ 'asciidoctor'
-    silent Asciidoctor2HTML
+"function! WikiSyncSave()
+"  if &ft =~ 'asciidoctor'
+"    silent Asciidoctor2HTML
     "silent execute '!mv ' . g:wikidir . '%:t ' . g:wikidir . 'html/'
-  elseif &ft =~ 'vimwiki'
-    silent VimwikiAll2HTML
+"  elseif &ft =~ 'vimwiki'
+"    silent VimwikiAll2HTML
     "call vimwiki#html#WikiAll2HTML(g:wikidir)
-  endif
-  let g:has_modified = 1
-endfunction
+"  endif
+"  let g:has_modified = 1
+"endfunction
 " }}}
 " WikiSyncPush {{{
-function! WikiSyncPush()
-  if exists('g:has_modified')
-    silent execute '!git -C ' . g:wikidir . ' pull'
-    silent execute '!git -C ' . g:wikidir . ' add .'
-    silent execute '!git -C ' . g:wikidir . ' commit -m"Auto push of %:t at ' . strftime('%a-%FT%T%z') .'"'
-    execute '!git -C ' . g:wikidir . ' push origin master'
-    unlet g:has_modified
+"function! WikiSyncPush()
+"  if exists('g:has_modified')
+"    silent execute '!git -C ' . g:wikidir . ' pull'
+"    silent execute '!git -C ' . g:wikidir . ' add .'
+"    silent execute '!git -C ' . g:wikidir . ' commit -m"Auto push of %:t at ' . strftime('%a-%FT%T%z') .'"'
+"    execute '!git -C ' . g:wikidir . ' push origin master'
+"    unlet g:has_modified
 
     "while true
     "  if (system('git status')) =~ 'ahead of'
@@ -1168,8 +1172,8 @@ function! WikiSyncPush()
     "    endif
     "  endif
     "endwhile
-  endif
-endfunction
+"  endif
+"endfunction
 " }}}
 
 " augroup WikiSync {{{
