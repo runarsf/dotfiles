@@ -42,16 +42,15 @@ let maplocalleader = ','
 " }}}======================
 " Plugins {{{
 " =========================
-" TODO: Automatically set up nvim config files to point at vim files
 " vim-plug linux installation {{{
-if empty(glob('~/.vim/autoload/plug.vim')) && (has('unix') || has('win32unix'))
+if (has('unix') || has('win32unix')) && empty(glob('~/.vim/autoload/plug.vim'))
   silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
     \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
   autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 " }}}
 " vim-plug windows installation {{{
-if empty(glob('~\vimfiles\autoload\plug.vim')) && empty(glob('~\AppData\Local\nvim\autoload\plug.vim')) && has('win32')
+if has('win32') && empty(glob('~\vimfiles\autoload\plug.vim')) && empty(glob('~\AppData\Local\nvim\autoload\plug.vim'))
   if has('nvim')
     md ~\AppData\Local\nvim\autoload
     $uri = 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
@@ -77,13 +76,15 @@ endif
 
 filetype plugin indent on
 let g:colorscheme = 'one'
-let g:has_node = (system('node -v') =~ '^v')
-let g:has_adoc = (system('asciidoctor --version') =~ '^A')
+"let g:has_node = (system('node -v') =~ '^v')
+"let g:has_adoc = (system('asciidoctor --version') =~ '^A')
 "let g:has_rgrep = (system('rgrep --version') =~ '^g')
 
 silent! if plug#begin('~/.vim/plugged')
 " General {{{
 " Disabled General {{{
+"Plug 'pedrohdz/vim-yaml-folds'
+"Plug 'ctrlpvim/ctrlp.vim'
 "Plug 'kien/ctrlp.vim'
 "if has('nvim') || has('patch-8.0.902')
 "  Plug 'mhinz/vim-signify'
@@ -180,8 +181,6 @@ silent! if plug#begin('~/.vim/plugged')
 " }}}
 Plug 'liuchengxu/vim-clap'
 Plug 'dstein64/vim-startuptime'
-"Plug 'pedrohdz/vim-yaml-folds'
-"Plug 'ctrlpvim/ctrlp.vim'
 Plug 'fcpg/vim-waikiki'
 Plug 'tpope/vim-dispatch'
 Plug 'habamax/vim-asciidoctor'
@@ -199,7 +198,8 @@ Plug 'junegunn/limelight.vim', { 'on': 'Limelight' }
 Plug 'tyru/open-browser.vim', { 'on': 'RunningX' }
 Plug 'inkarkat/vim-ingo-library', { 'branch': 'stable' }
 Plug 'inkarkat/vim-ModelineCommands', { 'branch': 'stable' }
-if g:has_node && v:version >= 703
+if v:version >= 703
+  "if g:has_node && v:version >= 703
   Plug 'neoclide/coc.nvim', { 'branch': 'release' } " 'do': { -> coc#util#install() }}
 endif
 Plug 'ryanoasis/vim-devicons'
@@ -520,11 +520,6 @@ endfunction
 "highlight TabLineFill ctermfg=LightGreen ctermbg=DarkGreen
 "highlight TabLine ctermfg=Blue ctermbg=Yellow
 "highlight TabLineSel ctermfg=Red ctermbg=Yellow
-
-" For Neovim 0.1.3 and 0.1.4 - https://github.com/neovim/neovim/pull/2198
-if (has('nvim'))
-  let $NVIM_TUI_ENABLE_TRUE_COLOR = 1
-endif
 
 " For Neovim > 0.1.5 and Vim > patch 7.4.1799 - https://github.com/vim/vim/commit/61be73bb0f965a895bfb064ea3e55476ac175162
 " Based on Vim patch 7.4.1770 (`guicolors` option) - https://github.com/vim/vim/commit/8a633e3427b47286869aa4b96f2bfc1fe65b25cd
@@ -1034,9 +1029,11 @@ endfunction
 " Turn off line numbers etc
 "autocmd TermOpen * setlocal listchars= nonumber norelativenumber
 
-" Maps ESC to exit terminal's insert mode
 if has('nvim')
+  " Maps ESC to exit terminal's insert mode
   tnoremap <Esc> <C-\><C-n>
+  " For Neovim 0.1.3 and 0.1.4 - https://github.com/neovim/neovim/pull/2198
+  let $NVIM_TUI_ENABLE_TRUE_COLOR = 1
 endif
 
 function! OpenTerm(cmd)
