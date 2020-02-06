@@ -76,19 +76,10 @@ bindkey '\CI' expand-or-complete-prefix
 #autoload -Uz compinit
 #compinit
 
-case "$(hostname)" in
-  runfre-t480s)
-    alias fix-monitor='xrandr --output eDP-1 --mode 1920x1080 --output DP-1-1 --mode 2560x1440 --right-of eDP-1 --output DP-1-2 --mode 2560x1440 --right-of DP-1-1'
-    alias portable='xrandr --output DP-1-2 --off --output DP-1-1 --off'
-    export JAVA_HOME=/usr/java/jre1.8.0_231
-    ;;
-esac
-
 #set -o vi
 #bindkey 'jk' vi-cmd-mode
 PROMPT_EOL_MARK=''
 alias vim='nvim'
-alias wiki='vim ~/wiki/index.wiki'
 alias ls='ls -lAFh --color'
 alias grep='grep --color'
 alias c='xclip -selection clipboard'

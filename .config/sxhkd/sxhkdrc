@@ -7,7 +7,7 @@ super + x
 super + shift + x
 	$HOME/bin/prompt.sh "Are you sure you want to shutdown?" "$shutdown"
 super + v
-	$TERMINAL -e nvim
+	$TERMINAL -e $EDITOR
 super + d
 	rofi -show run -lines 3 -eh 2
 super + Tab
@@ -20,8 +20,6 @@ super + Escape
 
 alt + p
 	sharenix-section -n -c
-alt + shift + p
-	$HOME/git/pyshare/pyshare-runner.py -s -u -c -d
 
 
 ctrl + @comma
@@ -32,8 +30,8 @@ ctrl + @period
 # i3 {{{
 
 # i3 stuff that I don't use
-# super + {_,shift + }{1-9,0,F1,F2,F3,F4}
-# 	i3-msg {_,move container to }workspace number {1-9,10,11,12,13,14}
+super + {_,shift + }{1-9,0}
+	i3-msg {_,move container to }workspace number {1-9,10,11,12,13,14}
 # super + {x,b,v,m}
 # 	i3-msg workspace {prev,prev,next,next}_on_output
 # super + Escape
@@ -50,9 +48,14 @@ ctrl + @period
 super + alt + {q,r}
 	bspc {quit,wm -r}
 
-# close and kill
+# close and kill, DESKTOP_SESSION, XDG_CURRENT_DESKTOP, GDMSESSION
 super + {_,shift + }q
-	bspc node -{c,k}
+	test "${XDG_CURRENT_DESKTOP}"     = "bspwm" && bspc node -{c,k} \
+	|| (test "${XDG_CURRENT_DESKTOP}" = "i3"    && i3-msg kill)
+
+# focus or send to the given desktop
+super + {_,shift + }{1-9,0}
+	bspc {desktop -f,node -d} '{1,2,3,4,5,6,7,8,9,10}'
 
 # alternate between the tiled and monocle layout
 super + m
@@ -101,10 +104,6 @@ super + {o,i}
 	bspc wm -h off; \
 	bspc node {older,newer} -f; \
 	bspc wm -h on
-
-# focus or send to the given desktop
-super + {_,shift + }{1-9,0}
-	bspc {desktop -f,node -d} '{1,2,3,4,5,6,7,8,9,10}'
 
 # preselect the direction
 super + ctrl + {h,j,k,l}

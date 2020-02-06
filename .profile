@@ -13,7 +13,7 @@ test -n "${SSH_CONNECTION}" \
 export VISUAL="${EDITOR}"
 export FILE="${EDITOR}"
 export TERMINAL="alacritty"
-export BROWSER="firefox"
+export BROWSER="google-chrome-stable"
 export PYTHONDONTWRITEBYTECODE=1
 
 # Start graphical server on tty1 if not already running.
