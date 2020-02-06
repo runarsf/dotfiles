@@ -1,8 +1,4 @@
-# Definitions
 set $mod Mod4
-set $hibernate sudo systemctl suspend
-set $shutdown shutdown -h now
-set $reboot sudo reboot
 set $font pango:System San Francisco
 
 # Font for window titles.
@@ -32,135 +28,50 @@ for_window [instance="spotify"] move scratchpad
 bindsym $mod+p [instance="spotify"] scratchpad show; move position center
 bindsym $mod+Shift+p exec --no-startup-id snap run spotify
 
-bindsym Mod1+Right exec xdotool click 3
-bindsym Mod1+Left exec xdotool click 1
-
-###---Basic Bindings---###
-floating_modifier $mod
-
-#bindsym $mod+q kill
-
-bindsym $mod+j focus left
-bindsym $mod+k focus down
-bindsym $mod+l focus up
-bindsym $mod+oslash focus right
-bindsym $mod+Left focus left
-bindsym $mod+Down focus down
-bindsym $mod+Up focus up
-bindsym $mod+Right focus right
-
-bindsym $mod+Shift+j move left
-bindsym $mod+Shift+k move down
-bindsym $mod+Shift+l move up
-bindsym $mod+Shift+oslash move right
-bindsym $mod+Shift+Left move left
-bindsym $mod+Shift+Down move down
-bindsym $mod+Shift+Up move up
-bindsym $mod+Shift+Right move right
-
-# split in horizontal orientation
-bindsym $mod+h 			split h
-bindsym $mod+Mod1+Up 	split h
-bindsym $mod+Mod1+Right split h
-
-# split in vertical orientation
-bindsym $mod+v 			split v
-bindsym $mod+Mod1+Down 	split v
-bindsym $mod+Mod1+Left 	split v
-
-# Fullscreen
-bindsym $mod+f fullscreen toggle
-
 #bindsym $mod+s layout stacking
 #bindsym $mod+t layout tabbed
 #bindsym $mod+e layout toggle split
 
-bindsym Mod1+space exec $HOME/bin/dvorak.sh status
-bindsym Ctrl+space exec $HOME/bin/dvorak.sh toggle
-
-bindsym $mod+space floating toggle
-bindsym $mod+Shift+space floating toggle
-
-bindsym $mod+Shift+i reload
-bindsym $mod+Shift+r restart
-
-bindsym $mod+Shift+e exec $HOME/bin/prompt.sh "You pressed the exit shortcut. Do you really want to exit i3?" "i3-msg exit"
-bindsym $mod+Shift+Mod1+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3?' -b 'Yes, exit i3' 'i3-msg exit'"
-
-bindsym $mod+s gaps inner current plus 5
-bindsym $mod+Shift+s gaps inner current minus 5
-bindsym $mod+z gaps outer current plus 5
-bindsym $mod+Shift+z gaps outer current minus 5
-
-# switch to workspace
-bindsym $mod+1 workspace 1
-bindsym $mod+2 workspace 2
-bindsym $mod+3 workspace 3
-bindsym $mod+4 workspace 4
-bindsym $mod+5 workspace 5
-bindsym $mod+6 workspace 6
-bindsym $mod+7 workspace 7
-bindsym $mod+8 workspace 8
-bindsym $mod+9 workspace 9
-bindsym $mod+0 workspace 0
-#bindsym $mod+Tab workspace back_and_forth
-
-# move focused container to workspace
-bindsym $mod+Shift+1 move container to workspace 1
-bindsym $mod+Shift+2 move container to workspace 2
-bindsym $mod+Shift+3 move container to workspace 3
-bindsym $mod+Shift+4 move container to workspace 4
-bindsym $mod+Shift+5 move container to workspace 5
-bindsym $mod+Shift+6 move container to workspace 6
-bindsym $mod+Shift+7 move container to workspace 7
-bindsym $mod+Shift+8 move container to workspace 8
-bindsym $mod+Shift+9 move container to workspace 9
-bindsym $mod+Shift+0 move container to workspace 0
+#bindsym $mod+Shift+e exec $HOME/bin/prompt.sh "You pressed the exit shortcut. Do you really want to exit i3?" "i3-msg exit"
+#bindsym $mod+Shift+Mod1+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3?' -b 'Yes, exit i3' 'i3-msg exit'"
 
 # workspace monitor assignment
-workspace 1 output DP-1-1
-workspace 2 output DP-1-2
-workspace 3 output DP-1-1
-workspace 4 output DP-1-1
-workspace 5 output DP-1-1
-workspace 6 output DP-1-1
-workspace 7 output DP-1-2
-workspace 8 output DP-1-2
-workspace 9 output eDP-1
-workspace 0 output eDP-1
+#workspace 1 output DP-1-1
+#workspace 2 output DP-1-2
+#workspace 3 output DP-1-1
+#workspace 4 output DP-1-1
+#workspace 5 output DP-1-1
+#workspace 6 output DP-1-1
+#workspace 7 output DP-1-2
+#workspace 8 output DP-1-2
+#workspace 9 output eDP-1
+#workspace 0 output eDP-1
 
-# app workspace assignments, ordered by ws number, use xprop to find class
+# app workspace assignments, use xprop to find class
 # assign [class="discord"] 2
 assign [class="Mattermost"] 2
 for_window [class="Spotify"] move to workspace 0
 assign [class="nagstamon"] 0
 #for_window [class="Tk"] floating enable
 
-# resize window
+#bindsym $mod+r mode "resize"
 mode "resize" {
         # These bindings trigger as soon as you enter the resize mode
-        bindsym j resize shrink width 10 px or 10 ppt
-        bindsym k resize grow height 10 px or 10 ppt
-        bindsym l resize shrink height 10 px or 10 ppt
-        bindsym oslash resize grow width 10 px or 10 ppt
+        bindsym j resize shrink width 5 px or 5 ppt
+        bindsym k resize grow height 5 px or 5 ppt
+        bindsym l resize shrink height 5 px or 5 ppt
+        bindsym oslash resize grow width 5 px or 5 ppt
 
-        bindsym Left resize shrink width 10 px or 10 ppt
-        bindsym Down resize grow height 10 px or 10 ppt
-        bindsym Up resize shrink height 10 px or 10 ppt
-        bindsym Right resize grow width 10 px or 10 ppt
+        bindsym Left resize shrink width 5 px or 5 ppt
+        bindsym Down resize grow height 5 px or 5 ppt
+        bindsym Up resize shrink height 5 px or 5 ppt
+        bindsym Right resize grow width 5 px or 5 ppt
 
         # back to normal: Enter or Escape or $mod+r
         bindsym Return mode "default"
         bindsym Escape mode "default"
         bindsym $mod+r mode "default"
 }
-
-# resize binds
-bindsym $mod+r mode "resize"
-bindsym $mod+Ctrl+Left resize shrink width 10 px or 10 ppt
-bindsym $mod+Ctrl+Down resize grow height 10 px or 10 ppt
-bindsym $mod+Ctrl+Up resize shrink height 10 px or 10 ppt
-bindsym $mod+Ctrl+Right resize grow width 10 px or 10 ppt
 
 # border size
 for_window [class="^.*"] border pixel 2
@@ -184,22 +95,4 @@ client.background #000000
 gaps inner 10
 gaps outer 10
 
-#exec_always --no-startup-id xsetwacom --set "Wacom Intuos S Pen stylus" Suppress 2
-#exec_always --no-startup-id xsetwacom --set "Wacom Intuos S Pen stylus" Rawsample 4
-####exec_always --no-startup-id xsetwacom --set "Wacom Intuos S Pen stylus" Area 0 351 8211 5453
-#exec_always --no-startup-id xsetwacom --set "Wacom Intuos S Pen stylus" Area 2000 2351 10210 7453
-#exec_always --no-startup-id xsetwacom --set "Wacom Intuos S Pen stylus" Button 1 '0'
-#exec_always --no-startup-id xsetwacom --set "Wacom Intuos S Pen stylus" Button 2 '0'
-#exec_always --no-startup-id xsetwacom --set "Wacom Intuos S Pen stylus" Button 3 '0'
-#exec_always --no-startup-id xsetwacom --set "Wacom Intuos S Pen stylus" MapToOutput HEAD-0
-
-exec_always --no-startup-id $HOME/bin/monitors.sh
-exec_always --no-startup-id $HOME/bin/polybar.sh
-exec_always sxhkd
-exec_always --no-startup-id feh --bg-scale $HOME/.config/wall.png
-exec_always --no-startup-id xrdb -load ~/.Xresources
-exec_always --no-startup-id compton -fcCG --xrender-sync-fence > /dev/null 2>&1 &
-exec setxkbmap -option caps:super -v no
-exec nm-applet
-exec xdg-settings set default-web-browser firefox.desktop
 #exec --no-startup-id i3-msg workspace $ws9

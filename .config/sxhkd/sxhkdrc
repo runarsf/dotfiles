@@ -1,12 +1,11 @@
+# vim: set foldmethod=marker foldlevel=0 nomodeline:
 super + Return
 	$TERMINAL
-super + shift + q
-	kill -9 `xdotool getwindowfocus getwindowpid`
 super + x
 	$HOME/bin/customlock.sh "gllock"
 super + shift + x
-	$HOME/bin/prompt.sh "Are you sure you want to shutdown?" "$shutdown"
-super + v
+	$HOME/bin/prompt.sh "Are you sure you want to shutdown?" "shutdown -h now"
+super + shift + v
 	$TERMINAL -e $EDITOR
 super + d
 	rofi -show run -lines 3 -eh 2
@@ -15,125 +14,141 @@ super + Tab
 super + shift + w
 	$BROWSER
 
+# Restart sxhkd
 super + Escape
 	pkill -USR1 -x sxhkd
 
 alt + p
 	sharenix-section -n -c
 
-
+# Insert < and >
 ctrl + @comma
 	xdotool keyup ctrl && xdotool key less && xdotool keydown ctrl
 ctrl + @period
 	xdotool keyup ctrl && xdotool key greater && xdotool keydown ctrl
 
-# i3 {{{
+super + ctrl + @space
+	$HOME/bin/dvorak.sh toggle
 
-# i3 stuff that I don't use
-super + {_,shift + }{1-9,0}
-	i3-msg {_,move container to }workspace number {1-9,10,11,12,13,14}
-# super + {x,b,v,m}
-# 	i3-msg workspace {prev,prev,next,next}_on_output
-# super + Escape
-# 	i3-msg workspace back_and_forth
-# super + ctrl + {_,shift + } o
-# 	i3-msg move workspace to output {right,left}
+# Window manager {{{
 
-# }}}
-
-
-# bspwm {{{
-
-# quit/restart bspwm
-super + alt + {q,r}
-	bspc {quit,wm -r}
-
-# close and kill, DESKTOP_SESSION, XDG_CURRENT_DESKTOP, GDMSESSION
+# close and kill
 super + {_,shift + }q
-	test "${XDG_CURRENT_DESKTOP}"     = "bspwm" && bspc node -{c,k} \
-	|| (test "${XDG_CURRENT_DESKTOP}" = "i3"    && i3-msg kill)
+	pidof i3 && {i3-msg ,x}kill \
+	|| (pidof bspwm && bspc node -{c,k})
+	#kill -9 $(xdotool getwindowfocus getwindowpid)
 
-# focus or send to the given desktop
+# Change workspace or move container to workspace
 super + {_,shift + }{1-9,0}
-	bspc {desktop -f,node -d} '{1,2,3,4,5,6,7,8,9,10}'
+	pidof i3 && i3-msg {_,move container to }workspace number {1-9,0} \
+	|| (bspc {desktop -f,node -d} '{1-9,10}')
+# Change focus or move container
+super + {_,shift + }{Left,Down,Up,Right}
+	pidof i3 && i3-msg {focus,move} {left,down,up,right} \
+	|| (pidof bspwm && bspc node -{f,s} {west,south,north,east})
+# Resize window
+super + ctrl + {Left,Down,Up,Right}
+	pidof i3 && i3-msg resize {shrink width,grow height,shrink height,grow width} 10 px or 10 ppt \
+	|| (pidof bspwm && bspc node -z {right -20 0,top 0 20,bottom 0 -20,left 20 0})
+# Move window to monitor or focus the next/previous desktop in the current monitor
+super + alt + shift + {Left,Right}
+	pidof i3 && i3-msg move workspace to output {left,right} \
+	|| (bspc desktop -f {prev,next}.local)
+
+alt + Return
+	i3-msg workspace back_and_forth
+
+# restart/reload/quit
+super + shift + {r,i,e}
+	pidof i3 && i3-msg {restart,reload,exit} \
+	|| (pidof bspwm && bspc {wm -r,wm -r,quit})
+
+# Toggle fullscreen
+super + f
+	pidof i3 && i3-msg fullscreen toggle \
+	|| (pidof bspwm && bspc node -t \~fullscreen)
+
+# Split direction
+super + {v,h}
+	pidof i3 && i3-msg split {v,h}
+
+# Change gap size (can inner/outer be combined to {s,z}?)
+super + {_,shift + }s
+	pidof i3 && i3-msg gaps inner current {plus,minus} 3
+super + {_,shift + }z
+	pidof i3 && i3-msg gaps outer current {plus,minus} 3
+
+#super + {t,shift + t,s,f}
+#	bspc node -t '~{tiled,pseudo_tiled,floating,fullscreen}'
+super + @space
+	pidof i3 && i3-msg floating toggle \
+	|| (pidof bspwm && bspc node -t '\~floating')
 
 # alternate between the tiled and monocle layout
-super + m
-	bspc desktop -l next
+#super + m
+#	bspc desktop -l next
 
 # send the newest marked node to the newest preselected node
-super + y
-	bspc node newest.marked.local -n newest.!automatic.local
+#super + y
+#	bspc node newest.marked.local -n newest.!automatic.local
 
 # swap the current node and the biggest node
-super + g
-	bspc node -s biggest
+#super + g
+#	bspc node -s biggest
 
 # set the window state
-super + {t,shift + t,s,f}
-	bspc node -t {tiled,pseudo_tiled,floating,fullscreen}
+#super + {t,shift + t,s,f}
+#	bspc node -t {tiled,pseudo_tiled,floating,fullscreen}
 
 # set the node flags
-super + ctrl + {m,x,y,z}
-	bspc node -g {marked,locked,sticky,private}
-
-# focus the node in the given direction
-super + {_,shift + }{h,j,k,l}
-	bspc node -{f,s} {west,south,north,east}
-super + {_,shift + }{Left,Down,Up,Right}
-	bspc node -{f,s} {west,south,north,east}
+#super + ctrl + {m,x,y,z}
+#	bspc node -g {marked,locked,sticky,private}
 
 # focus the node for the given path jump
-super + {p,b,comma,period}
-	bspc node -f @{parent,brother,first,second}
+#super + {p,b,comma,period}
+#	bspc node -f @{parent,brother,first,second}
 
 # focus the next/previous node in the current desktop
-super + {_,shift + }c
-	bspc node -f {next,prev}.local
+#super + {_,shift + }c
+#	bspc node -f {next,prev}.local
 
 # focus the next/previous desktop in the current monitor
-super + bracket{Left,Right}
-	bspc desktop -f {prev,next}.local
+#super + bracket{Left,Right}
+#	bspc desktop -f {prev,next}.local
 
 # focus the last node/desktop
-super + {grave,Tab}
-	bspc {node,desktop} -f last
+#super + {grave,Tab}
+#	bspc {node,desktop} -f last
 
 # focus the older or newer node in the focus history
-super + {o,i}
-	bspc wm -h off; \
-	bspc node {older,newer} -f; \
-	bspc wm -h on
+#super + {o,i}
+#	bspc wm -h off; \
+#	bspc node {older,newer} -f; \
+#	bspc wm -h on
 
 # preselect the direction
-super + ctrl + {h,j,k,l}
-	bspc node -p {west,south,north,east}
-super + ctrl + {Left,Down,Up,Right}
-	bspc node -p {west,south,north,east}
+#super + ctrl + {h,j,k,l}
+#	bspc node -p {west,south,north,east}
+#super + ctrl + {Left,Down,Up,Right}
+#	bspc node -p {west,south,north,east}
 
 # preselect the ratio
-super + ctrl + {1-9}
-	bspc node -o 0.{1-9}
+#super + ctrl + {1-9}
+#	bspc node -o 0.{1-9}
 
 # cancel the preselection for the focused node
-super + ctrl + space
-	bspc node -p cancel
+#super + ctrl + space
+#	bspc node -p cancel
 
 # cancel the preselection for the focused desktop
-super + ctrl + shift + space
-	bspc query -N -d | xargs -I id -n 1 bspc node id -p cancel
+#super + ctrl + shift + space
+#	bspc query -N -d | xargs -I id -n 1 bspc node id -p cancel
 
 # expand a window by moving one of its side outward
-super + alt + {h,j,k,l}
-	bspc node -z {left -20 0,bottom 0 20,top 0 -20,right 20 0}
-super + alt + {Left,Down,Up,Right}
-	bspc node -z {left -20 0,bottom 0 20,top 0 -20,right 20 0}
-
-# contract a window by moving one of its side inward
-super + alt + shift + {h,j,k,l}
-	bspc node -z {right -20 0,top 0 20,bottom 0 -20,left 20 0}
-super + alt + shift + {Left,Down,Up,Right}
-	bspc node -z {right -20 0,top 0 20,bottom 0 -20,left 20 0}
+#super + alt + {h,j,k,l}
+#	bspc node -z {left -20 0,bottom 0 20,top 0 -20,right 20 0}
+#super + alt + {Left,Down,Up,Right}
+#	bspc node -z {left -20 0,bottom 0 20,top 0 -20,right 20 0}
 
 # move a floating window
 #super + {Left,Down,Up,Right}
