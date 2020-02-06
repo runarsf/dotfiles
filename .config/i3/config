@@ -38,30 +38,25 @@ bindsym Mod1+Left exec xdotool click 1
 ###---Basic Bindings---###
 floating_modifier $mod
 
-#bindsym $mod+Return exec $TERMINAL
-#bindsym $mod+d exec rofi -show run -lines 3 -eh 2 -width 200
+#bindsym $mod+q kill
 
-#bindsym Mod1+p exec sharenix-section -n -c
-
-bindsym $mod+q			kill
-
-bindsym $mod+j 		focus left
-bindsym $mod+k 		focus down
-bindsym $mod+l 		focus up
+bindsym $mod+j focus left
+bindsym $mod+k focus down
+bindsym $mod+l focus up
 bindsym $mod+oslash focus right
-bindsym $mod+Left 	focus left
-bindsym $mod+Down 	focus down
-bindsym $mod+Up 	focus up
-bindsym $mod+Right 	focus right
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
 
-bindsym $mod+Shift+j 		move left
-bindsym $mod+Shift+k 		move down
-bindsym $mod+Shift+l 		move up
-bindsym $mod+Shift+oslash 	move right
-bindsym $mod+Shift+Left 	move left
-bindsym $mod+Shift+Down 	move down
-bindsym $mod+Shift+Up 		move up
-bindsym $mod+Shift+Right 	move right
+bindsym $mod+Shift+j move left
+bindsym $mod+Shift+k move down
+bindsym $mod+Shift+l move up
+bindsym $mod+Shift+oslash move right
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
 
 # split in horizontal orientation
 bindsym $mod+h 			split h
