@@ -4,6 +4,7 @@ set $font pango:System San Francisco
 # Font for window titles.
 #font pango:System San Francisco 7
 font $font 7
+floating_modifier $mod
 
 ###---Scratchpad Windows---###
 for_window [instance="sc_term"] floating enable
@@ -54,7 +55,6 @@ for_window [class="Spotify"] move to workspace 0
 assign [class="nagstamon"] 0
 #for_window [class="Tk"] floating enable
 
-#bindsym $mod+r mode "resize"
 mode "resize" {
         # These bindings trigger as soon as you enter the resize mode
         bindsym j resize shrink width 5 px or 5 ppt
@@ -72,6 +72,7 @@ mode "resize" {
         bindsym Escape mode "default"
         bindsym $mod+r mode "default"
 }
+#bindsym $mod+r mode "resize"
 
 # border size
 for_window [class="^.*"] border pixel 2
@@ -95,4 +96,9 @@ client.background #000000
 gaps inner 10
 gaps outer 10
 
+# i3 misbehaves if it doesn't find any bindings (I think), this is added for compatibility, sxhkd handles all binds
+bindsym $mod+Shift+space floating toggle
+
+exec_always --no-startup-id ${HOME}/bin/polybar.sh
+exec_always --no-startup-id feh --bg-scale "${HOME}/.config/wall.png"
 #exec --no-startup-id i3-msg workspace $ws9
