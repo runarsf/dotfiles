@@ -1,6 +1,7 @@
 #!/usr/bin/env sh
 
 setxkbmap -option caps:escape -v no
+#setxkbmap -option caps:super -v no
 pulseaudio --start &
 #pulseaudio --log-level=4 --log-target=stderr &
 sxhkd -m 1 &
@@ -12,7 +13,6 @@ systemctl --user import-environment DISPLAY
 compton -fcCG --xrender-sync-fence > /dev/null 2>&1 &
 feh --bg-scale "${HOME}/.config/wall.png"
 "${HOME}"/bin/polybar.sh
-setxkbmap -option caps:super -v no
 
 xsetwacom --set "Wacom Intuos S Pen stylus" Suppress 2
 xsetwacom --set "Wacom Intuos S Pen stylus" Rawsample 4
