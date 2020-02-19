@@ -13,8 +13,11 @@ test -n "${SSH_CONNECTION}" \
 export VISUAL="${EDITOR}"
 export FILE="${EDITOR}"
 export TERMINAL="alacritty"
-export BROWSER="google-chrome-stable"
+export BROWSER="firefox"
 export PYTHONDONTWRITEBYTECODE=1
+
+# Add ssh-agent
+eval "$(ssh-agent)" && ssh-add
 
 # Start graphical server on tty1 if not already running.
 [ "$(tty)" = "/dev/tty1" ] && ! pgrep -x Xorg >/dev/null && exec startx
