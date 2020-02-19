@@ -16,7 +16,7 @@ export TERMINAL="alacritty"
 export BROWSER="firefox"
 export PYTHONDONTWRITEBYTECODE=1
 
-# Add ssh-agent
+# Auto start ssh-agent
 eval "$(ssh-agent)" && ssh-add
 
 # Start graphical server on tty1 if not already running.

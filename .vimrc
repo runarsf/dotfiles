@@ -83,6 +83,9 @@ let g:colorscheme = 'one'
 silent! if plug#begin('~/.vim/plugged')
 " General {{{
 " Disabled General {{{
+"Plug 'svermeulen/vim-subversive'
+"Plug 'svermeulen/vim-cutlass'
+"Plug 'svermeulen/vim-yoink'
 "Plug 'pedrohdz/vim-yaml-folds'
 "Plug 'ctrlpvim/ctrlp.vim'
 "Plug 'kien/ctrlp.vim'
