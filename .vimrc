@@ -175,10 +175,10 @@ silent! if plug#begin('~/.vim/plugged')
 "Plug 'vim-scripts/loremipsum'
 "Plug 'robcsi/viewmaps.vim'
 "Plug 'tpope/vim-fugitive'
-"Plug 'editorconfig/editorconfig-vim'
 "Plug 'tpope/vim-surround'
 "Plug 'voldikss/vim-codelf', { 'on': 'Codelf' }
 " }}}
+Plug 'editorconfig/editorconfig-vim'
 Plug 'liuchengxu/vim-clap'
 Plug 'dstein64/vim-startuptime'
 Plug 'fcpg/vim-waikiki'
