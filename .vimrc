@@ -166,7 +166,6 @@ silent! if plug#begin('~/.vim/plugged')
 "Plug 'mechatroner/rainbow_csv'
 "Plug 'sheerun/vim-polyglot'
 "Plug 'mbbill/undotree'
-"Plug 'nathanaelkane/vim-indent-guides'
 "Plug 'junegunn/vim-peekaboo'
 "Plug 'tpope/vim-eunuch'
 "Plug 'Xuyuanp/nerdtree-git-plugin', { 'on': 'NERDTreeToggle' }
@@ -181,6 +180,8 @@ silent! if plug#begin('~/.vim/plugged')
 "Plug 'tpope/vim-surround'
 "Plug 'voldikss/vim-codelf', { 'on': 'Codelf' }
 " }}}
+Plug 'camspiers/animate.vim'
+Plug 'camspiers/lens.vim'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'liuchengxu/vim-clap'
 Plug 'dstein64/vim-startuptime'
@@ -224,7 +225,9 @@ Plug 'kovetskiy/sxhkd-vim', { 'for': 'sxhkdrc' }
 Plug 'mboughaba/i3config.vim', { 'for': 'conf' }
 Plug 'Glench/Vim-Jinja2-Syntax', { 'for': 'jinja' }
 Plug 'rodjek/vim-puppet', { 'for': 'puppet' }
+Plug 'nathanaelkane/vim-indent-guides'
 Plug 'dense-analysis/ale'
+Plug 'tmhedberg/SimpylFold'
 " }}}
 " Colorschemes {{{
 " Disabled Colorschemes {{{
@@ -254,6 +257,16 @@ Plug 'arcticicestudio/nord-vim'
 call plug#end()
 endif
 
+" lens.vim {{{
+let g:lens#animate = 1
+let g:lens#disabled_filetypes = ['nerdtree', 'fzf']
+let g:lens#disabled = 0
+" }}}
+" SimplyFold {{{
+let g:SimpylFold_docstring_preview = 1
+let g:SimpylFold_fold_docstring = 1
+let g:SimpylFold_fold_import = 1
+" }}}
 " vim-buftabs {{{
 "let g:buftabs_enabled = 1
 "let g:buftabs_in_statusline = 1
@@ -347,10 +360,13 @@ let g:one_allow_italics = 1
 nmap <F8> :TagbarToggle<CR>
 " }}}
 " vim-indent-guides {{{
-"let g:indent_guides_enable_on_vim_startup = 1
-"let g:indent_guides_auto_colors = 0
-"autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=red   ctermbg=3
-"autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=green ctermbg=4
+let g:indent_guides_enable_on_vim_startup = 1
+let g:indent_guides_start_level = 1
+let g:indent_guides_auto_colors = 0
+"let g:indent_guides_guide_size = 2
+let g:indent_guides_color_change_percent = 10
+"autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=gray ctermbg=236
+autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=#363840 ctermbg=237
 " }}}
 " vim-codelf {{{
 "inoremap <silent> <leader>ce <C-R>=codelf#start()<CR>
