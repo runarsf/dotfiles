@@ -108,7 +108,6 @@ silent! if plug#begin('~/.vim/plugged')
 "Plug 'bling/vim-bufferline'
 "Plug 'airblade/vim-gitgutter'
 "Plug 'fcpg/vim-waikiki'
-"Plug 'lervag/wiki.vim'
 "Plug 'yuttie/comfortable-motion.vim'
 "Plug 'psliwka/vim-smoothie'
 "Plug 'tpope/vim-repeat'
@@ -180,12 +179,13 @@ silent! if plug#begin('~/.vim/plugged')
 "Plug 'tpope/vim-surround'
 "Plug 'voldikss/vim-codelf', { 'on': 'Codelf' }
 " }}}
+"Plug 'lervag/wiki.vim'
 Plug 'camspiers/animate.vim'
 Plug 'camspiers/lens.vim'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'liuchengxu/vim-clap'
 Plug 'dstein64/vim-startuptime'
-Plug 'fcpg/vim-waikiki'
+"Plug 'fcpg/vim-waikiki'
 Plug 'tpope/vim-dispatch'
 Plug 'habamax/vim-asciidoctor'
 Plug 'ap/vim-buftabline'
@@ -228,6 +228,7 @@ Plug 'rodjek/vim-puppet', { 'for': 'puppet' }
 Plug 'nathanaelkane/vim-indent-guides'
 Plug 'dense-analysis/ale'
 Plug 'tmhedberg/SimpylFold'
+Plug 'lervag/wiki-ft.vim'
 " }}}
 " Colorschemes {{{
 " Disabled Colorschemes {{{
@@ -257,6 +258,9 @@ Plug 'arcticicestudio/nord-vim'
 call plug#end()
 endif
 
+" wiki.vim {{{
+let g:wiki_root = '~/wiki'
+" }}}
 " lens.vim {{{
 let g:lens#animate = 1
 let g:lens#disabled_filetypes = ['nerdtree', 'fzf']
