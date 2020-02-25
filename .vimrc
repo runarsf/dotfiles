@@ -83,11 +83,12 @@ let g:colorscheme = 'one'
 silent! if plug#begin('~/.vim/plugged')
 " General {{{
 " Disabled General {{{
+"Plug 'fcpg/vim-waikiki'
+"Plug 'lervag/wiki.vim'
 "Plug 'svermeulen/vim-subversive'
 "Plug 'svermeulen/vim-cutlass'
 "Plug 'svermeulen/vim-yoink'
 "Plug 'pedrohdz/vim-yaml-folds'
-"Plug 'ctrlpvim/ctrlp.vim'
 "Plug 'kien/ctrlp.vim'
 "if has('nvim') || has('patch-8.0.902')
 "  Plug 'mhinz/vim-signify'
@@ -179,29 +180,30 @@ silent! if plug#begin('~/.vim/plugged')
 "Plug 'tpope/vim-surround'
 "Plug 'voldikss/vim-codelf', { 'on': 'Codelf' }
 " }}}
-"Plug 'lervag/wiki.vim'
-Plug 'camspiers/animate.vim'
-Plug 'camspiers/lens.vim'
-Plug 'editorconfig/editorconfig-vim'
-Plug 'liuchengxu/vim-clap'
+"Plug 'ctrlpvim/ctrlp.vim'
+"Plug 'camspiers/animate.vim'
+"Plug 'camspiers/lens.vim'
+"Plug 'editorconfig/editorconfig-vim'
+"Plug 'liuchengxu/vim-clap'
+"Plug 'tpope/vim-dispatch'
+"Plug 'habamax/vim-asciidoctor'
+"Plug 'pbrisbin/vim-mkdir'
+"Plug 'majutsushi/tagbar', { 'on': 'TagbarToggle' }
+"Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+"Plug 'junegunn/fzf.vim'
+"Plug 'lifepillar/vim-cheat40', { 'on': 'Cheat40' }
+"Plug 'inkarkat/vim-ingo-library', { 'branch': 'stable' }
+"Plug 'inkarkat/vim-ModelineCommands', { 'branch': 'stable' }
+"Plug 'tyru/open-browser.vim', { 'on': 'RunningX' }
+"Plug 'tmhedberg/SimpylFold'
+"Plug 'lervag/wiki-ft.vim'
 Plug 'dstein64/vim-startuptime'
-"Plug 'fcpg/vim-waikiki'
-Plug 'tpope/vim-dispatch'
-Plug 'habamax/vim-asciidoctor'
 Plug 'ap/vim-buftabline'
-Plug 'pbrisbin/vim-mkdir'
-Plug 'majutsushi/tagbar', { 'on': 'TagbarToggle' }
 Plug 'jlanzarotta/bufexplorer'
 Plug 'scrooloose/nerdtree'
 Plug 'junegunn/goyo.vim'
-Plug 'justinmk/vim-sneak'
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-Plug 'junegunn/fzf.vim'
-Plug 'lifepillar/vim-cheat40', { 'on': 'Cheat40' }
 Plug 'junegunn/limelight.vim', { 'on': 'Limelight' }
-Plug 'tyru/open-browser.vim', { 'on': 'RunningX' }
-Plug 'inkarkat/vim-ingo-library', { 'branch': 'stable' }
-Plug 'inkarkat/vim-ModelineCommands', { 'branch': 'stable' }
+Plug 'justinmk/vim-sneak'
 if v:version >= 703
   "if g:has_node && v:version >= 703
   Plug 'neoclide/coc.nvim', { 'branch': 'release' } " 'do': { -> coc#util#install() }}
@@ -227,11 +229,12 @@ Plug 'Glench/Vim-Jinja2-Syntax', { 'for': 'jinja' }
 Plug 'rodjek/vim-puppet', { 'for': 'puppet' }
 Plug 'nathanaelkane/vim-indent-guides'
 Plug 'dense-analysis/ale'
-Plug 'tmhedberg/SimpylFold'
-Plug 'lervag/wiki-ft.vim'
 " }}}
 " Colorschemes {{{
 " Disabled Colorschemes {{{
+"Plug 'AlessandroYorba/Sierra'
+"Plug 'liuchengxu/space-vim-dark'
+"Plug 'arcticicestudio/nord-vim'
 "Plug 'ayu-theme/ayu-vim'
 "Plug 'morhetz/gruvbox'
 "Plug 'chriskempson/base16-vim'
@@ -250,26 +253,23 @@ Plug 'lervag/wiki-ft.vim'
 "Plug 'flrnd/plastic.vim'
 "Plug 'kaicataldo/material.vim'
 " }}}
-Plug 'AlessandroYorba/Sierra'
 Plug 'rakr/vim-one'
-Plug 'liuchengxu/space-vim-dark'
-Plug 'arcticicestudio/nord-vim'
 " }}}
 call plug#end()
 endif
 
 " wiki.vim {{{
-let g:wiki_root = '~/wiki'
+"let g:wiki_root = '~/wiki'
 " }}}
 " lens.vim {{{
-let g:lens#animate = 1
-let g:lens#disabled_filetypes = ['nerdtree', 'fzf']
-let g:lens#disabled = 0
+"let g:lens#animate = 1
+"let g:lens#disabled_filetypes = ['nerdtree', 'fzf']
+"let g:lens#disabled = 0
 " }}}
 " SimplyFold {{{
-let g:SimpylFold_docstring_preview = 1
-let g:SimpylFold_fold_docstring = 1
-let g:SimpylFold_fold_import = 1
+"let g:SimpylFold_docstring_preview = 1
+"let g:SimpylFold_fold_docstring = 1
+"let g:SimpylFold_fold_import = 1
 " }}}
 " vim-buftabs {{{
 "let g:buftabs_enabled = 1
@@ -361,7 +361,7 @@ let g:SimpylFold_fold_import = 1
 let g:one_allow_italics = 1
 " }}}
 " tagbar {{{
-nmap <F8> :TagbarToggle<CR>
+"nmap <F8> :TagbarToggle<CR>
 " }}}
 " vim-indent-guides {{{
 let g:indent_guides_enable_on_vim_startup = 1
@@ -398,7 +398,7 @@ autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=#363840 ctermbg=237
 "endfunction
 " }}}
 " fzf {{{
-nmap <leader>f :FZF<cr>
+"nmap <leader>f :FZF<cr>
 " }}}
 " limelight.vim {{{
 " Color name (:help cterm-colors) or ANSI code
@@ -439,7 +439,7 @@ let g:sneak#label = 1
 " Sierra {{{
 "let g:sierra_Sunset = 1
 "let g:sierra_Twilight = 1
-let g:sierra_Midnight = 1
+"let g:sierra_Midnight = 1
 "let g:sierra_Pitch = 1
 " }}}
 " vim-easy-align {{{
@@ -449,31 +449,31 @@ let g:sierra_Midnight = 1
 "nmap ga <Plug>(EasyAlign)
 " }}}
 " vim-cheat40 {{{
-let g:cheat40_use_default = 1
+"let g:cheat40_use_default = 1
 "nmap <F1> :Cheat40<CR>
 "imap <F1> :Cheat40<CR>
-function! Cheat()
-  "if (g:loaded_cheatsheet)
-  if empty(bufname('~/.vim/plugged/vim-cheat40/cheat40.txt'))
-    Cheat40
-  else
-    bd
-  endif
-endfunction
-nnoremap <F1> :call Cheat()<CR>
+"function! Cheat()
+"  "if (g:loaded_cheatsheet)
+"  if empty(bufname('~/.vim/plugged/vim-cheat40/cheat40.txt'))
+"    Cheat40
+"  else
+"    bd
+"  endif
+"endfunction
+"nnoremap <F1> :call Cheat()<CR>
 " }}}
 " gruvbox {{{
 "let g:gruvbox_contrast_dark="hard"
 " }}}
 " nerdtree {{{
 " Open a NERDTree automatically when vim starts up if no files were specified
-"autocmd StdinReadPre * let s:std_in=1
-"autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
 " Open NERDTree automatically when vim starts up on opening a directory
-"autocmd StdinReadPre * let s:std_in=1
-"autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | endif
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | endif
 " Close vim if the only window left open is a NERDTree
-"autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 let g:NERDTreeWinPos = "left"
 map <silent> <C-o> :NERDTreeToggle<CR>
 " }}}
@@ -637,7 +637,7 @@ set number                                                    " Enable line numb
 set relativenumber                                            " Set line numbers to relative
 set ruler
 set showcmd                                                   " Display incomplete commands
-set scrolloff=5                                                      " Set lines to the cursor - when moving vertically
+set scrolloff=7                                                      " Set lines to the cursor - when moving vertically
 let $LANG='en'                                                " Avoid garbled characters in Chinese language in Windows
 set langmenu=en
 set wildmenu                                                  " Turn on the Wild menu for cycling through command options
@@ -715,7 +715,7 @@ nnoremap <Leader>h :bprevious<CR>
 nnoremap <Leader>j :blast<CR>
 nnoremap <Leader>k :bfirst<CR>
 nnoremap <Leader>l :bnext<CR>
-map bf :BufExplorer<CR>
+map bb :BufExplorer<CR>
 
 " Disable CTRL-A on tmux or on screen
 if $TERM =~ 'screen'
@@ -737,19 +737,16 @@ cnoremap jk <C-C>
 " qq to record, Q to replay
 nnoremap Q @q
 
-" Run python file
-"nnoremap <F5> :echo system('python3 "' . expand('%') . '"')<cr>
-
 " Toggle paste
 "nnoremap <leader>p :set invpaste<CR>
 " Breaks if '<leader>p' is in the pasted string
 set pastetoggle=<leader>p
 
 " Rebind CapsLock to Escape in X-Sessions
-if has('unix') && !empty($DISPLAY)
-  autocmd VimEnter * silent! !xmodmap -e 'clear Lock' -e 'keycode 0x42 = Escape'
-  autocmd VimLeave * silent! !xmodmap -e 'clear Lock' -e 'keycode 0x42 = Caps_Lock'
-endif
+"if has('unix') && !empty($DISPLAY)
+"  autocmd VimEnter * silent! !xmodmap -e 'clear Lock' -e 'keycode 0x42 = Escape'
+"  autocmd VimLeave * silent! !xmodmap -e 'clear Lock' -e 'keycode 0x42 = Caps_Lock'
+"endif
 
 " Toggle mouse
 function! ToggleMouse()
@@ -786,12 +783,12 @@ vmap <M-j> :m'>+<cr>`<my`>mzgv`yo`z
 vmap <M-k> :m'<-2<cr>`>my`<mzgv`yo`z
 
 " Splits navigation.
-set splitbelow
-set splitright
-map <C-h> <C-w>h
-map <C-j> <C-w>j
-map <C-k> <C-w>k
-map <C-l> <C-w>l
+"set splitbelow
+"set splitright
+"map <C-h> <C-w>h
+"map <C-j> <C-w>j
+"map <C-k> <C-w>k
+"map <C-l> <C-w>l
 
 " Completions
 "inoremap <silent> ,f <C-x><C-f>
@@ -803,17 +800,15 @@ map <C-l> <C-w>l
 "inoremap <silent> ,u <C-x><C-u>
 
 " Visual mode pressing * or # searches for the current selection
-vnoremap <silent> * :<C-u>call VisualSelection('', '')<CR>/<C-R>=@/<CR><CR>
+"vnoremap <silent> * :<C-u>call VisualSelection('', '')<CR>/<C-R>=@/<CR><CR>
 "vnoremap <silent> # :<C-u>call VisualSelection('', '')<CR>?<C-R>=@/<CR><CR>
 
 " Get line, word and character counts with F3:
 map <F3> :!wc %<CR>
 
-" Spell-check set to F6:
-map <F6> :setlocal spell! spelllang=en_us,no<CR>
-
-" Pressing ,ss will toggle and untoggle spell checking
-map <leader>ss :setlocal spell!<cr>
+" Spell-check, english and norwegian
+map <F6> :setlocal spell! spelllang=en_us,nb<CR>
+map <leader>ss :setlocal spell! spelllang=en_us,nb<cr>
 
 " Remove the Windows ^M - when the encodings gets messed up
 "noremap <Leader>m mmHmt:%s/<C-V><cr>//ge<cr>'tzt'm
@@ -848,13 +843,13 @@ inoreabbrev <expr> #!! "#!/usr/bin/env" . (empty(&filetype) ? '' : ' '.&filetype
 "endif
 
 " File interpreting
-autocmd BufRead,BufNewFile *.md set filetype=markdown
-autocmd BufRead,BufNewFile .{jscs,jshint,eslint}rc set filetype=json
-autocmd BufRead,BufNewFile *.zsh-theme,aliases.local,zshrc.local,*/zsh/configs/* set filetype=zsh
-autocmd BufRead,BufNewFile gitconfig.local set filetype=gitconfig
-autocmd BufRead,BufNewFile tmux.conf.local set filetype=tmux
-autocmd BufRead,BufNewFile vimrc.local set filetype=vim
-autocmd BufRead,BufNewFile *.rss set filetype=xml
+"autocmd BufRead,BufNewFile *.md set filetype=markdown
+"autocmd BufRead,BufNewFile .{jscs,jshint,eslint}rc set filetype=json
+"autocmd BufRead,BufNewFile *.zsh-theme,aliases.local,zshrc.local,*/zsh/configs/* set filetype=zsh
+"autocmd BufRead,BufNewFile gitconfig.local set filetype=gitconfig
+"autocmd BufRead,BufNewFile tmux.conf.local set filetype=tmux
+"autocmd BufRead,BufNewFile vimrc.local set filetype=vim
+"autocmd BufRead,BufNewFile *.rss set filetype=xml
 
 " Turn persistent undo on
 " Undo even when you close a buffer/VIM
@@ -897,21 +892,21 @@ let &statusline = s:statusline_expr()
 " }}}
 
 " :W sudo saves file {{{
-command! W w !sudo tee % > /dev/null
+"command! W w !sudo tee % > /dev/null
 " }}}
 
 " Create command aliases {{{
-function! SetupCommandAlias(from, to)
-  exec 'cnoreabbrev <expr> '.a:from
-        \ .' ((getcmdtype() is# ":" && getcmdline() is# "'.a:from.'")'
-        \ .'? ("'.a:to.'") : ("'.a:from.'"))'
-endfun
+"function! SetupCommandAlias(from, to)
+"  exec 'cnoreabbrev <expr> '.a:from
+"        \ .' ((getcmdtype() is# ":" && getcmdline() is# "'.a:from.'")'
+"        \ .'? ("'.a:to.'") : ("'.a:from.'"))'
+"endfun
 " call SetupCommandAlias('W','w')
 " }}}
 
 " Run line under cursor {{{
 "nnoremap <leader>o mmI:<esc>v$h"oy@o<CR>x`m
-nnoremap <leader>o "oyy:exe @o<CR>
+"nnoremap <leader>o "oyy:exe @o<CR>
 " }}}
 
 " Autoreload .vimrc {{{
@@ -954,12 +949,11 @@ augroup END
 
 " Switch colorscheme and enable limelight with Goyo {{{
 function! s:goyo_enter()
-  colorscheme sierra
+  "colorscheme sierra
   Limelight
 endfunction
 function! s:goyo_leave()
-  execute "colorscheme " . g:colorscheme
-  "highlight Normal     ctermbg=NONE guibg=NONE
+  "execute "colorscheme " . g:colorscheme
   Limelight!
 endfunction
 autocmd! User GoyoEnter nested call <SID>goyo_enter()
@@ -978,16 +972,16 @@ com! DiffSaved call s:DiffWithSaved()
 " }}}
 
 " :root to change directory to git repo root {{{
-function! s:root()
-  let root = systemlist('git rev-parse --show-toplevel')[0]
-  if v:shell_error
-    echo 'Not in git repo'
-  else
-    execute 'lcd' root
-    echo 'Changed directory to: ' . root
-  endif
-endfunction
-command! Root call s:root()
+"function! s:root()
+"  let root = systemlist('git rev-parse --show-toplevel')[0]
+"  if v:shell_error
+"    echo 'Not in git repo'
+"  else
+"    execute 'lcd' root
+"    echo 'Changed directory to: ' . root
+"  endif
+"endfunction
+"command! Root call s:root()
 " }}}
 
 " Separate python indents {{{
