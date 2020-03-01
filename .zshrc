@@ -13,7 +13,7 @@ compinit
 # Include hidden files in autocomplete:
 #_comp_options+=(globdots)
 
-if [ -z ${noplug+x} ]; then
+if test -z ${noplug+x}; then
   command -v antibody > /dev/null 2>&1 \
     || (echo "Installing Antibody."; curl -sfL git.io/antibody | sudo sh -s - -b /usr/local/bin) \
     && source <(antibody init)
@@ -47,7 +47,7 @@ if [ -z ${noplug+x} ]; then
 		skx/sysadmin-util
 		zdharma/zsh-diff-so-fancy
 		sroze/docker-compose-zsh-plugin
-		b4b4r07/emoji-cli
+		# b4b4r07/emoji-cli
 		# runarsf/rufus-zsh-theme
 		robbyrussell/oh-my-zsh path:themes/miloshadzic.zsh-theme
 	EOBUNDLES
@@ -56,7 +56,7 @@ if [ -z ${noplug+x} ]; then
 else
   export ZSH="${HOME}/.oh-my-zsh"
   ZSH_THEME='rufus-nightly'
-  source $ZSH/oh-my-zsh.sh
+  source "${ZSH}/oh-my-zsh.sh"
 fi
 
 ## setopt MENU_COMPLETE

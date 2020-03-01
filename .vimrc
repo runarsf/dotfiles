@@ -176,7 +176,6 @@ silent! if plug#begin('~/.vim/plugged')
 "Plug 'vim-scripts/loremipsum'
 "Plug 'robcsi/viewmaps.vim'
 "Plug 'tpope/vim-fugitive'
-"Plug 'tpope/vim-surround'
 "Plug 'voldikss/vim-codelf', { 'on': 'Codelf' }
 " }}}
 "Plug 'ctrlpvim/ctrlp.vim'
@@ -200,6 +199,7 @@ silent! if plug#begin('~/.vim/plugged')
 "Plug 'SirVer/ultisnips'
 "Plug 'honza/vim-snippets'
 "Plug 'Yggdroot/hiPairs'
+Plug 'tpope/vim-surround'
 Plug 'rstacruz/vim-closer'
 Plug 'tpope/vim-endwise'
 Plug 'segeljakt/vim-isotope'
