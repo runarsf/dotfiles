@@ -128,7 +128,6 @@ silent! if plug#begin('~/.vim/plugged')
 "if &rtp =~ 'denite.nvim'
 "  Plug 'Shougo/vimfiler.vim'
 "endif
-"Plug 'SirVer/ultisnips'
 "Plug 'unblevable/quick-scope'
 "Plug 'AshleyF/VimSpeak'
 "Plug 'fmoralesc/vim-pad'
@@ -197,6 +196,13 @@ silent! if plug#begin('~/.vim/plugged')
 "Plug 'tyru/open-browser.vim', { 'on': 'RunningX' }
 "Plug 'tmhedberg/SimpylFold'
 "Plug 'lervag/wiki-ft.vim'
+"Plug 'liuchengxu/vista.vim'
+"Plug 'SirVer/ultisnips'
+"Plug 'honza/vim-snippets'
+"Plug 'Yggdroot/hiPairs'
+Plug 'rstacruz/vim-closer'
+Plug 'tpope/vim-endwise'
+Plug 'segeljakt/vim-isotope'
 Plug 'dstein64/vim-startuptime'
 Plug 'ap/vim-buftabline'
 Plug 'jlanzarotta/bufexplorer'
@@ -258,6 +264,12 @@ Plug 'rakr/vim-one'
 call plug#end()
 endif
 
+" ultisnips {{{
+"let g:UltiSnipsExpandTrigger="<tab>"
+"let g:UltiSnipsJumpForwardTrigger="<c-b>"
+"let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+"let g:UltiSnipsEditSplit="vertical"
+" }}}
 " wiki.vim {{{
 "let g:wiki_root = '~/wiki'
 " }}}
