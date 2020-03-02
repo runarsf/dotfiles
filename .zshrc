@@ -185,9 +185,9 @@ zle -N magic-enter
 bindkey "^M" magic-enter
 
 # Add aliases to all files in ./bin without .sh extension
-#for script in ./bin/*.sh; do
-#  eval "alias $(basename ${script} .sh)=$(readlink -f ${script})"
-#done
+for script in ./bin/*.sh; do
+  eval "alias $(basename ${script} .sh)=$(readlink -f ${script})"
+done
 
 test -s "${HOME}/.nvm/nvm.sh" && source "${HOME}/.nvm/nvm.sh"
 test -f "${HOME}/.fzf.zsh" && source "${HOME}/.fzf.zsh"
