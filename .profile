@@ -4,8 +4,8 @@
 export PATH="${PATH}:$(du "${HOME}/bin/" | cut -f2 | tr '\n' ':' | sed 's/:*$//')"
 export PATH="${PATH}:${HOME}/.local/bin"
 export PATH="${PATH}:/snap/bin"
-
-export LANG=en_US.UTF-8
+export LANG="en_US.UTF-8"
+export LC_ALL="${LANG}"
 
 test -n "${SSH_CONNECTION}" \
   && export EDITOR='nvim' \
@@ -20,4 +20,4 @@ export PYTHONDONTWRITEBYTECODE=1
 eval "$(ssh-agent)" && ssh-add
 
 # Start graphical server on tty1 if not already running.
-[ "$(tty)" = "/dev/tty1" ] && ! pgrep -x Xorg >/dev/null && exec startx
+test "$(tty)" = "/dev/tty1" && ! pgrep -x Xorg >/dev/null && exec startx

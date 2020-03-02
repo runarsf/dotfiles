@@ -1,4 +1,6 @@
+# vim: set foldmethod=marker foldlevel=0 nomodeline:
 # runarsf's Zoomer SHell config
+[[ $- != *i* ]] && return # don't do anythign if not running interactively
 clear
 
 #autoload -U compinit
@@ -13,6 +15,7 @@ compinit
 # Include hidden files in autocomplete:
 #_comp_options+=(globdots)
 
+# plugins {{{
 if test -z ${noplug+x}; then
   command -v antibody > /dev/null 2>&1 \
     || (echo "Installing Antibody."; curl -sfL git.io/antibody | sudo sh -s - -b /usr/local/bin) \
@@ -39,17 +42,20 @@ if test -z ${noplug+x}; then
 		zsh-users/zsh-history-substring-search
 		zsh-users/zsh-completions
 		# zsh-users/zsh-syntax-highlighting
-		djui/alias-tips
+		# djui/alias-tips
 		# walesmd/caniuse.plugin.zsh
 		zdharma/fast-syntax-highlighting
-		chrissicool/zsh-256color
+		# chrissicool/zsh-256color
 		akarzim/zsh-docker-aliases
-		skx/sysadmin-util
+		# skx/sysadmin-util
 		zdharma/zsh-diff-so-fancy
-		sroze/docker-compose-zsh-plugin
+		# sroze/docker-compose-zsh-plugin
 		# b4b4r07/emoji-cli
 		# runarsf/rufus-zsh-theme
+		# robbyrussell/oh-my-zsh path:themes/daveverwer.zsh-theme
+		# robbyrussell/oh-my-zsh path:themes/edvardm.zsh-theme
 		robbyrussell/oh-my-zsh path:themes/miloshadzic.zsh-theme
+		# denysdovhan/spaceship-prompt
 	EOBUNDLES
   bindkey "$terminfo[kcuu1]" history-substring-search-up
   bindkey "$terminfo[kcud1]" history-substring-search-down
@@ -58,6 +64,7 @@ else
   ZSH_THEME='rufus-nightly'
   source "${ZSH}/oh-my-zsh.sh"
 fi
+# }}}
 
 ## setopt MENU_COMPLETE
 ## CASE_SENSITIVE='false'
@@ -76,8 +83,47 @@ bindkey '\CI' expand-or-complete-prefix
 #autoload -Uz compinit
 #compinit
 
+# https://github.com/denysdovhan/spaceship-prompt/blob/master/docs/Options.md {{{
+SPACESHIP_PROMPT_ADD_NEWLINE=false
+SPACESHIP_USER_SHOW=false
+SPACESHIP_HOST_SHOW=false
+SPACESHIP_PROMPT_SEPARATE_LINE=false
+#SPACESHIP_CHAR_SYMBOL=❯
+SPACESHIP_GIT_PREFIX=""
+SPACESHIP_CHAR_SUFFIX=" "
+SPACESHIP_HG_SHOW=false
+SPACESHIP_PACKAGE_SHOW=false
+SPACESHIP_NODE_SHOW=false
+SPACESHIP_RUBY_SHOW=false
+SPACESHIP_ELM_SHOW=false
+SPACESHIP_ELIXIR_SHOW=false
+SPACESHIP_XCODE_SHOW_LOCAL=false
+SPACESHIP_SWIFT_SHOW_LOCAL=false
+SPACESHIP_GOLANG_SHOW=false
+SPACESHIP_PHP_SHOW=false
+SPACESHIP_RUST_SHOW=false
+SPACESHIP_JULIA_SHOW=false
+SPACESHIP_DOCKER_SHOW=false
+SPACESHIP_DOCKER_CONTEXT_SHOW=false
+SPACESHIP_AWS_SHOW=false
+SPACESHIP_CONDA_SHOW=false
+SPACESHIP_VENV_SHOW=false
+SPACESHIP_PYENV_SHOW=false
+SPACESHIP_DOTNET_SHOW=false
+SPACESHIP_EMBER_SHOW=false
+SPACESHIP_KUBECONTEXT_SHOW=false
+SPACESHIP_TERRAFORM_SHOW=false
+SPACESHIP_TERRAFORM_SHOW=false
+SPACESHIP_VI_MODE_SHOW=false
+SPACESHIP_JOBS_SHOW=false
+SPACESHIP_EXEC_TIME_SHOW=false
+SPACESHIP_BATTERY_SHOW=false
+# }}}
+
 #set -o vi
 #bindkey 'jk' vi-cmd-mode
+bindkey '^ ' autosuggest-accept
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#ff00ff,bg=cyan,bold,underline"
 PROMPT_EOL_MARK=''
 alias vim='nvim'
 alias ls='ls -lAFh --color'
@@ -88,7 +134,6 @@ alias please='sudo $(fc -ln -1)'
 alias reload='source $HOME/.zshrc'
 alias back='cd $OLDPWD'
 eval "$(thefuck --alias heck)"
-export PATH="${PATH}:/snap/bin" # This shoudn't be here but is required for snap (should be in .profile)
 
 # Change cursor shape for different vi modes.
 #function zle-keymap-select {
@@ -139,52 +184,10 @@ magic-enter () {
 zle -N magic-enter
 bindkey "^M" magic-enter
 
-showme () {
-  dir="${1}"
-  term="${2}"
-  if test ! -e "${dir}"; then
-    term="${dir}"
-    dir="."
-  fi
-  grep -winR "${dir}" -e "${term}"
-}
-
-rmln () {
-  test -L "$1" \
-    && cp --remove-destination "$(readlink "$1")" "$1" \
-    || echo "$1: Not a symlink."
-}
-
-goto () {
-  test -L "$1" \
-    && cd $(dirname $(readlink -f "$1")) \
-    || echo "$1: Not a symlink."
-}
-
-dirtygit () {
-  printf "\n\e[94m| ADDING \e[0;39m\n\n"
-  git add .
-  printf "\n\e[94m| COMMITTING \e[0;39m'$*'\n\n"
-  git commit -m "$*"
-  printf "\n\e[94m| PULLING \e[0;39m\n\n"
-  git pull
-  printf "\n\e[94m| PUSHING \e[0;39m\n\n"
-  git push
-  printf "\n\e[32m| DONE! \e[0;39m\n\n"
-}
-
-debug () {
-  D_BEAK=$(tput setaf 202) # 1
-  D_EYE=$(tput setaf 15) # 7
-  D_BODY=$(tput setaf 11) # 3
-	cat <<-EODUCK
-	      ${D_BODY}__
-	  ___( ${D_EYE}o${D_BODY})${D_BEAK}>
-	  ${D_BODY}\\ <_. )
-	   \`---'
-
-	EODUCK
-}
+# Add aliases to all files in ./bin without .sh extension
+#for script in ./bin/*.sh; do
+#  eval "alias $(basename ${script} .sh)=$(readlink -f ${script})"
+#done
 
 test -s "${HOME}/.nvm/nvm.sh" && source "${HOME}/.nvm/nvm.sh"
-test -f ~/.fzf.zsh && source ~/.fzf.zsh
+test -f "${HOME}/.fzf.zsh" && source "${HOME}/.fzf.zsh"
