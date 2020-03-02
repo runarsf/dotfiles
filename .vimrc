@@ -201,7 +201,7 @@ silent! if plug#begin('~/.vim/plugged')
 "Plug 'Yggdroot/hiPairs'
 Plug 'tpope/vim-surround'
 Plug 'rstacruz/vim-closer'
-Plug 'tpope/vim-endwise'
+"Plug 'tpope/vim-endwise'
 Plug 'segeljakt/vim-isotope'
 Plug 'dstein64/vim-startuptime'
 Plug 'ap/vim-buftabline'
