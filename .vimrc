@@ -855,6 +855,8 @@ inoreabbrev <expr> #!! "#!/usr/bin/env" . (empty(&filetype) ? '' : ' '.&filetype
 "endif
 
 " File interpreting
+" Syntax highlighting for conf files
+autocmd BufRead,BufNewFile *.conf setf dosini
 "autocmd BufRead,BufNewFile *.md set filetype=markdown
 "autocmd BufRead,BufNewFile .{jscs,jshint,eslint}rc set filetype=json
 "autocmd BufRead,BufNewFile *.zsh-theme,aliases.local,zshrc.local,*/zsh/configs/* set filetype=zsh

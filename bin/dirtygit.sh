@@ -1,4 +1,9 @@
 #!/usr/bin/env sh
+if test ! -d "./.git"; then
+  printf "Not a git repository."
+  exit 1
+fi
+
 printf "\n\e[94m| ADDING \e[0;39m\n\n"
 git add .
 printf "\n\e[94m| COMMITTING \e[0;39m'${*}'\n\n"
