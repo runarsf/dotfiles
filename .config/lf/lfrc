@@ -1,7 +1,6 @@
-
 # Basic Settings
 set preview false
-set previewer ~/scripts/lf/preview
+set previewer ~/dotfiles/bin/lf/previewer
 #set previewer pistol
 set hidden true
 set color256 true
@@ -174,8 +173,11 @@ map R reload
 map C clear
 map U unselect
 
+map gg cd ~
+
 map gp cd ~/Pictures
-map gd. cd ~/Documents
+map gdc cd ~/Documents
+map gdf cd ~/dofiles
 map gdl cd ~/Downloads
 
 map gc cd ~/.config
