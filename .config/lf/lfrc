@@ -1,7 +1,7 @@
 # Basic Settings
 set preview false
-set previewer ~/dotfiles/bin/lf/previewer
-#set previewer pistol
+#set previewer ~/dotfiles/bin/lf/previewer
+set previewer pistol
 set hidden true
 set color256 true
 set drawbox true
@@ -10,107 +10,82 @@ set ignorecase true
 
 # Custom Functions
 cmd open ${{
-    case $(file --mime-type "$f" -bL) in
-        text/*|application/json) $EDITOR "$f";;
-        video/*|image/*/application/pdf) xdg-open "$f" & disown;;
-        *) xdg-open "$f" ;;
+    case $(file --mime-type "${f}" -bL) in
+        text/*|application/json) ${EDITOR} "${f}";;
+        video/*|image/*/application/pdf) xdg-open "${f}" & disown;;
+        *) xdg-open "${f}" ;;
     esac
 }}
 
 cmd mkdir ${{
   printf "Directory Name: "
-  read ans
-  mkdir $ans
+  read dir
+  mkdir "${dir}"
 }}
 
 cmd mkfile ${{
   printf "File Name: "
-  read ans
-  $EDITOR $ans
+  read file
+  touch "${file}"
+  #${EDITOR} "${file}"
 }}
 
 cmd chmod ${{
   printf "Mode Bits: "
-  read ans
+  read bits
 
-  for file in "$fx"
-  do
-    chmod $ans $file
+  for file in "${fx}"; do
+    chmod "${bits}" "${file}"
   done
 }}
 
 cmd sudomkfile ${{
   printf "File Name: "
-  read ans
-  sudo $EDITOR $ans
+  read file
+  sudo touch "${file}"
+  #sudo $EDITOR $ans
 }}
 
-cmd setwallpaper %cp "$f" ~/.config/wall.png && nitrogen --set-scaled "$f"
+cmd setbg %cp "${f}" ~/.config/wall.png && feh --bg-scale "${f}"
 
-cmd fzf_jump ${{
-  res="$(find . -maxdepth 3 | fzf --reverse --header='Jump to location')"
-  if [ -f "$res" ]; then
-    cmd="select"
-  elif [ -d "$res" ]; then
-    cmd="cd"
-  fi
-  lf -remote "send $id $cmd \"$res\""
-}}
-
-cmd broot_jump ${{
-  f=$(mktemp)
-  res="$(broot --outcmd $f && cat $f | sed 's/cd //')"
-  rm -f "$f"
-  if [ -f "$res" ]; then
-    cmd="select"
-  elif [ -d "$res" ]; then
-    cmd="cd"
-  fi
-  lf -remote "send $id $cmd \"$res\""
-}}
-
-cmd open_config  ${{
-  $EDITOR $(bookmenu -b ~/.config/bookmenu/configs -f fzf -o)
-}}
-
-cmd dragon %dragon-drag-and-drop -a -x $fx
-cmd cpdragon %cpdragon
-cmd mvdragon %mvdragon
-cmd dlfile %dlfile
+#cmd dragon %dragon-drag-and-drop -a -x $fx
+#cmd cpdragon %cpdragon
+#cmd mvdragon %mvdragon
+#cmd dlfile %dlfile
 
 # Archive bindings
 cmd unarchive ${{
-  case "$f" in
-      *.zip) unzip "$f" ;;
-      *.tar.gz) tar -xzvf "$f" ;;
-      *.tar.bz2) tar -xjvf "$f" ;;
-      *.tar) tar -xvf "$f" ;;
-      *) echo "Unsupported format" ;;
+  case "${f}" in
+      *.zip) unzip "${f}";;
+      *.tar.gz) tar -xzvf "${f}";;
+      *.tar.bz2) tar -xjvf "${f}";;
+      *.tar) tar -xvf "${f}";;
+      *) printf "Unsupported format\n";;
   esac
 }}
 
-cmd zip %zip -r "$f" "$f"
-cmd tar %tar cvf "$f.tar" "$f"
-cmd targz %tar cvzf "$f.tar.gz" "$f"
-cmd tarbz2 %tar cjvf "$f.tar.bz2" "$f"
+cmd zip %zip -r "${f}" "${f}"
+cmd tar %tar cvf "${f}.tar" "${f}"
+cmd targz %tar cvzf "${f}.tar.gz" "${f}"
+cmd tarbz2 %tar cjvf "${f}.tar.bz2" "${f}"
 
 # Trash cli bindings
-cmd trash ${{
-  files=$(echo "$fx" | sed "s/ /\\\ /g;s/\[/\\\[/g;s/\]/\\\]/g")
-  IFS=$'\n'
-  for file in $files
-  do
-    trash-put "$(basename "$file")"
-  done
-}}
+#cmd trash ${{
+#  files=$(echo "$fx" | sed "s/ /\\\ /g;s/\[/\\\[/g;s/\]/\\\]/g")
+#  IFS=$'\n'
+#  for file in $files
+#  do
+#    trash-put "$(basename "$file")"
+#  done
+#}}
 
-cmd clear_trash %trash-empty
+#cmd clear_trash %trash-empty
 
-cmd restore_trash ${{
-  trash-restore
-}}
+#cmd restore_trash ${{
+#  trash-restore
+#}}
 
-cmd stripspace %stripspace "$f"
+#cmd stripspace %stripspace "$f"
 
 # Bindings
 # Remove some defaults
@@ -125,8 +100,8 @@ map e
 map f
 
 # File Openers
-map ee $$EDITOR "$f"
-map es $sudo $EDITOR "$f"
+map e $${EDITOR} "${f}"
+#map es $sudo $EDITOR "$f"
 map u $view "$f"
 
 # Archive Mappings
@@ -137,41 +112,41 @@ map ab targz
 map au unarchive
 
 # Trash Mappings
-map dd trash
-map tc clear_trash
-map tr restore_trash
+#map dd trash
+#map tc clear_trash
+#map tr restore_trash
 
 # Broot Mapping
-map f broot_jump
+#map f broot_jump
 
 # Dragon Mapping
-map dr dragon
-map dm mvdragon
-map dc cpdragon
-map dl dlfile
+#map dr dragon
+#map dm mvdragon
+#map dc cpdragon
+#map dl dlfile
 
-map ss stripspace
+#map ss stripspace
 
 # Basic Functions
-map . set hidden!
+map sh set hidden!
 map DD delete
 map p paste
 map x cut
 map y copy
 map <enter> open
 map mf mkfile
-map mr sudomkfile
+#map mr sudomkfile
 map md mkdir
-map ms $mkscript
+#map ms $mkscript
 map ch chmod
-map bg setwallpaper
-map o open_config
+map bg setbg
+#map o open_config
 map r rename
 map H top
 map L bottom
 map R reload
-map C clear
-map U unselect
+#map C clear
+#map U unselect
 
 map gg cd ~
 

@@ -490,6 +490,20 @@ let g:NERDTreeWinPos = "left"
 map <silent> <C-o> :NERDTreeToggle<CR>
 " }}}
 " coc.nvim {{{
+"let s:coc_extensions = [
+"  \ 'coc-snippets',
+"  \ 'coc-pairs',
+"  \ 'coc-html',
+"  \ 'coc-json',
+"  \ 'coc-python',
+"  \ 'coc-vetur',
+"  \ 'coc-css',
+"  \ 'coc-yaml',
+"  \ 'coc-highlight',
+"  \ 'coc-markdownlint',
+"  \ 'coc-emoji'
+"  \ ]
+"call coc#add_extension(join(get(s:, 'coc_extensions', [])))
 "let g:coc_force_debug = 1
 "set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')} " Add status line support, for integration with other plugin, checkout `:h coc-status`
 " Use `[g` and `]g` to navigate diagnostics
