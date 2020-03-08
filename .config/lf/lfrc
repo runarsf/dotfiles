@@ -152,7 +152,7 @@ map gg cd ~
 
 map gp cd ~/Pictures
 map gdc cd ~/Documents
-map gdf cd ~/dofiles
+map gdf cd ~/dotfiles
 map gdl cd ~/Downloads
 
 map gc cd ~/.config

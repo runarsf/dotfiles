@@ -30,6 +30,11 @@ ctrl + @period
 super + ctrl + @space
 	$HOME/bin/dvorak.sh toggle
 
+#super + shift + n
+	# 
+#super + n
+	#bspc node $DDTERMWID --flag hidden --focus $DDTERMWID.!hidden
+
 # Window manager {{{
 
 # close and kill
