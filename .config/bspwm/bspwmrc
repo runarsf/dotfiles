@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 # vim: set foldmethod=marker foldlevel=0 nomodeline:
 bspc rule -r "*"
 
@@ -50,20 +50,55 @@ bspc config window_gap 15
 #bspc config external_rules_command "$(which floaters)"
 
 # Rules {{{
-# state=tiled, manage=off, state=fullscreen
+# FIXME: Double check these classes
+# TODO: Create function to automatically apply rules from array
 bspc rule -a discord desktop=^2
-bspc rule -a mattermost desktop=^2
+bspc rule -a Mattermost desktop=^2
 bspc rule -a slack desktop=^2
+bspc rule -a Steam desktop=^5
 bspc rule -a Screenkey manage=off
+bspc rule -a Pavucontrol floating=on
+bspc rule -a mpv floating=on
+:'
+declare -a rule_floating=(
+  Pavucontrol
+  mpv
+)
+declare -a rule_desktop_two=(
+  discord
+  Mattermost
+  slack
+)
+declare -a rule_desktop_five=(
+  Steam
+)
+declare -a rule_nomanage=(
+  Screenkey
+)
+
+add_rules () {
+  local rule="${1}"
+  shift
+  local classes=("${@}")
+  for class in "${classes[@]}"; do
+    bspc rule -a "${class}" "${rule}"
+  done
+}
+add_rules "floating=on" "${rule_floating[@]}"
+add_rules "desktop=^5" "${rule_desktop_two[@]}"
+'
 # }}}
 
 exec_once () { # {{{
-  if test -z "${BSPWM_STARTED}"; then
-    "${@}"
+  # Note: Most programs are started in .xprofile
+  cmd="${1}" # $1: command to run
+  pid="${2:-${cmd%% *}}" # $2: what to check the pid of, defaults to first word of $1
+  if ! pidof "${pid}"; then
+    eval "${cmd} &"
   fi
+  # if test -z "${BSPWM_STARTED}"; then
+  # export BSPWM_STARTED=true
 }
 
-exec_once discord
-
-export BSPWM_STARTED=true
+exec_once "discord"
 # }}}

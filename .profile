@@ -16,9 +16,10 @@ export FILE="${EDITOR}"
 export TERMINAL="alacritty"
 export BROWSER="firefox"
 export PYTHONDONTWRITEBYTECODE=1
+export PAGER="less"
 
 # Auto start ssh-agent
 eval "$(ssh-agent)" && ssh-add
 
 # Start graphical server on tty1 if not already running.
-test "$(tty)" = "/dev/tty1" && ! pgrep -x Xorg >/dev/null && exec startx
+test "$(tty)" = "/dev/tty1" && ! pgrep -x Xorg >/dev/null && startx

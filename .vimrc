@@ -203,6 +203,7 @@ silent! if plug#begin('~/.vim/plugged')
 "Plug 'rstacruz/vim-closer'
 "Plug 'tpope/vim-endwise'
 "Plug 'segeljakt/vim-isotope'
+Plug 'jceb/vim-orgmode'
 Plug 'dstein64/vim-startuptime'
 Plug 'ap/vim-buftabline'
 Plug 'jlanzarotta/bufexplorer'

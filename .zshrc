@@ -184,9 +184,15 @@ magic-enter () {
 zle -N magic-enter
 bindkey "^M" magic-enter
 
-# Add aliases to all files in ./bin without .sh extension
+# Add aliases to all files in ./bin
 for script in "$( dirname "$(readlink -f -- "${HOME}"/.zshrc)" )"/bin/*.*; do
-   eval "alias ${$(basename -- $script)%.*}=$(readlink -f -- ${script})"
+  # Without file extension
+  if ! command -v "${$(basename -- ${script})%.*}" >/dev/null 2>&1; then
+    eval "alias ${$(basename -- ${script})%.*}=$(readlink -f -- ${script})"
+  # With file extension
+  elif ! command -v "$(basename -- ${script})" >/dev/null 2>&1; then
+    eval "alias $(basename -- ${script})=$(readlink -f -- ${script})"
+  fi
 done
 
 test -s "${HOME}/.nvm/nvm.sh" && source "${HOME}/.nvm/nvm.sh"

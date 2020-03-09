@@ -1,13 +1,17 @@
 #!/bin/bash
-#  arg 1: vaultfile name
+# arg 1: vaultfile name
 if test -z "${1}"; then
   vaultdir="${HOME}/.vault"
   vaultfile="${vaultdir}/.vault"
 else
-  vaultdir="."
-  vaultfile="${vaultdir}/${1}"
+  vaultfile="$(readlink -f ${1})"
+  vaultdir="$(dirname ${vaultfile})"
 fi
 cryptofile="${vaultfile}.aes"
+
+printf "vaultdir: ${vaultdir}\n"
+printf "vaultfile: ${vaultfile}\n"
+printf "cryptofile: ${cryptofile}\n\n"
 
 prompt () {
   printf "${1} [y/N]"
