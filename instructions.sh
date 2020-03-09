@@ -15,19 +15,6 @@ set +o errexit
 
 # This file is responsible for setting the `prefix`, `suffix`, and `INSTRUCTIONS` variables once sourced.
 
-testing () {
-  prefix='echo'
-  suffix=''
-	read -r -d '' INSTRUCTIONS <<- EOINSTRUCTIONS
-		hi
-		echo -e 'hello'
-		ls
-		ls #
-		ls; :
-		while true; do echo hi; break; done
-	EOINSTRUCTIONS
-}
-
 ubuntu () {
   prefix='DEBIAN_FRONTEND=noninteractive sudo apt-get -yq install'
   suffix='--no=install-recommends'
@@ -63,20 +50,22 @@ ubuntu () {
 
 arch () {
   prefix='sudo pacman -S --noconfirm'
+  aur='yay -S --noconfirm'
   suffix=''
 	read -r -d '' INSTRUCTIONS <<- EOINSTRUCTIONS
-		sudo pacman -Syyu
+		sudo pacman -Syu
 		yay
 		git
 		curl
 		zsh
-		yay -S --noconfirm lf
+		$aur lf
 		vim
 		rofi
 		rxvt-unicode
+		bspwm
 		i3-gaps
-		yay -S --noconfirm polybar
-		yay -S --noconfirm ttf-font-awesome-4
+		$aur polybar
+		$aur ttf-font-awesome-4
 		ranger
 		compton
 		feh
@@ -96,17 +85,34 @@ arch () {
 		i3lock
 		gpick
 		dmenu
-		yay -S --noconfirm discord
-		yay -S --noconfirm lib32-libwacom
-		yay -S --noconfirm wacom-utility
-		yay -S --noconfirm minecraft-launcher
-		yay -S --noconfirm input-wacom-dkms
+		curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
+		nvm install --lts
+		$aur discord
+		$aur lib32-libwacom
+		$aur wacom-utility
+		$aur minecraft-launcher
+		$aur input-wacom-dkms
+	EOINSTRUCTIONS
+}
+
+testing () {
+  prefix='echo'
+  suffix=''
+	read -r -d '' INSTRUCTIONS <<- EOINSTRUCTIONS
+		hi
+		echo -e 'hello'
+		ls
+		ls #
+		ls; :
+		while true; do echo hi; break; done
 	EOINSTRUCTIONS
 }
 
 case "$(cat /etc/*-release)" in
-  *Ubuntu*)
+  *) # This is used for testing, prevents all other conditions.
     testing;;
+  *Ubuntu*)
+    ubuntu;;
   *Manjaro*|*Arch*)
     arch;;
 esac

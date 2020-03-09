@@ -39,55 +39,55 @@ super + ctrl + @space
 
 # close and kill
 super + {_,shift + }q
-	pidof i3 && {i3-msg ,x}kill \
-	|| (pidof bspwm && bspc node -{c,k})
+	bspc node -{c,k}
+	# {i3-msg ,x}kill
 	#kill -9 $(xdotool getwindowfocus getwindowpid)
 
 # Change workspace or move container to workspace
 super + {_,shift + }{1-9,0}
-	pidof i3 && i3-msg {_,move container to }workspace number {1-9,0} \
-	|| (bspc {desktop -f,node -d} '{1-9,10}')
+	bspc {desktop -f,node -d} '{1-9,10}'
+	# i3-msg {_,move container to }workspace number {1-9,0}
 # Change focus or move container
 super + {_,shift + }{Left,Down,Up,Right}
-	pidof i3 && i3-msg {focus,move} {left,down,up,right} \
-	|| (pidof bspwm && bspc node -{f,s} {west,south,north,east})
+	bspc node -{f,s} {west,south,north,east}
+	# i3-msg {focus,move} {left,down,up,right}
 # Resize window
 super + ctrl + {Left,Down,Up,Right}
-	pidof i3 && i3-msg resize {shrink width,grow height,shrink height,grow width} 10 px or 10 ppt \
-	|| (pidof bspwm && bspc node -z {right -20 0,top 0 20,bottom 0 -20,left 20 0})
+	bspc node -z {right -20 0,top 0 20,bottom 0 -20,left 20 0}
+	# pidof i3 && i3-msg resize {shrink width,grow height,shrink height,grow width} 10 px or 10 ppt
 # Move window to monitor or focus the next/previous desktop in the current monitor
 super + alt + shift + {Left,Right}
-	pidof i3 && i3-msg move workspace to output {left,right} \
-	|| (bspc desktop -f {prev,next}.local)
+	bspc desktop -f {prev,next}.local
+	# i3-msg move workspace to output {left,right}
 
-alt + Return
-	i3-msg workspace back_and_forth
+#alt + Return
+#	i3-msg workspace back_and_forth
 
 # restart/reload/quit
 super + shift + {r,i,e}
-	pidof i3 && i3-msg {restart,reload,exit} \
-	|| (pidof bspwm && bspc {wm -r,wm -r,quit})
+	bspwm && bspc {wm -r,wm -r,quit}
+	# i3-msg {restart,reload,exit}
 
 # Toggle fullscreen
 super + f
-	pidof i3 && i3-msg fullscreen toggle \
-	|| (pidof bspwm && bspc node -t \~fullscreen)
+	|| bspwm && bspc node -t \~fullscreen
+	# i3-msg fullscreen toggle \
 
 # Split direction
-super + {v,h}
-	pidof i3 && i3-msg split {v,h}
+#super + {v,h}
+#	pidof i3 && i3-msg split {v,h}
 
 # Change gap size (can inner/outer be combined to {s,z}?)
-super + {_,shift + }s
-	pidof i3 && i3-msg gaps inner current {plus,minus} 3
-super + {_,shift + }z
-	pidof i3 && i3-msg gaps outer current {plus,minus} 3
+#super + {_,shift + }s
+#	pidof i3 && i3-msg gaps inner current {plus,minus} 3
+#super + {_,shift + }z
+#	pidof i3 && i3-msg gaps outer current {plus,minus} 3
 
 #super + {t,shift + t,s,f}
 #	bspc node -t '~{tiled,pseudo_tiled,floating,fullscreen}'
 super + @space
-	pidof i3 && i3-msg floating toggle \
-	|| (pidof bspwm && bspc node -t '\~floating')
+	|| pidof bspwm && bspc node -t '\~floating'
+	# i3-msg floating toggle \
 
 # alternate between the tiled and monocle layout
 #super + m
