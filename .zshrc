@@ -1,4 +1,12 @@
 # vim: set foldmethod=marker foldlevel=0 nomodeline:
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
+# vim: set foldmethod=marker foldlevel=0 nomodeline:
 # runarsf's Zoomer SHell config
 [[ $- != *i* ]] && return # don't do anythign if not running interactively
 clear
@@ -22,17 +30,17 @@ if test -z ${noplug+x}; then
     && source <(antibody init)
 	antibody bundle <<-EOBUNDLES
 		robbyrussell/oh-my-zsh path:lib
-		robbyrussell/oh-my-zsh path:plugins/git
-		robbyrussell/oh-my-zsh path:plugins/git-extras
-		robbyrussell/oh-my-zsh path:plugins/colorize
+		# robbyrussell/oh-my-zsh path:plugins/git
+		# robbyrussell/oh-my-zsh path:plugins/git-extras
+		robbyrussell/oh-my-zsh path:plugins/colorize # sudo pip3 install pygments
 		robbyrussell/oh-my-zsh path:plugins/colored-man-pages
 		robbyrussell/oh-my-zsh path:plugins/command-not-found
-		robbyrussell/oh-my-zsh path:plugins/jump
+		# robbyrussell/oh-my-zsh path:plugins/jump
 		robbyrussell/oh-my-zsh path:plugins/thefuck
 		robbyrussell/oh-my-zsh path:plugins/common-aliases
-		robbyrussell/oh-my-zsh path:plugins/docker
-		robbyrussell/oh-my-zsh path:plugins/systemd
-		robbyrussell/oh-my-zsh path:plugins/tmux
+		# robbyrussell/oh-my-zsh path:plugins/docker
+		# robbyrussell/oh-my-zsh path:plugins/systemd
+		# robbyrussell/oh-my-zsh path:plugins/tmux
 		# robbyrussell/oh-my-zsh path:plugins/bgnotify
 		# robbyrussell/oh-my-zsh path:plugins/sudo
 		# robbyrussell/oh-my-zsh path:plugins/ssh-agent
@@ -42,7 +50,7 @@ if test -z ${noplug+x}; then
 		zsh-users/zsh-history-substring-search
 		zsh-users/zsh-completions
 		# zsh-users/zsh-syntax-highlighting
-		# djui/alias-tips
+		djui/alias-tips
 		# walesmd/caniuse.plugin.zsh
 		zdharma/fast-syntax-highlighting
 		# chrissicool/zsh-256color
@@ -54,8 +62,9 @@ if test -z ${noplug+x}; then
 		# runarsf/rufus-zsh-theme
 		# robbyrussell/oh-my-zsh path:themes/daveverwer.zsh-theme
 		# robbyrussell/oh-my-zsh path:themes/edvardm.zsh-theme
-		robbyrussell/oh-my-zsh path:themes/miloshadzic.zsh-theme
+		# robbyrussell/oh-my-zsh path:themes/miloshadzic.zsh-theme
 		# denysdovhan/spaceship-prompt
+		romkatv/powerlevel10k
 	EOBUNDLES
   bindkey "$terminfo[kcuu1]" history-substring-search-up
   bindkey "$terminfo[kcud1]" history-substring-search-down
@@ -63,6 +72,7 @@ else
   export ZSH="${HOME}/.oh-my-zsh"
   ZSH_THEME='rufus-nightly'
   source "${ZSH}/oh-my-zsh.sh"
+  eval "$(thefuck --alias fuck)"
 fi
 # }}}
 
@@ -125,15 +135,14 @@ SPACESHIP_BATTERY_SHOW=false
 bindkey '^ ' autosuggest-accept
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#ff00ff,bg=cyan,bold,underline"
 PROMPT_EOL_MARK=''
-alias vim='nvim'
+alias vim="${EDITOR}"
 alias ls='ls -lAFh --color'
 alias grep='grep --color'
 alias c='xclip -selection clipboard'
-alias paste='nc termbin.com 9999'
+#alias paste='nc termbin.com 9999'
 alias please='sudo $(fc -ln -1)'
-alias reload='source $HOME/.zshrc'
-alias back='cd $OLDPWD'
-eval "$(thefuck --alias heck)"
+alias reload="source ${HOME}/.zshrc"
+#alias back='cd $OLDPWD'
 
 # Change cursor shape for different vi modes.
 #function zle-keymap-select {
@@ -197,3 +206,4 @@ done
 
 test -s "${HOME}/.nvm/nvm.sh" && source "${HOME}/.nvm/nvm.sh"
 test -f "${HOME}/.fzf.zsh" && source "${HOME}/.fzf.zsh"
+test -f "${HOME}/.config/p10k/.p10k.zsh" && source "${HOME}/.config/p10k/.p10k.zsh" || (test -f "${HOME}/.p10k.zsh" && source "${HOME}/.p10k.zsh")

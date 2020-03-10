@@ -92,6 +92,8 @@ arch () {
 		$aur wacom-utility
 		$aur minecraft-launcher
 		$aur input-wacom-dkms
+		sudo rm /etc/fonts/conf.d/70-no-bitmaps.conf
+		sudo ln -s /etc/fonts/conf.avail/70-yes-bitmaps.conf /etc/fonts/conf.d/70-yes-bitmaps.conf
 	EOINSTRUCTIONS
 }
 
