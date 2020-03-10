@@ -27,8 +27,8 @@ ctrl + @comma
 ctrl + @period
 	xdotool keyup ctrl && xdotool key greater && xdotool keydown ctrl
 
-super + ctrl + @space
-	$HOME/bin/dvorak.sh toggle
+#super + ctrl + @space
+#	$HOME/bin/dvorak.sh toggle
 
 #super + shift + n
 	# 
@@ -48,6 +48,11 @@ super + {_,shift + }{1-9,0}
 	bspc {desktop -f,node -d} '{1-9,10}'
 	# i3-msg {_,move container to }workspace number {1-9,0}
 # Change focus or move container
+super + alt + {Left,Right}
+	desk=`bspc query -D -d focused`; \
+	bspc desktop -m {prev,next}; \
+	bspc monitor -f {prev,next}; \
+	bspc desktop -f $desk
 super + {_,shift + }{Left,Down,Up,Right}
 	bspc node -{f,s} {west,south,north,east}
 	# i3-msg {focus,move} {left,down,up,right}
@@ -65,17 +70,20 @@ super + alt + shift + {Left,Right}
 
 # restart/reload/quit
 super + shift + {r,i,e}
-	bspwm && bspc {wm -r,wm -r,quit}
+	bspc {wm -r,wm -r,quit}
 	# i3-msg {restart,reload,exit}
 
 # Toggle fullscreen
 super + f
-	|| bspwm && bspc node -t \~fullscreen
-	# i3-msg fullscreen toggle \
+	bspc node -t \~fullscreen
+	# i3-msg fullscreen toggle
+
+super + @space
+	bspc node -t \~floating
 
 # Split direction
 #super + {v,h}
-#	pidof i3 && i3-msg split {v,h}
+#	i3-msg split {v,h}
 
 # Change gap size (can inner/outer be combined to {s,z}?)
 #super + {_,shift + }s
@@ -85,8 +93,7 @@ super + f
 
 #super + {t,shift + t,s,f}
 #	bspc node -t '~{tiled,pseudo_tiled,floating,fullscreen}'
-super + @space
-	|| pidof bspwm && bspc node -t '\~floating'
+#bspc node -t \~floating
 	# i3-msg floating toggle \
 
 # alternate between the tiled and monocle layout

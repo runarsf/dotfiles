@@ -215,6 +215,11 @@ if v:version >= 703
   "if g:has_node && v:version >= 703
   Plug 'neoclide/coc.nvim', { 'branch': 'release' } " 'do': { -> coc#util#install() }}
 endif
+if has('nvim') || has('patch-8.0.902')
+  Plug 'mhinz/vim-signify'
+else
+  Plug 'mhinz/vim-signify', { 'branch': 'legacy' }
+endif
 Plug 'ryanoasis/vim-devicons'
 " }}}
 " Syntax highlighting {{{
@@ -265,6 +270,10 @@ Plug 'rakr/vim-one'
 call plug#end()
 endif
 
+" vim-signify {{{
+" default updatetime 4000ms is not good for async update
+"set updatetime=100
+" }}}
 " ultisnips {{{
 "let g:UltiSnipsExpandTrigger="<tab>"
 "let g:UltiSnipsJumpForwardTrigger="<c-b>"
@@ -871,7 +880,7 @@ inoreabbrev <expr> #!! "#!/usr/bin/env" . (empty(&filetype) ? '' : ' '.&filetype
 
 " File interpreting
 " Syntax highlighting for conf files
-autocmd BufRead,BufNewFile *.conf setf dosini
+autocmd BufRead,BufNewFile *.conf, config setf dosini
 "autocmd BufRead,BufNewFile *.md set filetype=markdown
 "autocmd BufRead,BufNewFile .{jscs,jshint,eslint}rc set filetype=json
 "autocmd BufRead,BufNewFile *.zsh-theme,aliases.local,zshrc.local,*/zsh/configs/* set filetype=zsh
@@ -946,6 +955,21 @@ augroup END
 " }}}
 
 " Dynamic line numbers {{{
+function! ToggleNumbers()
+  if &number || &relativenumber
+    let b:default_number = &number
+    let b:default_relativenumber = &relativenumber
+    let b:default_signcolumn = &signcolumn
+    set nonumber
+    set norelativenumber
+    set signcolumn=no
+  else
+    if b:default_number | set number | endif
+    if b:default_relativenumber | set relativenumber | endif
+    execute 'set signcolumn=' . b:default_signcolumn
+  endif
+endfunction
+nmap <silent> <leader>n :call ToggleNumbers()<CR>
 "function! ToggleNumbers()
 "  if &number || &relativenumber
 "    call EnterInsert()
