@@ -1,19 +1,54 @@
 #!/usr/bin/env sh
-if test ! -d "./.git"; then
+if test ! -d ".git"; then
   printf "Not a git repository."
   exit 1
 fi
 
-printf "\n\e[94m| ADDING \e[0;39m\n\n"
-sleep 1.5
+cleanup () {
+  tput cnorm
+  printf "${reset}"
+  exit 1
+}
+trap cleanup INT
+
+reset='\e[0;39m'
+blue='\e[94m'
+green='\e[32m'
+yellow='\e[33m'
+red='\e[31m'
+
+dots () {
+  local d='0.35'
+  local i='.'
+  tput civis
+  printf "\r${green}${i}${i}${i}"
+  sleep "${d}"
+  printf "\r${yellow}${i}${i} "
+  printf "\r${i}${i}"
+  sleep "${d}"
+  printf "\r${red}${i} "
+  printf "\r${i}"
+  sleep "${d}"
+  printf "\r${reset} "
+  printf "\r"
+  sleep "${d}"
+  tput cnorm
+}
+
+printf "\n${blue}| ADDING \e[0;39m\n\n"
+dots
 git add .
-printf "\n\e[94m| COMMITTING \e[0;39m'${*}'\n\n"
-sleep 1.5
+
+printf "\n${blue}| COMMITTING \e[0;39m'${*}'\n\n"
+dots
 git commit -m "${*}"
-printf "\n\e[94m| PULLING \e[0;39m\n\n"
-sleep 1.5
+
+printf "\n${blue}| PULLING \e[0;39m\n\n"
+dots
 git pull
-printf "\n\e[94m| PUSHING \e[0;39m\n\n"
-sleep 1.5
+
+printf "\n${blue}| PUSHING \e[0;39m\n\n"
+dots
 git push
-printf "\n\e[32m| DONE! \e[0;39m\n\n"
+
+printf "\n${green}| DONE! \e[0;39m\n\n"
