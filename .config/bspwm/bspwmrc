@@ -76,11 +76,14 @@ exec_once () { # {{{
   cmd="${1}" # $1: command to run
   pid="${2:-${cmd%% *}}" # $2: what to check the pid of, defaults to first word of $1
   if ! pidof "${pid}"; then
-    eval "${cmd} &"
+    if command -v "${cmd}" >/dev/null 2>&1; then
+      eval "${cmd} &"
+    fi
   fi
   # if test -z "${BSPWM_STARTED}"; then
   # export BSPWM_STARTED=true
 }
 
 exec_once "discord"
+sxhkd -m 1 -c "${HOME}/.config/bspwm/sxhkdrc" &
 # }}}

@@ -99,6 +99,7 @@ gaps outer 10
 # i3 misbehaves if it doesn't find any bindings (I think), this is added for compatibility, sxhkd handles all binds
 bindsym $mod+Shift+space floating toggle
 
+exec_always --no-startup-id sxhkd -m 1 -c "${HOME}/.config/i3/sxhkdrc" &
 exec_always --no-startup-id ${HOME}/bin/polybar.sh
 exec_always --no-startup-id feh --bg-scale "${HOME}/.config/wall.png"
 #exec --no-startup-id i3-msg workspace $ws9

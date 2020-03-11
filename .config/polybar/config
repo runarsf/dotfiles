@@ -61,7 +61,7 @@ font-3 = "unifont:size=6:heavy:fontformat=truetype;-2"
 
 modules-left = bspwm
 modules-center = xwindow
-modules-right = time cpu memory battery pulseaudio
+modules-right = pulseaudio cpu memory battery date
 
 ;---------------------------------------
 ;	     LASTFM
@@ -246,7 +246,7 @@ format-underline = ${colors.orange1}
 ;---------------------------------------
 ;	   DATE
 ;---------------------------------------
-[module/date]
+[module/time]
 type = internal/date
 interval = 1
 date = %a %d %b
@@ -259,7 +259,7 @@ format-underline = ${colors.violet1}
 ;---------------------------------------
 ;	   TIME
 ;---------------------------------------
-[module/time]
+[module/date]
 type = internal/date
 interval = 1
 
