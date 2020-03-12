@@ -85,7 +85,7 @@ type = internal/memory
 interval = 3
 format = <label>
 ; 
-label = "  %gb_used% " 
+label = "   %gb_used% " 
 format-foreground = ${colors.black}
 format-background = ${colors.green}
 format-underline = ${colors.green1}
@@ -302,7 +302,7 @@ format-volume-background = ${colors.yellow}
 label-volume = "%percentage% "
 label-volume-foreground = ${colors.black}
 label-volume-background = ${colors.yellow}
-label-muted = " mute "
+label-muted = "   mute "
 label-muted-foreground = ${colors.black}
 label-muted-background = ${colors.yellow}
 ramp-volume-0 = "  "

@@ -10,13 +10,50 @@ bspc rule -r "*"
 #bspc monitor $mainmonitor -d 1 2 3 4 5 6 7 8 9 0
 #bspc desktop -f 1
 
-i=1
+# Loop through all monitors and change name
+#i=1
+#for monitor in $(bspc query -M); do
+#  bspc monitor "${monitor}" --rename "${i}"
+#  let i++
+#done
+
+# Loop through all monitors and assign workspaces {{{
+# https://stackoverflow.com/questions/16553089/dynamic-variable-names-in-bash
+# Each monitor stores its workspaces under a dynamic variable name named m$monitor_id
+
+# Unsett all dynamic variables
 for monitor in $(bspc query -M); do
-bspc monitor $monitor \
-        -n "$i" \
-        -d $i/{a,b,c}
-    let i++
+  unset "m${monitor}"
 done
+
+# Set dynamic variables
+ws=0
+ws_max=9
+while test ! "${ws}" -gt "${ws_max}"; do
+  for monitor in $(bspc query -M); do
+    declare "m${monitor}"="$(eval eval 'echo \${m${monitor}}') ${ws}"
+    let ws++
+    test "${ws}" -gt "${ws_max}" && break
+  done
+done
+
+# Assign workspaces
+for monitor in $(bspc query -M); do
+  # Could incorporate the -n, --rename option
+  eval eval eval 'bspc monitor ${monitor} -d\${m${monitor}}'
+done
+
+# Focus desktop 2
+#bspc desktop -f 2
+# }}}
+
+#i=1
+#for monitor in $(bspc query -M); do
+#bspc monitor $monitor \
+#        -n "$i" \
+#        -d $i/{a,b,c}
+#    let i++
+#done
 
 # }}}
 
@@ -50,6 +87,8 @@ bspc config left_padding 0
 bspc config right_padding 0
 bspc config border_width 3
 bspc config window_gap 10
+
+xsetroot -cursor_name left_ptr
 # }}}
 
 # https://www.reddit.com/r/bspwm/comments/85hr4c/making_a_scratchpaddropdown_terminal_in_bspwm/
@@ -85,5 +124,8 @@ exec_once () { # {{{
 }
 
 exec_once "discord"
-sxhkd -m 1 -c "${HOME}/.config/bspwm/sxhkdrc" &
+
+"${HOME}"/bin/polybar.sh
+feh --bg-scale "${HOME}/.config/wall.png"
+killall -q sxhkd && sxhkd -m 1 -c "${HOME}/.config/sxhkd/sxhkdrc" "${HOME}/.config/bspwm/sxhkdrc" &
 # }}}
