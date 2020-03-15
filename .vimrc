@@ -203,6 +203,7 @@ silent! if plug#begin('~/.vim/plugged')
 "Plug 'rstacruz/vim-closer'
 "Plug 'tpope/vim-endwise'
 "Plug 'segeljakt/vim-isotope'
+Plug 'rrethy/vim-hexokinase', { 'do': 'make hexokinase' }
 Plug 'jceb/vim-orgmode'
 Plug 'dstein64/vim-startuptime'
 Plug 'ap/vim-buftabline'
@@ -231,7 +232,7 @@ Plug 'ryanoasis/vim-devicons'
 "Plug 'octol/vim-cpp-enhanced-highlight', { 'for': 'cpp' }
 "Plug 'nono/jquery.vim', { 'for': 'javascript' }
 " }}}
-Plug 'gko/vim-coloresque', { 'for': ['css', 'html', 'markdown', 'javascript', 'python'] }
+"Plug 'gko/vim-coloresque', { 'for': ['css', 'html', 'markdown', 'javascript', 'python'] }
 Plug 'chr4/nginx.vim', { 'for': 'nginx' }
 Plug 'storyn26383/vim-vue', { 'for': 'vue' }
 Plug 'ekalinin/Dockerfile.vim', { 'for': 'Dockerfile' }
@@ -270,6 +271,11 @@ Plug 'rakr/vim-one'
 call plug#end()
 endif
 
+" vim-hexokinase {{{
+let g:Hexokinase_highlighters = ['virtual']
+autocmd! VimEnter * HexokinaseTurnOn
+" blue
+" }}}
 " vim-signify {{{
 " default updatetime 4000ms is not good for async update
 "set updatetime=100
