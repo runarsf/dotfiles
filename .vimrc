@@ -203,6 +203,9 @@ silent! if plug#begin('~/.vim/plugged')
 "Plug 'rstacruz/vim-closer'
 "Plug 'tpope/vim-endwise'
 "Plug 'segeljakt/vim-isotope'
+Plug 'vifm/vifm.vim'
+Plug 'unblevable/quick-scope'
+Plug 'tpope/vim-dadbod'
 Plug 'rrethy/vim-hexokinase', { 'do': 'make hexokinase' }
 Plug 'jceb/vim-orgmode'
 Plug 'dstein64/vim-startuptime'
@@ -245,10 +248,6 @@ Plug 'dense-analysis/ale'
 " }}}
 " Colorschemes {{{
 " Disabled Colorschemes {{{
-"Plug 'AlessandroYorba/Sierra'
-"Plug 'liuchengxu/space-vim-dark'
-"Plug 'arcticicestudio/nord-vim'
-"Plug 'ayu-theme/ayu-vim'
 "Plug 'morhetz/gruvbox'
 "Plug 'chriskempson/base16-vim'
 "Plug 'sainnhe/edge'
@@ -266,11 +265,35 @@ Plug 'dense-analysis/ale'
 "Plug 'flrnd/plastic.vim'
 "Plug 'kaicataldo/material.vim'
 " }}}
+Plug 'liuchengxu/space-vim-dark'
+Plug 'AlessandroYorba/Sierra'
+Plug 'arcticicestudio/nord-vim'
+Plug 'ayu-theme/ayu-vim'
 Plug 'rakr/vim-one'
 " }}}
 call plug#end()
 endif
 
+" quick-scope {{{
+" Trigger a highlight in the appropriate direction when pressing these keys:
+let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
+augroup qs_colors
+  autocmd!
+  autocmd ColorScheme * highlight QuickScopePrimary guifg='#afff5f' gui=underline ctermfg=155 cterm=underline
+  autocmd ColorScheme * highlight QuickScopeSecondary guifg='#5fffff' gui=underline ctermfg=81 cterm=underline
+augroup END
+
+nmap <leader>sc <plug>(QuickScopeToggle)
+xmap <leader>sc <plug>(QuickScopeToggle)
+
+let g:qs_enable=1
+
+let g:qs_buftype_blacklist = ['terminal', 'nofile']
+
+let g:qs_max_chars=1000
+
+let g:qs_lazy_highlight = 0
+" }}}
 " vim-hexokinase {{{
 let g:Hexokinase_highlighters = ['virtual']
 autocmd! VimEnter * HexokinaseTurnOn
@@ -664,7 +687,7 @@ set encoding=utf-8                                            " Set utf-8 as sta
 set ffs=unix,dos,mac                                          " Use Unix as the standard file type
 set nobackup                                                  " Turn backup off, since most stuff is in git
 set nowritebackup
-set noswapfile
+set swapfile
 "set complete-=i                                              " Enable completions
 set mouse=c                                                   " a, disable mouse support
 set noerrorbells                                              " No annoying sound on errors
@@ -911,7 +934,7 @@ endtry
 "autocmd BufWinEnter *.* silent! loadview
 
 " Disables automatic commenting on newline:
-"autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
+autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 " }}}======================
 " Functions / Utilities {{{
 " =========================
@@ -1008,11 +1031,11 @@ nmap <silent> <leader>n :call ToggleNumbers()<CR>
 
 " Switch colorscheme and enable limelight with Goyo {{{
 function! s:goyo_enter()
-  "colorscheme sierra
+  colorscheme ayu
   Limelight
 endfunction
 function! s:goyo_leave()
-  "execute "colorscheme " . g:colorscheme
+  execute "colorscheme " . g:colorscheme
   Limelight!
 endfunction
 autocmd! User GoyoEnter nested call <SID>goyo_enter()
