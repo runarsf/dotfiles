@@ -387,16 +387,16 @@ type = internal/bspwm
 format = <label-monitor> <label-state> <label-mode>
 #wm-restack = bspwm
 
-#ws-icon-0 = 1;
-#ws-icon-1 = 2;
-#ws-icon-2 = 3;
-#ws-icon-3 = 4;
-#ws-icon-4 = 5;
-#ws-icon-5 = 6;
-#ws-icon-6 = 7;
-#ws-icon-7 = 8;
-#ws-icon-8 = 9;
-#ws-icon-9 = 0;
+ws-icon-0 = 0;
+ws-icon-1 = 1;
+ws-icon-2 = 2;
+ws-icon-3 = 3;
+ws-icon-4 = 4;
+ws-icon-5 = 5;
+ws-icon-6 = 6;
+ws-icon-7 = 7;
+ws-icon-8 = 8;
+ws-icon-9 = 9;
 ws-icon-default = 
 
 ; Only show workspaces defined on the same output as the bar
@@ -421,35 +421,40 @@ fuzzy-match = true
 padding = 3
 
 ; Active workspace on active monitor
-label-focused = %icon%
+label-focused = %name%
+#label-focused = %icon% %name%
 label-focused-foreground = ${colors.white}
 label-focused-background = ${colors.focus}
 label-focused-underline = ${colors.focus1}
 label-focused-padding = ${self.padding}
 
 ; Urgent workspaces
-label-urgent = %icon%
+label-urgent = %name%
+#label-urgent = %icon% %name%
 label-urgent-foreground = ${colors.white}
 label-urgent-background = ${colors.red}
 label-urgent-underline = ${colors.red1}
 label-urgent-padding = ${self.padding}
 
 ; Inactive monitors
-label-empty = %icon%
+label-empty = %name%
+#label-empty = %icon% %name%
 label-empty-foreground = ${colors.white}
 label-empty-background = ${colors.unfocus}
 label-empty-underline = ${colors.unfocus1}
 label-empty-padding = ${self.padding}
 
 ; Workspaces on inactive monitors
-label-dimmed = %icon%
+label-dimmed = %name%
+#label-dimmed = %icon% %name%
 label-dimmed-foreground = ${self.label-empty-foreground}
 label-dimmed-background = ${self.label-empty-background}
 label-dimmed-underline = ${self.label-empty-underline}
 label-dimmed-padding = ${self.padding}
 
 ; Non-empty workspaces 
-label-occupied = %icon%
+label-occupied = %name%
+#label-occupied = %icon% %name%
 label-occupied-foreground = ${colors.white}
 label-occupied-background = ${colors.occupied}
 label-occupied-underline = ${colors.occupied1}
