@@ -62,9 +62,9 @@ if test -z ${noplug+x}; then
 		# runarsf/rufus-zsh-theme
 		# robbyrussell/oh-my-zsh path:themes/daveverwer.zsh-theme
 		# robbyrussell/oh-my-zsh path:themes/edvardm.zsh-theme
-		# robbyrussell/oh-my-zsh path:themes/miloshadzic.zsh-theme
+		robbyrussell/oh-my-zsh path:themes/miloshadzic.zsh-theme
 		# denysdovhan/spaceship-prompt
-		romkatv/powerlevel10k
+		# romkatv/powerlevel10k
 	EOBUNDLES
   bindkey "$terminfo[kcuu1]" history-substring-search-up
   bindkey "$terminfo[kcud1]" history-substring-search-down

@@ -236,6 +236,7 @@ Plug 'ryanoasis/vim-devicons'
 "Plug 'nono/jquery.vim', { 'for': 'javascript' }
 " }}}
 "Plug 'gko/vim-coloresque', { 'for': ['css', 'html', 'markdown', 'javascript', 'python'] }
+Plug 'hashivim/vim-terraform'
 Plug 'chr4/nginx.vim', { 'for': 'nginx' }
 Plug 'storyn26383/vim-vue', { 'for': 'vue' }
 Plug 'ekalinin/Dockerfile.vim', { 'for': 'Dockerfile' }
