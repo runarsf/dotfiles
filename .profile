@@ -4,6 +4,7 @@
 export PATH="${PATH}:$(du "${HOME}/bin/" | cut -f2 | tr '\n' ':' | sed 's/:*$//')"
 export PATH="${PATH}:${HOME}/.local/bin"
 export PATH="${PATH}:${HOME}/go/bin"
+export PATH="${PATH}:${HOME}/.gem/ruby/*/bin"
 export PATH="${PATH}:/snap/bin"
 export LANG="en_US.UTF-8"
 export LC_ALL="${LANG}"

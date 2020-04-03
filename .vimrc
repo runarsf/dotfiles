@@ -665,7 +665,6 @@ highlight Comment cterm=italic
 set history=200                                               " Sets how many lines of history VIM has to remember
 set autoread                                                  " Set to auto read when a file is changed from the outside
 set clipboard+=unnamedplus
-"set wrap                                                     " Enables wrapping
 set nowrap
 set textwidth=0                                               " Disable wrapping
 set wrapmargin=0

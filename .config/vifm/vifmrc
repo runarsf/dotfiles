@@ -435,6 +435,7 @@ nnoremap yf :!echo %c:p | xclip %i<cr>
 
 " Mappings for faster renaming
 nnoremap I cw<c-a>
+nnoremap rn cw<c-u>
 nnoremap cc cw<c-u>
 nnoremap A cw
 
