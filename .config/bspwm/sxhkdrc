@@ -1,7 +1,13 @@
 # vim: set foldmethod=marker foldlevel=0 nomodeline:
 # bspwm-specific sxhkd config, extends ~/.config/sxhkd/sxhkdrc
 
+# https://www.reddit.com/r/bspwm/comments/ceu0za/help_with_sxhkdrc_config_for_multiple_monitors/
+
+# bspc monitor -f next
+
 # close and kill
+# bspc  window -c
+# bspc  window -k
 super + {_,shift + }q
 	bspc node -{c,k}
 
@@ -9,23 +15,30 @@ super + {_,shift + }q
 super + {_,shift + }{1-9,0}
 	bspc {desktop -f,node -d} '{1-9,10}'
 # Change focus or move container
-super + alt + {Left,Right}
-	desk=`bspc query -D -d focused`; \
-	bspc desktop -m {prev,next}; \
-	bspc monitor -f {prev,next}; \
-	bspc desktop -f $desk
+#super + alt + {Left,Right}
+#	desk=`bspc query -D -d focused`; \
+#	bspc desktop -m {prev,next}; \
+#	bspc monitor -f {prev,next}; \
+#	bspc desktop -f $desk
 super + {_,shift + }{Left,Down,Up,Right}
 	bspc node -{f,s} {west,south,north,east}
 # Resize window
 super + ctrl + {Left,Down,Up,Right}
 	bspc node -z {right -20 0,top 0 20,bottom 0 -20,left 20 0}
 # Move window to monitor or focus the next/previous desktop in the current monitor
+super + alt + {Left,Right}
+	bspc node -f {prev,next}.local
+super {_,shift + }Tab
+	bspc node -f {next,prev}.local
 super + alt + shift + {Left,Right}
 	bspc desktop -f {prev,next}.local
 
 # restart/reload/quit
 super + shift + {r,i,e}
 	bspc {wm -r,wm -r,quit}
+
+alt + @space
+	bspc desktop --layout next
 
 # Toggle fullscreen
 super + f
@@ -34,8 +47,53 @@ super + f
 super + @space
 	bspc node -t \~floating
 
-super + {t,shift + t,s,f}
-	bspc node -t '~{tiled,pseudo_tiled,floating,fullscreen}'
+## Send the newest marked node to the newest preselected node
+#super + y
+#	bspc node newest.marked.local -n newest.!automatic.local
+#
+## Split vertical, horizontal, or cancel
+#super + {n,e,s,w,r}
+#        bspc node -p {north, east, south, west, cancel}
+
+#bspc node -s biggest.local
+#bspc desktop -f {prev.occupied,next.occupied} 
+#bspc window -t locked 
+#bspc window -f {next.floating,next.tiled}
+
+## Change desktop padding
+#alt + {_, shift} + bracketright
+#	bspc config -d focused right_padding $((`bspc config -d focused right_padding` {+,-} 20 ))
+#
+#alt + {_, shift} + bracketleft
+#	bspc config -d focused left_padding $((`bspc config -d focused left_padding` {+,-} 20 ))
+#
+#ctrl + {_, shift} + bracketright
+#	bspc config -d focused bottom_padding $((`bspc config -d focused bottom_padding` {+,-} 20 ))
+#
+#ctrl + {_, shift} + bracketleft
+#	bspc config -d focused top_padding $((`bspc config -d focused top_padding` {+,-} 20 ))
+#
+#alt + shift + {minus,equal}
+#	bspc config -d focused right_padding $((`bspc config -d focused right_padding` {+,-} 20 )); \
+#	bspc config -d focused left_padding $((`bspc config -d focused left_padding` {+,-} 20 )); \
+#	bspc config -d focused bottom_padding $((`bspc config -d focused bottom_padding` {+,-} 20 )); \
+#	bspc config -d focused top_padding $((`bspc config -d focused top_padding` {+,-} 20 ));
+#
+#
+## Change window gap
+#alt + {minus,equal}
+#	bspc config -d focused window_gap $((`bspc config -d focused window_gap` {+,-} 2 ))
+
+## Presel window for splitting
+#alt + ctrl + {h,j,k,l}
+#	bspc window -p {left,down,up,right}
+#
+## Move window into presel position
+#alt + shift {a,s,d,f}
+#	bspc window -w {left.manual,down.manual,up.manual,right.manual}
+
+#super + {t,shift + t,s,f}
+#	bspc node -t '~{tiled,pseudo_tiled,floating,fullscreen}'
 
 # alternate between the tiled and monocle layout
 #super + m

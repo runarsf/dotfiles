@@ -206,7 +206,7 @@ silent! if plug#begin('~/.vim/plugged')
 Plug 'vifm/vifm.vim'
 Plug 'unblevable/quick-scope'
 Plug 'tpope/vim-dadbod'
-Plug 'rrethy/vim-hexokinase', { 'do': 'make hexokinase' }
+"Plug 'rrethy/vim-hexokinase', { 'do': 'make hexokinase' }
 Plug 'jceb/vim-orgmode'
 Plug 'dstein64/vim-startuptime'
 Plug 'ap/vim-buftabline'
@@ -296,8 +296,9 @@ let g:qs_max_chars=1000
 let g:qs_lazy_highlight = 0
 " }}}
 " vim-hexokinase {{{
-let g:Hexokinase_highlighters = ['virtual']
-autocmd! VimEnter * HexokinaseTurnOn
+"let g:Hexokinase_highlighters = ['virtual']
+"let g:Hexokinase_v2 = 0
+"autocmd! VimEnter * HexokinaseTurnOn
 " blue
 " }}}
 " vim-signify {{{

@@ -2,60 +2,12 @@
 # vim: set foldmethod=marker foldlevel=0 nomodeline:
 bspc rule -r "*"
 
-# Monitor and workspace assignment {{{
-#mainmonitor="$(bspc query --monitors --names | grep -v LVDS | head -n 1)"
-#if ! echo "$mainmonitor" | grep LVDS >/dev/null 2>&1; then
-#  xrandr --output "$mainmonitor" --auto --output LVDS1 --off
-#fi
-#bspc monitor $mainmonitor -d 1 2 3 4 5 6 7 8 9 0
-#bspc desktop -f 1
-
 # Loop through all monitors and change name
 #i=1
 #for monitor in $(bspc query -M); do
 #  bspc monitor "${monitor}" --rename "${i}"
 #  let i++
 #done
-
-# Loop through all monitors and assign workspaces {{{
-# https://stackoverflow.com/questions/16553089/dynamic-variable-names-in-bash
-# Each monitor stores its workspaces under a dynamic variable name named m$monitor_id
-
-# Unsett all dynamic variables
-for monitor in $(bspc query -M); do
-  unset "m${monitor}"
-done
-
-# Set dynamic variables
-ws=0
-ws_max=9
-while test ! "${ws}" -gt "${ws_max}"; do
-  for monitor in $(bspc query -M); do
-    declare "m${monitor}"="$(eval eval 'echo \${m${monitor}}') ${ws}"
-    let ws++
-    test "${ws}" -gt "${ws_max}" && break
-  done
-done
-
-# Assign workspaces
-for monitor in $(bspc query -M); do
-  # Could incorporate the -n, --rename option
-  eval eval eval 'bspc monitor ${monitor} -d\${m${monitor}}'
-done
-
-# Focus desktop 2
-#bspc desktop -f 2
-# }}}
-
-#i=1
-#for monitor in $(bspc query -M); do
-#bspc monitor $monitor \
-#        -n "$i" \
-#        -d $i/{a,b,c}
-#    let i++
-#done
-
-# }}}
 
 # General config {{{
 #bspc config split_ratio 0.52
@@ -91,6 +43,7 @@ bspc config window_gap 10
 xsetroot -cursor_name left_ptr
 # }}}
 
+# Scratchpad {{{
 # https://www.reddit.com/r/bspwm/comments/85hr4c/making_a_scratchpaddropdown_terminal_in_bspwm/
 #dropdownname="dropdown"
 #bspc query -N -n .hidden >/dev/null || setsid $TERMINAL -n "$dropdownname" -e dropdown >/dev/null 2>&1 &
@@ -99,6 +52,7 @@ xsetroot -cursor_name left_ptr
 #bspc rule -a St:$dropdownname state=floating
 
 #bspc config external_rules_command "$(which floaters)"
+# }}}
 
 # Rules {{{
 bspc rule -a discord desktop=^2
@@ -114,18 +68,16 @@ exec_once () { # {{{
   # Note: Most programs are started in .xprofile
   cmd="${1}" # $1: command to run
   pid="${2:-${cmd%% *}}" # $2: what to check the pid of, defaults to first word of $1
-  if ! pidof "${pid}"; then
+  if ! pgrep -f "${pid}" >/dev/null 2>&1; then
     if command -v "${cmd}" >/dev/null 2>&1; then
       eval "${cmd} &"
     fi
   fi
-  # if test -z "${BSPWM_STARTED}"; then
-  # export BSPWM_STARTED=true
 }
+#exec_once "discord"
 
-exec_once "discord"
-
+"${HOME}"/.config/bspwm/monitors.py
 "${HOME}"/bin/polybar.sh
 feh --bg-scale "${HOME}/.config/wall.png"
-killall -q sxhkd && sxhkd -m 1 -c "${HOME}/.config/sxhkd/sxhkdrc" "${HOME}/.config/bspwm/sxhkdrc" &
+killall -q sxhkd; sxhkd -m 1 -c "${HOME}/.config/sxhkd/sxhkdrc" "${HOME}/.config/bspwm/sxhkdrc" &
 # }}}

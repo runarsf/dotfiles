@@ -10,8 +10,8 @@ super + shift + v
 super + d
 	dmenu_run -nb '#1e1e1e' -sf '#1e1e1e' -sb '#f4800d' -nf '#F4800d'
 #	rofi -show run -lines 3 -eh 2
-super + Tab
-	rofi -show window
+#super + Tab
+#	rofi -show window
 #super + shift + w
 #	$BROWSER
 
