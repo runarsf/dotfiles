@@ -1,14 +1,15 @@
 # vim: set foldmethod=marker foldlevel=0 nomodeline:
+
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
+#if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+#  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+#fi
 
 # vim: set foldmethod=marker foldlevel=0 nomodeline:
 # runarsf's Zoomer SHell config
-[[ $- != *i* ]] && return # don't do anythign if not running interactively
+[[ $- != *i* ]] && return # don't do anything if not running interactively
 clear
 
 #autoload -U compinit
