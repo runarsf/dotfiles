@@ -42,6 +42,8 @@ line-color = #f00
 clickareas = 35
 ;spacing = 4
 ;locale = en_US.UTF-8
+wm-restack = bspwm
+override-redirect = false
 
 border-size = 0
 #border-color =
@@ -385,7 +387,6 @@ label-urgent-padding = 2
 [module/bspwm]
 type = internal/bspwm
 format = <label-monitor> <label-state> <label-mode>
-#wm-restack = bspwm
 
 ws-icon-0 = 0;
 ws-icon-1 = 1;
