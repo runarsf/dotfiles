@@ -10,7 +10,7 @@ dunst &
 nm-applet &
 xrdb -load ~/.Xresources
 systemctl --user import-environment DISPLAY
-compton -fcCG --xrender-sync-fence > /dev/null 2>&1 &
+picom -fcCG --xrender-sync-fence > /dev/null 2>&1 &
 feh --bg-scale "${HOME}/.config/wall.png"
 "${HOME}"/bin/polybar.sh
 

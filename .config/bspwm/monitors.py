@@ -5,7 +5,7 @@ import subprocess
 output = subprocess.run(['bspc', 'query', '-M'], stdout=subprocess.PIPE)
 monitors = output.stdout.decode('utf-8').strip().split('\n')
 
-workspaces = os.environ.get('BSPWM_WORKSPACES', '0 1 2 3 4 5 6 7 8 9').split(' ')
+workspaces = os.environ.get('BSPWM_WORKSPACES', '1 2 3 4 5 6 7 8 9 0').split(' ')
 
 assigned = {}
 

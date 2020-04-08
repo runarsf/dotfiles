@@ -203,10 +203,12 @@ silent! if plug#begin('~/.vim/plugged')
 "Plug 'rstacruz/vim-closer'
 "Plug 'tpope/vim-endwise'
 "Plug 'segeljakt/vim-isotope'
+"Plug 'rrethy/vim-hexokinase', { 'do': 'make hexokinase' }
+Plug 'nvie/vim-flake8'
+Plug 'tmhedberg/SimpylFold'
 Plug 'vifm/vifm.vim'
 Plug 'unblevable/quick-scope'
 Plug 'tpope/vim-dadbod'
-"Plug 'rrethy/vim-hexokinase', { 'do': 'make hexokinase' }
 Plug 'jceb/vim-orgmode'
 Plug 'dstein64/vim-startuptime'
 Plug 'ap/vim-buftabline'
@@ -236,6 +238,7 @@ Plug 'ryanoasis/vim-devicons'
 "Plug 'nono/jquery.vim', { 'for': 'javascript' }
 " }}}
 "Plug 'gko/vim-coloresque', { 'for': ['css', 'html', 'markdown', 'javascript', 'python'] }
+"Plug 'vim-syntastic/syntastic'
 Plug 'hashivim/vim-terraform'
 Plug 'chr4/nginx.vim', { 'for': 'nginx' }
 Plug 'storyn26383/vim-vue', { 'for': 'vue' }
@@ -275,6 +278,17 @@ Plug 'rakr/vim-one'
 call plug#end()
 endif
 
+" syntastic {{{
+"let g:syntastic_always_populate_loc_list = 1
+"let g:syntastic_auto_loc_list = 1
+"let g:syntastic_check_on_open = 1
+"let g:syntastic_check_on_wq = 0
+" }}}
+" SimpylFold {{{
+let g:SimpylFold_docstring_preview = 1
+let g:SimpylFold_fold_docstring = 1
+let g:SimpylFold_fold_import = 1
+" }}}
 " quick-scope {{{
 " Trigger a highlight in the appropriate direction when pressing these keys:
 let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
@@ -318,11 +332,6 @@ let g:qs_lazy_highlight = 0
 "let g:lens#animate = 1
 "let g:lens#disabled_filetypes = ['nerdtree', 'fzf']
 "let g:lens#disabled = 0
-" }}}
-" SimplyFold {{{
-"let g:SimpylFold_docstring_preview = 1
-"let g:SimpylFold_fold_docstring = 1
-"let g:SimpylFold_fold_import = 1
 " }}}
 " vim-buftabs {{{
 "let g:buftabs_enabled = 1
@@ -628,9 +637,9 @@ set background=dark
 execute "colorscheme " . g:colorscheme
 
 highlight Comment cterm=italic
-"highlight Normal     ctermbg=NONE guibg=NONE
-"highlight LineNr     ctermbg=NONE guibg=NONE
-"highlight SignColumn ctermbg=NONE guibg=NONE
+highlight Normal     ctermbg=NONE guibg=NONE
+highlight LineNr     ctermbg=NONE guibg=NONE
+highlight SignColumn ctermbg=NONE guibg=NONE
 
 "if has('nvim')
   " https://github.com/neovim/neovim/issues/2897#issuecomment-115464516
@@ -660,15 +669,11 @@ highlight Comment cterm=italic
 " }}}======================
 " General {{{
 " =========================
-"set textwidth=80                                             " Make it obvious where 80 characters is
 "set colorcolumn=+1
 "set nojoinspaces                                             " Use one space, not two, after punctuation.
 set history=200                                               " Sets how many lines of history VIM has to remember
 set autoread                                                  " Set to auto read when a file is changed from the outside
 set clipboard+=unnamedplus
-set nowrap
-set textwidth=0                                               " Disable wrapping
-set wrapmargin=0
 "set foldlevelstart=99                                        " Start with fold level 99 at launch (all folds closed)
 "set foldmethod=syntax
 "if expand('%:t') == '.vimrc' | set foldmethod=marker | else | set foldmethod=syntax | endif
@@ -725,15 +730,41 @@ set numberwidth=1                                             " Left margin
 set updatetime=300                                            " Default 4000
 set shortmess+=c                                              " don't give |ins-completion-menu| messages.
 "set signcolumn=yes                                           " always show signcolumns
-set laststatus=2 " Always show the status line
-set softtabstop=0
-set expandtab " expand tabs to spaces (opposite of noexpandtab)
-set smarttab
-set shiftwidth=2
-set tabstop=2
 set list
 set listchars=trail:·,nbsp:⎵,tab:┊» " ¦┆┊ eol:⏎ (		)
 "set fillchars=vert:\|,fold:-
+set laststatus=2 " Always show the status line
+"set ttymouse=sgr                                              " Fix mouse issues using Alacritty
+
+" Tabs and lines {{{
+set smarttab        " Enabling this will make the tab key
+                    " (in insert mode) insert spaces or
+                    " tabs to go to the next indent of the
+                    " next tabstop when the cursor is at
+                    " the beginning of a line
+                    " (i.e. the only preceding characters
+                    " are whitespace).
+set tabstop=2       " The width of a TAB is set to 2.
+                    " Still it is a \t. It is just that
+                    " Vim will interpret it to be having
+                    " a width of 2.
+set shiftwidth=2    " Indents will have a width of 2
+set softtabstop=0   " Sets the number of columns for a TAB
+set expandtab       " Expand TABs to spaces
+
+set nowrap
+set textwidth=0
+set wrapmargin=0
+
+"au BufNewFile,BufRead *.py
+au Filetype python
+  \ setlocal tabstop=4
+  \ | setlocal softtabstop=4
+  \ | setlocal shiftwidth=4
+  \ | setlocal textwidth=79
+  \ | setlocal fileformat=unix
+"\ set autoindent
+" }}}
 
 source $VIMRUNTIME/delmenu.vim
 source $VIMRUNTIME/menu.vim
@@ -792,6 +823,9 @@ endif
 " space open/closes folds
 nnoremap <space> za
 
+nnoremap <leader>l :set cursorline!<CR>
+nnoremap <leader>ll :set cursorcolumn!<CR>
+
 " esc in insert mode, consider using kj instead, as it's no-op (up-down)
 inoremap jk <esc>
 " esc in command mode
@@ -827,7 +861,7 @@ nmap <silent> <leader>m :call ToggleMouse()<CR>
 nnoremap <silent> <leader><space> :nohlsearch<CR>
 
 " Fast config edit
-nmap <leader>cfg :e ~/.vimrc<CR>
+nmap <leader>cfg :e $MYVIMRC<CR>
 
 " Fast saving
 nmap <leader>w :w!<CR>
@@ -931,8 +965,8 @@ endtry
 "autocmd BufWritePre * %s/\s\+$//e
 
 " Save and restore code folding
-"autocmd BufWinLeave *.* mkview
-"autocmd BufWinEnter *.* silent! loadview
+autocmd BufWinLeave *.* mkview
+autocmd BufWinEnter *.* silent! loadview
 
 " Disables automatic commenting on newline:
 autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
@@ -940,19 +974,57 @@ autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 " Functions / Utilities {{{
 " =========================
 " Statusline {{{
-function! s:statusline_expr()
-  let pst = "%{&paste ? '[P] ' : ''}"
-  let mse = "%{&mouse == 'a' ? '[M] ' : ''}"
-  let mod = "%{&modified ? '[+] ' : !&modifiable ? '[x] ' : ''}"
-  let ro  = "%{&readonly ? '[RO] ' : ''}"
-  let ft  = "%{len(&filetype) ? '['.&filetype.'] ' : ''}"
-  let fug = "%{exists('g:loaded_fugitive') ? fugitive#statusline() : ''}"
-  let sep = ' %= '
-  let pos = ' %-12(%l : %c%V%) '
-  let pct = ' %P'
-  return '[%n] %F %<'.pst.mse.mod.ro.ft.fug.sep.pos.'%*'.pct
+"function! s:statusline_expr()
+"  let pst = "%{&paste ? '[P] ' : ''}"
+"  let mse = "%{&mouse == 'a' ? '[M] ' : ''}"
+"  let mod = "%{&modified ? '[+] ' : !&modifiable ? '[x] ' : ''}"
+"  let ro  = "%{&readonly ? '[RO] ' : ''}"
+"  let ft  = "%{len(&filetype) ? '['.&filetype.'] ' : ''}"
+"  "let fug = "%{exists('g:loaded_fugitive') ? fugitive#statusline() : ''}"
+"  let sep = ' %= '
+"  let pos = ' %-12(%l : %c%V%) '
+"  let pct = ' %P'
+"  return '[%n] %F %<'.pst.mse.mod.ro.ft.sep.pos.'%*'.pct
+"endfunction
+"let &statusline = s:statusline_expr()
+
+function! ModePaste()
+  return &paste ? '[P] ' : ''
 endfunction
-let &statusline = s:statusline_expr()
+function! ModeMouse()
+  return &mouse == 'a' ? '[M] ' : ''
+endfunction
+function! ReadOnly()
+  return &readonly ? '[RO] ' : ''
+endfunction
+
+set statusline=
+
+set statusline+=%F                            " current file path
+set statusline+=\                             " blank space
+set statusline+=%y                            " filetype
+set statusline+=\                             " blank space
+set statusline+=%m                            " modified flag [+]
+set statusline+=\                             " blank space
+
+set statusline+=%=                            " right-align from now on
+
+set statusline+=%{ReadOnly()}                " mouse flag
+set statusline+=%{ModeMouse()}                " mouse flag
+set statusline+=%{ModePaste()}                " paste flag
+set statusline+=\[%{mode()}\]                 " current mode
+set statusline+=\                             " blank space
+set statusline+=%v                            " column number
+set statusline+=\:                            " colon separator
+set statusline+=%l                            " row number
+set statusline+=\/                            " slash separator
+set statusline+=%L                            " number of rows
+set statusline+=\                             " blank space
+set statusline+=%{winnr()}                    " buffer number
+
+"set statusline+=%#warningmsg#                 " Syntastic error flag
+"set statusline+=%{SyntasticStatuslineFlag()}  " Syntastic error flag
+"set statusline+=%*                            " Syntastic error flag
 
 " Format the status line
 "set statusline=%F%m%r%h%w[%L][%{&ff}]%y[%p%%][%04l,%04v]
@@ -1287,4 +1359,58 @@ command! -nargs=1 Scratch call Scratchpad(<f-args>)
 "!!  autocmd BufWinLeave *.wiki :call WikiSyncPush()
 "!!augroup END
 " }}}
+" }}}======================
+" Google Python Styleguide {{{
+" https://google.github.io/styleguide/pyguide.html
+" =========================
+" Copyright 2019 Google LLC
+"
+" Licensed under the Apache License, Version 2.0 (the "License");
+" you may not use this file except in compliance with the License.
+" You may obtain a copy of the License at
+"
+"    https://www.apache.org/licenses/LICENSE-2.0
+"
+" Unless required by applicable law or agreed to in writing, software
+" distributed under the License is distributed on an "AS IS" BASIS,
+" WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+" See the License for the specific language governing permissions and
+" limitations under the License.
+
+" Indent Python in the Google way.
+
+setlocal indentexpr=GetGooglePythonIndent(v:lnum)
+
+let s:maxoff = 50 " maximum number of lines to look backwards.
+
+function GetGooglePythonIndent(lnum)
+
+  " Indent inside parens.
+  " Align with the open paren unless it is at the end of the line.
+  " E.g.
+  "   open_paren_not_at_EOL(100,
+  "                         (200,
+  "                          300),
+  "                         400)
+  "   open_paren_at_EOL(
+  "       100, 200, 300, 400)
+  call cursor(a:lnum, 1)
+  let [par_line, par_col] = searchpairpos('(\|{\|\[', '', ')\|}\|\]', 'bW',
+        \ "line('.') < " . (a:lnum - s:maxoff) . " ? dummy :"
+        \ . " synIDattr(synID(line('.'), col('.'), 1), 'name')"
+        \ . " =~ '\\(Comment\\|String\\)$'")
+  if par_line > 0
+    call cursor(par_line, 1)
+    if par_col != col("$") - 1
+      return par_col
+    endif
+  endif
+
+  " Delegate the rest to the original function.
+  return GetPythonIndent(a:lnum)
+
+endfunction
+
+let pyindent_nested_paren="&sw*2"
+let pyindent_open_paren="&sw*2"
 " }}}======================

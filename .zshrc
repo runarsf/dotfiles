@@ -134,7 +134,7 @@ SPACESHIP_BATTERY_SHOW=false
 #set -o vi
 #bindkey 'jk' vi-cmd-mode
 bindkey '^ ' autosuggest-accept
-ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#ff00ff,bg=cyan,bold,underline"
+#ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#ff00ff,bg=cyan,bold,underline"
 PROMPT_EOL_MARK=''
 alias vim="${EDITOR}"
 alias ls='ls -lAFh --color'

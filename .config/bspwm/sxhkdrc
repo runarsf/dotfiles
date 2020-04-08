@@ -44,8 +44,12 @@ alt + @space
 super + f
 	bspc node -t \~fullscreen
 
+# FIXME
 super + @space
 	bspc node -t \~floating
+
+super + n
+	$HOME/bin/scratchpad.sh
 
 ## Send the newest marked node to the newest preselected node
 #super + y

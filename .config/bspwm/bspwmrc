@@ -62,6 +62,7 @@ bspc rule -a Steam desktop=^5
 bspc rule -a Screenkey manage=off
 bspc rule -a Pavucontrol floating=on
 bspc rule -a mpv floating=on
+bspc rule -a Alacritty:scratchpad sticky=on state=floating rectangle=widthxheight+Xoffset+Yoffset
 # }}}
 
 exec_once () { # {{{
