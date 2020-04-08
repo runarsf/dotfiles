@@ -34,8 +34,8 @@ super + alt + shift + {Left,Right}
 	bspc desktop -f {prev,next}.local
 
 # restart/reload/quit
-super + shift + {r,i,e}
-	bspc {wm -r,wm -r,quit}
+super + shift + {r,e}
+	bspc {wm -r,quit}
 
 alt + @space
 	bspc desktop --layout next

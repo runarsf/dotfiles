@@ -147,9 +147,10 @@ alias reload='source "${HOME}/.zshrc"'
 
 alias dots='dotfiles'
 dotfiles () {
-  #if ! "${1}"; then
-  #  dotfiles status
-  #fi
+  if test "$#" -eq "0"; then
+    dotfiles status
+    return
+  fi
   for var in "$@"; do
     if test "${var}" = "."; then
       printf "STOP."
