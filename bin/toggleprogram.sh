@@ -1,10 +1,10 @@
-#!/bin/sh
+#!/bin/bash
 
-ID=$(pgrep "$1")
+id="$(pgrep ${1})"
 
-if [ -z "$ID" ]; then
-    "$1" "$2"
+if test -z "${id}"; then
+    command "${1}" "${@:2}"
   else
-    killall $1 && notify-send "$1" "$1 killed"
+    killall "${1}"
 fi
 

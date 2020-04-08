@@ -136,7 +136,7 @@ SPACESHIP_BATTERY_SHOW=false
 bindkey '^ ' autosuggest-accept
 #ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#ff00ff,bg=cyan,bold,underline"
 PROMPT_EOL_MARK=''
-alias vim="${EDITOR}"
+alias vim='${EDITOR}'
 alias ls='ls -lAFh --color'
 alias grep='grep --color'
 alias c='xclip -selection clipboard'
@@ -145,7 +145,11 @@ alias please='sudo $(fc -ln -1)'
 alias reload='source "${HOME}/.zshrc"'
 #alias back='cd $OLDPWD'
 
+alias dots='dotfiles'
 dotfiles () {
+  #if ! "${1}"; then
+  #  dotfiles status
+  #fi
   for var in "$@"; do
     if test "${var}" = "."; then
       printf "STOP."
