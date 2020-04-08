@@ -10,7 +10,7 @@
 # vim: set foldmethod=marker foldlevel=0 nomodeline:
 # runarsf's Zoomer SHell config
 [[ $- != *i* ]] && return # don't do anything if not running interactively
-clear
+#clear
 
 #autoload -U compinit
 #zstyle ':completion:*' menu select
@@ -142,8 +142,18 @@ alias grep='grep --color'
 alias c='xclip -selection clipboard'
 #alias paste='nc termbin.com 9999'
 alias please='sudo $(fc -ln -1)'
-alias reload="source ${HOME}/.zshrc"
+alias reload='source "${HOME}/.zshrc"'
 #alias back='cd $OLDPWD'
+
+dotfiles () {
+  for var in "$@"; do
+    if test "${var}" = "."; then
+      printf "STOP."
+      return 1
+    fi
+  done
+  git --git-dir="${HOME}/dotfiles" --work-tree="${HOME}" "$@"
+}
 
 # Change cursor shape for different vi modes.
 #function zle-keymap-select {
