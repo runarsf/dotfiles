@@ -9,15 +9,15 @@ export PATH="${PATH}:/snap/bin"
 export LANG="en_US.UTF-8"
 export LC_ALL="${LANG}"
 
-test -n "${SSH_CONNECTION}" \
-  && export EDITOR='nvim' \
-  || export EDITOR='nvim'
+export EDITOR='nvim'
 export VISUAL="${EDITOR}"
 export FILE="${EDITOR}"
 export TERMINAL="alacritty"
 export BROWSER="firefox"
-export PYTHONDONTWRITEBYTECODE=1
 export PAGER="less"
+export PYTHONDONTWRITEBYTECODE=1
+export ZDOTDIR="${XDG_CONFIG_HOME:-$HOME/.config}/zsh"
+export FZF_DEFAULT_OPTS="--layout=reverse --height 40%"
 
 # Auto start ssh-agent
 eval "$(ssh-agent)" && ssh-add

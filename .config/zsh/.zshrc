@@ -209,8 +209,8 @@ magic-enter () {
 zle -N magic-enter
 bindkey "^M" magic-enter
 
-# Add aliases to all files in ./bin
-for script in "$( dirname "$(readlink -f -- "${HOME}"/.zshrc)" )"/bin/*.*; do
+# Add aliases to all files in .local/bin
+for script in "${HOME}/.local/"bin/*.*; do
   # Without file extension
   if ! command -v "${$(basename -- ${script})%.*}" >/dev/null 2>&1; then
     eval "alias ${$(basename -- ${script})%.*}=$(readlink -f -- ${script})"
