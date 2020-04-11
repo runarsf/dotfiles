@@ -79,13 +79,51 @@ endif
 
 filetype plugin indent on
 let g:colorscheme = 'one'
-"let g:has_node = (system('node -v') =~ '^v')
-"let g:has_adoc = (system('asciidoctor --version') =~ '^A')
-"let g:has_rgrep = (system('rgrep --version') =~ '^g')
+
+" Plugin helpers {{{
+"function! PlugLoaded(name)
+"    return (
+"        \ has_key(g:plugs, a:name) &&
+"        \ isdirectory(g:plugs[a:name].dir) &&
+"        \ stridx(&rtp, g:plugs[a:name].dir) >= 0)
+"endfunction
+function! PlugLoaded(name)
+  return (match(&runtimepath, a:name) != -1)
+endfunction
+" }}}
 
 silent! if plug#begin('~/.vim/plugged')
 " General {{{
 " Disabled General {{{
+"Plug 'mhinz/vim-startify'
+"Plug 'jceb/vim-orgmode'
+"Plug 'ctrlpvim/ctrlp.vim'
+"Plug 'camspiers/animate.vim'
+"Plug 'camspiers/lens.vim'
+"Plug 'editorconfig/editorconfig-vim'
+"Plug 'liuchengxu/vim-clap'
+"Plug 'tpope/vim-dispatch'
+"Plug 'habamax/vim-asciidoctor'
+"Plug 'pbrisbin/vim-mkdir'
+"Plug 'majutsushi/tagbar', { 'on': 'TagbarToggle' }
+"Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+"Plug 'junegunn/fzf.vim'
+"Plug 'lifepillar/vim-cheat40', { 'on': 'Cheat40' }
+"Plug 'inkarkat/vim-ingo-library', { 'branch': 'stable' }
+"Plug 'inkarkat/vim-ModelineCommands', { 'branch': 'stable' }
+"Plug 'tyru/open-browser.vim', { 'on': 'RunningX' }
+"Plug 'tmhedberg/SimpylFold'
+"Plug 'lervag/wiki-ft.vim'
+"Plug 'liuchengxu/vista.vim'
+"Plug 'SirVer/ultisnips'
+"Plug 'honza/vim-snippets'
+"Plug 'Yggdroot/hiPairs'
+"Plug 'tpope/vim-surround'
+"Plug 'rstacruz/vim-closer'
+"Plug 'tpope/vim-endwise'
+"Plug 'segeljakt/vim-isotope'
+"Plug 'rrethy/vim-hexokinase', { 'do': 'make hexokinase' }
+"Plug 'nvie/vim-flake8'
 "Plug 'fcpg/vim-waikiki'
 "Plug 'lervag/wiki.vim'
 "Plug 'svermeulen/vim-subversive'
@@ -98,12 +136,8 @@ silent! if plug#begin('~/.vim/plugged')
 "else
 "  Plug 'mhinz/vim-signify', { 'branch': 'legacy' }
 "endif
-"Plug 'vimwiki/vimwiki'
 "Plug 'jceb/vim-orgmode'
 "Plug 'justinmk/vim-dirvish'
-"if has('python3') && g:has_rgrep
-"  Plug 'alok/notational-fzf-vim'
-"endif
 "Plug 'jonrad/vim-hi-hue'
 "Plug 'bagrat/vim-buffet'
 "plug 'zefei/vim-wintabs'
@@ -116,7 +150,6 @@ silent! if plug#begin('~/.vim/plugged')
 "Plug 'psliwka/vim-smoothie'
 "Plug 'tpope/vim-repeat'
 "Plug 'svermeulen/vim-macrobatics'
-"Plug 'michal-h21/vim-zettel'
 "Plug 'michal-h21/vimwiki-sync' " Doesn't work for neovim
 "if has_node && has('nvim') && !empty($DISPLAY)
 "  Plug 'aurieh/discord.nvim', { 'do': ':UpdateRemotePlugins'}
@@ -181,38 +214,18 @@ silent! if plug#begin('~/.vim/plugged')
 "Plug 'tpope/vim-fugitive'
 "Plug 'voldikss/vim-codelf', { 'on': 'Codelf' }
 " }}}
-"Plug 'ctrlpvim/ctrlp.vim'
-"Plug 'camspiers/animate.vim'
-"Plug 'camspiers/lens.vim'
-"Plug 'editorconfig/editorconfig-vim'
-"Plug 'liuchengxu/vim-clap'
-"Plug 'tpope/vim-dispatch'
-"Plug 'habamax/vim-asciidoctor'
-"Plug 'pbrisbin/vim-mkdir'
-"Plug 'majutsushi/tagbar', { 'on': 'TagbarToggle' }
-"Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-"Plug 'junegunn/fzf.vim'
-"Plug 'lifepillar/vim-cheat40', { 'on': 'Cheat40' }
-"Plug 'inkarkat/vim-ingo-library', { 'branch': 'stable' }
-"Plug 'inkarkat/vim-ModelineCommands', { 'branch': 'stable' }
-"Plug 'tyru/open-browser.vim', { 'on': 'RunningX' }
-"Plug 'tmhedberg/SimpylFold'
-"Plug 'lervag/wiki-ft.vim'
-"Plug 'liuchengxu/vista.vim'
-"Plug 'SirVer/ultisnips'
-"Plug 'honza/vim-snippets'
-"Plug 'Yggdroot/hiPairs'
-"Plug 'tpope/vim-surround'
-"Plug 'rstacruz/vim-closer'
-"Plug 'tpope/vim-endwise'
-"Plug 'segeljakt/vim-isotope'
-"Plug 'rrethy/vim-hexokinase', { 'do': 'make hexokinase' }
-Plug 'nvie/vim-flake8'
+Plug 'vimwiki/vimwiki'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
+Plug 'michal-h21/vim-zettel'
+if has('python3') && executable('rg') && PlugLoaded('fzf')
+  Plug 'alok/notational-fzf-vim'
+endif
+Plug 'DrCracket/painless-digraph'
 Plug 'tmhedberg/SimpylFold'
 Plug 'vifm/vifm.vim'
 Plug 'unblevable/quick-scope'
-Plug 'tpope/vim-dadbod'
-Plug 'jceb/vim-orgmode'
+Plug 'tpope/vim-dadbod', { 'on': 'DB' }
 Plug 'dstein64/vim-startuptime'
 Plug 'ap/vim-buftabline'
 Plug 'jlanzarotta/bufexplorer'
@@ -220,8 +233,7 @@ Plug 'scrooloose/nerdtree'
 Plug 'junegunn/goyo.vim'
 Plug 'junegunn/limelight.vim', { 'on': 'Limelight' }
 Plug 'justinmk/vim-sneak'
-if v:version >= 703
-  "if g:has_node && v:version >= 703
+if v:version >= 703 && executable('node')
   Plug 'neoclide/coc.nvim', { 'branch': 'release' } " 'do': { -> coc#util#install() }}
 endif
 if has('nvim') || has('patch-8.0.902')
@@ -233,6 +245,8 @@ Plug 'ryanoasis/vim-devicons'
 " }}}
 " Syntax highlighting {{{
 " Disabled Syntax highlighting {{{
+"Plug 'gko/vim-coloresque', { 'for': ['css', 'html', 'markdown', 'javascript', 'python'] }
+"Plug 'vim-syntastic/syntastic'
 "Plug 'ObserverOfTime/coloresque.vim'
 "if v:version >= 703
 "  Plug 'scrooloose/syntastic'
@@ -240,8 +254,6 @@ Plug 'ryanoasis/vim-devicons'
 "Plug 'octol/vim-cpp-enhanced-highlight', { 'for': 'cpp' }
 "Plug 'nono/jquery.vim', { 'for': 'javascript' }
 " }}}
-"Plug 'gko/vim-coloresque', { 'for': ['css', 'html', 'markdown', 'javascript', 'python'] }
-"Plug 'vim-syntastic/syntastic'
 Plug 'hashivim/vim-terraform'
 Plug 'chr4/nginx.vim', { 'for': 'nginx' }
 Plug 'storyn26383/vim-vue', { 'for': 'vue' }
@@ -281,6 +293,140 @@ Plug 'rakr/vim-one'
 call plug#end()
 endif
 
+" vimwiki {{{
+let g:wikidir = expand('~/wiki/')
+let g:vimwiki_ext2syntax = {'.md': 'markdown'}
+let g:vimwiki_list = [{'path': g:wikidir,
+                     \ 'path_html': g:wikidir . 'html',
+                     \ 'ext': '.md',
+                     \ 'syntax': 'default'},
+                     \{'path': g:wikidir . 'vimwiki/vimwikiwiki/wiki',
+                     \ 'path_html': g:wikidir . 'vimwiki/vimwikiwiki/docs',
+                     \ 'auto_toc': 1}]
+
+" Filename format. The filename is created using strftime() function
+let g:zettel_format = "%d%m%y-%H%M-%title-%file_no"
+" command used for VimwikiSearch 
+" default value is "ag". To use other command, like ripgrep, pass the
+" command line and options:
+"let g:zettel_fzf_command = "rg --column --line-number --ignore-case --no-heading --color=always "
+" Disable default keymappings
+let g:zettel_default_mappings = 0 
+" This is basically the same as the default configuration
+augroup filetype_vimwiki
+  autocmd!
+  autocmd FileType vimwiki imap <silent> [[ [[<esc><Plug>ZettelSearchMap
+  autocmd FileType vimwiki nmap T <Plug>ZettelYankNameMap
+  autocmd FileType vimwiki xmap z <Plug>ZettelNewSelectedMap
+  autocmd FileType vimwiki nmap gZ <Plug>ZettelReplaceFileWithLink
+augroup END
+
+" Set template and custom header variable for the second Wiki
+"let g:zettel_options = [{},{"front_matter" : {"tags" : ""}, "template" :  "~/mytemplate.tpl"}]
+let g:zettel_options = [{"template" :  g:wikidir . "templates/template.tpl"}]
+
+" WikiSyncSave {{{
+"function! WikiSyncSave()
+"  if &ft =~ 'asciidoctor'
+"    silent Asciidoctor2HTML
+    "silent execute '!mv ' . g:wikidir . '%:t ' . g:wikidir . 'html/'
+"  elseif &ft =~ 'vimwiki'
+"    silent VimwikiAll2HTML
+    "call vimwiki#html#WikiAll2HTML(g:wikidir)
+"  endif
+"  let g:has_modified = 1
+"endfunction
+" }}}
+
+" augroup WikiSync {{{
+"!!augroup WikiSync | autocmd!
+"!!  autocmd FileType asciidoctor call WikiSyncPull()
+"!!  autocmd FileType asciidoctor cabbrev wq write <bar> quit
+"!!  autocmd FileType vimwiki call WikiSyncPull()
+"!!  autocmd FileType vimwiki cabbrev wq write <bar> quit
+
+"!!  autocmd BufWritePost *.adoc :call WikiSyncSave()
+"!!  autocmd BufWritePost *.wiki :call WikiSyncSave()
+
+"!!  autocmd BufWinLeave *.adoc :call WikiSyncPush()
+"!!  autocmd BufWinLeave *.wiki :call WikiSyncPush()
+"!!augroup END
+" }}}======================
+" }}}
+" notational-fzf-vim {{{
+let g:nv_search_paths = [ g:wikidir ]
+
+" String. Set to '' (the empty string) if you don't want an extension appended by default.
+" Don't forget the dot, unless you don't want one.
+let g:nv_default_extension = ''
+
+" String. Default is first directory found in `g:nv_search_paths`. Error thrown
+"if no directory found and g:nv_main_directory is not specified
+"let g:nv_main_directory = g:nv_main_directory or (first directory in g:nv_search_paths)
+
+" Dictionary with string keys and values. Must be in the form 'ctrl-KEY':
+" 'command' or 'alt-KEY' : 'command'. See examples below.
+let g:nv_keymap = {
+                    \ 'ctrl-s': 'split ',
+                    \ 'ctrl-v': 'vertical split ',
+                    \ 'ctrl-t': 'tabedit ' }
+
+" String. Must be in the form 'ctrl-KEY' or 'alt-KEY'
+let g:nv_create_note_key = 'ctrl-x'
+
+" String. Controls how new note window is created.
+let g:nv_create_note_window = 'vertical split'
+
+" Boolean. Show preview. Set by default. Pressing Alt-p in FZF will toggle this for the current search.
+let g:nv_show_preview = 1
+
+" Boolean. Respect .*ignore files in or above nv_search_paths. Set by default.
+let g:nv_use_ignore_files = 1
+
+" Boolean. Include hidden files and folders in search. Disabled by default.
+let g:nv_include_hidden = 0
+
+" Boolean. Wrap text in preview window.
+let g:nv_wrap_preview_text = 1
+
+" String. Width of window as a percentage of screen's width.
+let g:nv_window_width = '40%'
+
+" String. Determines where the window is. Valid options are: 'right', 'left', 'up', 'down'.
+let g:nv_window_direction = 'down'
+
+" String. Command to open the window (e.g. `vertical` `aboveleft` `30new` `call my_function()`).
+"let g:nv_window_command = 'call my_function()'
+
+" Float. Width of preview window as a percentage of screen's width. 50% by default.
+let g:nv_preview_width = 50
+
+" String. Determines where the preview window is. Valid options are: 'right', 'left', 'up', 'down'.
+let g:nv_preview_direction = 'right'
+
+" String. Yanks the selected filenames to the default register.
+let g:nv_yank_key = 'ctrl-y'
+
+" String. Separator used between yanked filenames.
+let g:nv_yank_separator = "\n"
+
+" Boolean. If set, will truncate each path element to a single character. If
+" you have colons in your pathname, this will fail. Set by default.
+let g:nv_use_short_pathnames = 1
+
+"List of Strings. Shell glob patterns. Ignore all filenames that match any of
+" the patterns.
+let g:nv_ignore_pattern = ['summarize-*', 'misc*']
+
+" List of Strings. Key mappings like above in case you want to define your own
+" handler function. Most users won't want to set this to anything.
+let g:nv_expect_keys = []                                              
+" }}}
+" painless-digraph {{{
+map <silent> <Leader>de <Plug>(PainlessdigraphEnable)
+map <silent> <Leader>dd <Plug>(PainlessdigraphDisable)
+map <silent> <Leader>dt <Plug>(PainlessdigraphToggle)
+" }}}
 " syntastic {{{
 "let g:syntastic_always_populate_loc_list = 1
 "let g:syntastic_auto_loc_list = 1
@@ -442,6 +588,26 @@ autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=#363840 ctermbg=237
 "nnoremap <silent> <leader>ce :call codelf#start()<CR>
 "let g:codelf_enable_popup_menu = v:true
 " }}}
+" vim-asciidoctor {{{
+"let g:asciidoctor_folding = 1
+"let g:asciidoctor_fenced_languages = ['python', 'c', 'javascript']
+" Underline current line (asciidoc) {{{
+"function! s:underline(chars)
+"  let nextnr = line('.') + 1
+"  let underline = repeat(a:chars[0], strchars(getline('.')))
+"  if index(a:chars, trim(getline(nextnr))[0]) != -1
+"    call setline(nextnr, underline)
+"  else
+"    call append('.', underline)
+"  endif
+"endfunc
+"nnoremap <silent> <leader>- :call <SID>underline(['-', '=', '~', '^', '+'])<CR>
+"nnoremap <silent> <leader>= :call <SID>underline(['=', '-', '~', '^', '+'])<CR>
+"nnoremap <silent> <leader>~ :call <SID>underline(['~', '=', '-', '^', '+'])<CR>
+"nnoremap <silent> <leader>^ :call <SID>underline(['^', '=', '-', '~', '+'])<CR>
+"nnoremap <silent> <leader>+ :call <SID>underline(['+', '=', '-', '~', '^'])<CR>
+" }}}
+" }}}
 " deoplete.nvim {{{
 "let g:deoplete#enable_at_startup = 1
 " }}}
@@ -532,15 +698,26 @@ let g:sneak#label = 1
 " }}}
 " nerdtree {{{
 " Open a NERDTree automatically when vim starts up if no files were specified
+"autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | silent NERDTree | endif
 autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | silent NERDTree | wincmd p | endif
 " Open NERDTree automatically when vim starts up on opening a directory
 autocmd StdinReadPre * let s:std_in=1
+"autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | exe 'cd '.argv()[0] | endif
 autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | endif
+"autocmd StdinReadPre * let s:std_in=1
+"autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | silent NERDTree | wincmd p | ene | endif
 " Close vim if the only window left open is a NERDTree
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+
+"let g:NERDTreeDirArrowExpandable = '>'
+"let g:NERDTreeDirArrowCollapsible = 'v'
+
 let g:NERDTreeWinPos = "left"
-map <silent> <C-o> :NERDTreeToggle<CR>
+" Toggle NERDTree and focus editor
+map <silent> <C-o> :NERDTreeToggle <bar> wincmd p<CR>
+
+"autocmd VimEnter * silent NERDTree | wincmd p
 " }}}
 " coc.nvim {{{
 "let s:coc_extensions = [
@@ -823,6 +1000,8 @@ if $TERM =~ 'screen'
   nnoremap <leader><C-a> <C-a>
 endif
 
+nmap <leader>now :read !date<CR>
+
 " space open/closes folds
 nnoremap <space> za
 
@@ -1055,7 +1234,7 @@ set statusline+=%{winnr()}                    " buffer number
 " Autoreload .vimrc {{{
 augroup myvimrchooks
   au!
-  autocmd bufwritepost .vimrc source ~/.vimrc
+  autocmd bufwritepost $MYVIMRC source $MYVIMRC
 augroup END
 " }}}
 
@@ -1249,119 +1428,6 @@ function! Scratchpad(command)
 endfunction
 
 command! -nargs=1 Scratch call Scratchpad(<f-args>)
-" }}}======================
-" Wiki {{{
-" =========================
-"let g:wikidir = expand('~/wiki/')
-
-" vim-wiki (plugin settings) {{{
-"let g:vimwiki_ext2syntax = {'.Rmd': 'markdown', '.rmd': 'markdown','.md': 'markdown', '.markdown': 'markdown', '.mdown': 'markdown'}
-"let g:vimwiki_list = [{'path': g:wikidir,
-"                     \ 'path_html': g:wikidir . 'html'}]
-"let g:vimwiki_list = [{'path': g:vimwiki_list[0]['path'],
-"                      \ 'syntax': 'markdown', 'ext': '.md'}]
-" }}}
-" vim-asciidoctor (plugin settings) {{{
-"let g:asciidoctor_folding = 1
-"let g:asciidoctor_fenced_languages = ['python', 'c', 'javascript']
-" }}}
-
-" Underline current line (asciidoc) {{{
-"function! s:underline(chars)
-"  let nextnr = line('.') + 1
-"  let underline = repeat(a:chars[0], strchars(getline('.')))
-"  if index(a:chars, trim(getline(nextnr))[0]) != -1
-"    call setline(nextnr, underline)
-"  else
-"    call append('.', underline)
-"  endif
-"endfunc
-"nnoremap <silent> <leader>- :call <SID>underline(['-', '=', '~', '^', '+'])<CR>
-"nnoremap <silent> <leader>= :call <SID>underline(['=', '-', '~', '^', '+'])<CR>
-"nnoremap <silent> <leader>~ :call <SID>underline(['~', '=', '-', '^', '+'])<CR>
-"nnoremap <silent> <leader>^ :call <SID>underline(['^', '=', '-', '~', '+'])<CR>
-"nnoremap <silent> <leader>+ :call <SID>underline(['+', '=', '-', '~', '^'])<CR>
-" }}}
-
-" Run ssh-agent if it's not running {{{
-"function! CallbackTest()
-"  echomsg 'Callback executed successfully!'
-"endfunction
-"function! CheckSSHAgent(callback)
-"  if !($SSH_AGENT_PID)
-"    if confirm("SSH_AGENT_PID unset, try adding ssh-agent?", "&Yes\n&No", 2) != 1
-"      return 2
-"    endif
-"  endif
-
-"  silent !if test -z "${SSH_AGENT_PID+x}"; then
-"  \   eval "$(ssh-agent)";
-"  \ fi;
-"  \ if test "$(ssh-add -L | grep id_rsa | wc -l)" -le 0; then
-"  \   ssh-add;
-"  \   exit 69;
-"  \ fi
-
-  "if v:shell_error == 69
-  "  execute "call " . a:callback
-  "endif
-"endfunction
-" }}}
-
-" WikiSyncPull {{{
-"function! WikiSyncPull()
-"  silent execute "!git -C " . g:wikidir . " pull"
-"endfunction
-" }}}
-" WikiSyncSave {{{
-"function! WikiSyncSave()
-"  if &ft =~ 'asciidoctor'
-"    silent Asciidoctor2HTML
-    "silent execute '!mv ' . g:wikidir . '%:t ' . g:wikidir . 'html/'
-"  elseif &ft =~ 'vimwiki'
-"    silent VimwikiAll2HTML
-    "call vimwiki#html#WikiAll2HTML(g:wikidir)
-"  endif
-"  let g:has_modified = 1
-"endfunction
-" }}}
-" WikiSyncPush {{{
-"function! WikiSyncPush()
-"  if exists('g:has_modified')
-"    silent execute '!git -C ' . g:wikidir . ' pull'
-"    silent execute '!git -C ' . g:wikidir . ' add .'
-"    silent execute '!git -C ' . g:wikidir . ' commit -m"Auto push of %:t at ' . strftime('%a-%FT%T%z') .'"'
-"    execute '!git -C ' . g:wikidir . ' push origin master'
-"    unlet g:has_modified
-
-    "while true
-    "  if (system('git status')) =~ 'ahead of'
-    "    if confirm("Could not push changes, add ssh-agent and retry?", "&Yes\n&No", 1) == 1
-    "      !eval "$(ssh-agent)" && ssh-add
-    "      call WikiSyncPush()
-    "    else
-    "      break
-    "    endif
-    "  endif
-    "endwhile
-"  endif
-"endfunction
-" }}}
-
-" augroup WikiSync {{{
-"!!augroup WikiSync | autocmd!
-"!!  autocmd FileType asciidoctor call WikiSyncPull()
-"!!  autocmd FileType asciidoctor cabbrev wq write <bar> quit
-"!!  autocmd FileType vimwiki call WikiSyncPull()
-"!!  autocmd FileType vimwiki cabbrev wq write <bar> quit
-
-"!!  autocmd BufWritePost *.adoc :call WikiSyncSave()
-"!!  autocmd BufWritePost *.wiki :call WikiSyncSave()
-
-"!!  autocmd BufWinLeave *.adoc :call WikiSyncPush()
-"!!  autocmd BufWinLeave *.wiki :call WikiSyncPush()
-"!!augroup END
-" }}}
 " }}}======================
 " Google Python Styleguide {{{
 " https://google.github.io/styleguide/pyguide.html

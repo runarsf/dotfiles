@@ -160,6 +160,14 @@ dotfiles () {
   git --git-dir="${HOME}/dotfiles" --work-tree="${HOME}" "$@"
 }
 
+# rm () {
+#   if test "${1}" = "-r"; then
+#     command rmdir "${@:2}"
+#   else
+#     command rm "$@"
+#   fi
+# }
+
 # Change cursor shape for different vi modes.
 #function zle-keymap-select {
 #  if [[ ${KEYMAP} == vicmd ]] ||
