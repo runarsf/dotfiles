@@ -142,9 +142,10 @@ alias grep='grep --color'
 alias c='xclip -selection clipboard'
 #alias paste='nc termbin.com 9999'
 alias please='sudo $(fc -ln -1)'
-alias reload='source "${HOME}/.zshrc"'
+alias reload='source "${HOME}/.config/zsh/.zshrc"'
 #alias back='cd $OLDPWD'
 
+alias dirtydots='GIT_DIR="${HOME}/dotfiles" WORK_TREE="${HOME}" GIT_ADD="-u" dirtygit'
 alias dots='dotfiles'
 dotfiles () {
   if test "$#" -eq "0"; then

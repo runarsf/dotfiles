@@ -1,8 +1,11 @@
-#!/usr/bin/env sh
-if test ! -d ".git"; then
-  printf "Not a git repository."
-  exit 1
-fi
+#!/usr/bin/env bash
+set -o errexit   # abort on nonzero exitstatus
+set -o nounset   # abort on unbound variable
+set -o pipefail  # don't hide errors within pipes
+
+GIT_ADD="${GIT_ADD:-.}"
+GIT_DIR="${GIT_DIR:-./.git}"
+WORK_TREE="${WORK_TREE:-.}"
 
 cleanup () {
   tput cnorm
@@ -17,7 +20,7 @@ green='\e[32m'
 yellow='\e[33m'
 red='\e[31m'
 
-dots () {
+waiting_dots () {
   local d='0.35'
   local i='.'
   tput civis
@@ -36,19 +39,19 @@ dots () {
 }
 
 printf "\n${blue}| ADDING \e[0;39m\n\n"
-dots
-git add .
+waiting_dots
+git --git-dir="${GIT_DIR}" --work-tree="${WORK_TREE}" add "${GIT_ADD}"
 
 printf "\n${blue}| COMMITTING \e[0;39m'${*}'\n\n"
-dots
-git commit -m "${*}"
+waiting_dots
+git --git-dir="${GIT_DIR}" --work-tree="${WORK_TREE}" commit -m "${*}"
 
 printf "\n${blue}| PULLING \e[0;39m\n\n"
-dots
-git pull
+waiting_dots
+git --git-dir="${GIT_DIR}" --work-tree="${WORK_TREE}" pull
 
 printf "\n${blue}| PUSHING \e[0;39m\n\n"
-dots
-git push
+waiting_dots
+git --git-dir="${GIT_DIR}" --work-tree="${WORK_TREE}" push
 
 printf "\n${green}| DONE! \e[0;39m\n\n"
