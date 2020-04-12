@@ -31,7 +31,7 @@ if test -z ${noplug+x}; then
     && source <(antibody init)
 	antibody bundle <<-EOBUNDLES
 		robbyrussell/oh-my-zsh path:lib
-		# robbyrussell/oh-my-zsh path:plugins/git
+		robbyrussell/oh-my-zsh path:plugins/git
 		# robbyrussell/oh-my-zsh path:plugins/git-extras
 		robbyrussell/oh-my-zsh path:plugins/colorize # sudo pip3 install pygments
 		robbyrussell/oh-my-zsh path:plugins/colored-man-pages
@@ -140,10 +140,10 @@ alias vim='${EDITOR}'
 alias ls='ls -lAFh --color'
 alias grep='grep --color'
 alias c='xclip -selection clipboard'
-#alias paste='nc termbin.com 9999'
 alias please='sudo $(fc -ln -1)'
 alias reload='source "${HOME}/.config/zsh/.zshrc"'
-#alias back='cd $OLDPWD'
+#alias paste='nc termbin.com 9999'
+#alias back='cd ${OLDPWD}'
 
 alias dirtydots='GIT_DIR="${HOME}/dotfiles" WORK_TREE="${HOME}" GIT_ADD="-u" dirtygit'
 alias dots='dotfiles'
@@ -158,7 +158,7 @@ dotfiles () {
       return 1
     fi
   done
-  git --git-dir="${HOME}/dotfiles" --work-tree="${HOME}" "$@"
+  git --git-dir="${HOME}/dotfiles" --work-tree="${HOME}" "${@}"
 }
 
 # rm () {
