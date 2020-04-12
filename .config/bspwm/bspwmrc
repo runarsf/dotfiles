@@ -78,7 +78,7 @@ exec_once () { # {{{
 #exec_once "discord"
 
 "${HOME}"/.config/bspwm/monitors.py
-"${HOME}"/bin/polybar.sh
+"${HOME}"/.local/bin/polybar-start
 feh --bg-scale "${HOME}/.config/wall.png"
 killall -q sxhkd; sxhkd -m 1 -c "${HOME}/.config/sxhkd/sxhkdrc" "${HOME}/.config/bspwm/sxhkdrc" &
 # }}}
