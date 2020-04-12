@@ -39,18 +39,22 @@ waiting_dots () {
 }
 
 printf "\n${blue}| ADDING \e[0;39m\n\n"
+printf "\$ ${yellow}git --git-dir=${GIT_DIR} --work-tree=${WORK_TREE} ${red}add ${GIT_ADD}${reset}\n"
 waiting_dots
 git --git-dir="${GIT_DIR}" --work-tree="${WORK_TREE}" add "${GIT_ADD}"
 
 printf "\n${blue}| COMMITTING \e[0;39m'${*}'\n\n"
+printf "\$ ${yellow}git --git-dir=${GIT_DIR} --work-tree=${WORK_TREE} ${red}commit -m ${*}${reset}\n"
 waiting_dots
 git --git-dir="${GIT_DIR}" --work-tree="${WORK_TREE}" commit -m "${*}"
 
 printf "\n${blue}| PULLING \e[0;39m\n\n"
+printf "\$ ${yellow}git --git-dir=${GIT_DIR} --work-tree=${WORK_TREE} ${red}pull${reset}\n"
 waiting_dots
 git --git-dir="${GIT_DIR}" --work-tree="${WORK_TREE}" pull
 
 printf "\n${blue}| PUSHING \e[0;39m\n\n"
+printf "\$ ${yellow}git --git-dir=${GIT_DIR} --work-tree=${WORK_TREE} ${red}push${reset}\n"
 waiting_dots
 git --git-dir="${GIT_DIR}" --work-tree="${WORK_TREE}" push
 
