@@ -80,5 +80,6 @@ exec_once () { # {{{
 "${HOME}"/.config/bspwm/monitors.py
 "${HOME}"/.local/bin/polybar-start
 feh --bg-scale "${HOME}/.config/wall.png"
+#pkill -USR1 compton
 killall -q sxhkd; sxhkd -m 1 -c "${HOME}/.config/sxhkd/sxhkdrc" "${HOME}/.config/bspwm/sxhkdrc" &
 # }}}

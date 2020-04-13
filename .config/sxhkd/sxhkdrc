@@ -1,34 +1,25 @@
 # vim: set foldmethod=marker foldlevel=0 nomodeline:
 super + Return
-	$TERMINAL
+	"${TERMINAL}"
+
 super + x
-	$HOME/bin/customlock.sh "gllock"
+	gllock || i3lock
+
 super + shift + x
-	$HOME/bin/prompt.sh "Are you sure you want to shutdown?" "shutdown -h now"
+	prompt "Are you sure you want to shutdown?" "shutdown -h now"
+
 super + shift + v
-	$TERMINAL -e $EDITOR
+	"${TERMINAL}" -e "${EDITOR}"
+
 super + d
 	dmenu_run -nb '#1e1e1e' -sf '#1e1e1e' -sb '#f4800d' -nf '#F4800d'
-#	rofi -show run -lines 3 -eh 2
-#super + Tab
-#	rofi -show window
-#super + shift + w
-#	$BROWSER
+	#rofi -show run -lines 3 -eh 2
 
-# Restart sxhkd
 super + Escape
 	pkill -USR1 -x sxhkd
 
 alt + p
 	sharenix-section -n -c
 
-# Insert < and >
-ctrl + @comma
-	xdotool keyup ctrl && xdotool key less && xdotool keydown ctrl
-ctrl + @period
-	xdotool keyup ctrl && xdotool key greater && xdotool keydown ctrl
-
-#super + shift + n
-	# 
-#super + n
-	#bspc node $DDTERMWID --flag hidden --focus $DDTERMWID.!hidden
+#super + o ; {w,e}
+#	{"${BROWSER}","${EDITOR}"}

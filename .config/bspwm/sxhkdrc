@@ -1,55 +1,68 @@
 # vim: set foldmethod=marker foldlevel=0 nomodeline:
-# bspwm-specific sxhkd config, extends ~/.config/sxhkd/sxhkdrc
+# bspwm-specific sxhkd config, extends ~/.config/sxhkd/sxhkd!rc
 
 # https://www.reddit.com/r/bspwm/comments/ceu0za/help_with_sxhkdrc_config_for_multiple_monitors/
-
 # bspc monitor -f next
 
-# close and kill
-# bspc  window -c
-# bspc  window -k
+# Close or kill node
 super + {_,shift + }q
-	bspc node -{c,k}
+	bspc node --{close,kill}
 
-# Change workspace or move container to workspace
-super + {_,shift + }{1-9,0}
-	bspc {desktop -f,node -d} '{1-9,10}'
-# Change focus or move container
-#super + alt + {Left,Right}
-#	desk=`bspc query -D -d focused`; \
-#	bspc desktop -m {prev,next}; \
-#	bspc monitor -f {prev,next}; \
-#	bspc desktop -f $desk
-super + {_,shift + }{Left,Down,Up,Right}
-	bspc node -{f,s} {west,south,north,east}
+# Focus desktop or move node to desktop
+super + {_,shift + }{0-9}
+	bspc {desktop --focus,node --to-desktop} '{0-9}'
+
+#super + {Left,Down,Up,Right}
+#  test "$(bspc query -T -d | jq -r '.layout')" = "monocle" \
+#  && bspc node --focus {prev,next,prev,next}.local \
+#  || bspc node --focus {west,south,north,east}.local
+
+#super + shift + {Left,Down,Up,Right}
+#  test "$(bspc query -T -d | jq -r '.layout')" = "monocle" \
+#  && bspc node --swap {prev,next,prev,next}.local --follow \
+#  || bspc node --swap {west,south,north,east}.local --follow
+
+#super + {_,shift + }{Left,Down,Up,Right}
+#  LAYOUT=$(bspc query -T -d | jq -r '.layout'); \
+#  test "${LAYOUT}" != "monocle" && bspc node -{f,s} {west,south,north,east}.local; \
+#  test "${LAYOUT}" = "monocle" && bspc node -{f,s} {prev,next,prev,next}.local
+
+super + {Left,Down,Up,Right}
+	bspc node --focus {west,south,north,east}
+super + shift + {Left,Down,Up,Right}
+	bspc node --swap {west,south,north,east} --follow
+
 # Resize window
-super + ctrl + {Left,Down,Up,Right}
-	bspc node -z {right -20 0,top 0 20,bottom 0 -20,left 20 0}
-# Move window to monitor or focus the next/previous desktop in the current monitor
-super + alt + {Left,Right}
-	bspc node -f {prev,next}.local
+#super + ctrl + {Left,Down,Up,Right}
+#	bspc node -z {right -20 0,top 0 20,bottom 0 -20,left 20 0}
+super + ctrl {_,shift + }{Left,Down,Up,Right}
+    bspwm_resize {contract,expand} {west,south,north,east} 20
+super {_,ctrl + }r : {Left,Down,Up,Right}
+    bspwm_resize {contract,expand} {west,south,north,east} 20
+
 super {_,shift + }Tab
-	bspc node -f {next,prev}.local
-super + alt + shift + {Left,Right}
-	bspc desktop -f {prev,next}.local
+	bspc node --focus {next,prev}.local
 
-# restart/reload/quit
+# restart/quit
 super + shift + {r,e}
-	bspc {wm -r,quit}
+	bspc {wm --restart,quit}
 
-alt + @space
+super + @space
 	bspc desktop --layout next
 
-# Toggle fullscreen
-super + f
-	bspc node -t \~fullscreen
-
-# FIXME
-super + @space
-	bspc node -t \~floating
+# Toggle fullscreen and floating
+#super + @space
+super {_,shift + }f
+	bspc node --state \~{fullscreen,floating}
 
 super + n
-	$HOME/bin/scratchpad.sh
+	scratchpad || "${HOME}/.local/bin/scratchpad"
+
+super + c ; p
+	bspc config focus_follows_pointer {false,true}
+
+super + t
+	bspc node -t {tiled,pseudo_tiled,floating,fullscreen}
 
 ## Send the newest marked node to the newest preselected node
 #super + y
@@ -58,6 +71,13 @@ super + n
 ## Split vertical, horizontal, or cancel
 #super + {n,e,s,w,r}
 #        bspc node -p {north, east, south, west, cancel}
+
+# Change focus or move container
+#super + alt + {Left,Right}
+#	desk=`bspc query -D -d focused`; \
+#	bspc desktop -m {prev,next}; \
+#	bspc monitor -f {prev,next}; \
+#	bspc desktop -f $desk
 
 #bspc node -s biggest.local
 #bspc desktop -f {prev.occupied,next.occupied} 
@@ -98,14 +118,6 @@ super + n
 
 #super + {t,shift + t,s,f}
 #	bspc node -t '~{tiled,pseudo_tiled,floating,fullscreen}'
-
-# alternate between the tiled and monocle layout
-#super + m
-#	bspc desktop -l next
-
-# send the newest marked node to the newest preselected node
-#super + y
-#	bspc node newest.marked.local -n newest.!automatic.local
 
 # swap the current node and the biggest node
 #super + g
