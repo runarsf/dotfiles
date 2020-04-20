@@ -21,5 +21,8 @@ super + Escape
 alt + p
 	sharenix-section -n -c
 
+super + shift + c
+	toggleprogram "picom" "-b"
+
 #super + o ; {w,e}
 #	{"${BROWSER}","${EDITOR}"}

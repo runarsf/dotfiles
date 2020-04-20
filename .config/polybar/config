@@ -1,6 +1,7 @@
-;---------------------------------------
-;		COLORS
-;---------------------------------------
+[settings]
+screenchange-reload = true
+pseudo-transparency = true
+
 [colors]
 black = #263238
 white = #D8DEE9
@@ -25,9 +26,6 @@ unfocus1 = #101010
 occupied = #555555
 occupied1 = #454545
 
-;---------------------------------------
-;		GLOBAL
-;---------------------------------------
 [bar/nord]
 width = 100%
 height = 30
@@ -40,6 +38,7 @@ fixed-center = true
 line-size = 4
 line-color = #f00
 clickareas = 35
+enable-ipc = true
 ;spacing = 4
 ;locale = en_US.UTF-8
 wm-restack = bspwm
@@ -65,21 +64,25 @@ modules-left = bspwm
 modules-center = xwindow
 modules-right = pulseaudio cpu memory battery date
 
-;---------------------------------------
-;	     LASTFM
-;---------------------------------------
+
 [module/lastfm]
 type = custom/script
 interval = 2
 format-prefix = " "
 #format-prefix = " "
 format = <label>
-exec = $HOME/git/last.sh/last.sh -p
+exec = $HOME/.local/last.sh -p
 ;format-underline = #1db954
 
-;---------------------------------------
-;	     MEMORY
-;---------------------------------------
+[module/pacman-packages]
+type = custom/ipc
+hook-0 = sudo pacman -Qu | wc -l
+format-prefix = "📦 "
+initial = 1
+format-foreground = ${colors.black}
+format-background = ${colors.violet}
+format-underline = ${colors.violet1}
+
 [module/memory]
 type = internal/memory
 ; Seconds to sleep between updates
@@ -92,9 +95,6 @@ format-foreground = ${colors.black}
 format-background = ${colors.green}
 format-underline = ${colors.green1}
 
-;---------------------------------------
-;	     CPU
-;---------------------------------------
 [module/cpu]
 type = internal/cpu 
 interval = 2
@@ -106,24 +106,18 @@ format-background = ${colors.cyan}
 format-padding = 1
 format-underline = ${colors.cyan1}
 
-;---------------------------------------
-;	     WLAN
-;---------------------------------------
 [module/wlan]
 type = internal/network
 interface = net1
 interval = 3.0
-
 format-connected = <ramp-signal> <label-connected>
 format-connected-underline =  #456771
 label-connected = %essid%
-
 format-disconnected =
 ;format-disconnected = <label-disconnected>
 ;format-disconnected-underline = ${self.format-connected-underline}
 ;label-disconnected = %ifname% disconnected
 ;label-disconnected-foreground = ${colors.foreground-alt}
-
 ramp-signal-0 = 
 ramp-signal-1 = 
 ramp-signal-2 = 
@@ -131,28 +125,20 @@ ramp-signal-3 = 
 ramp-signal-4 = 
 ramp-signal-foreground = ${colors.foreground-alt}
 
-;---------------------------------------
-;	     ETHERNET
-;---------------------------------------
 [module/eth]
 type = internal/network
 interface = eth0
 interval = 3.0
-
 format-connected-underline =  #456771
 format-connected-prefix = " "
 format-connected-prefix-foreground = ${colors.foreground-alt}
 label-connected = %local_ip%
-
 format-disconnected =
 ;format-disconnected = <label-disconnected>
 ;format-disconnected-underline = ${self.format-connected-underline}
 ;label-disconnected = %ifname% disconnected
 ;label-disconnected-foreground = ${colors.foreground-alt}
 
-;---------------------------------------
-;	     MPD
-;---------------------------------------
 [module/mpd]
 type = internal/mpd
 host = 127.0.0.1
@@ -176,9 +162,6 @@ label-offline = mpd is offline
 format-online-underline = ${colors.blue1}
 format-offline-underline = ${colors.white}
 
-;---------------------------------------
-;	   SPOTIFY
-;---------------------------------------
 [module/spotify]
 type = custom/script
 interval = 1
@@ -187,9 +170,6 @@ format = <label>
 exec = python $HOME/bin/python/spotify_status.py -f '{song} - {artist}'
 format-underline = #1db954
 
-;---------------------------------------
-;	   XWINDOW
-;---------------------------------------
 [module/xwindow]
 type = internal/xwindow
 format-foreground = ${colors.white}
@@ -201,42 +181,28 @@ label = %title:0:50:...%
 ; label = %title%
 ; label-maxlen = 75
 
-;---------------------------------------
-;	   XKEYBOARD
-;---------------------------------------
 [module/xkeyboard]
 type = internal/xkeyboard
 blacklist-0 = num lock
 format = <label-indicator> <label-layout>
-
 format-prefix = " "
 format-prefix-foreground = ${colors.foreground-alt}
 format-prefix-underline = ${colors.secondary}
-
 label-layout = %layout%
 label-layout-underline = ${colors.secondary}
-
 label-indicator-padding = 2
 label-indicator-margin = 1
 label-indicator-background = ${colors.secondary}
 label-indicator-underline = ${colors.secondary}
 
-;---------------------------------------
-;	   FILESYSTEM
-;---------------------------------------
 [module/filesystem]
 type = internal/fs
 interval = 25
-
 mount-0 = /
-
 label-mounted = %{F#0a81f5}%mountpoint%%{F-}: %percentage_used%%
 label-unmounted = %mountpoint% not mounted
 label-unmounted-foreground = ${colors.white}
 
-;---------------------------------------
-;	   XBACKLIGHT
-;---------------------------------------
 [module/xbacklight]
 type = internal/xbacklight
 format = <label>
@@ -245,9 +211,6 @@ format-background = ${colors.orange}
 label = " 盛 %percentage%% "
 format-underline = ${colors.orange1}
 
-;---------------------------------------
-;	   DATE
-;---------------------------------------
 [module/time]
 type = internal/date
 interval = 1
@@ -258,30 +221,20 @@ format-foreground = ${colors.black}
 format-background = ${colors.violet}
 format-underline = ${colors.violet1}
 
-;---------------------------------------
-;	   TIME
-;---------------------------------------
 [module/date]
 type = internal/date
 interval = 1
-
 date =
 date-alt = "  %a %m %b "
-
 time = %H:%M
 time-alt = %H:%M:%S
-
 ;format-prefix = " "
 ;format-prefix-foreground = ${colors.foreground-alt}
 format-foreground = ${colors.black}
 format-background = ${colors.violet}
 format-underline = ${colors.violet1}
-
 label = "%date%  %time% "
 
-;---------------------------------------
-;	   KERNEL
-;---------------------------------------
 [module/kernel-version]
 type = custom/script
 exec = uname -r
@@ -290,9 +243,6 @@ format-underline =  #456771
 format-prefix = " "
 format-prefix-foreground = #666
 
-;---------------------------------------
-;	   VOLUME
-;---------------------------------------
 [module/pulseaudio]
 type = internal/pulseaudio
 sink = alsa_output.pci-0000_00_1b.0.analog-stereo
@@ -321,9 +271,6 @@ ramp-volume-3-foreground = ${colors.black}
 ramp-volume-3-background = ${colors.yellow}
 format-volume-underline = ${colors.yellow1}
 
-;---------------------------------------
-;	   BATTERY
-;---------------------------------------
 [module/battery]
 type = internal/battery
 battery = BAT0
@@ -342,43 +289,34 @@ label-charging = "  %percentage%% "
 label-discharging ="  %percentage%% "
 label-discharging-foreground = ${colors.black}
 label-full = "  %percentage%% "
-
 format-charging-underline = ${colors.red1}
 format-discharging-underline = ${colors.red1}
 format-full-underline = ${colors.red1}
 
-;---------------------------------------
-;	     WORKSPACE
-;---------------------------------------
 [module/i3]
 type = internal/i3
 format = <label-state> <label-mode>
 index-sort = true
 wrapping-scroll = false
-
 label-mode-padding = 2
 label-mode-foreground = #000
 label-mode-background = ${colors.focus}
-
 ; focused = Active workspace on focused monitor
 label-focused = %index%
 label-focused-background = ${colors.focus}
 label-focused-foreground = ${colors.black}
 label-focused-underline= ${colors.focus1}
 label-focused-padding = 2
-
 ; unfocused = Inactive workspace on any monitor
 label-unfocused = %index%
 label-unfocused-padding = 2
 label-unfocused-background = ${colors.unfocus}
 label-unfocused-underline= ${colors.unfocus1}
-
 ; visible = Active workspace on unfocused monitor
 label-visible = %index%
 label-visible-background = ${self.label-focused-background}
 label-visible-underline = ${self.label-focused-underline}
 label-visible-padding = ${self.label-focused-padding}
-
 ; urgent = Workspace with urgency hint set
 label-urgent = %index%
 label-urgent-background = #5f5f5f
@@ -387,7 +325,6 @@ label-urgent-padding = 2
 [module/bspwm]
 type = internal/bspwm
 format = <label-monitor> <label-state> <label-mode>
-
 ws-icon-0 = 0;
 ws-icon-1 = 1;
 ws-icon-2 = 2;
@@ -399,10 +336,8 @@ ws-icon-7 = 7;
 ws-icon-8 = 8;
 ws-icon-9 = 9;
 ws-icon-default = 
-
 ; Only show workspaces defined on the same output as the bar
 pin-workspaces = true
-
 ; Output mode flags after focused state label
 inline-mode = false
 ; Create click handler used to focus workspace
@@ -413,17 +348,14 @@ enable-scroll = true
 reverse-scroll = true
 ; Use fuzzy (partial) matching on labels when assigning icons to workspaces
 fuzzy-match = true
-
 ;label-separator = |
 ;label-separator-padding = 1
 ;label-separator-foreground = ${colors.orange}
 ;label-separator-foreground = #ffb52a
-
 padding = 3
-
 ; Active workspace on active monitor
 label-focused = %name%
-#label-focused = %icon% %name%
+;label-focused = %icon% %name%
 label-focused-foreground = ${colors.white}
 label-focused-background = ${colors.focus}
 label-focused-underline = ${colors.focus1}
@@ -431,7 +363,7 @@ label-focused-padding = ${self.padding}
 
 ; Urgent workspaces
 label-urgent = %name%
-#label-urgent = %icon% %name%
+;label-urgent = %icon% %name%
 label-urgent-foreground = ${colors.white}
 label-urgent-background = ${colors.red}
 label-urgent-underline = ${colors.red1}
@@ -439,7 +371,7 @@ label-urgent-padding = ${self.padding}
 
 ; Inactive monitors
 label-empty = %name%
-#label-empty = %icon% %name%
+;label-empty = %icon% %name%
 label-empty-foreground = ${colors.white}
 label-empty-background = ${colors.unfocus}
 label-empty-underline = ${colors.unfocus1}
@@ -447,7 +379,7 @@ label-empty-padding = ${self.padding}
 
 ; Workspaces on inactive monitors
 label-dimmed = %name%
-#label-dimmed = %icon% %name%
+;label-dimmed = %icon% %name%
 label-dimmed-foreground = ${self.label-empty-foreground}
 label-dimmed-background = ${self.label-empty-background}
 label-dimmed-underline = ${self.label-empty-underline}
@@ -455,7 +387,7 @@ label-dimmed-padding = ${self.padding}
 
 ; Non-empty workspaces 
 label-occupied = %name%
-#label-occupied = %icon% %name%
+;label-occupied = %icon% %name%
 label-occupied-foreground = ${colors.white}
 label-occupied-background = ${colors.occupied}
 label-occupied-underline = ${colors.occupied1}

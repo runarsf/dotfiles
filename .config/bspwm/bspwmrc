@@ -59,6 +59,7 @@ bspc rule -a discord desktop=^2
 bspc rule -a Mattermost desktop=^2
 bspc rule -a slack desktop=^2
 bspc rule -a Steam desktop=^5
+bspc rule -a org.remmina.Remmina desktop=^5
 bspc rule -a Screenkey manage=off
 bspc rule -a Pavucontrol floating=on
 bspc rule -a mpv floating=on
@@ -77,9 +78,15 @@ exec_once () { # {{{
 }
 #exec_once "discord"
 
-"${HOME}"/.config/bspwm/monitors.py
-"${HOME}"/.local/bin/polybar-start
-feh --bg-scale "${HOME}/.config/wall.png"
-#pkill -USR1 compton
+# Move to top?
+command -v "polybar-start" \
+  && polybar-start \
+  || "${HOME}"/.local/bin/polybar-start
+command -v "cleanfullscreen" \
+  && cleanfullscreen \
+  || "${HOME}/.local/bin/cleanfullscreen"
+"${HOME}"/.config/bspwm/monitors.py &
+feh --bg-scale "${HOME}/.config/wall.png" &
+pkill -USR1 compton
 killall -q sxhkd; sxhkd -m 1 -c "${HOME}/.config/sxhkd/sxhkdrc" "${HOME}/.config/bspwm/sxhkdrc" &
 # }}}

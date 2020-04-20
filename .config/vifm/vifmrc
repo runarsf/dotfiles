@@ -412,7 +412,7 @@ nnoremap q :quit<cr>
 nnoremap ,q :quit<cr>
 
 "Open all images in current directory in sxiv thumbnail mode
-nnoremap sx :!sxiv -t %d & <cr>
+"nnoremap sx :!sxiv -t %d & <cr>
 
 " Start shell in current directory
 nnoremap s :shell<cr>
@@ -443,6 +443,8 @@ nnoremap A cw
 nnoremap ,t :!alacritty &<cr>
 
 nnoremap <space> :select<cr>
+
+nnoremap bg :!cp %c ~/.config/wall.png && feh --bg-scale ~/.config/wall.png<cr>
 
 " Various customization examples
 
