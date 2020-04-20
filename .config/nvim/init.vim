@@ -880,7 +880,7 @@ set noerrorbells                                              " No annoying soun
 set novisualbell
 set t_vb=
 set timeoutlen=500
-set synmaxcol=180
+set synmaxcol=250
 set scrolljump=0
 set nocursorline                                              " Highlight current line
 set nocursorcolumn
