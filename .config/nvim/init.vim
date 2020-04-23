@@ -215,9 +215,13 @@ silent! if plug#begin('~/.vim/plugged')
 "Plug 'voldikss/vim-codelf', { 'on': 'Codelf' }
 " }}}
 Plug 'vimwiki/vimwiki'
+"Plug 'vimoutliner/vimoutliner'
+Plug 'mattn/calendar-vim'
+"Plug 'michal-h21/vimwiki-sync'
+Plug 'chazy/dirsettings'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
-Plug 'michal-h21/vim-zettel'
+"Plug 'michal-h21/vim-zettel'
 if has('python3') && executable('rg') && PlugLoaded('fzf')
   Plug 'alok/notational-fzf-vim'
 endif
@@ -294,67 +298,127 @@ call plug#end()
 endif
 
 " vimwiki {{{
-let g:wikidir = expand('~/wiki/')
-let g:vimwiki_ext2syntax = {'.md': 'markdown'}
-let g:vimwiki_list = [{'path': g:wikidir,
-                     \ 'path_html': g:wikidir . 'html',
-                     \ 'ext': '.md',
-                     \ 'syntax': 'default'},
-                     \{'path': g:wikidir . 'vimwiki/vimwikiwiki/wiki',
-                     \ 'path_html': g:wikidir . 'vimwiki/vimwikiwiki/docs',
-                     \ 'auto_toc': 1}]
-
+" https://opensource.com/article/18/6/vimwiki-gitlab-notes
+" https://blog.mague.com/?p=602
+let g:vimwiki_ext2syntax = {'.md': 'markdown', '.markdown': 'markdown', '.mdown': 'markdown'}
+let g:vimwiki_list = [{'path':      expand('~/wiki/') . 'personal',
+                     \ 'path_html': expand('~/wiki/') . 'personal/html',
+                     \ 'ext':       '.md',
+                     \ 'syntax':    'default',
+                     \ 'auto_toc':  0},
+                     \{'path':      expand('~/wiki/') . 'work',
+                     \ 'path_html': expand('~/wiki/') . 'work/html',
+                     \ 'ext':       '.md',
+                     \ 'syntax':    'markdown',
+                     \ 'auto_toc':  0},
+                     \{'path':      expand('~/wiki/') . 'vimwikiwiki/wiki',
+                     \ 'path_html': expand('~/wiki/') . 'vimwikiwiki/docs',
+                     \ 'ext':       '.wiki',
+                     \ 'syntax':    'default',
+                     \ 'auto_toc':  1}]
 " Filename format. The filename is created using strftime() function
-let g:zettel_format = "%d%m%y-%H%M-%title-%file_no"
+"let g:zettel_format = "%d%m%y-%H%M-%title-%file_no"
 " command used for VimwikiSearch 
 " default value is "ag". To use other command, like ripgrep, pass the
 " command line and options:
 "let g:zettel_fzf_command = "rg --column --line-number --ignore-case --no-heading --color=always "
 " Disable default keymappings
-let g:zettel_default_mappings = 0 
+"let g:zettel_default_mappings = 1
 " This is basically the same as the default configuration
-augroup filetype_vimwiki
-  autocmd!
-  autocmd FileType vimwiki imap <silent> [[ [[<esc><Plug>ZettelSearchMap
-  autocmd FileType vimwiki nmap T <Plug>ZettelYankNameMap
-  autocmd FileType vimwiki xmap z <Plug>ZettelNewSelectedMap
-  autocmd FileType vimwiki nmap gZ <Plug>ZettelReplaceFileWithLink
-augroup END
+"augroup filetype_vimwiki
+"  autocmd!
+"  autocmd FileType vimwiki imap <silent> [[ [[<esc><Plug>ZettelSearchMap
+"  autocmd FileType vimwiki nmap T <Plug>ZettelYankNameMap
+"  autocmd FileType vimwiki xmap z <Plug>ZettelNewSelectedMap
+"  autocmd FileType vimwiki nmap gZ <Plug>ZettelReplaceFileWithLink
+"augroup END
 
 " Set template and custom header variable for the second Wiki
 "let g:zettel_options = [{},{"front_matter" : {"tags" : ""}, "template" :  "~/mytemplate.tpl"}]
-let g:zettel_options = [{"template" :  g:wikidir . "templates/template.tpl"}]
+"let g:zettel_options = [{"template" :  expand('~/wiki/') . "templates/template.tpl"}]
 
+" Run ssh-agent if it's not running {{{
+"function! CallbackTest()
+"  echomsg 'Callback executed successfully!'
+"endfunction
+"function! CheckSSHAgent(callback)
+"  if !($SSH_AGENT_PID)
+"    if confirm("SSH_AGENT_PID unset, try adding ssh-agent?", "&Yes\n&No", 2) != 1
+"      return 2
+"    endif
+"  endif
+
+"  silent !if test -z "${SSH_AGENT_PID+x}"; then
+"  \   eval "$(ssh-agent)";
+"  \ fi;
+"  \ if test "$(ssh-add -L | grep id_rsa | wc -l)" -le 0; then
+"  \   ssh-add;
+"  \   exit 69;
+"  \ fi
+
+  "if v:shell_error == 69
+  "  execute "call " . a:callback
+  "endif
+"endfunction
+" }}}
+
+" WikiSyncPull {{{
+"function! WikiSyncPull()
+"  silent execute "!git -C " . expand('~/wiki/') . " pull"
+"endfunction
+" }}}
 " WikiSyncSave {{{
 "function! WikiSyncSave()
 "  if &ft =~ 'asciidoctor'
 "    silent Asciidoctor2HTML
-    "silent execute '!mv ' . g:wikidir . '%:t ' . g:wikidir . 'html/'
+"   "silent execute '!mv ' . g:wikidir . '%:t ' . g:wikidir . 'html/'
 "  elseif &ft =~ 'vimwiki'
 "    silent VimwikiAll2HTML
-    "call vimwiki#html#WikiAll2HTML(g:wikidir)
+"   "call vimwiki#html#WikiAll2HTML(g:wikidir)
 "  endif
 "  let g:has_modified = 1
 "endfunction
 " }}}
+" WikiSyncPush {{{
+"function! WikiSyncPush()
+"  if exists('g:has_modified')
+"    silent execute '!git -C ' . expand('~/wiki/') . ' pull'
+"    silent execute '!git -C ' . expand('~/wiki/') . ' add -u'
+"    silent execute '!git -C ' . expand('~/wiki/') . ' commit -m "Auto push of %:t at ' . strftime('%a-%FT%T%z') .'"'
+"    execute '!git -C ' . expand('~/wiki/') . ' push origin master'
+"    unlet g:has_modified
+"
+"    while true
+"      if (system('git status')) =~ 'ahead of'
+"        if confirm("Could not push changes, add ssh-agent and retry?", "&Yes\n&No", 1) == 1
+"          !eval "$(ssh-agent)" && ssh-add
+"          call WikiSyncPush()
+"        else
+"          break
+"        endif
+"      endif
+"    endwhile
+"  endif
+"endfunction
+" }}}
 
 " augroup WikiSync {{{
-"!!augroup WikiSync | autocmd!
-"!!  autocmd FileType asciidoctor call WikiSyncPull()
-"!!  autocmd FileType asciidoctor cabbrev wq write <bar> quit
-"!!  autocmd FileType vimwiki call WikiSyncPull()
-"!!  autocmd FileType vimwiki cabbrev wq write <bar> quit
-
-"!!  autocmd BufWritePost *.adoc :call WikiSyncSave()
-"!!  autocmd BufWritePost *.wiki :call WikiSyncSave()
-
-"!!  autocmd BufWinLeave *.adoc :call WikiSyncPush()
-"!!  autocmd BufWinLeave *.wiki :call WikiSyncPush()
-"!!augroup END
-" }}}======================
+"augroup WikiSync | autocmd!
+"  autocmd FileType asciidoctor call WikiSyncPull()
+"  autocmd FileType asciidoctor cabbrev wq write <bar> quit
+"  autocmd FileType vimwiki call WikiSyncPull()
+"  autocmd FileType vimwiki cabbrev wq write <bar> quit
+"
+"  autocmd BufWritePost *.adoc :call WikiSyncSave()
+"  autocmd BufWritePost *.wiki :call WikiSyncSave()
+"
+"  autocmd BufWinLeave *.adoc :call WikiSyncPush()
+"  autocmd BufWinLeave *.wiki :call WikiSyncPush()
+"augroup END
+" }}}
 " }}}
 " notational-fzf-vim {{{
-let g:nv_search_paths = [ g:wikidir ]
+let g:nv_search_paths = [ expand('~/wiki/') ]
 
 " String. Set to '' (the empty string) if you don't want an extension appended by default.
 " Don't forget the dot, unless you don't want one.
