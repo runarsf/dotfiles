@@ -1,21 +1,25 @@
-set $bg-color			#2f343f
-set $inactive-bg-color		#2f343f
-set $text-color			#f3f4f5
-set $inactive-text-color	#676E7D
-set $urgent-bg-color		#E53935
-
-# rofi.color-enabled		true
-rofi.color-window:		#201D1D, #151718, #295253
-rofi.color-normal:		#201D1D, #bdbdbd, argb:21686c70, #59666e, #d3c2aa
-rofi.color-active:		#201D1D, #b5bae1, argb:21686c70, #59666e, #b5bae1
-rofi.color-urgent: 		#201D1D, #e1b5ba, argb:21686c70, #59666e, #e1b5ba
-rofi.hide-scrollbar:		true
-rofi.font:			System San Francisco 16
-rofi.separator-style:		dotted
-rofi.line-margin:		0
-rofi.padding:			400
-rofi.width:			100
-rofi.bw:			2
-rofi.opacity:			85
-# rofi.theme: /usr/share/rofi/themes/Arc-Dark.rasi
-rofi.theme: ./sidetab.rasi
+#set $bg-color			#2f343f
+#set $inactive-bg-color		#2f343f
+#set $text-color			#f3f4f5
+#set $inactive-text-color	#676E7D
+#set $urgent-bg-color		#E53935
+#
+## rofi.color-enabled		true
+#rofi.color-window:		#201D1D, #151718, #295253
+#rofi.color-normal:		#201D1D, #bdbdbd, argb:21686c70, #59666e, #d3c2aa
+#rofi.color-active:		#201D1D, #b5bae1, argb:21686c70, #59666e, #b5bae1
+#rofi.color-urgent: 		#201D1D, #e1b5ba, argb:21686c70, #59666e, #e1b5ba
+#rofi.width:			100
+rofi.show-icons:            true
+rofi.modi:                  run,drun,window,ssh
+rofi.lines:                 7
+rofi.line-padding:          10
+rofi.matching:              fuzzy
+rofi.bw:                    0
+rofi.padding:               0
+rofi.separator-style:       none
+rofi.hide-scrollbar:        true
+rofi.line-margin:           0
+rofi.opacity                95
+rofi.font:                  sans-serif 10
+rofi.theme:                 ./themes/custom-nord.rasi

@@ -1,4 +1,5 @@
 # vim: set foldmethod=marker foldlevel=0 nomodeline:
+# description: Launch terminal.
 super + Return
 	"${TERMINAL}"
 
@@ -12,8 +13,10 @@ super + shift + v
 	"${TERMINAL}" -e "${EDITOR}"
 
 super + d
-	dmenu_run -nb '#1e1e1e' -sf '#1e1e1e' -sb '#f4800d' -nf '#F4800d'
-	#rofi -show run -lines 3 -eh 2
+	rofi -show run
+	#dmenu_run -nb '#1e1e1e' -sf '#1e1e1e' -sb '#f4800d' -nf '#F4800d'
+super + shift + d
+	rofi -combi-modi window,drun -show combi -modi combi
 
 super + Escape
 	pkill -USR1 -x sxhkd
@@ -23,6 +26,9 @@ alt + p
 
 super + shift + c
 	toggleprogram "picom" "-b"
+
+super + alt + e
+	emoji
 
 #super + o ; {w,e}
 #	{"${BROWSER}","${EDITOR}"}

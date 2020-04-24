@@ -1175,6 +1175,9 @@ au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g
 " #!! shebang
 inoreabbrev <expr> #!! "#!/usr/bin/env" . (empty(&filetype) ? '' : ' '.&filetype)
 
+" >dn
+"inoreabbrev <expr> #dn ">/dev/null 2>&1"
+
 " Set extra options when running in GUI mode
 "if has("gui_running")
 "  set guioptions-=T

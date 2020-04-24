@@ -1,3 +1,13 @@
 #!/bin/bash
 
-[ $(echo -e "No\nYes" | dmenu -i -p "$1") == "Yes" ] && $2
+msg="${1}"
+shift
+cmd="${@}"
+
+if command -v "rofi" >/dev/null 2>&1; then
+  test "$(printf 'No\nYes' | rofi -dmenu -p "${msg}")" = "Yes" && command ${cmd}
+elif command -v "dmenu" >/dev/null 2>&1; then
+  test "$(printf 'No\nYes' | dmenu -i -p "${msg}")" = "Yes" && command ${cmd}
+else
+  command ${cmd}
+fi

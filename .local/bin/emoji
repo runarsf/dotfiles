@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+if ! command -v "xsel" "xdotool" "frece" >/dev/null 2>&1; then
+  printf "xsel, xdotool, and frece are required to run this script.\n"
+fi
+
+SRC_PATH="${HOME}/.config/rofi/emoji-list"
+DB_PATH="${HOME}/.config/rofi/emoji.db"
+
+# Create database (see also: `frece update`)
+test -f "${DB_PATH}" || frece init "${DB_PATH}" "${SRC_PATH}"
+
+# Rofi
+line="$(frece print "${DB_PATH}" | rofi -dmenu -theme "${HOME}/.config/rofi/themes/emoji.rasi" -i -markup-rows -p '' -columns 6)"
+test -z "${line}" && exit
+
+# Increment entry and paste
+frece increment "${DB_PATH}" "${line}"
+a="${line#*>}"
+b="${a%<*}"
+echo -n "${b}" | xsel -ipb
+xdotool key Ctrl+Shift+v

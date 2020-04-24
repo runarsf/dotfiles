@@ -53,8 +53,11 @@ super + ctrl + r : {Left,Down,Up,Right}
 super {_,shift + }Tab
 	bspc node --focus {next,prev}.local
 
-super + shift + {r,e}
-	bspc {wm --restart,quit}
+super + shift + r
+	bspc wm --restart
+
+super + shift + e
+	prompt "Exit bspwm?" "bspc quit"
 
 super + @space
 	bspc desktop --layout next
