@@ -214,6 +214,9 @@ silent! if plug#begin('~/.vim/plugged')
 "Plug 'tpope/vim-fugitive'
 "Plug 'voldikss/vim-codelf', { 'on': 'Codelf' }
 " }}}
+"Plug 'Kody-Quintana/bspwm_border_color'
+"Plug 'amerlyq/vim-focus-autocmd'
+Plug 'ying17zi/vim-live-latex-preview' " requires biber
 Plug 'vimwiki/vimwiki'
 "Plug 'vimoutliner/vimoutliner'
 Plug 'mattn/calendar-vim'
@@ -222,8 +225,11 @@ Plug 'chazy/dirsettings'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 "Plug 'michal-h21/vim-zettel'
-if has('python3') && executable('rg') && PlugLoaded('fzf')
-  Plug 'alok/notational-fzf-vim'
+"if has('python3') && executable('rg') && PlugLoaded('fzf')
+"  Plug 'alok/notational-fzf-vim'
+"endif
+if has('python3') && $DISPLAY != ''
+  Plug 'anned20/vimsence'
 endif
 Plug 'DrCracket/painless-digraph'
 Plug 'tmhedberg/SimpylFold'
@@ -1064,6 +1070,8 @@ if $TERM =~ 'screen'
   nnoremap <leader><C-a> <C-a>
 endif
 
+nmap <silent> <leader>wr :set wrap!<CR>
+
 nmap <leader>now :read !date<CR>
 
 " space open/closes folds
@@ -1154,7 +1162,7 @@ map <F3> :!wc %<CR>
 
 " Spell-check, english and norwegian
 map <F6> :setlocal spell! spelllang=en_us,nb<CR>
-map <leader>ss :setlocal spell! spelllang=en_us,nb<cr>
+map <leader>ss :setlocal spell spelllang=en_us,nb<cr>
 
 " Remove the Windows ^M - when the encodings gets messed up
 "noremap <Leader>m mmHmt:%s/<C-V><cr>//ge<cr>'tzt'm

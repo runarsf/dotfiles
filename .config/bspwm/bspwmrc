@@ -41,6 +41,10 @@ bspc config border_width 3
 bspc config window_gap 10
 
 xsetroot -cursor_name left_ptr
+
+which external_rules >/dev/null 2>&1 \
+  && bspc config external_rules_command "$(which external_rules)" \
+  || bspc config external_rules_command "${HOME}/.config/bspwm/extrules"
 # }}}
 
 # Scratchpad {{{

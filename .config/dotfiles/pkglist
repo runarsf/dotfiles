@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+os="${1}"
+action="${2}"
+
+case "${os}" in
+  arch)
+    case "${action}" in
+      export)
+        printf "Exporting packages for Arch...\n"
+        pacman -Qqen > ~/.config/dotfiles/arch.pkglist
+        pacman -Qqem > ~/.config/dotfiles/aur.pkglist
+        ;;
+      install)
+        printf "Installing packages for Arch...\n"
+        sudo pacman -S --needed - < ~/.config/dotfiles/arch.pkglist
+        yay -S --needed --nocleanmenu --nodiffmenu --noeditmenu - < ~/.config/dotfiles/aur.pkglist
+        ;;
+    esac
+    ;;
+esac
