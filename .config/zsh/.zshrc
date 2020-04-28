@@ -145,7 +145,7 @@ alias reload='source "${HOME}/.config/zsh/.zshrc"'
 #alias paste='nc termbin.com 9999'
 #alias back='cd ${OLDPWD}'
 
-alias dirtydots='GIT_DIR="${HOME}/dotfiles" WORK_TREE="${HOME}" GIT_ADD="-u" dirtygit'
+alias dirtydots='dirtygit --git-dir "${HOME}/dotfiles" --work-tree "${HOME}" --git-add "-u"'
 alias dots='dotfiles'
 dotfiles () {
   if test "$#" -eq "0"; then
