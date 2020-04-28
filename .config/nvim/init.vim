@@ -5,44 +5,6 @@ set packpath+=~/.vim
 let mapleader = ','
 let maplocalleader = ','
 " }}}
-" runarsf's .vimrc {{{
-" =========================
-"  vim scp://root@domain.tld//home/root/.vimrc
-"  vim scp://root@domain.tld/.vimrc
-"
-"  vim ~/.ssh/config
-"  ---
-"  host shortname
-"    User root
-"    Hostname domain.tld
-"    Port 22
-"  ---
-"  vim scp://shortname/.vimrc
-"
-"  zo  Open a fold at cursor position.
-"  zO  Open all fold at cursor position.
-"  zc  Close a fold at cursor position.
-"  zm  Increase foldlevel by 1.
-"  zM  Close all folds.
-"  zr  Decrease foldlevel by 1.
-"  zR  Decrease foldlevel to 0; all folds will open.
-"
-"  h   Left
-"  j   Down
-"  k   Up
-"  l   Right
-"
-"  K  - Open help page for keyword under cursor.
-"  /  - Search for text in current file.
-"  :  - Prefix for executing commands.
-"
-"  :%s/foo/bar/g       Change "foo" to "bar".
-"  :s/foo/bar/g        Change "foo" to "bar" on the current line.
-"  :%s/foo/bar/gc      Change "foo" to "bar", but ask for confirmation.
-"  :%s/\<foo\>/bar/gc  Change whole words matching "foo" to "bar".
-"  :%s/foo/bar/gci     Change "foo" to "bar", case sensitive.
-"
-" }}}======================
 " Plugins {{{
 " =========================
 " vim-plug linux installation {{{
@@ -95,6 +57,15 @@ endfunction
 silent! if plug#begin('~/.vim/plugged')
 " General {{{
 " Disabled General {{{
+"Plug 'DrCracket/painless-digraph'
+"Plug 'vimoutliner/vimoutliner'
+"Plug 'michal-h21/vimwiki-sync'
+"Plug 'michal-h21/vim-zettel'
+"if has('python3') && executable('rg') && PlugLoaded('fzf')
+"  Plug 'alok/notational-fzf-vim'
+"endif
+"Plug 'Kody-Quintana/bspwm_border_color'
+"Plug 'amerlyq/vim-focus-autocmd'
 "Plug 'mhinz/vim-startify'
 "Plug 'jceb/vim-orgmode'
 "Plug 'ctrlpvim/ctrlp.vim'
@@ -214,24 +185,18 @@ silent! if plug#begin('~/.vim/plugged')
 "Plug 'tpope/vim-fugitive'
 "Plug 'voldikss/vim-codelf', { 'on': 'Codelf' }
 " }}}
-"Plug 'Kody-Quintana/bspwm_border_color'
-"Plug 'amerlyq/vim-focus-autocmd'
-Plug 'ying17zi/vim-live-latex-preview' " requires biber
+Plug 'matze/vim-tex-fold'
+if $DISPLAY != ''
+  Plug 'ying17zi/vim-live-latex-preview' " requires biber
+endif
 Plug 'vimwiki/vimwiki'
-"Plug 'vimoutliner/vimoutliner'
 Plug 'mattn/calendar-vim'
-"Plug 'michal-h21/vimwiki-sync'
 Plug 'chazy/dirsettings'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
-"Plug 'michal-h21/vim-zettel'
-"if has('python3') && executable('rg') && PlugLoaded('fzf')
-"  Plug 'alok/notational-fzf-vim'
-"endif
 if has('python3') && $DISPLAY != ''
   Plug 'anned20/vimsence'
 endif
-Plug 'DrCracket/painless-digraph'
 Plug 'tmhedberg/SimpylFold'
 Plug 'vifm/vifm.vim'
 Plug 'unblevable/quick-scope'
@@ -865,11 +830,6 @@ endfunction
 " }}}======================
 " A E S T H E T I C S {{{
 " =========================
-" Tab colors
-"highlight TabLineFill ctermfg=LightGreen ctermbg=DarkGreen
-"highlight TabLine ctermfg=Blue ctermbg=Yellow
-"highlight TabLineSel ctermfg=Red ctermbg=Yellow
-
 " For Neovim > 0.1.5 and Vim > patch 7.4.1799 - https://github.com/vim/vim/commit/61be73bb0f965a895bfb064ea3e55476ac175162
 " Based on Vim patch 7.4.1770 (`guicolors` option) - https://github.com/vim/vim/commit/8a633e3427b47286869aa4b96f2bfc1fe65b25cd
 " https://github.com/neovim/neovim/wiki/Following-HEAD#20160511
@@ -890,101 +850,48 @@ highlight Comment cterm=italic
 highlight Normal     ctermbg=NONE guibg=NONE
 highlight LineNr     ctermbg=NONE guibg=NONE
 highlight SignColumn ctermbg=NONE guibg=NONE
-
-"if has('nvim')
-  " https://github.com/neovim/neovim/issues/2897#issuecomment-115464516
-"  let g:terminal_color_0 = '#4e4e4e'
-"  let g:terminal_color_1 = '#d68787'
-"  let g:terminal_color_2 = '#5f865f'
-"  let g:terminal_color_3 = '#d8af5f'
-"  let g:terminal_color_4 = '#85add4'
-"  let g:terminal_color_5 = '#d7afaf'
-"  let g:terminal_color_6 = '#87afaf'
-"  let g:terminal_color_7 = '#d0d0d0'
-"  let g:terminal_color_8 = '#626262'
-"  let g:terminal_color_9 = '#d75f87'
-"  let g:terminal_color_10 = '#87af87'
-"  let g:terminal_color_11 = '#ffd787'
-"  let g:terminal_color_12 = '#add4fb'
-"  let g:terminal_color_13 = '#ffafaf'
-"  let g:terminal_color_14 = '#87d7d7'
-"  let g:terminal_color_15 = '#e4e4e4'
-
-"  autocmd BufReadPost *
-"    \ if line("'\"") >= 1 && line("'\"") <= line("$") |
-"    \   exe "normal! g`\"" |
-"    \ endif
-"endif
-
 " }}}======================
 " General {{{
 " =========================
-"set colorcolumn=+1
-"set nojoinspaces                                             " Use one space, not two, after punctuation.
-set history=200                                               " Sets how many lines of history VIM has to remember
-set autoread                                                  " Set to auto read when a file is changed from the outside
+set nocompatible
 set clipboard+=unnamedplus
-"set foldlevelstart=99                                        " Start with fold level 99 at launch (all folds closed)
-"set foldmethod=syntax
-"if expand('%:t') == '.vimrc' | set foldmethod=marker | else | set foldmethod=syntax | endif
-"set foldlevel=0
-"set modelines=0                                               " Disable modelines as a security precaution<Paste>
-"set nomodeline
-set modeline
-set modelines=5
-set nocompatible                                              " Enables VI iMproved enhancements
-"set guifont=Source\ Code\ Pro                                  " GUI Font
-"syntax on                                                     " Enable syntax highlighting
-"syntax enable
-if !exists("g:syntax_on")
-  syntax enable
-endif
-set encoding=utf-8                                            " Set utf-8 as standard encoding
-set ffs=unix,dos,mac                                          " Use Unix as the standard file type
-set nobackup                                                  " Turn backup off, since most stuff is in git
-set nowritebackup
-set swapfile
-"set complete-=i                                              " Enable completions
-set mouse=c                                                   " a, disable mouse support
-set noerrorbells                                              " No annoying sound on errors
-set novisualbell
+set history=500
+set autoread
+set modeline modelines=5
+if !exists("g:syntax_on") | syntax enable | endif
+set encoding=utf-8
+set ffs=unix,dos,mac
+set nobackup writebackup swapfile
+set splitbelow splitright
+"set complete-=i
+set mouse=c
+set noerrorbells novisualbell
 set t_vb=
 set timeoutlen=500
 set synmaxcol=250
 set scrolljump=0
-set nocursorline                                              " Highlight current line
-set nocursorcolumn
-set number                                                    " Enable line numbers (or absolute line number on current line with relativenumber)
-set relativenumber                                            " Set line numbers to relative
-set ruler
-set showcmd                                                   " Display incomplete commands
-set scrolloff=7                                                      " Set lines to the cursor - when moving vertically
-let $LANG='en'                                                " Avoid garbled characters in Chinese language in Windows
+set nocursorline nocursorcolumn
+set number relativenumber
+set showcmd
+set scrolloff=7
 set langmenu=en
-set wildmenu                                                  " Turn on the Wild menu for cycling through command options
-set wildmode=longest:full,full                                " longest:list,full
-set cmdheight=1                                               " Height of the command bar
-set hidden                                                    " A buffer becomes hidden when it is abandoned, recommended for coc
-set backspace=indent,eol,start                                " Configure backspace so it acts as it should act
+set wildmenu wildmode=longest:full,full
+set hidden
+set backspace=indent,eol,start
 set whichwrap+=<,>,h,l
-set ignorecase                                                " Make search case insensitive
-set smartcase                                                 " When searching try to be smart about cases
-set lazyredraw                                                " Don't redraw while executing macros (good performance config)
-set magic                                                     " For regular expressions turn magic on
-set incsearch                                                 " Makes search act like search in modern browsers
-set noshowmatch                                                 " Show matching brackets when text indicator is over them
-set hlsearch                                                  " Highlight search results
-set mat=2                                                     " How many tenths of a second to blink when matching brackets
-set foldcolumn=0                                              " Left margin
-set numberwidth=1                                             " Left margin
-set updatetime=300                                            " Default 4000
-set shortmess+=c                                              " don't give |ins-completion-menu| messages.
-"set signcolumn=yes                                           " always show signcolumns
-set list
-set listchars=trail:·,nbsp:⎵,tab:┊» " ¦┆┊ eol:⏎ (		)
-"set fillchars=vert:\|,fold:-
-set laststatus=2 " Always show the status line
-"set ttymouse=sgr                                              " Fix mouse issues using Alacritty
+set ignorecase smartcase
+set lazyredraw
+set magic
+set incsearch
+set noshowmatch
+set hlsearch 
+set mat=2 
+set foldcolumn=0 numberwidth=1
+set updatetime=300
+set shortmess+=c
+set signcolumn=no
+set list listchars=trail:·,nbsp:⎵,tab:┊» " ¦┆┊ eol:⏎ (		)
+set laststatus=2 cmdheight=1
 
 " Tabs and lines {{{
 set smarttab        " Enabling this will make the tab key
@@ -1007,12 +914,12 @@ set textwidth=0
 set wrapmargin=0
 
 "au BufNewFile,BufRead *.py
-au Filetype python
-  \ setlocal tabstop=4
-  \ | setlocal softtabstop=4
-  \ | setlocal shiftwidth=4
-  \ | setlocal textwidth=79
-  \ | setlocal fileformat=unix
+"au Filetype python
+"  \ setlocal tabstop=4
+"  \ | setlocal softtabstop=4
+"  \ | setlocal shiftwidth=4
+"  \ | setlocal textwidth=79
+"  \ | setlocal fileformat=unix
 "\ set autoindent
 " }}}
 
@@ -1030,52 +937,25 @@ source $VIMRUNTIME/menu.vim
 "  :cmap - Display command-line mode maps
 "  :omap - Display operator pending mode maps
 
-" Insert tab (i CTRL+v TAB)
-"nmap <leader>t i	<ESC>
-"imap <leader>t
-
-" Tab navigation {{{
+" Tab navigation
 nnoremap H gT
 nnoremap L gt
-
-nnoremap <C-S-tab> :tabprevious<CR>
-nnoremap <C-tab>   :tabnext<CR>
-nnoremap <C-t>     :tabnew<CR>
-inoremap <C-S-tab> <Esc>:tabprevious<CR>i
-inoremap <C-tab>   <Esc>:tabnext<CR>i
-inoremap <C-t>     <Esc>:tabnew<CR>
-
-"nmap <leader>1 :tabfirst<cr>
-"nmap <leader>2 2gt
-"nmap <leader>3 3gt
-"nmap <leader>4 4gt
-"nmap <leader>5 5gt
-"nmap <leader>6 6gt
-"nmap <leader>7 7gt
-"nmap <leader>8 8gt
-"nmap <leader>9 9gt
-"nmap <leader>0 :tablast<cr>
-" }}}
+nnoremap <C-t> :tabnew<CR>
 
 " Buffer navigation
-nnoremap <Leader>h :bprevious<CR>
-nnoremap <Leader>j :blast<CR>
-nnoremap <Leader>k :bfirst<CR>
-nnoremap <Leader>l :bnext<CR>
-map bb :BufExplorer<CR>
+nnoremap <leader>h :bprevious<CR>
+nnoremap <leader>j :blast<CR>
+nnoremap <leader>k :bfirst<CR>
+nnoremap <leader>l :bnext<CR>
+map <leader>b :BufExplorer<CR>
 
-" Disable CTRL-A on tmux or on screen
+" Disable CTRL-A on tmux and screen
 if $TERM =~ 'screen'
   nnoremap <C-a> <nop>
   nnoremap <leader><C-a> <C-a>
 endif
 
-nmap <silent> <leader>wr :set wrap!<CR>
-
-nmap <leader>now :read !date<CR>
-
-" space open/closes folds
-nnoremap <space> za
+nmap <silent> <leader>rw :set wrap!<CR>
 
 nnoremap <leader>l :set cursorline!<CR>
 nnoremap <leader>ll :set cursorcolumn!<CR>
@@ -1084,9 +964,6 @@ nnoremap <leader>ll :set cursorcolumn!<CR>
 inoremap jk <esc>
 " esc in command mode
 cnoremap jk <C-C>
-" Note: In command mode mappings to esc run the command for some odd
-" historical vi compatibility reason. We use the alternate method of
-" existing which is Ctrl-C
 
 " qq to record, Q to replay
 nnoremap Q @q
@@ -1096,34 +973,14 @@ nnoremap Q @q
 " Breaks if '<leader>p' is in the pasted string
 set pastetoggle=<leader>p
 
-" Rebind CapsLock to Escape in X-Sessions
-"if has('unix') && !empty($DISPLAY)
-"  autocmd VimEnter * silent! !xmodmap -e 'clear Lock' -e 'keycode 0x42 = Escape'
-"  autocmd VimLeave * silent! !xmodmap -e 'clear Lock' -e 'keycode 0x42 = Caps_Lock'
-"endif
-
-" Toggle mouse
-function! ToggleMouse()
-    if &mouse == 'a'
-        set mouse=c
-    else
-        set mouse=a
-    endif
-endfunc
-nmap <silent> <leader>m :call ToggleMouse()<CR>
-
 nnoremap <silent> <leader><space> :nohlsearch<CR>
 
 " Fast config edit
 nmap <leader>cfg :e $MYVIMRC<CR>
 
-" Fast saving
+" Fast file actions
 nmap <leader>w :w!<CR>
-
-" Write quit
 nmap <leader>wq :wq<CR>
-
-" Fast quit
 nmap <leader>q :q<CR>
 nmap <leader>Q :q!<CR>
 
@@ -1136,115 +993,71 @@ nmap <M-k> mz:m-2<cr>`z
 vmap <M-j> :m'>+<cr>`<my`>mzgv`yo`z
 vmap <M-k> :m'<-2<cr>`>my`<mzgv`yo`z
 
-" Splits navigation.
-"set splitbelow
-"set splitright
-"map <C-h> <C-w>h
-"map <C-j> <C-w>j
-"map <C-k> <C-w>k
-"map <C-l> <C-w>l
-
-" Completions
-"inoremap <silent> ,f <C-x><C-f>
-"inoremap <silent> ,i <C-x><C-i>
-"inoremap <silent> ,l <C-x><C-l>
-"inoremap <silent> ,n <C-x><C-n>
-"inoremap <silent> ,o <C-x><C-o>
-"inoremap <silent> ,t <C-x><C-]>
-"inoremap <silent> ,u <C-x><C-u>
-
-" Visual mode pressing * or # searches for the current selection
-"vnoremap <silent> * :<C-u>call VisualSelection('', '')<CR>/<C-R>=@/<CR><CR>
-"vnoremap <silent> # :<C-u>call VisualSelection('', '')<CR>?<C-R>=@/<CR><CR>
-
-" Get line, word and character counts with F3:
-map <F3> :!wc %<CR>
-
 " Spell-check, english and norwegian
-map <F6> :setlocal spell! spelllang=en_us,nb<CR>
-map <leader>ss :setlocal spell spelllang=en_us,nb<cr>
+map <leader>ss :setlocal spell! spelllang=en_us,nb<CR>
 
-" Remove the Windows ^M - when the encodings gets messed up
-"noremap <Leader>m mmHmt:%s/<C-V><cr>//ge<cr>'tzt'm
-
-" Copy selected text to system clipboard (requires gvim installed):
-"vnoremap <C-c> "*Y :let @+=@*<CR>
-"map <C-p> "+P
-
-" }}}======================
-" Misc {{{
-" =========================
-" Space space goto
-"inoremap <Space><Space> <Esc>/<++><Enter>"_c4l
-
-" Return to last edit position when opening files
-au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
-
-" #!! shebang
-inoreabbrev <expr> #!! "#!/usr/bin/env" . (empty(&filetype) ? '' : ' '.&filetype)
-
-" >dn
-"inoreabbrev <expr> #dn ">/dev/null 2>&1"
-
-" Set extra options when running in GUI mode
-"if has("gui_running")
-"  set guioptions-=T
-"  set guioptions-=e
-"  set guitablabel=%M\ %t
-"  set guioptions-=r                " Disable scrollbars
-"  set guioptions-=R
-"  set guioptions-=l
-"  set guioptions-=L
-"else
-"  set t_Co=256
-"endif
-
-" File interpreting
-" Syntax highlighting for conf files
 autocmd BufRead,BufNewFile *.conf,config setf dosini
-"autocmd BufRead,BufNewFile *.md set filetype=markdown
-"autocmd BufRead,BufNewFile .{jscs,jshint,eslint}rc set filetype=json
-"autocmd BufRead,BufNewFile *.zsh-theme,aliases.local,zshrc.local,*/zsh/configs/* set filetype=zsh
-"autocmd BufRead,BufNewFile gitconfig.local set filetype=gitconfig
-"autocmd BufRead,BufNewFile tmux.conf.local set filetype=tmux
-"autocmd BufRead,BufNewFile vimrc.local set filetype=vim
-"autocmd BufRead,BufNewFile *.rss set filetype=xml
+autocmd BufRead,BufNewFile *.md set filetype=markdown
+autocmd BufRead,BufNewFile *.rss set filetype=xml
+" }}}======================
+" Functions / Utilities {{{
+" =========================
+" Toggle mouse {{{
+function! ToggleMouse()
+    if &mouse == 'a'
+        set mouse=c
+    else
+        set mouse=a
+    endif
+endfunc
+nmap <silent> <leader>m :call ToggleMouse()<CR>
+" }}}
 
-" Turn persistent undo on
-" Undo even when you close a buffer/VIM
+" goto {{{
+"inoremap <leader><leader> <Esc>/<++><Enter>"_c4l
+" }}}
+
+" Return to last edit position when opening files {{{
+au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+" }}}
+
+" #!! shebang {{{
+inoreabbrev <expr> #!! "#!/usr/bin/env" . (empty(&filetype) ? '' : ' '.&filetype)
+" }}}
+
+" Set extra options when running in GUI mode {{{
+if has("gui_running")
+  set guioptions-=T
+  set guioptions-=e
+  set guitablabel=%M\ %t
+  set guioptions-=r
+  set guioptions-=R
+  set guioptions-=l
+  set guioptions-=L
+  set guifont=Source\ Code\ Pro
+  let $LANG='en'
+endif
+" }}}
+
+" Save and restore code folding {{{
+autocmd BufWinLeave *.* mkview
+autocmd BufWinEnter *.* silent! loadview
+" }}}
+
+" Disable automatic commenting on newline {{{
+"autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
+set formatoptions-=c formatoptions-=r formatoptions-=o
+" }}}
+
+" Undo even when you close a buffer/VIM {{{
 try
   set undodir=~/.vim_runtime/temp_dirs/undodir
   set undofile
 catch
 endtry
+" }}}
 
-" Automatically deletes all trailing whitespace on save
-"autocmd BufWritePre * %s/\s\+$//e
-
-" Save and restore code folding
-autocmd BufWinLeave *.* mkview
-autocmd BufWinEnter *.* silent! loadview
-
-" Disables automatic commenting on newline:
-autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
-" }}}======================
-" Functions / Utilities {{{
-" =========================
 " Statusline {{{
-"function! s:statusline_expr()
-"  let pst = "%{&paste ? '[P] ' : ''}"
-"  let mse = "%{&mouse == 'a' ? '[M] ' : ''}"
-"  let mod = "%{&modified ? '[+] ' : !&modifiable ? '[x] ' : ''}"
-"  let ro  = "%{&readonly ? '[RO] ' : ''}"
-"  let ft  = "%{len(&filetype) ? '['.&filetype.'] ' : ''}"
-"  "let fug = "%{exists('g:loaded_fugitive') ? fugitive#statusline() : ''}"
-"  let sep = ' %= '
-"  let pos = ' %-12(%l : %c%V%) '
-"  let pct = ' %P'
-"  return '[%n] %F %<'.pst.mse.mod.ro.ft.sep.pos.'%*'.pct
-"endfunction
-"let &statusline = s:statusline_expr()
-
 function! ModePaste()
   return &paste ? '[P] ' : ''
 endfunction
@@ -1278,32 +1091,6 @@ set statusline+=\/                            " slash separator
 set statusline+=%L                            " number of rows
 set statusline+=\                             " blank space
 set statusline+=%{winnr()}                    " buffer number
-
-"set statusline+=%#warningmsg#                 " Syntastic error flag
-"set statusline+=%{SyntasticStatuslineFlag()}  " Syntastic error flag
-"set statusline+=%*                            " Syntastic error flag
-
-" Format the status line
-"set statusline=%F%m%r%h%w[%L][%{&ff}]%y[%p%%][%04l,%04v]
-"set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ CWD:\ %r%{getcwd()}%h\ \ Line:\ %l\ \ Column:\ %c
-" }}}
-
-" :W sudo saves file {{{
-"command! W w !sudo tee % > /dev/null
-" }}}
-
-" Create command aliases {{{
-"function! SetupCommandAlias(from, to)
-"  exec 'cnoreabbrev <expr> '.a:from
-"        \ .' ((getcmdtype() is# ":" && getcmdline() is# "'.a:from.'")'
-"        \ .'? ("'.a:to.'") : ("'.a:from.'"))'
-"endfun
-" call SetupCommandAlias('W','w')
-" }}}
-
-" Run line under cursor {{{
-"nnoremap <leader>o mmI:<esc>v$h"oy@o<CR>x`m
-"nnoremap <leader>o "oyy:exe @o<CR>
 " }}}
 
 " Autoreload .vimrc {{{
@@ -1313,8 +1100,7 @@ augroup myvimrchooks
 augroup END
 " }}}
 
-" Dynamic line numbers {{{
-function! ToggleNumbers()
+function! ToggleNumbers() " {{{
   if &number || &relativenumber
     let b:default_number = &number
     let b:default_relativenumber = &relativenumber
@@ -1329,34 +1115,6 @@ function! ToggleNumbers()
   endif
 endfunction
 nmap <silent> <leader>n :call ToggleNumbers()<CR>
-"function! ToggleNumbers()
-"  if &number || &relativenumber
-"    call EnterInsert()
-"    set nonumber
-"    set norelativenumber
-"  else
-"    call LeaveInsert()
-"  endif
-"endfunction
-"nmap <silent> <leader>n :call ToggleNumbers()<CR>
-
-"function! EnterInsert()
-"  "GitGutterDisable
-"  set cursorline
-"  set norelativenumber
-"  set number
-"endfunction
-"function! LeaveInsert()
-"  "GitGutterEnable
-"  set nocursorline
-"  set relativenumber
-"  set number
-"endfunction
-"autocmd InsertEnter * call EnterInsert()
-"autocmd FocusLost * call EnterInsert()
-"autocmd InsertLeave * call LeaveInsert()
-"autocmd FocusGained * call LeaveInsert()
-"autocmd VimEnter * call LeaveInsert()
 " }}}
 
 " Switch colorscheme and enable limelight with Goyo {{{
@@ -1372,8 +1130,7 @@ autocmd! User GoyoEnter nested call <SID>goyo_enter()
 autocmd! User GoyoLeave nested call <SID>goyo_leave()
 " }}}
 
-" :DiffSaved to show file modifications in diff format {{{
-function! s:DiffWithSaved()
+function! s:DiffWithSaved() " {{{
   let filetype=&ft
   diffthis
   vnew | r # | normal! 1Gdd
@@ -1381,28 +1138,6 @@ function! s:DiffWithSaved()
   exe "setlocal bt=nofile bh=wipe nobl noswf ro ft=" . filetype
 endfunction
 com! DiffSaved call s:DiffWithSaved()
-" }}}
-
-" :root to change directory to git repo root {{{
-"function! s:root()
-"  let root = systemlist('git rev-parse --show-toplevel')[0]
-"  if v:shell_error
-"    echo 'Not in git repo'
-"  else
-"    execute 'lcd' root
-"    echo 'Changed directory to: ' . root
-"  endif
-"endfunction
-"command! Root call s:root()
-" }}}
-
-" Separate python indents {{{
-" autocmd FileType python set expandtab
-" autocmd FileType python set textwidth=79
-" autocmd FileType python set tabstop=4
-" autocmd FileType python set softtabstop=4
-" autocmd FileType python set shiftwidth=4
-" autocmd FileType python set autoindent
 " }}}
 
 " Fancy folding {{{
@@ -1503,58 +1238,5 @@ function! Scratchpad(command)
 endfunction
 
 command! -nargs=1 Scratch call Scratchpad(<f-args>)
-" }}}======================
-" Google Python Styleguide {{{
-" https://google.github.io/styleguide/pyguide.html
-" =========================
-" Copyright 2019 Google LLC
-"
-" Licensed under the Apache License, Version 2.0 (the "License");
-" you may not use this file except in compliance with the License.
-" You may obtain a copy of the License at
-"
-"    https://www.apache.org/licenses/LICENSE-2.0
-"
-" Unless required by applicable law or agreed to in writing, software
-" distributed under the License is distributed on an "AS IS" BASIS,
-" WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-" See the License for the specific language governing permissions and
-" limitations under the License.
-
-" Indent Python in the Google way.
-
-setlocal indentexpr=GetGooglePythonIndent(v:lnum)
-
-let s:maxoff = 50 " maximum number of lines to look backwards.
-
-function GetGooglePythonIndent(lnum)
-
-  " Indent inside parens.
-  " Align with the open paren unless it is at the end of the line.
-  " E.g.
-  "   open_paren_not_at_EOL(100,
-  "                         (200,
-  "                          300),
-  "                         400)
-  "   open_paren_at_EOL(
-  "       100, 200, 300, 400)
-  call cursor(a:lnum, 1)
-  let [par_line, par_col] = searchpairpos('(\|{\|\[', '', ')\|}\|\]', 'bW',
-        \ "line('.') < " . (a:lnum - s:maxoff) . " ? dummy :"
-        \ . " synIDattr(synID(line('.'), col('.'), 1), 'name')"
-        \ . " =~ '\\(Comment\\|String\\)$'")
-  if par_line > 0
-    call cursor(par_line, 1)
-    if par_col != col("$") - 1
-      return par_col
-    endif
-  endif
-
-  " Delegate the rest to the original function.
-  return GetPythonIndent(a:lnum)
-
-endfunction
-
-let pyindent_nested_paren="&sw*2"
-let pyindent_open_paren="&sw*2"
+nmap <leader><CR> :Scratch zsh<CR>i
 " }}}======================
