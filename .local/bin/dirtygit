@@ -113,8 +113,8 @@ commit () { # {{{
   test -n "${yes}" && waiting_dots || confirm
   eval "${gitCommand[*]} pull"
 
-  printf "\n\n${blue}| APPLYING STASH ${reset}'${stash}'\n\n"
-  printf "\$ ${yellow}${gitCommand[*]} ${red}stash apply'${reset}\n"
+  printf "\n\n${blue}| APPLYING STASH ${reset}\n\n"
+  printf "\$ ${yellow}${gitCommand[*]} ${red}stash apply${reset}\n"
   test -n "${yes}" && waiting_dots || confirm
   eval "${gitCommand[*]} stash apply"
 
