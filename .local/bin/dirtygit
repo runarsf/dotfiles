@@ -70,6 +70,7 @@ helpme () { # {{{
 	${green}Options:${reset}
 	  -h${gray},${reset} --help          Display this message.
 	  -y${gray},${reset} --yes           Don't prompt for confirmation.
+	  -n${gray},${reset} --noop          Don't perform any git actions.
 	  --git-dir    ${gray}<${red}dir${gray}>${reset}  Git-repo-files directory, see: \`man git\`.
 	  --work-tree  ${gray}<${red}dir${gray}>${reset}  Git work tree, see: \`man git\`.
 	  --git-add    ${gray}<${red}str${gray}>${reset}  What to send to \`git add\`, default: '.'.
@@ -82,6 +83,9 @@ helpme () { # {{{
 	  dirtygit -y
 	  dirtygit Initial commit
 	  dirtygit --git-dir "\${HOME}/dotfiles" --work-tree "\${HOME}" --git-add '-u'
+
+	${green}Git flow:${reset}
+    ${magenta}Stash${gray} > ${magenta}Pull${gray} > ${magenta}Apply Stash${gray} | ${magenta}Merge${gray} | ${magenta}Add${gray} > ${magenta}Commit${gray} > ${magenta}Push${reset}
 	${reset}
 	EOMAN
 } # }}}
@@ -97,27 +101,39 @@ confirm () { # {{{
 } # }}}
 
 commit () { # {{{
-  printf "\n${blue}| ADDING ${reset}\n\n"
-  printf "\$ ${yellow}${gitCommand[*]} ${red}add ${gitAdd}${reset}\n"
-  test -n "${yes}" && waiting_dots || confirm
-  eval "${gitCommand[*]} add ${gitAdd}"
+  stash="$(date +'%a-%Y-%m-%dT%T%z')"
 
-  printf "\n${blue}| COMMITTING ${reset}'${*}'\n\n"
-  printf "\$ ${yellow}${gitCommand[*]} ${red}commit -m "${*}"${reset}\n"
+  printf "\n${blue}| STASHING ${reset}'${stash}'\n\n"
+  printf "\$ ${yellow}${gitCommand[*]} ${red}stash save '${stash}'${reset}\n"
   test -n "${yes}" && waiting_dots || confirm
-  eval "${gitCommand[*]} commit -m '${*}'"
+  eval "${gitCommand[*]} stash save '${stash}'"
 
-  printf "\n${blue}| PULLING ${reset}\n\n"
+  printf "\n\n${blue}| PULLING ${reset}\n\n"
   printf "\$ ${yellow}${gitCommand[*]} ${red}pull${reset}\n"
   test -n "${yes}" && waiting_dots || confirm
   eval "${gitCommand[*]} pull"
 
-  printf "\n${blue}| PUSHING ${reset}\n\n"
+  printf "\n\n${blue}| APPLYING STASH ${reset}'${stash}'\n\n"
+  printf "\$ ${yellow}${gitCommand[*]} ${red}stash apply'${reset}\n"
+  test -n "${yes}" && waiting_dots || confirm
+  eval "${gitCommand[*]} stash apply"
+
+  printf "\n\n${blue}| ADDING ${reset}\n\n"
+  printf "\$ ${yellow}${gitCommand[*]} ${red}add ${gitAdd}${reset}\n"
+  test -n "${yes}" && waiting_dots || confirm
+  eval "${gitCommand[*]} add ${gitAdd}"
+
+  printf "\n\n${blue}| COMMITTING ${reset}'${*}'\n\n"
+  printf "\$ ${yellow}${gitCommand[*]} ${red}commit -m '${*}'${reset}\n"
+  test -n "${yes}" && waiting_dots || confirm
+  eval "${gitCommand[*]} commit -m '${*}'"
+
+  printf "\n\n${blue}| PUSHING ${reset}\n\n"
   printf "\$ ${yellow}${gitCommand[*]} ${red}push${reset}\n"
   test -n "${yes}" && waiting_dots || confirm
   eval "${gitCommand[*]} push"
 
-  printf "\n${green}| DONE! ${reset}\n\n"
+  printf "\n${green}| DONE!${reset}\n\n"
 } # }}}
 
 # Arguments {{{
@@ -139,6 +155,12 @@ while test "${#}" -gt "0"; do
     -y|--yes)
       yes='true'
       shift;;
+    -n|--noop)
+      gitCommand=("echo" "${gitCommand[@]}")
+      shift;;
+    #-f|--flow)
+    #  flow="${2}"
+    #  shift;shift;;
     *)
       positional+=("${1}")
       shift;;
@@ -148,6 +170,7 @@ done
 set -- "${positional[@]}"
 
 if test "${#}" -lt "1"; then
+  printf "Commit message not supplied, defaulting to current time.\n"
   set -- "$(date +'%a-%Y-%m-%dT%T%z')"
 fi
 

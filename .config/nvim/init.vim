@@ -185,9 +185,9 @@ silent! if plug#begin('~/.vim/plugged')
 "Plug 'tpope/vim-fugitive'
 "Plug 'voldikss/vim-codelf', { 'on': 'Codelf' }
 " }}}
-Plug 'matze/vim-tex-fold'
+Plug 'matze/vim-tex-fold', { 'for': 'tex' }
 if $DISPLAY != ''
-  Plug 'ying17zi/vim-live-latex-preview' " requires biber
+  Plug 'ying17zi/vim-live-latex-preview', { 'for': 'tex' } " requires biber
 endif
 Plug 'vimwiki/vimwiki'
 Plug 'mattn/calendar-vim'
@@ -209,7 +209,9 @@ Plug 'junegunn/goyo.vim'
 Plug 'junegunn/limelight.vim', { 'on': 'Limelight' }
 Plug 'justinmk/vim-sneak'
 if v:version >= 703 && executable('node')
-  Plug 'neoclide/coc.nvim', { 'branch': 'release' } " 'do': { -> coc#util#install() }}
+  "Plug 'neoclide/coc.nvim', { 'branch': 'release' } " 'do': { -> coc#util#install() }}
+  Plug 'neoclide/coc.nvim', { 'branch': 'release', 'tag': '*', 'do': { -> coc#util#install()}}
+  "Plug 'neoclide/coc.nvim', {'do': { -> coc#util#build()}}
 endif
 if has('nvim') || has('patch-8.0.902')
   Plug 'mhinz/vim-signify'
@@ -264,6 +266,19 @@ Plug 'AlessandroYorba/Sierra'
 Plug 'arcticicestudio/nord-vim'
 Plug 'ayu-theme/ayu-vim'
 Plug 'rakr/vim-one'
+" }}}
+" Coc {{{
+"if executable('yarnpkg')
+"  Plug 'neoclide/coc-snippets', {'do': 'yarn install --frozen-lockfile'}
+"  Plug 'neoclide/coc-pairs', {'do': 'yarn install --frozen-lockfile'}
+"  Plug 'neoclide/coc-html', {'do': 'yarn install --frozen-lockfile'}
+"  Plug 'neoclide/coc-json', {'do': 'yarn install --frozen-lockfile'}
+"  Plug 'neoclide/coc-python', {'do': 'yarn install --frozen-lockfile'}
+"  Plug 'neoclide/coc-vetur', {'do': 'yarn install --frozen-lockfile'}
+"  Plug 'neoclide/coc-css', {'do': 'yarn install --frozen-lockfile'}
+"  Plug 'neoclide/coc-yaml', {'do': 'yarn install --frozen-lockfile'}
+"  Plug 'neoclide/coc-highlight', {'do': 'yarn install --frozen-lockfile'}
+"endif
 " }}}
 call plug#end()
 endif
@@ -699,20 +714,11 @@ let g:limelight_conceal_guifg = '#777777'
 " vim-sneak {{{
 let g:sneak#label = 1
 " }}}
-" vim-emoji {{{
-"command! -range EmojiReplace <line1>,<line2>s/:\([^:]\+\):/\=emoji#for(submatch(1), submatch(0))/g
-" }}}
 " Sierra {{{
 "let g:sierra_Sunset = 1
 "let g:sierra_Twilight = 1
 "let g:sierra_Midnight = 1
 "let g:sierra_Pitch = 1
-" }}}
-" vim-easy-align {{{
-" Start interactive EasyAlign in visual mode (e.g. vipga)
-"xmap ga <Plug>(EasyAlign)
-" Start interactive EasyAlign for a motion/text object (e.g. gaip)
-"nmap ga <Plug>(EasyAlign)
 " }}}
 " vim-cheat40 {{{
 "let g:cheat40_use_default = 1
@@ -755,20 +761,21 @@ map <silent> <C-o> :NERDTreeToggle <bar> wincmd p<CR>
 "autocmd VimEnter * silent NERDTree | wincmd p
 " }}}
 " coc.nvim {{{
-"let s:coc_extensions = [
-"  \ 'coc-snippets',
-"  \ 'coc-pairs',
-"  \ 'coc-html',
-"  \ 'coc-json',
-"  \ 'coc-python',
-"  \ 'coc-vetur',
-"  \ 'coc-css',
-"  \ 'coc-yaml',
-"  \ 'coc-highlight',
-"  \ 'coc-markdownlint',
-"  \ 'coc-emoji'
-"  \ ]
-"call coc#add_extension(join(get(s:, 'coc_extensions', [])))
+let g:coc_global_extensions = [
+  \ 'coc-snippets',
+  \ 'coc-pairs',
+  \ 'coc-html',
+  \ 'coc-json',
+  \ 'coc-python',
+  \ 'coc-vetur',
+  \ 'coc-css',
+  \ 'coc-yaml',
+  \ 'coc-highlight',
+  \ 'coc-markdownlint',
+  \ 'coc-emoji'
+  \ ]
+"exec "CocInstall -sync " . join(get(g:, 'coc_global_extensions', []))
+"call coc#add_extension(join(get(g:, 'coc_extensions', [])))
 "let g:coc_force_debug = 1
 "set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')} " Add status line support, for integration with other plugin, checkout `:h coc-status`
 " Use `[g` and `]g` to navigate diagnostics
@@ -999,6 +1006,7 @@ map <leader>ss :setlocal spell! spelllang=en_us,nb<CR>
 autocmd BufRead,BufNewFile *.conf,config setf dosini
 autocmd BufRead,BufNewFile *.md set filetype=markdown
 autocmd BufRead,BufNewFile *.rss set filetype=xml
+autocmd FileType json syntax match Comment +\/\/.\+$+
 " }}}======================
 " Functions / Utilities {{{
 " =========================
