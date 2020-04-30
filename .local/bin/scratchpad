@@ -1,8 +1,16 @@
-#!/bin/sh
+#!/bin/bash
+
+requirements=("xdo" "xprop" "awk")
+for cmd in "${requirements[@]}"; do
+  if ! command -v "${cmd}" >/dev/null 2>&1; then
+    printf "Command ${cmd} not found.\n"
+    notify-send "Scratchpad" "Command ${cmd} not found."
+  fi
+done
 
 id="$(xdo id -n scratchpad)"
 if test -z "${id}"; then
-  alacritty --class scratchpad --title scratchpad
+  ${TERMINAL} --class scratchpad --title scratchpad
 else
   action='hide'
   if test "$(xprop -id ${id} | awk '/window state: / {print $3}')" = 'Withdrawn'; then

@@ -114,7 +114,7 @@ commit () { # {{{
   #test -n "${yes}" && waiting_dots || confirm
   #eval "${gitCommand[*]} stash apply"
 
-  printf "\n\n${blue}| ADDING ${reset}\n\n"
+  printf "\n${blue}| ADDING ${reset}\n\n"
   printf "\$ ${yellow}${gitCommand[*]} ${red}add ${gitAdd}${reset}\n"
   test -n "${yes}" && waiting_dots || confirm
   eval "${gitCommand[*]} add ${gitAdd}"

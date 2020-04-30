@@ -57,6 +57,8 @@ endfunction
 silent! if plug#begin('~/.vim/plugged')
 " General {{{
 " Disabled General {{{
+"Plug 'easymotion/vim-easymotion'
+"Plug 'vifm/vifm.vim'
 "Plug 'DrCracket/painless-digraph'
 "Plug 'vimoutliner/vimoutliner'
 "Plug 'michal-h21/vimwiki-sync'
@@ -68,7 +70,6 @@ silent! if plug#begin('~/.vim/plugged')
 "Plug 'amerlyq/vim-focus-autocmd'
 "Plug 'mhinz/vim-startify'
 "Plug 'jceb/vim-orgmode'
-"Plug 'ctrlpvim/ctrlp.vim'
 "Plug 'camspiers/animate.vim'
 "Plug 'camspiers/lens.vim'
 "Plug 'editorconfig/editorconfig-vim'
@@ -101,7 +102,6 @@ silent! if plug#begin('~/.vim/plugged')
 "Plug 'svermeulen/vim-cutlass'
 "Plug 'svermeulen/vim-yoink'
 "Plug 'pedrohdz/vim-yaml-folds'
-"Plug 'kien/ctrlp.vim'
 "if has('nvim') || has('patch-8.0.902')
 "  Plug 'mhinz/vim-signify'
 "else
@@ -185,6 +185,7 @@ silent! if plug#begin('~/.vim/plugged')
 "Plug 'tpope/vim-fugitive'
 "Plug 'voldikss/vim-codelf', { 'on': 'Codelf' }
 " }}}
+Plug 'airblade/vim-rooter'
 Plug 'matze/vim-tex-fold', { 'for': 'tex' }
 if $DISPLAY != ''
   Plug 'ying17zi/vim-live-latex-preview', { 'for': 'tex' } " requires biber
@@ -194,24 +195,22 @@ Plug 'mattn/calendar-vim'
 Plug 'chazy/dirsettings'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
+Plug 'ctrlpvim/ctrlp.vim'
 if has('python3') && $DISPLAY != ''
   Plug 'anned20/vimsence'
 endif
 Plug 'tmhedberg/SimpylFold'
-Plug 'vifm/vifm.vim'
 Plug 'unblevable/quick-scope'
-Plug 'tpope/vim-dadbod', { 'on': 'DB' }
 Plug 'dstein64/vim-startuptime'
 Plug 'ap/vim-buftabline'
 Plug 'jlanzarotta/bufexplorer'
 Plug 'scrooloose/nerdtree'
-Plug 'junegunn/goyo.vim'
+Plug 'junegunn/goyo.vim', { 'on': 'Goyo' }
 Plug 'junegunn/limelight.vim', { 'on': 'Limelight' }
 Plug 'justinmk/vim-sneak'
+Plug 'nathanaelkane/vim-indent-guides'
 if v:version >= 703 && executable('node')
-  "Plug 'neoclide/coc.nvim', { 'branch': 'release' } " 'do': { -> coc#util#install() }}
   Plug 'neoclide/coc.nvim', { 'branch': 'release', 'tag': '*', 'do': { -> coc#util#install()}}
-  "Plug 'neoclide/coc.nvim', {'do': { -> coc#util#build()}}
 endif
 if has('nvim') || has('patch-8.0.902')
   Plug 'mhinz/vim-signify'
@@ -222,16 +221,9 @@ Plug 'ryanoasis/vim-devicons'
 " }}}
 " Syntax highlighting {{{
 " Disabled Syntax highlighting {{{
-"Plug 'gko/vim-coloresque', { 'for': ['css', 'html', 'markdown', 'javascript', 'python'] }
-"Plug 'vim-syntastic/syntastic'
-"Plug 'ObserverOfTime/coloresque.vim'
-"if v:version >= 703
-"  Plug 'scrooloose/syntastic'
-"endif
-"Plug 'octol/vim-cpp-enhanced-highlight', { 'for': 'cpp' }
-"Plug 'nono/jquery.vim', { 'for': 'javascript' }
 " }}}
-Plug 'hashivim/vim-terraform'
+Plug 'dense-analysis/ale'
+Plug 'hashivim/vim-terraform', { 'for': 'terraform' }
 Plug 'chr4/nginx.vim', { 'for': 'nginx' }
 Plug 'storyn26383/vim-vue', { 'for': 'vue' }
 Plug 'ekalinin/Dockerfile.vim', { 'for': 'Dockerfile' }
@@ -239,8 +231,6 @@ Plug 'kovetskiy/sxhkd-vim', { 'for': 'sxhkdrc' }
 Plug 'mboughaba/i3config.vim', { 'for': 'conf' }
 Plug 'Glench/Vim-Jinja2-Syntax', { 'for': 'jinja' }
 Plug 'rodjek/vim-puppet', { 'for': 'puppet' }
-Plug 'nathanaelkane/vim-indent-guides'
-Plug 'dense-analysis/ale'
 " }}}
 " Colorschemes {{{
 " Disabled Colorschemes {{{
@@ -266,19 +256,6 @@ Plug 'AlessandroYorba/Sierra'
 Plug 'arcticicestudio/nord-vim'
 Plug 'ayu-theme/ayu-vim'
 Plug 'rakr/vim-one'
-" }}}
-" Coc {{{
-"if executable('yarnpkg')
-"  Plug 'neoclide/coc-snippets', {'do': 'yarn install --frozen-lockfile'}
-"  Plug 'neoclide/coc-pairs', {'do': 'yarn install --frozen-lockfile'}
-"  Plug 'neoclide/coc-html', {'do': 'yarn install --frozen-lockfile'}
-"  Plug 'neoclide/coc-json', {'do': 'yarn install --frozen-lockfile'}
-"  Plug 'neoclide/coc-python', {'do': 'yarn install --frozen-lockfile'}
-"  Plug 'neoclide/coc-vetur', {'do': 'yarn install --frozen-lockfile'}
-"  Plug 'neoclide/coc-css', {'do': 'yarn install --frozen-lockfile'}
-"  Plug 'neoclide/coc-yaml', {'do': 'yarn install --frozen-lockfile'}
-"  Plug 'neoclide/coc-highlight', {'do': 'yarn install --frozen-lockfile'}
-"endif
 " }}}
 call plug#end()
 endif
@@ -497,8 +474,8 @@ augroup qs_colors
   autocmd ColorScheme * highlight QuickScopeSecondary guifg='#5fffff' gui=underline ctermfg=81 cterm=underline
 augroup END
 
-nmap <leader>sc <plug>(QuickScopeToggle)
-xmap <leader>sc <plug>(QuickScopeToggle)
+nmap <leader>tq <plug>(QuickScopeToggle)
+xmap <leader>tq <plug>(QuickScopeToggle)
 
 let g:qs_enable=1
 
@@ -607,22 +584,8 @@ let g:qs_lazy_highlight = 0
 " netrw {{{
 "let loaded_netrwPlugin = 1  " disable netrw
 " }}}
-" base16-vim {{{
-"let base16colorspace=256  " Access colors present in 256 colorspace
-" }}}
-" edge {{{
-"let g:edge_style = 'neon'
-"let g:edge_disable_italic_comment = 0
-" }}}
-" material.vim {{{
-"let g:material_theme_style = 'default' " 'default' | 'palenight' | 'ocean' | 'lighter' | 'darker'
-"let g:material_terminal_italics = 1
-" }}}
 " vim-one {{{
 let g:one_allow_italics = 1
-" }}}
-" tagbar {{{
-"nmap <F8> :TagbarToggle<CR>
 " }}}
 " vim-indent-guides {{{
 let g:indent_guides_enable_on_vim_startup = 1
@@ -638,48 +601,8 @@ autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=#363840 ctermbg=237
 "nnoremap <silent> <leader>ce :call codelf#start()<CR>
 "let g:codelf_enable_popup_menu = v:true
 " }}}
-" vim-asciidoctor {{{
-"let g:asciidoctor_folding = 1
-"let g:asciidoctor_fenced_languages = ['python', 'c', 'javascript']
-" Underline current line (asciidoc) {{{
-"function! s:underline(chars)
-"  let nextnr = line('.') + 1
-"  let underline = repeat(a:chars[0], strchars(getline('.')))
-"  if index(a:chars, trim(getline(nextnr))[0]) != -1
-"    call setline(nextnr, underline)
-"  else
-"    call append('.', underline)
-"  endif
-"endfunc
-"nnoremap <silent> <leader>- :call <SID>underline(['-', '=', '~', '^', '+'])<CR>
-"nnoremap <silent> <leader>= :call <SID>underline(['=', '-', '~', '^', '+'])<CR>
-"nnoremap <silent> <leader>~ :call <SID>underline(['~', '=', '-', '^', '+'])<CR>
-"nnoremap <silent> <leader>^ :call <SID>underline(['^', '=', '-', '~', '+'])<CR>
-"nnoremap <silent> <leader>+ :call <SID>underline(['+', '=', '-', '~', '^'])<CR>
-" }}}
-" }}}
-" deoplete.nvim {{{
-"let g:deoplete#enable_at_startup = 1
-" }}}
-" denite.nvim {{{
-"autocmd FileType denite call s:denite_my_settings()
-"function! s:denite_my_settings() abort
-"  nnoremap <silent><buffer><expr> <CR>
-"  \ denite#do_map('do_action')
-"  nnoremap <silent><buffer><expr> d
-"  \ denite#do_map('do_action', 'delete')
-"  nnoremap <silent><buffer><expr> p
-"  \ denite#do_map('do_action', 'preview')
-"  nnoremap <silent><buffer><expr> q
-"  \ denite#do_map('quit')
-"  nnoremap <silent><buffer><expr> i
-"  \ denite#do_map('open_filter_buffer')
-"  nnoremap <silent><buffer><expr> <Space>
-"  \ denite#do_map('toggle_select').'j'
-"endfunction
-" }}}
 " fzf {{{
-"nmap <leader>f :FZF<cr>
+nmap <leader>f :FZF<cr>
 " }}}
 " limelight.vim {{{
 " Color name (:help cterm-colors) or ANSI code
@@ -701,16 +624,6 @@ let g:limelight_conceal_guifg = '#777777'
 "   Set it to -1 not to overrule hlsearch
 "let g:limelight_priority = 10
 " }}}
-" vim-github-dashboard {{{
-"let g:github_dashboard = { 'username': 'runarsf' }
-" }}}
-" lightline {{{
-"let g:lightline.enable.tabline = 0
-" }}}
-" vim-airline {{{
-"let g:airline_theme='raven'
-"let g:airline#extensions#ale#enabled = 1
-" }}}
 " vim-sneak {{{
 let g:sneak#label = 1
 " }}}
@@ -719,23 +632,6 @@ let g:sneak#label = 1
 "let g:sierra_Twilight = 1
 "let g:sierra_Midnight = 1
 "let g:sierra_Pitch = 1
-" }}}
-" vim-cheat40 {{{
-"let g:cheat40_use_default = 1
-"nmap <F1> :Cheat40<CR>
-"imap <F1> :Cheat40<CR>
-"function! Cheat()
-"  "if (g:loaded_cheatsheet)
-"  if empty(bufname('~/.vim/plugged/vim-cheat40/cheat40.txt'))
-"    Cheat40
-"  else
-"    bd
-"  endif
-"endfunction
-"nnoremap <F1> :call Cheat()<CR>
-" }}}
-" gruvbox {{{
-"let g:gruvbox_contrast_dark="hard"
 " }}}
 " nerdtree {{{
 " Open a NERDTree automatically when vim starts up if no files were specified
@@ -775,9 +671,6 @@ let g:coc_global_extensions = [
   \ 'coc-emoji'
   \ ]
 "exec "CocInstall -sync " . join(get(g:, 'coc_global_extensions', []))
-"call coc#add_extension(join(get(g:, 'coc_extensions', [])))
-"let g:coc_force_debug = 1
-"set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')} " Add status line support, for integration with other plugin, checkout `:h coc-status`
 " Use `[g` and `]g` to navigate diagnostics
 nmap <silent> [g <Plug>(coc-diagnostic-prev)
 nmap <silent> ]g <Plug>(coc-diagnostic-next)
@@ -944,6 +837,43 @@ source $VIMRUNTIME/menu.vim
 "  :cmap - Display command-line mode maps
 "  :omap - Display operator pending mode maps
 
+" LaTeX {{{
+" https://github.com/LukeSmithxyz/voidrice/commit/a89697cd752329aa5fe36c82655862cb09a984ac#diff-53d6aeb99314b91adfd5bfd4b227589b
+" https://github.com/LukeSmithxyz/voidrice/blob/aa7a4af4612462f30668a7d161b2b75c9582bfcf/.config/nvim/init.vim
+"inoremap <expr> <leader><leader> exists('b:texmap') ? '<Esc>/<++><Enter>"_c4l<Esc>\:unlet b\:texmap' : '<leader><leader>'
+
+augroup LaTeX | autocmd!
+  autocmd FileType tex inoremap <leader><leader> <Esc>/<++><Enter>"_c4l
+  autocmd FileType tex vnoremap <leader><leader> <Esc>/<++><Enter>"_c4l
+  autocmd FileType tex map <leader><leader> <Esc>/<++><Enter>"_c4l
+
+  autocmd FileType tex inoremap ,em \emph{}<++><Esc>T{i
+  autocmd FileType tex inoremap ,bf \textbf{}<++><Esc>T{i
+  autocmd FileType tex inoremap ,it \textit{}<++><Esc>T{i
+  autocmd FileType tex inoremap ,ct \textcite{}<++><Esc>T{i
+  autocmd FileType tex inoremap ,cp \parencite{}<++><Esc>T{i
+  autocmd FileType tex inoremap ,glos {\gll<Space><++><Space>\\<Enter><++><Space>\\<Enter>\trans{``<++>''}}<Esc>2k2bcw
+  autocmd FileType tex inoremap ,x \begin{xlist}<Enter>\ex<Space><Enter>\end{xlist}<Esc>kA<Space>
+  autocmd FileType tex inoremap ,ol \begin{enumerate}<Enter><Enter>\end{enumerate}<Enter><Enter><++><Esc>3kA\item<Space>
+  autocmd FileType tex inoremap ,ul \begin{itemize}<Enter><Enter>\end{itemize}<Enter><Enter><++><Esc>3kA\item<Space>
+  autocmd FileType tex inoremap ,li <Enter>\item<Space>
+  autocmd FileType tex inoremap ,ref \ref{}<Space><++><Esc>T{i
+  autocmd FileType tex inoremap ,a \href{}{<++>}<Space><++><Esc>2T{i
+  autocmd FileType tex inoremap ,sc \textsc{}<Space><++><Esc>T{i
+  autocmd FileType tex inoremap ,chap \chapter{}<Enter><Enter><++><Esc>2kf}i
+  autocmd FileType tex inoremap ,sec \section{}<Enter><Enter><++><Esc>2kf}i
+  autocmd FileType tex inoremap ,ssec \subsection{}<Enter><Enter><++><Esc>2kf}i
+  autocmd FileType tex inoremap ,sssec \subsubsection{}<Enter><Enter><++><Esc>2kf}i
+  autocmd FileType tex inoremap ,up <Esc>/usepackage<Enter>o\usepackage{}<Esc>i
+  autocmd FileType tex nnoremap ,up /usepackage<Enter>o\usepackage{}<Esc>i
+  autocmd FileType tex inoremap ,tt \texttt{}<Space><++><Esc>T{i
+  autocmd FileType tex inoremap ,bt {\blindtext}
+  autocmd FileType bib inoremap ,a @article{<Enter>author<Space>=<Space>{<++>},<Enter>year<Space>=<Space>{<++>},<Enter>title<Space>=<Space>{<++>},<Enter>journal<Space>=<Space>{<++>},<Enter>volume<Space>=<Space>{<++>},<Enter>pages<Space>=<Space>{<++>},<Enter>}<Enter><++><Esc>8kA,<Esc>i
+  autocmd FileType bib inoremap ,b @book{<Enter>author<Space>=<Space>{<++>},<Enter>year<Space>=<Space>{<++>},<Enter>title<Space>=<Space>{<++>},<Enter>publisher<Space>=<Space>{<++>},<Enter>}<Enter><++><Esc>6kA,<Esc>i
+  autocmd FileType bib inoremap ,c @incollection{<Enter>author<Space>=<Space>{<++>},<Enter>title<Space>=<Space>{<++>},<Enter>booktitle<Space>=<Space>{<++>},<Enter>editor<Space>=<Space>{<++>},<Enter>year<Space>=<Space>{<++>},<Enter>publisher<Space>=<Space>{<++>},<Enter>}<Enter><++><Esc>8kA,<Esc>i
+augroup END
+" }}}
+
 " Tab navigation
 nnoremap H gT
 nnoremap L gt
@@ -1000,8 +930,12 @@ nmap <M-k> mz:m-2<cr>`z
 vmap <M-j> :m'>+<cr>`<my`>mzgv`yo`z
 vmap <M-k> :m'<-2<cr>`>my`<mzgv`yo`z
 
+imap #dn >/dev/null<space>2>&1
+
+inoreabbrev <expr> #!! "#!/usr/bin/env" . (empty(&filetype) ? '' : ' '.&filetype)
+
 " Spell-check, english and norwegian
-map <leader>ss :setlocal spell! spelllang=en_us,nb<CR>
+map <leader>ts :setlocal spell! spelllang=en_us,nb<CR>
 
 autocmd BufRead,BufNewFile *.conf,config setf dosini
 autocmd BufRead,BufNewFile *.md set filetype=markdown
@@ -1021,16 +955,8 @@ endfunc
 nmap <silent> <leader>m :call ToggleMouse()<CR>
 " }}}
 
-" goto {{{
-"inoremap <leader><leader> <Esc>/<++><Enter>"_c4l
-" }}}
-
 " Return to last edit position when opening files {{{
-au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
-" }}}
-
-" #!! shebang {{{
-inoreabbrev <expr> #!! "#!/usr/bin/env" . (empty(&filetype) ? '' : ' '.&filetype)
+autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 " }}}
 
 " Set extra options when running in GUI mode {{{
@@ -1075,6 +1001,9 @@ endfunction
 function! ReadOnly()
   return &readonly ? '[RO] ' : ''
 endfunction
+function! ModeSpell()
+  return &spell ? '[SP] ' : ''
+endfunction
 
 set statusline=
 
@@ -1087,9 +1016,10 @@ set statusline+=\                             " blank space
 
 set statusline+=%=                            " right-align from now on
 
-set statusline+=%{ReadOnly()}                " mouse flag
+set statusline+=%{ReadOnly()}                 " mouse flag
 set statusline+=%{ModeMouse()}                " mouse flag
 set statusline+=%{ModePaste()}                " paste flag
+set statusline+=%{ModeSpell()}
 set statusline+=\[%{mode()}\]                 " current mode
 set statusline+=\                             " blank space
 set statusline+=%v                            " column number
@@ -1166,85 +1096,85 @@ set foldtext=FoldText()
 " }}}======================
 " Terminal handling {{{
 " =========================
-" Set login shell for :terminal command so aliases work
-set shell=/bin/zsh
-
-" Creates a floating window with a most recent buffer to be used https://github.com/camspiers/dotfiles/blob/master/files/.config/nvim/init.vim#L446-L468 {{{
-function! CreateCenteredFloatingWindow()
-  let width = float2nr(&columns * 0.6)
-  let height = float2nr(&lines * 0.6)
-  let top = ((&lines - height) / 2) - 1
-  let left = (&columns - width) / 2
-  let opts = {'relative': 'editor', 'row': top, 'col': left, 'width': width, 'height': height, 'style': 'minimal'}
-
-  let top = "┌" . repeat("─", width - 2) . "┐"
-  "let top = "╭" . repeat("─", width - 2) . "╮"
-  let mid = "│" . repeat(" ", width - 2) . "│"
-  "let bot = "╰" . repeat("─", width - 2) . "╯"
-  let bot = "└" . repeat("─", width - 2) . "┘"
-  let lines = [top] + repeat([mid], height - 2) + [bot]
-  let s:buf = nvim_create_buf(v:false, v:true)
-  call nvim_buf_set_lines(s:buf, 0, -1, v:true, lines)
-  call nvim_open_win(s:buf, v:true, opts)
-  set winhl=Normal:Floating
-  let opts.row += 1
-  let opts.height -= 2
-  let opts.col += 2
-  let opts.width -= 4
-  call nvim_open_win(nvim_create_buf(v:false, v:true), v:true, opts)
-  au BufWipeout <buffer> exe 'bw '.s:buf
-endfunction
-" }}}
-
-" When term starts, auto go into insert mode
-"autocmd TermOpen * startinsert
-" Turn off line numbers etc
-"autocmd TermOpen * setlocal listchars= nonumber norelativenumber
-
-if has('nvim')
-  " Maps ESC to exit terminal's insert mode
-  tnoremap <Esc> <C-\><C-n>
-  " For Neovim 0.1.3 and 0.1.4 - https://github.com/neovim/neovim/pull/2198
-  let $NVIM_TUI_ENABLE_TRUE_COLOR = 1
-endif
-
-function! OpenTerm(cmd)
-  call CreateCenteredFloatingWindow()
-  call termopen(a:cmd, { 'on_exit': function('TermCallback') })
-endfunction
-
-function! TermCallback(job_id, code, event) dict
-  if a:code == 0
-    bd!
-  endif
-endfunction
-
-"nnoremap <C-n> :call ToggleScratchTerm()<CR>
-function! ToggleScratchTerm()
-  if empty(bufname('/bin/zsh'))
-    call OpenTerm('/bin/zsh')
-  else
-    bd!
-  endif
-endfunction
-
-function! ToggleLazyGit()
-  if empty(bufname('lazygit'))
-    call OpenTerm('lazygit')
-  else
-    bd!
-  endif
-endfunction
-
-" Usage: call Scratchpad('zsh')
-function! Scratchpad(command)
-  if empty(bufname('zsh -c ' . a:command . '; read _'))
-    call OpenTerm('zsh -c ' . a:command . '; read _')
-  else
-    bd!
-  endif
-endfunction
-
-command! -nargs=1 Scratch call Scratchpad(<f-args>)
-nmap <leader><CR> :Scratch zsh<CR>i
+"" Set login shell for :terminal command so aliases work
+"set shell=/bin/zsh
+"
+"" Creates a floating window with a most recent buffer to be used https://github.com/camspiers/dotfiles/blob/master/files/.config/nvim/init.vim#L446-L468 {{{
+"function! CreateCenteredFloatingWindow()
+"  let width = float2nr(&columns * 0.6)
+"  let height = float2nr(&lines * 0.6)
+"  let top = ((&lines - height) / 2) - 1
+"  let left = (&columns - width) / 2
+"  let opts = {'relative': 'editor', 'row': top, 'col': left, 'width': width, 'height': height, 'style': 'minimal'}
+"
+"  let top = "┌" . repeat("─", width - 2) . "┐"
+"  "let top = "╭" . repeat("─", width - 2) . "╮"
+"  let mid = "│" . repeat(" ", width - 2) . "│"
+"  "let bot = "╰" . repeat("─", width - 2) . "╯"
+"  let bot = "└" . repeat("─", width - 2) . "┘"
+"  let lines = [top] + repeat([mid], height - 2) + [bot]
+"  let s:buf = nvim_create_buf(v:false, v:true)
+"  call nvim_buf_set_lines(s:buf, 0, -1, v:true, lines)
+"  call nvim_open_win(s:buf, v:true, opts)
+"  set winhl=Normal:Floating
+"  let opts.row += 1
+"  let opts.height -= 2
+"  let opts.col += 2
+"  let opts.width -= 4
+"  call nvim_open_win(nvim_create_buf(v:false, v:true), v:true, opts)
+"  au BufWipeout <buffer> exe 'bw '.s:buf
+"endfunction
+"" }}}
+"
+"" When term starts, auto go into insert mode
+""autocmd TermOpen * startinsert
+"" Turn off line numbers etc
+""autocmd TermOpen * setlocal listchars= nonumber norelativenumber
+"
+"if has('nvim')
+"  " Maps ESC to exit terminal's insert mode
+"  tnoremap <Esc> <C-\><C-n>
+"  " For Neovim 0.1.3 and 0.1.4 - https://github.com/neovim/neovim/pull/2198
+"  let $NVIM_TUI_ENABLE_TRUE_COLOR = 1
+"endif
+"
+"function! OpenTerm(cmd)
+"  call CreateCenteredFloatingWindow()
+"  call termopen(a:cmd, { 'on_exit': function('TermCallback') })
+"endfunction
+"
+"function! TermCallback(job_id, code, event) dict
+"  if a:code == 0
+"    bd!
+"  endif
+"endfunction
+"
+""nnoremap <C-n> :call ToggleScratchTerm()<CR>
+"function! ToggleScratchTerm()
+"  if empty(bufname('/bin/zsh'))
+"    call OpenTerm('/bin/zsh')
+"  else
+"    bd!
+"  endif
+"endfunction
+"
+"function! ToggleLazyGit()
+"  if empty(bufname('lazygit'))
+"    call OpenTerm('lazygit')
+"  else
+"    bd!
+"  endif
+"endfunction
+"
+"" Usage: call Scratchpad('zsh')
+"function! Scratchpad(command)
+"  if empty(bufname('zsh -c ' . a:command . '; read _'))
+"    call OpenTerm('zsh -c ' . a:command . '; read _')
+"  else
+"    bd!
+"  endif
+"endfunction
+"
+"command! -nargs=1 Scratch call Scratchpad(<f-args>)
+"nmap <leader><CR> :Scratch zsh<CR>i
 " }}}======================
