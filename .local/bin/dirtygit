@@ -119,22 +119,23 @@ commit () { # {{{
   test -n "${yes}" && waiting_dots || confirm
   eval "${gitCommand[*]} add ${gitAdd}"
 
-  printf "\n\n${blue}| COMMITTING ${reset}'${*}'\n\n"
+  printf "\n${blue}| COMMITTING ${reset}'${*}'\n\n"
   printf "\$ ${yellow}${gitCommand[*]} ${red}commit -m '${*}'${reset}\n"
   test -n "${yes}" && waiting_dots || confirm
   eval "${gitCommand[*]} commit -m '${*}'"
 
-  printf "\n\n${blue}| PULLING ${reset}\n\n"
+  printf "\n${blue}| PULLING ${reset}\n\n"
   printf "\$ ${yellow}${gitCommand[*]} ${red}pull${reset}\n"
   test -n "${yes}" && waiting_dots || confirm
   eval "${gitCommand[*]} pull"
 
-  printf "\n\n${blue}| PUSHING ${reset}\n\n"
+  printf "\n${blue}| PUSHING ${reset}\n\n"
   printf "\$ ${yellow}${gitCommand[*]} ${red}push${reset}\n"
   test -n "${yes}" && waiting_dots || confirm
   eval "${gitCommand[*]} push"
 
   printf "\n${green}| DONE!${reset}\n\n"
+  eval "${gitCommand[*]} status"
 } # }}}
 
 # Arguments {{{
