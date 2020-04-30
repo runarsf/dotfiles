@@ -1,8 +1,6 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-id="$(pgrep ${1})"
-
-if test -z "${id}"; then
+if test -z "$(pgrep ${1})"; then
     command "${1}" "${@:2}"
   else
     killall "${1}"

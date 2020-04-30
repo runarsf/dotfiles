@@ -57,6 +57,9 @@ endfunction
 silent! if plug#begin('~/.vim/plugged')
 " General {{{
 " Disabled General {{{
+"if has('python3') && $DISPLAY != ''
+"  Plug 'anned20/vimsence'
+"endif
 "Plug 'easymotion/vim-easymotion'
 "Plug 'vifm/vifm.vim'
 "Plug 'DrCracket/painless-digraph'
@@ -196,9 +199,6 @@ Plug 'chazy/dirsettings'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'ctrlpvim/ctrlp.vim'
-if has('python3') && $DISPLAY != ''
-  Plug 'anned20/vimsence'
-endif
 Plug 'tmhedberg/SimpylFold'
 Plug 'unblevable/quick-scope'
 Plug 'dstein64/vim-startuptime'
@@ -841,6 +841,9 @@ source $VIMRUNTIME/menu.vim
 " https://github.com/LukeSmithxyz/voidrice/commit/a89697cd752329aa5fe36c82655862cb09a984ac#diff-53d6aeb99314b91adfd5bfd4b227589b
 " https://github.com/LukeSmithxyz/voidrice/blob/aa7a4af4612462f30668a7d161b2b75c9582bfcf/.config/nvim/init.vim
 "inoremap <expr> <leader><leader> exists('b:texmap') ? '<Esc>/<++><Enter>"_c4l<Esc>\:unlet b\:texmap' : '<leader><leader>'
+
+" Always open in tex filetype instead of plaintex
+let g:tex_flavor = "latex"
 
 augroup LaTeX | autocmd!
   autocmd FileType tex inoremap <leader><leader> <Esc>/<++><Enter>"_c4l

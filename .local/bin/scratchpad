@@ -1,12 +1,14 @@
 #!/bin/bash
 
-requirements=("xdo" "xprop" "awk")
-for cmd in "${requirements[@]}"; do
+dependencies=("xdo" "xprop" "awk")
+for cmd in "${dependencies[@]}"; do
   if ! command -v "${cmd}" >/dev/null 2>&1; then
     printf "Command ${cmd} not found.\n"
     notify-send "Scratchpad" "Command ${cmd} not found."
+    missingDependencies='true'
   fi
 done
+test -n "${missingDependencies}" && exit 1
 
 id="$(xdo id -n scratchpad)"
 if test -z "${id}"; then

@@ -91,6 +91,6 @@ command -v "cleanfullscreen" \
   || "${HOME}/.local/bin/cleanfullscreen"
 "${HOME}"/.config/bspwm/monitors.py &
 feh --bg-scale "${HOME}/.config/wall.png" &
-pkill -USR1 compton
+pkill -USR1 picom
 killall -q sxhkd; sxhkd -m 1 -c "${HOME}/.config/sxhkd/sxhkdrc" "${HOME}/.config/bspwm/sxhkdrc" &
 # }}}
