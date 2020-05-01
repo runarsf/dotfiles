@@ -9,7 +9,7 @@ dunst &
 nm-applet &
 picom -fcCGb --xrender-sync-fence &
 feh --bg-scale "${HOME}/.config/wall.png" &
-#xrdb ${XDG_CONFIG_HOME:-$HOME/.config}/Xresources &     # Uncomment to use Xresources colors/settings on startup
+xrdb ${XDG_CONFIG_HOME:-$HOME/.config}/Xresources &
 systemctl --user import-environment DISPLAY
 "${HOME}"/.local/bin/polybar-start
 

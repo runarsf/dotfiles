@@ -69,7 +69,7 @@ URxvt.fading: 25
 !URxvt*blurRadius: 10
 
 ! Extensions
-URxvt.perl-lib: ./.config/.urxvt/ext/
+URxvt.perl-lib: ./.urxvt/ext/
 URxvt.perl-ext-common: default,pgnav,keyboard-select,resize-font,url-select
 URxvt.clipboard.autocopy: true
 URxvt.keysym.M-c: eval:selection_to_clipboard

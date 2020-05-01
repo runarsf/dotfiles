@@ -353,6 +353,7 @@ fuzzy-match = true
 ;label-separator-foreground = ${colors.orange}
 ;label-separator-foreground = #ffb52a
 padding = 3
+
 ; Active workspace on active monitor
 label-focused = %name%
 ;label-focused = %icon% %name%
@@ -369,7 +370,7 @@ label-urgent-background = ${colors.red}
 label-urgent-underline = ${colors.red1}
 label-urgent-padding = ${self.padding}
 
-; Inactive monitors
+; Empty inactive workspaces on all monitors
 label-empty = %name%
 ;label-empty = %icon% %name%
 label-empty-foreground = ${colors.white}
@@ -377,7 +378,7 @@ label-empty-background = ${colors.unfocus}
 label-empty-underline = ${colors.unfocus1}
 label-empty-padding = ${self.padding}
 
-; Workspaces on inactive monitors
+; All workspaces on inactive monitors
 label-dimmed = %name%
 ;label-dimmed = %icon% %name%
 label-dimmed-foreground = ${self.label-empty-foreground}
@@ -385,7 +386,7 @@ label-dimmed-background = ${self.label-empty-background}
 label-dimmed-underline = ${self.label-empty-underline}
 label-dimmed-padding = ${self.padding}
 
-; Non-empty workspaces 
+; Non-empty workspaces on active monitor
 label-occupied = %name%
 ;label-occupied = %icon% %name%
 label-occupied-foreground = ${colors.white}
