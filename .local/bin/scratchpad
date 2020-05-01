@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 dependencies=("xdo" "xprop" "awk")
 for cmd in "${dependencies[@]}"; do
