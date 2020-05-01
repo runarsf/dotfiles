@@ -18,6 +18,9 @@ super + d
 super + shift + d
 	rofi -combi-modi window,drun -show combi -modi combi
 
+super + alt + e
+	emoji
+
 super + Escape
 	pkill -USR1 -x sxhkd
 
@@ -26,9 +29,6 @@ alt + p
 
 super + shift + c
 	toggleprogram "picom" "-b"
-
-super + alt + e
-	emoji
 
 #super + o ; {w,e}
 #	{"${BROWSER}","${EDITOR}"}

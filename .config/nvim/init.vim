@@ -204,7 +204,7 @@ Plug 'unblevable/quick-scope'
 Plug 'dstein64/vim-startuptime'
 Plug 'ap/vim-buftabline'
 Plug 'jlanzarotta/bufexplorer'
-Plug 'scrooloose/nerdtree'
+"Plug 'scrooloose/nerdtree'
 Plug 'junegunn/goyo.vim', { 'on': 'Goyo' }
 Plug 'junegunn/limelight.vim', { 'on': 'Limelight' }
 Plug 'justinmk/vim-sneak'
@@ -221,6 +221,7 @@ Plug 'ryanoasis/vim-devicons'
 " }}}
 " Syntax highlighting {{{
 " Disabled Syntax highlighting {{{
+"Plug 'autozimu/LanguageClient-neovim'
 " }}}
 Plug 'dense-analysis/ale'
 Plug 'hashivim/vim-terraform', { 'for': 'terraform' }
@@ -634,27 +635,27 @@ let g:sneak#label = 1
 "let g:sierra_Pitch = 1
 " }}}
 " nerdtree {{{
-" Open a NERDTree automatically when vim starts up if no files were specified
-"autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | silent NERDTree | endif
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | silent NERDTree | wincmd p | endif
-" Open NERDTree automatically when vim starts up on opening a directory
-autocmd StdinReadPre * let s:std_in=1
-"autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | exe 'cd '.argv()[0] | endif
-autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | endif
-"autocmd StdinReadPre * let s:std_in=1
-"autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | silent NERDTree | wincmd p | ene | endif
-" Close vim if the only window left open is a NERDTree
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-
-"let g:NERDTreeDirArrowExpandable = '>'
-"let g:NERDTreeDirArrowCollapsible = 'v'
-
-let g:NERDTreeWinPos = "left"
-" Toggle NERDTree and focus editor
-map <silent> <C-o> :NERDTreeToggle <bar> wincmd p<CR>
-
-"autocmd VimEnter * silent NERDTree | wincmd p
+" " Open a NERDTree automatically when vim starts up if no files were specified
+" "autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | silent NERDTree | endif
+" autocmd StdinReadPre * let s:std_in=1
+" autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | silent NERDTree | wincmd p | endif
+" " Open NERDTree automatically when vim starts up on opening a directory
+" autocmd StdinReadPre * let s:std_in=1
+" "autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | exe 'cd '.argv()[0] | endif
+" autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | endif
+" "autocmd StdinReadPre * let s:std_in=1
+" "autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | silent NERDTree | wincmd p | ene | endif
+" " Close vim if the only window left open is a NERDTree
+" autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+" 
+" "let g:NERDTreeDirArrowExpandable = '>'
+" "let g:NERDTreeDirArrowCollapsible = 'v'
+" 
+" let g:NERDTreeWinPos = "left"
+" " Toggle NERDTree and focus editor
+" map <silent> <C-o> :NERDTreeToggle <bar> wincmd p<CR>
+" 
+" "autocmd VimEnter * silent NERDTree | wincmd p
 " }}}
 " coc.nvim {{{
 let g:coc_global_extensions = [
@@ -775,8 +776,11 @@ set number relativenumber
 set showcmd
 set scrolloff=7
 set langmenu=en
-set wildmenu wildmode=longest:full,full
-set hidden
+set wildmenu
+set wildmode=longest:full,full
+set path+=**
+set wildignore+=**/node_modules/**
+set hidden " Allow switching buffers without writing
 set backspace=indent,eol,start
 set whichwrap+=<,>,h,l
 set ignorecase smartcase
@@ -788,7 +792,7 @@ set hlsearch
 set mat=2 
 set foldcolumn=0 numberwidth=1
 set updatetime=300
-set shortmess+=c
+set shortmess+=cI
 set signcolumn=no
 set list listchars=trail:·,nbsp:⎵,tab:┊» " ¦┆┊ eol:⏎ (		)
 set laststatus=2 cmdheight=1

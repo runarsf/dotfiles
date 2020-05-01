@@ -31,15 +31,15 @@ if test -z ${noplug}; then
     && source <(antibody init)
 	antibody bundle <<-EOBUNDLES
 		robbyrussell/oh-my-zsh path:lib
-		robbyrussell/oh-my-zsh path:plugins/git
+		# robbyrussell/oh-my-zsh path:plugins/git
 		# robbyrussell/oh-my-zsh path:plugins/git-extras
-		robbyrussell/oh-my-zsh path:plugins/colorize # sudo pip3 install pygments
+		# robbyrussell/oh-my-zsh path:plugins/colorize # sudo pip3 install pygments
 		robbyrussell/oh-my-zsh path:plugins/colored-man-pages
 		robbyrussell/oh-my-zsh path:plugins/command-not-found
 		# robbyrussell/oh-my-zsh path:plugins/jump
 		robbyrussell/oh-my-zsh path:plugins/thefuck
 		robbyrussell/oh-my-zsh path:plugins/common-aliases
-		robbyrussell/oh-my-zsh path:plugins/docker
+		# robbyrussell/oh-my-zsh path:plugins/docker
 		robbyrussell/oh-my-zsh path:plugins/docker-compose
 		zsh-users/zsh-autosuggestions
 		zsh-users/zsh-history-substring-search
@@ -84,7 +84,7 @@ HISTSIZE=5000
 SAVEHIST=5000
 PROMPT_EOL_MARK=''
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=067,underline'
-ZSH_AUTOSUGGEST_STRATEGY=(history completion) # (completion match_prev_cmd)
+#ZSH_AUTOSUGGEST_STRATEGY=(history completion) # (completion match_prev_cmd)
 # }}}
 
 # https://github.com/denysdovhan/spaceship-prompt/blob/master/docs/Options.md {{{
