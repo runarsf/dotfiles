@@ -151,6 +151,7 @@ alias c='xclip -selection clipboard'
 alias please='sudo $(fc -ln -1)'
 alias reload='source "${HOME}/.config/zsh/.zshrc"'
 alias tmux='tmux -f "${XDG_CONFIG_HOME:-${HOME}/.config}/tmux/tmux.conf"'
+alias lineinon='pactl load-module module-loopback latency_msec=1'
 #alias paste='nc termbin.com 9999'
 # }}}
 
