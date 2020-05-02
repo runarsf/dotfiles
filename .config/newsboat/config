@@ -8,6 +8,8 @@ prepopulate-query-feeds yes
 show-read-feeds no
 feed-sort-order unreadarticlecount-asc
 
+browser "link_handler.sh %u"
+external-url-viewer "link_handler.sh %u"
 #external-url-viewer "urlscan -dc -r 'linkhandler {}'"
 
 bind-key j down

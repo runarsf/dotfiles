@@ -15,6 +15,7 @@ export FILE="${EDITOR}"
 export TERMINAL="alacritty"
 export BROWSER="firefox"
 export PAGER="less"
+export READER="zathura"
 export PYTHONDONTWRITEBYTECODE=1
 export ZDOTDIR="${XDG_CONFIG_HOME:-$HOME/.config}/zsh"
 export FZF_DEFAULT_OPTS="--layout=reverse --height 40%"
