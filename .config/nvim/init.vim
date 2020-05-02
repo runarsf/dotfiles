@@ -850,34 +850,35 @@ source $VIMRUNTIME/menu.vim
 let g:tex_flavor = "latex"
 
 augroup LaTeX | autocmd!
-  autocmd FileType tex inoremap <leader><leader> <Esc>/<++><Enter>"_c4l
-  autocmd FileType tex vnoremap <leader><leader> <Esc>/<++><Enter>"_c4l
-  autocmd FileType tex map <leader><leader> <Esc>/<++><Enter>"_c4l
+  autocmd FileType tex,latex,plaintex,bib inoremap <leader><leader> <Esc>/<++><Enter>"_c4l
+  autocmd FileType tex,latex,plaintex,bib vnoremap <leader><leader> <Esc>/<++><Enter>"_c4l
+  autocmd FileType tex,latex,plaintex,bib map <leader><leader> <Esc>/<++><Enter>"_c4l
 
-  autocmd FileType tex inoremap ,em \emph{}<++><Esc>T{i
-  autocmd FileType tex inoremap ,bf \textbf{}<++><Esc>T{i
-  autocmd FileType tex inoremap ,it \textit{}<++><Esc>T{i
-  autocmd FileType tex inoremap ,ct \textcite{}<++><Esc>T{i
-  autocmd FileType tex inoremap ,cp \parencite{}<++><Esc>T{i
-  autocmd FileType tex inoremap ,glos {\gll<Space><++><Space>\\<Enter><++><Space>\\<Enter>\trans{``<++>''}}<Esc>2k2bcw
-  autocmd FileType tex inoremap ,x \begin{xlist}<Enter>\ex<Space><Enter>\end{xlist}<Esc>kA<Space>
-  autocmd FileType tex inoremap ,ol \begin{enumerate}<Enter><Enter>\end{enumerate}<Enter><Enter><++><Esc>3kA\item<Space>
-  autocmd FileType tex inoremap ,ul \begin{itemize}<Enter><Enter>\end{itemize}<Enter><Enter><++><Esc>3kA\item<Space>
-  autocmd FileType tex inoremap ,li <Enter>\item<Space>
-  autocmd FileType tex inoremap ,ref \ref{}<Space><++><Esc>T{i
-  autocmd FileType tex inoremap ,a \href{}{<++>}<Space><++><Esc>2T{i
-  autocmd FileType tex inoremap ,sc \textsc{}<Space><++><Esc>T{i
-  autocmd FileType tex inoremap ,chap \chapter{}<Enter><Enter><++><Esc>2kf}i
-  autocmd FileType tex inoremap ,sec \section{}<Enter><Enter><++><Esc>2kf}i
-  autocmd FileType tex inoremap ,ssec \subsection{}<Enter><Enter><++><Esc>2kf}i
-  autocmd FileType tex inoremap ,sssec \subsubsection{}<Enter><Enter><++><Esc>2kf}i
-  autocmd FileType tex inoremap ,up <Esc>/usepackage<Enter>o\usepackage{}<Esc>i
-  autocmd FileType tex nnoremap ,up /usepackage<Enter>o\usepackage{}<Esc>i
-  autocmd FileType tex inoremap ,tt \texttt{}<Space><++><Esc>T{i
-  autocmd FileType tex inoremap ,bt {\blindtext}
-  autocmd FileType bib inoremap ,a @article{<Enter>author<Space>=<Space>{<++>},<Enter>year<Space>=<Space>{<++>},<Enter>title<Space>=<Space>{<++>},<Enter>journal<Space>=<Space>{<++>},<Enter>volume<Space>=<Space>{<++>},<Enter>pages<Space>=<Space>{<++>},<Enter>}<Enter><++><Esc>8kA,<Esc>i
-  autocmd FileType bib inoremap ,b @book{<Enter>author<Space>=<Space>{<++>},<Enter>year<Space>=<Space>{<++>},<Enter>title<Space>=<Space>{<++>},<Enter>publisher<Space>=<Space>{<++>},<Enter>}<Enter><++><Esc>6kA,<Esc>i
-  autocmd FileType bib inoremap ,c @incollection{<Enter>author<Space>=<Space>{<++>},<Enter>title<Space>=<Space>{<++>},<Enter>booktitle<Space>=<Space>{<++>},<Enter>editor<Space>=<Space>{<++>},<Enter>year<Space>=<Space>{<++>},<Enter>publisher<Space>=<Space>{<++>},<Enter>}<Enter><++><Esc>8kA,<Esc>i
+  autocmd FileType tex inoremap <buffer> ,em \emph{}<++><Esc>T{i
+  autocmd FileType tex inoremap <buffer> ,dc \documentclass{}<Enter><Enter><++><Esc>2kf}i
+  autocmd FileType tex inoremap <buffer> ,bf \textbf{}<++><Esc>T{i
+  autocmd FileType tex inoremap <buffer> ,it \textit{}<++><Esc>T{i
+  autocmd FileType tex inoremap <buffer> ,ct \textcite{}<++><Esc>T{i
+  autocmd FileType tex inoremap <buffer> ,cp \parencite{}<++><Esc>T{i
+  autocmd FileType tex inoremap <buffer> ,glos {\gll<Space><++><Space>\\<Enter><++><Space>\\<Enter>\trans{``<++>''}}<Esc>2k2bcw
+  autocmd FileType tex inoremap <buffer> ,x \begin{xlist}<Enter>\ex<Space><Enter>\end{xlist}<Esc>kA<Space>
+  autocmd FileType tex inoremap <buffer> ,ol \begin{enumerate}<Enter><Enter>\end{enumerate}<Enter><Enter><++><Esc>3kA\item<Space>
+  autocmd FileType tex inoremap <buffer> ,ul \begin{itemize}<Enter><Enter>\end{itemize}<Enter><Enter><++><Esc>3kA\item<Space>
+  autocmd FileType tex inoremap <buffer> ,li <Enter>\item<Space>
+  autocmd FileType tex inoremap <buffer> ,ref \ref{}<Space><++><Esc>T{i
+  autocmd FileType tex inoremap <buffer> ,a \href{}{<++>}<Space><++><Esc>2T{i
+  autocmd FileType tex inoremap <buffer> ,sc \textsc{}<Space><++><Esc>T{i
+  autocmd FileType tex inoremap <buffer> ,chap \chapter{}<Enter><Enter><++><Esc>2kf}i
+  autocmd FileType tex inoremap <buffer> ,sec \section{}<Enter><Enter><++><Esc>2kf}i
+  autocmd FileType tex inoremap <buffer> ,ssec \subsection{}<Enter><Enter><++><Esc>2kf}i
+  autocmd FileType tex inoremap <buffer> ,sssec \subsubsection{}<Enter><Enter><++><Esc>2kf}i
+  "autocmd FileType tex inoremap <buffer> ,up <Esc>/usepackage<Enter>o\usepackage{}<Esc>i
+  "autocmd FileType tex nnoremap <buffer> ,up /usepackage<Enter>o\usepackage{}<Esc>i
+  autocmd FileType tex inoremap <buffer> ,tt \texttt{}<Space><++><Esc>T{i
+  autocmd FileType tex inoremap <buffer> ,bt {\blindtext}
+  autocmd FileType bib inoremap <buffer> ,a @article{<Enter>author<Space>=<Space>{<++>},<Enter>year<Space>=<Space>{<++>},<Enter>title<Space>=<Space>{<++>},<Enter>journal<Space>=<Space>{<++>},<Enter>volume<Space>=<Space>{<++>},<Enter>pages<Space>=<Space>{<++>},<Enter>}<Enter><++><Esc>8kA,<Esc>i
+  autocmd FileType bib inoremap <buffer> ,b @book{<Enter>author<Space>=<Space>{<++>},<Enter>year<Space>=<Space>{<++>},<Enter>title<Space>=<Space>{<++>},<Enter>publisher<Space>=<Space>{<++>},<Enter>}<Enter><++><Esc>6kA,<Esc>i
+  autocmd FileType bib inoremap <buffer> ,c @incollection{<Enter>author<Space>=<Space>{<++>},<Enter>title<Space>=<Space>{<++>},<Enter>booktitle<Space>=<Space>{<++>},<Enter>editor<Space>=<Space>{<++>},<Enter>year<Space>=<Space>{<++>},<Enter>publisher<Space>=<Space>{<++>},<Enter>}<Enter><++><Esc>8kA,<Esc>i
 augroup END
 " }}}
 
