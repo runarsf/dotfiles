@@ -10,6 +10,8 @@ http://feeds.feedburner.com/codinghorror/ misc
 
 # Sysadmin feeds
 https://www.reddit.com/r/devops+docker+linux+netsec+opensource+Passwords+github+PowerShell+privacy+sysadmin+networking+windows+linuxadmin+commandline+security+sensu/.rss
+https://www.reddit.com/r/Trackballs+thinkpad/.rss
+https://www.reddit.com/r/MechanicalKeyboards+keyboardcirclejerk+Keyboards+ergodox+CustomKeyboards/.rss
 https://itavisen.no/feed/
 https://news.ycombinator.com/rss
 http://blog.linuxmint.com/?feed=rss2 linux
@@ -32,9 +34,17 @@ https://blogs.msdn.microsoft.com/commandline/feed/
 http://feeds.feedburner.com/TechCrunch/
 http://feeds.feedburner.com/crunchgear
 
+# Linguistics & Vexillology
+https://www.reddit.com/r/vexillology+MapPorn/.rss
+https://www.reddit.com/r/de+duolingo+German+languagelearnin+linguistics+norsk/.rss
+https://www.reddit.com/r/boottoobig+BrandNewSentence+engrish+vexillologycirclejerk/.rss
+
 # Misc
 https://lukesmith.xyz/rss.xml
 https://www.youtube.com/feeds/videos.xml?channel_id=UC2eYFnH61tmytImy1mTYvhA "~Luke Smith (YouTube)"
 https://www.youtube.com/feeds/videos.xml?channel_id=UCld68syR8Wi-GY_n4CaoJGA "~Brodie Robertson (YouTube)"
-https://www.reddit.com/r/news/.rss
+https://www.reddit.com/r/news+worldnews/.rss
+https://www.reddit.com/r/Norge/.rss
+https://www.reddit.com/r/Zettelkasten+NotionSO/.rss
+https://www.reddit.com/r/todayilearned+YouShouldKnow/.rss
 https://www.reddit.com/r/eFreebies+FREE+freebies+FreeGamesOnSteam/.rss
