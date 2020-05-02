@@ -190,9 +190,11 @@ silent! if plug#begin('~/.vim/plugged')
 " }}}
 Plug 'airblade/vim-rooter'
 Plug 'matze/vim-tex-fold', { 'for': 'tex' }
-if $DISPLAY != ''
-  Plug 'ying17zi/vim-live-latex-preview', { 'for': 'tex' } " requires biber
-endif
+Plug 'matze/vim-ini-fold', { 'for': 'ini' }
+Plug 'zhimsel/vim-stay'
+"if $DISPLAY != ''
+"  Plug 'ying17zi/vim-live-latex-preview', { 'for': 'tex' } " requires biber
+"endif
 Plug 'vimwiki/vimwiki'
 Plug 'mattn/calendar-vim'
 Plug 'chazy/dirsettings'
@@ -261,6 +263,9 @@ Plug 'rakr/vim-one'
 call plug#end()
 endif
 
+" vim-stay {{{
+set viewoptions=cursor,folds,slash,unix
+" }}}
 " vimwiki {{{
 " https://opensource.com/article/18/6/vimwiki-gitlab-notes
 " https://blog.mague.com/?p=602
@@ -768,7 +773,13 @@ set splitbelow splitright
 set mouse=c
 set noerrorbells novisualbell
 set t_vb=
+set ttimeout
+set ttimeoutlen=100
 set timeoutlen=500
+augroup timeout | autocmd!
+  autocmd InsertEnter * set timeoutlen=750
+  autocmd InsertLeave * set timeoutlen=400
+augroup END
 set synmaxcol=250
 set scrolljump=0
 set nocursorline nocursorcolumn
@@ -856,6 +867,8 @@ augroup LaTeX | autocmd!
 
   autocmd FileType tex inoremap <buffer> ,em \emph{}<++><Esc>T{i
   autocmd FileType tex inoremap <buffer> ,dc \documentclass{}<Enter><Enter><++><Esc>2kf}i
+  autocmd FileType tex inoremap <buffer> ,be \begin{}<Enter><Enter><++><Esc>2kf}i
+  autocmd FileType tex inoremap <buffer> ,en \end{}<Enter><Enter><++><Esc>2kf}i
   autocmd FileType tex inoremap <buffer> ,bf \textbf{}<++><Esc>T{i
   autocmd FileType tex inoremap <buffer> ,it \textit{}<++><Esc>T{i
   autocmd FileType tex inoremap <buffer> ,ct \textcite{}<++><Esc>T{i
@@ -964,7 +977,7 @@ nmap <silent> <leader>m :call ToggleMouse()<CR>
 " }}}
 
 " Return to last edit position when opening files {{{
-autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+"autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 " }}}
 
 " Set extra options when running in GUI mode {{{
@@ -982,8 +995,8 @@ endif
 " }}}
 
 " Save and restore code folding {{{
-autocmd BufWinLeave *.* mkview
-autocmd BufWinEnter *.* silent! loadview
+"autocmd BufWinLeave *.* mkview
+"autocmd BufWinEnter *.* silent! loadview
 " }}}
 
 " Disable automatic commenting on newline {{{
@@ -1065,15 +1078,21 @@ nmap <silent> <leader>n :call ToggleNumbers()<CR>
 
 " Switch colorscheme and enable limelight with Goyo {{{
 function! s:goyo_enter()
-  colorscheme ayu
   Limelight
+  colorscheme ayu
 endfunction
 function! s:goyo_leave()
-  execute "colorscheme " . g:colorscheme
   Limelight!
+  execute "colorscheme " . g:colorscheme
+  highlight Comment cterm=italic
+  highlight Normal     ctermbg=NONE guibg=NONE
+  highlight LineNr     ctermbg=NONE guibg=NONE
+  highlight SignColumn ctermbg=NONE guibg=NONE
 endfunction
-autocmd! User GoyoEnter nested call <SID>goyo_enter()
-autocmd! User GoyoLeave nested call <SID>goyo_leave()
+augroup goyocolor | autocmd!
+  autocmd User GoyoEnter nested call <SID>goyo_enter()
+  autocmd User GoyoLeave nested call <SID>goyo_leave()
+augroup END
 " }}}
 
 function! s:DiffWithSaved() " {{{
