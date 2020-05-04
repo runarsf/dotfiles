@@ -1,0 +1,123 @@
+#!/usr/bin/env bash
+# vim: set foldmethod=marker nomodeline:
+# Options {{{
+set -o errexit   # abort on nonzero exit status
+set -o nounset   # abort on unbound variable
+set -o pipefail  # don't hide errors within pipes
+set -o noclobber # disallow redirect overwriting
+# }}}
+
+dependencies=("xclip") # {{{
+for cmd in "${dependencies[@]}"; do
+  if ! command -v "${cmd}" >/dev/null 2>&1; then
+    printf "Command ${cmd} not found.\n"
+    notify-send "Whim" "Command ${cmd} not found."
+    missingDependencies='true'
+  fi
+done
+test -n "${missingDependencies}" && exit 1
+# }}}
+
+# Colours {{{
+reset=$'\e[0;39m'
+#red='\e[31m'
+#green='\e[32m'
+#blue='\e[94m'
+#yellow='\e[33m'
+
+gray=$'\e[90m'
+red=$'\e[91m'
+green=$'\e[92m'
+yellow=$'\e[93m'
+blue=$'\e[94m'
+magenta=$'\e[95m'
+cyan=$'\e[96m'
+
+bGray=$'\e[100m'
+bRed=$'\e[101m'
+bGreen=$'\e[102m'
+bYellow=$'\e[103m'
+bBlue=$'\e[104m'
+bMagenta=$'\e[105m'
+bCyan=$'\e[106m'
+# }}}
+
+usage () { # {{{
+	cat <<-EOMAN
+	${green}Usage:${reset} ${blue}dirtygit${reset} ${gray}[${red}options${gray}] [${red}command${gray}]${reset}
+
+	${green}Options:${reset}
+	  -h${gray},${reset} --help          Display this message.
+	  -y${gray},${reset} --yes           Don't prompt for confirmation.
+	  -n${gray},${reset} --noop          Don't perform any git actions.
+	  --git-dir    ${gray}<${red}dir${gray}>${reset}  Git-repo-files directory, see: \`man git\`.
+	  --work-tree  ${gray}<${red}dir${gray}>${reset}  Git work tree, see: \`man git\`.
+	  --git-add    ${gray}<${red}str${gray}>${reset}  What to send to \`git add\`, default: '.'.
+
+	${green}Commands:${reset}
+	  Commit message      Commit message used with git, default: \`date +'%a-%Y-%m-%dT%T%z'\`.
+
+	${green}Examples:${yellow}
+	  dirtygit
+	${reset}
+	EOMAN
+} # }}}
+
+# Arguments {{{
+terminal="${TERMINAL}" editor="${EDITOR}"
+positional=()
+while test "${#}" -gt "0"; do
+  case "${1}" in
+    -h|--help)
+      usage
+      exit 0
+      shift;;
+    -e|--editor)
+      editor="${2}"
+      shift;shift;;
+    -t|--terminal)
+      terminal="${2}"
+      shift;shift;;
+    -g|--gui)
+      terminal='gui'
+      shift;;
+    --*)
+      printf "Unknown option: ${1}\n"
+      exit 1
+      shift;;
+    -*)
+      shopts="${1}"
+      if test "${#shopts}" -le "2"; then
+        printf "Unknown option: ${shopts}\n"
+        exit 2
+      fi
+      shift
+      set -- "${shopts:0:2}" "-${shopts:2}" "${@}"
+      ;;
+    *)
+      positional+=("${1}")
+      shift;;
+  esac
+done
+
+set -- "${positional[@]}"
+
+if test "${#}" -gt "0"; then
+  for opt in "${@}"; do
+    printf "Unknown option: ${opt}\n"
+  done
+fi
+# }}}
+
+# Create file and open {{{
+mkdir -p /tmp/whim
+tmpfile=$(mktemp -p /tmp/whim)
+
+if test "${terminal}" = "gui"; then
+  eval "${editor} ${tmpfile}"
+else
+  eval "${terminal} '${editor} ${tmpfile}'"
+fi
+
+cat "${tmpfile}" | xclip -selection clipboard
+# }}}

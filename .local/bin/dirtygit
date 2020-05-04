@@ -7,12 +7,6 @@ set -o pipefail  # don't hide errors within pipes
 set -o noclobber # disallow redirect overwriting
 # }}}
 
-# Magic variables {{{
-__dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)" # /path/to/dir
-__file="${__dir}/$(basename "${BASH_SOURCE[0]}")"                     # /path/to/dir/file
-__base="$(basename ${__file})"                                        # file
-# }}}
-
 # Colours {{{
 reset=$'\e[0;39m'
 #red='\e[31m'

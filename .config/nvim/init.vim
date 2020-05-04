@@ -942,9 +942,6 @@ nmap <leader>wq :wq<CR>
 nmap <leader>q :q<CR>
 nmap <leader>Q :q!<CR>
 
-" Toggle Zen mode / Goyo
-nmap <leader>z :Goyo<CR>
-
 " Move a line of text using ALT+[jk] or Command+[jk] on mac
 nmap <M-j> mz:m+<cr>`z
 nmap <M-k> mz:m-2<cr>`z
@@ -1078,11 +1075,11 @@ nmap <silent> <leader>n :call ToggleNumbers()<CR>
 
 " Switch colorscheme and enable limelight with Goyo {{{
 function! s:goyo_enter()
-  Limelight
+  "Limelight
   colorscheme ayu
 endfunction
 function! s:goyo_leave()
-  Limelight!
+  "Limelight!
   execute "colorscheme " . g:colorscheme
   highlight Comment cterm=italic
   highlight Normal     ctermbg=NONE guibg=NONE
@@ -1093,6 +1090,9 @@ augroup goyocolor | autocmd!
   autocmd User GoyoEnter nested call <SID>goyo_enter()
   autocmd User GoyoLeave nested call <SID>goyo_leave()
 augroup END
+autocmd! User GoyoEnter Limelight
+autocmd! User GoyoLeave Limelight!
+nmap <silent> <leader>z :Goyo<CR>
 " }}}
 
 function! s:DiffWithSaved() " {{{
