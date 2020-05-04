@@ -40,7 +40,7 @@ bCyan=$'\e[106m'
 cleanup () { # {{{
   tput cnorm
   printf "${reset}"
-  exit 1
+  exit 2
 }
 trap cleanup INT
 # }}}
@@ -63,7 +63,7 @@ waiting_dots () { # {{{
   tput cnorm
 } # }}}
 
-helpme () { # {{{
+usage () { # {{{
 	cat <<-EOMAN
 	${green}Usage:${reset} ${blue}dirtygit${reset} ${gray}[${red}options${gray}] [${red}command${gray}]${reset}
 
@@ -81,6 +81,7 @@ helpme () { # {{{
 	${green}Examples:${yellow}
 	  dirtygit
 	  dirtygit -y
+	  dirtygit -nyy
 	  dirtygit Initial commit
 	  dirtygit --git-dir "\${HOME}/dotfiles" --work-tree "\${HOME}" --git-add '-u'
 
@@ -97,41 +98,37 @@ confirm () { # {{{
   read -p " " -n 1 -r </dev/tty
   printf "\n"
   if [[ "${REPLY}" =~ ^[Nn]$ ]]; then
-    exit 1
+    exit 3
   fi
 } # }}}
 
 commit () { # {{{
-  stash="$(date +'%a-%Y-%m-%dT%T%z')"
-
-  #printf "\n${blue}| STASHING ${reset}'${stash}'\n\n"
-  #printf "\$ ${yellow}${gitCommand[*]} ${red}stash save '${stash}'${reset}\n"
-  #test -n "${yes}" && waiting_dots || confirm
-  #eval "${gitCommand[*]} stash save '${stash}'"
-
-  #printf "\n\n${blue}| APPLYING STASH ${reset}\n\n"
-  #printf "\$ ${yellow}${gitCommand[*]} ${red}stash apply${reset}\n"
-  #test -n "${yes}" && waiting_dots || confirm
-  #eval "${gitCommand[*]} stash apply"
+  accept () { # {{{
+    if test "${yes}" -eq "0"; then
+      confirm
+    elif test "${yes}" -eq "1"; then
+      waiting_dots
+    fi
+  } # }}}
 
   printf "\n${blue}| ADDING ${reset}\n\n"
   printf "\$ ${yellow}${gitCommand[*]} ${red}add ${gitAdd}${reset}\n"
-  test -n "${yes}" && waiting_dots || confirm
+  accept
   eval "${gitCommand[*]} add ${gitAdd}"
 
   printf "\n${blue}| COMMITTING ${reset}'${*}'\n\n"
   printf "\$ ${yellow}${gitCommand[*]} ${red}commit -m '${*}'${reset}\n"
-  test -n "${yes}" && waiting_dots || confirm
+  accept
   eval "${gitCommand[*]} commit -m '${*}'"
 
   printf "\n${blue}| PULLING ${reset}\n\n"
   printf "\$ ${yellow}${gitCommand[*]} ${red}pull${reset}\n"
-  test -n "${yes}" && waiting_dots || confirm
+  accept
   eval "${gitCommand[*]} pull"
 
   printf "\n${blue}| PUSHING ${reset}\n\n"
   printf "\$ ${yellow}${gitCommand[*]} ${red}push${reset}\n"
-  test -n "${yes}" && waiting_dots || confirm
+  accept
   eval "${gitCommand[*]} push"
 
   printf "\n${green}| DONE!${reset}\n\n"
@@ -139,33 +136,43 @@ commit () { # {{{
 } # }}}
 
 # Arguments {{{
-yes='' gitAdd='.'
+yes=0 gitAdd='.'
 positional=()
 gitCommand=("git")
 while test "${#}" -gt "0"; do
   case "${1}" in
-    -h|--help)
-      helpme
+    -h|--help) # {{{
+      usage
       exit 0
-      shift;;
-    --git-dir|--work-tree)
+      shift;; # }}}
+    --git-dir|--work-tree) # {{{
       gitCommand+=("${1}=${2}")
-      shift;shift;;
-    --git-add)
+      shift;shift;; # }}}
+    --git-add) # {{{
       gitAdd="${2}"
-      shift;shift;;
-    -y|--yes)
-      yes='true'
-      shift;;
-    -n|--noop)
+      shift;shift;; # }}}
+    -y|--yes) # {{{
+      yes=$((yes+1))
+      shift;; # }}}
+    -n|--noop) # {{{
       gitCommand=("echo" "${gitCommand[@]}")
-      shift;;
-    #-f|--flow)
-    #  flow="${2}"
-    #  shift;shift;;
-    *)
+      shift;; # }}}
+    --*) # {{{
+      printf "Unknown option: ${1}\n"
+      exit 4
+      shift;; # }}}
+    -*) # {{{
+      shopts="${1}"
+      if test "${#shopts}" -le "2"; then
+        printf "Unknown option: ${shopts}\n"
+        exit 5
+      fi
+      shift
+      set -- "${shopts:0:2}" "-${shopts:2}" "${@}"
+      ;; # }}}
+    *) # {{{
       positional+=("${1}")
-      shift;;
+      shift;; # }}}
   esac
 done
 
