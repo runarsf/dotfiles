@@ -30,5 +30,8 @@ alt + p
 super + shift + c
 	toggleprogram "picom" "-b"
 
+super + shift + v
+	whim
+
 #super + o ; {w,e}
 #	{"${BROWSER}","${EDITOR}"}

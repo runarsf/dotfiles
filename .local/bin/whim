@@ -8,6 +8,7 @@ set -o noclobber # disallow redirect overwriting
 # }}}
 
 dependencies=("xclip") # {{{
+missingDependencies=''
 for cmd in "${dependencies[@]}"; do
   if ! command -v "${cmd}" >/dev/null 2>&1; then
     printf "Command ${cmd} not found.\n"
@@ -44,15 +45,13 @@ bCyan=$'\e[106m'
 
 usage () { # {{{
 	cat <<-EOMAN
-	${green}Usage:${reset} ${blue}dirtygit${reset} ${gray}[${red}options${gray}] [${red}command${gray}]${reset}
+	${green}Usage:${reset} ${blue}whim${reset} ${gray}[${red}options${gray}]${reset}
 
 	${green}Options:${reset}
 	  -h${gray},${reset} --help          Display this message.
-	  -y${gray},${reset} --yes           Don't prompt for confirmation.
-	  -n${gray},${reset} --noop          Don't perform any git actions.
-	  --git-dir    ${gray}<${red}dir${gray}>${reset}  Git-repo-files directory, see: \`man git\`.
-	  --work-tree  ${gray}<${red}dir${gray}>${reset}  Git work tree, see: \`man git\`.
-	  --git-add    ${gray}<${red}str${gray}>${reset}  What to send to \`git add\`, default: '.'.
+	  -t${gray},${reset} --terminal      Custom terminal. Default: \$TERMINAL.
+	  -e${gray},${reset} --editor        Custom editor. Default: \$EDITOR.
+	  -g${gray},${reset} --gui           Open app directly, same as setting terminal to none.
 
 	${green}Commands:${reset}
 	  Commit message      Commit message used with git, default: \`date +'%a-%Y-%m-%dT%T%z'\`.
@@ -64,7 +63,7 @@ usage () { # {{{
 } # }}}
 
 # Arguments {{{
-terminal="${TERMINAL}" editor="${EDITOR}"
+terminal="${TERMINAL} -e" editor="${EDITOR}"
 positional=()
 while test "${#}" -gt "0"; do
   case "${1}" in
@@ -79,7 +78,7 @@ while test "${#}" -gt "0"; do
       terminal="${2}"
       shift;shift;;
     -g|--gui)
-      terminal='gui'
+      terminal=''
       shift;;
     --*)
       printf "Unknown option: ${1}\n"
@@ -113,10 +112,10 @@ fi
 mkdir -p /tmp/whim
 tmpfile=$(mktemp -p /tmp/whim)
 
-if test "${terminal}" = "gui"; then
+if test -z "${terminal}"; then
   eval "${editor} ${tmpfile}"
 else
-  eval "${terminal} '${editor} ${tmpfile}'"
+  eval "${terminal} ${editor} ${tmpfile}"
 fi
 
 cat "${tmpfile}" | xclip -selection clipboard
