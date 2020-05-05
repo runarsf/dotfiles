@@ -674,7 +674,6 @@ let g:coc_global_extensions = [
   \ 'coc-pairs',
   \ 'coc-html',
   \ 'coc-json',
-  \ 'coc-python',
   \ 'coc-vetur',
   \ 'coc-css',
   \ 'coc-yaml',
@@ -682,6 +681,7 @@ let g:coc_global_extensions = [
   \ 'coc-markdownlint',
   \ 'coc-emoji'
   \ ]
+  " \ 'coc-python',
 "exec "CocInstall -sync " . join(get(g:, 'coc_global_extensions', []))
 " Use `[g` and `]g` to navigate diagnostics
 nmap <silent> [g <Plug>(coc-diagnostic-prev)
