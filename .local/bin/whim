@@ -57,13 +57,13 @@ usage () { # {{{
 	  Commit message      Commit message used with git, default: \`date +'%a-%Y-%m-%dT%T%z'\`.
 
 	${green}Examples:${yellow}
-	  dirtygit
+	  whim
 	${reset}
 	EOMAN
 } # }}}
 
 # Arguments {{{
-terminal="${TERMINAL} -e" editor="${EDITOR}"
+terminal="${TERMINAL}-e" editor="${EDITOR}"
 positional=()
 while test "${#}" -gt "0"; do
   case "${1}" in
@@ -112,10 +112,16 @@ fi
 mkdir -p /tmp/whim
 tmpfile=$(mktemp -p /tmp/whim)
 
+if test -z "${tmpfile}"; then
+  printf "Tempfile not set, something went wrong."
+  notify-send "Whim" "Tempfile not set, something went wrong."
+  exit 1
+fi
+
 if test -z "${terminal}"; then
-  eval "${editor} ${tmpfile}"
+  ${editor} "${tmpfile}"
 else
-  eval "${terminal} ${editor} ${tmpfile}"
+  ${terminal} ${editor} "${tmpfile}"
 fi
 
 cat "${tmpfile}" | xclip -selection clipboard

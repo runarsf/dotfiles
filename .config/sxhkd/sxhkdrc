@@ -9,9 +9,6 @@ super + x
 super + shift + x
 	prompt "Are you sure you want to shutdown?" "shutdown -h now"
 
-super + shift + v
-	"${TERMINAL}" -e "${EDITOR}"
-
 super + d
 	rofi -show run
 	#dmenu_run -nb '#1e1e1e' -sf '#1e1e1e' -sb '#f4800d' -nf '#F4800d'
@@ -28,10 +25,13 @@ alt + p
 	sharenix-section -n -c
 
 super + shift + c
-	toggleprogram "picom" "-b"
+	toggleprogram "compton" "-b"
+
+#super + shift + v
+#	"${TERMINAL}" -e "${EDITOR}"
 
 super + shift + v
-	whim
+	whim --editor "${EDITOR}" --terminal "${TERMINAL} --class scratchpad -e"
 
 #super + o ; {w,e}
 #	{"${BROWSER}","${EDITOR}"}
