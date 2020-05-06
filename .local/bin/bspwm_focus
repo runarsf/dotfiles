@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+monocle="$(bspc query -T -d | grep '"layout":"monocle"')"
+
+motion="${1}"
+
+if test -z "${monocle}"; then
+  case "${motion}" in
+    north) bspc node --focus north;;
+    south) bspc node --focus south;;
+    west) bspc node --focus west;;
+    east) bspc node --focus east;;
+  esac
+else
+  case "${motion}" in
+    north) bspc node --focus next.local;;
+    south) bspc node --focus prev.local;;
+    west) bspc node --focus prev.local;;
+    east) bspc node --focus next.local;;
+  esac
+fi

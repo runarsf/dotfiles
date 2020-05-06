@@ -51,9 +51,9 @@ if test -z ${noplug}; then
 		zdharma/zsh-diff-so-fancy
 		# runarsf/rufus-zsh-theme path:rufus-nightly.zsh-theme
 		# robbyrussell/oh-my-zsh path:themes/daveverwer.zsh-theme
-		# robbyrussell/oh-my-zsh path:themes/miloshadzic.zsh-theme
+		robbyrussell/oh-my-zsh path:themes/miloshadzic.zsh-theme
 		# denysdovhan/spaceship-prompt
-		romkatv/powerlevel10k
+		# romkatv/powerlevel10k
 	EOBUNDLES
   bindkey "$terminfo[kcuu1]" history-substring-search-up
   bindkey "$terminfo[kcud1]" history-substring-search-down
@@ -152,11 +152,12 @@ alias please='sudo $(fc -ln -1)'
 alias reload='source "${HOME}/.config/zsh/.zshrc"'
 alias tmux='tmux -f "${XDG_CONFIG_HOME:-${HOME}/.config}/tmux/tmux.conf"'
 alias lineinon='pactl load-module module-loopback latency_msec=1'
-alias whim='whim --editor "${EDITOR}" --terminal "${TERMINAL} --class scratchpad -e"'
+alias whim='whim --editor "${EDITOR} +startinsert" --terminal "${TERMINAL} --class scratchpad -e"'
 #alias paste='nc termbin.com 9999'
 # }}}
 
 # Dotfiles {{{
+alias dotted='dotfiles ls-files --error-unmatch'
 alias dirtydots='dirtygit --git-dir "${HOME}/dotfiles" --work-tree "${HOME}" --git-add "-u"'
 alias dots='dotfiles'
 dotfiles () {

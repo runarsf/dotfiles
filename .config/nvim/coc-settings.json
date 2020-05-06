@@ -1,5 +1,6 @@
 {
   "languageserver": {
+    // https://github.com/neoclide/coc.nvim/wiki/Language-servers
     "terraform": {
       // mkdir terraform-lsp
       // wget -P ./terraform-lsp https://github.com/juliosueiras/terraform-lsp/releases/download/v0.0.11-beta1/terraform-lsp_0.0.11-beta1_linux_amd64.tar.gz | tar -xvf
@@ -8,6 +9,12 @@
       "command": "terraform-lsp",
       "filetypes": ["terraform"],
       "initializationOptions": {}
+    },
+    "dockerfile": {
+      // npm install -g dockerfile-language-server-nodejs
+      "command": "docker-langserver",
+      "filetypes": ["dockerfile"],
+      "args": ["--stdio"]
     }
   }
 }

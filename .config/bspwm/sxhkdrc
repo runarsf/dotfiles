@@ -1,5 +1,4 @@
-# vim: set foldmethod=marker foldlevel=0 nomodeline:
-# bspwm-specific sxhkd config, extends ~/.config/sxhkd/sxhkd!rc
+# bspwm-specific sxhkd config, extends ~/.config/sxhkd/sxhkdrc
 
 # https://www.reddit.com/r/bspwm/comments/ceu0za/help_with_sxhkdrc_config_for_multiple_monitors/
 # bspc monitor -f next
@@ -22,22 +21,22 @@ super + {_,shift + }{0-9}
 #  && bspc node --swap {prev,next,prev,next}.local --follow \
 #  || bspc node --swap {west,south,north,east}.local --follow
 
-#super + {_,shift + }{Left,Down,Up,Right}
-#  LAYOUT=$(bspc query -T -d | jq -r '.layout'); \
-#  test "${LAYOUT}" != "monocle" && bspc node -{f,s} {west,south,north,east}.local; \
-#  test "${LAYOUT}" = "monocle" && bspc node -{f,s} {prev,next,prev,next}.local
-
-#super + {Left,Down,Up,Right}
-#	test "$(bspc query -T -d | jq -r '.layout')" = "monocle" \
-#	&& bspc node --focus {}
-
-#super + {_,shift + }{Left,Down,Up,Right}
-#	bspc node -{f,s} {left,down,up,right} || bspc node -f {prev,next,prev,next}
-
 super + {Left,Down,Up,Right}
-	bspc node --focus {west,south,north,east}
+	bspwm_focus {west,south,north,east}
+	#	monocle="$(bspc query -T -d | grep '"layout":"monocle"')"; \
+	#	{test -z "$monocle" && bspc node --focus west.local || bspc node --focus prev.local, \
+	#	 test -z "$monocle" && bspc node --focus south.local || bspc node --focus prev.local, \
+	#	 test -z "$monocle" && bspc node --focus north.local || bspc node --focus next.local, \
+	#	 test -z "$monocle" && bspc node --focus east.local || bspc node --focus next.local}
+
+# TODO: Should call --to-monitor {west,south,north,east}
 super + shift + {Left,Down,Up,Right}
-	bspc node --swap {west,south,north,east} --follow
+	bspwm_move {west,south,north,east}
+#	floating="$(bspc query -T -n focused | grep '"state":"floating"')"; \
+#	{test -z "$floating" && bspc node --swap west --follow || bspc node --move -40 0, \
+#	 test -z "$floating" && bspc node --swap south --follow || bspc node --move 0 40, \
+#	 test -z "$floating" && bspc node --swap north --follow || bspc node --move 0 -40, \
+#	 test -z "$floating" && bspc node --swap east --follow || bspc node --move 40 0}
 
 super + ctrl + {Left,Down,Up,Right}
 	bspc node --resize {left 20 0,bottom 0 -20,top 0 20,right -20 0}
@@ -72,12 +71,11 @@ super + t
 	bspc node --state {tiled,pseudo_tiled,floating,fullscreen}
 
 super + n
-	scratchpad || "${HOME}/.local/bin/scratchpad"
+	bspwm_scratchpad
 
 super + c ; p
 	bspc config focus_follows_pointer {false,true}
 
-# preselect the direction
 super + alt + {Left,Down,Up,Right}
 	bspc node --presel-dir {west,south,north,east}
 

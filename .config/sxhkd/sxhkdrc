@@ -1,7 +1,7 @@
 # vim: set foldmethod=marker foldlevel=0 nomodeline:
 # description: Launch terminal.
 super + Return
-	"${TERMINAL}"
+	"$TERMINAL"
 
 super + x
 	gllock || i3lock
@@ -11,7 +11,6 @@ super + shift + x
 
 super + d
 	rofi -show run
-	#dmenu_run -nb '#1e1e1e' -sf '#1e1e1e' -sb '#f4800d' -nf '#F4800d'
 super + shift + d
 	rofi -combi-modi window,drun -show combi -modi combi
 
@@ -27,11 +26,9 @@ alt + p
 super + shift + c
 	toggleprogram "compton" "-b"
 
-#super + shift + v
-#	"${TERMINAL}" -e "${EDITOR}"
-
 super + shift + v
-	whim --editor "${EDITOR}" --terminal "${TERMINAL} --class scratchpad -e"
+	whim --editor "$EDITOR +startinsert" --terminal "$TERMINAL --class scratchpad -e"
 
-#super + o ; {w,e}
-#	{"${BROWSER}","${EDITOR}"}
+super + o ; {v,w}
+	{"$TERMINAL" -e "$EDITOR", \
+	 "$BROWSER"}

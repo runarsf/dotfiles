@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+floating="$(bspc query -T -n focused | grep '"state":"floating"')"
+
+motion="${1}"
+amount="${2:-40}"
+
+if test -z "${floating}"; then
+  case "${motion}" in
+    north) bspc node --swap north --follow || bspc node --to-monitor north;;
+    south) bspc node --swap south --follow || bspc node --to-monitor south;;
+    west) bspc node --swap west --follow || bspc node --to-monitor west;;
+    east) bspc node --swap east --follow || bspc node --to-monitor east;;
+  esac
+else
+  case "${motion}" in
+    north) bspc node --move 0 -"${amount}";;
+    south) bspc node --move 0 "${amount}";;
+    west) bspc node --move -"${amount}" 0;;
+    east) bspc node --move "${amount}" 0;;
+  esac
+fi
