@@ -193,9 +193,10 @@ silent! if plug#begin('~/.vim/plugged')
 "if $DISPLAY != ''
 "  Plug 'ying17zi/vim-live-latex-preview', { 'for': 'tex' } " requires biber
 "endif
+"Plug 'skywind3000/vim-auto-popmenu'
+"Plug 'zhimsel/vim-stay'
 Plug 'matze/vim-tex-fold', { 'for': 'tex' }
 Plug 'matze/vim-ini-fold', { 'for': 'ini' }
-"Plug 'zhimsel/vim-stay'
 Plug 'vimwiki/vimwiki'
 Plug 'scrooloose/nerdcommenter'
 Plug 'mattn/calendar-vim'
