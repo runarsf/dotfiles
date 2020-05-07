@@ -57,6 +57,7 @@ endfunction
 silent! if plug#begin('~/.vim/plugged')
 " General {{{
 " Disabled General {{{
+"Plug 'chazy/dirsettings'
 "if has('python3') && $DISPLAY != ''
 "  Plug 'anned20/vimsence'
 "endif
@@ -188,16 +189,16 @@ silent! if plug#begin('~/.vim/plugged')
 "Plug 'tpope/vim-fugitive'
 "Plug 'voldikss/vim-codelf', { 'on': 'Codelf' }
 " }}}
-Plug 'airblade/vim-rooter'
-Plug 'matze/vim-tex-fold', { 'for': 'tex' }
-Plug 'matze/vim-ini-fold', { 'for': 'ini' }
-Plug 'zhimsel/vim-stay'
+"Plug 'airblade/vim-rooter'
 "if $DISPLAY != ''
 "  Plug 'ying17zi/vim-live-latex-preview', { 'for': 'tex' } " requires biber
 "endif
+Plug 'matze/vim-tex-fold', { 'for': 'tex' }
+Plug 'matze/vim-ini-fold', { 'for': 'ini' }
+"Plug 'zhimsel/vim-stay'
 Plug 'vimwiki/vimwiki'
+Plug 'scrooloose/nerdcommenter'
 Plug 'mattn/calendar-vim'
-Plug 'chazy/dirsettings'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'ctrlpvim/ctrlp.vim'
@@ -263,8 +264,12 @@ Plug 'rakr/vim-one'
 call plug#end()
 endif
 
+" nerdcommenter {{{
+vmap <leader>cc <plug>NERDCommenterToggle
+nmap <leader>cc <plug>NERDCommenterToggle
+" }}}
 " vim-stay {{{
-set viewoptions=cursor,folds,slash,unix
+"set viewoptions=cursor,folds,slash,unix
 " }}}
 " vimwiki {{{
 " https://opensource.com/article/18/6/vimwiki-gitlab-notes
@@ -662,9 +667,30 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 "let g:NERDTreeDirArrowExpandable = '>'
 "let g:NERDTreeDirArrowCollapsible = 'v'
 
+let g:NERDTreeGitStatusWithFlags = 1
+let g:NERDTreeIgnore = [
+  \ '^node_modules$',
+  "\ '^.*\.png$',
+  "\ '^.*\.jpg$',
+  "\ '^.*\.mkv$',
+  "\ '^.*\.mp4$',
+  "\ '^.*\.mp3$'
+  \ ]
+"let g:WebDevIconsUnicodeDecorateFolderNodes = 1
+"let g:NERDTreeGitStatusNodeColorization = 1
+"let g:NERDTreeColorMapCustom = {
+   "\ "Staged"    : "#0ee375",  
+   "\ "Modified"  : "#d9bf91",  
+   "\ "Renamed"   : "#51C9FC",  
+   "\ "Untracked" : "#FCE77C",  
+   "\ "Unmerged"  : "#FC51E6",  
+   "\ "Dirty"     : "#FFBD61",  
+   "\ "Clean"     : "#87939A",   
+   "\ "Ignored"   : "#808080"   
+   "\ }
 let g:NERDTreeWinPos = "left"
 " Toggle NERDTree and focus editor
-map <silent> <C-o> :NERDTreeToggle <bar> wincmd p<CR>
+map <silent> <C-n> :NERDTreeToggle <bar> wincmd p<CR>
 
 "autocmd VimEnter * silent NERDTree | wincmd p
 " }}}
@@ -920,6 +946,8 @@ if $TERM =~ 'screen'
 endif
 
 nmap <silent> <leader>rw :set wrap!<CR>
+
+nmap <leader>.. :messages<CR>
 
 nnoremap <leader>l :set cursorline!<CR>
 nnoremap <leader>ll :set cursorcolumn!<CR>

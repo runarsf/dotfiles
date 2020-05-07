@@ -14,7 +14,9 @@
 # Completions {{{
 #autoload -U compinit
 #zmodload zsh/complist
-zstyle ':completion:*' menu select
+#zstyle ':completion:*' menu select
+# TODO: Disable tab completion for . and ..
+zstyle ':completion:*:(cd|mv|cp):*' menu select ignore-parents parent pwd
 zstyle :compinstall filename "${HOME}/.config/zsh/.zshrc"
 autoload -Uz compinit
 autoload -U edit-command-line
@@ -150,9 +152,9 @@ alias grep='grep --color'
 alias c='xclip -selection clipboard'
 alias please='sudo $(fc -ln -1)'
 alias reload='source "${HOME}/.config/zsh/.zshrc"'
-alias tmux='tmux -f "${XDG_CONFIG_HOME:-${HOME}/.config}/tmux/tmux.conf"'
 alias lineinon='pactl load-module module-loopback latency_msec=1'
 alias whim='whim --editor "${EDITOR} +startinsert" --terminal "${TERMINAL} --class scratchpad -e"'
+#alias tmux='tmux -f "${XDG_CONFIG_HOME:-${HOME}/.config}/tmux/tmux.conf"'
 #alias paste='nc termbin.com 9999'
 # }}}
 
@@ -214,4 +216,7 @@ dotfiles () {
 test -s "${HOME}/.nvm/nvm.sh" && source "${HOME}/.nvm/nvm.sh"
 test -f "${HOME}/.fzf.zsh" && source "${HOME}/.fzf.zsh"
 test -f "${HOME}/.config/p10k/.p10k.zsh" && source "${HOME}/.config/p10k/.p10k.zsh" || (test -f "${HOME}/.p10k.zsh" && source "${HOME}/.p10k.zsh")
+if command -v "tmux" >/dev/null 2>&1 && test -n "${PS1}" -a -z "${TMUX}" && [[ ! "${TERM}" =~ screen ]] && [[ ! "${TERM}" =~ tmux ]]; then
+  exec tmux
+fi
 # }}}

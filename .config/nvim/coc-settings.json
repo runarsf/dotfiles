@@ -1,4 +1,10 @@
 {
+  "suggest.noselect": false,
+  "coc.preferences.formatOnSaveFiletypes": [
+    "javascript",
+    "typescript",
+    "json"
+  ],
   "languageserver": {
     // https://github.com/neoclide/coc.nvim/wiki/Language-servers
     "terraform": {
