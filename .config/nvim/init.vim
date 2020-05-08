@@ -194,7 +194,7 @@ silent! if plug#begin('~/.vim/plugged')
 "endif
 "Plug 'skywind3000/vim-auto-popmenu'
 "Plug 'zhimsel/vim-stay'
-Plug 'mhinz/vim-startify'
+"Plug 'mhinz/vim-startify'
 Plug 'matze/vim-tex-fold', { 'for': 'tex' }
 Plug 'matze/vim-ini-fold', { 'for': 'ini' }
 Plug 'vimwiki/vimwiki'
@@ -242,7 +242,6 @@ Plug 'rodjek/vim-puppet', { 'for': 'puppet' }
 " }}}
 " Colorschemes {{{
 " Disabled Colorschemes {{{
-"Plug 'morhetz/gruvbox'
 "Plug 'chriskempson/base16-vim'
 "Plug 'sainnhe/edge'
 "Plug 'tomasr/molokai'
@@ -260,6 +259,7 @@ Plug 'rodjek/vim-puppet', { 'for': 'puppet' }
 "Plug 'kaicataldo/material.vim'
 " }}}
 Plug 'liuchengxu/space-vim-dark'
+"Plug 'morhetz/gruvbox'
 Plug 'AlessandroYorba/Sierra'
 Plug 'arcticicestudio/nord-vim'
 Plug 'ayu-theme/ayu-vim'
@@ -269,26 +269,26 @@ call plug#end()
 endif
 
 " vim-startify {{{
-let g:startify_session_dir = '~/.config/nvim/session'
-let g:startify_lists = [
-          \ { 'type': 'files',     'header': ['   Files']            },
-          \ { 'type': 'dir',       'header': ['   Current Directory '. getcwd()] },
-          \ { 'type': 'bookmarks', 'header': ['   Bookmarks']      },
-          \ { 'type': 'sessions',  'header': ['   Sessions']       },
-          \ ]
-let g:startify_bookmarks = [
-            \ { 'c': '~/.config/nvim/init.vim' },
-            \ { 'z': '~/.config/zsh/.zshrc' },
-            \ '~/Blog',
-            \ '~/Code',
-            \ '~/Pics',
-            \ ]
-let g:startify_session_autoload = 1
-let g:startify_session_delete_buffers = 1
-let g:startify_change_to_vcs_root = 0
-let g:startify_fortune_use_unicode = 1
-let g:startify_session_persistence = 1
-let g:startify_enable_special = 0
+"let g:startify_session_dir = '~/.config/nvim/session'
+"let g:startify_lists = [
+"          \ { 'type': 'files',     'header': ['   Files']            },
+"          \ { 'type': 'dir',       'header': ['   Current Directory '. getcwd()] },
+"          \ { 'type': 'bookmarks', 'header': ['   Bookmarks']      },
+"          \ { 'type': 'sessions',  'header': ['   Sessions']       },
+"          \ ]
+"let g:startify_bookmarks = [
+"            \ { 'c': '~/.config/nvim/init.vim' },
+"            \ { 'z': '~/.config/zsh/.zshrc' },
+"            \ '~/Blog',
+"            \ '~/Code',
+"            \ '~/Pics',
+"            \ ]
+"let g:startify_session_autoload = 1
+"let g:startify_session_delete_buffers = 1
+"let g:startify_change_to_vcs_root = 0
+"let g:startify_fortune_use_unicode = 1
+"let g:startify_session_persistence = 1
+"let g:startify_enable_special = 0
 "let g:startify_custom_header = [
         "\ '   _  __     _         __  ___         __     ___ ',
         "\ '  / |/ /  __(_)_ _    /  |/  /__ _____/ /    |_  |',
