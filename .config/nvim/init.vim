@@ -246,7 +246,6 @@ Plug 'rodjek/vim-puppet', { 'for': 'puppet' }
 "Plug 'sainnhe/edge'
 "Plug 'tomasr/molokai'
 "Plug 'AlessandroYorba/Despacio'
-"Plug 'nightsense/cosmic_latte'
 "Plug 'nightsense/snow'
 "Plug 'nightsense/stellarized'
 "Plug 'junegunn/seoul256.vim'
@@ -255,10 +254,11 @@ Plug 'rodjek/vim-puppet', { 'for': 'puppet' }
 "Plug 'mhartington/oceanic-next'
 "Plug 'jacoborus/tender.vim'
 "Plug 'joshdick/onedark.vim'
-"Plug 'flrnd/plastic.vim'
 "Plug 'kaicataldo/material.vim'
+"Plug 'flrnd/plastic.vim'
 " }}}
 Plug 'liuchengxu/space-vim-dark'
+Plug 'nightsense/cosmic_latte' " Looks best with gruvbox in terminal with transparent bg
 "Plug 'morhetz/gruvbox'
 Plug 'AlessandroYorba/Sierra'
 Plug 'arcticicestudio/nord-vim'
