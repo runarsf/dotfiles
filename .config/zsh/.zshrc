@@ -2,9 +2,9 @@
 # vim: set foldmethod=marker foldlevel=0 nomodeline:
 [[ $- != *i* ]] && return # don't do anything if not running interactively
 # Auto start tmux, chsh alternative: sudo chsh -s /bin/tmux ${USER}
-#if command -v "tmux" >/dev/null 2>&1 && test -n "${PS1}" -a -z "${TMUX}" && [[ ! "${TERM}" =~ screen ]] && [[ ! "${TERM}" =~ tmux ]]; then
-#  exec tmux
-#fi
+if command -v "tmux" >/dev/null 2>&1 && test -n "${PS1}" -a -z "${TMUX}" && [[ ! "${TERM}" =~ screen ]] && [[ ! "${TERM}" =~ tmux ]]; then
+  exec tmux
+fi
 # }}}
 
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc. {{{
