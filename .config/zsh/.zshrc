@@ -1,6 +1,10 @@
 # runarsf's Zoomer SHell config {{{
 # vim: set foldmethod=marker foldlevel=0 nomodeline:
 [[ $- != *i* ]] && return # don't do anything if not running interactively
+# Auto start tmux, chsh alternative: sudo chsh -s /bin/tmux ${USER}
+#if command -v "tmux" >/dev/null 2>&1 && test -n "${PS1}" -a -z "${TMUX}" && [[ ! "${TERM}" =~ screen ]] && [[ ! "${TERM}" =~ tmux ]]; then
+#  exec tmux
+#fi
 # }}}
 
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc. {{{
@@ -216,7 +220,4 @@ dotfiles () {
 test -s "${HOME}/.nvm/nvm.sh" && source "${HOME}/.nvm/nvm.sh"
 test -f "${HOME}/.fzf.zsh" && source "${HOME}/.fzf.zsh"
 test -f "${HOME}/.config/p10k/.p10k.zsh" && source "${HOME}/.config/p10k/.p10k.zsh" || (test -f "${HOME}/.p10k.zsh" && source "${HOME}/.p10k.zsh")
-if command -v "tmux" >/dev/null 2>&1 && test -n "${PS1}" -a -z "${TMUX}" && [[ ! "${TERM}" =~ screen ]] && [[ ! "${TERM}" =~ tmux ]]; then
-  exec tmux
-fi
 # }}}

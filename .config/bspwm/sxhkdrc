@@ -23,6 +23,8 @@ super + {_,shift + }{0-9}
 
 super + {Left,Down,Up,Right}
 	bspwm_focus {west,south,north,east}
+super + {h,j,k,l}
+	bspwm_focus {west,south,north,east}
 	#	monocle="$(bspc query -T -d | grep '"layout":"monocle"')"; \
 	#	{test -z "$monocle" && bspc node --focus west.local || bspc node --focus prev.local, \
 	#	 test -z "$monocle" && bspc node --focus south.local || bspc node --focus prev.local, \
@@ -32,6 +34,8 @@ super + {Left,Down,Up,Right}
 # TODO: Should call --to-monitor {west,south,north,east}
 super + shift + {Left,Down,Up,Right}
 	bspwm_move {west,south,north,east}
+super + shift + {h,j,k,l}
+	bspwm_move {west,south,north,east}
 #	floating="$(bspc query -T -n focused | grep '"state":"floating"')"; \
 #	{test -z "$floating" && bspc node --swap west --follow || bspc node --move -40 0, \
 #	 test -z "$floating" && bspc node --swap south --follow || bspc node --move 0 40, \
@@ -40,12 +44,24 @@ super + shift + {Left,Down,Up,Right}
 
 super + ctrl + {Left,Down,Up,Right}
 	bspc node --resize {left 20 0,bottom 0 -20,top 0 20,right -20 0}
+super + ctrl + {h,j,k,l}
+	bspc node --resize {left 20 0,bottom 0 -20,top 0 20,right -20 0}
+
 super + ctrl + shift + {Left,Down,Up,Right}
 	bspc node --resize {left -20 0,bottom 0 20,top 0 -20,right 20 0}
+super + ctrl + shift + {h,j,k,l}
+	bspc node --resize {left -20 0,bottom 0 20,top 0 -20,right 20 0}
+
 super + r : {Left,Down,Up,Right}
 	bspc node --resize {left 20 0,bottom 0 -20,top 0 20,right -20 0}
+super + r : {h,j,k,l}
+	bspc node --resize {left 20 0,bottom 0 -20,top 0 20,right -20 0}
+
 super + ctrl + r : {Left,Down,Up,Right}
 	bspc node --resize {left -20 0,bottom 0 20,top 0 -20,right 20 0}
+super + ctrl + r : {h,j,k,l}
+	bspc node --resize {left -20 0,bottom 0 20,top 0 -20,right 20 0}
+
 #super {_,ctrl + }r : {Left,Down,Up,Right}
 #	bspwm_resize {contract,expand} {west,south,north,east} 20
 
@@ -77,6 +93,8 @@ super + c ; p
 	bspc config focus_follows_pointer {false,true}
 
 super + alt + {Left,Down,Up,Right}
+	bspc node --presel-dir {west,south,north,east}
+super + alt + {h,j,k,l}
 	bspc node --presel-dir {west,south,north,east}
 
 # preselect the ratio
