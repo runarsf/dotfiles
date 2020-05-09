@@ -187,6 +187,7 @@ silent! if plug#begin('~/.vim/plugged')
 "Plug 'robcsi/viewmaps.vim'
 "Plug 'tpope/vim-fugitive'
 "Plug 'voldikss/vim-codelf', { 'on': 'Codelf' }
+"Plug 'scrooloose/nerdcommenter'
 " }}}
 "Plug 'airblade/vim-rooter'
 "if $DISPLAY != ''
@@ -198,7 +199,6 @@ silent! if plug#begin('~/.vim/plugged')
 Plug 'matze/vim-tex-fold', { 'for': 'tex' }
 Plug 'matze/vim-ini-fold', { 'for': 'ini' }
 Plug 'vimwiki/vimwiki'
-Plug 'scrooloose/nerdcommenter'
 Plug 'mattn/calendar-vim'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
@@ -297,8 +297,8 @@ endif
         "\]
 " }}}
 " nerdcommenter {{{
-vmap <leader>cc <plug>NERDCommenterToggle
-nmap <leader>cc <plug>NERDCommenterToggle
+"vmap <leader>cc <plug>NERDCommenterToggle
+"nmap <leader>cc <plug>NERDCommenterToggle
 " }}}
 " vim-stay {{{
 "set viewoptions=cursor,folds,slash,unix
