@@ -57,6 +57,15 @@ endfunction
 silent! if plug#begin('~/.vim/plugged')
 " General {{{
 " Disabled General {{{
+"Plug 'tpope/vim-fugitive'
+"Plug 'tpope/vim-rhubarb'
+"Plug 'junegunn/gv.vim'
+"Plug 'airblade/vim-rooter'
+"if $DISPLAY != ''
+"  Plug 'ying17zi/vim-live-latex-preview', { 'for': 'tex' } " requires biber
+"endif
+"Plug 'skywind3000/vim-auto-popmenu'
+"Plug 'mhinz/vim-startify'
 "Plug 'chazy/dirsettings'
 "if has('python3') && $DISPLAY != ''
 "  Plug 'anned20/vimsence'
@@ -118,6 +127,7 @@ silent! if plug#begin('~/.vim/plugged')
 "plug 'zefei/vim-wintabs-powerline'
 "Plug 'b4b4r07/vim-buftabs'
 "Plug 'bling/vim-bufferline'
+"Plug 'ap/vim-buftabline' " Best buffer tabline
 "Plug 'airblade/vim-gitgutter'
 "Plug 'fcpg/vim-waikiki'
 "Plug 'yuttie/comfortable-motion.vim'
@@ -189,24 +199,17 @@ silent! if plug#begin('~/.vim/plugged')
 "Plug 'voldikss/vim-codelf', { 'on': 'Codelf' }
 "Plug 'scrooloose/nerdcommenter'
 " }}}
-"Plug 'airblade/vim-rooter'
-"if $DISPLAY != ''
-"  Plug 'ying17zi/vim-live-latex-preview', { 'for': 'tex' } " requires biber
-"endif
-"Plug 'skywind3000/vim-auto-popmenu'
-"Plug 'zhimsel/vim-stay'
-"Plug 'mhinz/vim-startify'
+Plug 'zhimsel/vim-stay'
 Plug 'matze/vim-tex-fold', { 'for': 'tex' }
 Plug 'matze/vim-ini-fold', { 'for': 'ini' }
 Plug 'vimwiki/vimwiki'
 Plug 'mattn/calendar-vim'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
-Plug 'ctrlpvim/ctrlp.vim'
-Plug 'tmhedberg/SimpylFold'
+"Plug 'ctrlpvim/ctrlp.vim'
+Plug 'tmhedberg/SimpylFold', { 'for': 'python' }
 Plug 'unblevable/quick-scope'
 Plug 'dstein64/vim-startuptime'
-Plug 'ap/vim-buftabline'
 Plug 'jlanzarotta/bufexplorer'
 Plug 'scrooloose/nerdtree'
 Plug 'junegunn/goyo.vim', { 'on': 'Goyo' }
@@ -221,9 +224,6 @@ if has('nvim') || has('patch-8.0.902')
 else
   Plug 'mhinz/vim-signify', { 'branch': 'legacy' }
 endif
-Plug 'tpope/vim-fugitive'
-Plug 'tpope/vim-rhubarb'
-Plug 'junegunn/gv.vim'
 Plug 'ryanoasis/vim-devicons'
 " }}}
 " Syntax highlighting {{{
@@ -301,7 +301,7 @@ endif
 "nmap <leader>cc <plug>NERDCommenterToggle
 " }}}
 " vim-stay {{{
-"set viewoptions=cursor,folds,slash,unix
+set viewoptions=cursor,folds,slash,unix
 " }}}
 " vimwiki {{{
 " https://opensource.com/article/18/6/vimwiki-gitlab-notes
@@ -424,78 +424,78 @@ let g:vimwiki_list = [{'path':      expand('~/wiki/') . 'personal',
 " }}}
 " }}}
 " notational-fzf-vim {{{
-let g:nv_search_paths = [ expand('~/wiki/') ]
-
-" String. Set to '' (the empty string) if you don't want an extension appended by default.
-" Don't forget the dot, unless you don't want one.
-let g:nv_default_extension = ''
-
-" String. Default is first directory found in `g:nv_search_paths`. Error thrown
-"if no directory found and g:nv_main_directory is not specified
-"let g:nv_main_directory = g:nv_main_directory or (first directory in g:nv_search_paths)
-
-" Dictionary with string keys and values. Must be in the form 'ctrl-KEY':
-" 'command' or 'alt-KEY' : 'command'. See examples below.
-let g:nv_keymap = {
-                    \ 'ctrl-s': 'split ',
-                    \ 'ctrl-v': 'vertical split ',
-                    \ 'ctrl-t': 'tabedit ' }
-
-" String. Must be in the form 'ctrl-KEY' or 'alt-KEY'
-let g:nv_create_note_key = 'ctrl-x'
-
-" String. Controls how new note window is created.
-let g:nv_create_note_window = 'vertical split'
-
-" Boolean. Show preview. Set by default. Pressing Alt-p in FZF will toggle this for the current search.
-let g:nv_show_preview = 1
-
-" Boolean. Respect .*ignore files in or above nv_search_paths. Set by default.
-let g:nv_use_ignore_files = 1
-
-" Boolean. Include hidden files and folders in search. Disabled by default.
-let g:nv_include_hidden = 0
-
-" Boolean. Wrap text in preview window.
-let g:nv_wrap_preview_text = 1
-
-" String. Width of window as a percentage of screen's width.
-let g:nv_window_width = '40%'
-
-" String. Determines where the window is. Valid options are: 'right', 'left', 'up', 'down'.
-let g:nv_window_direction = 'down'
-
-" String. Command to open the window (e.g. `vertical` `aboveleft` `30new` `call my_function()`).
-"let g:nv_window_command = 'call my_function()'
-
-" Float. Width of preview window as a percentage of screen's width. 50% by default.
-let g:nv_preview_width = 50
-
-" String. Determines where the preview window is. Valid options are: 'right', 'left', 'up', 'down'.
-let g:nv_preview_direction = 'right'
-
-" String. Yanks the selected filenames to the default register.
-let g:nv_yank_key = 'ctrl-y'
-
-" String. Separator used between yanked filenames.
-let g:nv_yank_separator = "\n"
-
-" Boolean. If set, will truncate each path element to a single character. If
-" you have colons in your pathname, this will fail. Set by default.
-let g:nv_use_short_pathnames = 1
-
-"List of Strings. Shell glob patterns. Ignore all filenames that match any of
-" the patterns.
-let g:nv_ignore_pattern = ['summarize-*', 'misc*']
-
-" List of Strings. Key mappings like above in case you want to define your own
-" handler function. Most users won't want to set this to anything.
-let g:nv_expect_keys = []                                              
+"let g:nv_search_paths = [ expand('~/wiki/') ]
+"
+"" String. Set to '' (the empty string) if you don't want an extension appended by default.
+"" Don't forget the dot, unless you don't want one.
+"let g:nv_default_extension = ''
+"
+"" String. Default is first directory found in `g:nv_search_paths`. Error thrown
+""if no directory found and g:nv_main_directory is not specified
+""let g:nv_main_directory = g:nv_main_directory or (first directory in g:nv_search_paths)
+"
+"" Dictionary with string keys and values. Must be in the form 'ctrl-KEY':
+"" 'command' or 'alt-KEY' : 'command'. See examples below.
+"let g:nv_keymap = {
+"                    \ 'ctrl-s': 'split ',
+"                    \ 'ctrl-v': 'vertical split ',
+"                    \ 'ctrl-t': 'tabedit ' }
+"
+"" String. Must be in the form 'ctrl-KEY' or 'alt-KEY'
+"let g:nv_create_note_key = 'ctrl-x'
+"
+"" String. Controls how new note window is created.
+"let g:nv_create_note_window = 'vertical split'
+"
+"" Boolean. Show preview. Set by default. Pressing Alt-p in FZF will toggle this for the current search.
+"let g:nv_show_preview = 1
+"
+"" Boolean. Respect .*ignore files in or above nv_search_paths. Set by default.
+"let g:nv_use_ignore_files = 1
+"
+"" Boolean. Include hidden files and folders in search. Disabled by default.
+"let g:nv_include_hidden = 0
+"
+"" Boolean. Wrap text in preview window.
+"let g:nv_wrap_preview_text = 1
+"
+"" String. Width of window as a percentage of screen's width.
+"let g:nv_window_width = '40%'
+"
+"" String. Determines where the window is. Valid options are: 'right', 'left', 'up', 'down'.
+"let g:nv_window_direction = 'down'
+"
+"" String. Command to open the window (e.g. `vertical` `aboveleft` `30new` `call my_function()`).
+""let g:nv_window_command = 'call my_function()'
+"
+"" Float. Width of preview window as a percentage of screen's width. 50% by default.
+"let g:nv_preview_width = 50
+"
+"" String. Determines where the preview window is. Valid options are: 'right', 'left', 'up', 'down'.
+"let g:nv_preview_direction = 'right'
+"
+"" String. Yanks the selected filenames to the default register.
+"let g:nv_yank_key = 'ctrl-y'
+"
+"" String. Separator used between yanked filenames.
+"let g:nv_yank_separator = "\n"
+"
+"" Boolean. If set, will truncate each path element to a single character. If
+"" you have colons in your pathname, this will fail. Set by default.
+"let g:nv_use_short_pathnames = 1
+"
+""List of Strings. Shell glob patterns. Ignore all filenames that match any of
+"" the patterns.
+"let g:nv_ignore_pattern = ['summarize-*', 'misc*']
+"
+"" List of Strings. Key mappings like above in case you want to define your own
+"" handler function. Most users won't want to set this to anything.
+"let g:nv_expect_keys = []                                              
 " }}}
 " painless-digraph {{{
-map <silent> <Leader>de <Plug>(PainlessdigraphEnable)
-map <silent> <Leader>dd <Plug>(PainlessdigraphDisable)
-map <silent> <Leader>dt <Plug>(PainlessdigraphToggle)
+"map <silent> <Leader>de <Plug>(PainlessdigraphEnable)
+"map <silent> <Leader>dd <Plug>(PainlessdigraphDisable)
+"map <silent> <Leader>dt <Plug>(PainlessdigraphToggle)
 " }}}
 " syntastic {{{
 "let g:syntastic_always_populate_loc_list = 1
@@ -649,6 +649,9 @@ autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=#363840 ctermbg=237
 " }}}
 " fzf {{{
 nmap <leader>f :FZF<cr>
+if !PlugLoaded('ctrlp.vim')
+  nmap <C-p> :FZF<cr>
+endif
 
 " Always enable preview window on the right with 60% width
 let g:fzf_preview_window = 'right:60%'
