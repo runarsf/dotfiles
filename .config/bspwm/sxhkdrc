@@ -21,10 +21,14 @@ super + {_,shift + }{0-9}
 #  && bspc node --swap {prev,next,prev,next}.local --follow \
 #  || bspc node --swap {west,south,north,east}.local --follow
 
-super + {Left,Down,Up,Right}
-	bspwm_focus {west,south,north,east}
-super + {h,j,k,l}
-	bspwm_focus {west,south,north,east}
+super + {Left,Right}
+	bspc node --focus {west,east}
+super + {Down,Up}
+	bspwm_focus {south,north}
+super + {h,l}
+	bspwm_focus {west,east}
+super + {j,k}
+	bspwm_focus {south,north}
 	#	monocle="$(bspc query -T -d | grep '"layout":"monocle"')"; \
 	#	{test -z "$monocle" && bspc node --focus west.local || bspc node --focus prev.local, \
 	#	 test -z "$monocle" && bspc node --focus south.local || bspc node --focus prev.local, \
