@@ -202,8 +202,8 @@ silent! if plug#begin('~/.vim/plugged')
 Plug 'zhimsel/vim-stay'
 Plug 'matze/vim-tex-fold', { 'for': 'tex' }
 Plug 'matze/vim-ini-fold', { 'for': 'ini' }
-Plug 'vimwiki/vimwiki'
-Plug 'mattn/calendar-vim'
+"Plug 'vimwiki/vimwiki'
+"Plug 'mattn/calendar-vim'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 "Plug 'ctrlpvim/ctrlp.vim'
@@ -212,6 +212,7 @@ Plug 'unblevable/quick-scope'
 Plug 'dstein64/vim-startuptime'
 Plug 'jlanzarotta/bufexplorer'
 Plug 'scrooloose/nerdtree'
+"Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'junegunn/goyo.vim', { 'on': 'Goyo' }
 Plug 'junegunn/limelight.vim', { 'on': 'Limelight' }
 Plug 'justinmk/vim-sneak'
@@ -219,11 +220,11 @@ Plug 'nathanaelkane/vim-indent-guides'
 if v:version >= 703 && executable('node')
   Plug 'neoclide/coc.nvim', { 'branch': 'release', 'tag': '*', 'do': { -> coc#util#install()}}
 endif
-if has('nvim') || has('patch-8.0.902')
-  Plug 'mhinz/vim-signify'
-else
-  Plug 'mhinz/vim-signify', { 'branch': 'legacy' }
-endif
+"if has('nvim') || has('patch-8.0.902')
+"  Plug 'mhinz/vim-signify'
+"else
+"  Plug 'mhinz/vim-signify', { 'branch': 'legacy' }
+"endif
 Plug 'ryanoasis/vim-devicons'
 " }}}
 " Syntax highlighting {{{
@@ -268,6 +269,21 @@ Plug 'rakr/vim-one'
 call plug#end()
 endif
 
+" nertree-git-plugin {{{
+"let g:NERDTreeIndicatorMapCustom = {
+"    \ "Modified"  : "✹",
+"    \ "Staged"    : "✚",
+"    \ "Untracked" : "✭",
+"    \ "Renamed"   : "➜",
+"    \ "Unmerged"  : "═",
+"    \ "Deleted"   : "✖",
+"    \ "Dirty"     : "✗",
+"    \ "Clean"     : "✔︎",
+"    \ 'Ignored'   : '☒',
+"    \ "Unknown"   : "?"
+"    \ }
+"let g:NERDTreeShowIgnoredStatus = 0
+" }}}
 " vim-startify {{{
 "let g:startify_session_dir = '~/.config/nvim/session'
 "let g:startify_lists = [
@@ -306,22 +322,22 @@ set viewoptions=cursor,folds,slash,unix
 " vimwiki {{{
 " https://opensource.com/article/18/6/vimwiki-gitlab-notes
 " https://blog.mague.com/?p=602
-let g:vimwiki_ext2syntax = {'.md': 'markdown', '.markdown': 'markdown', '.mdown': 'markdown'}
-let g:vimwiki_list = [{'path':      expand('~/wiki/') . 'personal',
-                     \ 'path_html': expand('~/wiki/') . 'personal/html',
-                     \ 'ext':       '.md',
-                     \ 'syntax':    'default',
-                     \ 'auto_toc':  0},
-                     \{'path':      expand('~/wiki/') . 'work',
-                     \ 'path_html': expand('~/wiki/') . 'work/html',
-                     \ 'ext':       '.md',
-                     \ 'syntax':    'markdown',
-                     \ 'auto_toc':  0},
-                     \{'path':      expand('~/wiki/') . 'vimwikiwiki/wiki',
-                     \ 'path_html': expand('~/wiki/') . 'vimwikiwiki/docs',
-                     \ 'ext':       '.wiki',
-                     \ 'syntax':    'default',
-                     \ 'auto_toc':  1}]
+"let g:vimwiki_ext2syntax = {'.md': 'markdown', '.markdown': 'markdown', '.mdown': 'markdown'}
+"let g:vimwiki_list = [{'path':      expand('~/wiki/') . 'personal',
+"                     \ 'path_html': expand('~/wiki/') . 'personal/html',
+"                     \ 'ext':       '.md',
+"                     \ 'syntax':    'default',
+"                     \ 'auto_toc':  0},
+"                     \{'path':      expand('~/wiki/') . 'work',
+"                     \ 'path_html': expand('~/wiki/') . 'work/html',
+"                     \ 'ext':       '.md',
+"                     \ 'syntax':    'markdown',
+"                     \ 'auto_toc':  0},
+"                     \{'path':      expand('~/wiki/') . 'vimwikiwiki/wiki',
+"                     \ 'path_html': expand('~/wiki/') . 'vimwikiwiki/docs',
+"                     \ 'ext':       '.wiki',
+"                     \ 'syntax':    'default',
+"                     \ 'auto_toc':  1}]
 " Filename format. The filename is created using strftime() function
 "let g:zettel_format = "%d%m%y-%H%M-%title-%file_no"
 " command used for VimwikiSearch 
@@ -703,6 +719,8 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 "let g:NERDTreeDirArrowCollapsible = 'v'
 
 let g:NERDTreeGitStatusWithFlags = 1
+let NERDTreeShowHidden=1
+let g:NERDTreeWinPos = "left"
 let g:NERDTreeIgnore = [
   \ '^node_modules$',
   "\ '^.*\.png$',
@@ -723,7 +741,6 @@ let g:NERDTreeIgnore = [
    "\ "Clean"     : "#87939A",   
    "\ "Ignored"   : "#808080"   
    "\ }
-let g:NERDTreeWinPos = "left"
 " Toggle NERDTree and focus editor
 map <silent> <C-n> :NERDTreeToggle <bar> wincmd p<CR>
 
@@ -874,6 +891,7 @@ set shortmess+=cI
 set signcolumn=no
 set list listchars=trail:·,nbsp:⎵,tab:┊» " ¦┆┊ eol:⏎ (		)
 set laststatus=2 cmdheight=1
+set foldmethod=marker foldmarker={{{,}}}
 
 " Tabs and lines {{{
 set smarttab        " Enabling this will make the tab key
