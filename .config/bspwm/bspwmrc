@@ -67,7 +67,7 @@ bspc rule -a org.remmina.Remmina desktop=^5
 bspc rule -a Screenkey manage=off
 bspc rule -a Pavucontrol floating=on
 bspc rule -a mpv floating=on
-bspc rule -a Alacritty:scratchpad sticky=on state=floating rectangle=widthxheight+Xoffset+Yoffset
+bspc rule -a '*:scratchpad' sticky=on state=floating center=true rectangle=1600x1000+0+0
 # }}}
 
 exec_once () { # {{{

@@ -905,6 +905,18 @@ set wrapmargin=0
 "\ set autoindent
 " }}}
 
+" oni {{{
+if exists('g:gui_oni')
+  set noswapfile
+  set smartcase
+  set mouse=a
+  set noshowmode
+  set noruler
+  set laststatus=0
+  set noshowcmd
+endif
+" }}}
+
 source $VIMRUNTIME/delmenu.vim
 source $VIMRUNTIME/menu.vim
 " }}}======================
