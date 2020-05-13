@@ -16,26 +16,35 @@ endif
 " }}}
 " vim-plug windows installation {{{
 if has('win32') && empty(glob('~\vimfiles\autoload\plug.vim')) && empty(glob('~\AppData\Local\nvim\autoload\plug.vim'))
-  if has('nvim')
-    md ~\AppData\Local\nvim\autoload
-    $uri = 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-    (New-Object Net.WebClient).DownloadFile(
-      $uri,
-      $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath(
-        "~\AppData\Local\nvim\autoload\plug.vim"
-      )
-    )
-  else
-    md ~\vimfiles\autoload
-    $uri = 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-    (New-Object Net.WebClient).DownloadFile(
-      $uri,
-      $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath(
-        "~\vimfiles\autoload\plug.vim"
-      )
-    )
-  endif
+  if empty(glob('$LOCALAPPDATA\nvim\autoload\plug.vim'))
+  silent ! powershell -Command "
+  \   New-Item -Path ~\AppData\Local\nvim -Name autoload -Type Directory -Force;
+  \   Invoke-WebRequest
+  \   -Uri 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+  \   -OutFile ~\AppData\Local\nvim\autoload\plug.vim
+  \ "
   autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
+"  if has('nvim')
+"    md ~\AppData\Local\nvim\autoload
+"    $uri = 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+"    (New-Object Net.WebClient).DownloadFile(
+"      $uri,
+"      $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath(
+"        "~\AppData\Local\nvim\autoload\plug.vim"
+"      )
+"    )
+"  else
+"    md ~\vimfiles\autoload
+"    $uri = 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+"    (New-Object Net.WebClient).DownloadFile(
+"      $uri,
+"      $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath(
+"        "~\vimfiles\autoload\plug.vim"
+"      )
+"    )
+"  endif
+"  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 " }}}
 
