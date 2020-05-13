@@ -673,13 +673,24 @@ autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=#363840 ctermbg=237
 "let g:codelf_enable_popup_menu = v:true
 " }}}
 " fzf {{{
-nmap <leader>f :FZF<cr>
+nmap <leader>f :Files<CR>
 if !PlugLoaded('ctrlp.vim')
-  nmap <C-p> :FZF<cr>
+  nmap <C-p> :GFiles<CR>
 endif
 
 " Always enable preview window on the right with 60% width
 let g:fzf_preview_window = 'right:60%'
+
+" Simple preview for :Files with only cat
+"command! -bang -nargs=? -complete=dir Files
+"    \ call fzf#vim#files(<q-args>, {'options': ['--layout=reverse', '--info=inline', '--preview', 'cat {}']}, <bang>0)
+"command! -bang -nargs=? -complete=dir Files
+"    \ call fzf#vim#files(<q-args>, fzf#vim#with_preview({'options': ['--layout=reverse', '--info=inline']}), <bang>0)
+command! -bang -nargs=? -complete=dir Files
+    \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
+
+" fzf#vim#marks({'options': ['--preview', 'echo line = {}']})
+" '--preview', 'cat -n {-1} | egrep --color=always -C 10 ^[[:space:]]*{2}[[:space:]]'
 " }}}
 " limelight.vim {{{
 " Color name (:help cterm-colors) or ANSI code
