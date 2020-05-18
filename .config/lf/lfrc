@@ -1,7 +1,7 @@
 # Basic Settings
 set preview false
-set previewer lfpreviewer
-set previewer pistol
+#set previewer lfpreviewer
+# set previewer pistol
 set hidden true
 set color256 true
 set drawbox true
@@ -10,21 +10,21 @@ set ignorecase true
 
 # Custom Functions
 cmd open ${{
-    case $(file --mime-type "${f}" -bL) in
-        text/*|application/json) ${EDITOR} "${f}";;
-        video/*|image/*/application/pdf) xdg-open "${f}" & disown;;
-        *) xdg-open "${f}" ;;
-    esac
+  case $(file --mime-type "${f}" -bL) in
+    text/*|application/json) ${EDITOR} "${f}";;
+    video/*|image/*/application/pdf) xdg-open "${f}" & disown;;
+    *) xdg-open "${f}";;
+  esac
 }}
 
 cmd mkdir ${{
-  printf "Directory Name: "
+  printf "Directory name: "
   read dir
   mkdir "${dir}"
 }}
 
 cmd mkfile ${{
-  printf "File Name: "
+  printf "File name: "
   read file
   touch "${file}"
   #${EDITOR} "${file}"
@@ -39,12 +39,7 @@ cmd chmod ${{
   done
 }}
 
-cmd sudomkfile ${{
-  printf "File Name: "
-  read file
-  sudo touch "${file}"
-  #sudo $EDITOR $ans
-}}
+cmd chexec %chmod +x "${f}"
 
 cmd setbg %cp "${f}" ~/.config/wall.png && feh --bg-scale "${f}"
 
@@ -54,15 +49,15 @@ cmd setbg %cp "${f}" ~/.config/wall.png && feh --bg-scale "${f}"
 #cmd dlfile %dlfile
 
 # Archive bindings
-cmd unarchive ${{
-  case "${f}" in
-      *.zip) unzip "${f}";;
-      *.tar.gz) tar -xzvf "${f}";;
-      *.tar.bz2) tar -xjvf "${f}";;
-      *.tar) tar -xvf "${f}";;
-      *) printf "Unsupported format\n";;
-  esac
-}}
+#cmd unarchive ${{
+#  case "${f}" in
+#      *.zip) unzip "${f}";;
+#      *.tar.gz) tar -xzvf "${f}";;
+#      *.tar.bz2) tar -xjvf "${f}";;
+#      *.tar) tar -xvf "${f}";;
+#      *) printf "Unsupported format\n";;
+#  esac
+#}}
 
 cmd zip %zip -r "${f}" "${f}"
 cmd tar %tar cvf "${f}.tar" "${f}"
@@ -129,18 +124,18 @@ map au unarchive
 
 # Basic Functions
 map sh set hidden!
-map DD delete
+map dd delete
 map p paste
 map x cut
 map y copy
 map <enter> open
 map mf mkfile
-#map mr sudomkfile
 map md mkdir
 #map ms $mkscript
-map ch chmod
+map ch. chmod
+map chx chexec
 map bg setbg
-#map o open_config
+map o open_config
 map r rename
 map H top
 map L bottom
@@ -148,11 +143,9 @@ map R reload
 #map C clear
 #map U unselect
 
-map gg cd ~
+map gg top
+map G bottom
 
-map gp cd ~/Pictures
-map gdc cd ~/Documents
-map gdf cd ~/dotfiles
 map gdl cd ~/Downloads
 
 map gc cd ~/.config

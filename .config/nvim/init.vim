@@ -1034,8 +1034,8 @@ nmap <silent> <leader>rw :set wrap!<CR>
 
 nmap <leader>.. :messages<CR>
 
-nnoremap <leader>l :set cursorline!<CR>
-nnoremap <leader>ll :set cursorcolumn!<CR>
+nnoremap <silent> <leader>l :set cursorline!<CR>
+nnoremap <silent> <leader>ll :set cursorcolumn!<CR>
 
 " esc in insert mode, consider using kj instead, as it's no-op (up-down)
 inoremap jk <esc>
