@@ -213,6 +213,8 @@ Plug 'matze/vim-tex-fold', { 'for': 'tex' }
 Plug 'matze/vim-ini-fold', { 'for': 'ini' }
 "Plug 'vimwiki/vimwiki'
 "Plug 'mattn/calendar-vim'
+"Plug 'mg979/vim-xtabline'
+"RRethy/vim-illuminate
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 "Plug 'ctrlpvim/ctrlp.vim'
