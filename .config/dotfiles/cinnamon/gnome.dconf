@@ -33,6 +33,9 @@ side-panel-size=200
 size=(612, 278)
 state=128
 
+[libgnomekbd/desktop]
+load-extra-items=true
+
 [nautilus/preferences]
 default-folder-viewer='icon-view'
 search-filter-time-type='last_modified'
