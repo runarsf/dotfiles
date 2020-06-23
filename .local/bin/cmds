@@ -25,7 +25,7 @@ cmd=$(\
 | fzf
 )
 
-printf "${cmd}\n"
+printf "$ ${cmd}\n\n"
 
 # Replace all <index> > input
 while true; do
