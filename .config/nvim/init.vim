@@ -66,6 +66,11 @@ endfunction
 silent! if plug#begin('~/.vim/plugged')
 " General {{{
 " Disabled General {{{
+"Plug 'mattn/calendar-vim'
+"Plug 'mg979/vim-xtabline'
+"RRethy/vim-illuminate
+"Plug 'ctrlpvim/ctrlp.vim'
+"Plug 'Xuyuanp/nerdtree-git-plugin'
 "Plug 'tpope/vim-fugitive'
 "Plug 'tpope/vim-rhubarb'
 "Plug 'junegunn/gv.vim'
@@ -211,19 +216,14 @@ silent! if plug#begin('~/.vim/plugged')
 Plug 'zhimsel/vim-stay'
 Plug 'matze/vim-tex-fold', { 'for': 'tex' }
 Plug 'matze/vim-ini-fold', { 'for': 'ini' }
-"Plug 'vimwiki/vimwiki'
-"Plug 'mattn/calendar-vim'
-"Plug 'mg979/vim-xtabline'
-"RRethy/vim-illuminate
+Plug 'vimwiki/vimwiki'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
-"Plug 'ctrlpvim/ctrlp.vim'
 Plug 'tmhedberg/SimpylFold', { 'for': 'python' }
 Plug 'unblevable/quick-scope'
 Plug 'dstein64/vim-startuptime'
 Plug 'jlanzarotta/bufexplorer'
 Plug 'scrooloose/nerdtree'
-"Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'junegunn/goyo.vim', { 'on': 'Goyo' }
 Plug 'junegunn/limelight.vim', { 'on': 'Limelight' }
 Plug 'justinmk/vim-sneak'
@@ -333,22 +333,17 @@ set viewoptions=cursor,folds,slash,unix
 " vimwiki {{{
 " https://opensource.com/article/18/6/vimwiki-gitlab-notes
 " https://blog.mague.com/?p=602
-"let g:vimwiki_ext2syntax = {'.md': 'markdown', '.markdown': 'markdown', '.mdown': 'markdown'}
-"let g:vimwiki_list = [{'path':      expand('~/wiki/') . 'personal',
-"                     \ 'path_html': expand('~/wiki/') . 'personal/html',
-"                     \ 'ext':       '.md',
-"                     \ 'syntax':    'default',
-"                     \ 'auto_toc':  0},
-"                     \{'path':      expand('~/wiki/') . 'work',
-"                     \ 'path_html': expand('~/wiki/') . 'work/html',
-"                     \ 'ext':       '.md',
-"                     \ 'syntax':    'markdown',
-"                     \ 'auto_toc':  0},
-"                     \{'path':      expand('~/wiki/') . 'vimwikiwiki/wiki',
-"                     \ 'path_html': expand('~/wiki/') . 'vimwikiwiki/docs',
-"                     \ 'ext':       '.wiki',
-"                     \ 'syntax':    'default',
-"                     \ 'auto_toc':  1}]
+let g:vimwiki_ext2syntax = {'.md': 'markdown', '.markdown': 'markdown', '.mdown': 'markdown'}
+let g:vimwiki_list = [{'path':      expand('~/wiki/'),
+                     \ 'path_html': expand('~/wiki/') . 'html',
+                     \ 'ext':       '.md',
+                     \ 'syntax':    'markdown',
+                     \ 'auto_toc':  0},
+                     \{'path':      expand('~/wiki/') . 'work',
+                     \ 'path_html': expand('~/wiki/') . 'work/html',
+                     \ 'ext':       '.md',
+                     \ 'syntax':    'markdown',
+                     \ 'auto_toc':  0}]
 " Filename format. The filename is created using strftime() function
 "let g:zettel_format = "%d%m%y-%H%M-%title-%file_no"
 " command used for VimwikiSearch 

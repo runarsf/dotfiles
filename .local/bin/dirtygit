@@ -129,10 +129,26 @@ commit () { # {{{
   eval "${gitCommand[*]} status"
 } # }}}
 
-# Arguments {{{
-yes=0 gitAdd='.'
+yes=0
+gitAdd='.'
+#defaultArgs=()
 positional=()
 gitCommand=("git")
+
+#configPaths=(
+#  "${HOME}/.config/.dirtygitrc"
+#  "${HOME}/.dirtygitrc"
+#  #"./.dirtygitrc"
+#)
+#for cfg in "${configPaths[@]}"; do
+#  if test -f "${cfg}"; then
+#    export "$(grep -v '^#' ${cfg} | xargs)"
+#  fi
+#done
+#
+#set -- "${defaultArgs[@]} ${@}"
+
+# Arguments {{{
 while test "${#}" -gt "0"; do
   case "${1}" in
     -h|--help) # {{{

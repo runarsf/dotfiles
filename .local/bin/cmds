@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+set -o errexit
+
+# Get list of commands
+if test -n "${COMMANDS_FILE}" -a -f "${COMMANDS_FILE}"; then
+  commands="$(cat ${COMMANDS_FILE})"
+elif test -f 'commands'; then
+  commands="$(cat commands)"
+elif (test -d '.git' || git rev-parse --is-inside-work-tree > /dev/null 2>&1) \
+ && test -f "$(find -L -type f -name 'commands' 2> >(grep -v 'Permission denied' >&2))"; then
+  commands="$(cat $(find -L -type f -name 'commands' 2> >(grep -v 'Permission denied' >&2)))"
+elif test -f "${HOME}"/.config/commands; then
+  commands="$(cat ${HOME}/.config/commands)"
+elif test -f "${HOME}"/.commands; then
+  commands="$(cat ${HOME}/.commands)"
+else
+  printf "No 'commands' file found.\n"
+  exit 1
+fi
+
+# Select command
+cmd=$(\
+  printf "${commands[@]}" \
+| awk '{$1=$1};1' \
+| fzf
+)
+
+printf "${cmd}\n"
+
+# Replace all <index> > input
+while true; do
+  # Check if anything left to replace
+  [[ ${cmd} == *"<"*">"* ]] || break
+  # Get the content of the first occurence of <this>
+  index="$(echo $cmd | awk -F[\<\>] '{print $2}')"
+  # Get substitution for <this>
+  read -p "${index}» " subst
+  test -z "${subst}" && subst="${index}"
+  # Replace all occurences of <this>
+  cmd="$(sed -E "s|(<${index}>)|${subst}|g" <<< ${cmd})"
+done
+
+# Run final command
+printf "${cmd}" | bash
+#eval "${cmd}"
