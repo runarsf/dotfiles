@@ -34,7 +34,7 @@ while true; do
   # Get the content of the first occurence of <this>
   index="$(echo $cmd | awk -F[\<\>] '{print $2}')"
   # Get substitution for <this>
-  read -p "${index}» " subst
+  read -p "${index}> " subst
   test -z "${subst}" && subst="${index}"
   # Replace all occurences of <this>
   cmd="$(sed -E "s|(<${index}>)|${subst}|g" <<< ${cmd})"
