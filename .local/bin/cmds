@@ -41,5 +41,5 @@ while true; do
 done
 
 # Run final command
-printf "${cmd}" | bash
-#eval "${cmd}"
+#printf "${cmd}" | bash
+eval "${cmd}"
