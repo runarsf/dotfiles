@@ -1,26 +1,40 @@
 #!/usr/bin/env bash
 set -o errexit
+#set -o xtrace
 
 # Get list of commands
 if test -n "${COMMANDS_FILE}" -a -f "${COMMANDS_FILE}"; then
-  commands="$(cat ${COMMANDS_FILE})"
+  ctype="environment"
+  cfile="${COMMANDS_FILE}"
+  #commands="$(cat ${COMMANDS_FILE})"
 elif test -f 'commands'; then
-  commands="$(cat commands)"
+  ctype="local"
+  cfile="./commands"
+  #commands="$(cat commands)"
 elif (test -d '.git' || git rev-parse --is-inside-work-tree > /dev/null 2>&1) \
  && test -f "$(find -L -type f -name 'commands' 2> >(grep -v 'Permission denied' >&2))"; then
-  commands="$(cat $(find -L -type f -name 'commands' 2> >(grep -v 'Permission denied' >&2)))"
+  ctype="local git"
+  cfile="$(printf $(find -L -type f -name 'commands' 2> >(grep -v 'Permission denied' >&2)))"
+  #commands="$(cat $(find -L -type f -name 'commands' 2> >(grep -v 'Permission denied' >&2)))"
 elif test -f "${HOME}"/.config/commands; then
-  commands="$(cat ${HOME}/.config/commands)"
+  ctype="global"
+  cfile="${HOME}/.config/commands"
+  #commands="$(cat ${HOME}/.config/commands)"
 elif test -f "${HOME}"/.commands; then
-  commands="$(cat ${HOME}/.commands)"
+  ctype="global"
+  cfile="${HOME}/.commands"
+  #commands="$(cat ${HOME}/.commands)"
 else
   printf "No 'commands' file found.\n"
   exit 1
 fi
 
+default_commands=": Edit ${ctype} commands file. ; ${EDITOR:-vim} ${cfile}\n"
+commands="$(cat ${cfile})"
+
 # Select command
 cmd=$(\
-  printf "${commands[@]}" \
+  printf "${default_commands}${commands[@]}" \
 | awk '{$1=$1};1' \
 | fzf
 )

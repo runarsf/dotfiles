@@ -1,0 +1,2 @@
+: Restart docker-compose container. ; docker-compose down && docker-compose up -d --force-recreate --build && docker-compose logs -f
+: Exec into docker container. ; docker exec -it <> <bash>

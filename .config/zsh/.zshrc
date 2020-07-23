@@ -55,6 +55,7 @@ if test -z ${noplug}; then
 		zdharma/fast-syntax-highlighting
 		akarzim/zsh-docker-aliases
 		zdharma/zsh-diff-so-fancy
+		kazhala/dotbare
 		# runarsf/rufus-zsh-theme path:rufus-nightly.zsh-theme
 		# robbyrussell/oh-my-zsh path:themes/daveverwer.zsh-theme
 		robbyrussell/oh-my-zsh path:themes/miloshadzic.zsh-theme
@@ -165,8 +166,13 @@ wim () { ${EDITOR} "$(which ${1})" "${@:2}" }
 # }}}
 
 # Dotfiles {{{
+export DOT_DIR="${HOME}/.config/dotfiles/.git"
+export DOT_TREE="${HOME}"
+export DOTBARE_DIR="${DOT_DIR}"
+export DOTBARE_TREE="${DOT_TREE}"
+
 alias dotted='dotfiles ls-files --error-unmatch'
-alias dirtydots='dirtygit --git-dir "${HOME}/dotfiles" --work-tree "${HOME}" --git-add "-u"'
+alias dirtydots="dirtygit --git-dir '${DOT_DIR}' --work-tree '${DOT_TREE}' --git-add '-u'"
 alias dots='dotfiles'
 dotfiles () {
   if test "$#" -eq "0"; then
@@ -179,7 +185,7 @@ dotfiles () {
       return 1
     fi
   done
-  git --git-dir="${HOME}/dotfiles" --work-tree="${HOME}" "${@}"
+  git --git-dir="${DOT_DIR}" --work-tree="${DOT_TREE}" "${@}"
 }
 # }}}
 
