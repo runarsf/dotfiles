@@ -23,8 +23,11 @@ super + Escape
 alt + p
 	sharenix-section -n -c
 
+super + alt + c
+	roficmds
+
 super + shift + c
-	toggleprogram "compton" "-b"
+	toggleprogram "picom" "-b"
 
 super + shift + v
 	whim --editor "$EDITOR +startinsert" --terminal "$TERMINAL --class scratchpad -e"

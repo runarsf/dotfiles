@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+set -o errexit
+
+# TODO: make more interactive (allow templating)
+
+if ! command -v "rofi" "xclip" "xdotool" >/dev/null 2>&1; then
+  notify-send "rofi, xclip, and xdotool are required to run this script."
+  printf "rofi, xclip, and xdotool are required to run this script.\n"
+fi
+
+selection=$(rofi -i -dmenu "${@}" < "${HOME}"/.config/commands)
+printf "${selection}" | xclip -selection clipboard
+sleep 0.1
+xdotool key alt+v
