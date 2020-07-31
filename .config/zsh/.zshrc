@@ -10,9 +10,9 @@
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc. {{{
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
-#if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-#  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-#fi
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
 # }}}
 
 # Completions {{{
@@ -58,9 +58,9 @@ if test -z ${noplug}; then
 		kazhala/dotbare
 		# runarsf/rufus-zsh-theme path:rufus-nightly.zsh-theme
 		# robbyrussell/oh-my-zsh path:themes/daveverwer.zsh-theme
-		robbyrussell/oh-my-zsh path:themes/miloshadzic.zsh-theme
+		# robbyrussell/oh-my-zsh path:themes/miloshadzic.zsh-theme
 		# denysdovhan/spaceship-prompt
-		# romkatv/powerlevel10k
+		romkatv/powerlevel10k
 	EOBUNDLES
   bindkey "$terminfo[kcuu1]" history-substring-search-up
   bindkey "$terminfo[kcud1]" history-substring-search-down

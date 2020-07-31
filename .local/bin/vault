@@ -73,14 +73,9 @@ fi
 read -p "Enter decryption password > " -s password
 printf "\n"
 
-if test -z "${password}"; then
-  prompt "Password not entered, continue without password?" || exit 1
-else
-  printf "Password entered. Proceeding with decryption.\n"
-fi
-
 if test ! -f "${cryptofile}"; then
   printf "Cryptofile not detected, verifying prerequisites and creating.\n"
+  prompt "Password not entered, continue without password?" || exit 1
   if test ! -d "${vaultdir}"; then
     printf "Vault directory not detected, creating.\n"
     mkdir -p "${vaultdir}"
@@ -123,6 +118,7 @@ if test -f "${vaultfile}"; then
   rm -f "${vaultfile}"
 fi
 
+# FIXME: What does this check __actually__ do?
 if test "${premd5}" = "${postmd5}"; then
   printf "File unencrypted. Aborting commit.\n"
 else

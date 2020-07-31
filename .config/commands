@@ -1,2 +1,4 @@
 : Restart docker-compose container. ; docker-compose down && docker-compose up -d --force-recreate --build && docker-compose logs -f
 : Exec into docker container. ; docker exec -it <> <bash>
+ldapsearch -x -h adcon1.kantega.lan -D "runfre-adm@kantega.no" -W -b "ou=Users,ou=Trondheim,ou=Norway,dc=kantega,dc=lan" 
+ldapsearch -H ldaps://adcon1.kantega.lan -x -W -D "runfre@kantega.no" -b "dc=kantega,dc=lan" "(sAMAccountName=tomtor)"
