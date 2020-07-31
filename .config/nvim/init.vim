@@ -216,7 +216,7 @@ silent! if plug#begin('~/.vim/plugged')
 Plug 'zhimsel/vim-stay'
 Plug 'matze/vim-tex-fold', { 'for': 'tex' }
 Plug 'matze/vim-ini-fold', { 'for': 'ini' }
-Plug 'vimwiki/vimwiki'
+"Plug 'vimwiki/vimwiki'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'tmhedberg/SimpylFold', { 'for': 'python' }
