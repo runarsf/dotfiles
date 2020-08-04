@@ -160,6 +160,7 @@ alias back='cd ${OLDPWD}'
 alias reload='source "${HOME}/.config/zsh/.zshrc"'
 alias lineinon='pactl load-module module-loopback latency_msec=1'
 alias whim='whim --editor "${EDITOR} +startinsert" --terminal "${TERMINAL} --class scratchpad -e"'
+dkhl () { docker inspect --format "{{json .State.Health }}" "${1}" | jq }
 wim () { ${EDITOR} "$(which ${1})" "${@:2}" }
 #alias tmux='tmux -f "${XDG_CONFIG_HOME:-${HOME}/.config}/tmux/tmux.conf"'
 #alias paste='nc termbin.com 9999'
