@@ -4,7 +4,7 @@ super + Return
 	"$TERMINAL"
 
 super + x
-	lock || gllock || i3lock-fancy || i3lock
+	gllock || lock || i3lock-fancy || i3lock
 
 super + shift + x
 	prompt "Are you sure you want to shutdown?" "shutdown -h now"
