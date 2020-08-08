@@ -228,6 +228,7 @@ Plug 'junegunn/goyo.vim', { 'on': 'Goyo' }
 Plug 'junegunn/limelight.vim', { 'on': 'Limelight' }
 Plug 'justinmk/vim-sneak'
 Plug 'nathanaelkane/vim-indent-guides'
+"Plug 'rlue/vim-barbaric'
 if v:version >= 703 && executable('node')
   Plug 'neoclide/coc.nvim', { 'branch': 'release', 'tag': '*', 'do': { -> coc#util#install()}}
 endif
