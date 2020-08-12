@@ -1,16 +1,37 @@
 #!/usr/bin/env bash
-
-floating="$(bspc query -T -n focused | grep '"state":"floating"')"
-
 motion="${1}"
-amount="${2:-40}"
+amount="${2:-70}"
+floating="$(bspc query --tree --node focused | grep '"state":"floating"')"
+
+move_node () {
+  motion="${1}"
+  active_monitor="$(bspc query --monitors --node focused)"
+  to_node="$(bspc query --nodes --node ${motion})"
+
+  if test -z "${to_node}"; then
+    to_monitor="$(bspc query --monitors --monitor ${motion})"
+  else
+    to_monitor="$(bspc query --monitors --node ${to_node})"
+  fi
+
+  if test "${active_monitor}" != "${to_monitor}"; then
+    #bspc node --to-node "${motion}" --follow || bspc node --to-monitor "${motion}" --follow
+    #if "${to_monitor}" != "$(bspc query --monitors --monitor west)"
+    bspc node --to-monitor "${motion}" --follow
+    #if test "${motion}" = "east"; then
+    #  bspc node --to-node west --follow
+    #fi
+  else
+    bspc node --swap "${motion}" --follow
+  fi
+}
 
 if test -z "${floating}"; then
   case "${motion}" in
-    north) bspc node --swap north --follow || bspc node --to-monitor north;;
-    south) bspc node --swap south --follow || bspc node --to-monitor south;;
-    west) bspc node --swap west --follow || bspc node --to-monitor west;;
-    east) bspc node --swap east --follow || bspc node --to-monitor east;;
+    north) move_node north;;
+    south) move_node south;;
+    west) move_node west;;
+    east) move_node east;;
   esac
 else
   case "${motion}" in

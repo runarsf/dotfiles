@@ -176,13 +176,13 @@ alias dotted='dotfiles ls-files --error-unmatch'
 alias dirtydots="dirtygit --git-dir '${DOT_DIR}' --work-tree '${DOT_TREE}' --git-add '-u'"
 alias dots='dotfiles'
 dotfiles () {
-  if test "$#" -eq "0"; then
+  if test "${#}" -eq "0"; then
     dotfiles status
-    return
+    return 0
   fi
-  for var in "$@"; do
+  for var in "${@}"; do
     if test "${var}" = "."; then
-      printf "STOP."
+      printf "\'.\' argument disabled by dotfiles git wrapper."
       return 1
     fi
   done
