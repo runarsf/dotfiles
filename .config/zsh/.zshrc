@@ -10,24 +10,22 @@
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc. {{{
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
-#if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-#  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-#fi
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
 # }}}
 
 # Completions {{{
-#autoload -U compinit
-#zmodload zsh/complist
-#zstyle ':completion:*' menu select
-# TODO: Disable tab completion for . and ..
-zstyle ':completion:*:(cd|mv|cp):*' menu select ignore-parents parent pwd
-zstyle :compinstall filename "${HOME}/.config/zsh/.zshrc"
+#zstyle :compinstall filename "${HOME}/.config/zsh/.zshrc"
+#zstyle ':completion:*:(cd|mv|cp):*' menu select ignore-parents parent pwd
 autoload -Uz compinit
-autoload -U edit-command-line
+
+autoload -z edit-command-line
+zle -N edit-command-line
+bindkey "^X^E" edit-command-line
+
 compinit
-# Include hidden files in autocomplete:
 _comp_options+=(globdots)
-bindkey '\CI' expand-or-complete-prefix
 # }}}
 
 # plugins {{{
@@ -41,26 +39,27 @@ if test -z ${noplug}; then
 		# robbyrussell/oh-my-zsh path:plugins/git-extras
 		# robbyrussell/oh-my-zsh path:plugins/colorize # sudo pip3 install pygments
 		robbyrussell/oh-my-zsh path:plugins/colored-man-pages
-		robbyrussell/oh-my-zsh path:plugins/command-not-found
+		# robbyrussell/oh-my-zsh path:plugins/command-not-found
 		# robbyrussell/oh-my-zsh path:plugins/jump
-		robbyrussell/oh-my-zsh path:plugins/thefuck
-		robbyrussell/oh-my-zsh path:plugins/common-aliases
+		# robbyrussell/oh-my-zsh path:plugins/thefuck
+		# robbyrussell/oh-my-zsh path:plugins/common-aliases
 		# robbyrussell/oh-my-zsh path:plugins/docker
 		robbyrussell/oh-my-zsh path:plugins/docker-compose
 		zsh-users/zsh-autosuggestions
 		zsh-users/zsh-history-substring-search
 		zsh-users/zsh-completions
-		djui/alias-tips
+		# djui/alias-tips
 		# zsh-users/zsh-syntax-highlighting
 		zdharma/fast-syntax-highlighting
 		akarzim/zsh-docker-aliases
 		zdharma/zsh-diff-so-fancy
+		knu/zsh-manydots-magic
 		# kazhala/dotbare
 		# runarsf/rufus-zsh-theme path:rufus-nightly.zsh-theme
 		# robbyrussell/oh-my-zsh path:themes/daveverwer.zsh-theme
 		# robbyrussell/oh-my-zsh path:themes/miloshadzic.zsh-theme
-		denysdovhan/spaceship-prompt
-		# romkatv/powerlevel10k
+		# denysdovhan/spaceship-prompt
+		romkatv/powerlevel10k
 	EOBUNDLES
   bindkey "$terminfo[kcuu1]" history-substring-search-up
   bindkey "$terminfo[kcud1]" history-substring-search-down
@@ -95,40 +94,40 @@ ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=067,underline'
 # }}}
 
 # https://github.com/denysdovhan/spaceship-prompt/blob/master/docs/Options.md {{{
-SPACESHIP_PROMPT_ADD_NEWLINE=false
-SPACESHIP_USER_SHOW=false
-SPACESHIP_HOST_SHOW=false
-SPACESHIP_PROMPT_SEPARATE_LINE=false
-SPACESHIP_CHAR_SYMBOL=»
-SPACESHIP_GIT_PREFIX=""
-SPACESHIP_CHAR_SUFFIX=" "
-SPACESHIP_HG_SHOW=false
-SPACESHIP_PACKAGE_SHOW=false
-SPACESHIP_NODE_SHOW=false
-SPACESHIP_RUBY_SHOW=false
-SPACESHIP_ELM_SHOW=false
-SPACESHIP_ELIXIR_SHOW=false
-SPACESHIP_XCODE_SHOW_LOCAL=false
-SPACESHIP_SWIFT_SHOW_LOCAL=false
-SPACESHIP_GOLANG_SHOW=false
-SPACESHIP_PHP_SHOW=false
-SPACESHIP_RUST_SHOW=false
-SPACESHIP_JULIA_SHOW=false
-SPACESHIP_DOCKER_SHOW=false
-SPACESHIP_DOCKER_CONTEXT_SHOW=false
-SPACESHIP_AWS_SHOW=false
-SPACESHIP_CONDA_SHOW=false
-SPACESHIP_VENV_SHOW=false
-SPACESHIP_PYENV_SHOW=false
-SPACESHIP_DOTNET_SHOW=false
-SPACESHIP_EMBER_SHOW=false
-SPACESHIP_KUBECONTEXT_SHOW=false
-SPACESHIP_TERRAFORM_SHOW=false
-SPACESHIP_TERRAFORM_SHOW=false
-SPACESHIP_VI_MODE_SHOW=false
-SPACESHIP_JOBS_SHOW=false
-SPACESHIP_EXEC_TIME_SHOW=false
-SPACESHIP_BATTERY_SHOW=false
+#SPACESHIP_PROMPT_ADD_NEWLINE=false
+#SPACESHIP_USER_SHOW=false
+#SPACESHIP_HOST_SHOW=false
+#SPACESHIP_PROMPT_SEPARATE_LINE=false
+#SPACESHIP_CHAR_SYMBOL=»
+#SPACESHIP_GIT_PREFIX=""
+#SPACESHIP_CHAR_SUFFIX=" "
+#SPACESHIP_HG_SHOW=false
+#SPACESHIP_PACKAGE_SHOW=false
+#SPACESHIP_NODE_SHOW=false
+#SPACESHIP_RUBY_SHOW=false
+#SPACESHIP_ELM_SHOW=false
+#SPACESHIP_ELIXIR_SHOW=false
+#SPACESHIP_XCODE_SHOW_LOCAL=false
+#SPACESHIP_SWIFT_SHOW_LOCAL=false
+#SPACESHIP_GOLANG_SHOW=false
+#SPACESHIP_PHP_SHOW=false
+#SPACESHIP_RUST_SHOW=false
+#SPACESHIP_JULIA_SHOW=false
+#SPACESHIP_DOCKER_SHOW=false
+#SPACESHIP_DOCKER_CONTEXT_SHOW=false
+#SPACESHIP_AWS_SHOW=false
+#SPACESHIP_CONDA_SHOW=false
+#SPACESHIP_VENV_SHOW=false
+#SPACESHIP_PYENV_SHOW=false
+#SPACESHIP_DOTNET_SHOW=false
+#SPACESHIP_EMBER_SHOW=false
+#SPACESHIP_KUBECONTEXT_SHOW=false
+#SPACESHIP_TERRAFORM_SHOW=false
+#SPACESHIP_TERRAFORM_SHOW=false
+#SPACESHIP_VI_MODE_SHOW=false
+#SPACESHIP_JOBS_SHOW=false
+#SPACESHIP_EXEC_TIME_SHOW=false
+#SPACESHIP_BATTERY_SHOW=false
 # }}}
 
 # Binds {{{

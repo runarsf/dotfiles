@@ -51,18 +51,6 @@ endif
 filetype plugin indent on
 let g:colorscheme = 'one'
 
-" Plugin helpers {{{
-"function! PlugLoaded(name)
-"    return (
-"        \ has_key(g:plugs, a:name) &&
-"        \ isdirectory(g:plugs[a:name].dir) &&
-"        \ stridx(&rtp, g:plugs[a:name].dir) >= 0)
-"endfunction
-function! PlugLoaded(name)
-  return (match(&runtimepath, a:name) != -1)
-endfunction
-" }}}
-
 silent! if plug#begin('~/.vim/plugged')
 " General {{{
 " Disabled General {{{
@@ -213,45 +201,50 @@ silent! if plug#begin('~/.vim/plugged')
 "Plug 'voldikss/vim-codelf', { 'on': 'Codelf' }
 "Plug 'scrooloose/nerdcommenter'
 " }}}
-Plug 'zhimsel/vim-stay'
-Plug 'matze/vim-tex-fold', { 'for': 'tex' }
-Plug 'matze/vim-ini-fold', { 'for': 'ini' }
+"Plug 'zhimsel/vim-stay'
+"Plug 'matze/vim-tex-fold', { 'for': 'tex' }
+"Plug 'matze/vim-ini-fold', { 'for': 'ini' }
 "Plug 'vimwiki/vimwiki'
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-Plug 'junegunn/fzf.vim'
-Plug 'tmhedberg/SimpylFold', { 'for': 'python' }
-Plug 'unblevable/quick-scope'
-Plug 'dstein64/vim-startuptime'
-Plug 'jlanzarotta/bufexplorer'
-Plug 'scrooloose/nerdtree'
-Plug 'junegunn/goyo.vim', { 'on': 'Goyo' }
-Plug 'junegunn/limelight.vim', { 'on': 'Limelight' }
-Plug 'justinmk/vim-sneak'
+"Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+"Plug 'junegunn/fzf.vim'
+"Plug 'tmhedberg/SimpylFold', { 'for': 'python' }
+"Plug 'unblevable/quick-scope'
+"Plug 'dstein64/vim-startuptime'
+"Plug 'jlanzarotta/bufexplorer'
+"Plug 'severin-lemaignan/vim-minimap'
+Plug 'preservim/nerdtree'
+"Plug 'junegunn/goyo.vim', { 'on': 'Goyo' }
+"Plug 'junegunn/limelight.vim', { 'on': 'Limelight' }
+"Plug 'justinmk/vim-sneak'
 Plug 'nathanaelkane/vim-indent-guides'
 "Plug 'rlue/vim-barbaric'
 if v:version >= 703 && executable('node')
   Plug 'neoclide/coc.nvim', { 'branch': 'release', 'tag': '*', 'do': { -> coc#util#install()}}
 endif
+"Plug 'vifm/vifm.vim'
+"Plug 'justinmk/vim-dirvish'
+"Plug 'kristijanhusak/vim-dirvish-git'
+"Plug 'bounceme/remote-viewer'
 "if has('nvim') || has('patch-8.0.902')
 "  Plug 'mhinz/vim-signify'
 "else
 "  Plug 'mhinz/vim-signify', { 'branch': 'legacy' }
 "endif
-Plug 'ryanoasis/vim-devicons'
+"Plug 'ryanoasis/vim-devicons'
 " }}}
 " Syntax highlighting {{{
 " Disabled Syntax highlighting {{{
 "Plug 'autozimu/LanguageClient-neovim'
 " }}}
-Plug 'dense-analysis/ale'
-Plug 'hashivim/vim-terraform', { 'for': 'terraform' }
+"Plug 'dense-analysis/ale'
+"Plug 'hashivim/vim-terraform', { 'for': 'terraform' }
 Plug 'chr4/nginx.vim', { 'for': 'nginx' }
 Plug 'storyn26383/vim-vue', { 'for': 'vue' }
 Plug 'ekalinin/Dockerfile.vim', { 'for': 'Dockerfile' }
 Plug 'kovetskiy/sxhkd-vim', { 'for': 'sxhkdrc' }
-Plug 'mboughaba/i3config.vim', { 'for': 'conf' }
-Plug 'Glench/Vim-Jinja2-Syntax', { 'for': 'jinja' }
-Plug 'rodjek/vim-puppet', { 'for': 'puppet' }
+"Plug 'mboughaba/i3config.vim', { 'for': 'conf' }
+"Plug 'Glench/Vim-Jinja2-Syntax', { 'for': 'jinja' }
+"Plug 'rodjek/vim-puppet', { 'for': 'puppet' }
 " }}}
 " Colorschemes {{{
 " Disabled Colorschemes {{{
@@ -270,10 +263,6 @@ Plug 'rodjek/vim-puppet', { 'for': 'puppet' }
 "Plug 'kaicataldo/material.vim'
 "Plug 'flrnd/plastic.vim'
 " }}}
-Plug 'liuchengxu/space-vim-dark'
-Plug 'nightsense/cosmic_latte' " Looks best with gruvbox in terminal with transparent bg
-"Plug 'morhetz/gruvbox'
-Plug 'AlessandroYorba/Sierra'
 Plug 'arcticicestudio/nord-vim'
 Plug 'ayu-theme/ayu-vim'
 Plug 'rakr/vim-one'
@@ -329,13 +318,13 @@ endif
 "nmap <leader>cc <plug>NERDCommenterToggle
 " }}}
 " vim-stay {{{
-set viewoptions=cursor,folds,slash,unix
+"set viewoptions=cursor,folds,slash,unix
 " }}}
 " vimwiki {{{
 " https://opensource.com/article/18/6/vimwiki-gitlab-notes
 " https://blog.mague.com/?p=602
-let g:vimwiki_ext2syntax = {'.md': 'markdown', '.markdown': 'markdown', '.mdown': 'markdown'}
-let g:vimwiki_list = [{'path':      expand('~/wiki/'),
+"let g:vimwiki_ext2syntax = {'.md': 'markdown', '.markdown': 'markdown', '.mdown': 'markdown'}
+"let g:vimwiki_list = [{'path':      expand('~/wiki/'),
                      \ 'path_html': expand('~/wiki/') . 'html',
                      \ 'ext':       '.md',
                      \ 'syntax':    'markdown',
@@ -527,29 +516,29 @@ let g:vimwiki_list = [{'path':      expand('~/wiki/'),
 "let g:syntastic_check_on_wq = 0
 " }}}
 " SimpylFold {{{
-let g:SimpylFold_docstring_preview = 1
-let g:SimpylFold_fold_docstring = 1
-let g:SimpylFold_fold_import = 1
+"let g:SimpylFold_docstring_preview = 1
+"let g:SimpylFold_fold_docstring = 1
+"let g:SimpylFold_fold_import = 1
 " }}}
 " quick-scope {{{
-" Trigger a highlight in the appropriate direction when pressing these keys:
-let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
-augroup qs_colors
-  autocmd!
-  autocmd ColorScheme * highlight QuickScopePrimary guifg='#afff5f' gui=underline ctermfg=155 cterm=underline
-  autocmd ColorScheme * highlight QuickScopeSecondary guifg='#5fffff' gui=underline ctermfg=81 cterm=underline
-augroup END
-
-nmap <leader>tq <plug>(QuickScopeToggle)
-xmap <leader>tq <plug>(QuickScopeToggle)
-
-let g:qs_enable=1
-
-let g:qs_buftype_blacklist = ['terminal', 'nofile']
-
-let g:qs_max_chars=1000
-
-let g:qs_lazy_highlight = 0
+" " Trigger a highlight in the appropriate direction when pressing these keys:
+"let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
+"augroup qs_colors
+"  autocmd!
+"  autocmd ColorScheme * highlight QuickScopePrimary guifg='#afff5f' gui=underline ctermfg=155 cterm=underline
+"  autocmd ColorScheme * highlight QuickScopeSecondary guifg='#5fffff' gui=underline ctermfg=81 cterm=underline
+"augroup END
+"
+"nmap <leader>tq <plug>(QuickScopeToggle)
+"xmap <leader>tq <plug>(QuickScopeToggle)
+"
+"let g:qs_enable=1
+"
+"let g:qs_buftype_blacklist = ['terminal', 'nofile']
+"
+"let g:qs_max_chars=1000
+"
+"let g:qs_lazy_highlight = 0
 " }}}
 " vim-hexokinase {{{
 "let g:Hexokinase_highlighters = ['virtual']
@@ -654,16 +643,16 @@ let g:qs_lazy_highlight = 0
 "autocmd FileType netrw set nolist
 " }}}
 " vim-one {{{
-let g:one_allow_italics = 1
+"let g:one_allow_italics = 1
 " }}}
 " vim-indent-guides {{{
-let g:indent_guides_enable_on_vim_startup = 1
-let g:indent_guides_start_level = 1
-let g:indent_guides_auto_colors = 0
-"let g:indent_guides_guide_size = 2
-let g:indent_guides_color_change_percent = 10
-"autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=gray ctermbg=236
-autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=#363840 ctermbg=237
+"let g:indent_guides_enable_on_vim_startup = 1
+"let g:indent_guides_start_level = 1
+"let g:indent_guides_auto_colors = 0
+""let g:indent_guides_guide_size = 2
+"let g:indent_guides_color_change_percent = 10
+""autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=gray ctermbg=236
+"autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=#363840 ctermbg=237
 " }}}
 " vim-codelf {{{
 "inoremap <silent> <leader>ce <C-R>=codelf#start()<CR>
@@ -671,47 +660,47 @@ autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=#363840 ctermbg=237
 "let g:codelf_enable_popup_menu = v:true
 " }}}
 " fzf {{{
-nmap <leader>f :Files<CR>
-if !PlugLoaded('ctrlp.vim')
-  nmap <C-p> :GFiles<CR>
-endif
-
-" Always enable preview window on the right with 60% width
-let g:fzf_preview_window = 'right:60%'
-
-" Simple preview for :Files with only cat
+"nmap <leader>f :Files<CR>
+"if !PlugLoaded('ctrlp.vim')
+"  nmap <C-p> :GFiles<CR>
+"endif
+"
+"" Always enable preview window on the right with 60% width
+"let g:fzf_preview_window = 'right:60%'
+"
+"" Simple preview for :Files with only cat
+""command! -bang -nargs=? -complete=dir Files
+""    \ call fzf#vim#files(<q-args>, {'options': ['--layout=reverse', '--info=inline', '--preview', 'cat {}']}, <bang>0)
+""command! -bang -nargs=? -complete=dir Files
+""    \ call fzf#vim#files(<q-args>, fzf#vim#with_preview({'options': ['--layout=reverse', '--info=inline']}), <bang>0)
 "command! -bang -nargs=? -complete=dir Files
-"    \ call fzf#vim#files(<q-args>, {'options': ['--layout=reverse', '--info=inline', '--preview', 'cat {}']}, <bang>0)
-"command! -bang -nargs=? -complete=dir Files
-"    \ call fzf#vim#files(<q-args>, fzf#vim#with_preview({'options': ['--layout=reverse', '--info=inline']}), <bang>0)
-command! -bang -nargs=? -complete=dir Files
-    \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
-
-" fzf#vim#marks({'options': ['--preview', 'echo line = {}']})
-" '--preview', 'cat -n {-1} | egrep --color=always -C 10 ^[[:space:]]*{2}[[:space:]]'
+"    \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
+"
+"" fzf#vim#marks({'options': ['--preview', 'echo line = {}']})
+"" '--preview', 'cat -n {-1} | egrep --color=always -C 10 ^[[:space:]]*{2}[[:space:]]'
 " }}}
 " limelight.vim {{{
-" Color name (:help cterm-colors) or ANSI code
-let g:limelight_conceal_ctermfg = 'gray'
-let g:limelight_conceal_ctermfg = 240
-" Color name (:help gui-colors) or RGB color
-let g:limelight_conceal_guifg = 'DarkGray'
-let g:limelight_conceal_guifg = '#777777'
-" Default: 0.5
-"let g:limelight_default_coefficient = 0.7
-" Number of preceding/following paragraphs to include (default: 0)
-"let g:limelight_paragraph_span = 1
-" Beginning/end of paragraph
-"   When there's no empty line between the paragraphs
-"   and each paragraph starts with indentation
-"let g:limelight_bop = '^\s'
-"let g:limelight_eop = '\ze\n^\s'
-" Highlighting priority (default: 10)
-"   Set it to -1 not to overrule hlsearch
-"let g:limelight_priority = 10
+" " Color name (:help cterm-colors) or ANSI code
+"let g:limelight_conceal_ctermfg = 'gray'
+"let g:limelight_conceal_ctermfg = 240
+"" Color name (:help gui-colors) or RGB color
+"let g:limelight_conceal_guifg = 'DarkGray'
+"let g:limelight_conceal_guifg = '#777777'
+"" Default: 0.5
+""let g:limelight_default_coefficient = 0.7
+"" Number of preceding/following paragraphs to include (default: 0)
+""let g:limelight_paragraph_span = 1
+"" Beginning/end of paragraph
+""   When there's no empty line between the paragraphs
+""   and each paragraph starts with indentation
+""let g:limelight_bop = '^\s'
+""let g:limelight_eop = '\ze\n^\s'
+"" Highlighting priority (default: 10)
+""   Set it to -1 not to overrule hlsearch
+""let g:limelight_priority = 10
 " }}}
 " vim-sneak {{{
-let g:sneak#label = 1
+"let g:sneak#label = 1
 " }}}
 " Sierra {{{
 "let g:sierra_Sunset = 1
@@ -736,16 +725,23 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 "let g:NERDTreeDirArrowExpandable = '>'
 "let g:NERDTreeDirArrowCollapsible = 'v'
 
+" Toggle NERDTree and focus editor
+map <silent> <C-n> :NERDTreeToggle <bar> wincmd p<CR>
+
+let NERDTreeAutoDeleteBuffer = 1
+let NERDTreeQuitOnOpen = 1
+let NERDTreeMinimalUI=1
+let NERDTreeDirArrows = 1
 let g:NERDTreeGitStatusWithFlags = 1
 let NERDTreeShowHidden=1
 let g:NERDTreeWinPos = "left"
 let g:NERDTreeIgnore = [
   \ '^node_modules$',
-  "\ '^.*\.png$',
-  "\ '^.*\.jpg$',
-  "\ '^.*\.mkv$',
-  "\ '^.*\.mp4$',
-  "\ '^.*\.mp3$'
+  \ '^.*\.png$',
+  \ '^.*\.jpg$',
+  \ '^.*\.mkv$',
+  \ '^.*\.mp4$',
+  \ '^.*\.mp3$'
   \ ]
 "let g:WebDevIconsUnicodeDecorateFolderNodes = 1
 "let g:NERDTreeGitStatusNodeColorization = 1
@@ -759,8 +755,6 @@ let g:NERDTreeIgnore = [
    "\ "Clean"     : "#87939A",   
    "\ "Ignored"   : "#808080"   
    "\ }
-" Toggle NERDTree and focus editor
-map <silent> <C-n> :NERDTreeToggle <bar> wincmd p<CR>
 
 "autocmd VimEnter * silent NERDTree | wincmd p
 " }}}
@@ -973,41 +967,41 @@ source $VIMRUNTIME/menu.vim
 "inoremap <expr> <leader><leader> exists('b:texmap') ? '<Esc>/<++><Enter>"_c4l<Esc>\:unlet b\:texmap' : '<leader><leader>'
 
 " Always open in tex filetype instead of plaintex
-let g:tex_flavor = "latex"
-
-augroup LaTeX | autocmd!
-  autocmd FileType tex,latex,plaintex,bib inoremap <leader><leader> <Esc>/<++><Enter>"_c4l
-  autocmd FileType tex,latex,plaintex,bib vnoremap <leader><leader> <Esc>/<++><Enter>"_c4l
-  autocmd FileType tex,latex,plaintex,bib map <leader><leader> <Esc>/<++><Enter>"_c4l
-
-  autocmd FileType tex inoremap <buffer> ,em \emph{}<++><Esc>T{i
-  autocmd FileType tex inoremap <buffer> ,dc \documentclass{}<Enter><Enter><++><Esc>2kf}i
-  autocmd FileType tex inoremap <buffer> ,be \begin{}<Enter><Enter><++><Esc>2kf}i
-  autocmd FileType tex inoremap <buffer> ,en \end{}<Enter><Enter><++><Esc>2kf}i
-  autocmd FileType tex inoremap <buffer> ,bf \textbf{}<++><Esc>T{i
-  autocmd FileType tex inoremap <buffer> ,it \textit{}<++><Esc>T{i
-  autocmd FileType tex inoremap <buffer> ,ct \textcite{}<++><Esc>T{i
-  autocmd FileType tex inoremap <buffer> ,cp \parencite{}<++><Esc>T{i
-  autocmd FileType tex inoremap <buffer> ,glos {\gll<Space><++><Space>\\<Enter><++><Space>\\<Enter>\trans{``<++>''}}<Esc>2k2bcw
-  autocmd FileType tex inoremap <buffer> ,x \begin{xlist}<Enter>\ex<Space><Enter>\end{xlist}<Esc>kA<Space>
-  autocmd FileType tex inoremap <buffer> ,ol \begin{enumerate}<Enter><Enter>\end{enumerate}<Enter><Enter><++><Esc>3kA\item<Space>
-  autocmd FileType tex inoremap <buffer> ,ul \begin{itemize}<Enter><Enter>\end{itemize}<Enter><Enter><++><Esc>3kA\item<Space>
-  autocmd FileType tex inoremap <buffer> ,li <Enter>\item<Space>
-  autocmd FileType tex inoremap <buffer> ,ref \ref{}<Space><++><Esc>T{i
-  autocmd FileType tex inoremap <buffer> ,a \href{}{<++>}<Space><++><Esc>2T{i
-  autocmd FileType tex inoremap <buffer> ,sc \textsc{}<Space><++><Esc>T{i
-  autocmd FileType tex inoremap <buffer> ,chap \chapter{}<Enter><Enter><++><Esc>2kf}i
-  autocmd FileType tex inoremap <buffer> ,sec \section{}<Enter><Enter><++><Esc>2kf}i
-  autocmd FileType tex inoremap <buffer> ,ssec \subsection{}<Enter><Enter><++><Esc>2kf}i
-  autocmd FileType tex inoremap <buffer> ,sssec \subsubsection{}<Enter><Enter><++><Esc>2kf}i
-  "autocmd FileType tex inoremap <buffer> ,up <Esc>/usepackage<Enter>o\usepackage{}<Esc>i
-  "autocmd FileType tex nnoremap <buffer> ,up /usepackage<Enter>o\usepackage{}<Esc>i
-  autocmd FileType tex inoremap <buffer> ,tt \texttt{}<Space><++><Esc>T{i
-  autocmd FileType tex inoremap <buffer> ,bt {\blindtext}
-  autocmd FileType bib inoremap <buffer> ,a @article{<Enter>author<Space>=<Space>{<++>},<Enter>year<Space>=<Space>{<++>},<Enter>title<Space>=<Space>{<++>},<Enter>journal<Space>=<Space>{<++>},<Enter>volume<Space>=<Space>{<++>},<Enter>pages<Space>=<Space>{<++>},<Enter>}<Enter><++><Esc>8kA,<Esc>i
-  autocmd FileType bib inoremap <buffer> ,b @book{<Enter>author<Space>=<Space>{<++>},<Enter>year<Space>=<Space>{<++>},<Enter>title<Space>=<Space>{<++>},<Enter>publisher<Space>=<Space>{<++>},<Enter>}<Enter><++><Esc>6kA,<Esc>i
-  autocmd FileType bib inoremap <buffer> ,c @incollection{<Enter>author<Space>=<Space>{<++>},<Enter>title<Space>=<Space>{<++>},<Enter>booktitle<Space>=<Space>{<++>},<Enter>editor<Space>=<Space>{<++>},<Enter>year<Space>=<Space>{<++>},<Enter>publisher<Space>=<Space>{<++>},<Enter>}<Enter><++><Esc>8kA,<Esc>i
-augroup END
+"let g:tex_flavor = "latex"
+"
+"augroup LaTeX | autocmd!
+"  autocmd FileType tex,latex,plaintex,bib inoremap <leader><leader> <Esc>/<++><Enter>"_c4l
+"  autocmd FileType tex,latex,plaintex,bib vnoremap <leader><leader> <Esc>/<++><Enter>"_c4l
+"  autocmd FileType tex,latex,plaintex,bib map <leader><leader> <Esc>/<++><Enter>"_c4l
+"
+"  autocmd FileType tex inoremap <buffer> ,em \emph{}<++><Esc>T{i
+"  autocmd FileType tex inoremap <buffer> ,dc \documentclass{}<Enter><Enter><++><Esc>2kf}i
+"  autocmd FileType tex inoremap <buffer> ,be \begin{}<Enter><Enter><++><Esc>2kf}i
+"  autocmd FileType tex inoremap <buffer> ,en \end{}<Enter><Enter><++><Esc>2kf}i
+"  autocmd FileType tex inoremap <buffer> ,bf \textbf{}<++><Esc>T{i
+"  autocmd FileType tex inoremap <buffer> ,it \textit{}<++><Esc>T{i
+"  autocmd FileType tex inoremap <buffer> ,ct \textcite{}<++><Esc>T{i
+"  autocmd FileType tex inoremap <buffer> ,cp \parencite{}<++><Esc>T{i
+"  autocmd FileType tex inoremap <buffer> ,glos {\gll<Space><++><Space>\\<Enter><++><Space>\\<Enter>\trans{``<++>''}}<Esc>2k2bcw
+"  autocmd FileType tex inoremap <buffer> ,x \begin{xlist}<Enter>\ex<Space><Enter>\end{xlist}<Esc>kA<Space>
+"  autocmd FileType tex inoremap <buffer> ,ol \begin{enumerate}<Enter><Enter>\end{enumerate}<Enter><Enter><++><Esc>3kA\item<Space>
+"  autocmd FileType tex inoremap <buffer> ,ul \begin{itemize}<Enter><Enter>\end{itemize}<Enter><Enter><++><Esc>3kA\item<Space>
+"  autocmd FileType tex inoremap <buffer> ,li <Enter>\item<Space>
+"  autocmd FileType tex inoremap <buffer> ,ref \ref{}<Space><++><Esc>T{i
+"  autocmd FileType tex inoremap <buffer> ,a \href{}{<++>}<Space><++><Esc>2T{i
+"  autocmd FileType tex inoremap <buffer> ,sc \textsc{}<Space><++><Esc>T{i
+"  autocmd FileType tex inoremap <buffer> ,chap \chapter{}<Enter><Enter><++><Esc>2kf}i
+"  autocmd FileType tex inoremap <buffer> ,sec \section{}<Enter><Enter><++><Esc>2kf}i
+"  autocmd FileType tex inoremap <buffer> ,ssec \subsection{}<Enter><Enter><++><Esc>2kf}i
+"  autocmd FileType tex inoremap <buffer> ,sssec \subsubsection{}<Enter><Enter><++><Esc>2kf}i
+"  "autocmd FileType tex inoremap <buffer> ,up <Esc>/usepackage<Enter>o\usepackage{}<Esc>i
+"  "autocmd FileType tex nnoremap <buffer> ,up /usepackage<Enter>o\usepackage{}<Esc>i
+"  autocmd FileType tex inoremap <buffer> ,tt \texttt{}<Space><++><Esc>T{i
+"  autocmd FileType tex inoremap <buffer> ,bt {\blindtext}
+"  autocmd FileType bib inoremap <buffer> ,a @article{<Enter>author<Space>=<Space>{<++>},<Enter>year<Space>=<Space>{<++>},<Enter>title<Space>=<Space>{<++>},<Enter>journal<Space>=<Space>{<++>},<Enter>volume<Space>=<Space>{<++>},<Enter>pages<Space>=<Space>{<++>},<Enter>}<Enter><++><Esc>8kA,<Esc>i
+"  autocmd FileType bib inoremap <buffer> ,b @book{<Enter>author<Space>=<Space>{<++>},<Enter>year<Space>=<Space>{<++>},<Enter>title<Space>=<Space>{<++>},<Enter>publisher<Space>=<Space>{<++>},<Enter>}<Enter><++><Esc>6kA,<Esc>i
+"  autocmd FileType bib inoremap <buffer> ,c @incollection{<Enter>author<Space>=<Space>{<++>},<Enter>title<Space>=<Space>{<++>},<Enter>booktitle<Space>=<Space>{<++>},<Enter>editor<Space>=<Space>{<++>},<Enter>year<Space>=<Space>{<++>},<Enter>publisher<Space>=<Space>{<++>},<Enter>}<Enter><++><Esc>8kA,<Esc>i
+"augroup END
 " }}}
 
 " Tab navigation
@@ -1016,11 +1010,11 @@ nnoremap L gt
 nnoremap <C-t> :tabnew<CR>
 
 " Buffer navigation
-nnoremap <leader>h :bprevious<CR>
-nnoremap <leader>j :blast<CR>
-nnoremap <leader>k :bfirst<CR>
-nnoremap <leader>l :bnext<CR>
-map <leader>b :BufExplorer<CR>
+"nnoremap <leader>h :bprevious<CR>
+"nnoremap <leader>j :blast<CR>
+"nnoremap <leader>k :bfirst<CR>
+"nnoremap <leader>l :bnext<CR>
+"map <leader>b :BufExplorer<CR>
 
 " Disable CTRL-A on tmux and screen
 if $TERM =~ 'screen'
@@ -1028,7 +1022,7 @@ if $TERM =~ 'screen'
   nnoremap <leader><C-a> <C-a>
 endif
 
-nmap <silent> <leader>rw :set wrap!<CR>
+nmap <silent> <leader>wr :set wrap!<CR>
 
 nmap <leader>.. :messages<CR>
 
@@ -1067,7 +1061,7 @@ vmap <M-k> :m'<-2<cr>`>my`<mzgv`yo`z
 
 imap #dn >/dev/null<space>2>&1
 
-inoreabbrev <expr> #!! "#!/usr/bin/env" . (empty(&filetype) ? '' : ' '.&filetype)
+"inoreabbrev <expr> #!! "#!/usr/bin/env" . (empty(&filetype) ? '' : ' '.&filetype)
 
 " Spell-check, english and norwegian
 map <leader>ts :setlocal spell! spelllang=en_us,nb<CR>
@@ -1091,34 +1085,19 @@ nmap <silent> <leader>m :call ToggleMouse()<CR>
 " }}}
 
 " Return to last edit position when opening files {{{
-"autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
-" }}}
-
-" Set extra options when running in GUI mode {{{
-if has("gui_running")
-  set guioptions-=T
-  set guioptions-=e
-  set guitablabel=%M\ %t
-  set guioptions-=r
-  set guioptions-=R
-  set guioptions-=l
-  set guioptions-=L
-  set guifont=Source\ Code\ Pro
-  let $LANG='en'
-endif
+autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 " }}}
 
 " Save and restore code folding {{{
-"autocmd BufWinLeave *.* mkview
-"autocmd BufWinEnter *.* silent! loadview
+autocmd BufWinLeave *.* mkview
+autocmd BufWinEnter *.* silent! loadview
 " }}}
 
 " Disable automatic commenting on newline {{{
-"autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
-set formatoptions-=c formatoptions-=r formatoptions-=o
+autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 " }}}
 
-" Undo even when you close a buffer/VIM {{{
+" Persistent undo {{{
 try
   set undodir=~/.vim_runtime/temp_dirs/undodir
   set undofile
@@ -1190,28 +1169,6 @@ endfunction
 nmap <silent> <leader>n :call ToggleNumbers()<CR>
 " }}}
 
-" Switch colorscheme and enable limelight with Goyo {{{
-function! s:goyo_enter()
-  "Limelight
-  colorscheme ayu
-endfunction
-function! s:goyo_leave()
-  "Limelight!
-  execute "colorscheme " . g:colorscheme
-  highlight Comment cterm=italic
-  highlight Normal     ctermbg=NONE guibg=NONE
-  highlight LineNr     ctermbg=NONE guibg=NONE
-  highlight SignColumn ctermbg=NONE guibg=NONE
-endfunction
-augroup goyocolor | autocmd!
-  autocmd User GoyoEnter nested call <SID>goyo_enter()
-  autocmd User GoyoLeave nested call <SID>goyo_leave()
-augroup END
-autocmd! User GoyoEnter Limelight
-autocmd! User GoyoLeave Limelight!
-nmap <silent> <leader>z :Goyo<CR>
-" }}}
-
 function! s:DiffWithSaved() " {{{
   let filetype=&ft
   diffthis
@@ -1237,88 +1194,4 @@ function! FoldText()
 endfunction
 set foldtext=FoldText()
 " }}}
-" }}}======================
-" Terminal handling {{{
-" =========================
-"" Set login shell for :terminal command so aliases work
-"set shell=/bin/zsh
-"
-"" Creates a floating window with a most recent buffer to be used https://github.com/camspiers/dotfiles/blob/master/files/.config/nvim/init.vim#L446-L468 {{{
-"function! CreateCenteredFloatingWindow()
-"  let width = float2nr(&columns * 0.6)
-"  let height = float2nr(&lines * 0.6)
-"  let top = ((&lines - height) / 2) - 1
-"  let left = (&columns - width) / 2
-"  let opts = {'relative': 'editor', 'row': top, 'col': left, 'width': width, 'height': height, 'style': 'minimal'}
-"
-"  let top = "┌" . repeat("─", width - 2) . "┐"
-"  "let top = "╭" . repeat("─", width - 2) . "╮"
-"  let mid = "│" . repeat(" ", width - 2) . "│"
-"  "let bot = "╰" . repeat("─", width - 2) . "╯"
-"  let bot = "└" . repeat("─", width - 2) . "┘"
-"  let lines = [top] + repeat([mid], height - 2) + [bot]
-"  let s:buf = nvim_create_buf(v:false, v:true)
-"  call nvim_buf_set_lines(s:buf, 0, -1, v:true, lines)
-"  call nvim_open_win(s:buf, v:true, opts)
-"  set winhl=Normal:Floating
-"  let opts.row += 1
-"  let opts.height -= 2
-"  let opts.col += 2
-"  let opts.width -= 4
-"  call nvim_open_win(nvim_create_buf(v:false, v:true), v:true, opts)
-"  au BufWipeout <buffer> exe 'bw '.s:buf
-"endfunction
-"" }}}
-"
-"" When term starts, auto go into insert mode
-""autocmd TermOpen * startinsert
-"" Turn off line numbers etc
-""autocmd TermOpen * setlocal listchars= nonumber norelativenumber
-"
-"if has('nvim')
-"  " Maps ESC to exit terminal's insert mode
-"  tnoremap <Esc> <C-\><C-n>
-"  " For Neovim 0.1.3 and 0.1.4 - https://github.com/neovim/neovim/pull/2198
-"  let $NVIM_TUI_ENABLE_TRUE_COLOR = 1
-"endif
-"
-"function! OpenTerm(cmd)
-"  call CreateCenteredFloatingWindow()
-"  call termopen(a:cmd, { 'on_exit': function('TermCallback') })
-"endfunction
-"
-"function! TermCallback(job_id, code, event) dict
-"  if a:code == 0
-"    bd!
-"  endif
-"endfunction
-"
-""nnoremap <C-n> :call ToggleScratchTerm()<CR>
-"function! ToggleScratchTerm()
-"  if empty(bufname('/bin/zsh'))
-"    call OpenTerm('/bin/zsh')
-"  else
-"    bd!
-"  endif
-"endfunction
-"
-"function! ToggleLazyGit()
-"  if empty(bufname('lazygit'))
-"    call OpenTerm('lazygit')
-"  else
-"    bd!
-"  endif
-"endfunction
-"
-"" Usage: call Scratchpad('zsh')
-"function! Scratchpad(command)
-"  if empty(bufname('zsh -c ' . a:command . '; read _'))
-"    call OpenTerm('zsh -c ' . a:command . '; read _')
-"  else
-"    bd!
-"  endif
-"endfunction
-"
-"command! -nargs=1 Scratch call Scratchpad(<f-args>)
-"nmap <leader><CR> :Scratch zsh<CR>i
 " }}}======================
