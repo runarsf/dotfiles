@@ -85,7 +85,7 @@ super + @space
 	bspc desktop --layout next
 
 super {_,shift + ,ctrl + shift }f
-	bspc node --state \~{floating,fullscreen,pseudo_tiled}
+	bspc node --state \~{fullscreen,floating,pseudo_tiled}
 
 super + m
 	bspc node --state \~monocle
