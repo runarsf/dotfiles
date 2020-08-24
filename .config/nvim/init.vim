@@ -218,9 +218,9 @@ Plug 'preservim/nerdtree'
 "Plug 'justinmk/vim-sneak'
 Plug 'nathanaelkane/vim-indent-guides'
 "Plug 'rlue/vim-barbaric'
-"if v:version >= 703 && executable('node')
-"  Plug 'neoclide/coc.nvim', { 'branch': 'release', 'tag': '*', 'do': { -> coc#util#install()}}
-"endif
+if v:version >= 703 && executable('node')
+  Plug 'neoclide/coc.nvim', { 'branch': 'release', 'tag': '*', 'do': { -> coc#util#install()}}
+endif
 "Plug 'vifm/vifm.vim'
 "Plug 'justinmk/vim-dirvish'
 "Plug 'kristijanhusak/vim-dirvish-git'
@@ -1061,7 +1061,7 @@ vmap <M-k> :m'<-2<cr>`>my`<mzgv`yo`z
 
 imap #dn >/dev/null<space>2>&1
 
-"inoreabbrev <expr> #!! "#!/usr/bin/env" . (empty(&filetype) ? '' : ' '.&filetype)
+inoreabbrev <expr> #!! "#!/usr/bin/env" . (empty(&filetype) ? '' : ' '.&filetype)
 
 " Spell-check, english and norwegian
 map <leader>ts :setlocal spell! spelllang=en_us,nb<CR>
