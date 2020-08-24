@@ -8,8 +8,8 @@ super + {_,shift + }q
 	bspc node --{close,kill}
 
 # Focus desktop or move node to desktop
-super + shift + {0-9}
-	bspc node --to-desktop '{0-9}' --follow
+super + shift + {0-9} + {_,alt}
+	bspc node --to-desktop '{0-9}' {--follow, }
 
 super + {0-9}
 	bspc desktop --focus '{0-9}'
