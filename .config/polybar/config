@@ -171,15 +171,17 @@ exec = python $HOME/bin/python/spotify_status.py -f '{song} - {artist}'
 format-underline = #1db954
 
 [module/xwindow]
+#type = internal/xwindow
+#format-foreground = ${colors.white}
+#format-background = ${colors.black}
+#format-padding = 5
+#label = %title:0:50:...%
 type = internal/xwindow
+format = <label>
 format-foreground = ${colors.white}
 format-background = ${colors.black}
-format-padding = 5
-label = %title:0:50:...%
-; type = internal/xwindow
-; format = <label>
-; label = %title%
-; label-maxlen = 75
+label = %title%
+label-maxlen = 75
 
 [module/xkeyboard]
 type = internal/xkeyboard
@@ -325,6 +327,7 @@ label-urgent-padding = 2
 [module/bspwm]
 type = internal/bspwm
 format = <label-monitor> <label-state> <label-mode>
+format-prefix = " "
 ws-icon-0 = 0;
 ws-icon-1 = 1;
 ws-icon-2 = 2;
