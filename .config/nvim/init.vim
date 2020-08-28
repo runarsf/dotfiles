@@ -863,7 +863,7 @@ set modeline modelines=5
 if !exists("g:syntax_on") | syntax enable | endif
 set encoding=utf-8
 set ffs=unix,dos,mac
-set nobackup writebackup swapfile
+set nobackup nowritebackup noswapfile
 set splitbelow splitright
 "set complete-=i
 set mouse=c
@@ -1066,10 +1066,13 @@ inoreabbrev <expr> #!! "#!/usr/bin/env" . (empty(&filetype) ? '' : ' '.&filetype
 " Spell-check, english and norwegian
 map <leader>ts :setlocal spell! spelllang=en_us,nb<CR>
 
-autocmd BufRead,BufNewFile *.conf,config setf dosini
-autocmd BufRead,BufNewFile *.md set filetype=markdown
-autocmd BufRead,BufNewFile *.rss set filetype=xml
-autocmd FileType json syntax match Comment +\/\/.\+$+
+augroup twig_ft | au!
+  autocmd BufRead,BufNewFile *.conf,config setf dosini
+  autocmd BufRead,BufNewFile *.md set filetype=markdown
+  autocmd BufRead,BufNewFile *.txt set syntax=markdown | imap ... … | set wrap
+  autocmd BufRead,BufNewFile *.rss set filetype=xml
+  autocmd FileType json syntax match Comment +\/\/.\+$+
+augroup END
 " }}}======================
 " Functions / Utilities {{{
 " =========================
