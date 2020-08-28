@@ -87,7 +87,7 @@ super + @space
 super {_,shift + ,ctrl + shift }f
 	bspc node --state \~{fullscreen,floating,pseudo_tiled}
 
-super + m
+super + shift + m
 	bspc node --state \~monocle
 
 super + t
@@ -96,7 +96,7 @@ super + t
 super + n
 	bspwm_scratchpad
 super + m
-	bspwm_scratchpad
+	bspwm_scratchpad "math" "${TERMINAL} --class math --title math --command python3"
 
 super + c ; p
 	bspc config focus_follows_pointer {false,true}

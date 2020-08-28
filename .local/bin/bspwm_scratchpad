@@ -1,5 +1,16 @@
 #!/usr/bin/env bash
 
+# Example sxhkdrc
+# super + m
+# 	bspwm_scratchpad "math" "${TERMINAL} --class math --title math --command python3"
+
+class="${1:-scratchpad}"
+command="${2:-${TERMINAL} --class ${class} --title scratchpad}"
+sticky="${4:-on}"
+state="${5:-floating}"
+center="${6:-true}"
+rectangle="${3:-1600x1000+0+0}"
+
 dependencies=("xdo" "xprop" "awk")
 for cmd in "${dependencies[@]}"; do
   if ! command -v "${cmd}" >/dev/null 2>&1; then
@@ -10,13 +21,14 @@ for cmd in "${dependencies[@]}"; do
 done
 test -n "${missingDependencies}" && exit 1
 
-id="$(xdo id -n scratchpad)"
+id="$(xdo id -n ${class})"
 if test -z "${id}"; then
-  ${TERMINAL} --class scratchpad --title scratchpad
+  bspc rule -a "*:${class}" sticky=on state=floating center=true rectangle="${size}"
+  eval "${command}"
 else
   action='hide'
   if test "$(xprop -id ${id} | awk '/window state: / {print $3}')" = 'Withdrawn'; then
     action='show'
   fi
-  xdo "${action}" -n scratchpad
+  xdo "${action}" -n "${class}"
 fi
