@@ -58,7 +58,6 @@ silent! if plug#begin('~/.vim/plugged')
 "Plug 'mg979/vim-xtabline'
 "RRethy/vim-illuminate
 "Plug 'ctrlpvim/ctrlp.vim'
-"Plug 'Xuyuanp/nerdtree-git-plugin'
 "Plug 'tpope/vim-fugitive'
 "Plug 'tpope/vim-rhubarb'
 "Plug 'junegunn/gv.vim'
@@ -67,69 +66,48 @@ silent! if plug#begin('~/.vim/plugged')
 "  Plug 'ying17zi/vim-live-latex-preview', { 'for': 'tex' } " requires biber
 "endif
 "Plug 'skywind3000/vim-auto-popmenu'
-"Plug 'mhinz/vim-startify'
 "Plug 'chazy/dirsettings'
 "if has('python3') && $DISPLAY != ''
 "  Plug 'anned20/vimsence'
 "endif
 "Plug 'easymotion/vim-easymotion'
 "Plug 'vifm/vifm.vim'
-"Plug 'DrCracket/painless-digraph'
 "Plug 'vimoutliner/vimoutliner'
 "Plug 'michal-h21/vimwiki-sync'
 "Plug 'michal-h21/vim-zettel'
-"if has('python3') && executable('rg') && PlugLoaded('fzf')
-"  Plug 'alok/notational-fzf-vim'
-"endif
 "Plug 'Kody-Quintana/bspwm_border_color'
 "Plug 'amerlyq/vim-focus-autocmd'
 "Plug 'jceb/vim-orgmode'
 "Plug 'camspiers/animate.vim'
-"Plug 'camspiers/lens.vim'
 "Plug 'editorconfig/editorconfig-vim'
 "Plug 'liuchengxu/vim-clap'
 "Plug 'tpope/vim-dispatch'
 "Plug 'habamax/vim-asciidoctor'
 "Plug 'pbrisbin/vim-mkdir'
 "Plug 'majutsushi/tagbar', { 'on': 'TagbarToggle' }
-"Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-"Plug 'junegunn/fzf.vim'
 "Plug 'lifepillar/vim-cheat40', { 'on': 'Cheat40' }
 "Plug 'inkarkat/vim-ingo-library', { 'branch': 'stable' }
 "Plug 'inkarkat/vim-ModelineCommands', { 'branch': 'stable' }
 "Plug 'tyru/open-browser.vim', { 'on': 'RunningX' }
-"Plug 'tmhedberg/SimpylFold'
 "Plug 'lervag/wiki-ft.vim'
 "Plug 'liuchengxu/vista.vim'
-"Plug 'SirVer/ultisnips'
 "Plug 'honza/vim-snippets'
 "Plug 'Yggdroot/hiPairs'
 "Plug 'tpope/vim-surround'
 "Plug 'rstacruz/vim-closer'
 "Plug 'tpope/vim-endwise'
 "Plug 'segeljakt/vim-isotope'
-"Plug 'rrethy/vim-hexokinase', { 'do': 'make hexokinase' }
 "Plug 'nvie/vim-flake8'
 "Plug 'fcpg/vim-waikiki'
-"Plug 'lervag/wiki.vim'
 "Plug 'svermeulen/vim-subversive'
 "Plug 'svermeulen/vim-cutlass'
 "Plug 'svermeulen/vim-yoink'
 "Plug 'pedrohdz/vim-yaml-folds'
-"if has('nvim') || has('patch-8.0.902')
-"  Plug 'mhinz/vim-signify'
-"else
-"  Plug 'mhinz/vim-signify', { 'branch': 'legacy' }
-"endif
 "Plug 'jceb/vim-orgmode'
 "Plug 'justinmk/vim-dirvish'
 "Plug 'jonrad/vim-hi-hue'
-"Plug 'bagrat/vim-buffet'
-"plug 'zefei/vim-wintabs'
 "plug 'zefei/vim-wintabs-powerline'
-"Plug 'b4b4r07/vim-buftabs'
 "Plug 'bling/vim-bufferline'
-"Plug 'ap/vim-buftabline' " Best buffer tabline
 "Plug 'airblade/vim-gitgutter'
 "Plug 'fcpg/vim-waikiki'
 "Plug 'yuttie/comfortable-motion.vim'
@@ -198,28 +176,151 @@ silent! if plug#begin('~/.vim/plugged')
 "Plug 'vim-scripts/loremipsum'
 "Plug 'robcsi/viewmaps.vim'
 "Plug 'tpope/vim-fugitive'
-"Plug 'voldikss/vim-codelf', { 'on': 'Codelf' }
-"Plug 'scrooloose/nerdcommenter'
 " }}}
-"Plug 'zhimsel/vim-stay'
 "Plug 'matze/vim-tex-fold', { 'for': 'tex' }
 "Plug 'matze/vim-ini-fold', { 'for': 'ini' }
-"Plug 'vimwiki/vimwiki'
 "Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 "Plug 'junegunn/fzf.vim'
 "Plug 'tmhedberg/SimpylFold', { 'for': 'python' }
-"Plug 'unblevable/quick-scope'
 "Plug 'dstein64/vim-startuptime'
 "Plug 'jlanzarotta/bufexplorer'
 "Plug 'severin-lemaignan/vim-minimap'
-Plug 'preservim/nerdtree'
+Plug 'mbbill/undotree' " {{{
+map <silent> <C-u> :UndotreeToggle<CR>
+" }}}
+Plug 'preservim/nerdtree' " {{{
+" Open a NERDTree automatically when vim starts up if no files were specified
+"autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | silent NERDTree | endif
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | silent NERDTree | wincmd p | endif
+" Open NERDTree automatically when vim starts up on opening a directory
+autocmd StdinReadPre * let s:std_in=1
+"autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | exe 'cd '.argv()[0] | endif
+autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | endif
+"autocmd StdinReadPre * let s:std_in=1
+"autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | silent NERDTree | wincmd p | ene | endif
+" Close vim if the only window left open is a NERDTree
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+
+"let g:NERDTreeDirArrowExpandable = '>'
+"let g:NERDTreeDirArrowCollapsible = 'v'
+
+" Toggle NERDTree and focus editor
+map <silent> <C-n> :NERDTreeToggle <bar> wincmd p<CR>
+
+let NERDTreeAutoDeleteBuffer = 1
+let NERDTreeQuitOnOpen = 1
+let NERDTreeMinimalUI=1
+let NERDTreeDirArrows = 1
+let g:NERDTreeGitStatusWithFlags = 1
+let NERDTreeShowHidden=1
+let g:NERDTreeWinPos = "left"
+let g:NERDTreeIgnore = [
+  \ '^node_modules$',
+  \ '^.*\.png$',
+  \ '^.*\.jpg$',
+  \ '^.*\.mkv$',
+  \ '^.*\.mp4$',
+  \ '^.*\.mp3$'
+  \ ]
+"let g:WebDevIconsUnicodeDecorateFolderNodes = 1
+"let g:NERDTreeGitStatusNodeColorization = 1
+"let g:NERDTreeColorMapCustom = {
+   "\ "Staged"    : "#0ee375",  
+   "\ "Modified"  : "#d9bf91",  
+   "\ "Renamed"   : "#51C9FC",  
+   "\ "Untracked" : "#FCE77C",  
+   "\ "Unmerged"  : "#FC51E6",  
+   "\ "Dirty"     : "#FFBD61",  
+   "\ "Clean"     : "#87939A",   
+   "\ "Ignored"   : "#808080"   
+   "\ }
+
+"autocmd VimEnter * silent NERDTree | wincmd p
+" }}}
 "Plug 'junegunn/goyo.vim', { 'on': 'Goyo' }
-"Plug 'junegunn/limelight.vim', { 'on': 'Limelight' }
-"Plug 'justinmk/vim-sneak'
-Plug 'nathanaelkane/vim-indent-guides'
+Plug 'nathanaelkane/vim-indent-guides' " {{{
+let g:indent_guides_enable_on_vim_startup = 1
+let g:indent_guides_start_level = 1
+let g:indent_guides_auto_colors = 0
+"let g:indent_guides_guide_size = 2
+let g:indent_guides_color_change_percent = 10
+"autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=gray ctermbg=236
+autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=#363840 ctermbg=237
+" }}}
 "Plug 'rlue/vim-barbaric'
 if v:version >= 703 && executable('node')
-  Plug 'neoclide/coc.nvim', { 'branch': 'release', 'tag': '*', 'do': { -> coc#util#install()}}
+  Plug 'neoclide/coc.nvim', { 'branch': 'release', 'tag': '*', 'do': { -> coc#util#install()}} " {{{
+"let g:coc_global_extensions = [
+"  \ 'coc-snippets',
+"  \ 'coc-pairs',
+"  \ 'coc-html',
+"  \ 'coc-json',
+"  \ 'coc-vetur',
+"  \ 'coc-css',
+"  \ 'coc-yaml',
+"  \ 'coc-highlight',
+"  \ 'coc-markdownlint',
+"  \ 'coc-emoji'
+"  \ ]
+"  " \ 'coc-python',
+""exec "CocInstall -sync " . join(get(g:, 'coc_global_extensions', []))
+"" Use `[g` and `]g` to navigate diagnostics
+"nmap <silent> [g <Plug>(coc-diagnostic-prev)
+"nmap <silent> ]g <Plug>(coc-diagnostic-next)
+"" Remap keys for gotos
+"nmap <silent> gd <Plug>(coc-definition)
+"nmap <silent> gy <Plug>(coc-type-definition)
+"nmap <silent> gi <Plug>(coc-implementation)
+"nmap <silent> gr <Plug>(coc-references)
+"" Using CocList
+"" Show all diagnostics
+"nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
+"" Manage extensions
+"nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
+"" Show commands
+"nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
+"" Find symbol of current document
+"nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
+"" Search workspace symbols
+"nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
+"" Do default action for next item.
+"nnoremap <silent> <space>j  :<C-u>CocNext<CR>
+"" Do default action for previous item.
+"nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
+"" Resume latest coc list
+"nnoremap <silent> <space>p  :<C-u>CocListResume<CR><Paste>
+"
+"" Use tab for trigger completion with characters ahead and navigate.
+"" Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
+"inoremap <silent><expr> <TAB>
+"      \ pumvisible() ? "\<C-n>" :
+"      \ <SID>check_back_space() ? "\<TAB>" :
+"      \ coc#refresh()
+"inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+"function! s:check_back_space() abort
+"  let col = col('.') - 1
+"  return !col || getline('.')[col - 1]  =~# '\s'
+"endfunction
+"
+"inoremap <silent><expr> <c-space> coc#refresh() " Use <c-space> to trigger completion.
+"
+"" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current position.
+"" Coc only does snippet and additional edit on confirm.
+"inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+"" Or use `complete_info` if your vim support it, like:
+"" inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
+"
+"" Use K to show documentation in preview window
+"nnoremap <silent> K :call <SID>show_documentation()<CR>
+"function! s:show_documentation()
+"  if (index(['vim','help'], &filetype) >= 0)
+"    execute 'h '.expand('<cword>')
+"  else
+"    call CocAction('doHover')
+"  endif
+"endfunction
+" }}}
 endif
 "Plug 'vifm/vifm.vim'
 "Plug 'justinmk/vim-dirvish'
@@ -265,12 +366,20 @@ Plug 'kovetskiy/sxhkd-vim', { 'for': 'sxhkdrc' }
 " }}}
 Plug 'arcticicestudio/nord-vim'
 Plug 'ayu-theme/ayu-vim'
-Plug 'rakr/vim-one'
+Plug 'rakr/vim-one' " {{{
+let g:one_allow_italics = 1
+" }}}
 " }}}
 call plug#end()
 endif
 
-" nertree-git-plugin {{{
+" netrw {{{
+"let loaded_netrwPlugin = 1  " disable netrw
+"let g:netrw_banner=0
+"let g:netrw_list_hide = '\(^\|\s\s\)\zs\.\S\+,\(^\|\s\s\)ntuser\.\S\+'
+"autocmd FileType netrw set nolist
+" }}}
+"Plug 'Xuyuanp/nerdtree-git-plugin' " {{{
 "let g:NERDTreeIndicatorMapCustom = {
 "    \ "Modified"  : "✹",
 "    \ "Staged"    : "✚",
@@ -285,7 +394,7 @@ endif
 "    \ }
 "let g:NERDTreeShowIgnoredStatus = 0
 " }}}
-" vim-startify {{{
+"Plug 'mhinz/vim-startify' " {{{
 "let g:startify_session_dir = '~/.config/nvim/session'
 "let g:startify_lists = [
 "          \ { 'type': 'files',     'header': ['   Files']            },
@@ -313,14 +422,14 @@ endif
         "\ '/_/|_/|___/_/_/_/_/ /_/  /_/\_,_/\__/_//_/ /____/ ',
         "\]
 " }}}
-" nerdcommenter {{{
+"Plug 'scrooloose/nerdcommenter' " {{{
 "vmap <leader>cc <plug>NERDCommenterToggle
 "nmap <leader>cc <plug>NERDCommenterToggle
 " }}}
-" vim-stay {{{
+"Plug 'zhimsel/vim-stay " {{{
 "set viewoptions=cursor,folds,slash,unix
 " }}}
-" vimwiki {{{
+"Plug 'vimwiki/vimwiki' " {{{
 " https://opensource.com/article/18/6/vimwiki-gitlab-notes
 " https://blog.mague.com/?p=602
 "let g:vimwiki_ext2syntax = {'.md': 'markdown', '.markdown': 'markdown', '.mdown': 'markdown'}
@@ -435,7 +544,8 @@ endif
 "augroup END
 " }}}
 " }}}
-" notational-fzf-vim {{{
+"if has('python3') && executable('rg') && PlugLoaded('fzf') " {{{
+"  Plug 'alok/notational-fzf-vim'
 "let g:nv_search_paths = [ expand('~/wiki/') ]
 "
 "" String. Set to '' (the empty string) if you don't want an extension appended by default.
@@ -503,24 +613,24 @@ endif
 "" List of Strings. Key mappings like above in case you want to define your own
 "" handler function. Most users won't want to set this to anything.
 "let g:nv_expect_keys = []                                              
-" }}}
-" painless-digraph {{{
+"endif " }}}
+"Plug 'DrCracket/painless-digraph' " {{{
 "map <silent> <Leader>de <Plug>(PainlessdigraphEnable)
 "map <silent> <Leader>dd <Plug>(PainlessdigraphDisable)
 "map <silent> <Leader>dt <Plug>(PainlessdigraphToggle)
 " }}}
-" syntastic {{{
+"Plug 'vim-syntastic/syntastic' " {{{
 "let g:syntastic_always_populate_loc_list = 1
 "let g:syntastic_auto_loc_list = 1
 "let g:syntastic_check_on_open = 1
 "let g:syntastic_check_on_wq = 0
 " }}}
-" SimpylFold {{{
+"Plug 'tmhedberg/SimpylFold' " {{{
 "let g:SimpylFold_docstring_preview = 1
 "let g:SimpylFold_fold_docstring = 1
 "let g:SimpylFold_fold_import = 1
 " }}}
-" quick-scope {{{
+"Plug 'unblevable/quick-scope' " {{{
 " " Trigger a highlight in the appropriate direction when pressing these keys:
 "let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
 "augroup qs_colors
@@ -540,31 +650,34 @@ endif
 "
 "let g:qs_lazy_highlight = 0
 " }}}
-" vim-hexokinase {{{
+"Plug 'rrethy/vim-hexokinase', { 'do': 'make hexokinase' } " {{{
 "let g:Hexokinase_highlighters = ['virtual']
 "let g:Hexokinase_v2 = 0
 "autocmd! VimEnter * HexokinaseTurnOn
 " blue
 " }}}
-" vim-signify {{{
-" default updatetime 4000ms is not good for async update
+"if has('nvim') || has('patch-8.0.902') " {{{
+"  Plug 'mhinz/vim-signify'
+"else
+"  Plug 'mhinz/vim-signify', { 'branch': 'legacy' }
+"default updatetime 4000ms is not good for async update
 "set updatetime=100
-" }}}
-" ultisnips {{{
+"endif " }}}
+"Plug 'SirVer/ultisnips' " {{{
 "let g:UltiSnipsExpandTrigger="<tab>"
 "let g:UltiSnipsJumpForwardTrigger="<c-b>"
 "let g:UltiSnipsJumpBackwardTrigger="<c-z>"
 "let g:UltiSnipsEditSplit="vertical"
 " }}}
-" wiki.vim {{{
+"Plug 'lervag/wiki.vim' " {{{
 "let g:wiki_root = '~/wiki'
 " }}}
-" lens.vim {{{
+"Plug 'camspiers/lens.vim' " {{{
 "let g:lens#animate = 1
 "let g:lens#disabled_filetypes = ['nerdtree', 'fzf']
 "let g:lens#disabled = 0
 " }}}
-" vim-buftabs {{{
+"Plug 'b4b4r07/vim-buftabs' " {{{
 "let g:buftabs_enabled = 1
 "let g:buftabs_in_statusline = 1
 "let g:buftabs_in_cmdline = 0
@@ -577,11 +690,11 @@ endif
 "let g:buftabs_separator = "-"
 "let g:buftabs_marker_modified = "!"
 " }}}
-" vim-buftabline {{{
+"Plug 'ap/vim-buftabline' " best buftabline {{{
 "set hidden
 "buffer binds
 " }}}
-" vim-wintabs {{{
+"plug 'zefei/vim-wintabs' " {{{
 " commands             | mapping keys                 | replacing Vim commands
 " ---------------------+------------------------------+-----------------------
 " :WintabsNext         | <Plug>(wintabs_next)         | :bnext!
@@ -605,7 +718,7 @@ endif
 "command! Tabc WintabsCloseVimtab
 "command! Tabo WintabsOnlyVimtab
 " }}}
-" vim-buffet {{{
+"Plug 'bagrat/vim-buffet' " {{{
 "noremap <Tab> :bn<CR>
 "noremap <S-Tab> :bp<CR>
 "noremap <Leader><Tab> :Bw<CR>
@@ -636,30 +749,13 @@ endif
 "  highlight! BuffetCurrentBuffer cterm=NONE ctermbg=5 ctermfg=8 guibg=#00FF00 guifg=#000000
 "endfunction
 " }}}
-" netrw {{{
-"let loaded_netrwPlugin = 1  " disable netrw
-"let g:netrw_banner=0
-"let g:netrw_list_hide = '\(^\|\s\s\)\zs\.\S\+,\(^\|\s\s\)ntuser\.\S\+'
-"autocmd FileType netrw set nolist
-" }}}
-" vim-one {{{
-"let g:one_allow_italics = 1
-" }}}
-" vim-indent-guides {{{
-let g:indent_guides_enable_on_vim_startup = 1
-let g:indent_guides_start_level = 1
-let g:indent_guides_auto_colors = 0
-"let g:indent_guides_guide_size = 2
-let g:indent_guides_color_change_percent = 10
-"autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=gray ctermbg=236
-autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=#363840 ctermbg=237
-" }}}
-" vim-codelf {{{
+"Plug 'voldikss/vim-codelf', { 'on': 'Codelf' } " {{{
 "inoremap <silent> <leader>ce <C-R>=codelf#start()<CR>
 "nnoremap <silent> <leader>ce :call codelf#start()<CR>
 "let g:codelf_enable_popup_menu = v:true
 " }}}
-" fzf {{{
+"Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } " {{{
+"Plug 'junegunn/fzf.vim'
 "nmap <leader>f :Files<CR>
 "if !PlugLoaded('ctrlp.vim')
 "  nmap <C-p> :GFiles<CR>
@@ -679,7 +775,7 @@ autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=#363840 ctermbg=237
 "" fzf#vim#marks({'options': ['--preview', 'echo line = {}']})
 "" '--preview', 'cat -n {-1} | egrep --color=always -C 10 ^[[:space:]]*{2}[[:space:]]'
 " }}}
-" limelight.vim {{{
+"Plug 'junegunn/limelight.vim', { 'on': 'Limelight' } " {{{
 " " Color name (:help cterm-colors) or ANSI code
 "let g:limelight_conceal_ctermfg = 'gray'
 "let g:limelight_conceal_ctermfg = 240
@@ -699,135 +795,14 @@ autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=#363840 ctermbg=237
 ""   Set it to -1 not to overrule hlsearch
 ""let g:limelight_priority = 10
 " }}}
-" vim-sneak {{{
+"Plug 'justinmk/vim-sneak' " {{{
 "let g:sneak#label = 1
 " }}}
-" Sierra {{{
+"Plug 'AlessandroYorba/Sierra' " {{{
 "let g:sierra_Sunset = 1
 "let g:sierra_Twilight = 1
 "let g:sierra_Midnight = 1
 "let g:sierra_Pitch = 1
-" }}}
-" nerdtree {{{
-" Open a NERDTree automatically when vim starts up if no files were specified
-"autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | silent NERDTree | endif
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | silent NERDTree | wincmd p | endif
-" Open NERDTree automatically when vim starts up on opening a directory
-autocmd StdinReadPre * let s:std_in=1
-"autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | exe 'cd '.argv()[0] | endif
-autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | endif
-"autocmd StdinReadPre * let s:std_in=1
-"autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | silent NERDTree | wincmd p | ene | endif
-" Close vim if the only window left open is a NERDTree
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-
-"let g:NERDTreeDirArrowExpandable = '>'
-"let g:NERDTreeDirArrowCollapsible = 'v'
-
-" Toggle NERDTree and focus editor
-map <silent> <C-n> :NERDTreeToggle <bar> wincmd p<CR>
-
-let NERDTreeAutoDeleteBuffer = 1
-let NERDTreeQuitOnOpen = 1
-let NERDTreeMinimalUI=1
-let NERDTreeDirArrows = 1
-let g:NERDTreeGitStatusWithFlags = 1
-let NERDTreeShowHidden=1
-let g:NERDTreeWinPos = "left"
-let g:NERDTreeIgnore = [
-  \ '^node_modules$',
-  \ '^.*\.png$',
-  \ '^.*\.jpg$',
-  \ '^.*\.mkv$',
-  \ '^.*\.mp4$',
-  \ '^.*\.mp3$'
-  \ ]
-"let g:WebDevIconsUnicodeDecorateFolderNodes = 1
-"let g:NERDTreeGitStatusNodeColorization = 1
-"let g:NERDTreeColorMapCustom = {
-   "\ "Staged"    : "#0ee375",  
-   "\ "Modified"  : "#d9bf91",  
-   "\ "Renamed"   : "#51C9FC",  
-   "\ "Untracked" : "#FCE77C",  
-   "\ "Unmerged"  : "#FC51E6",  
-   "\ "Dirty"     : "#FFBD61",  
-   "\ "Clean"     : "#87939A",   
-   "\ "Ignored"   : "#808080"   
-   "\ }
-
-"autocmd VimEnter * silent NERDTree | wincmd p
-" }}}
-" coc.nvim {{{
-"let g:coc_global_extensions = [
-"  \ 'coc-snippets',
-"  \ 'coc-pairs',
-"  \ 'coc-html',
-"  \ 'coc-json',
-"  \ 'coc-vetur',
-"  \ 'coc-css',
-"  \ 'coc-yaml',
-"  \ 'coc-highlight',
-"  \ 'coc-markdownlint',
-"  \ 'coc-emoji'
-"  \ ]
-"  " \ 'coc-python',
-""exec "CocInstall -sync " . join(get(g:, 'coc_global_extensions', []))
-"" Use `[g` and `]g` to navigate diagnostics
-"nmap <silent> [g <Plug>(coc-diagnostic-prev)
-"nmap <silent> ]g <Plug>(coc-diagnostic-next)
-"" Remap keys for gotos
-"nmap <silent> gd <Plug>(coc-definition)
-"nmap <silent> gy <Plug>(coc-type-definition)
-"nmap <silent> gi <Plug>(coc-implementation)
-"nmap <silent> gr <Plug>(coc-references)
-"" Using CocList
-"" Show all diagnostics
-"nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
-"" Manage extensions
-"nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
-"" Show commands
-"nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
-"" Find symbol of current document
-"nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
-"" Search workspace symbols
-"nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
-"" Do default action for next item.
-"nnoremap <silent> <space>j  :<C-u>CocNext<CR>
-"" Do default action for previous item.
-"nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
-"" Resume latest coc list
-"nnoremap <silent> <space>p  :<C-u>CocListResume<CR><Paste>
-"
-"" Use tab for trigger completion with characters ahead and navigate.
-"" Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
-"inoremap <silent><expr> <TAB>
-"      \ pumvisible() ? "\<C-n>" :
-"      \ <SID>check_back_space() ? "\<TAB>" :
-"      \ coc#refresh()
-"inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-"function! s:check_back_space() abort
-"  let col = col('.') - 1
-"  return !col || getline('.')[col - 1]  =~# '\s'
-"endfunction
-"
-"inoremap <silent><expr> <c-space> coc#refresh() " Use <c-space> to trigger completion.
-"
-"" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current position.
-"" Coc only does snippet and additional edit on confirm.
-"inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-"" Or use `complete_info` if your vim support it, like:
-"" inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
-"
-"" Use K to show documentation in preview window
-"nnoremap <silent> K :call <SID>show_documentation()<CR>
-"function! s:show_documentation()
-"  if (index(['vim','help'], &filetype) >= 0)
-"    execute 'h '.expand('<cword>')
-"  else
-"    call CocAction('doHover')
-"  endif
-"endfunction
 " }}}
 " }}}======================
 " A E S T H E T I C S {{{
@@ -1101,11 +1076,15 @@ autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 " }}}
 
 " Persistent undo {{{
-try
+"try
+"  set undodir=~/.vim_runtime/temp_dirs/undodir
+"  set undofile
+"catch
+"endtry
+if has("persistent_undo")
   set undodir=~/.vim_runtime/temp_dirs/undodir
   set undofile
-catch
-endtry
+endif
 " }}}
 
 " Statusline {{{
