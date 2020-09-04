@@ -819,14 +819,21 @@ set t_Co=256
 set t_AB=^[[48;5;%dm
 set t_AF=^[[38;5;%dm
 
+function! MyHighlights() abort
+  highlight Comment cterm=italic
+  highlight Normal     ctermbg=NONE guibg=NONE
+  highlight LineNr     ctermbg=NONE guibg=NONE
+  highlight SignColumn ctermbg=NONE guibg=NONE
+endfunction
+
+augroup MyColors | autocmd!
+  autocmd ColorScheme * call MyHighlights()
+augroup END
+
 " Colorscheme
 set background=dark
 execute "colorscheme " . g:colorscheme
 
-highlight Comment cterm=italic
-highlight Normal     ctermbg=NONE guibg=NONE
-highlight LineNr     ctermbg=NONE guibg=NONE
-highlight SignColumn ctermbg=NONE guibg=NONE
 " }}}======================
 " General {{{
 " =========================
@@ -1130,7 +1137,7 @@ set statusline+=%{winnr()}                    " buffer number
 " Autoreload .vimrc {{{
 augroup myvimrchooks
   au!
-  autocmd bufwritepost $MYVIMRC source $MYVIMRC
+  autocmd BufWritePost $MYVIMRC nested source $MYVIMRC
 augroup END
 " }}}
 
