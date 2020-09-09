@@ -5,6 +5,8 @@ super + Return
 
 super + x
 	gllock || lock || i3lock-fancy || i3lock
+super + l
+	dm-tool lock
 
 super + shift + x
 	prompt "Are you sure you want to shutdown?" "shutdown -h now"
