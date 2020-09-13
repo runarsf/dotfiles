@@ -10,12 +10,17 @@
 
 test -f ~/.xprofile && source ~/.xprofile
 
-if command -v bspwm >/dev/null 2>&1; then
+# e.g. `WM=bspwm startx`
+if test ! -z "${WM}"; then
+  exec "${WM}"
+elif command -v bspwm >/dev/null 2>&1; then
   exec bspwm
 elif command -v i3 >/dev/null 2>&1; then
   exec i3
 elif command -v dwm >/dev/null 2>&1; then
   exec dwm
+elif command -v xfce4-session >/dev/null 2>&1; then
+  exec xfce4-session
 else
   echo "No valid window manager found."
 fi

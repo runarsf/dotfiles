@@ -82,16 +82,13 @@ exec_once () { # {{{
   fi
 }
 #exec_once "discord"
+exec_once "dunst"
 
 # Move to top?
-command -v "polybar-start" \
-  && polybar-start \
-  || "${HOME}"/.local/bin/polybar-start
-command -v "cleanfullscreen" \
-  && cleanfullscreen \
-  || "${HOME}/.local/bin/cleanfullscreen"
-"${HOME}"/.config/bspwm/monitors.py &
+"${HOME}/.local/bin/polybar-start" &
 feh --bg-scale "${HOME}/.config/wall.png" &
-pkill -USR1 picom
+"${HOME}/.local/bin/cleanfullscreen" &
+"${HOME}/.config/bspwm/monitors.py" &
+#pkill -USR1 picom
 killall -q sxhkd; sxhkd -m 1 -c "${HOME}/.config/sxhkd/sxhkdrc" "${HOME}/.config/bspwm/sxhkdrc" &
 # }}}

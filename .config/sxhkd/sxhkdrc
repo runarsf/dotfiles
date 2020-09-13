@@ -31,8 +31,8 @@ super + alt + c
 super + shift + c
 	toggleprogram "picom" "-b"
 
-super + shift + v
-	whim --editor "$EDITOR +startinsert" --terminal "$TERMINAL --class scratchpad -e"
+#super + shift + v
+#	whim --editor "$EDITOR +startinsert" --terminal "$TERMINAL --class scratchpad -e"
 
 super + o ; {v,w}
 	{"$TERMINAL" -e "$EDITOR", \
