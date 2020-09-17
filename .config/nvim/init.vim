@@ -185,6 +185,13 @@ silent! if plug#begin('~/.vim/plugged')
 "Plug 'dstein64/vim-startuptime'
 "Plug 'jlanzarotta/bufexplorer'
 "Plug 'severin-lemaignan/vim-minimap'
+Plug 'tbastos/vim-lua'
+Plug 'rrethy/vim-hexokinase', { 'do': 'make hexokinase' } " {{{
+let g:Hexokinase_highlighters = ['virtual']
+let g:Hexokinase_v2 = 0
+autocmd! VimEnter * HexokinaseRefresh
+" blue
+" }}}
 Plug 'mbbill/undotree' " {{{
 map <silent> <C-u> :UndotreeToggle<CR>
 " }}}
@@ -649,12 +656,6 @@ endif
 "let g:qs_max_chars=1000
 "
 "let g:qs_lazy_highlight = 0
-" }}}
-"Plug 'rrethy/vim-hexokinase', { 'do': 'make hexokinase' } " {{{
-"let g:Hexokinase_highlighters = ['virtual']
-"let g:Hexokinase_v2 = 0
-"autocmd! VimEnter * HexokinaseTurnOn
-" blue
 " }}}
 "if has('nvim') || has('patch-8.0.902') " {{{
 "  Plug 'mhinz/vim-signify'

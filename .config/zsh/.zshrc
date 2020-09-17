@@ -179,12 +179,12 @@ dotfiles () {
     dotfiles status
     return 0
   fi
-  for var in "${@}"; do
-    if test "${var}" = "."; then
-      printf "\'.\' argument disabled by dotfiles git wrapper."
-      return 1
-    fi
-  done
+  #for var in "${@}"; do
+  #  if test "${var}" = "."; then
+  #    printf "\'.\' argument disabled by dotfiles git wrapper."
+  #    return 1
+  #  fi
+  #done
   git --git-dir="${DOT_DIR}" --work-tree="${DOT_TREE}" "${@}"
 }
 # }}}

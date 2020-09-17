@@ -26,7 +26,7 @@ unfocus1 = #101010
 occupied = #555555
 occupied1 = #454545
 
-[bar/nord]
+[bar/main]
 width = 100%
 height = 30
 radius-bottom = 0
@@ -49,10 +49,10 @@ border-size = 0
 padding-left = 0
 padding-right = 0
 module-margin-left = 1
-module-margin-right = 1
+module-margin-right = 0
 
 tray-position = right
-tray-padding = 2
+tray-padding = 1
 tray-background = ${colors.black}
 
 font-0 = TerminessTTF Nerd Font:weight=bold:size=10;2
@@ -71,7 +71,7 @@ interval = 2
 format-prefix = " "
 #format-prefix = " "
 format = <label>
-exec = $HOME/.local/last.sh -p
+exec = $HOME/.local/bin/last.sh -p
 ;format-underline = #1db954
 
 [module/pacman-packages]
