@@ -83,13 +83,13 @@ exec_once () { # {{{
   fi
 }
 #exec_once "discord"
-exec_once "dunst"
 
-# Move to top?
+#feh --bg-tile "${HOME}/.config/wall.png" &
 "${HOME}/.local/bin/polybar-start" &
-feh --bg-scale "${HOME}/.config/wall.png" &
 "${HOME}/.local/bin/cleanfullscreen" &
 "${HOME}/.config/bspwm/monitors.py" &
+nitrogen --restore &
+dunst &
 #pkill -USR1 picom
 killall -q sxhkd; sxhkd -m 1 -c "${HOME}/.config/sxhkd/sxhkdrc" "${HOME}/.config/bspwm/sxhkdrc" &
 killall -q 2bspwm; 2bspwm &
