@@ -248,7 +248,8 @@ colors: # {{{
 
   # One Dark {{{
   primary:
-    background: '0x1e2127'
+    background: '0x30333d'
+    #background: '0x1e2127'
     foreground: '0xabb2bf'
 
   # Normal colors
