@@ -1,7 +1,7 @@
 # vim: set foldmethod=marker foldlevel=0 nomodeline:
 # description: Launch terminal.
 super + Return
-	"$TERMINAL"
+	"${TERMINAL}"
 
 super + x
 	gllock || lock || i3lock-fancy || i3lock
@@ -35,5 +35,5 @@ super + shift + c
 #	whim --editor "$EDITOR +startinsert" --terminal "$TERMINAL --class scratchpad -e"
 
 super + o ; {v,w}
-	{"$TERMINAL" -e "$EDITOR", \
-	 "$BROWSER"}
+	{"${TERMINAL}" -e "${EDITOR}", \
+	 "${BROWSER}"}

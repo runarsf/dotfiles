@@ -3,6 +3,6 @@
 if test -z "$(pgrep ${1})"; then
     command "${1}" "${@:2}"
   else
-    killall "${1}"
+    pkill "${1}"
 fi
 

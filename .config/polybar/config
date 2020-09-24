@@ -67,11 +67,11 @@ modules-right = pulseaudio cpu memory battery date
 
 [module/lastfm]
 type = custom/script
-interval = 300
-format-prefix = "  "
+interval = 2
+format-prefix = " "
 #format-prefix = " "
 format = <label>
-exec = last.sh -t
+exec = last.sh
 ;format-underline = #1db954
 
 [module/pacman-packages]

@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+set -o errexit
+
+#if ! command -v "rofi" "xclip" "curl" "scrot" >/dev/null 2>&1; then
+#  notify-send "rofi, xclip, and xdotool are required to run this script."
+#  printf "rofi, xclip, and xdotool are required to run this script.\n"
+#fi
+
+mktmp () {
+  tmpfile="$(mktemp /tmp/XXXXX.png)"
+}
+
+selection () {
+  mktmp
+  # Selection: scrot --select "${tmpfile}"
+  # Entire screen: import -window root "${tmpfile}"
+  # Active window: scrot --focused "${tmpfile}"
+  printf "${tmpfile}" | xclip -selection clipboard
+  curl -T "${tmpfile}" https://img.runarsf.dev/upload \
+    | xclip -selection clipboard
+}
+
+selection=$(printf "Selection\nActive Monitor\nAll Screens\nActive Window" | rofi -i -dmenu "${@}")
+echo $selection
+
+case "${selection}" in
+  Selection) selection;;
+  *) exit;;
+esac
+
+
+#selection=$(rofi -i -dmenu "${@}" < "${HOME}"/.config/commands)
+#printf "${selection}" | xclip -selection clipboard
+#sleep 0.1
+#xdotool key alt+v

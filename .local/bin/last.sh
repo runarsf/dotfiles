@@ -51,6 +51,8 @@ animate () {
 fetch () {
   url="http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=${LASTFM_USER}&api_key=${LASTFM_API_KEY}&format=json"
   response="$(curl -s ${url})"
+  echo hi
+  exit
 
   if printf '%s\n' "${response}" | jq ".[] | .track | .[0] | .name" | tr -d '"'  > /dev/null; then
     if test -z "${displayArtist}" -a -z "${displayTrack}" -a -z "${displayAlbum}"; then

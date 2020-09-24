@@ -72,6 +72,9 @@ super + ctrl + r : {h,j,k,l}
 #super {_,ctrl + }r : {Left,Down,Up,Right}
 #	bspwm_resize {contract,expand} {west,south,north,east} 20
 
+super + shift + b
+	toggleprogram "2bspwm"
+
 super {_,shift + }Tab
 	bspc node --focus {next,prev}.local
 
