@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
-rm -f ~/.local/bin/StandardNotes
 
-tmpfile="$(mktemp sn-XXXXX.AppImage)"
+# Grab the latest release
+url=$(
+  curl --silent https://api.github.com/repos/standardnotes/desktop/releases/latest \
+    | grep "browser_download_url.*linux-x86_64\.AppImage" \
+    | cut -d : -f 2,3 \
+    | tr -d \"
+) && rm -f ~/.local/bin/StandardNotes
 
-curl -s https://api.github.com/repos/standardnotes/desktop/releases/latest \
-  | grep "browser_download_url.*linux-x86_64\.AppImage" \
-  | cut -d : -f 2,3 \
-  | tr -d \" \
-  | wget -qi -O "${tmpfile}" -
+curl --location --output ~/.local/bin/StandardNotes ${url}
 
-mv "${tmpfile}" ~/.local/bin/StandardNotes
 chmod +x ~/.local/bin/StandardNotes
