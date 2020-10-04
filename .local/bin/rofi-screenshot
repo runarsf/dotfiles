@@ -1,11 +1,6 @@
 #!/usr/bin/env bash
 set -o errexit
 
-#if ! command -v "rofi" "xclip" "curl" "scrot" >/dev/null 2>&1; then
-#  notify-send "rofi, xclip, and xdotool are required to run this script."
-#  printf "rofi, xclip, and xdotool are required to run this script.\n"
-#fi
-
 mktmp () {
   tmpfile="$(mktemp /tmp/XXXXX.png)"
 }
@@ -20,16 +15,54 @@ selection () {
     | xclip -selection clipboard
 }
 
-selection=$(printf "Selection\nActive Monitor\nAll Screens\nActive Window" | rofi -i -dmenu "${@}")
-echo $selection
+select () {
+  selection=$(printf "Selection\nActive Monitor\nAll Screens\nActive Window" | rofi -i -dmenu "${@}")
 
-case "${selection}" in
-  Selection) selection;;
-  *) exit;;
-esac
+  case "${selection}" in
+    Selection) selection;;
+    *) exit;;
+  esac
+}
 
+capture_mode="selection"
+positional=()
+while test "${#}" -gt "0"; do
+  case "${1}" in
+    -m|--monitor) # {{{
+      capture_mode="monitor"
+      shift;; # }}}
+    -w|--window) # {{{
+      capture_mode="window"
+      shift;; # }}}
+    -s|--selection) # {{{
+      capture_mode="selection"
+      shift;shift;; # }}}
+    --*) # {{{
+      printf "Unknown option: ${1}\n"
+      exit 1
+      shift;;
+    -*)
+      shopts="${1}"
+      if test "${#shopts}" -le "2"; then
+        printf "Unknown option: ${shopts}\n"
+        exit 2
+      fi
+      shift
+      set -- "${shopts:0:2}" "-${shopts:2}" "${@}"
+      ;;
+    *)
+      positional+=("${1}")
+      shift;; # }}}
+  esac
+done
 
-#selection=$(rofi -i -dmenu "${@}" < "${HOME}"/.config/commands)
-#printf "${selection}" | xclip -selection clipboard
-#sleep 0.1
-#xdotool key alt+v
+set -- "${positional[@]}"
+
+select
+screenshot "${capture_mode}"
+
+# Either parse as unknown or command arguments
+#if test "${#}" -lt "1"; then
+  #printf "No command supplied, exiting.\n"
+  # should run selection mode
+#fi

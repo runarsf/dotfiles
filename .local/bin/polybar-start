@@ -12,7 +12,7 @@ while pgrep -x polybar >/dev/null; do sleep 1; done
 #polybar nord &
 
 for m in $(polybar --list-monitors | cut -d":" -f1); do
-    MONITOR=$m polybar --reload "${BAR}" &
+    MONITOR=$m polybar --config=/home/runar/.config/polybar/config.mac --reload "${BAR}" &
 done
 
 #if [ -z "$(pgrep -x polybar)" ]; then

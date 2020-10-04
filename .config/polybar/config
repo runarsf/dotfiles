@@ -3,8 +3,8 @@ screenchange-reload = true
 pseudo-transparency = true
 
 [colors]
-black = #263238
-white = #D8DEE9
+background = #263238
+foreground = #D8DEE9
 red = #BF616A
 red1 = #BF3B48
 green = #94AD7D
@@ -29,11 +29,11 @@ occupied1 = #454545
 [bar/main]
 width = 100%
 height = 30
-radius-bottom = 0
-monitor = ${env:MONITOR:}
+radius = 5
+monitor = ${env:MONITOR:eDP1}
 bottom = false
-background = ${colors.black}
-foreground = ${colors.white}
+background = ${colors.background}
+foreground = ${colors.foreground}
 fixed-center = true
 line-size = 4
 line-color = #f00
@@ -44,16 +44,21 @@ enable-ipc = true
 wm-restack = bspwm
 override-redirect = false
 
-border-size = 0
-#border-color =
+border-size = 5
+border-color = #00000000
 padding-left = 0
 padding-right = 0
 module-margin-left = 1
 module-margin-right = 0
 
-tray-position = right
-tray-padding = 1
-tray-background = ${colors.black}
+#tray-position = right
+#tray-detached = true
+#tray-maxsize = 20
+#tray-padding = 0
+#tray-offset-x = 0
+#tray-offset-y = 30
+#tray-scale = 1.0
+#tray-background = #00000000
 
 font-0 = TerminessTTF Nerd Font:weight=bold:size=10;2
 font-1 = "Input Mono:size=8;0"
@@ -79,7 +84,7 @@ type = custom/ipc
 hook-0 = sudo pacman -Qu | wc -l
 format-prefix = "📦 "
 initial = 1
-format-foreground = ${colors.black}
+format-foreground = ${colors.background}
 format-background = ${colors.violet}
 format-underline = ${colors.violet1}
 
@@ -91,7 +96,7 @@ interval = 3
 format = <label>
 ; 
 label = "   %gb_used% " 
-format-foreground = ${colors.black}
+format-foreground = ${colors.background}
 format-background = ${colors.green}
 format-underline = ${colors.green1}
 
@@ -101,7 +106,7 @@ interval = 2
 format = <label>
 ; 
 label = "﬙ %percentage:2%%"
-format-foreground = ${colors.black}
+format-foreground = ${colors.background}
 format-background = ${colors.cyan}
 format-padding = 1
 format-underline = ${colors.cyan1}
@@ -146,7 +151,7 @@ port = 6600
 format-online = <toggle> <label-song>
 ;alt icons = 
 format-online-background = ${colors.blue}
-format-online-foreground = ${colors.black}
+format-online-foreground = ${colors.background}
 format-online-padding = 1
 icon-play = 
 ;icon-prev = 
@@ -160,7 +165,7 @@ label-song-ellipsis = true
 ;bar-progress-empty = ─
 label-offline = mpd is offline
 format-online-underline = ${colors.blue1}
-format-offline-underline = ${colors.white}
+format-offline-underline = ${colors.foreground}
 
 [module/spotify]
 type = custom/script
@@ -172,14 +177,14 @@ format-underline = #1db954
 
 [module/xwindow]
 #type = internal/xwindow
-#format-foreground = ${colors.white}
-#format-background = ${colors.black}
+#format-foreground = ${colors.foreground}
+#format-background = ${colors.background}
 #format-padding = 5
 #label = %title:0:50:...%
 type = internal/xwindow
 format = <label>
-format-foreground = ${colors.white}
-format-background = ${colors.black}
+format-foreground = ${colors.foreground}
+format-background = ${colors.background}
 label = %title%
 label-maxlen = 75
 
@@ -203,12 +208,12 @@ interval = 25
 mount-0 = /
 label-mounted = %{F#0a81f5}%mountpoint%%{F-}: %percentage_used%%
 label-unmounted = %mountpoint% not mounted
-label-unmounted-foreground = ${colors.white}
+label-unmounted-foreground = ${colors.foreground}
 
 [module/xbacklight]
 type = internal/xbacklight
 format = <label>
-format-foreground = ${colors.black}
+format-foreground = ${colors.background}
 format-background = ${colors.orange}
 label = " 盛 %percentage%% "
 format-underline = ${colors.orange1}
@@ -219,7 +224,7 @@ interval = 1
 date = %a %d %b
 time = %I:%M %p
 label = "%{A1:gsimplecal:}  %date%   %time% %{A}"
-format-foreground = ${colors.black}
+format-foreground = ${colors.background}
 format-background = ${colors.violet}
 format-underline = ${colors.violet1}
 
@@ -232,7 +237,7 @@ time = "%H:%M"
 time-alt = "%H:%M:%S"
 ;format-prefix = " "
 ;format-prefix-foreground = ${colors.foreground-alt}
-format-foreground = ${colors.black}
+format-foreground = ${colors.background}
 format-background = ${colors.violet}
 format-underline = ${colors.violet1}
 label = "%date%  %time% "
@@ -251,25 +256,25 @@ sink = alsa_output.pci-0000_00_1b.0.analog-stereo
 use-ui-max = true
 interval = 5
 format-volume = <ramp-volume><label-volume>
-format-volume-foreground = ${colors.black}
+format-volume-foreground = ${colors.background}
 format-volume-background = ${colors.yellow}
 label-volume = "%percentage% "
-label-volume-foreground = ${colors.black}
+label-volume-foreground = ${colors.background}
 label-volume-background = ${colors.yellow}
 label-muted = "   mute "
-label-muted-foreground = ${colors.black}
+label-muted-foreground = ${colors.background}
 label-muted-background = ${colors.yellow}
 ramp-volume-0 = "  "
-ramp-volume-0-foreground = ${colors.black}
+ramp-volume-0-foreground = ${colors.background}
 ramp-volume-0-background = ${colors.yellow}
 ramp-volume-1 = "  "
-ramp-volume-1-foreground = ${colors.black}
+ramp-volume-1-foreground = ${colors.background}
 ramp-volume-1-background = ${colors.yellow}
 ramp-volume-2 = "  "
-ramp-volume-2-foreground = ${colors.black}
+ramp-volume-2-foreground = ${colors.background}
 ramp-volume-2-background = ${colors.yellow}
 ramp-volume-3 = "  "
-ramp-volume-3-foreground = ${colors.black}
+ramp-volume-3-foreground = ${colors.background}
 ramp-volume-3-background = ${colors.yellow}
 format-volume-underline = ${colors.yellow1}
 
@@ -279,17 +284,17 @@ battery = BAT0
 adapter = ADP1
 full-at = 99
 format-charging = <label-charging>
-format-charging-foreground = ${colors.black}
+format-charging-foreground = ${colors.background}
 format-charging-background = ${colors.red}
 format-full = <label-full>
-format-full-foreground = ${colors.black}
+format-full-foreground = ${colors.background}
 format-full-background = ${colors.red}
 format-discharging = <label-discharging>
-format-discharging-foreground = ${colors.black}
+format-discharging-foreground = ${colors.background}
 format-discharging-background = ${colors.red}
 label-charging = "  %percentage%% "
 label-discharging ="  %percentage%% "
-label-discharging-foreground = ${colors.black}
+label-discharging-foreground = ${colors.background}
 label-full = "  %percentage%% "
 format-charging-underline = ${colors.red1}
 format-discharging-underline = ${colors.red1}
@@ -306,7 +311,7 @@ label-mode-background = ${colors.focus}
 ; focused = Active workspace on focused monitor
 label-focused = %index%
 label-focused-background = ${colors.focus}
-label-focused-foreground = ${colors.black}
+label-focused-foreground = ${colors.background}
 label-focused-underline= ${colors.focus1}
 label-focused-padding = 2
 ; unfocused = Inactive workspace on any monitor
@@ -360,7 +365,7 @@ padding = 3
 ; Active workspace on active monitor
 label-focused = %name%
 ;label-focused = %icon% %name%
-label-focused-foreground = ${colors.white}
+label-focused-foreground = ${colors.foreground}
 label-focused-background = ${colors.focus}
 label-focused-underline = ${colors.focus1}
 label-focused-padding = ${self.padding}
@@ -368,7 +373,7 @@ label-focused-padding = ${self.padding}
 ; Urgent workspaces
 label-urgent = %name%
 ;label-urgent = %icon% %name%
-label-urgent-foreground = ${colors.white}
+label-urgent-foreground = ${colors.foreground}
 label-urgent-background = ${colors.red}
 label-urgent-underline = ${colors.red1}
 label-urgent-padding = ${self.padding}
@@ -376,7 +381,7 @@ label-urgent-padding = ${self.padding}
 ; Empty inactive workspaces on all monitors
 label-empty = %name%
 ;label-empty = %icon% %name%
-label-empty-foreground = ${colors.white}
+label-empty-foreground = ${colors.foreground}
 label-empty-background = ${colors.unfocus}
 label-empty-underline = ${colors.unfocus1}
 label-empty-padding = ${self.padding}
@@ -392,7 +397,7 @@ label-dimmed-padding = ${self.padding}
 ; Non-empty workspaces on active monitor
 label-occupied = %name%
 ;label-occupied = %icon% %name%
-label-occupied-foreground = ${colors.white}
+label-occupied-foreground = ${colors.foreground}
 label-occupied-background = ${colors.occupied}
 label-occupied-underline = ${colors.occupied1}
 label-occupied-padding = ${self.padding}
