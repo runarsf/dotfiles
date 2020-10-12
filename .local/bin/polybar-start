@@ -1,6 +1,7 @@
 #!/bin/sh
 
 BAR="${1:-main}"
+CONFIG="${2:-${HOME}/.config/polybar/config}"
 
 # Terminate already running bar instances
 killall -q polybar
@@ -12,7 +13,7 @@ while pgrep -x polybar >/dev/null; do sleep 1; done
 #polybar nord &
 
 for m in $(polybar --list-monitors | cut -d":" -f1); do
-    MONITOR=$m polybar --config=/home/runar/.config/polybar/config.mac --reload "${BAR}" &
+    MONITOR=$m polybar --config="${CONFIG}" --reload "${BAR}" &
 done
 
 #if [ -z "$(pgrep -x polybar)" ]; then

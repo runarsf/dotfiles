@@ -26,14 +26,42 @@ unfocus1 = #101010
 occupied = #555555
 occupied1 = #454545
 
+[nord]
+polar-1 = #2E3440
+polar-2 = #3B4252
+polar-3 = #434C5E
+polar-4 = #4C566A
+
+snow-1 = #D8DEE9
+snow-2 = #E5E9F0
+snow-3 = #ECEFF4
+
+frost-1 = #8FBCBB
+frost-2 = #88C0D0
+frost-3 = #81A1C1
+frost-4 = #5E81AC
+
+aurora-1 = #BF616A
+aurora-2 = #D08770
+aurora-3 = #EBCB8B
+aurora-4 = #A3BE8C
+aurora-5 = #B48EAD
+
+black = #000
+white = #FFF
+
+trans = #00000000
+semi-trans-black = #aa000000
+semi-trans = #aa2E3440
+
 [bar/main]
 width = 100%
 height = 30
-radius = 5
+radius = 0
 monitor = ${env:MONITOR:eDP1}
 bottom = false
-background = ${colors.background}
-foreground = ${colors.foreground}
+background = #1b2026
+foreground = #b7c7ca
 fixed-center = true
 line-size = 4
 line-color = #f00
@@ -44,7 +72,7 @@ enable-ipc = true
 wm-restack = bspwm
 override-redirect = false
 
-border-size = 5
+border-size = 0
 border-color = #00000000
 padding-left = 0
 padding-right = 0
@@ -67,7 +95,7 @@ font-3 = "unifont:size=6:heavy:fontformat=truetype;-2"
 
 modules-left = bspwm
 modules-center = xwindow
-modules-right = pulseaudio cpu memory battery date
+modules-right = xbacklight pulseaudio cpu memory battery date
 
 
 [module/lastfm]
@@ -84,32 +112,31 @@ type = custom/ipc
 hook-0 = sudo pacman -Qu | wc -l
 format-prefix = "📦 "
 initial = 1
-format-foreground = ${colors.background}
-format-background = ${colors.violet}
-format-underline = ${colors.violet1}
+format-foreground = ${colors.foreground}
+format-background =
+format-underline =
 
 [module/memory]
 type = internal/memory
 ; Seconds to sleep between updates
-; Default: 1
 interval = 3
 format = <label>
-; 
-label = "   %gb_used% " 
-format-foreground = ${colors.background}
-format-background = ${colors.green}
-format-underline = ${colors.green1}
+; 
+label = "   %gb_used% " 
+format-foreground = ${colors.foreground}
+format-background =
+format-underline =
 
 [module/cpu]
 type = internal/cpu 
 interval = 2
 format = <label>
-; 
-label = "﬙ %percentage:2%%"
-format-foreground = ${colors.background}
-format-background = ${colors.cyan}
+; ﬙
+label = " %percentage:2%%"
+format-foreground = ${colors.foreground}
+format-background =
 format-padding = 1
-format-underline = ${colors.cyan1}
+format-underline =
 
 [module/wlan]
 type = internal/network
@@ -130,51 +157,6 @@ ramp-signal-3 = 
 ramp-signal-4 = 
 ramp-signal-foreground = ${colors.foreground-alt}
 
-[module/eth]
-type = internal/network
-interface = eth0
-interval = 3.0
-format-connected-underline =  #456771
-format-connected-prefix = " "
-format-connected-prefix-foreground = ${colors.foreground-alt}
-label-connected = %local_ip%
-format-disconnected =
-;format-disconnected = <label-disconnected>
-;format-disconnected-underline = ${self.format-connected-underline}
-;label-disconnected = %ifname% disconnected
-;label-disconnected-foreground = ${colors.foreground-alt}
-
-[module/mpd]
-type = internal/mpd
-host = 127.0.0.1
-port = 6600
-format-online = <toggle> <label-song>
-;alt icons = 
-format-online-background = ${colors.blue}
-format-online-foreground = ${colors.background}
-format-online-padding = 1
-icon-play = 
-;icon-prev = 
-;icon-next = 
-icon-pause = 
-label-song =  "%{A1:mpc next && mpdfy:}%title:0:40:...%%{A}"
-label-song-ellipsis = true
-;bar-progress-width = 13
-;bar-progress-indicator = ⊙
-;bar-progress-fill = ━
-;bar-progress-empty = ─
-label-offline = mpd is offline
-format-online-underline = ${colors.blue1}
-format-offline-underline = ${colors.foreground}
-
-[module/spotify]
-type = custom/script
-interval = 1
-format-prefix = " "
-format = <label>
-exec = python $HOME/bin/python/spotify_status.py -f '{song} - {artist}'
-format-underline = #1db954
-
 [module/xwindow]
 #type = internal/xwindow
 #format-foreground = ${colors.foreground}
@@ -184,49 +166,17 @@ format-underline = #1db954
 type = internal/xwindow
 format = <label>
 format-foreground = ${colors.foreground}
-format-background = ${colors.background}
+format-background =
 label = %title%
 label-maxlen = 75
-
-[module/xkeyboard]
-type = internal/xkeyboard
-blacklist-0 = num lock
-format = <label-indicator> <label-layout>
-format-prefix = " "
-format-prefix-foreground = ${colors.foreground-alt}
-format-prefix-underline = ${colors.secondary}
-label-layout = %layout%
-label-layout-underline = ${colors.secondary}
-label-indicator-padding = 2
-label-indicator-margin = 1
-label-indicator-background = ${colors.secondary}
-label-indicator-underline = ${colors.secondary}
-
-[module/filesystem]
-type = internal/fs
-interval = 25
-mount-0 = /
-label-mounted = %{F#0a81f5}%mountpoint%%{F-}: %percentage_used%%
-label-unmounted = %mountpoint% not mounted
-label-unmounted-foreground = ${colors.foreground}
 
 [module/xbacklight]
 type = internal/xbacklight
 format = <label>
-format-foreground = ${colors.background}
-format-background = ${colors.orange}
+format-foreground = ${colors.foreground}
+format-background =
+format-underline =
 label = " 盛 %percentage%% "
-format-underline = ${colors.orange1}
-
-[module/time]
-type = internal/date
-interval = 1
-date = %a %d %b
-time = %I:%M %p
-label = "%{A1:gsimplecal:}  %date%   %time% %{A}"
-format-foreground = ${colors.background}
-format-background = ${colors.violet}
-format-underline = ${colors.violet1}
 
 [module/date]
 type = internal/date
@@ -235,18 +185,16 @@ date =
 date-alt = "  %a %d %b"
 time = "%H:%M"
 time-alt = "%H:%M:%S"
-;format-prefix = " "
-;format-prefix-foreground = ${colors.foreground-alt}
-format-foreground = ${colors.background}
-format-background = ${colors.violet}
-format-underline = ${colors.violet1}
+format-foreground = ${colors.foreground}
+format-background =
+format-underline =
 label = "%date%  %time% "
 
 [module/kernel-version]
 type = custom/script
 exec = uname -r
 interval = 1024
-format-underline =  #456771
+format-underline = #456771
 format-prefix = " "
 format-prefix-foreground = #666
 
@@ -282,68 +230,106 @@ format-volume-underline = ${colors.yellow1}
 type = internal/battery
 battery = BAT0
 adapter = ADP1
-full-at = 99
+full-at = 95
 format-charging = <label-charging>
-format-charging-foreground = ${colors.background}
-format-charging-background = ${colors.red}
-format-full = <label-full>
-format-full-foreground = ${colors.background}
-format-full-background = ${colors.red}
-format-discharging = <label-discharging>
-format-discharging-foreground = ${colors.background}
-format-discharging-background = ${colors.red}
-label-charging = "  %percentage%% "
-label-discharging ="  %percentage%% "
-label-discharging-foreground = ${colors.background}
-label-full = "  %percentage%% "
-format-charging-underline = ${colors.red1}
-format-discharging-underline = ${colors.red1}
-format-full-underline = ${colors.red1}
+format-charging-foreground = ${colors.foreground}
+format-charging-background =
 
-[module/i3]
-type = internal/i3
-format = <label-state> <label-mode>
-index-sort = true
-wrapping-scroll = false
-label-mode-padding = 2
-label-mode-foreground = #000
-label-mode-background = ${colors.focus}
-; focused = Active workspace on focused monitor
-label-focused = %index%
-label-focused-background = ${colors.focus}
-label-focused-foreground = ${colors.background}
-label-focused-underline= ${colors.focus1}
-label-focused-padding = 2
-; unfocused = Inactive workspace on any monitor
-label-unfocused = %index%
-label-unfocused-padding = 2
-label-unfocused-background = ${colors.unfocus}
-label-unfocused-underline= ${colors.unfocus1}
-; visible = Active workspace on unfocused monitor
-label-visible = %index%
-label-visible-background = ${self.label-focused-background}
-label-visible-underline = ${self.label-focused-underline}
-label-visible-padding = ${self.label-focused-padding}
-; urgent = Workspace with urgency hint set
-label-urgent = %index%
-label-urgent-background = #5f5f5f
-label-urgent-padding = 2
+format-full = <label-full>
+format-full-foreground = ${colors.foreground}
+format-full-background =
+
+format-discharging = <label-discharging>
+format-discharging-foreground = ${colors.foreground}
+format-discharging-background =
+
+label-charging = "  %percentage%% "
+
+label-discharging ="  %percentage%% "
+label-discharging-foreground = ${colors.foreground}
+
+label-full = "  %percentage%% "
+
+format-charging-underline = ${colors.green}
+
+format-discharging-underline = ${colors.red}
+
+format-full-underline =
+
 
 [module/bspwm]
 type = internal/bspwm
-format = <label-monitor> <label-state> <label-mode>
+ws-icon-0 = 1;%{T4}%{T-}
+ws-icon-1 = 2;%{T4}%{T-}
+ws-icon-2 = 3;%{T4}%{T-}
+ws-icon-3 = 4;%{T4}%{T-}
+ws-icon-4 = 5;%{T4}%{T-}
+ws-icon-5 = 6;%{T4}%{T-}
+ws-icon-6 = 7;%{T4}%{T-}
+ws-icon-7 = 8;%{T4}%{T-}
+ws-icon-8 = 9;%{T4}%{T-}
+ws-icon-9 = 0;%{T4}%{T-}
+
 format-prefix = " "
-ws-icon-0 = 0;
-ws-icon-1 = 1;
-ws-icon-2 = 2;
-ws-icon-3 = 3;
-ws-icon-4 = 4;
-ws-icon-5 = 5;
-ws-icon-6 = 6;
-ws-icon-7 = 7;
-ws-icon-8 = 8;
-ws-icon-9 = 9;
-ws-icon-default = 
+format = <label-monitor> <label-state> <label-mode>
+
+; Active workspace on active monitor
+;label-focused = %name% %icon%%{O5}
+label-focused = %icon%
+label-focused-foreground = ${nord.aurora-4}
+label-focused-padding = 0
+#label-focused =
+#label-focused-background = ${colors.focus}
+#label-focused-underline = ${colors.focus1}
+
+label-occupied = %icon%
+label-occupied-foreground = ${nord.aurora-1}
+;label-occupied-padding = 1
+; Non-empty workspaces on active monitor
+;label-occupied = %name% %icon%%{O5}
+#label-occupied = "   "
+#label-occupied-foreground = ${colors.foreground}
+#label-occupied-background = ${colors.occupied}
+#label-occupied-underline = ${colors.occupied1}
+#label-occupied-padding = ${self.padding}
+
+label-urgent = %icon%
+label-urgent-foreground = ${nord.aurora-1}
+;label-urgent-padding = 1
+; Urgent workspaces
+;label-urgent = %name% %icon%%{O5}
+#label-urgent = "   "
+#label-urgent-background = ${colors.red}
+#label-urgent-underline = ${colors.red1}
+#label-urgent-padding = ${self.padding}
+
+label-empty = %icon%
+label-empty-foreground = ${nord.polar-4}
+;label-empty-padding = 1
+; Empty inactive workspaces on all monitors
+;label-empty = %name% %icon%%{O5}
+#label-empty = " ◯  "
+#label-empty-foreground = ${colors.foreground}
+#label-empty-background = ${colors.unfocus}
+#label-empty-underline = ${colors.unfocus1}
+#label-empty-padding = ${self.padding}
+
+label-locked = %{T4}%{T-}
+label-locked-foreground = ${nord.polar-2}
+label-locked-padding = 1
+
+label-sticky = %{T4}𢡊%{T-}
+label-sticky-foreground = ${nord.polar-3}
+label-sticky-padding = 1
+
+label-private = %{T4}廬%{T-}
+label-private-foreground = ${nord.polar-4}
+label-private-padding = 1
+
+label-marked = %{T4}%{T-}
+label-marked-foreground = ${nord.aurora-2}
+label-marked-padding = 1
+
 ; Only show workspaces defined on the same output as the bar
 pin-workspaces = true
 ; Output mode flags after focused state label
@@ -356,48 +342,12 @@ enable-scroll = true
 reverse-scroll = true
 ; Use fuzzy (partial) matching on labels when assigning icons to workspaces
 fuzzy-match = true
-;label-separator = |
-;label-separator-padding = 1
-;label-separator-foreground = ${colors.orange}
-;label-separator-foreground = #ffb52a
-padding = 3
-
-; Active workspace on active monitor
-label-focused = %name%
-;label-focused = %icon% %name%
-label-focused-foreground = ${colors.foreground}
-label-focused-background = ${colors.focus}
-label-focused-underline = ${colors.focus1}
-label-focused-padding = ${self.padding}
-
-; Urgent workspaces
-label-urgent = %name%
-;label-urgent = %icon% %name%
-label-urgent-foreground = ${colors.foreground}
-label-urgent-background = ${colors.red}
-label-urgent-underline = ${colors.red1}
-label-urgent-padding = ${self.padding}
-
-; Empty inactive workspaces on all monitors
-label-empty = %name%
-;label-empty = %icon% %name%
-label-empty-foreground = ${colors.foreground}
-label-empty-background = ${colors.unfocus}
-label-empty-underline = ${colors.unfocus1}
-label-empty-padding = ${self.padding}
 
 ; All workspaces on inactive monitors
-label-dimmed = %name%
-;label-dimmed = %icon% %name%
-label-dimmed-foreground = ${self.label-empty-foreground}
-label-dimmed-background = ${self.label-empty-background}
-label-dimmed-underline = ${self.label-empty-underline}
-label-dimmed-padding = ${self.padding}
+;label-dimmed = %name% %icon%%{O5}
+#label-dimmed = " ◯  "
+#label-dimmed-foreground = ${self.label-empty-foreground}
+#label-dimmed-background = ${self.label-empty-background}
+#label-dimmed-underline = ${self.label-empty-underline}
+#label-dimmed-padding = ${self.padding}
 
-; Non-empty workspaces on active monitor
-label-occupied = %name%
-;label-occupied = %icon% %name%
-label-occupied-foreground = ${colors.foreground}
-label-occupied-background = ${colors.occupied}
-label-occupied-underline = ${colors.occupied1}
-label-occupied-padding = ${self.padding}

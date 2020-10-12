@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# FIXME: expand variables in debug and why tf does it expand newlines...
+printf "\e[94m[run-order|line number>|function:function-call] \e[4mcommand\e[0m\n"
+trap 'printf "\e[94m[$((runlineno+=1))|${LINENO}|${FUNCNAME[1]:-0}:${BASH_LINENO[0]}] \e[4m${BASH_COMMAND}\e[0m\n"; read -n 1 -s -r' DEBUG

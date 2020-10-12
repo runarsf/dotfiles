@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 # vim: set foldmethod=marker foldlevel=0 nomodeline:
-bspc rule -r "*"
 
 # Loop through all monitors and change name
 #i=1
@@ -60,6 +59,7 @@ which external_rules >/dev/null 2>&1 \
 # }}}
 
 # Rules {{{
+bspc rule -r "*"
 bspc rule -a discord desktop=^2
 bspc rule -a Mattermost desktop=^2
 bspc rule -a slack desktop=^2

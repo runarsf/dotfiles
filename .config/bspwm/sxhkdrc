@@ -100,6 +100,8 @@ super + n
 	bspwm_scratchpad
 super + m
 	bspwm_scratchpad "math" "${TERMINAL} --class math --title math --command R"
+super + p
+	bspwm_scratchpad "pomotroid" "pomotroid"
 
 super + c ; p
 	bspc config focus_follows_pointer {false,true}
