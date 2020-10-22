@@ -79,13 +79,13 @@ padding-right = 0
 module-margin-left = 1
 module-margin-right = 0
 
-#tray-position = right
-#tray-detached = true
-#tray-maxsize = 20
-#tray-padding = 0
-#tray-offset-x = 0
-#tray-offset-y = 30
-#tray-scale = 1.0
+tray-position = right
+tray-detached = false
+tray-maxsize = 20
+tray-padding = 0
+tray-offset-x = 0
+tray-offset-y = 0
+tray-scale = 1.0
 #tray-background = #00000000
 
 font-0 = TerminessTTF Nerd Font:weight=bold:size=10;2

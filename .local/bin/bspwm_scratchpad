@@ -11,17 +11,17 @@ state="${5:-floating}"
 center="${6:-true}"
 rectangle="${3:-1600x1000+0+0}"
 
-dependencies=("xdo" "xprop" "awk")
-for cmd in "${dependencies[@]}"; do
-  if ! command -v "${cmd}" >/dev/null 2>&1; then
-    printf "Command ${cmd} not found.\n"
-    notify-send "Scratchpad" "Command ${cmd} not found."
-    missingDependencies='true'
-  fi
-done
-test -n "${missingDependencies}" && exit 1
+#dependencies=("xdo" "xprop" "awk")
+#for cmd in "${dependencies[@]}"; do
+#  if ! command -v "${cmd}" >/dev/null 2>&1; then
+#    printf "Command ${cmd} not found.\n"
+#    notify-send "Scratchpad" "Command ${cmd} not found."
+#    missingDependencies='true'
+#  fi
+#done
+#test -n "${missingDependencies}" && exit 1
 
-id="$(xdo id -n ${class})"
+id="$(xdo id -n ${class} | head -1)"
 if test -z "${id}"; then
   bspc rule -a "*:${class}" sticky=on state=floating center=true rectangle="${size}"
   eval "${command}"
