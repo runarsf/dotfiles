@@ -2,7 +2,6 @@
 set -o errexit
 #set -o xtrace
 
-# Get list of commands
 if test -n "${COMMANDS_FILE}" -a -f "${COMMANDS_FILE}"; then
   ctype="environment"
   cfile="${COMMANDS_FILE}"
@@ -16,20 +15,20 @@ elif (test -d '.git' || git rev-parse --is-inside-work-tree > /dev/null 2>&1) \
   ctype="local git"
   cfile="$(printf $(find -L -type f -name 'commands' 2> >(grep -v 'Permission denied' >&2)))"
   #commands="$(cat $(find -L -type f -name 'commands' 2> >(grep -v 'Permission denied' >&2)))"
-elif test -f "${HOME}"/.config/commands; then
+elif test -f "${HOME}/.config/commands"; then
   ctype="global"
   cfile="${HOME}/.config/commands"
   #commands="$(cat ${HOME}/.config/commands)"
-elif test -f "${HOME}"/.commands; then
+elif test -f "${HOME}/.commands"; then
   ctype="global"
   cfile="${HOME}/.commands"
   #commands="$(cat ${HOME}/.commands)"
 else
-  printf "No 'commands' file found.\n"
+  printf "No commands file found.\n"
   exit 1
 fi
 
-default_commands=": Edit ${ctype} commands file. ; ${EDITOR:-vim} ${cfile}\n"
+#default_commands=": Edit ${ctype} commands file. ; ${EDITOR:-vim} ${cfile}\n"
 commands="$(cat ${cfile})"
 
 # Select command

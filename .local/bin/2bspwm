@@ -1,6 +1,7 @@
 #!/bin/sh
 # depends on wmutils/opt
 #  yay -S wmutils-git
+# https://github.com/virginfuhrer/dots/blob/master/.local/bin/2bspwm
 
 border_color_in_normal="292b34"
 border_color_out_normal="30333d"
