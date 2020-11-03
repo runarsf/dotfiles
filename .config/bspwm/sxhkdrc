@@ -75,8 +75,8 @@ super + ctrl + r : {h,j,k,l}
 super + shift + b
 	toggleprogram "2bspwm"
 
-super {_,shift + }Tab
-	bspc node --focus {next,prev}.local
+#super {_,shift + }Tab
+#	bspc node --focus {next,prev}.local
 
 super + shift + r
 	bspc wm --restart

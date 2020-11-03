@@ -15,6 +15,10 @@ super + d
 	rofi -show run
 super + shift + d
 	rofi -combi-modi window,drun -show combi -modi combi
+super + Tab
+	rofi -show window
+super + shift + Tab
+	rofi -show ssh
 
 super + alt + e
 	emoji

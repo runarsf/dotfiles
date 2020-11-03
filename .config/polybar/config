@@ -63,7 +63,7 @@ bottom = false
 background = #1b2026
 foreground = #b7c7ca
 fixed-center = true
-line-size = 4
+line-size = 0
 line-color = #f00
 clickareas = 35
 enable-ipc = true
@@ -259,31 +259,32 @@ format-full-underline =
 
 [module/bspwm]
 type = internal/bspwm
-ws-icon-0 = 1;%{T4}%{T-}
-ws-icon-1 = 2;%{T4}%{T-}
-ws-icon-2 = 3;%{T4}%{T-}
-ws-icon-3 = 4;%{T4}%{T-}
-ws-icon-4 = 5;%{T4}%{T-}
-ws-icon-5 = 6;%{T4}%{T-}
-ws-icon-6 = 7;%{T4}%{T-}
-ws-icon-7 = 8;%{T4}%{T-}
-ws-icon-8 = 9;%{T4}%{T-}
-ws-icon-9 = 0;%{T4}%{T-}
+#ws-icon-1 = 1;%{T4}%{T-}
+#ws-icon-2 = 2;%{T4}%{T-}
+#ws-icon-3 = 3;%{T4}%{T-}
+#ws-icon-4 = 4;%{T4}%{T-}
+#ws-icon-5 = 5;%{T4}%{T-}
+#ws-icon-6 = 6;%{T4}%{T-}
+#ws-icon-7 = 7;%{T4}%{T-}
+#ws-icon-8 = 8;%{T4}%{T-}
+#ws-icon-9 = 9;%{T4}%{T-}
+#ws-icon-0 = 0;%{T4}%{T-}
+ws-icon-default = %{T4}%{T-}
 
 format-prefix = " "
 format = <label-monitor> <label-state> <label-mode>
 
 ; Active workspace on active monitor
 ;label-focused = %name% %icon%%{O5}
-label-focused = %icon%
-label-focused-foreground = ${nord.aurora-4}
+label-focused = " %icon%"
+label-focused-foreground = ${colors.green}
 label-focused-padding = 0
 #label-focused =
 #label-focused-background = ${colors.focus}
 #label-focused-underline = ${colors.focus1}
 
-label-occupied = %icon%
-label-occupied-foreground = ${nord.aurora-1}
+label-occupied = " %name%"
+label-occupied-foreground = ${colors.blue1}
 ;label-occupied-padding = 1
 ; Non-empty workspaces on active monitor
 ;label-occupied = %name% %icon%%{O5}
@@ -293,7 +294,7 @@ label-occupied-foreground = ${nord.aurora-1}
 #label-occupied-underline = ${colors.occupied1}
 #label-occupied-padding = ${self.padding}
 
-label-urgent = %icon%
+label-urgent = " %name%"
 label-urgent-foreground = ${nord.aurora-1}
 ;label-urgent-padding = 1
 ; Urgent workspaces
@@ -303,7 +304,7 @@ label-urgent-foreground = ${nord.aurora-1}
 #label-urgent-underline = ${colors.red1}
 #label-urgent-padding = ${self.padding}
 
-label-empty = %icon%
+label-empty = " %name%"
 label-empty-foreground = ${nord.polar-4}
 ;label-empty-padding = 1
 ; Empty inactive workspaces on all monitors

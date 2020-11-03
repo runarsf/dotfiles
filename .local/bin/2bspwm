@@ -51,6 +51,9 @@ border_width_in_focused="${border_width_in_normal}"
 border_width_out_focused="${border_width_out_normal}"
 
 #set_default_borders
+bspc config normal_border_color "#${border_color_out_normal}"
+bspc config active_border_color "#${border_color_out_normal}"
+bspc config focused_border_color "#${border_color_out_normal}"
 
 _chwb2() {
   colorType=$1
