@@ -8,7 +8,7 @@ C_PURPLE='\033[1;35m'
 C_CYAN='\033[1;36m'
 RESET='\033[0m'
 
-LASTFM_API_KEY="2169b05c976f5fb53969b4ad1fce2c9c"
+LASTFM_API_KEY=""
 
 require () {
   if ! command -v "${1}" >/dev/null 2>&1; then

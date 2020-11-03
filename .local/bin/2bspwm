@@ -1,5 +1,6 @@
 #!/bin/sh
 # depends on wmutils/opt
+#  pacman -S base-devel
 #  yay -S wmutils-git
 # https://github.com/virginfuhrer/dots/blob/master/.local/bin/2bspwm
 
@@ -9,17 +10,18 @@ border_color_in_focused="5d637a"
 border_color_out_focused="30333d"
 
 function set_default_borders {
-  #bspc config normal_border_color "#2e2e2e"
-  #bspc config active_border_color "#2e2e2e"
-  #bspc config focused_border_color "#306998"
-  #bspc config presel_feedback_color "#5e81ac"
-  #bspc config urgent_border_color "#dd2727"
+  bspc config normal_border_color "#2e2e2e"
+  bspc config active_border_color "#2e2e2e"
+  bspc config focused_border_color "#306998"
+  bspc config presel_feedback_color "#5e81ac"
+  bspc config urgent_border_color "#dd2727"
 
-  bspc config normal_border_color "#${border_color_out_normal}"
-  bspc config active_border_color "#${border_color_out_normal}"
-  bspc config focused_border_color "#${border_color_out_normal}"
+  bspc config border_width "3"
+  #bspc config normal_border_color "#${border_color_out_normal}"
+  #bspc config active_border_color "#${border_color_out_normal}"
+  #bspc config focused_border_color "#${border_color_out_normal}"
 }
-trap default_borders EXIT
+trap set_default_borders EXIT
 
 bspwindows () {
   kind="${1:-active}"
@@ -48,7 +50,7 @@ border_width_out_normal="$(( (border_width_current/2) + (border_width_current%2)
 border_width_in_focused="${border_width_in_normal}"
 border_width_out_focused="${border_width_out_normal}"
 
-set_default_borders
+#set_default_borders
 
 _chwb2() {
   colorType=$1
