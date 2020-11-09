@@ -35,7 +35,7 @@ done
 set -- "${positional[@]}"
 
 if test "${#}" -gt "0"; then
-  printf "Leftover options: ${@}\n"
+  printf "Leftover options: ${*}\n"
 else
   printf "No leftover options after parsing.\n"
 fi

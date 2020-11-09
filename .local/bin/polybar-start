@@ -1,20 +1,38 @@
 #!/bin/sh
 
-BAR="${1:-main}"
-CONFIG="${2:-${HOME}/.config/polybar/config}"
+CONFIG="${HOME}/.config/polybar/config"
 
-# Terminate already running bar instances
-killall -q polybar
+kill_bar () {
+  killall -q polybar
+  while pgrep -x polybar >/dev/null; do sleep 1; done
+}
 
-# Wait until the processes have been shut down
-while pgrep -x polybar >/dev/null; do sleep 1; done
-#while pgrep -u $UID -x polybar >/dev/null; do sleep 1; done
+run_bar () {
+  #for m in $(polybar --list-monitors | cut -d":" -f1); do
+  #  for bar in "${BARS}"; do
+  #    MONITOR=$m polybar --config="${CONFIG}" --reload "${bar}" &
+  #  done
+  #done
+  bar="${1}"
+  monitor="${2}"
+  MONITOR="${monitor}" polybar --config="${CONFIG}" --reload "${bar}" &
+}
 
-#polybar nord &
+#BAR_NAME=main
 
-for m in $(polybar --list-monitors | cut -d":" -f1); do
-    MONITOR=$m polybar --config="${CONFIG}" --reload "${BAR}" &
-done
+#IFS=$'\n'
+
+#for item in $(polybar --list-monitors); do
+#    MONITOR=$(echo $item | cut -d" " -f1 | cut -d":" -f1)
+#    IS_PRIMARY=$(echo $item | cut -d" " -f3)
+#    if [[ $IS_PRIMARY == *"primary"* ]]; then
+#        TRAY_POSITION=right MONITOR=$MONITOR polybar --reload $BAR_NAME &
+#    else
+#        MONITOR=$MONITOR polybar --reload $BAR_NAME &
+#    fi
+#done
+
+# --- --- --- --- ---
 
 #if [ -z "$(pgrep -x polybar)" ]; then
 #    BAR="nord"
@@ -33,3 +51,42 @@ done
 #    MONITOR=$m polybar --reload def &
 #  done
 #fi
+
+positional=()
+while test "${#}" -gt "0"; do
+  case "${1}" in
+    --*)
+      printf "Unknown option: ${1}\n"
+      exit 1
+      shift;;
+    -*)
+      shopts="${1}"
+      if test "${#shopts}" -le "2"; then
+        printf "Unknown option: ${shopts}\n"
+        exit 2
+      fi
+      shift
+      set -- "${shopts:0:2}" "-${shopts:2}" "${@}"
+      ;;
+    *)
+      positional+=("${1}")
+      shift;;
+  esac
+done
+
+set -- "${positional[@]}"
+
+if test "${#}" -le "0"; then
+  printf "No bars provided, using default (main).\n"
+  positional=("main")
+fi
+
+kill_bar
+
+for monitor in $(polybar --list-monitors | cut -d":" -f1); do
+  for bar in "${positional[@]}"; do
+    printf "Launching bar: ${bar}\n"
+    run_bar "${bar}" "${monitor}"
+    sleep 1
+  done
+done
