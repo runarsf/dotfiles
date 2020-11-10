@@ -2,56 +2,6 @@
 
 CONFIG="${HOME}/.config/polybar/config"
 
-kill_bar () {
-  killall -q polybar
-  while pgrep -x polybar >/dev/null; do sleep 1; done
-}
-
-run_bar () {
-  #for m in $(polybar --list-monitors | cut -d":" -f1); do
-  #  for bar in "${BARS}"; do
-  #    MONITOR=$m polybar --config="${CONFIG}" --reload "${bar}" &
-  #  done
-  #done
-  bar="${1}"
-  monitor="${2}"
-  MONITOR="${monitor}" polybar --config="${CONFIG}" --reload "${bar}" &
-}
-
-#BAR_NAME=main
-
-#IFS=$'\n'
-
-#for item in $(polybar --list-monitors); do
-#    MONITOR=$(echo $item | cut -d" " -f1 | cut -d":" -f1)
-#    IS_PRIMARY=$(echo $item | cut -d" " -f3)
-#    if [[ $IS_PRIMARY == *"primary"* ]]; then
-#        TRAY_POSITION=right MONITOR=$MONITOR polybar --reload $BAR_NAME &
-#    else
-#        MONITOR=$MONITOR polybar --reload $BAR_NAME &
-#    fi
-#done
-
-# --- --- --- --- ---
-
-#if [ -z "$(pgrep -x polybar)" ]; then
-#    BAR="nord"
-#    for m in $(polybar --list-monitors | cut -d":" -f1); do
-#        MONITOR=$m polybar --reload $BAR &
-#        sleep 1
-#    done
-#else
-#    polybar-msg cmd restart
-#fi
-
-# Loop through all connected monitors, launch bar with tray on $mainmon and normal on others
-#if type "xrandr"; then
-#  #for m in $(xrandr --query | grep " connected" | cut -d" " -f1); do
-#  for m in $(polybar --list-monitors | cut -d":" -f1); do
-#    MONITOR=$m polybar --reload def &
-#  done
-#fi
-
 positional=()
 while test "${#}" -gt "0"; do
   case "${1}" in
@@ -81,12 +31,23 @@ if test "${#}" -le "0"; then
   positional=("main")
 fi
 
-kill_bar
+killall -q polybar
+while pgrep -x polybar >/dev/null; do sleep 1; done
 
-for monitor in $(polybar --list-monitors | cut -d":" -f1); do
-  for bar in "${positional[@]}"; do
-    printf "Launching bar: ${bar}\n"
-    run_bar "${bar}" "${monitor}"
-    sleep 1
+if [ -z "$(pgrep -x polybar)" ]; then
+  for MONITOR in $(polybar --list-monitors | cut -d" " -f1 | cut -d":" -f1); do
+    IS_PRIMARY="$(polybar --list-monitors | grep "${MONITOR}" | cut -d" " -f3)"
+    if [[ $IS_PRIMARY == *"primary"* ]]; then
+      TRAY_POSITION=right
+    else
+      TRAY_POSITION=none
+    fi
+    for bar in "${positional[@]}"; do
+      printf "Launching bar: ${bar}\n"
+      TRAY_POSITION="${TRAY_POSITION}" MONITOR="${MONITOR}" polybar --config="${CONFIG}" --reload "${bar}" &
+    done
   done
-done
+else
+  polybar-msg cmd restart
+fi
+

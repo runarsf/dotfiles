@@ -75,7 +75,7 @@ padding-right = 0
 module-margin-left = 0
 module-margin-right = 0
 
-tray-position = right
+tray-position = ${env:TRAY_POSITION:right}
 tray-detached = false
 tray-maxsize = 20
 tray-padding = 0
@@ -171,11 +171,12 @@ format-disconnected-padding = 1
 label-connected = "%{A1:nm-connection-editor &:} %essid%%{A}"
 label-disconnected = "%{A1:nm-connection-editor &:}  Not Connected!%{A}"
 
-ramp-signal-0 = 
-ramp-signal-1 = 
-ramp-signal-2 = 
-ramp-signal-3 = 
-ramp-signal-4 = 
+ramp-signal-0 = 直
+ramp-signal-1 = 直
+ramp-signal-2 = 直
+ramp-signal-3 = 直
+ramp-signal-4 = 直
+ramp-signal-foreground = ${colors.foreground}
 #click-left = networkmanager_dmenu &
 #click-right = networkmanager_dmenu &
 #click-left = nm-connection-editor &

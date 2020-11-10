@@ -87,7 +87,7 @@ exec_once () { # {{{
 exec_once "xfce4-power-manager"
 
 #feh --bg-tile "${HOME}/.config/wall.png" &
-"${HOME}/.local/bin/polybar-start" main tray &
+"${HOME}/.local/bin/polybar-start" main &
 "${HOME}/.local/bin/cleanfullscreen" &
 "${HOME}/.config/bspwm/monitors.py" &
 nitrogen --restore &

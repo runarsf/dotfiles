@@ -158,6 +158,7 @@ alias back='cd ${OLDPWD}'
 alias reload='source "${HOME}/.config/zsh/.zshrc"'
 alias lineinon='pactl load-module module-loopback latency_msec=1'
 alias whim='whim --editor "${EDITOR} +startinsert" --terminal "${TERMINAL} --class scratchpad -e"'
+alias passed='test "${?}" -eq "0" && lolcat ~/.local/bin/tp -s 40 -d 2'
 please () { test -z "${1}" && sudo "$(fc -ln -1)" || sudo "${@}" }
 dkhl () { docker inspect --format "{{json .State.Health }}" "${1}" | jq }
 wim () { ${EDITOR} "$(which ${1})" "${@:2}" }
@@ -225,6 +226,7 @@ dotfiles () {
 # }}}
 
 # Sourcing {{{
+test -f "/etc/profile.d/undistract-me.sh" && source /etc/profile.d/undistract-me.sh
 test -s "${HOME}/.nvm/nvm.sh" && source "${HOME}/.nvm/nvm.sh"
 test -f "${HOME}/.fzf.zsh" && source "${HOME}/.fzf.zsh"
 test -f "${HOME}/.config/p10k/.p10k.zsh" && source "${HOME}/.config/p10k/.p10k.zsh" || (test -f "${HOME}/.p10k.zsh" && source "${HOME}/.p10k.zsh")
