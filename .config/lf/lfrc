@@ -1,14 +1,14 @@
 # Basic Settings
-set preview false
-#set previewer lfpreviewer
-# set previewer pistol
+set previewer lfpreview
+#set preview false
+#set previewer ~/.config/lf/preview
 set hidden true
-set color256 true
+#set color256 true
 set drawbox true
 set icons true
 set ignorecase true
+set ratios 1:2:3
 
-# Custom Functions
 cmd open ${{
   case $(file --mime-type "${f}" -bL) in
     text/*|application/json) ${EDITOR} "${f}";;
@@ -16,12 +16,14 @@ cmd open ${{
     *) xdg-open "${f}";;
   esac
 }}
+map <enter> open
 
 cmd mkdir ${{
   printf "Directory name: "
   read dir
   mkdir "${dir}"
 }}
+map md mkdir
 
 cmd mkfile ${{
   printf "File name: "
@@ -29,6 +31,7 @@ cmd mkfile ${{
   touch "${file}"
   #${EDITOR} "${file}"
 }}
+map mf mkfile
 
 cmd chmod ${{
   printf "Mode Bits: "
@@ -38,31 +41,38 @@ cmd chmod ${{
     chmod "${bits}" "${file}"
   done
 }}
+map ch. chmod
 
 cmd chexec %chmod +x "${f}"
+map chx chexec
 
 cmd setbg %cp "${f}" ~/.config/wall.png && feh --bg-scale "${f}"
+map bg setbg
 
-#cmd dragon %dragon-drag-and-drop -a -x $fx
-#cmd cpdragon %cpdragon
-#cmd mvdragon %mvdragon
-#cmd dlfile %dlfile
+cmd dragon %dragon-drag-and-drop -a -x $fx
+map dr dragon
 
 # Archive bindings
-#cmd unarchive ${{
-#  case "${f}" in
-#      *.zip) unzip "${f}";;
-#      *.tar.gz) tar -xzvf "${f}";;
-#      *.tar.bz2) tar -xjvf "${f}";;
-#      *.tar) tar -xvf "${f}";;
-#      *) printf "Unsupported format\n";;
-#  esac
-#}}
+cmd unarchive ${{
+  case "${f}" in
+    *.zip) unzip "${f}";;
+    *.tar.gz) tar -xzvf "${f}";;
+    *.tar.bz2) tar -xjvf "${f}";;
+    *.tar) tar -xvf "${f}";;
+    *) printf "Unsupported format\n";;
+  esac
+}}
+map au unarchive
+
 
 cmd zip %zip -r "${f}" "${f}"
+map az zip
 cmd tar %tar cvf "${f}.tar" "${f}"
+map at tar
 cmd targz %tar cvzf "${f}.tar.gz" "${f}"
+map ag targz
 cmd tarbz2 %tar cjvf "${f}.tar.bz2" "${f}"
+map ab tarbz2
 
 # Trash cli bindings
 #cmd trash ${{
@@ -73,12 +83,13 @@ cmd tarbz2 %tar cjvf "${f}.tar.bz2" "${f}"
 #    trash-put "$(basename "$file")"
 #  done
 #}}
+#map dd trash
 
 #cmd clear_trash %trash-empty
+#map tc clear_trash
 
-#cmd restore_trash ${{
-#  trash-restore
-#}}
+#cmd restore_trash %trash-restore
+#map tr restore_trash
 
 #cmd stripspace %stripspace "$f"
 
@@ -94,61 +105,22 @@ map c
 map e
 map f
 
-# File Openers
 map e $${EDITOR} "${f}"
-#map es $sudo $EDITOR "$f"
-map u $view "$f"
 
-# Archive Mappings
-map az zip
-map at tar
-map ag targz
-map ab targz
-map au unarchive
-
-# Trash Mappings
-#map dd trash
-#map tc clear_trash
-#map tr restore_trash
-
-# Broot Mapping
-#map f broot_jump
-
-# Dragon Mapping
-#map dr dragon
-#map dm mvdragon
-#map dc cpdragon
-#map dl dlfile
-
-#map ss stripspace
-
-# Basic Functions
 map sh set hidden!
 map dd delete
 map p paste
 map x cut
 map y copy
-map <enter> open
-map mf mkfile
-map md mkdir
-#map ms $mkscript
-map ch. chmod
-map chx chexec
-map bg setbg
-map o open_config
 map r rename
 map H top
 map L bottom
 map R reload
-#map C clear
-#map U unselect
 
 map gg top
 map G bottom
 
 map gdl cd ~/Downloads
+map gdc cd ~/Documents
 
 map gc cd ~/.config
-map gE cd /etc
-map gU. cd /usr
-map gUs cd /usr/share
