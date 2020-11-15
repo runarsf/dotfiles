@@ -64,7 +64,6 @@ cmd unarchive ${{
 }}
 map au unarchive
 
-
 cmd zip %zip -r "${f}" "${f}"
 map az zip
 cmd tar %tar cvf "${f}.tar" "${f}"
@@ -74,27 +73,33 @@ map ag targz
 cmd tarbz2 %tar cjvf "${f}.tar.bz2" "${f}"
 map ab tarbz2
 
-# Trash cli bindings
-#cmd trash ${{
-#  files=$(echo "$fx" | sed "s/ /\\\ /g;s/\[/\\\[/g;s/\]/\\\]/g")
-#  IFS=$'\n'
-#  for file in $files
-#  do
-#    trash-put "$(basename "$file")"
-#  done
-#}}
-#map dd trash
+cmd trash ${{
+  files=$(printf "$fx" | tr '\n' ';')
+  while test "${files}"; do
+    # extract the substring from start of string up to delimiter.
+    # this is the first "element" of the string.
+    file=${files%%;*}
 
-#cmd clear_trash %trash-empty
-#map tc clear_trash
+    trash-put "$(basename "${file}")"
+    # if there's only one element left, set `files` to an empty string.
+    # this causes us to exit this `while` loop.
+    # else, we delete the first "element" of the string from files, and move onto the next.
+    if test "${files}" = "${file}"; then
+      files=''
+    else
+      files="${files#*;}"
+    fi
+  done
+}}
+map dd trash
 
-#cmd restore_trash %trash-restore
-#map tr restore_trash
+cmd trash-list $trash-list; read trash
+map tl trash-list
+map trash-empty %trash-empty
+map tc trash-empty
+cmd trash-restore $trash-restore "$(trash-list | fzf | cut -d' ' -f3)"
+map tr trash-restore
 
-#cmd stripspace %stripspace "$f"
-
-# Bindings
-# Remove some defaults
 map m
 map o
 map n
@@ -108,7 +113,7 @@ map f
 map e $${EDITOR} "${f}"
 
 map sh set hidden!
-map dd delete
+#map dd delete
 map p paste
 map x cut
 map y copy
@@ -120,7 +125,10 @@ map R reload
 map gg top
 map G bottom
 
+map gtr cd ~/.local/share/Trash/files
+map gp cd ~/Pictures
+map gb cd ~/.local/bin
 map gdl cd ~/Downloads
+map gd. cd ~/data
 map gdc cd ~/Documents
-
 map gc cd ~/.config
