@@ -50,7 +50,12 @@ while true; do
   read -p "${index}> " subst
   test -z "${subst}" && subst="${index}"
   # Replace all occurences of <this>
-  cmd="$(sed -E "s|(<${index}>)|${subst}|g" <<< ${cmd})"
+  # Don't replace all when only <>
+  #if [[ $b =~ "^.*<.*\S.*>.*$" ]]; then
+    cmd="$(sed -E "s|(<${index}>)|${subst}|g" <<< ${cmd})"
+  #else
+  #  cmd="$(sed -E "s|(<${index}>)|${subst}|" <<< ${cmd})"
+  #fi
 done
 
 # Run final command
