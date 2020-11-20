@@ -162,7 +162,7 @@ alias passed='test "${?}" -eq "0" && lolcat ~/.local/bin/tp -s 40 -d 2'
 please () { test -z "${1}" && sudo "$(fc -ln -1)" || sudo "${@}" }
 dkhl () { docker inspect --format "{{json .State.Health }}" "${1}" | jq }
 wim () { ${EDITOR} "$(which ${1})" "${@:2}" }
-test -n "${DISPLAY}" && alias lf='lfrun' || unalias lf
+test -n "${DISPLAY}" && alias lf='lfrun' || (alias lf && unalias lf)
 #alias tmux='tmux -f "${XDG_CONFIG_HOME:-${HOME}/.config}/tmux/tmux.conf"'
 #alias paste='nc termbin.com 9999'
 # }}}

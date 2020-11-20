@@ -185,15 +185,15 @@ silent! if plug#begin('~/.vim/plugged')
 "Plug 'dstein64/vim-startuptime'
 "Plug 'jlanzarotta/bufexplorer'
 "Plug 'severin-lemaignan/vim-minimap'
-Plug 'tbastos/vim-lua'
+"Plug 'tbastos/vim-lua'
 Plug 'rrethy/vim-hexokinase', { 'do': 'make hexokinase' } " {{{
 let g:Hexokinase_highlighters = ['virtual']
 let g:Hexokinase_v2 = 0
 autocmd! VimEnter * HexokinaseRefresh
 " blue
 " }}}
-Plug 'mbbill/undotree' " {{{
-map <silent> <C-u> :UndotreeToggle<CR>
+"Plug 'mbbill/undotree' " {{{
+"map <silent> <C-u> :UndotreeToggle<CR>
 " }}}
 Plug 'preservim/nerdtree' " {{{
 " Open a NERDTree automatically when vim starts up if no files were specified
