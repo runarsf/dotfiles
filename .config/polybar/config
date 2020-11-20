@@ -313,7 +313,7 @@ type = internal/bspwm
 #ws-icon-8 = 8;%{T4}%{T-}
 #ws-icon-9 = 9;%{T4}%{T-}
 #ws-icon-0 = 0;%{T4}%{T-}
-ws-icon-default = %{T4}%{T-}
+#ws-icon-default = %{T4}%{T-}
 
 format-prefix = " "
 format = <label-monitor> <label-state> <label-mode>
@@ -325,7 +325,7 @@ label-occupied = 
 label-occupied-padding = 1
  
 label-urgent = 
-label-urgent-background = ${colors.red}
+label-urgent-foreground = ${colors.red}
 label-urgent-padding = 1
  
 label-empty = 
