@@ -1,46 +1,99 @@
 #!/usr/bin/env bash
+# https://trello.com/b/QwNLllss/cmds
 set -o errexit
-#set -o xtrace
 
+# Argument parsing {{{
+positional=()
+while test "${#}" -gt "0"; do
+  case "${1}" in
+    -q|--query)
+      query="${2}"
+      shift;shift;;
+    -d|--defaults)
+      default_commands=': Edit ${__type} commands file. ; ${EDITOR:-vim} ${__file}\n'
+      shift;;
+    -t|--text)
+      OUTPUT_AS_TEXT="true"
+      shift;;
+    -s|--silent)
+      SILENT="true"
+      shift;;
+    --*)
+      printf "Unknown option: ${1}\n"
+      exit 1
+      shift;;
+    -*)
+      shopts="${1}"
+      if test "${#shopts}" -le "2"; then
+        printf "Unknown option: ${shopts}\n"
+        exit 2
+      fi
+      shift
+      set -- "${shopts:0:2}" "-${shopts:2}" "${@}"
+      ;;
+    *)
+      positional+=("${1}")
+      shift;;
+  esac
+done
+
+set -- "${positional[@]}"
+
+if test "${#}" -gt "0"; then
+  test -n "${SILENT}" || printf "Commands file(s): ${*}\n"
+  # No support for multiple files (yet)
+  COMMANDS_FILE="${1}"
+fi
+# }}}
+
+# Select commands file {{{
 if test -n "${COMMANDS_FILE}" -a -f "${COMMANDS_FILE}"; then
-  ctype="environment"
-  cfile="${COMMANDS_FILE}"
-  #commands="$(cat ${COMMANDS_FILE})"
+  __type="environment"
+  __file="${COMMANDS_FILE}"
 elif test -f 'commands'; then
-  ctype="local"
-  cfile="./commands"
-  #commands="$(cat commands)"
+  __type="local"
+  __file="./commands"
 elif (test -d '.git' || git rev-parse --is-inside-work-tree > /dev/null 2>&1) \
  && test -f "$(find -L -type f -name 'commands' 2> >(grep -v 'Permission denied' >&2))"; then
-  ctype="local git"
-  cfile="$(printf $(find -L -type f -name 'commands' 2> >(grep -v 'Permission denied' >&2)))"
-  #commands="$(cat $(find -L -type f -name 'commands' 2> >(grep -v 'Permission denied' >&2)))"
+  __type="local git"
+  __file="$(printf $(find -L -type f -name 'commands' 2> >(grep -v 'Permission denied' >&2)))"
 elif test -f "${HOME}/.config/commands"; then
-  ctype="global"
-  cfile="${HOME}/.config/commands"
-  #commands="$(cat ${HOME}/.config/commands)"
+  __type="global"
+  __file="${HOME}/.config/commands"
 elif test -f "${HOME}/.commands"; then
-  ctype="global"
-  cfile="${HOME}/.commands"
-  #commands="$(cat ${HOME}/.commands)"
+  __type="global"
+  __file="${HOME}/.commands"
 else
   printf "No commands file found.\n"
   exit 1
 fi
+# }}}
 
-#default_commands=": Edit ${ctype} commands file. ; ${EDITOR:-vim} ${cfile}\n"
-commands="$(cat ${cfile})"
+export __file="$(realpath ${__file})"
+export __path="$(dirname "${__file}")"
+commands="$(cat ${__file})"
 
-# Select command
+# Check to see if a pipe exists on stdin. {{{
+if test -p /dev/stdin; then
+  #while IFS= read line; do
+  #        echo "Line: ${line}"
+  #done
+  # TODO: 
+  commands="$(cat)"
+fi
+# }}}
+
+# Select command {{{
 cmd=$(\
   printf "${default_commands}${commands[@]}" \
 | awk '{$1=$1};1' \
-| fzf
+| fzf --select-1 --exit-0 --query="${query}"
 )
+# }}}
 
-printf "$ ${cmd}\n\n"
+test -n "${SILENT}" || printf "$ ${cmd}\n\n"
 
-# Replace all <index> > input
+# Replace all <index> with user input {{{
 while true; do
   # Check if anything left to replace
   [[ ${cmd} == *"<"*">"* ]] || break
@@ -52,7 +105,14 @@ while true; do
   # Replace all occurences of <this>
   cmd="$(sed -E "s|(<${index}>)|${subst}|g" <<< ${cmd})"
 done
+# }}}
 
-# Run final command
+# Utilize selected command command {{{
 #printf "${cmd}" | bash
-eval "${cmd}"
+if test -n "${OUTPUT_AS_TEXT}"; then
+  cmd="$(envsubst <<<${cmd})"
+  printf "${cmd}"
+else
+  eval "${cmd}"
+fi
+# }}}
