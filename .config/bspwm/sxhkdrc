@@ -123,6 +123,22 @@ super + ctrl + space
 super + ctrl + shift + space
 	bspc query -N -d | xargs -I id -n 1 bspc node id -p cancel
 
+# Move to receptacle
+#super + r
+#	bspcreceptacle
+
+# Balance nodes
+super + e
+	bspc node @/ -B
+
+# Insert receptacle
+super + i; {Left,Down,Up,Right}
+	bspc node --presel-dir {west,south,north,east} -i
+
+# Close all receptacles
+super + shift + i
+	for win in `bspc query -N -n .leaf.\!window`; do bspc node $win -k; done;
+
 # mark node
 #super + y
 #	bspc node --flag
