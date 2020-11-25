@@ -5,6 +5,7 @@ set -o noclobber
 #set -o nounset
 #set -o xtrace
 
+# Script utilities {{{
 colours () { # {{{
   export RESET=$'\e[0;39m'
 
@@ -81,6 +82,20 @@ send () { # {{{
   )
   test -n "${callback}" && eval "${callback}"
 } # }}}
+# }}}
+
+setup_ssh_key () { # {{{
+  read -p "SSH key comment: " SSH_KEY_COMMENT
+  ssh-keygen -f ~/.ssh/id_rsa -t rsa -b 4096 -o -a 100 -C "${SSH_KEY_COMMENT}"
+  cat ~/.ssh/id_rsa.pub
+  read -p "Please add this key to your git provider and press Enter when you're done"
+} # }}}
+
+setup_fonts () { # {{{
+  FONTS_REPO="git@github.com:runarsf/fonts.git"
+  git clone "${FONTS_REPO}" ~/.fonts
+  sudo fc-cache -f
+} # }}}
 
 dotfiles_bare_repo () { # {{{
   DOT_REPO="git@github.com:runarsf/dotfiles.git"
@@ -129,12 +144,14 @@ install_packages () { # {{{
 } # }}}
 
 desktop () { # {{{
-  install_packages arch pacman alacritty bspwm sxhkd rofi base-devel dunst vim neovim polybar nitrogen tmux picom yay ueberzug mediainfo trash-cli highlight dnsutils # ffmpegthumbnailer poppler odt2txt docx2txt
+  install_packages arch pacman git alacritty bspwm sxhkd rofi base-devel dunst vim neovim polybar nitrogen tmux picom yay ueberzug mediainfo trash-cli highlight dnsutils # ffmpegthumbnailer poppler odt2txt docx2txt
   install_packages arch yay wmutils-git dragon-drag-and-drop gllock-git ttf-font-awesome-4 lf glow # undistract-me-git
   install_packages debian apt alacritty
+  install_fonts
 } # }}}
 
 case "${1}" in
-  desktop) desktop;;
+  desktop) desktop; shift;;
+  test) eval "${2}"; shift;shift;;
   *) printf "Unrecognized action: ${1}\n"
 esac

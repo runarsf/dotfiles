@@ -59,10 +59,10 @@ super + ctrl + shift + {Left,Down,Up,Right}
 super + ctrl + shift + {h,j,k,l}
 	bspc node --resize {left -20 0,bottom 0 20,top 0 -20,right 20 0}
 
-super + r : {Left,Down,Up,Right}
-	bspc node --resize {left 20 0,bottom 0 -20,top 0 20,right -20 0}
-super + r : {h,j,k,l}
-	bspc node --resize {left 20 0,bottom 0 -20,top 0 20,right -20 0}
+#super + r : {Left,Down,Up,Right}
+#	bspc node --resize {left 20 0,bottom 0 -20,top 0 20,right -20 0}
+#super + r : {h,j,k,l}
+#	bspc node --resize {left 20 0,bottom 0 -20,top 0 20,right -20 0}
 
 super + ctrl + r : {Left,Down,Up,Right}
 	bspc node --resize {left -20 0,bottom 0 20,top 0 -20,right 20 0}
@@ -124,8 +124,8 @@ super + ctrl + shift + space
 	bspc query -N -d | xargs -I id -n 1 bspc node id -p cancel
 
 # Move to receptacle
-#super + r
-#	bspcreceptacle
+super + r
+	bspc node $(bspc query -N -n focused) -n $(bspc query -N -n .leaf.\!window)
 
 # Balance nodes
 super + e
