@@ -82,6 +82,15 @@ send () { # {{{
   )
   test -n "${callback}" && eval "${callback}"
 } # }}}
+
+prompt () { # {{{
+  printf "${1} [y/N]"
+  read -p " " -n 1 -r </dev/tty
+  printf "\n"
+  if [[ ! "${REPLY}" =~ ^[Yy]$ ]]; then
+    return 1
+  fi
+} # }}}
 # }}}
 
 setup_ssh_key () { # {{{
@@ -91,16 +100,26 @@ setup_ssh_key () { # {{{
   read -p "Please add this key to your git provider and press Enter when you're done"
 } # }}}
 
-setup_fonts () { # {{{
-  FONTS_REPO="git@github.com:runarsf/fonts.git"
-  git clone "${FONTS_REPO}" ~/.fonts
-  sudo fc-cache -f
+setup_git_dir () { # {{{
+  GIT_REPO="${1}"
+  DESTINATION_PATH="${2}"
+  CALLBACK="${@:3}"
+  mkdir -p "$(dirname "${DESTINATION_PATH}")"
+  if test -d "${DESTINATION_PATH}"; then
+    if prompt "${DESTINATION_PATH} already exists, but you're trying to clone a repo to that path. Delete and contonue?"; then
+      rm -rf "${DESTINATION_PATH}"
+    else
+      return 1
+    fi
+  fi
+  git clone "${GIT_REPO}" "${DESTINATION_PATH}"
+  test -n "${CALLBACK}" && eval ${CALLBACK}
 } # }}}
 
-dotfiles_bare_repo () { # {{{
-  DOT_REPO="git@github.com:runarsf/dotfiles.git"
-  DOT_DIR="${HOME}/.config/dotfiles/.git"
-  DOT_TREE="${HOME}"
+setup_dotfiles_bare_repo () { # {{{
+  DOT_REPO="${1:-git@github.com:runarsf/dotfiles.git}"
+  DOT_DIR="${2:-~/.config/dotfiles/.git}"
+  DOT_TREE="${3:-~}"
 
   # Create parent directories of DOT_DIR
   mkdir -p "$(dirname "${DOT_DIR}")"
@@ -146,12 +165,22 @@ install_packages () { # {{{
 desktop () { # {{{
   install_packages arch pacman git alacritty bspwm sxhkd rofi base-devel dunst vim neovim polybar nitrogen tmux picom yay ueberzug mediainfo trash-cli highlight dnsutils # ffmpegthumbnailer poppler odt2txt docx2txt
   install_packages arch yay wmutils-git dragon-drag-and-drop gllock-git ttf-font-awesome-4 lf glow # undistract-me-git
-  install_packages debian apt alacritty
-  install_fonts
+  install_packages debian apt git vim
+  # FIXME: This might break if lightdm isn't a service and errexit is enabled
+  sudo systemctl stop lightdm
+  sudo systemctl disable lightdm
+  setup_ssh_key
+  setup_dotfiles_bare_repo "git@github.com:runarsf/dotfiles.git" "~/.config/dotfiles/.git" "~"
+  setup_git_dir "git@github.com:runarsf/fonts.git" "~/.fonts" "sudo fc-cache -f"
+  setup_git_dir "git@github.com:runarsf/wallpapers.git" "~/data/wallpapers"
 } # }}}
+
+if test "${USER}" = "root"; then
+  read -p "NB! Make sure you're signed in as the correct user, the current user is: ${USER}, with a home directory of ${HOME}. Continue?"
+fi
 
 case "${1}" in
   desktop) desktop; shift;;
-  test) eval "${2}"; shift;shift;;
+  test) eval "${2}"; shift;shift;; # ./deploy test setup_ssh_key
   *) printf "Unrecognized action: ${1}\n"
 esac
