@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+tmpfile="$(mktemp ${TMPDIR:-/tmp/}a.XXXXXX)"
+exec 3> "${tmpfile}"
+exec 4< "${tmpfile}"
+rm "${tmpfile}"
+
+>&3 cat <<EOS
+line 1
+line 2
+line 3
+EOS
+
+cat <&4

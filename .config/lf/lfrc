@@ -126,21 +126,32 @@ map R reload
 map gg top
 map G bottom
 
-cmd mark-new ${{
+cmd mark-add ${{
     # querying mark
     read -e -p "Mark as: " -n 1 markchar
     markfile="${XDG_CONFIG_HOME:-${HOME}/.config}/lf/marks"
-    # removing old mark if present
-    sed -i "/^${markchar} .*/d" "${markfile}"
-    # adding new mark
-    { cat "${markfile}" 2>/dev/null;
-      echo "${markchar}" "$(pwd)";
-    } | sort > "${markfile}.tmp"
-    mv -f "${markfile}.tmp" "${markfile}"
-}}
-map m mark-new
+    location="$(pwd)"
 
-cmd mark-cd ${{
+    # removing old mark (from character and path)
+    if test -f "${markfile}"; then
+      sed -i "\|^${markchar} .*$|d" "${markfile}"
+      sed -i "\|^.* ${location}$|d" "${markfile}"
+    fi
+
+    # adding new mark
+    tmpfile="$(mktemp ${TMPDIR:-/tmp/}lfmark.XXXXXX)"
+    exec 3> "${tmpfile}" # Open &3 for writing
+    exec 4< "${tmpfile}" # Open &4 for reading
+    rm "${tmpfile}"
+
+    { cat "${markfile}" 2>/dev/null;
+      echo "${markchar}" "${location}";
+    } | sort >&3
+    cat <&4 > "${markfile}"
+}}
+map m mark-add
+
+cmd mark-go ${{
     # loading and presenting
     markfile="${XDG_CONFIG_HOME:-${HOME}/.config}/lf/marks"
     echo "Current marks:"
@@ -149,12 +160,13 @@ cmd mark-cd ${{
     read -e -p "Go to mark: " -n 1 markchar
     dir=$(grep -e "^${markchar}" < "${markfile}" | cut -d' ' -f2)
     # setting last visited dir
+    # TODO: Should this go in mark-add?
     sed -i "/^' .*$/d" "${markfile}"
     echo "' $(pwd)" >> "${markfile}"
     # going to wanted dir
     test -n "${dir}" && lf -remote "send ${id} cd ${dir}"
 }}
-map "'" mark-cd
+map "'" mark-go
 
 map gtr cd ~/.local/share/Trash/files
 map gp cd ~/Pictures
