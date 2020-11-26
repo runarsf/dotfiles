@@ -9,6 +9,16 @@ set icons true
 set ignorecase true
 set ratios 1:2:3
 
+map m
+map o
+map n
+map "'"
+map '"'
+map d
+map c
+map e
+map f
+
 cmd open ${{
   case $(file --mime-type "${f}" -bL) in
     text/*|application/json) ${EDITOR} "${f}";;
@@ -100,17 +110,8 @@ map tc trash-empty
 cmd trash-restore $trash-restore "$(trash-list | fzf | cut -d' ' -f3)"
 map tr trash-restore
 
-map m
-map o
-map n
-map "'"
-map '"'
-map d
-map c
-map e
-map f
-
 map e $${EDITOR} "${f}"
+map z $zathura "${f}" &
 
 map sh set hidden!
 #map dd delete
@@ -125,10 +126,41 @@ map R reload
 map gg top
 map G bottom
 
+cmd mark-new ${{
+    # querying mark
+    read -e -p "Mark as: " -n 1 markchar
+    markfile="${XDG_CONFIG_HOME:-${HOME}/.config}/lf/marks"
+    # removing old mark if present
+    sed -i "/^${markchar} .*/d" "${markfile}"
+    # adding new mark
+    { cat "${markfile}" 2>/dev/null;
+      echo "${markchar}" "$(pwd)";
+    } | sort > "${markfile}.tmp"
+    mv -f "${markfile}.tmp" "${markfile}"
+}}
+map m mark-new
+
+cmd mark-cd ${{
+    # loading and presenting
+    markfile="${XDG_CONFIG_HOME:-${HOME}/.config}/lf/marks"
+    echo "Current marks:"
+    cat "${markfile}" 2>/dev/null
+    # querying mark
+    read -e -p "Go to mark: " -n 1 markchar
+    dir=$(grep -e "^${markchar}" < "${markfile}" | cut -d' ' -f2)
+    # setting last visited dir
+    sed -i "/^' .*$/d" "${markfile}"
+    echo "' $(pwd)" >> "${markfile}"
+    # going to wanted dir
+    test -n "${dir}" && lf -remote "send ${id} cd ${dir}"
+}}
+map "'" mark-cd
+
 map gtr cd ~/.local/share/Trash/files
 map gp cd ~/Pictures
 map gb cd ~/.local/bin
 map gdl cd ~/Downloads
 map gd. cd ~/data
 map gdc cd ~/Documents
+map gdr cd ~/Documents/drive
 map gc cd ~/.config

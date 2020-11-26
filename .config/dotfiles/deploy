@@ -163,7 +163,7 @@ install_packages () { # {{{
 } # }}}
 
 desktop () { # {{{
-  install_packages arch pacman git alacritty bspwm sxhkd rofi base-devel dunst vim neovim polybar nitrogen tmux picom yay ueberzug mediainfo trash-cli highlight dnsutils # ffmpegthumbnailer poppler odt2txt docx2txt
+  install_packages arch pacman git alacritty bspwm sxhkd rofi base-devel dunst vim neovim polybar nitrogen tmux picom yay ueberzug mediainfo trash-cli highlight dnsutils zathura zathura-pdf-mupdf # ffmpegthumbnailer poppler odt2txt docx2txt
   install_packages arch yay wmutils-git dragon-drag-and-drop gllock-git ttf-font-awesome-4 lf glow # undistract-me-git
   install_packages debian apt git vim
   # FIXME: This might break if lightdm isn't a service and errexit is enabled
