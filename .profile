@@ -21,6 +21,7 @@ export PYTHONDONTWRITEBYTECODE=1
 export ZDOTDIR="${XDG_CONFIG_HOME:-${HOME}/.config}/zsh"
 export FZF_DEFAULT_OPTS="--layout=reverse --height 40%"
 
+export BYOBU_CONFIG_DIR=${XDG_CONFIG_HOME:-${HOME}}/.config/byobu
 export CALIBRE_USE_DARK_PALETTE=1
 export QT_QPA_PLATFORMTHEME="qt5ct"
 export QT_AUTO_SCREEN_SCALE_FACTOR=0

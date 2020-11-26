@@ -1,3 +1,0 @@
-echo Hello World!
-echo <one> <two> <one>
-echo "Detected ${__file} at ${__path}"
