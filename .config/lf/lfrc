@@ -9,6 +9,10 @@ set icons true
 set ignorecase true
 set ratios 1:2:3
 
+set shell bash
+#set shellopts '-eu'
+#set ifs "\n"
+
 map m
 map o
 map n
@@ -126,45 +130,61 @@ map R reload
 map gg top
 map G bottom
 
+# Requires bash (not sh) to be set as the shell in lf
 cmd mark-add ${{
-    # querying mark
-    read -e -p "Mark as: " -n 1 markchar
-    markfile="${XDG_CONFIG_HOME:-${HOME}/.config}/lf/marks"
-    location="$(pwd)"
+  # querying mark
+  read -e -p "Mark as: " -n 1 markchar
+  if test -z "${markchar}"; then
+    exit 1
+  fi
+  markfile="${XDG_CONFIG_HOME:-${HOME}/.config}/lf/marks"
+  location="$(pwd)"
 
-    # removing old mark (from character and path)
-    if test -f "${markfile}"; then
-      sed -i "\|^${markchar} .*$|d" "${markfile}"
-      sed -i "\|^.* ${location}$|d" "${markfile}"
-    fi
+  # removing old mark (from character and path)
+  if test -f "${markfile}"; then
+    sed -i "\|^${markchar} .*$|d" "${markfile}"
+    sed -i "\|^.* ${location}$|d" "${markfile}"
+  fi
+  if test "${markchar}" = "-"; then
+    exit 0
+  fi
 
-    # adding new mark
-    tmpfile="$(mktemp ${TMPDIR:-/tmp/}lfmark.XXXXXX)"
-    exec 3> "${tmpfile}" # Open &3 for writing
-    exec 4< "${tmpfile}" # Open &4 for reading
-    rm "${tmpfile}"
+  # adding new mark
+  tmpfile="$(mktemp ${TMPDIR:-/tmp/}lfmark.XXXXXX)"
+  exec 3> "${tmpfile}" # Open &3 for writing
+  exec 4< "${tmpfile}" # Open &4 for reading
+  rm "${tmpfile}"
 
-    { cat "${markfile}" 2>/dev/null;
-      echo "${markchar}" "${location}";
-    } | sort >&3
-    cat <&4 > "${markfile}"
+  { cat "${markfile}" 2>/dev/null;
+    echo "${markchar}" "${location}";
+  } | sort >&3
+  cat <&4 > "${markfile}"
 }}
 map m mark-add
 
 cmd mark-go ${{
-    # loading and presenting
-    markfile="${XDG_CONFIG_HOME:-${HOME}/.config}/lf/marks"
-    echo "Current marks:"
-    cat "${markfile}" 2>/dev/null
-    # querying mark
-    read -e -p "Go to mark: " -n 1 markchar
-    dir=$(grep -e "^${markchar}" < "${markfile}" | cut -d' ' -f2)
-    # setting last visited dir
-    # TODO: Should this go in mark-add?
-    sed -i "/^' .*$/d" "${markfile}"
-    echo "' $(pwd)" >> "${markfile}"
-    # going to wanted dir
-    test -n "${dir}" && lf -remote "send ${id} cd ${dir}"
+  # TODO: FZF support?
+  # loading and presenting
+  markfile="${XDG_CONFIG_HOME:-${HOME}/.config}/lf/marks"
+
+  # Remove recent dir if you're currently at it
+  if test -f "${markfile}"; then
+    sed -i "\|^' $(pwd)$|d" "${markfile}"
+  fi
+
+  echo "Current marks:"
+  cat "${markfile}" | sed 's/^/  /' 2>/dev/null
+  # querying mark
+  read -e -p "Go to mark: " -n 1 markchar
+  if test -z "${markchar}"; then
+    exit 0
+  fi
+  dir=$(grep -e "^${markchar}" < "${markfile}" | cut -d' ' -f2)
+  # setting last visited dir
+  sed -i "/^' .*$/d" "${markfile}"
+  echo "' $(pwd)" >> "${markfile}"
+  # going to wanted dir
+  test -n "${dir}" && lf -remote "send ${id} cd ${dir}"
 }}
 map "'" mark-go
 
