@@ -35,6 +35,9 @@ super + alt + c
 super + shift + c
 	toggleprogram "picom" "-b"
 
+super + shift + p
+	curl "https://push.runarsf.dev/message?token=$(cat ~/.config/.gotifytoken)" -F "title=$(echo '' | rofi -lines 0 -dmenu -p 'Title')" -F "message=$(echo '' | rofi -lines 0 -dmenu -p 'Message')" -F "priority=$(echo '0\n1\n2\n3\n4\n5' | rofi -lines 6 -dmenu -p 'Priority')"
+
 #super + shift + v
 #	whim --editor "$EDITOR +startinsert" --terminal "$TERMINAL --class scratchpad -e"
 

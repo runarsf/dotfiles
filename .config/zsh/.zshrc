@@ -159,10 +159,14 @@ alias reload='source "${HOME}/.config/zsh/.zshrc"'
 alias lineinon='pactl load-module module-loopback latency_msec=1'
 alias whim='whim --editor "${EDITOR} +startinsert" --terminal "${TERMINAL} --class scratchpad -e"'
 alias passed='test "${?}" -eq "0" && lolcat ~/.local/bin/tp -s 40 -d 2'
-please () { test -z "${1}" && sudo "$(fc -ln -1)" || sudo "${@}" }
+#please () { test -z "${1}" && eval "sudo !!" || sudo "${@}" }
 dkhl () { docker inspect --format "{{json .State.Health }}" "${1}" | jq }
 wim () { ${EDITOR} "$(which ${1})" "${@:2}" }
 test -n "${DISPLAY}" && alias lf='lfrun' || (alias lf && unalias lf)
+
+#insert_sudo () { zle beginning-of-line; zle -U "sudo " }
+#zle -N insert-sudo insert_sudo
+#bindkey "^[s" insert-sudo
 #alias tmux='tmux -f "${XDG_CONFIG_HOME:-${HOME}/.config}/tmux/tmux.conf"'
 #alias paste='nc termbin.com 9999'
 # }}}
