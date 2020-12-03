@@ -63,7 +63,13 @@ map chx chexec
 cmd setbg %cp "${f}" ~/.config/wall.png && feh --bg-scale "${f}"
 map bg setbg
 
-cmd dragon %dragon-drag-and-drop -a -x $fx
+cmd dragon ${{
+  files=()
+  while IFS= read -r line; do
+    files+=("${line}")
+  done <<< "$fx"
+  dragon-drag-and-drop -a -x "${files[@]}"
+}}
 map dr dragon
 
 # Archive bindings
@@ -131,62 +137,70 @@ map gg top
 map G bottom
 
 # Requires bash (not sh) to be set as the shell in lf
-cmd mark-add ${{
-  # querying mark
-  read -e -p "Mark as: " -n 1 markchar
-  if test -z "${markchar}"; then
-    exit 1
-  fi
-  markfile="${XDG_CONFIG_HOME:-${HOME}/.config}/lf/marks"
-  location="$(pwd)"
+#cmd mark-add ${{
+#  # querying mark
+#  read -e -p "Mark as: " -n 1 markchar
+#  test -z "${markchar}" && exit 0
+#  markfile="${XDG_CONFIG_HOME:-${HOME}/.config}/lf/marks"
+#  location="$(pwd)"
+#
+#  # removing old mark (from character and path)
+#  if test -f "${markfile}"; then
+#    sed -i "\|^${markchar} .*$|d" "${markfile}"
+#    sed -i "\|^.* ${location}$|d" "${markfile}"
+#  else
+#    mkdir -p "$(dirname "$(realpath ${markfile})")"
+#    touch "$(realpath ${markfile})"
+#  fi
+#  test "${markchar}" = "-" && exit 0
+#
+#  # adding new mark
+#  tmpfile="$(mktemp ${TMPDIR:-/tmp/}lfmark.XXXXXX)"
+#  exec 3> "${tmpfile}" # Open &3 for writing
+#  exec 4< "${tmpfile}" # Open &4 for reading
+#  rm "${tmpfile}"
+#
+#  { cat "${markfile}" 2>/dev/null;
+#    printf "${markchar}" "${location}\n";
+#  } | sort >&3
+#  cat <&4 > "${markfile}"
+#}}
+#map m mark-add
+map m $marker add "$(pwd)"
 
-  # removing old mark (from character and path)
-  if test -f "${markfile}"; then
-    sed -i "\|^${markchar} .*$|d" "${markfile}"
-    sed -i "\|^.* ${location}$|d" "${markfile}"
-  fi
-  if test "${markchar}" = "-"; then
-    exit 0
-  fi
-
-  # adding new mark
-  tmpfile="$(mktemp ${TMPDIR:-/tmp/}lfmark.XXXXXX)"
-  exec 3> "${tmpfile}" # Open &3 for writing
-  exec 4< "${tmpfile}" # Open &4 for reading
-  rm "${tmpfile}"
-
-  { cat "${markfile}" 2>/dev/null;
-    echo "${markchar}" "${location}";
-  } | sort >&3
-  cat <&4 > "${markfile}"
-}}
-map m mark-add
-
-cmd mark-go ${{
-  # TODO: FZF support?
-  # loading and presenting
-  markfile="${XDG_CONFIG_HOME:-${HOME}/.config}/lf/marks"
-
-  # Remove recent dir if you're currently at it
-  if test -f "${markfile}"; then
-    sed -i "\|^' $(pwd)$|d" "${markfile}"
-  fi
-
-  echo "Current marks:"
-  cat "${markfile}" | sed 's/^/  /' 2>/dev/null
-  # querying mark
-  read -e -p "Go to mark: " -n 1 markchar
-  if test -z "${markchar}"; then
-    exit 0
-  fi
-  dir=$(grep -e "^${markchar}" < "${markfile}" | cut -d' ' -f2)
-  # setting last visited dir
-  sed -i "/^' .*$/d" "${markfile}"
-  echo "' $(pwd)" >> "${markfile}"
-  # going to wanted dir
-  test -n "${dir}" && lf -remote "send ${id} cd ${dir}"
-}}
-map "'" mark-go
+#cmd mark-go ${{
+#  FZF="${1:-}"
+#  markfile="${XDG_CONFIG_HOME:-${HOME}/.config}/lf/marks"
+#
+#  test ! -f "${markfile}" && exit 1
+#
+#  # Remove recent dir if you're currently at it
+#  sed -i "\|^' $(pwd)$|d" "${markfile}"
+#
+#  if test -n "${FZF}"; then
+#    markdirs="$(sed 's/^. //' "${markfile}" 2>/dev/null)"
+#    markstring="$(printf "${markdirs}\n" | fzf --preview 'ls {}')"
+#    markchar="$(cat ${markfile} | grep "${markstring}$" | cut -d' ' -f1)"
+#  else
+#    printf "Marks:\n"
+#    # Add two spaces in front of every line
+#    sed 's/^/  /' "${markfile}" 2>/dev/null
+#    # Querying mark
+#    read -e -p "Go to mark: " -n 1 markchar
+#  fi
+#  test -z "${markchar}" && exit 0
+#  dir=$(grep -e "^${markchar}" < "${markfile}" | cut -d' ' -f2)
+#
+#  # setting last visited dir
+#  sed -i "/^' .*$/d" "${markfile}"
+#  printf "' $(pwd)\n$(cat ${markfile})\n" > "${markfile}"
+#
+#  # going to wanted dir
+#  test -n "${dir}" && lf -remote "send ${id} cd ${dir}"
+#}}
+map "'" $ "$(marker get)"
+#map "'" mark-go fzf
+#map '"' mark-go
 
 map gtr cd ~/.local/share/Trash/files
 map gp cd ~/Pictures

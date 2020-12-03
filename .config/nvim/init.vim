@@ -186,6 +186,9 @@ silent! if plug#begin('~/.vim/plugged')
 "Plug 'jlanzarotta/bufexplorer'
 "Plug 'severin-lemaignan/vim-minimap'
 "Plug 'tbastos/vim-lua'
+Plug 'Jorengarenar/vim-syntaxMarkerFold' " {{{
+let g:syntaxMarkerFold_maxlevel = 2
+" }}}
 Plug 'rrethy/vim-hexokinase', { 'do': 'make hexokinase' } " {{{
 let g:Hexokinase_highlighters = ['virtual']
 let g:Hexokinase_v2 = 0
@@ -256,7 +259,7 @@ let g:indent_guides_color_change_percent = 10
 autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=#363840 ctermbg=237
 " }}}
 "Plug 'rlue/vim-barbaric'
-if v:version >= 703 && executable('node')
+if v:version >= 703 && executable('node') && executable('yarn')
   Plug 'neoclide/coc.nvim', { 'branch': 'release', 'tag': '*', 'do': { -> coc#util#install()}} " {{{
 "let g:coc_global_extensions = [
 "  \ 'coc-snippets',

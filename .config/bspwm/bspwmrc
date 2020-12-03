@@ -94,5 +94,5 @@ nitrogen --restore &
 dunst &
 #pkill -USR1 picom
 killall -q sxhkd; sxhkd -m 1 -c "${HOME}/.config/sxhkd/sxhkdrc" "${HOME}/.config/bspwm/sxhkdrc" &
-killall -q 2bspwm; 2bspwm &
+#killall -q 2bspwm; 2bspwm &
 # }}}
