@@ -930,6 +930,8 @@ if exists('g:gui_oni')
 endif
 " }}}
 
+autocmd FileType python set foldmethod=indent foldnestmax=1 nomodeline
+
 source $VIMRUNTIME/delmenu.vim
 source $VIMRUNTIME/menu.vim
 " }}}======================
