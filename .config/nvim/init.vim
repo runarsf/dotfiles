@@ -933,8 +933,6 @@ if exists('g:gui_oni')
 endif
 " }}}
 
-autocmd FileType python set foldmethod=indent foldnestmax=1 nomodeline
-
 source $VIMRUNTIME/delmenu.vim
 source $VIMRUNTIME/menu.vim
 " }}}======================
@@ -997,20 +995,11 @@ nnoremap H gT
 nnoremap L gt
 nnoremap <C-t> :tabnew<CR>
 
-" Buffer navigation
-"nnoremap <leader>h :bprevious<CR>
-"nnoremap <leader>j :blast<CR>
-"nnoremap <leader>k :bfirst<CR>
-"nnoremap <leader>l :bnext<CR>
-"map <leader>b :BufExplorer<CR>
-
 " Disable CTRL-A on tmux and screen
 if $TERM =~ 'screen'
   nnoremap <C-a> <nop>
   nnoremap <leader><C-a> <C-a>
 endif
-
-nmap <silent> <leader>wr :set wrap!<CR>
 
 nmap <leader>.. :messages<CR>
 
@@ -1027,8 +1016,10 @@ nnoremap Q @q
 
 " Toggle paste
 "nnoremap <leader>p :set invpaste<CR>
-" Breaks if '<leader>p' is in the pasted string
-set pastetoggle=<leader>p
+" Breaks if '<leader>pp' is in the pasted string
+set pastetoggle=<leader>pp
+
+nmap <silent> <leader>wr :set wrap!<CR>
 
 nnoremap <silent> <leader><space> :nohlsearch<CR>
 
@@ -1048,17 +1039,17 @@ vmap <M-j> :m'>+<cr>`<my`>mzgv`yo`z
 vmap <M-k> :m'<-2<cr>`>my`<mzgv`yo`z
 
 imap #dn >/dev/null<space>2>&1
-
 inoreabbrev <expr> #!! "#!/usr/bin/env" . (empty(&filetype) ? '' : ' '.&filetype)
 
 " Spell-check, english and norwegian
 map <leader>ts :setlocal spell! spelllang=en_us,nb<CR>
 
 augroup twig_ft | au!
-  autocmd BufRead,BufNewFile *.conf,config setf dosini
+  autocmd BufRead,BufNewFile *.conf,*.toml,config setf dosini
   autocmd BufRead,BufNewFile *.md set filetype=markdown
   autocmd BufRead,BufNewFile *.txt set syntax=markdown | imap ... … | set wrap
   autocmd BufRead,BufNewFile *.rss set filetype=xml
+  autocmd FileType python set foldmethod=indent foldnestmax=1 nomodeline
   autocmd FileType json syntax match Comment +\/\/.\+$+
 augroup END
 " }}}======================

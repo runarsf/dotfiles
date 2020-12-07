@@ -29,7 +29,7 @@ _comp_options+=(globdots)
 # }}}
 
 # plugins {{{
-if test -z ${noplug}; then
+if test -z ${NOPLUG}; then
   command -v "antibody" >/dev/null 2>&1 \
     || (echo "Installing Antibody."; curl -sfL git.io/antibody | sudo sh -s - -b /usr/local/bin) \
     && source <(antibody init)
@@ -58,9 +58,10 @@ if test -z ${noplug}; then
 		# runarsf/rufus-zsh-theme path:rufus-nightly.zsh-theme
 		# robbyrussell/oh-my-zsh path:themes/daveverwer.zsh-theme
 		# robbyrussell/oh-my-zsh path:themes/miloshadzic.zsh-theme
-		denysdovhan/spaceship-prompt
+		# denysdovhan/spaceship-prompt
 		# romkatv/powerlevel10k
 	EOBUNDLES
+  command -v starship >/dev/null 2>&1 || (curl -fsSL https://starship.rs/install.sh | bash)
   bindkey "$terminfo[kcuu1]" history-substring-search-up
   bindkey "$terminfo[kcud1]" history-substring-search-down
 else
@@ -94,40 +95,40 @@ ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=067,underline'
 # }}}
 
 # https://github.com/denysdovhan/spaceship-prompt/blob/master/docs/Options.md {{{
-SPACESHIP_PROMPT_ADD_NEWLINE=false
-SPACESHIP_USER_SHOW=false
-SPACESHIP_HOST_SHOW=false
-SPACESHIP_PROMPT_SEPARATE_LINE=false
-SPACESHIP_CHAR_SYMBOL=»
-SPACESHIP_GIT_PREFIX=""
-SPACESHIP_CHAR_SUFFIX=" "
-SPACESHIP_HG_SHOW=false
-SPACESHIP_PACKAGE_SHOW=false
-SPACESHIP_NODE_SHOW=false
-SPACESHIP_RUBY_SHOW=false
-SPACESHIP_ELM_SHOW=false
-SPACESHIP_ELIXIR_SHOW=false
-SPACESHIP_XCODE_SHOW_LOCAL=false
-SPACESHIP_SWIFT_SHOW_LOCAL=false
-SPACESHIP_GOLANG_SHOW=false
-SPACESHIP_PHP_SHOW=false
-SPACESHIP_RUST_SHOW=false
-SPACESHIP_JULIA_SHOW=false
-SPACESHIP_DOCKER_SHOW=false
-SPACESHIP_DOCKER_CONTEXT_SHOW=false
-SPACESHIP_AWS_SHOW=false
-SPACESHIP_CONDA_SHOW=false
-SPACESHIP_VENV_SHOW=false
-SPACESHIP_PYENV_SHOW=false
-SPACESHIP_DOTNET_SHOW=false
-SPACESHIP_EMBER_SHOW=false
-SPACESHIP_KUBECONTEXT_SHOW=false
-SPACESHIP_TERRAFORM_SHOW=false
-SPACESHIP_TERRAFORM_SHOW=false
-SPACESHIP_VI_MODE_SHOW=false
-SPACESHIP_JOBS_SHOW=false
-SPACESHIP_EXEC_TIME_SHOW=false
-SPACESHIP_BATTERY_SHOW=false
+#SPACESHIP_PROMPT_ADD_NEWLINE=false
+#SPACESHIP_USER_SHOW=false
+#SPACESHIP_HOST_SHOW=false
+#SPACESHIP_PROMPT_SEPARATE_LINE=false
+#SPACESHIP_CHAR_SYMBOL=»
+#SPACESHIP_GIT_PREFIX=""
+#SPACESHIP_CHAR_SUFFIX=" "
+#SPACESHIP_HG_SHOW=false
+#SPACESHIP_PACKAGE_SHOW=false
+#SPACESHIP_NODE_SHOW=false
+#SPACESHIP_RUBY_SHOW=false
+#SPACESHIP_ELM_SHOW=false
+#SPACESHIP_ELIXIR_SHOW=false
+#SPACESHIP_XCODE_SHOW_LOCAL=false
+#SPACESHIP_SWIFT_SHOW_LOCAL=false
+#SPACESHIP_GOLANG_SHOW=false
+#SPACESHIP_PHP_SHOW=false
+#SPACESHIP_RUST_SHOW=false
+#SPACESHIP_JULIA_SHOW=false
+#SPACESHIP_DOCKER_SHOW=false
+#SPACESHIP_DOCKER_CONTEXT_SHOW=false
+#SPACESHIP_AWS_SHOW=false
+#SPACESHIP_CONDA_SHOW=false
+#SPACESHIP_VENV_SHOW=false
+#SPACESHIP_PYENV_SHOW=false
+#SPACESHIP_DOTNET_SHOW=false
+#SPACESHIP_EMBER_SHOW=false
+#SPACESHIP_KUBECONTEXT_SHOW=false
+#SPACESHIP_TERRAFORM_SHOW=false
+#SPACESHIP_TERRAFORM_SHOW=false
+#SPACESHIP_VI_MODE_SHOW=false
+#SPACESHIP_JOBS_SHOW=false
+#SPACESHIP_EXEC_TIME_SHOW=false
+#SPACESHIP_BATTERY_SHOW=false
 # }}}
 
 # Binds {{{
@@ -231,8 +232,10 @@ dotfiles () {
 # }}}
 
 # Sourcing {{{
-test -f "/etc/profile.d/undistract-me.sh" && source /etc/profile.d/undistract-me.sh
+#test -f "/etc/profile.d/undistract-me.sh" && source /etc/profile.d/undistract-me.sh
 test -s "${HOME}/.nvm/nvm.sh" && source "${HOME}/.nvm/nvm.sh"
 test -f "${HOME}/.fzf.zsh" && source "${HOME}/.fzf.zsh"
-test -f "${HOME}/.config/p10k/.p10k.zsh" && source "${HOME}/.config/p10k/.p10k.zsh" || (test -f "${HOME}/.p10k.zsh" && source "${HOME}/.p10k.zsh")
+#test -f "${HOME}/.config/p10k/.p10k.zsh" && source "${HOME}/.config/p10k/.p10k.zsh" || (test -f "${HOME}/.p10k.zsh" && source "${HOME}/.p10k.zsh")
+export STARSHIP_CONFIG=~/.config/starship.toml
+eval "$(starship init zsh)"
 # }}}

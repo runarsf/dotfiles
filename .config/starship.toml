@@ -1,0 +1,31 @@
+# Don't print a new line at the start of the prompt
+add_newline = false
+
+# Make prompt a single line instead of two lines
+[line_break]
+disabled = true
+
+[character]
+success_symbol = "[»](bold green)"
+error_symbol = "[»](bold red)"
+
+[hostname]
+disabled = true
+ssh_only = true
+
+[cmd_duration]
+min_time = 4000
+show_milliseconds = false
+format = " took [$duration]($style) "
+
+[directory]
+truncation_length = 1
+
+[username]
+disabled = true
+
+[package]
+disabled = true
+
+[git_branch]
+format = "[$symbol$branch]($style) "
