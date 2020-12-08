@@ -18,6 +18,12 @@ min_time = 4000
 show_milliseconds = false
 format = "[$duration]($style) "
 
+[nodejs]
+format = "[$symbol$version]($style) "
+
+[battery]
+disabled = true
+
 [directory]
 truncation_length = 2
 
