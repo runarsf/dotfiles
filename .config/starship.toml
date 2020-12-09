@@ -14,7 +14,7 @@ disabled = true
 ssh_only = true
 
 [cmd_duration]
-min_time = 4000
+min_time = 10000
 show_milliseconds = false
 format = "[$duration]($style) "
 

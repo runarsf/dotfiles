@@ -239,3 +239,5 @@ test -f "${HOME}/.fzf.zsh" && source "${HOME}/.fzf.zsh"
 export STARSHIP_CONFIG=~/.config/starship.toml
 eval "$(starship init zsh)"
 # }}}
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
