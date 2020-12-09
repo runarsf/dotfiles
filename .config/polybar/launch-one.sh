@@ -50,4 +50,3 @@ if [ -z "$(pgrep -x polybar)" ]; then
 else
   polybar-msg cmd restart
 fi
-
