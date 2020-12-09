@@ -48,7 +48,10 @@ endif
 endif
 " }}}
 
-filetype plugin indent on
+set nocompatible
+if has("autocmd")
+  filetype plugin indent on
+endif
 let g:colorscheme = 'one'
 
 silent! if plug#begin('~/.vim/plugged')
@@ -190,6 +193,40 @@ nmap <silent> <leader>f :FZF<CR>
 "Plug 'junegunn/goyo.vim', { 'on': 'Goyo' }
 "Plug 'rlue/vim-barbaric'
 Plug 'vimwiki/vimwiki' " {{{
+Plug 'mattn/calendar-vim' " {{{
+
+function! TabQuit()
+  " https://vim.fandom.com/wiki/Tabclose_instead_of_quit-all
+  try
+    if tabpagenr('$') > 1
+      exec 'tabclose!'
+    else
+      exec 'qa!'
+    endif
+  catch
+    echohl ErrorMsg | echo v:exception | echohl NONE
+  endtry
+endfunction
+function! NerdTreeEnabled()
+  return exists('t:NERDTreeBufName') && bufwinnr(t:NERDTreeBufName) != -1
+endfunction
+function! CalendarEnabled()
+  return bufwinnr("Calendar") != -1
+endfunction
+function! ShouldClose()
+  return (winnr("$") == 1 && (NerdTreeEnabled() || CalendarEnabled())) || (winnr("$") == 2 && (NerdTreeEnabled() && CalendarEnabled()))
+endfunction
+autocmd bufenter * if ShouldClose() | call TabQuit() | endif
+
+"autocmd bufenter * if ((winnr("$") == 1 && (NerdTreeEnabled() || CalendarEnabled())) || (winnr("$") == 2 && (NerdTreeEnabled() && CalendarEnabled()))) | q | endif
+
+"autocmd bufenter * if (
+"    \ (winnr("$") == 1 && (exists("b:Calendar")) || (exists("b:NERDTree") && b:NERDTree.isTabTree()))
+"    \ || (winnr("$") == 2 && (bufname("Calendar") && g:NERDTree.IsOpen()))
+"  \ ) | q | endif
+
+"autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+" }}}
 " https://opensource.com/article/18/6/vimwiki-gitlab-notes
 " https://blog.mague.com/?p=602
 let g:vimwiki_syntax = 'markdown'
@@ -208,11 +245,30 @@ let g:vimwiki_list = [{'path':      expand('~/notes/'),
                      \ 'auto_toc':  0,
                      \ 'auto_tags': 0}]
 
+autocmd BufRead,BufNewFile *.wiki set filetype=vimwiki
+autocmd FileType vimwiki map D :VimwikiMakeDiaryNote<CR>
+function! ToggleCalendar()
+  execute ":CalendarVR"
+  if exists("b:calendar_open")
+    if b:calendar_open == 1
+      unlet b:calendar_open
+      execute "q"
+    else
+      b:calendar_open = 1
+    end
+  else
+    let b:calendar_open = 1
+  end
+endfunction
+autocmd FileType vimwiki map c :call ToggleCalendar()<CR>
+
 "autocmd FileType vimwiki execute 'echo hi'
-augroup WikiSync | autocmd!
-  autocmd FileType vimwiki :autocmd! WikiSync BufRead,BufNewFile,BufWrite :echo hi
+"augroup WikiSync | autocmd!
+  "autocmd FileType vimwiki :!~/notes/.ops/sync
+  "autocmd FileType vimwiki :!~/notes/.ops/sync
+  "autocmd FileType vimwiki :autocmd! WikiSync BufRead,BufNewFile,BufWrite :echo hi
   "autocmd FileType BufRead,BufNewFile */somepath/** set filetype=sometype
-augroup END
+"augroup END
 
 " Autosave anytime there are updates to write & user is inactive
 "autocmd CursorHold * update
@@ -220,6 +276,7 @@ augroup END
 " Allow "normal" editor style tab/shift-tab indent/dedent. (Only in vimwiki
 " buffers!)
 let g:vimwiki_table_mappings = 0
+autocmd FileType vimwiki silent! iunmap <buffer> <Tab>
 autocmd FileType vimwiki map <buffer> <Tab> <Plug>VimwikiIncreaseLvlSingleItem
 autocmd FileType vimwiki map <buffer> <S-Tab> <Plug>VimwikiDecreaseLvlSingleItem
 " Not only do we want regular edit-style tab, but we also want it to be useful
@@ -300,7 +357,7 @@ autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in
 "autocmd StdinReadPre * let s:std_in=1
 "autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | silent NERDTree | wincmd p | ene | endif
 " Close vim if the only window left open is a NERDTree
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+"autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
 "let g:NERDTreeDirArrowExpandable = '>'
 "let g:NERDTreeDirArrowCollapsible = 'v'
@@ -814,7 +871,6 @@ execute "colorscheme " . g:colorscheme
 " }}}======================
 " General {{{
 " =========================
-set nocompatible
 set clipboard+=unnamedplus
 set history=500
 set autoread
@@ -962,6 +1018,15 @@ source $VIMRUNTIME/menu.vim
 "  autocmd FileType bib inoremap <buffer> ,c @incollection{<Enter>author<Space>=<Space>{<++>},<Enter>title<Space>=<Space>{<++>},<Enter>booktitle<Space>=<Space>{<++>},<Enter>editor<Space>=<Space>{<++>},<Enter>year<Space>=<Space>{<++>},<Enter>publisher<Space>=<Space>{<++>},<Enter>}<Enter><++><Esc>8kA,<Esc>i
 "augroup END
 " }}}
+
+let g:markdown_folding = 1
+
+" Use ctrl-[hjkl] to select the active split!
+" https://vim.fandom.com/wiki/Switch_between_Vim_window_splits_easily
+nmap <silent> <c-k> :wincmd k<CR>
+nmap <silent> <c-j> :wincmd j<CR>
+nmap <silent> <c-h> :wincmd h<CR>
+nmap <silent> <c-l> :wincmd l<CR>
 
 " Tab navigation
 nnoremap H gT
