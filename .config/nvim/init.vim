@@ -57,6 +57,253 @@ let g:colorscheme = 'one'
 silent! if plug#begin('~/.vim/plugged')
 " General {{{
 " Disabled General {{{
+"Plug 'Jorengarenar/vim-syntaxMarkerFold' " {{{
+"let g:syntaxMarkerFold_maxlevel = 2
+" }}}
+"Plug 'Xuyuanp/nerdtree-git-plugin' " {{{
+"let g:NERDTreeIndicatorMapCustom = {
+"    \ "Modified"  : "✹",
+"    \ "Staged"    : "✚",
+"    \ "Untracked" : "✭",
+"    \ "Renamed"   : "➜",
+"    \ "Unmerged"  : "═",
+"    \ "Deleted"   : "✖",
+"    \ "Dirty"     : "✗",
+"    \ "Clean"     : "✔︎",
+"    \ 'Ignored'   : '☒',
+"    \ "Unknown"   : "?"
+"    \ }
+"let g:NERDTreeShowIgnoredStatus = 0
+" }}}
+"Plug 'justinmk/vim-sneak' " {{{
+"let g:sneak#label = 1
+" }}}
+"Plug 'lervag/wiki.vim' " {{{
+"let g:wiki_root = expand("~/notes/")
+" }}}
+"Plug 'b4b4r07/vim-buftabs' " {{{
+"let g:buftabs_enabled = 1
+"let g:buftabs_in_statusline = 1
+"let g:buftabs_in_cmdline = 0
+"let g:buftabs_only_basename = 1
+"let g:buftabs_active_highlight_group = "Visual"
+"let g:buftabs_inactive_highlight_group = ""
+"let g:buftabs_statusline_highlight_group = ""
+"let g:buftabs_marker_start = "["
+"let g:buftabs_marker_end = "]"
+"let g:buftabs_separator = "-"
+"let g:buftabs_marker_modified = "!"
+" }}}
+"plug 'zefei/vim-wintabs' " {{{
+" commands             | mapping keys                 | replacing Vim commands
+" ---------------------+------------------------------+-----------------------
+" :WintabsNext         | <Plug>(wintabs_next)         | :bnext!
+" :WintabsPrevious     | <Plug>(wintabs_previous)     | :bprevious!
+" :WintabsClose        | <Plug>(wintabs_close)        | :bdelete
+" :WintabsUndo         | <Plug>(wintabs_undo)         |
+" :WintabsOnly         | <Plug>(wintabs_only)         |
+" :WintabsCloseWindow  | <Plug>(wintabs_close_window) | :close, CTRL-W c
+" :WintabsOnlyWindow   | <Plug>(wintabs_only_window)  | :only, CTRL-W o
+" :WintabsCloseVimtab  | <Plug>(wintabs_close_vimtab) | :tabclose
+" :WintabsOnlyVimtab   | <Plug>(wintabs_only_vimtab)  | :tabonly
+" :help wintabs-commands
+
+"map <C-H> <Plug>(wintabs_previous)
+"map <C-L> <Plug>(wintabs_next)
+"map <C-T>c <Plug>(wintabs_close)
+"map <C-T>u <Plug>(wintabs_undo)
+"map <C-T>o <Plug>(wintabs_only)
+"map <C-W>c <Plug>(wintabs_close_window)
+"map <C-W>o <Plug>(wintabs_only_window)
+"command! Tabc WintabsCloseVimtab
+"command! Tabo WintabsOnlyVimtab
+" }}}
+"Plug 'bagrat/vim-buffet' " {{{
+"noremap <Tab> :bn<CR>
+"noremap <S-Tab> :bp<CR>
+"noremap <Leader><Tab> :Bw<CR>
+"noremap <Leader><S-Tab> :Bw!<CR>
+"noremap <C-t> :tabnew split<CR>
+"nmap <leader>1 <Plug>BuffetSwitch(1)
+"nmap <leader>2 <Plug>BuffetSwitch(2)
+"nmap <leader>3 <Plug>BuffetSwitch(3)
+"nmap <leader>4 <Plug>BuffetSwitch(4)
+"nmap <leader>5 <Plug>BuffetSwitch(5)
+"nmap <leader>6 <Plug>BuffetSwitch(6)
+"nmap <leader>7 <Plug>BuffetSwitch(7)
+"nmap <leader>8 <Plug>BuffetSwitch(8)
+"nmap <leader>9 <Plug>BuffetSwitch(9)
+"nmap <leader>0 <Plug>BuffetSwitch(10)
+"let g:buffet_always_show_tabline = 1
+"let g:buffet_powerline_separators = 0
+"let g:buffet_separator = ""
+"let g:buffet_show_index = 0
+"let g:buffet_max_plug = 10
+"let g:buffet_use_devicons = 1
+"let g:buffet_tab_icon = "#"
+"let g:buffet_new_buffer_name = "*"
+"let g:buffet_modified_icon = "+"
+"let g:buffet_left_trunc_icon = "<"
+"let g:buffet_right_trunc_icon = ">"
+"function! g:BuffetSetCustomColors()
+"  highlight! BuffetCurrentBuffer cterm=NONE ctermbg=5 ctermfg=8 guibg=#00FF00 guifg=#000000
+"endfunction
+" }}}
+"Plug 'voldikss/vim-codelf', { 'on': 'Codelf' } " {{{
+"inoremap <silent> <leader>ce <C-R>=codelf#start()<CR>
+"nnoremap <silent> <leader>ce :call codelf#start()<CR>
+"let g:codelf_enable_popup_menu = v:true
+" }}}
+"Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } " {{{
+"Plug 'junegunn/fzf.vim'
+"nmap <leader>f :Files<CR>
+"if !PlugLoaded('ctrlp.vim')
+"  nmap <C-p> :GFiles<CR>
+"endif
+"
+"" Always enable preview window on the right with 60% width
+"let g:fzf_preview_window = 'right:60%'
+"
+"" Simple preview for :Files with only cat
+""command! -bang -nargs=? -complete=dir Files
+""    \ call fzf#vim#files(<q-args>, {'options': ['--layout=reverse', '--info=inline', '--preview', 'cat {}']}, <bang>0)
+""command! -bang -nargs=? -complete=dir Files
+""    \ call fzf#vim#files(<q-args>, fzf#vim#with_preview({'options': ['--layout=reverse', '--info=inline']}), <bang>0)
+"command! -bang -nargs=? -complete=dir Files
+"    \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
+"
+"" fzf#vim#marks({'options': ['--preview', 'echo line = {}']})
+"" '--preview', 'cat -n {-1} | egrep --color=always -C 10 ^[[:space:]]*{2}[[:space:]]'
+" }}}
+"Plug 'junegunn/limelight.vim', { 'on': 'Limelight' } " {{{
+" " Color name (:help cterm-colors) or ANSI code
+"let g:limelight_conceal_ctermfg = 'gray'
+"let g:limelight_conceal_ctermfg = 240
+"" Color name (:help gui-colors) or RGB color
+"let g:limelight_conceal_guifg = 'DarkGray'
+"let g:limelight_conceal_guifg = '#777777'
+"" Default: 0.5
+""let g:limelight_default_coefficient = 0.7
+"" Number of preceding/following paragraphs to include (default: 0)
+""let g:limelight_paragraph_span = 1
+"" Beginning/end of paragraph
+""   When there's no empty line between the paragraphs
+""   and each paragraph starts with indentation
+""let g:limelight_bop = '^\s'
+""let g:limelight_eop = '\ze\n^\s'
+"" Highlighting priority (default: 10)
+""   Set it to -1 not to overrule hlsearch
+""let g:limelight_priority = 10
+" }}}
+"if has('nvim') || has('patch-8.0.902') " {{{
+"  Plug 'mhinz/vim-signify'
+"else
+"  Plug 'mhinz/vim-signify', { 'branch': 'legacy' }
+"default updatetime 4000ms is not good for async update
+"set updatetime=100
+"endif " }}}
+"Plug 'SirVer/ultisnips' " {{{
+"let g:UltiSnipsExpandTrigger="<tab>"
+"let g:UltiSnipsJumpForwardTrigger="<c-b>"
+"let g:UltiSnipsJumpBackwardTrigger="<c-z>"
+"let g:UltiSnipsEditSplit="vertical"
+" }}}
+"Plug 'camspiers/lens.vim' " {{{
+"let g:lens#animate = 1
+"let g:lens#disabled_filetypes = ['nerdtree', 'fzf']
+"let g:lens#disabled = 0
+" }}}
+"Plug 'scrooloose/nerdcommenter' " {{{
+"vmap <leader>cc <plug>NERDCommenterToggle
+"nmap <leader>cc <plug>NERDCommenterToggle
+" }}}
+"Plug 'zhimsel/vim-stay " {{{
+"set viewoptions=cursor,folds,slash,unix
+" }}}
+"Plug 'DrCracket/painless-digraph' " {{{
+"map <silent> <Leader>de <Plug>(PainlessdigraphEnable)
+"map <silent> <Leader>dd <Plug>(PainlessdigraphDisable)
+"map <silent> <Leader>dt <Plug>(PainlessdigraphToggle)
+" }}}
+"Plug 'vim-syntastic/syntastic' " {{{
+"let g:syntastic_always_populate_loc_list = 1
+"let g:syntastic_auto_loc_list = 1
+"let g:syntastic_check_on_open = 1
+"let g:syntastic_check_on_wq = 0
+" }}}
+"Plug 'tmhedberg/SimpylFold' " {{{
+"let g:SimpylFold_docstring_preview = 1
+"let g:SimpylFold_fold_docstring = 1
+"let g:SimpylFold_fold_import = 1
+" }}}
+"Plug 'unblevable/quick-scope' " {{{
+" " Trigger a highlight in the appropriate direction when pressing these keys:
+"let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
+"augroup qs_colors
+"  autocmd!
+"  autocmd ColorScheme * highlight QuickScopePrimary guifg='#afff5f' gui=underline ctermfg=155 cterm=underline
+"  autocmd ColorScheme * highlight QuickScopeSecondary guifg='#5fffff' gui=underline ctermfg=81 cterm=underline
+"augroup END
+"
+"nmap <leader>tq <plug>(QuickScopeToggle)
+"xmap <leader>tq <plug>(QuickScopeToggle)
+"
+"let g:qs_enable=1
+"
+"let g:qs_buftype_blacklist = ['terminal', 'nofile']
+"
+"let g:qs_max_chars=1000
+"
+"let g:qs_lazy_highlight = 0
+" }}}
+"Plug 'mhinz/vim-startify' " {{{
+"let g:startify_session_dir = '~/.config/nvim/session'
+"let g:startify_lists = [
+"          \ { 'type': 'files',     'header': ['   Files']            },
+"          \ { 'type': 'dir',       'header': ['   Current Directory '. getcwd()] },
+"          \ { 'type': 'bookmarks', 'header': ['   Bookmarks']      },
+"          \ { 'type': 'sessions',  'header': ['   Sessions']       },
+"          \ ]
+"let g:startify_bookmarks = [
+"            \ { 'c': '~/.config/nvim/init.vim' },
+"            \ { 'z': '~/.config/zsh/.zshrc' },
+"            \ '~/Blog',
+"            \ '~/Code',
+"            \ '~/Pics',
+"            \ ]
+"let g:startify_session_autoload = 1
+"let g:startify_session_delete_buffers = 1
+"let g:startify_change_to_vcs_root = 0
+"let g:startify_fortune_use_unicode = 1
+"let g:startify_session_persistence = 1
+"let g:startify_enable_special = 0
+"let g:startify_custom_header = [
+        "\ '   _  __     _         __  ___         __     ___ ',
+        "\ '  / |/ /  __(_)_ _    /  |/  /__ _____/ /    |_  |',
+        "\ ' /    / |/ / /  ` \  / /|_/ / _ `/ __/ _ \  / __/ ',
+        "\ '/_/|_/|___/_/_/_/_/ /_/  /_/\_,_/\__/_//_/ /____/ ',
+        "\]
+" }}}
+"Plug 'mbbill/undotree' " {{{
+"map <silent> <C-u> :UndotreeToggle<CR>
+" }}}
+"Plug 'junegunn/goyo.vim', { 'on': 'Goyo' }
+"Plug 'rlue/vim-barbaric'
+"Plug 'vifm/vifm.vim'
+"Plug 'justinmk/vim-dirvish'
+"Plug 'kristijanhusak/vim-dirvish-git'
+"Plug 'bounceme/remote-viewer'
+"if has('nvim') || has('patch-8.0.902')
+"  Plug 'mhinz/vim-signify'
+"else
+"  Plug 'mhinz/vim-signify', { 'branch': 'legacy' }
+"endif
+"Plug 'ryanoasis/vim-devicons'
+"Plug 'jlanzarotta/bufexplorer'
+"Plug 'severin-lemaignan/vim-minimap'
+"Plug 'matze/vim-tex-fold', { 'for': 'tex' }
+"Plug 'matze/vim-ini-fold', { 'for': 'ini' }
+"Plug 'tmhedberg/SimpylFold', { 'for': 'python' }
 "Plug 'mattn/calendar-vim'
 "Plug 'mg979/vim-xtabline'
 "RRethy/vim-illuminate
@@ -180,53 +427,15 @@ silent! if plug#begin('~/.vim/plugged')
 "Plug 'robcsi/viewmaps.vim'
 "Plug 'tpope/vim-fugitive'
 " }}}
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } " {{{
-Plug 'junegunn/fzf.vim'
-nmap <silent> <leader>f :FZF<CR>
+
+" netrw {{{
+"let loaded_netrwPlugin = 1  " disable netrw
+"let g:netrw_banner=0
+"let g:netrw_list_hide = '\(^\|\s\s\)\zs\.\S\+,\(^\|\s\s\)ntuser\.\S\+'
+"autocmd FileType netrw set nolist
 " }}}
-"Plug 'tmhedberg/SimpylFold', { 'for': 'python' }
-"Plug 'matze/vim-tex-fold', { 'for': 'tex' }
-"Plug 'matze/vim-ini-fold', { 'for': 'ini' }
-"Plug 'dstein64/vim-startuptime'
-"Plug 'jlanzarotta/bufexplorer'
-"Plug 'severin-lemaignan/vim-minimap'
-"Plug 'junegunn/goyo.vim', { 'on': 'Goyo' }
-"Plug 'rlue/vim-barbaric'
+
 Plug 'vimwiki/vimwiki' " {{{
-Plug 'mattn/calendar-vim' " {{{
-
-function! TabQuit()
-  " https://vim.fandom.com/wiki/Tabclose_instead_of_quit-all
-  try
-    if tabpagenr('$') > 1
-      exec 'tabclose!'
-    else
-      exec 'qa!'
-    endif
-  catch
-    echohl ErrorMsg | echo v:exception | echohl NONE
-  endtry
-endfunction
-function! NerdTreeEnabled()
-  return exists('t:NERDTreeBufName') && bufwinnr(t:NERDTreeBufName) != -1
-endfunction
-function! CalendarEnabled()
-  return bufwinnr("Calendar") != -1
-endfunction
-function! ShouldClose()
-  return (winnr("$") == 1 && (NerdTreeEnabled() || CalendarEnabled())) || (winnr("$") == 2 && (NerdTreeEnabled() && CalendarEnabled()))
-endfunction
-autocmd bufenter * if ShouldClose() | call TabQuit() | endif
-
-"autocmd bufenter * if ((winnr("$") == 1 && (NerdTreeEnabled() || CalendarEnabled())) || (winnr("$") == 2 && (NerdTreeEnabled() && CalendarEnabled()))) | q | endif
-
-"autocmd bufenter * if (
-"    \ (winnr("$") == 1 && (exists("b:Calendar")) || (exists("b:NERDTree") && b:NERDTree.isTabTree()))
-"    \ || (winnr("$") == 2 && (bufname("Calendar") && g:NERDTree.IsOpen()))
-"  \ ) | q | endif
-
-"autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-" }}}
 " https://opensource.com/article/18/6/vimwiki-gitlab-notes
 " https://blog.mague.com/?p=602
 let g:vimwiki_syntax = 'markdown'
@@ -247,20 +456,6 @@ let g:vimwiki_list = [{'path':      expand('~/notes/'),
 
 autocmd BufRead,BufNewFile *.wiki set filetype=vimwiki
 autocmd FileType vimwiki map D :VimwikiMakeDiaryNote<CR>
-function! ToggleCalendar()
-  execute ":CalendarVR"
-  if exists("b:calendar_open")
-    if b:calendar_open == 1
-      unlet b:calendar_open
-      execute "q"
-    else
-      b:calendar_open = 1
-    end
-  else
-    let b:calendar_open = 1
-  end
-endfunction
-autocmd FileType vimwiki map c :call ToggleCalendar()<CR>
 
 "autocmd FileType vimwiki execute 'echo hi'
 "augroup WikiSync | autocmd!
@@ -332,18 +527,189 @@ let g:vimwiki_auto_chdir = 1
 " (NOTE: setting to 'list' works well enough for lists, but then does not work
 " for sections, so kinda gotta pick one or the other :()
 let g:vimwiki_folding = 'expr'
+
+" Run ssh-agent if it's not running {{{
+"function! CallbackTest()
+"  echomsg 'Callback executed successfully!'
+"endfunction
+"function! CheckSSHAgent(callback)
+"  if !($SSH_AGENT_PID)
+"    if confirm("SSH_AGENT_PID unset, try adding ssh-agent?", "&Yes\n&No", 2) != 1
+"      return 2
+"    endif
+"  endif
+
+"  silent !if test -z "${SSH_AGENT_PID+x}"; then
+"  \   eval "$(ssh-agent)";
+"  \ fi;
+"  \ if test "$(ssh-add -L | grep id_rsa | wc -l)" -le 0; then
+"  \   ssh-add;
+"  \   exit 69;
+"  \ fi
+
+  "if v:shell_error == 69
+  "  execute "call " . a:callback
+  "endif
+"endfunction
 " }}}
-Plug 'Jorengarenar/vim-syntaxMarkerFold' " {{{
-let g:syntaxMarkerFold_maxlevel = 2
+
+" WikiSyncPull {{{
+"function! WikiSyncPull()
+"  silent execute "!git -C " . expand('~/wiki/') . " pull"
+"endfunction
 " }}}
+" WikiSyncSave {{{
+"function! WikiSyncSave()
+"  if &ft =~ 'asciidoctor'
+"    silent Asciidoctor2HTML
+"   "silent execute '!mv ' . g:wikidir . '%:t ' . g:wikidir . 'html/'
+"  elseif &ft =~ 'vimwiki'
+"    silent VimwikiAll2HTML
+"   "call vimwiki#html#WikiAll2HTML(g:wikidir)
+"  endif
+"  let g:has_modified = 1
+"endfunction
+" }}}
+" WikiSyncPush {{{
+"function! WikiSyncPush()
+"  if exists('g:has_modified')
+"    silent execute '!git -C ' . expand('~/wiki/') . ' pull'
+"    silent execute '!git -C ' . expand('~/wiki/') . ' add -u'
+"    silent execute '!git -C ' . expand('~/wiki/') . ' commit -m "Auto push of %:t at ' . strftime('%a-%FT%T%z') .'"'
+"    execute '!git -C ' . expand('~/wiki/') . ' push origin master'
+"    unlet g:has_modified
+"
+"    while true
+"      if (system('git status')) =~ 'ahead of'
+"        if confirm("Could not push changes, add ssh-agent and retry?", "&Yes\n&No", 1) == 1
+"          !eval "$(ssh-agent)" && ssh-add
+"          call WikiSyncPush()
+"        else
+"          break
+"        endif
+"      endif
+"    endwhile
+"  endif
+"endfunction
+" }}}
+
+" augroup WikiSync {{{
+"augroup WikiSync | autocmd!
+"  autocmd FileType asciidoctor call WikiSyncPull()
+"  autocmd FileType asciidoctor cabbrev wq write <bar> quit
+"  autocmd FileType vimwiki call WikiSyncPull()
+"  autocmd FileType vimwiki cabbrev wq write <bar> quit
+"
+"  autocmd BufWritePost *.adoc :call WikiSyncSave()
+"  autocmd BufWritePost *.wiki :call WikiSyncSave()
+"
+"  autocmd BufWinLeave *.adoc :call WikiSyncPush()
+"  autocmd BufWinLeave *.wiki :call WikiSyncPush()
+"augroup END
+" }}}
+" }}}
+Plug 'mattn/calendar-vim' " {{{
+function! ToggleCalendar()
+  if CalendarEnabled()
+    execute ":CalendarVR"
+    execute "q"
+  else
+    execute ":CalendarVR"
+  endif
+endfunction
+map <silent> <C-b> :call ToggleCalendar() <bar> wincmd p<CR>
+"autocmd FileType vimwiki map c :call ToggleCalendar()<CR>
+"autocmd bufenter * if ((winnr("$") == 1 && (NerdTreeEnabled() || CalendarEnabled())) || (winnr("$") == 2 && (NerdTreeEnabled() && CalendarEnabled()))) | q | endif
+
+"autocmd bufenter * if (
+"    \ (winnr("$") == 1 && (exists("b:Calendar")) || (exists("b:NERDTree") && b:NERDTree.isTabTree()))
+"    \ || (winnr("$") == 2 && (bufname("Calendar") && g:NERDTree.IsOpen()))
+"  \ ) | q | endif
+
+"autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+" }}}
+Plug 'dstein64/vim-startuptime'
+Plug 'ap/vim-buftabline' " {{{
+"set hidden
+"buffer binds
+" }}}
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } | Plug 'junegunn/fzf.vim' " {{{
+nmap <silent> <leader>f :FZF<CR>
+" }}}
+if has('python3') && executable('rg') | Plug 'alok/notational-fzf-vim' " {{{
+  let g:nv_search_paths = [ expand('~/notes/') ]
+
+  " String. Set to '' (the empty string) if you don't want an extension appended by default.
+  " Don't forget the dot, unless you don't want one.
+  let g:nv_default_extension = ''
+  
+  " String. Default is first directory found in `g:nv_search_paths`. Error thrown
+  "if no directory found and g:nv_main_directory is not specified
+  "let g:nv_main_directory = g:nv_main_directory or (first directory in g:nv_search_paths)
+  
+  " Dictionary with string keys and values. Must be in the form 'ctrl-KEY':
+  " 'command' or 'alt-KEY' : 'command'. See examples below.
+  let g:nv_keymap = {
+                      \ 'ctrl-s': 'split ',
+                      \ 'ctrl-v': 'vertical split ',
+                      \ 'ctrl-t': 'tabedit ' }
+  
+  " String. Must be in the form 'ctrl-KEY' or 'alt-KEY'
+  let g:nv_create_note_key = 'ctrl-x'
+  
+  " String. Controls how new note window is created.
+  let g:nv_create_note_window = 'vertical split'
+  
+  " Boolean. Show preview. Set by default. Pressing Alt-p in FZF will toggle this for the current search.
+  let g:nv_show_preview = 1
+  
+  " Boolean. Respect .*ignore files in or above nv_search_paths. Set by default.
+  let g:nv_use_ignore_files = 1
+  
+  " Boolean. Include hidden files and folders in search. Disabled by default.
+  let g:nv_include_hidden = 0
+  
+  " Boolean. Wrap text in preview window.
+  let g:nv_wrap_preview_text = 1
+  
+  " String. Width of window as a percentage of screen's width.
+  let g:nv_window_width = '40%'
+  
+  " String. Determines where the window is. Valid options are: 'right', 'left', 'up', 'down'.
+  let g:nv_window_direction = 'down'
+  
+  " String. Command to open the window (e.g. `vertical` `aboveleft` `30new` `call my_function()`).
+  "let g:nv_window_command = 'call my_function()'
+  
+  " Float. Width of preview window as a percentage of screen's width. 50% by default.
+  let g:nv_preview_width = 50
+  
+  " String. Determines where the preview window is. Valid options are: 'right', 'left', 'up', 'down'.
+  let g:nv_preview_direction = 'right'
+  
+  " String. Yanks the selected filenames to the default register.
+  let g:nv_yank_key = 'ctrl-y'
+  
+  " String. Separator used between yanked filenames.
+  let g:nv_yank_separator = "\n"
+  
+  " Boolean. If set, will truncate each path element to a single character. If
+  " you have colons in your pathname, this will fail. Set by default.
+  let g:nv_use_short_pathnames = 1
+  
+  "List of Strings. Shell glob patterns. Ignore all filenames that match any of
+  " the patterns.
+  let g:nv_ignore_pattern = ['summarize-*', 'misc*']
+  
+  " List of Strings. Key mappings like above in case you want to define your own
+  " handler function. Most users won't want to set this to anything.
+  let g:nv_expect_keys = []                                              
+endif " }}}
 Plug 'rrethy/vim-hexokinase', { 'do': 'make hexokinase' } " {{{
 let g:Hexokinase_highlighters = ['virtual']
 let g:Hexokinase_v2 = 0
 autocmd! VimEnter * HexokinaseRefresh
 " blue
-" }}}
-"Plug 'mbbill/undotree' " {{{
-"map <silent> <C-u> :UndotreeToggle<CR>
 " }}}
 Plug 'preservim/nerdtree' " {{{
 " Open a NERDTree automatically when vim starts up if no files were specified
@@ -404,8 +770,7 @@ let g:indent_guides_color_change_percent = 10
 "autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=gray ctermbg=236
 autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=#363840 ctermbg=237
 " }}}
-if v:version >= 703 && executable('node') && executable('yarn')
-  Plug 'neoclide/coc.nvim', { 'branch': 'release', 'tag': '*', 'do': { -> coc#util#install()}} " {{{
+if v:version >= 703 && executable('node') && executable('yarn') | Plug 'neoclide/coc.nvim', { 'branch': 'release', 'tag': '*', 'do': { -> coc#util#install()}} " {{{
 "let g:coc_global_extensions = [
 "  \ 'coc-snippets',
 "  \ 'coc-pairs',
@@ -477,33 +842,31 @@ if v:version >= 703 && executable('node') && executable('yarn')
 "endfunction
 " }}}
 endif
-"Plug 'vifm/vifm.vim'
-"Plug 'justinmk/vim-dirvish'
-"Plug 'kristijanhusak/vim-dirvish-git'
-"Plug 'bounceme/remote-viewer'
-"if has('nvim') || has('patch-8.0.902')
-"  Plug 'mhinz/vim-signify'
-"else
-"  Plug 'mhinz/vim-signify', { 'branch': 'legacy' }
-"endif
-"Plug 'ryanoasis/vim-devicons'
 " }}}
 " Syntax highlighting {{{
 " Disabled Syntax highlighting {{{
-"Plug 'autozimu/LanguageClient-neovim'
-" }}}
 "Plug 'dense-analysis/ale'
 "Plug 'hashivim/vim-terraform', { 'for': 'terraform' }
+"Plug 'mboughaba/i3config.vim', { 'for': 'conf' }
+"Plug 'Glench/Vim-Jinja2-Syntax', { 'for': 'jinja' }
+"Plug 'rodjek/vim-puppet', { 'for': 'puppet' }
+"Plug 'autozimu/LanguageClient-neovim'
+" }}}
+
 Plug 'chr4/nginx.vim', { 'for': 'nginx' }
 Plug 'storyn26383/vim-vue', { 'for': 'vue' }
 Plug 'ekalinin/Dockerfile.vim', { 'for': 'Dockerfile' }
 Plug 'kovetskiy/sxhkd-vim', { 'for': 'sxhkdrc' }
-"Plug 'mboughaba/i3config.vim', { 'for': 'conf' }
-"Plug 'Glench/Vim-Jinja2-Syntax', { 'for': 'jinja' }
-"Plug 'rodjek/vim-puppet', { 'for': 'puppet' }
 " }}}
 " Colorschemes {{{
 " Disabled Colorschemes {{{
+"Plug 'AlessandroYorba/Sierra' " {{{
+"let g:sierra_Sunset = 1
+"let g:sierra_Twilight = 1
+"let g:sierra_Midnight = 1
+"let g:sierra_Pitch = 1
+" }}}
+"Plug 'ayu-theme/ayu-vim'
 "Plug 'chriskempson/base16-vim'
 "Plug 'sainnhe/edge'
 "Plug 'tomasr/molokai'
@@ -519,8 +882,8 @@ Plug 'kovetskiy/sxhkd-vim', { 'for': 'sxhkdrc' }
 "Plug 'kaicataldo/material.vim'
 "Plug 'flrnd/plastic.vim'
 " }}}
+
 Plug 'arcticicestudio/nord-vim'
-"Plug 'ayu-theme/ayu-vim'
 Plug 'rakr/vim-one' " {{{
 let g:one_allow_italics = 1
 " }}}
@@ -528,316 +891,6 @@ let g:one_allow_italics = 1
 call plug#end()
 endif
 
-" netrw {{{
-"let loaded_netrwPlugin = 1  " disable netrw
-"let g:netrw_banner=0
-"let g:netrw_list_hide = '\(^\|\s\s\)\zs\.\S\+,\(^\|\s\s\)ntuser\.\S\+'
-"autocmd FileType netrw set nolist
-" }}}
-"Plug 'Xuyuanp/nerdtree-git-plugin' " {{{
-"let g:NERDTreeIndicatorMapCustom = {
-"    \ "Modified"  : "✹",
-"    \ "Staged"    : "✚",
-"    \ "Untracked" : "✭",
-"    \ "Renamed"   : "➜",
-"    \ "Unmerged"  : "═",
-"    \ "Deleted"   : "✖",
-"    \ "Dirty"     : "✗",
-"    \ "Clean"     : "✔︎",
-"    \ 'Ignored'   : '☒',
-"    \ "Unknown"   : "?"
-"    \ }
-"let g:NERDTreeShowIgnoredStatus = 0
-" }}}
-"Plug 'mhinz/vim-startify' " {{{
-"let g:startify_session_dir = '~/.config/nvim/session'
-"let g:startify_lists = [
-"          \ { 'type': 'files',     'header': ['   Files']            },
-"          \ { 'type': 'dir',       'header': ['   Current Directory '. getcwd()] },
-"          \ { 'type': 'bookmarks', 'header': ['   Bookmarks']      },
-"          \ { 'type': 'sessions',  'header': ['   Sessions']       },
-"          \ ]
-"let g:startify_bookmarks = [
-"            \ { 'c': '~/.config/nvim/init.vim' },
-"            \ { 'z': '~/.config/zsh/.zshrc' },
-"            \ '~/Blog',
-"            \ '~/Code',
-"            \ '~/Pics',
-"            \ ]
-"let g:startify_session_autoload = 1
-"let g:startify_session_delete_buffers = 1
-"let g:startify_change_to_vcs_root = 0
-"let g:startify_fortune_use_unicode = 1
-"let g:startify_session_persistence = 1
-"let g:startify_enable_special = 0
-"let g:startify_custom_header = [
-        "\ '   _  __     _         __  ___         __     ___ ',
-        "\ '  / |/ /  __(_)_ _    /  |/  /__ _____/ /    |_  |',
-        "\ ' /    / |/ / /  ` \  / /|_/ / _ `/ __/ _ \  / __/ ',
-        "\ '/_/|_/|___/_/_/_/_/ /_/  /_/\_,_/\__/_//_/ /____/ ',
-        "\]
-" }}}
-"Plug 'scrooloose/nerdcommenter' " {{{
-"vmap <leader>cc <plug>NERDCommenterToggle
-"nmap <leader>cc <plug>NERDCommenterToggle
-" }}}
-"Plug 'zhimsel/vim-stay " {{{
-"set viewoptions=cursor,folds,slash,unix
-" }}}
-"if has('python3') && executable('rg') && PlugLoaded('fzf') " {{{
-"  Plug 'alok/notational-fzf-vim'
-"let g:nv_search_paths = [ expand('~/wiki/') ]
-"
-"" String. Set to '' (the empty string) if you don't want an extension appended by default.
-"" Don't forget the dot, unless you don't want one.
-"let g:nv_default_extension = ''
-"
-"" String. Default is first directory found in `g:nv_search_paths`. Error thrown
-""if no directory found and g:nv_main_directory is not specified
-""let g:nv_main_directory = g:nv_main_directory or (first directory in g:nv_search_paths)
-"
-"" Dictionary with string keys and values. Must be in the form 'ctrl-KEY':
-"" 'command' or 'alt-KEY' : 'command'. See examples below.
-"let g:nv_keymap = {
-"                    \ 'ctrl-s': 'split ',
-"                    \ 'ctrl-v': 'vertical split ',
-"                    \ 'ctrl-t': 'tabedit ' }
-"
-"" String. Must be in the form 'ctrl-KEY' or 'alt-KEY'
-"let g:nv_create_note_key = 'ctrl-x'
-"
-"" String. Controls how new note window is created.
-"let g:nv_create_note_window = 'vertical split'
-"
-"" Boolean. Show preview. Set by default. Pressing Alt-p in FZF will toggle this for the current search.
-"let g:nv_show_preview = 1
-"
-"" Boolean. Respect .*ignore files in or above nv_search_paths. Set by default.
-"let g:nv_use_ignore_files = 1
-"
-"" Boolean. Include hidden files and folders in search. Disabled by default.
-"let g:nv_include_hidden = 0
-"
-"" Boolean. Wrap text in preview window.
-"let g:nv_wrap_preview_text = 1
-"
-"" String. Width of window as a percentage of screen's width.
-"let g:nv_window_width = '40%'
-"
-"" String. Determines where the window is. Valid options are: 'right', 'left', 'up', 'down'.
-"let g:nv_window_direction = 'down'
-"
-"" String. Command to open the window (e.g. `vertical` `aboveleft` `30new` `call my_function()`).
-""let g:nv_window_command = 'call my_function()'
-"
-"" Float. Width of preview window as a percentage of screen's width. 50% by default.
-"let g:nv_preview_width = 50
-"
-"" String. Determines where the preview window is. Valid options are: 'right', 'left', 'up', 'down'.
-"let g:nv_preview_direction = 'right'
-"
-"" String. Yanks the selected filenames to the default register.
-"let g:nv_yank_key = 'ctrl-y'
-"
-"" String. Separator used between yanked filenames.
-"let g:nv_yank_separator = "\n"
-"
-"" Boolean. If set, will truncate each path element to a single character. If
-"" you have colons in your pathname, this will fail. Set by default.
-"let g:nv_use_short_pathnames = 1
-"
-""List of Strings. Shell glob patterns. Ignore all filenames that match any of
-"" the patterns.
-"let g:nv_ignore_pattern = ['summarize-*', 'misc*']
-"
-"" List of Strings. Key mappings like above in case you want to define your own
-"" handler function. Most users won't want to set this to anything.
-"let g:nv_expect_keys = []                                              
-"endif " }}}
-"Plug 'DrCracket/painless-digraph' " {{{
-"map <silent> <Leader>de <Plug>(PainlessdigraphEnable)
-"map <silent> <Leader>dd <Plug>(PainlessdigraphDisable)
-"map <silent> <Leader>dt <Plug>(PainlessdigraphToggle)
-" }}}
-"Plug 'vim-syntastic/syntastic' " {{{
-"let g:syntastic_always_populate_loc_list = 1
-"let g:syntastic_auto_loc_list = 1
-"let g:syntastic_check_on_open = 1
-"let g:syntastic_check_on_wq = 0
-" }}}
-"Plug 'tmhedberg/SimpylFold' " {{{
-"let g:SimpylFold_docstring_preview = 1
-"let g:SimpylFold_fold_docstring = 1
-"let g:SimpylFold_fold_import = 1
-" }}}
-"Plug 'unblevable/quick-scope' " {{{
-" " Trigger a highlight in the appropriate direction when pressing these keys:
-"let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
-"augroup qs_colors
-"  autocmd!
-"  autocmd ColorScheme * highlight QuickScopePrimary guifg='#afff5f' gui=underline ctermfg=155 cterm=underline
-"  autocmd ColorScheme * highlight QuickScopeSecondary guifg='#5fffff' gui=underline ctermfg=81 cterm=underline
-"augroup END
-"
-"nmap <leader>tq <plug>(QuickScopeToggle)
-"xmap <leader>tq <plug>(QuickScopeToggle)
-"
-"let g:qs_enable=1
-"
-"let g:qs_buftype_blacklist = ['terminal', 'nofile']
-"
-"let g:qs_max_chars=1000
-"
-"let g:qs_lazy_highlight = 0
-" }}}
-"if has('nvim') || has('patch-8.0.902') " {{{
-"  Plug 'mhinz/vim-signify'
-"else
-"  Plug 'mhinz/vim-signify', { 'branch': 'legacy' }
-"default updatetime 4000ms is not good for async update
-"set updatetime=100
-"endif " }}}
-"Plug 'SirVer/ultisnips' " {{{
-"let g:UltiSnipsExpandTrigger="<tab>"
-"let g:UltiSnipsJumpForwardTrigger="<c-b>"
-"let g:UltiSnipsJumpBackwardTrigger="<c-z>"
-"let g:UltiSnipsEditSplit="vertical"
-" }}}
-"Plug 'lervag/wiki.vim' " {{{
-"let g:wiki_root = '~/wiki'
-" }}}
-"Plug 'camspiers/lens.vim' " {{{
-"let g:lens#animate = 1
-"let g:lens#disabled_filetypes = ['nerdtree', 'fzf']
-"let g:lens#disabled = 0
-" }}}
-"Plug 'b4b4r07/vim-buftabs' " {{{
-"let g:buftabs_enabled = 1
-"let g:buftabs_in_statusline = 1
-"let g:buftabs_in_cmdline = 0
-"let g:buftabs_only_basename = 1
-"let g:buftabs_active_highlight_group = "Visual"
-"let g:buftabs_inactive_highlight_group = ""
-"let g:buftabs_statusline_highlight_group = ""
-"let g:buftabs_marker_start = "["
-"let g:buftabs_marker_end = "]"
-"let g:buftabs_separator = "-"
-"let g:buftabs_marker_modified = "!"
-" }}}
-"Plug 'ap/vim-buftabline' " best buftabline {{{
-"set hidden
-"buffer binds
-" }}}
-"plug 'zefei/vim-wintabs' " {{{
-" commands             | mapping keys                 | replacing Vim commands
-" ---------------------+------------------------------+-----------------------
-" :WintabsNext         | <Plug>(wintabs_next)         | :bnext!
-" :WintabsPrevious     | <Plug>(wintabs_previous)     | :bprevious!
-" :WintabsClose        | <Plug>(wintabs_close)        | :bdelete
-" :WintabsUndo         | <Plug>(wintabs_undo)         |
-" :WintabsOnly         | <Plug>(wintabs_only)         |
-" :WintabsCloseWindow  | <Plug>(wintabs_close_window) | :close, CTRL-W c
-" :WintabsOnlyWindow   | <Plug>(wintabs_only_window)  | :only, CTRL-W o
-" :WintabsCloseVimtab  | <Plug>(wintabs_close_vimtab) | :tabclose
-" :WintabsOnlyVimtab   | <Plug>(wintabs_only_vimtab)  | :tabonly
-" :help wintabs-commands
-
-"map <C-H> <Plug>(wintabs_previous)
-"map <C-L> <Plug>(wintabs_next)
-"map <C-T>c <Plug>(wintabs_close)
-"map <C-T>u <Plug>(wintabs_undo)
-"map <C-T>o <Plug>(wintabs_only)
-"map <C-W>c <Plug>(wintabs_close_window)
-"map <C-W>o <Plug>(wintabs_only_window)
-"command! Tabc WintabsCloseVimtab
-"command! Tabo WintabsOnlyVimtab
-" }}}
-"Plug 'bagrat/vim-buffet' " {{{
-"noremap <Tab> :bn<CR>
-"noremap <S-Tab> :bp<CR>
-"noremap <Leader><Tab> :Bw<CR>
-"noremap <Leader><S-Tab> :Bw!<CR>
-"noremap <C-t> :tabnew split<CR>
-"nmap <leader>1 <Plug>BuffetSwitch(1)
-"nmap <leader>2 <Plug>BuffetSwitch(2)
-"nmap <leader>3 <Plug>BuffetSwitch(3)
-"nmap <leader>4 <Plug>BuffetSwitch(4)
-"nmap <leader>5 <Plug>BuffetSwitch(5)
-"nmap <leader>6 <Plug>BuffetSwitch(6)
-"nmap <leader>7 <Plug>BuffetSwitch(7)
-"nmap <leader>8 <Plug>BuffetSwitch(8)
-"nmap <leader>9 <Plug>BuffetSwitch(9)
-"nmap <leader>0 <Plug>BuffetSwitch(10)
-"let g:buffet_always_show_tabline = 1
-"let g:buffet_powerline_separators = 0
-"let g:buffet_separator = ""
-"let g:buffet_show_index = 0
-"let g:buffet_max_plug = 10
-"let g:buffet_use_devicons = 1
-"let g:buffet_tab_icon = "#"
-"let g:buffet_new_buffer_name = "*"
-"let g:buffet_modified_icon = "+"
-"let g:buffet_left_trunc_icon = "<"
-"let g:buffet_right_trunc_icon = ">"
-"function! g:BuffetSetCustomColors()
-"  highlight! BuffetCurrentBuffer cterm=NONE ctermbg=5 ctermfg=8 guibg=#00FF00 guifg=#000000
-"endfunction
-" }}}
-"Plug 'voldikss/vim-codelf', { 'on': 'Codelf' } " {{{
-"inoremap <silent> <leader>ce <C-R>=codelf#start()<CR>
-"nnoremap <silent> <leader>ce :call codelf#start()<CR>
-"let g:codelf_enable_popup_menu = v:true
-" }}}
-"Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } " {{{
-"Plug 'junegunn/fzf.vim'
-"nmap <leader>f :Files<CR>
-"if !PlugLoaded('ctrlp.vim')
-"  nmap <C-p> :GFiles<CR>
-"endif
-"
-"" Always enable preview window on the right with 60% width
-"let g:fzf_preview_window = 'right:60%'
-"
-"" Simple preview for :Files with only cat
-""command! -bang -nargs=? -complete=dir Files
-""    \ call fzf#vim#files(<q-args>, {'options': ['--layout=reverse', '--info=inline', '--preview', 'cat {}']}, <bang>0)
-""command! -bang -nargs=? -complete=dir Files
-""    \ call fzf#vim#files(<q-args>, fzf#vim#with_preview({'options': ['--layout=reverse', '--info=inline']}), <bang>0)
-"command! -bang -nargs=? -complete=dir Files
-"    \ call fzf#vim#files(<q-args>, fzf#vim#with_preview(), <bang>0)
-"
-"" fzf#vim#marks({'options': ['--preview', 'echo line = {}']})
-"" '--preview', 'cat -n {-1} | egrep --color=always -C 10 ^[[:space:]]*{2}[[:space:]]'
-" }}}
-"Plug 'junegunn/limelight.vim', { 'on': 'Limelight' } " {{{
-" " Color name (:help cterm-colors) or ANSI code
-"let g:limelight_conceal_ctermfg = 'gray'
-"let g:limelight_conceal_ctermfg = 240
-"" Color name (:help gui-colors) or RGB color
-"let g:limelight_conceal_guifg = 'DarkGray'
-"let g:limelight_conceal_guifg = '#777777'
-"" Default: 0.5
-""let g:limelight_default_coefficient = 0.7
-"" Number of preceding/following paragraphs to include (default: 0)
-""let g:limelight_paragraph_span = 1
-"" Beginning/end of paragraph
-""   When there's no empty line between the paragraphs
-""   and each paragraph starts with indentation
-""let g:limelight_bop = '^\s'
-""let g:limelight_eop = '\ze\n^\s'
-"" Highlighting priority (default: 10)
-""   Set it to -1 not to overrule hlsearch
-""let g:limelight_priority = 10
-" }}}
-"Plug 'justinmk/vim-sneak' " {{{
-"let g:sneak#label = 1
-" }}}
-"Plug 'AlessandroYorba/Sierra' " {{{
-"let g:sierra_Sunset = 1
-"let g:sierra_Twilight = 1
-"let g:sierra_Midnight = 1
-"let g:sierra_Pitch = 1
-" }}}
 " }}}======================
 " A E S T H E T I C S {{{
 " =========================
@@ -1093,15 +1146,29 @@ augroup END
 " }}}======================
 " Functions / Utilities {{{
 " =========================
-" Toggle mouse {{{
-function! ToggleMouse()
-    if &mouse == 'a'
-        set mouse=c
+" Automatically close tab/vim if the only open buffers are NERDTree and/or Calendar {{{
+function! TabQuit()
+  " https://vim.fandom.com/wiki/Tabclose_instead_of_quit-all
+  try
+    if tabpagenr('$') > 1
+      exec 'tabclose!'
     else
-        set mouse=a
+      exec 'qa!'
     endif
-endfunc
-nmap <silent> <leader>m :call ToggleMouse()<CR>
+  catch
+    echohl ErrorMsg | echo v:exception | echohl NONE
+  endtry
+endfunction
+function! NerdTreeEnabled()
+  return exists('t:NERDTreeBufName') && bufwinnr(t:NERDTreeBufName) != -1
+endfunction
+function! CalendarEnabled()
+  return bufwinnr("Calendar") != -1
+endfunction
+function! ShouldClose()
+  return (winnr("$") == 1 && (NerdTreeEnabled() || CalendarEnabled())) || (winnr("$") == 2 && (NerdTreeEnabled() && CalendarEnabled()))
+endfunction
+autocmd BufEnter * if ShouldClose() | call TabQuit() | endif
 " }}}
 
 " Return to last edit position when opening files {{{
@@ -1193,6 +1260,16 @@ endfunction
 nmap <silent> <leader>n :call ToggleNumbers()<CR>
 " }}}
 
+function! ToggleMouse() " {{{
+  if &mouse == 'a'
+    set mouse=c
+  else
+    set mouse=a
+  endif
+endfunction
+nmap <silent> <leader>m :call ToggleMouse()<CR>
+" }}}
+
 function! s:DiffWithSaved() " {{{
   let filetype=&ft
   diffthis
@@ -1200,11 +1277,10 @@ function! s:DiffWithSaved() " {{{
   diffthis
   exe "setlocal bt=nofile bh=wipe nobl noswf ro ft=" . filetype
 endfunction
-com! DiffSaved call s:DiffWithSaved()
+command! DiffSaved call s:DiffWithSaved()
 " }}}
 
-" Fancy folding {{{
-function! FoldText()
+function! FoldText() " {{{
   set fillchars=fold:\ "
   let line = ' ' . substitute(getline(v:foldstart), '^\s*"\?\s*\|\s*"\?\s*{{' . '{\d*\s*', '', 'g') . ' '
   let lines_count = v:foldend - v:foldstart + 1
