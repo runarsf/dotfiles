@@ -1131,7 +1131,7 @@ imap #dn >/dev/null<space>2>&1
 inoreabbrev <expr> #!! "#!/usr/bin/env" . (empty(&filetype) ? '' : ' '.&filetype)
 
 " Spell-check, english and norwegian
-map <leader>ts :setlocal spell! spelllang=en_us,nb<CR>
+map <leader>ts :setlocal spell! spelllang=en_us,nb<CR>:setlocal spell?<CR>
 
 augroup twig_ft | au!
   autocmd BufRead,BufNewFile *.conf,*.toml,config setf dosini
