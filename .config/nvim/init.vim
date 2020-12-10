@@ -438,6 +438,7 @@ silent! if plug#begin('~/.vim/plugged')
 Plug 'vimwiki/vimwiki' " {{{
 " https://opensource.com/article/18/6/vimwiki-gitlab-notes
 " https://blog.mague.com/?p=602
+let g:vimwiki_ext = '.md'
 let g:vimwiki_syntax = 'markdown'
 let g:vimwiki_ext2syntax = {'.md': 'markdown', '.markdown': 'markdown', '.mdown': 'markdown'}
 let g:vimwiki_root = expand('~/notes/')
@@ -1140,6 +1141,7 @@ augroup twig_ft | au!
   autocmd BufRead,BufNewFile *.conf,*.toml,config setf dosini
   autocmd BufRead,BufNewFile *.md set filetype=markdown
   autocmd BufRead,BufNewFile *.txt set syntax=markdown | imap ... … | set wrap
+  autocmd FileType vimwiki set wrap
   autocmd BufRead,BufNewFile *.rss set filetype=xml
   autocmd FileType python set foldmethod=indent foldnestmax=1 nomodeline
   autocmd FileType json syntax match Comment +\/\/.\+$+
