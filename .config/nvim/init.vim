@@ -1150,9 +1150,9 @@ function! TabQuit()
   " https://vim.fandom.com/wiki/Tabclose_instead_of_quit-all
   try
     if tabpagenr('$') > 1
-      exec 'tabclose!'
+      silent exec 'tabclose'
     else
-      exec 'qa!'
+      silent exec 'qa'
     endif
   catch
     echohl ErrorMsg | echo v:exception | echohl NONE
