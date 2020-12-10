@@ -57,6 +57,17 @@ let g:colorscheme = 'one'
 silent! if plug#begin('~/.vim/plugged')
 " General {{{
 " Disabled General {{{
+" netrw {{{
+"let loaded_netrwPlugin = 1  " disable netrw
+"let g:netrw_banner=0
+"let g:netrw_list_hide = '\(^\|\s\s\)\zs\.\S\+,\(^\|\s\s\)ntuser\.\S\+'
+"autocmd FileType netrw set nolist
+" }}}
+"Plug 'fcpg/vim-waikiki' " {{{
+"let maplocalleader = "-"
+"let g:waikiki_default_maps = 1
+"let g:waikiki_roots = [expand('~/notes/')]
+" }}}
 "Plug 'Jorengarenar/vim-syntaxMarkerFold' " {{{
 "let g:syntaxMarkerFold_maxlevel = 2
 " }}}
@@ -359,25 +370,10 @@ silent! if plug#begin('~/.vim/plugged')
 "plug 'zefei/vim-wintabs-powerline'
 "Plug 'bling/vim-bufferline'
 "Plug 'airblade/vim-gitgutter'
-"Plug 'fcpg/vim-waikiki'
 "Plug 'yuttie/comfortable-motion.vim'
 "Plug 'psliwka/vim-smoothie'
 "Plug 'tpope/vim-repeat'
 "Plug 'svermeulen/vim-macrobatics'
-"Plug 'michal-h21/vimwiki-sync' " Doesn't work for neovim
-"if has_node && has('nvim') && !empty($DISPLAY)
-"  Plug 'aurieh/discord.nvim', { 'do': ':UpdateRemotePlugins'}
-"endif
-"if has('python3') && has('nvim')
-"  Plug 'Shougo/denite.nvim', { 'do': ':UpdateRemotePlugins' }
-"else
-"  Plug 'Shougo/denite.nvim'
-"  Plug 'roxma/nvim-yarp'
-"  Plug 'roxma/vim-hug-neovim-rpc'
-"endif
-"if &rtp =~ 'denite.nvim'
-"  Plug 'Shougo/vimfiler.vim'
-"endif
 "Plug 'unblevable/quick-scope'
 "Plug 'AshleyF/VimSpeak'
 "Plug 'fmoralesc/vim-pad'
@@ -425,109 +421,109 @@ silent! if plug#begin('~/.vim/plugged')
 "Plug 'terryma/vim-multiple-cursors'
 "Plug 'vim-scripts/loremipsum'
 "Plug 'robcsi/viewmaps.vim'
-"Plug 'tpope/vim-fugitive'
 " }}}
 
-" netrw {{{
-"let loaded_netrwPlugin = 1  " disable netrw
-"let g:netrw_banner=0
-"let g:netrw_list_hide = '\(^\|\s\s\)\zs\.\S\+,\(^\|\s\s\)ntuser\.\S\+'
-"autocmd FileType netrw set nolist
+Plug 'lervag/wiki.vim' " {{{
+" https://github.com/lervag/wiki.vim/blob/master/doc/wiki.txt
+let g:wiki_root = expand('~/notes')
+let g:wiki_filetypes = ['md']
+let g:wiki_link_extension = '.md'
+let g:wiki_link_target_type = 'md'
+let g:wiki_list_todos = ['TODO', 'DONE']
 " }}}
-
-Plug 'vimwiki/vimwiki' " {{{
-" https://opensource.com/article/18/6/vimwiki-gitlab-notes
-" https://blog.mague.com/?p=602
-let g:vimwiki_ext = '.md'
-let g:vimwiki_syntax = 'markdown'
-let g:vimwiki_ext2syntax = {'.md': 'markdown', '.markdown': 'markdown', '.mdown': 'markdown'}
-let g:vimwiki_root = expand('~/notes/')
-let g:vimwiki_list = [{'path':      expand('~/notes/'),
-                     \ 'path_html': expand('~/notes/') . '.www',
-                     \ 'ext':       '.md',
-                     \ 'syntax':    'markdown',
-                     \ 'auto_toc':  0,
-                     \ 'auto_tags': 0},
-                     \{'path':      expand('~/notes/') . 'work',
-                     \ 'path_html': expand('~/notes/') . 'work/.www',
-                     \ 'ext':       '.md',
-                     \ 'syntax':    'markdown',
-                     \ 'auto_toc':  0,
-                     \ 'auto_tags': 0}]
-
-autocmd BufRead,BufNewFile *.wiki set filetype=vimwiki
-autocmd FileType vimwiki map D :VimwikiMakeDiaryNote<CR>
-
-"autocmd FileType vimwiki execute 'echo hi'
-"augroup WikiSync | autocmd!
-  "autocmd FileType vimwiki :!~/notes/.ops/sync
-  "autocmd FileType vimwiki :!~/notes/.ops/sync
-  "autocmd FileType vimwiki :autocmd! WikiSync BufRead,BufNewFile,BufWrite :echo hi
-  "autocmd FileType BufRead,BufNewFile */somepath/** set filetype=sometype
-"augroup END
-
-" Autosave anytime there are updates to write & user is inactive
-"autocmd CursorHold * update
-
-" Allow "normal" editor style tab/shift-tab indent/dedent. (Only in vimwiki
-" buffers!)
-let g:vimwiki_table_mappings = 0
-autocmd FileType vimwiki silent! iunmap <buffer> <Tab>
-autocmd FileType vimwiki map <buffer> <Tab> <Plug>VimwikiIncreaseLvlSingleItem
-autocmd FileType vimwiki map <buffer> <S-Tab> <Plug>VimwikiDecreaseLvlSingleItem
-" Not only do we want regular edit-style tab, but we also want it to be useful
-" for completing the tag-based insert-completion when only one match is
-" displayed.
-" TODO: try making it useful even when >1 possible match has been narrowed down
-autocmd FileType vimwiki imap <buffer> <expr> <Tab> pumvisible()
-\    ? "\<C-N>\<C-Y>:"
-\    : "\<Plug>VimwikiIncreaseLvlSingleItem"
-autocmd FileType vimwiki imap <buffer> <S-Tab> <Plug>VimwikiDecreaseLvlSingleItem
-
-" Don't make temporary wikis out of other .md files tho...sheesh. (Among other
-" things, this trips an auto-cd behavior I don't usually want.)
-let g:vimwiki_global_ext = 0
-
-" Allow 'gx' to open URLs (this technically works anywhere, not just in
-" vimwiki) that include question marks, hashes etc. Note: cWORD not cword.
-let g:netrw_gx = "<cWORD>"
-
-" Override behavior of (not actual mapping for) hitting Return in list items.
-" Specifically, change the 1st number from 1 to 3: Return always inserts a new
-" line item. 2nd number (set to 5) stays same: Enter on empty list item deletes
-" the list item.
-" TODO: except...this is firing even when not in a list item (i.e. it makes new
-" indented list items when mashing enter on an already blank line)! Clearly the
-" default isn't doing that; figure out how.
-"autocmd FileType vimwiki inoremap <buffer> <CR> <Esc>:VimwikiReturn 3 5<CR>
-
-" Always 'cd' to vimwiki directory when opening vimwiki pages. This means git,
-" search, etc should always 'just work'.
-" TODO: if I start using subdirs, see whether this goes to wiki root or not...
-let g:vimwiki_auto_chdir = 1
-
-" Prevent saving wiki files that didn't get tags. So easy to forget!
-"function CheckForTags()
-"    try
-"        " Note: regexp here MUST be single-quoted to avoid slash problems
-"        if getbufline("", 1)[0] !~ ':.\+:'
-"            echoerr "Don't forget tags!!"
-"        endif
-"    endtry
-"endfunction
-"" TODO: make variable out of vimwiki root? used in 3x places now
-"autocmd BufWritePre ~/vimwiki/*.md call CheckForTags()
-
-" Auto git commit/push on save for vimwiki files, every >=5min. Pauper's
-" Evernote sync.
-" TODO: this may or may not work w/ subdirs, forget exactly how pattern works
-"autocmd BufWritePost ~/notes/*.md execute 'echo hi'
-
-
-" Try vimwiki folding in a manner compatible with markdown syntax
-" (NOTE: setting to 'list' works well enough for lists, but then does not work
-" for sections, so kinda gotta pick one or the other :()
-let g:vimwiki_folding = 'expr'
+"Plug 'vimwiki/vimwiki' " {{{
+"" https://opensource.com/article/18/6/vimwiki-gitlab-notes
+"" https://blog.mague.com/?p=602
+"let g:vimwiki_ext = '.md'
+"let g:vimwiki_syntax = 'markdown'
+"let g:vimwiki_ext2syntax = {'.md': 'markdown', '.markdown': 'markdown', '.mdown': 'markdown'}
+"let g:vimwiki_root = expand('~/notes/')
+"let g:vimwiki_list = [{'path':      expand('~/notes/'),
+"                     \ 'path_html': expand('~/notes/') . '.www',
+"                     \ 'ext':       '.md',
+"                     \ 'syntax':    'markdown',
+"                     \ 'auto_toc':  0,
+"                     \ 'auto_tags': 0},
+"                     \{'path':      expand('~/notes/') . 'work',
+"                     \ 'path_html': expand('~/notes/') . 'work/.www',
+"                     \ 'ext':       '.md',
+"                     \ 'syntax':    'markdown',
+"                     \ 'auto_toc':  0,
+"                     \ 'auto_tags': 0}]
+"
+"autocmd BufRead,BufNewFile *.wiki set filetype=vimwiki
+"autocmd FileType vimwiki map D :VimwikiMakeDiaryNote<CR>
+"
+""autocmd FileType vimwiki execute 'echo hi'
+""augroup WikiSync | autocmd!
+"  "autocmd FileType vimwiki :!~/notes/.ops/sync
+"  "autocmd FileType vimwiki :!~/notes/.ops/sync
+"  "autocmd FileType vimwiki :autocmd! WikiSync BufRead,BufNewFile,BufWrite :echo hi
+"  "autocmd FileType BufRead,BufNewFile */somepath/** set filetype=sometype
+""augroup END
+"
+"" Autosave anytime there are updates to write & user is inactive
+""autocmd CursorHold * update
+"
+"" Allow "normal" editor style tab/shift-tab indent/dedent. (Only in vimwiki
+"" buffers!)
+"let g:vimwiki_table_mappings = 0
+"autocmd FileType vimwiki silent! iunmap <buffer> <Tab>
+"autocmd FileType vimwiki map <buffer> <Tab> <Plug>VimwikiIncreaseLvlSingleItem
+"autocmd FileType vimwiki map <buffer> <S-Tab> <Plug>VimwikiDecreaseLvlSingleItem
+"" Not only do we want regular edit-style tab, but we also want it to be useful
+"" for completing the tag-based insert-completion when only one match is
+"" displayed.
+"" TODO: try making it useful even when >1 possible match has been narrowed down
+"autocmd FileType vimwiki imap <buffer> <expr> <Tab> pumvisible()
+"\    ? "\<C-N>\<C-Y>:"
+"\    : "\<Plug>VimwikiIncreaseLvlSingleItem"
+"autocmd FileType vimwiki imap <buffer> <S-Tab> <Plug>VimwikiDecreaseLvlSingleItem
+"
+"" Don't make temporary wikis out of other .md files tho...sheesh. (Among other
+"" things, this trips an auto-cd behavior I don't usually want.)
+"let g:vimwiki_global_ext = 0
+"
+"" Allow 'gx' to open URLs (this technically works anywhere, not just in
+"" vimwiki) that include question marks, hashes etc. Note: cWORD not cword.
+"let g:netrw_gx = "<cWORD>"
+"
+"" Override behavior of (not actual mapping for) hitting Return in list items.
+"" Specifically, change the 1st number from 1 to 3: Return always inserts a new
+"" line item. 2nd number (set to 5) stays same: Enter on empty list item deletes
+"" the list item.
+"" TODO: except...this is firing even when not in a list item (i.e. it makes new
+"" indented list items when mashing enter on an already blank line)! Clearly the
+"" default isn't doing that; figure out how.
+""autocmd FileType vimwiki inoremap <buffer> <CR> <Esc>:VimwikiReturn 3 5<CR>
+"
+"" Always 'cd' to vimwiki directory when opening vimwiki pages. This means git,
+"" search, etc should always 'just work'.
+"" TODO: if I start using subdirs, see whether this goes to wiki root or not...
+"let g:vimwiki_auto_chdir = 1
+"
+"" Prevent saving wiki files that didn't get tags. So easy to forget!
+""function CheckForTags()
+""    try
+""        " Note: regexp here MUST be single-quoted to avoid slash problems
+""        if getbufline("", 1)[0] !~ ':.\+:'
+""            echoerr "Don't forget tags!!"
+""        endif
+""    endtry
+""endfunction
+""" TODO: make variable out of vimwiki root? used in 3x places now
+""autocmd BufWritePre ~/vimwiki/*.md call CheckForTags()
+"
+"" Auto git commit/push on save for vimwiki files, every >=5min. Pauper's
+"" Evernote sync.
+"" TODO: this may or may not work w/ subdirs, forget exactly how pattern works
+""autocmd BufWritePost ~/notes/*.md execute 'echo hi'
+"
+"
+"" Try vimwiki folding in a manner compatible with markdown syntax
+"" (NOTE: setting to 'list' works well enough for lists, but then does not work
+"" for sections, so kinda gotta pick one or the other :()
+"let g:vimwiki_folding = 'expr'
 
 " https://stackoverflow.com/questions/40549332/how-to-check-if-ssh-agent-is-already-running-in-bash
 " Run ssh-agent if it's not running {{{
