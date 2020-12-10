@@ -528,6 +528,7 @@ let g:vimwiki_auto_chdir = 1
 " for sections, so kinda gotta pick one or the other :()
 let g:vimwiki_folding = 'expr'
 
+" https://stackoverflow.com/questions/40549332/how-to-check-if-ssh-agent-is-already-running-in-bash
 " Run ssh-agent if it's not running {{{
 "function! CallbackTest()
 "  echomsg 'Callback executed successfully!'
