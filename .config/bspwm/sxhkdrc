@@ -99,7 +99,7 @@ super + t
 super + n
 	bspwm_scratchpad "scratchpad" "alacritty --class scratchpad --title scratchpad --command tmux"
 super + m
-	bspwm_scratchpad "math" "alacritty --class math --title math --command bc"
+	bspwm_scratchpad "math" "alacritty --class math --title math --command python3"
 super + p
 	bspwm_scratchpad "pomotroid" "pomotroid"
 
