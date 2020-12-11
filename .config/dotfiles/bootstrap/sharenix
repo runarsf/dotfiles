@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+read -p 'Enter sharenix token: ' SHARENIX_TOKEN
+SHARENIX_TOKEN="${SHARENIX_TOKEN}" envsubst '$SHARENIX_TOKEN' < ~/.config/dotfiles/.sharenix.json.template > ~/.sharenix.json
+

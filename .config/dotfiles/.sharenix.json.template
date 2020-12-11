@@ -9,7 +9,7 @@
       "RequestURL": "https://i.runarsf.dev/api/upload",
       "FileFormName": "files[]",
       "Headers": {
-        "token": "5up3r53cr37-70k3n"
+        "token": "${SHARENIX_TOKEN}"
       },
       "ResponseType": "Text",
       "URL": "$json:files[0].url$"
