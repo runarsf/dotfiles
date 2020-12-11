@@ -55,14 +55,17 @@ endif
 let g:colorscheme = 'one'
 
 silent! if plug#begin('~/.vim/plugged')
+" Built-in {{{
+" netrw {{{
+let loaded_netrwPlugin = 0  " disable netrw
+let g:netrw_banner = 0
+let g:netrw_list_hide = '\(^\|\s\s\)\zs\.\S\+,\(^\|\s\s\)ntuser\.\S\+'
+autocmd FileType netrw set nolist
+" }}}
+" }}}
 " General {{{
 " Disabled General {{{
-" netrw {{{
-"let loaded_netrwPlugin = 1  " disable netrw
-"let g:netrw_banner=0
-"let g:netrw_list_hide = '\(^\|\s\s\)\zs\.\S\+,\(^\|\s\s\)ntuser\.\S\+'
-"autocmd FileType netrw set nolist
-" }}}
+"Plug 'vifm/vifm.vim'
 "Plug 'fcpg/vim-waikiki' " {{{
 "let maplocalleader = "-"
 "let g:waikiki_default_maps = 1
@@ -300,7 +303,6 @@ silent! if plug#begin('~/.vim/plugged')
 " }}}
 "Plug 'junegunn/goyo.vim', { 'on': 'Goyo' }
 "Plug 'rlue/vim-barbaric'
-"Plug 'vifm/vifm.vim'
 "Plug 'justinmk/vim-dirvish'
 "Plug 'kristijanhusak/vim-dirvish-git'
 "Plug 'bounceme/remote-viewer'
@@ -315,7 +317,6 @@ silent! if plug#begin('~/.vim/plugged')
 "Plug 'matze/vim-tex-fold', { 'for': 'tex' }
 "Plug 'matze/vim-ini-fold', { 'for': 'ini' }
 "Plug 'tmhedberg/SimpylFold', { 'for': 'python' }
-"Plug 'mattn/calendar-vim'
 "Plug 'mg979/vim-xtabline'
 "RRethy/vim-illuminate
 "Plug 'ctrlpvim/ctrlp.vim'
@@ -326,20 +327,17 @@ silent! if plug#begin('~/.vim/plugged')
 "if $DISPLAY != ''
 "  Plug 'ying17zi/vim-live-latex-preview', { 'for': 'tex' } " requires biber
 "endif
-"Plug 'skywind3000/vim-auto-popmenu'
 "Plug 'chazy/dirsettings'
 "if has('python3') && $DISPLAY != ''
 "  Plug 'anned20/vimsence'
 "endif
 "Plug 'easymotion/vim-easymotion'
-"Plug 'vifm/vifm.vim'
 "Plug 'vimoutliner/vimoutliner'
 "Plug 'michal-h21/vimwiki-sync'
 "Plug 'michal-h21/vim-zettel'
 "Plug 'Kody-Quintana/bspwm_border_color'
 "Plug 'amerlyq/vim-focus-autocmd'
 "Plug 'jceb/vim-orgmode'
-"Plug 'camspiers/animate.vim'
 "Plug 'editorconfig/editorconfig-vim'
 "Plug 'liuchengxu/vim-clap'
 "Plug 'tpope/vim-dispatch'
@@ -423,6 +421,7 @@ silent! if plug#begin('~/.vim/plugged')
 "Plug 'robcsi/viewmaps.vim'
 " }}}
 
+Plug 'dstein64/vim-startuptime'
 Plug 'godlygeek/tabular' | Plug 'plasticboy/vim-markdown' " {{{
 " https://github.com/plasticboy/vim-markdown
 let g:vim_markdown_folding_disabled = 0
@@ -649,13 +648,15 @@ map <silent> <C-b> :call ToggleCalendar() <bar> wincmd p<CR>
 
 "autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 " }}}
-Plug 'dstein64/vim-startuptime'
 Plug 'ap/vim-buftabline' " {{{
 "set hidden
 "buffer binds
 " }}}
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } | Plug 'junegunn/fzf.vim' " {{{
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' } | Plug 'junegunn/fzf.vim' | Plug 'camspiers/animate.vim' " {{{
 nmap <silent> <leader>f :FZF<CR>
+let g:fzf_layout = {
+ \ 'window': 'new | wincmd J | resize 1 | call animate#window_percent_height(0.5)'
+\ }
 " }}}
 if has('python3') && executable('rg') | Plug 'alok/notational-fzf-vim' " {{{
   let g:nv_search_paths = [ expand('~/notes/') ]
@@ -863,6 +864,11 @@ function! s:show_documentation()
   endif
 endfunction
 endif
+" }}}
+Plug 'skywind3000/vim-auto-popmenu', { 'for': 'markdown' } " {{{
+let g:apc_enable_ft = {'text':1, 'markdown':1}
+set cpt=.,k,w,b
+set completeopt=menu,menuone,noselect
 " }}}
 " }}}
 " Syntax highlighting {{{
@@ -1146,10 +1152,10 @@ nmap <leader>q :q<CR>
 nmap <leader>Q :q!<CR>
 
 " Move a line of text using ALT+[jk] or Command+[jk] on mac
-nmap <M-j> mz:m+<cr>`z
-nmap <M-k> mz:m-2<cr>`z
-vmap <M-j> :m'>+<cr>`<my`>mzgv`yo`z
-vmap <M-k> :m'<-2<cr>`>my`<mzgv`yo`z
+nmap <silent> <M-j> mz:m+<cr>`z
+nmap <silent> <M-k> mz:m-2<cr>`z
+vmap <silent> <M-j> :m'>+<cr>`<my`>mzgv`yo`z
+vmap <silent> <M-k> :m'<-2<cr>`>my`<mzgv`yo`z
 
 imap #dn >/dev/null<space>2>&1
 inoreabbrev <expr> #!! "#!/usr/bin/env" . (empty(&filetype) ? '' : ' '.&filetype)
@@ -1276,11 +1282,13 @@ function! ToggleNumbers() " {{{
     let b:default_relativenumber = &relativenumber
     let b:default_signcolumn = &signcolumn
     set nonumber
+    set list!
     set norelativenumber
     set signcolumn=no
   else
     if b:default_number | set number | endif
     if b:default_relativenumber | set relativenumber | endif
+    set list
     execute 'set signcolumn=' . b:default_signcolumn
   endif
 endfunction
@@ -1320,5 +1328,16 @@ function! FoldText() " {{{
   return foldtextstart . repeat(foldchar, winwidth(0)-foldtextlength) . foldtextend
 endfunction
 set foldtext=FoldText()
+" }}}
+
+function! s:OpenAnimatedLF() abort " {{{
+  " Open lf in a terminal
+  new term://lf
+  " Send window to bottom and start with small height
+  wincmd J | resize 1
+  " Animate height to 66%
+  call animate#window_percent_height(0.66)
+endfunction
+command! LF call s:OpenAnimatedLF()
 " }}}
 " }}}======================
