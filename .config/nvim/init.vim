@@ -1197,16 +1197,19 @@ endif
 
 " Statusline {{{
 function! ModePaste()
-  return &paste ? '[P] ' : ''
+  return &paste ? '[p] ' : ''
 endfunction
 function! ModeMouse()
-  return &mouse == 'a' ? '[M] ' : ''
+  return &mouse == 'a' ? '[m] ' : ''
 endfunction
 function! ReadOnly()
-  return &readonly ? '[RO] ' : ''
+  return &readonly ? '[ro] ' : ''
 endfunction
 function! ModeSpell()
-  return &spell ? '[SP] ' : ''
+  return &spell ? '[sp] ' : ''
+endfunction
+function! ModeWrap()
+  return &wrap == 'wrap' ? '[wr] ' : ''
 endfunction
 
 set statusline=
@@ -1223,6 +1226,7 @@ set statusline+=%=                            " right-align from now on
 set statusline+=%{ReadOnly()}                 " mouse flag
 set statusline+=%{ModeMouse()}                " mouse flag
 set statusline+=%{ModePaste()}                " paste flag
+set statusline+=%{ModeWrap()}
 set statusline+=%{ModeSpell()}
 set statusline+=\[%{mode()}\]                 " current mode
 set statusline+=\                             " blank space
