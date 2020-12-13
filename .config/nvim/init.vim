@@ -65,6 +65,205 @@ autocmd FileType netrw set nolist
 " }}}
 " General {{{
 " Disabled General {{{
+"Plug 'justinmk/vim-dirvish' | Plug 'kristijanhusak/vim-dirvish-git' | Plug 'bounceme/remote-viewer'
+"if has('nvim') " Shougo/defx.nvim {{{
+"  Plug 'Shougo/defx.nvim', { 'do': ':UpdateRemotePlugins' }
+"else
+"  Plug 'Shougo/defx.nvim'
+"  Plug 'roxma/nvim-yarp'
+"  Plug 'roxma/vim-hug-neovim-rpc'
+"endif
+"let g:indentLine_fileTypeExclude = ['defx']
+"autocmd FileType defx call s:defx_settings()
+"function! s:defx_settings() abort
+"  setlocal conceallevel=2
+"  setlocal concealcursor=inc
+"  " other defx mappings etc...
+"endfunction
+" }}}
+"Plug 'xolox/vim-notes' | Plug 'xolox/vim-misc' " {{{
+"let g:notes_directories = [expand('~/notes')]
+"let g:notes_suffix = '.md'
+"let g:notes_smart_quotes = 1
+"let g:notes_list_bullets = ['•', '◦', '▸', '▹', '▪', '▫']
+"let g:notes_ruler_text = '***'
+"let g:notes_tab_indents = 1
+" }}}
+"Plug 'vimwiki/vimwiki' " {{{
+"" https://opensource.com/article/18/6/vimwiki-gitlab-notes
+"" https://blog.mague.com/?p=602
+"let g:vimwiki_ext = '.md'
+"let g:vimwiki_syntax = 'markdown'
+"let g:vimwiki_ext2syntax = {'.md': 'markdown', '.markdown': 'markdown', '.mdown': 'markdown'}
+"let g:vimwiki_root = expand('~/notes/')
+"let g:vimwiki_list = [{'path':      expand('~/notes/'),
+"                     \ 'path_html': expand('~/notes/') . '.www',
+"                     \ 'ext':       '.md',
+"                     \ 'syntax':    'markdown',
+"                     \ 'auto_toc':  0,
+"                     \ 'auto_tags': 0},
+"                     \{'path':      expand('~/notes/') . 'work',
+"                     \ 'path_html': expand('~/notes/') . 'work/.www',
+"                     \ 'ext':       '.md',
+"                     \ 'syntax':    'markdown',
+"                     \ 'auto_toc':  0,
+"                     \ 'auto_tags': 0}]
+"
+""autocmd BufRead,BufNewFile *.wiki set filetype=vimwiki
+"autocmd FileType vimwiki map D :VimwikiMakeDiaryNote<CR>
+"
+""autocmd FileType vimwiki execute 'echo hi'
+""augroup WikiSync | autocmd!
+"  "autocmd FileType vimwiki :!~/notes/.ops/sync
+"  "autocmd FileType vimwiki :!~/notes/.ops/sync
+"  "autocmd FileType vimwiki :autocmd! WikiSync BufRead,BufNewFile,BufWrite :echo hi
+"  "autocmd FileType BufRead,BufNewFile */somepath/** set filetype=sometype
+""augroup END
+"
+"" Autosave anytime there are updates to write & user is inactive
+""autocmd CursorHold * update
+"
+"" Allow "normal" editor style tab/shift-tab indent/dedent. (Only in vimwiki
+"" buffers!)
+"let g:vimwiki_table_mappings = 0
+"autocmd FileType vimwiki silent! iunmap <buffer> <Tab>
+"autocmd FileType vimwiki map <buffer> <Tab> <Plug>VimwikiIncreaseLvlSingleItem
+"autocmd FileType vimwiki map <buffer> <S-Tab> <Plug>VimwikiDecreaseLvlSingleItem
+"" Not only do we want regular edit-style tab, but we also want it to be useful
+"" for completing the tag-based insert-completion when only one match is
+"" displayed.
+"" TODO: try making it useful even when >1 possible match has been narrowed down
+"autocmd FileType vimwiki imap <buffer> <expr> <Tab> pumvisible()
+"\    ? "\<C-N>\<C-Y>:"
+"\    : "\<Plug>VimwikiIncreaseLvlSingleItem"
+"autocmd FileType vimwiki imap <buffer> <S-Tab> <Plug>VimwikiDecreaseLvlSingleItem
+"
+"" Don't make temporary wikis out of other .md files tho...sheesh. (Among other
+"" things, this trips an auto-cd behavior I don't usually want.)
+"let g:vimwiki_global_ext = 0
+"
+"" Allow 'gx' to open URLs (this technically works anywhere, not just in
+"" vimwiki) that include question marks, hashes etc. Note: cWORD not cword.
+"let g:netrw_gx = "<cWORD>"
+"
+"" Override behavior of (not actual mapping for) hitting Return in list items.
+"" Specifically, change the 1st number from 1 to 3: Return always inserts a new
+"" line item. 2nd number (set to 5) stays same: Enter on empty list item deletes
+"" the list item.
+"" TODO: except...this is firing even when not in a list item (i.e. it makes new
+"" indented list items when mashing enter on an already blank line)! Clearly the
+"" default isn't doing that; figure out how.
+""autocmd FileType vimwiki inoremap <buffer> <CR> <Esc>:VimwikiReturn 3 5<CR>
+"
+"" Always 'cd' to vimwiki directory when opening vimwiki pages. This means git,
+"" search, etc should always 'just work'.
+"" TODO: if I start using subdirs, see whether this goes to wiki root or not...
+"let g:vimwiki_auto_chdir = 1
+"
+"" Prevent saving wiki files that didn't get tags. So easy to forget!
+""function CheckForTags()
+""    try
+""        " Note: regexp here MUST be single-quoted to avoid slash problems
+""        if getbufline("", 1)[0] !~ ':.\+:'
+""            echoerr "Don't forget tags!!"
+""        endif
+""    endtry
+""endfunction
+""" TODO: make variable out of vimwiki root? used in 3x places now
+""autocmd BufWritePre ~/vimwiki/*.md call CheckForTags()
+"
+"" Auto git commit/push on save for vimwiki files, every >=5min. Pauper's
+"" Evernote sync.
+"" TODO: this may or may not work w/ subdirs, forget exactly how pattern works
+""autocmd BufWritePost ~/notes/*.md execute 'echo hi'
+"
+"
+"" Try vimwiki folding in a manner compatible with markdown syntax
+"" (NOTE: setting to 'list' works well enough for lists, but then does not work
+"" for sections, so kinda gotta pick one or the other :()
+"let g:vimwiki_folding = 'expr'
+
+" https://stackoverflow.com/questions/40549332/how-to-check-if-ssh-agent-is-already-running-in-bash
+" Run ssh-agent if it's not running {{{
+"function! CallbackTest()
+"  echomsg 'Callback executed successfully!'
+"endfunction
+"function! CheckSSHAgent(callback)
+"  if !($SSH_AGENT_PID)
+"    if confirm("SSH_AGENT_PID unset, try adding ssh-agent?", "&Yes\n&No", 2) != 1
+"      return 2
+"    endif
+"  endif
+
+"  silent !if test -z "${SSH_AGENT_PID+x}"; then
+"  \   eval "$(ssh-agent)";
+"  \ fi;
+"  \ if test "$(ssh-add -L | grep id_rsa | wc -l)" -le 0; then
+"  \   ssh-add;
+"  \   exit 69;
+"  \ fi
+
+  "if v:shell_error == 69
+  "  execute "call " . a:callback
+  "endif
+"endfunction
+" }}}
+
+" WikiSyncPull {{{
+"function! WikiSyncPull()
+"  silent execute "!git -C " . expand('~/wiki/') . " pull"
+"endfunction
+" }}}
+" WikiSyncSave {{{
+"function! WikiSyncSave()
+"  if &ft =~ 'asciidoctor'
+"    silent Asciidoctor2HTML
+"   "silent execute '!mv ' . g:wikidir . '%:t ' . g:wikidir . 'html/'
+"  elseif &ft =~ 'vimwiki'
+"    silent VimwikiAll2HTML
+"   "call vimwiki#html#WikiAll2HTML(g:wikidir)
+"  endif
+"  let g:has_modified = 1
+"endfunction
+" }}}
+" WikiSyncPush {{{
+"function! WikiSyncPush()
+"  if exists('g:has_modified')
+"    silent execute '!git -C ' . expand('~/wiki/') . ' pull'
+"    silent execute '!git -C ' . expand('~/wiki/') . ' add -u'
+"    silent execute '!git -C ' . expand('~/wiki/') . ' commit -m "Auto push of %:t at ' . strftime('%a-%FT%T%z') .'"'
+"    execute '!git -C ' . expand('~/wiki/') . ' push origin master'
+"    unlet g:has_modified
+"
+"    while true
+"      if (system('git status')) =~ 'ahead of'
+"        if confirm("Could not push changes, add ssh-agent and retry?", "&Yes\n&No", 1) == 1
+"          !eval "$(ssh-agent)" && ssh-add
+"          call WikiSyncPush()
+"        else
+"          break
+"        endif
+"      endif
+"    endwhile
+"  endif
+"endfunction
+" }}}
+
+" augroup WikiSync {{{
+"augroup WikiSync | autocmd!
+"  autocmd FileType asciidoctor call WikiSyncPull()
+"  autocmd FileType asciidoctor cabbrev wq write <bar> quit
+"  autocmd FileType vimwiki call WikiSyncPull()
+"  autocmd FileType vimwiki cabbrev wq write <bar> quit
+"
+"  autocmd BufWritePost *.adoc :call WikiSyncSave()
+"  autocmd BufWritePost *.wiki :call WikiSyncSave()
+"
+"  autocmd BufWinLeave *.adoc :call WikiSyncPush()
+"  autocmd BufWinLeave *.wiki :call WikiSyncPush()
+"augroup END
+" }}}
+" }}}
 "Plug 'vifm/vifm.vim'
 "Plug 'fcpg/vim-waikiki' " {{{
 "let maplocalleader = "-"
@@ -270,41 +469,11 @@ autocmd FileType netrw set nolist
 "
 "let g:qs_lazy_highlight = 0
 " }}}
-"Plug 'mhinz/vim-startify' " {{{
-"let g:startify_session_dir = '~/.config/nvim/session'
-"let g:startify_lists = [
-"          \ { 'type': 'files',     'header': ['   Files']            },
-"          \ { 'type': 'dir',       'header': ['   Current Directory '. getcwd()] },
-"          \ { 'type': 'bookmarks', 'header': ['   Bookmarks']      },
-"          \ { 'type': 'sessions',  'header': ['   Sessions']       },
-"          \ ]
-"let g:startify_bookmarks = [
-"            \ { 'c': '~/.config/nvim/init.vim' },
-"            \ { 'z': '~/.config/zsh/.zshrc' },
-"            \ '~/Blog',
-"            \ '~/Code',
-"            \ '~/Pics',
-"            \ ]
-"let g:startify_session_autoload = 1
-"let g:startify_session_delete_buffers = 1
-"let g:startify_change_to_vcs_root = 0
-"let g:startify_fortune_use_unicode = 1
-"let g:startify_session_persistence = 1
-"let g:startify_enable_special = 0
-"let g:startify_custom_header = [
-        "\ '   _  __     _         __  ___         __     ___ ',
-        "\ '  / |/ /  __(_)_ _    /  |/  /__ _____/ /    |_  |',
-        "\ ' /    / |/ / /  ` \  / /|_/ / _ `/ __/ _ \  / __/ ',
-        "\ '/_/|_/|___/_/_/_/_/ /_/  /_/\_,_/\__/_//_/ /____/ ',
-        "\]
-" }}}
 "Plug 'mbbill/undotree' " {{{
 "map <silent> <C-u> :UndotreeToggle<CR>
 " }}}
 "Plug 'junegunn/goyo.vim', { 'on': 'Goyo' }
 "Plug 'rlue/vim-barbaric'
-"Plug 'justinmk/vim-dirvish'
-"Plug 'kristijanhusak/vim-dirvish-git'
 "Plug 'bounceme/remote-viewer'
 "if has('nvim') || has('patch-8.0.902')
 "  Plug 'mhinz/vim-signify'
@@ -363,7 +532,6 @@ autocmd FileType netrw set nolist
 "Plug 'svermeulen/vim-yoink'
 "Plug 'pedrohdz/vim-yaml-folds'
 "Plug 'jceb/vim-orgmode'
-"Plug 'justinmk/vim-dirvish'
 "Plug 'jonrad/vim-hi-hue'
 "plug 'zefei/vim-wintabs-powerline'
 "Plug 'bling/vim-bufferline'
@@ -421,6 +589,34 @@ autocmd FileType netrw set nolist
 "Plug 'robcsi/viewmaps.vim'
 " }}}
 
+Plug 'mhinz/vim-startify' " {{{
+let g:startify_session_dir = '~/.config/nvim/session'
+let g:startify_lists = [
+          \ { 'type': 'files',     'header': ['   Files']            },
+          \ { 'type': 'dir',       'header': ['   Current Directory '. getcwd()] },
+          \ { 'type': 'bookmarks', 'header': ['   Bookmarks']      },
+          \ { 'type': 'sessions',  'header': ['   Sessions']       },
+          \ ]
+let g:startify_bookmarks = [
+            \ { 'c': '~/.config/nvim/init.vim' },
+            \ { 'z': '~/.config/zsh/.zshrc' },
+            \ { 'n': '~/notes/' },
+            \ expand('~')
+            \ ]
+let g:startify_change_to_dir = 0
+let g:startify_change_to_vcs_root = 1
+let g:startify_session_autoload = 1
+let g:startify_session_delete_buffers = 1
+let g:startify_fortune_use_unicode = 1
+let g:startify_session_persistence = 1
+let g:startify_enable_special = 0
+"let g:startify_custom_header = [
+        "\ '   _  __     _         __  ___         __     ___ ',
+        "\ '  / |/ /  __(_)_ _    /  |/  /__ _____/ /    |_  |',
+        "\ ' /    / |/ / /  ` \  / /|_/ / _ `/ __/ _ \  / __/ ',
+        "\ '/_/|_/|___/_/_/_/_/ /_/  /_/\_,_/\__/_//_/ /____/ ',
+        "\]
+" }}}
 Plug 'dstein64/vim-startuptime'
 Plug 'godlygeek/tabular' | Plug 'plasticboy/vim-markdown' " {{{
 " https://github.com/plasticboy/vim-markdown
@@ -452,181 +648,6 @@ let g:wiki_filetypes = ['md']
 let g:wiki_link_extension = '.md'
 let g:wiki_link_target_type = 'md'
 let g:wiki_list_todos = ['TODO', 'DONE']
-" }}}
-"Plug 'vimwiki/vimwiki' " {{{
-"" https://opensource.com/article/18/6/vimwiki-gitlab-notes
-"" https://blog.mague.com/?p=602
-"let g:vimwiki_ext = '.md'
-"let g:vimwiki_syntax = 'markdown'
-"let g:vimwiki_ext2syntax = {'.md': 'markdown', '.markdown': 'markdown', '.mdown': 'markdown'}
-"let g:vimwiki_root = expand('~/notes/')
-"let g:vimwiki_list = [{'path':      expand('~/notes/'),
-"                     \ 'path_html': expand('~/notes/') . '.www',
-"                     \ 'ext':       '.md',
-"                     \ 'syntax':    'markdown',
-"                     \ 'auto_toc':  0,
-"                     \ 'auto_tags': 0},
-"                     \{'path':      expand('~/notes/') . 'work',
-"                     \ 'path_html': expand('~/notes/') . 'work/.www',
-"                     \ 'ext':       '.md',
-"                     \ 'syntax':    'markdown',
-"                     \ 'auto_toc':  0,
-"                     \ 'auto_tags': 0}]
-"
-""autocmd BufRead,BufNewFile *.wiki set filetype=vimwiki
-"autocmd FileType vimwiki map D :VimwikiMakeDiaryNote<CR>
-"
-""autocmd FileType vimwiki execute 'echo hi'
-""augroup WikiSync | autocmd!
-"  "autocmd FileType vimwiki :!~/notes/.ops/sync
-"  "autocmd FileType vimwiki :!~/notes/.ops/sync
-"  "autocmd FileType vimwiki :autocmd! WikiSync BufRead,BufNewFile,BufWrite :echo hi
-"  "autocmd FileType BufRead,BufNewFile */somepath/** set filetype=sometype
-""augroup END
-"
-"" Autosave anytime there are updates to write & user is inactive
-""autocmd CursorHold * update
-"
-"" Allow "normal" editor style tab/shift-tab indent/dedent. (Only in vimwiki
-"" buffers!)
-"let g:vimwiki_table_mappings = 0
-"autocmd FileType vimwiki silent! iunmap <buffer> <Tab>
-"autocmd FileType vimwiki map <buffer> <Tab> <Plug>VimwikiIncreaseLvlSingleItem
-"autocmd FileType vimwiki map <buffer> <S-Tab> <Plug>VimwikiDecreaseLvlSingleItem
-"" Not only do we want regular edit-style tab, but we also want it to be useful
-"" for completing the tag-based insert-completion when only one match is
-"" displayed.
-"" TODO: try making it useful even when >1 possible match has been narrowed down
-"autocmd FileType vimwiki imap <buffer> <expr> <Tab> pumvisible()
-"\    ? "\<C-N>\<C-Y>:"
-"\    : "\<Plug>VimwikiIncreaseLvlSingleItem"
-"autocmd FileType vimwiki imap <buffer> <S-Tab> <Plug>VimwikiDecreaseLvlSingleItem
-"
-"" Don't make temporary wikis out of other .md files tho...sheesh. (Among other
-"" things, this trips an auto-cd behavior I don't usually want.)
-"let g:vimwiki_global_ext = 0
-"
-"" Allow 'gx' to open URLs (this technically works anywhere, not just in
-"" vimwiki) that include question marks, hashes etc. Note: cWORD not cword.
-"let g:netrw_gx = "<cWORD>"
-"
-"" Override behavior of (not actual mapping for) hitting Return in list items.
-"" Specifically, change the 1st number from 1 to 3: Return always inserts a new
-"" line item. 2nd number (set to 5) stays same: Enter on empty list item deletes
-"" the list item.
-"" TODO: except...this is firing even when not in a list item (i.e. it makes new
-"" indented list items when mashing enter on an already blank line)! Clearly the
-"" default isn't doing that; figure out how.
-""autocmd FileType vimwiki inoremap <buffer> <CR> <Esc>:VimwikiReturn 3 5<CR>
-"
-"" Always 'cd' to vimwiki directory when opening vimwiki pages. This means git,
-"" search, etc should always 'just work'.
-"" TODO: if I start using subdirs, see whether this goes to wiki root or not...
-"let g:vimwiki_auto_chdir = 1
-"
-"" Prevent saving wiki files that didn't get tags. So easy to forget!
-""function CheckForTags()
-""    try
-""        " Note: regexp here MUST be single-quoted to avoid slash problems
-""        if getbufline("", 1)[0] !~ ':.\+:'
-""            echoerr "Don't forget tags!!"
-""        endif
-""    endtry
-""endfunction
-""" TODO: make variable out of vimwiki root? used in 3x places now
-""autocmd BufWritePre ~/vimwiki/*.md call CheckForTags()
-"
-"" Auto git commit/push on save for vimwiki files, every >=5min. Pauper's
-"" Evernote sync.
-"" TODO: this may or may not work w/ subdirs, forget exactly how pattern works
-""autocmd BufWritePost ~/notes/*.md execute 'echo hi'
-"
-"
-"" Try vimwiki folding in a manner compatible with markdown syntax
-"" (NOTE: setting to 'list' works well enough for lists, but then does not work
-"" for sections, so kinda gotta pick one or the other :()
-"let g:vimwiki_folding = 'expr'
-
-" https://stackoverflow.com/questions/40549332/how-to-check-if-ssh-agent-is-already-running-in-bash
-" Run ssh-agent if it's not running {{{
-"function! CallbackTest()
-"  echomsg 'Callback executed successfully!'
-"endfunction
-"function! CheckSSHAgent(callback)
-"  if !($SSH_AGENT_PID)
-"    if confirm("SSH_AGENT_PID unset, try adding ssh-agent?", "&Yes\n&No", 2) != 1
-"      return 2
-"    endif
-"  endif
-
-"  silent !if test -z "${SSH_AGENT_PID+x}"; then
-"  \   eval "$(ssh-agent)";
-"  \ fi;
-"  \ if test "$(ssh-add -L | grep id_rsa | wc -l)" -le 0; then
-"  \   ssh-add;
-"  \   exit 69;
-"  \ fi
-
-  "if v:shell_error == 69
-  "  execute "call " . a:callback
-  "endif
-"endfunction
-" }}}
-
-" WikiSyncPull {{{
-"function! WikiSyncPull()
-"  silent execute "!git -C " . expand('~/wiki/') . " pull"
-"endfunction
-" }}}
-" WikiSyncSave {{{
-"function! WikiSyncSave()
-"  if &ft =~ 'asciidoctor'
-"    silent Asciidoctor2HTML
-"   "silent execute '!mv ' . g:wikidir . '%:t ' . g:wikidir . 'html/'
-"  elseif &ft =~ 'vimwiki'
-"    silent VimwikiAll2HTML
-"   "call vimwiki#html#WikiAll2HTML(g:wikidir)
-"  endif
-"  let g:has_modified = 1
-"endfunction
-" }}}
-" WikiSyncPush {{{
-"function! WikiSyncPush()
-"  if exists('g:has_modified')
-"    silent execute '!git -C ' . expand('~/wiki/') . ' pull'
-"    silent execute '!git -C ' . expand('~/wiki/') . ' add -u'
-"    silent execute '!git -C ' . expand('~/wiki/') . ' commit -m "Auto push of %:t at ' . strftime('%a-%FT%T%z') .'"'
-"    execute '!git -C ' . expand('~/wiki/') . ' push origin master'
-"    unlet g:has_modified
-"
-"    while true
-"      if (system('git status')) =~ 'ahead of'
-"        if confirm("Could not push changes, add ssh-agent and retry?", "&Yes\n&No", 1) == 1
-"          !eval "$(ssh-agent)" && ssh-add
-"          call WikiSyncPush()
-"        else
-"          break
-"        endif
-"      endif
-"    endwhile
-"  endif
-"endfunction
-" }}}
-
-" augroup WikiSync {{{
-"augroup WikiSync | autocmd!
-"  autocmd FileType asciidoctor call WikiSyncPull()
-"  autocmd FileType asciidoctor cabbrev wq write <bar> quit
-"  autocmd FileType vimwiki call WikiSyncPull()
-"  autocmd FileType vimwiki cabbrev wq write <bar> quit
-"
-"  autocmd BufWritePost *.adoc :call WikiSyncSave()
-"  autocmd BufWritePost *.wiki :call WikiSyncSave()
-"
-"  autocmd BufWinLeave *.adoc :call WikiSyncPush()
-"  autocmd BufWinLeave *.wiki :call WikiSyncPush()
-"augroup END
-" }}}
 " }}}
 Plug 'mattn/calendar-vim' " {{{
 function! ToggleCalendar()
