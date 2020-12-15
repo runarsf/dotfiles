@@ -610,6 +610,9 @@ let g:startify_session_delete_buffers = 1
 let g:startify_fortune_use_unicode = 1
 let g:startify_session_persistence = 1
 let g:startify_enable_special = 0
+autocmd User Startified setlocal cursorline
+"let g:startify_custom_header = 'startify#center(startify#fortune#cowsay())'
+let g:startify_custom_header = []
 "let g:startify_custom_header = [
         "\ '   _  __     _         __  ___         __     ___ ',
         "\ '  / |/ /  __(_)_ _    /  |/  /__ _____/ /    |_  |',
@@ -824,10 +827,10 @@ let g:coc_global_extensions = [
   \ 'coc-css',
   \ 'coc-yaml',
   \ 'coc-highlight',
-  \ 'coc-markdownlint',
-  \ 'coc-emoji'
+  \ 'coc-markdownlint'
   \ ]
   " \ 'coc-python',
+  " \ 'coc-emoji'
 "exec "CocInstall -sync " . join(get(g:, 'coc_global_extensions', []))
 " Use `[g` and `]g` to navigate diagnostics
 nmap <silent> <space>G <Plug>(coc-diagnostic-prev)
