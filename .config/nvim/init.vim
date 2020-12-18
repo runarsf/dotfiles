@@ -778,12 +778,12 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 " Toggle NERDTree and focus editor
 map <silent> <C-n> :NERDTreeToggle <bar> wincmd p<CR>
 
-let NERDTreeAutoDeleteBuffer = 1
+let NERDTreeAutoDeleteBuffer = 0
 let NERDTreeQuitOnOpen = 1
-let NERDTreeMinimalUI=1
-let NERDTreeDirArrows = 1
-let g:NERDTreeGitStatusWithFlags = 1
-let NERDTreeShowHidden=1
+let NERDTreeMinimalUI = 1
+let NERDTreeDirArrows = 0
+let g:NERDTreeGitStatusWithFlags = 0
+let NERDTreeShowHidden = 1
 let g:NERDTreeWinPos = "left"
 let g:NERDTreeIgnore = [
   \ '^node_modules$',
@@ -820,19 +820,31 @@ autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=#363840 ctermbg=237
 if v:version >= 703 && executable('node') | Plug 'neoclide/coc.nvim', {'branch': 'release'} " {{{
 "if v:version >= 703 && executable('node') && executable('yarn') | Plug 'neoclide/coc.nvim', { 'branch': 'release', 'tag': '*', 'do': { -> coc#util#install()}}
 let g:coc_global_extensions = [
-  \ 'coc-snippets',
   \ 'coc-pairs',
   \ 'coc-html',
   \ 'coc-json',
-  \ 'coc-vetur',
   \ 'coc-css',
   \ 'coc-yaml',
   \ 'coc-highlight',
-  \ 'coc-markdownlint'
   \ ]
+  " \ 'coc-vetur',
+  " \ 'coc-snippets',
+  " \ 'coc-markdownlint'
   " \ 'coc-python',
   " \ 'coc-emoji'
-"exec "CocInstall -sync " . join(get(g:, 'coc_global_extensions', []))
+function! NiceCock()
+  " https://stackoverflow.com/a/13908273
+  let coc_extensions=glob(fnameescape(expand('~/.config/coc/extensions/node_modules')).'/{,.}*/', 1, 1)
+  call map(coc_extensions, 'fnamemodify(v:val, ":h:t")')
+
+  for extension in coc_extensions
+    if index(g:coc_global_extensions, extension) == -1
+      exec "CocUninstall " . extension
+    endif
+  endfor
+endfunction
+command! Cock exec "CocInstall -sync " . join(get(g:, 'coc_global_extensions', []))
+command! Caulk call NiceCock() 
 " Use `[g` and `]g` to navigate diagnostics
 nmap <silent> <space>G <Plug>(coc-diagnostic-prev)
 nmap <silent> <space>g <Plug>(coc-diagnostic-next)
@@ -1355,14 +1367,14 @@ endfunction
 set foldtext=FoldText()
 " }}}
 
-function! s:OpenAnimatedLF() abort " {{{
+function! s:OpenAnimatedHtop() abort " {{{
   " Open lf in a terminal
-  new term://lf
+  new term://htop
   " Send window to bottom and start with small height
   wincmd J | resize 1
   " Animate height to 66%
   call animate#window_percent_height(0.66)
 endfunction
-command! LF call s:OpenAnimatedLF()
+command! Htop call s:OpenAnimatedHtop()
 " }}}
 " }}}======================
