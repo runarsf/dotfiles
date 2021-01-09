@@ -52,7 +52,6 @@ set nocompatible
 if has("autocmd")
   filetype plugin indent on
 endif
-let g:colorscheme = 'one'
 
 silent! if plug#begin('~/.vim/plugged')
 " Built-in {{{
@@ -65,6 +64,150 @@ autocmd FileType netrw set nolist
 " }}}
 " General {{{
 " Disabled General {{{
+"Plug 'skywind3000/vim-auto-popmenu', { 'for': 'markdown' } | Plug 'skywind3000/vim-dict'", { 'for': 'markdown' } {{{
+"let g:apc_enable_ft = {'text':1, 'markdown':1}
+"set cpt=.,k,w,b
+"set completeopt=menu,menuone,noselect
+" }}}
+"Plug 'Yggdroot/indentLine' " {{{
+"let g:indentLine_setColors = 0
+"let g:indentLine_char = '┊'
+"let g:indentLine_setConceal = 0
+"let g:indentLine_enabled = 1
+" }}}
+"Plug 'mhinz/vim-startify' " {{{
+"let g:startify_session_dir = '~/.config/nvim/session'
+"let g:startify_lists = [
+"          \ { 'type': 'files',     'header': ['   Files']            },
+"          \ { 'type': 'dir',       'header': ['   Current Directory '. getcwd()] },
+"          \ { 'type': 'bookmarks', 'header': ['   Bookmarks']      },
+"          \ { 'type': 'sessions',  'header': ['   Sessions']       },
+"          \ ]
+"let g:startify_bookmarks = [
+"            \ { 'c': '~/.config/nvim/init.vim' },
+"            \ { 'z': '~/.config/zsh/.zshrc' },
+"            \ { 'n': '~/notes/' },
+"            \ expand('~')
+"            \ ]
+"let g:startify_change_to_dir = 0
+"let g:startify_change_to_vcs_root = 1
+"let g:startify_session_autoload = 1
+"let g:startify_session_delete_buffers = 1
+"let g:startify_fortune_use_unicode = 1
+"let g:startify_session_persistence = 1
+"let g:startify_enable_special = 0
+"autocmd User Startified setlocal cursorline
+""let g:startify_custom_header = 'startify#center(startify#fortune#cowsay())'
+"let g:startify_custom_header = []
+""let g:startify_custom_header = [
+"        "\ '   _  __     _         __  ___         __     ___ ',
+"        "\ '  / |/ /  __(_)_ _    /  |/  /__ _____/ /    |_  |',
+"        "\ ' /    / |/ / /  ` \  / /|_/ / _ `/ __/ _ \  / __/ ',
+"        "\ '/_/|_/|___/_/_/_/_/ /_/  /_/\_,_/\__/_//_/ /____/ ',
+"        "\]
+" }}}
+"Plug 'dstein64/vim-startuptime'
+"Plug 'lervag/wiki.vim' " {{{
+"" https://github.com/lervag/wiki.vim/blob/master/doc/wiki.txt
+"let g:wiki_root = expand('~/notes')
+"let g:wiki_filetypes = ['md']
+"let g:wiki_link_extension = '.md'
+"let g:wiki_link_target_type = 'md'
+"let g:wiki_list_todos = ['TODO', 'DONE']
+" }}}
+"Plug 'mattn/calendar-vim' " {{{
+"function! ToggleCalendar()
+"  if CalendarEnabled()
+"    execute ":CalendarVR"
+"    execute "q"
+"  else
+"    execute ":CalendarVR"
+"  endif
+"endfunction
+"map <silent> <C-b> :call ToggleCalendar() <bar> wincmd p<CR>
+""autocmd FileType vimwiki map c :call ToggleCalendar()<CR>
+""autocmd bufenter * if ((winnr("$") == 1 && (NerdTreeEnabled() || CalendarEnabled())) || (winnr("$") == 2 && (NerdTreeEnabled() && CalendarEnabled()))) | q | endif
+"
+""autocmd bufenter * if (
+""    \ (winnr("$") == 1 && (exists("b:Calendar")) || (exists("b:NERDTree") && b:NERDTree.isTabTree()))
+""    \ || (winnr("$") == 2 && (bufname("Calendar") && g:NERDTree.IsOpen()))
+""  \ ) | q | endif
+"
+""autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+" }}}
+"Plug 'ap/vim-buftabline' " {{{
+""set hidden
+""buffer binds
+" }}}
+"if has('python3') && executable('rg') | Plug 'alok/notational-fzf-vim' " {{{
+"  let g:nv_search_paths = [ expand('~/notes/') ]
+"
+"  " String. Set to '' (the empty string) if you don't want an extension appended by default.
+"  " Don't forget the dot, unless you don't want one.
+"  let g:nv_default_extension = ''
+"  
+"  " String. Default is first directory found in `g:nv_search_paths`. Error thrown
+"  "if no directory found and g:nv_main_directory is not specified
+"  "let g:nv_main_directory = g:nv_main_directory or (first directory in g:nv_search_paths)
+"  
+"  " Dictionary with string keys and values. Must be in the form 'ctrl-KEY':
+"  " 'command' or 'alt-KEY' : 'command'. See examples below.
+"  let g:nv_keymap = {
+"                      \ 'ctrl-s': 'split ',
+"                      \ 'ctrl-v': 'vertical split ',
+"                      \ 'ctrl-t': 'tabedit ' }
+"  
+"  " String. Must be in the form 'ctrl-KEY' or 'alt-KEY'
+"  let g:nv_create_note_key = 'ctrl-x'
+"  
+"  " String. Controls how new note window is created.
+"  let g:nv_create_note_window = 'vertical split'
+"  
+"  " Boolean. Show preview. Set by default. Pressing Alt-p in FZF will toggle this for the current search.
+"  let g:nv_show_preview = 1
+"  
+"  " Boolean. Respect .*ignore files in or above nv_search_paths. Set by default.
+"  let g:nv_use_ignore_files = 1
+"  
+"  " Boolean. Include hidden files and folders in search. Disabled by default.
+"  let g:nv_include_hidden = 0
+"  
+"  " Boolean. Wrap text in preview window.
+"  let g:nv_wrap_preview_text = 1
+"  
+"  " String. Width of window as a percentage of screen's width.
+"  let g:nv_window_width = '40%'
+"  
+"  " String. Determines where the window is. Valid options are: 'right', 'left', 'up', 'down'.
+"  let g:nv_window_direction = 'down'
+"  
+"  " String. Command to open the window (e.g. `vertical` `aboveleft` `30new` `call my_function()`).
+"  "let g:nv_window_command = 'call my_function()'
+"  
+"  " Float. Width of preview window as a percentage of screen's width. 50% by default.
+"  let g:nv_preview_width = 50
+"  
+"  " String. Determines where the preview window is. Valid options are: 'right', 'left', 'up', 'down'.
+"  let g:nv_preview_direction = 'right'
+"  
+"  " String. Yanks the selected filenames to the default register.
+"  let g:nv_yank_key = 'ctrl-y'
+"  
+"  " String. Separator used between yanked filenames.
+"  let g:nv_yank_separator = "\n"
+"  
+"  " Boolean. If set, will truncate each path element to a single character. If
+"  " you have colons in your pathname, this will fail. Set by default.
+"  let g:nv_use_short_pathnames = 1
+"  
+"  "List of Strings. Shell glob patterns. Ignore all filenames that match any of
+"  " the patterns.
+"  let g:nv_ignore_pattern = ['summarize-*', 'misc*']
+"  
+"  " List of Strings. Key mappings like above in case you want to define your own
+"  " handler function. Most users won't want to set this to anything.
+"  let g:nv_expect_keys = []                                              
+"endif " }}}
 "Plug 'justinmk/vim-dirvish' | Plug 'kristijanhusak/vim-dirvish-git' | Plug 'bounceme/remote-viewer'
 "if has('nvim') " Shougo/defx.nvim {{{
 "  Plug 'Shougo/defx.nvim', { 'do': ':UpdateRemotePlugins' }
@@ -589,140 +732,6 @@ autocmd FileType netrw set nolist
 "Plug 'robcsi/viewmaps.vim'
 " }}}
 
-"Plug 'mhinz/vim-startify' " {{{
-"let g:startify_session_dir = '~/.config/nvim/session'
-"let g:startify_lists = [
-"          \ { 'type': 'files',     'header': ['   Files']            },
-"          \ { 'type': 'dir',       'header': ['   Current Directory '. getcwd()] },
-"          \ { 'type': 'bookmarks', 'header': ['   Bookmarks']      },
-"          \ { 'type': 'sessions',  'header': ['   Sessions']       },
-"          \ ]
-"let g:startify_bookmarks = [
-"            \ { 'c': '~/.config/nvim/init.vim' },
-"            \ { 'z': '~/.config/zsh/.zshrc' },
-"            \ { 'n': '~/notes/' },
-"            \ expand('~')
-"            \ ]
-"let g:startify_change_to_dir = 0
-"let g:startify_change_to_vcs_root = 1
-"let g:startify_session_autoload = 1
-"let g:startify_session_delete_buffers = 1
-"let g:startify_fortune_use_unicode = 1
-"let g:startify_session_persistence = 1
-"let g:startify_enable_special = 0
-"autocmd User Startified setlocal cursorline
-""let g:startify_custom_header = 'startify#center(startify#fortune#cowsay())'
-"let g:startify_custom_header = []
-""let g:startify_custom_header = [
-"        "\ '   _  __     _         __  ___         __     ___ ',
-"        "\ '  / |/ /  __(_)_ _    /  |/  /__ _____/ /    |_  |',
-"        "\ ' /    / |/ / /  ` \  / /|_/ / _ `/ __/ _ \  / __/ ',
-"        "\ '/_/|_/|___/_/_/_/_/ /_/  /_/\_,_/\__/_//_/ /____/ ',
-"        "\]
-" }}}
-"Plug 'dstein64/vim-startuptime'
-Plug 'lervag/wiki.vim' " {{{
-" https://github.com/lervag/wiki.vim/blob/master/doc/wiki.txt
-let g:wiki_root = expand('~/notes')
-let g:wiki_filetypes = ['md']
-let g:wiki_link_extension = '.md'
-let g:wiki_link_target_type = 'md'
-let g:wiki_list_todos = ['TODO', 'DONE']
-" }}}
-"Plug 'mattn/calendar-vim' " {{{
-"function! ToggleCalendar()
-"  if CalendarEnabled()
-"    execute ":CalendarVR"
-"    execute "q"
-"  else
-"    execute ":CalendarVR"
-"  endif
-"endfunction
-"map <silent> <C-b> :call ToggleCalendar() <bar> wincmd p<CR>
-""autocmd FileType vimwiki map c :call ToggleCalendar()<CR>
-""autocmd bufenter * if ((winnr("$") == 1 && (NerdTreeEnabled() || CalendarEnabled())) || (winnr("$") == 2 && (NerdTreeEnabled() && CalendarEnabled()))) | q | endif
-"
-""autocmd bufenter * if (
-""    \ (winnr("$") == 1 && (exists("b:Calendar")) || (exists("b:NERDTree") && b:NERDTree.isTabTree()))
-""    \ || (winnr("$") == 2 && (bufname("Calendar") && g:NERDTree.IsOpen()))
-""  \ ) | q | endif
-"
-""autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-" }}}
-"Plug 'ap/vim-buftabline' " {{{
-""set hidden
-""buffer binds
-" }}}
-"if has('python3') && executable('rg') | Plug 'alok/notational-fzf-vim' " {{{
-"  let g:nv_search_paths = [ expand('~/notes/') ]
-"
-"  " String. Set to '' (the empty string) if you don't want an extension appended by default.
-"  " Don't forget the dot, unless you don't want one.
-"  let g:nv_default_extension = ''
-"  
-"  " String. Default is first directory found in `g:nv_search_paths`. Error thrown
-"  "if no directory found and g:nv_main_directory is not specified
-"  "let g:nv_main_directory = g:nv_main_directory or (first directory in g:nv_search_paths)
-"  
-"  " Dictionary with string keys and values. Must be in the form 'ctrl-KEY':
-"  " 'command' or 'alt-KEY' : 'command'. See examples below.
-"  let g:nv_keymap = {
-"                      \ 'ctrl-s': 'split ',
-"                      \ 'ctrl-v': 'vertical split ',
-"                      \ 'ctrl-t': 'tabedit ' }
-"  
-"  " String. Must be in the form 'ctrl-KEY' or 'alt-KEY'
-"  let g:nv_create_note_key = 'ctrl-x'
-"  
-"  " String. Controls how new note window is created.
-"  let g:nv_create_note_window = 'vertical split'
-"  
-"  " Boolean. Show preview. Set by default. Pressing Alt-p in FZF will toggle this for the current search.
-"  let g:nv_show_preview = 1
-"  
-"  " Boolean. Respect .*ignore files in or above nv_search_paths. Set by default.
-"  let g:nv_use_ignore_files = 1
-"  
-"  " Boolean. Include hidden files and folders in search. Disabled by default.
-"  let g:nv_include_hidden = 0
-"  
-"  " Boolean. Wrap text in preview window.
-"  let g:nv_wrap_preview_text = 1
-"  
-"  " String. Width of window as a percentage of screen's width.
-"  let g:nv_window_width = '40%'
-"  
-"  " String. Determines where the window is. Valid options are: 'right', 'left', 'up', 'down'.
-"  let g:nv_window_direction = 'down'
-"  
-"  " String. Command to open the window (e.g. `vertical` `aboveleft` `30new` `call my_function()`).
-"  "let g:nv_window_command = 'call my_function()'
-"  
-"  " Float. Width of preview window as a percentage of screen's width. 50% by default.
-"  let g:nv_preview_width = 50
-"  
-"  " String. Determines where the preview window is. Valid options are: 'right', 'left', 'up', 'down'.
-"  let g:nv_preview_direction = 'right'
-"  
-"  " String. Yanks the selected filenames to the default register.
-"  let g:nv_yank_key = 'ctrl-y'
-"  
-"  " String. Separator used between yanked filenames.
-"  let g:nv_yank_separator = "\n"
-"  
-"  " Boolean. If set, will truncate each path element to a single character. If
-"  " you have colons in your pathname, this will fail. Set by default.
-"  let g:nv_use_short_pathnames = 1
-"  
-"  "List of Strings. Shell glob patterns. Ignore all filenames that match any of
-"  " the patterns.
-"  let g:nv_ignore_pattern = ['summarize-*', 'misc*']
-"  
-"  " List of Strings. Key mappings like above in case you want to define your own
-"  " handler function. Most users won't want to set this to anything.
-"  let g:nv_expect_keys = []                                              
-"endif " }}}
-
 Plug 'godlygeek/tabular' | Plug 'plasticboy/vim-markdown' " {{{
 " https://github.com/plasticboy/vim-markdown
 let g:vim_markdown_folding_disabled = 0
@@ -902,11 +911,6 @@ function! s:show_documentation()
 endfunction
 endif
 " }}}
-Plug 'skywind3000/vim-auto-popmenu', { 'for': 'markdown' } | Plug 'skywind3000/vim-dict'", { 'for': 'markdown' } {{{
-let g:apc_enable_ft = {'text':1, 'markdown':1}
-set cpt=.,k,w,b
-set completeopt=menu,menuone,noselect
-" }}}
 " }}}
 " Syntax highlighting {{{
 " Disabled Syntax highlighting {{{
@@ -924,6 +928,7 @@ Plug 'ekalinin/Dockerfile.vim', { 'for': 'Dockerfile' }
 Plug 'kovetskiy/sxhkd-vim', { 'for': 'sxhkdrc' }
 " }}}
 " Colorschemes {{{
+let g:colorscheme = 'one'
 " Disabled Colorschemes {{{
 "Plug 'AlessandroYorba/Sierra' " {{{
 "let g:sierra_Sunset = 1
@@ -948,7 +953,11 @@ Plug 'kovetskiy/sxhkd-vim', { 'for': 'sxhkdrc' }
 "Plug 'flrnd/plastic.vim'
 " }}}
 
-Plug 'arcticicestudio/nord-vim'
+"Plug 'arcticicestudio/nord-vim'
+Plug 'tekannor/ayu-vim' " {{{ 'ayu-theme/ayu-vim'
+" light, mirage, dark
+let ayucolor="dark"
+" }}}
 Plug 'rakr/vim-one' " {{{
 let g:one_allow_italics = 1
 " }}}
@@ -1212,31 +1221,6 @@ augroup END
 " }}}======================
 " Functions / Utilities {{{
 " =========================
-" Automatically close tab/vim if the only open buffers are NERDTree and/or Calendar {{{
-"function! TabQuit()
-"  " https://vim.fandom.com/wiki/Tabclose_instead_of_quit-all
-"  try
-"    if tabpagenr('$') > 1
-"      silent exec 'tabclose'
-"    else
-"      silent exec 'qa'
-"    endif
-"  catch
-"    echohl ErrorMsg | echo v:exception | echohl NONE
-"  endtry
-"endfunction
-"function! NerdTreeEnabled()
-"  return exists('t:NERDTreeBufName') && bufwinnr(t:NERDTreeBufName) != -1
-"endfunction
-"function! CalendarEnabled()
-"  return bufwinnr("Calendar") != -1
-"endfunction
-"function! ShouldClose()
-"  return (winnr("$") == 1 && (NerdTreeEnabled() || CalendarEnabled())) || (winnr("$") == 2 && (NerdTreeEnabled() && CalendarEnabled()))
-"endfunction
-"autocmd BufEnter * if ShouldClose() | call TabQuit() | endif
-" }}}
-
 " Return to last edit position when opening files {{{
 autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 " }}}
