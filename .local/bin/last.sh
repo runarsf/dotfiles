@@ -8,7 +8,14 @@ C_PURPLE='\033[1;35m'
 C_CYAN='\033[1;36m'
 RESET='\033[0m'
 
-LASTFM_API_KEY=""
+if test -z "${LASTFM_API_KEY}"; then
+  if test -f ~/.config/.lastfmtoken; then
+    LASTFM_API_KEY="$(cat ~/.config/.lastfmtoken)"
+  else
+    printf "~/.config/.lastfmtoken or LASTFM_API_KEY required.\n"
+    exit 1
+  fi
+fi
 
 require () {
   if ! command -v "${1}" >/dev/null 2>&1; then
@@ -28,13 +35,6 @@ usage () {
 		███████╗██║  ██║███████║   ██║${C_CYAN}██╗${C_GREEN}███████║██║   ██║
 		╚══════╝╚═╝  ╚═╝╚══════╝   ╚═╝${C_CYAN}╚═╝${C_GREEN}╚══════╝╚═╝   ╚═╝
 		${RESET}"
-		Usage: last.sh [args]"
-		 -r\t\tRun"
-		 -h\t\tHelp"
-		 -c\t\tCredentials setup."
-		 -d\t\tDelete credentials."
-		 -p\t\tPolybar mode, returns output once."
-		 -u\t\tDefine a custom user that is not saved as credentials."
 	${RESET}"
 	EOMAN
 }
@@ -51,7 +51,7 @@ animate () {
 fetch () {
   url="http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=${LASTFM_USER}&api_key=${LASTFM_API_KEY}&format=json"
   response="$(curl -s ${url})"
-  echo hi
+  echo $response | jq
   exit
 
   if printf '%s\n' "${response}" | jq ".[] | .track | .[0] | .name" | tr -d '"'  > /dev/null; then
@@ -87,10 +87,6 @@ fetch () {
     echo "track lookup failed"
   fi
 }
-
-#parse () {
-#
-#}
 
 #test "${#}" -lt "1" && "${0}" --help
 positional=()
@@ -131,7 +127,7 @@ while test "${#}" -gt "0"; do
   esac
 done
 
-set -- "${positional[@]}" # restore positional parameters
+set -- "${positional[@]}"
 
 if test "${#}" -gt "0"; then
   echo "Unrecognized option: ${1}"
@@ -139,5 +135,4 @@ if test "${#}" -gt "0"; then
   exit 1
 fi
 
-#test -n "${installPackages}" && installPackages
 fetch
