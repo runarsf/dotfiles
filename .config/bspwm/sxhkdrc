@@ -24,6 +24,15 @@ super + {0-9}
 #  && bspc node --swap {prev,next,prev,next}.local --follow \
 #  || bspc node --swap {west,south,north,east}.local --follow
 
+#bsp-layout set tall --master-size 0.6
+#bsp-layout set even --master-size 0.5
+#bsp-layout once tile && bsp-layout remove
+#test "$(bsp-layout get)"
+#bsp-layout cycle --layouts tall,tile
+
+super + shift + space
+	did="$(bspc query -D -n focused --names)"; layout="$(bsp-layout get ${did})"; test "${layout}" = "-" -o "${layout}" = "tile" && bsp-layout set tall "${did}" --master-size 0.6 || {bsp-layout remove "${did}"; bsp-layout once tile}
+
 super + {Left,Right}
 	bspc node --focus {west,east}
 super + {Down,Up}
