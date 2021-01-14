@@ -732,6 +732,13 @@ autocmd FileType netrw set nolist
 "Plug 'robcsi/viewmaps.vim'
 " }}}
 
+Plug 'reedes/vim-textobj-quote' | Plug 'kana/vim-textobj-user' " {{{
+augroup textobj_quote | autocmd!
+  autocmd FileType markdown call textobj#quote#init()
+  autocmd FileType textile call textobj#quote#init()
+  autocmd FileType text call textobj#quote#init({'educate': 0})
+augroup END
+" }}}
 Plug 'godlygeek/tabular' | Plug 'plasticboy/vim-markdown' " {{{
 " https://github.com/plasticboy/vim-markdown
 let g:vim_markdown_folding_disabled = 0

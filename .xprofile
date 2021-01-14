@@ -22,3 +22,5 @@ xrdb ${XDG_CONFIG_HOME:-$HOME/.config}/Xresources &
 #dunst &
 #feh --bg-scale "${HOME}/.config/wall.png" &
 #"${HOME}"/.local/bin/polybar-start
+
+test -f "${HOME}/.config/dotfiles/.xbootstrap" && "${HOME}/.config/dotfiles/.xbootstrap"
