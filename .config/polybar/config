@@ -5,6 +5,7 @@ pseudo-transparency = true
 [colors]
 background = #bb000000
 foreground = #D8DEE9
+foreground-alt = #9da2ab
 dim = #666
 
 [bar/main]
@@ -46,18 +47,21 @@ exec = last.sh
 interval = 300
 format-prefix = " "
 format = <label>
+format-foreground = ${colors.foreground-alt}
 
 [module/memory]
 type = internal/memory
 interval = 5
 format = <label>
 label = " %gb_used%"
+format-foreground = ${colors.foreground-alt}
 
 [module/cpu]
 type = internal/cpu 
 interval = 5
 format = <label>
-label = "﬙%percentage:2%%"
+label = "﬙ %percentage%%"
+format-foreground = ${colors.foreground-alt}
 
 [module/wlan]
 type = internal/network
@@ -68,7 +72,9 @@ accumulate-stats = true
 unknown-as-up = true
 
 format-connected = <ramp-signal><label-connected>
+format-connected-foreground = ${colors.foreground-alt}
 format-disconnected = <label-disconnected>
+format-disconnected-foreground = ${colors.foreground-alt}
 
 label-connected = "%{A1:nm-connection-editor &:} %essid%%{A}"
 label-disconnected = "%{A1:nm-connection-editor &:} %{A}"
@@ -90,6 +96,7 @@ format-foreground = ${colors.dim}
 type = internal/xbacklight
 format = <label>
 label = "盛 %percentage%%"
+format-foreground = ${colors.foreground-alt}
 
 [module/date]
 type = internal/date
@@ -112,6 +119,7 @@ ramp-volume-0 = " "
 ramp-volume-1 = " "
 ramp-volume-2 = " "
 ramp-volume-3 = " "
+format-foreground = ${colors.foreground-alt}
 
 [module/battery]
 type = internal/battery
@@ -120,8 +128,11 @@ adapter = ADP1
 full-at = 95
 
 format-charging = <label-charging>
+format-charging-foreground = ${colors.foreground-alt}
 format-full = <label-full>
+format-full-foreground = ${colors.foreground-alt}
 format-discharging = <label-discharging>
+format-discharging-foreground = ${colors.foreground-alt}
 
 label-charging = " %percentage%%"
 label-discharging =" %percentage%%"
