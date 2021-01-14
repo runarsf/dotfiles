@@ -103,7 +103,9 @@ super + shift + m
 	bspc node --state \~monocle
 
 super + t
-	bspc node --state {tiled,pseudo_tiled,floating,fullscreen}
+	toggleprogram "stalonetray"
+#super + t
+#	bspc node --state {tiled,pseudo_tiled,floating,fullscreen}
 
 super + n
 	bspwm_scratchpad "scratchpad" "alacritty --class scratchpad --title scratchpad --command tmux"

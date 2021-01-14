@@ -10,8 +10,8 @@
 
 # General config {{{
 #bspc config split_ratio 0.52
-#bspc config borderless_monocle true
-#bspc config gapless_monocle true
+bspc config borderless_monocle true
+bspc config gapless_monocle false
 bspc config automatic_scheme alternate
 bspc config initial_polarity second_child
 bspc config pointer_modifier mod4
@@ -41,10 +41,6 @@ bspc config border_width 3 # also set by 2bspwm
 bspc config window_gap 10
 
 xsetroot -cursor_name left_ptr
-
-which external_rules >/dev/null 2>&1 \
-  && bspc config external_rules_command "$(which external_rules)" \
-  || bspc config external_rules_command "${HOME}/.config/bspwm/extrules"
 # }}}
 
 # Scratchpad {{{
@@ -72,6 +68,19 @@ bspc rule -a keepass2 floating=on
 bspc rule -a sun-awt-X11-XFramePeer floating=on
 bspc rule -a org-geogebra-desktop-GeoGebra3D floating=on
 bspc rule -a '*:scratchpad' sticky=on state=floating center=true rectangle=1600x1000+0+0
+
+title="$(xtitle ${1})"
+if [[ "${title}" =~ " - YouTube - " ]]; then
+  bspc config -n "${1}" bottom_padding -12
+  echo "border=off"
+fi
+
+#on=14 off=0
+#bspc query -N -n .floating.window | xargs -I {node} bspc config -n {node} border_width "$on"
+#bspc query -N -n .!floating.window | xargs -I {node} bspc config -n {node} border_width "$off"
+#while read -r _ _ _ node state status; do
+#    [[ "$state" == "floating" ]] && bspc config -n "$node" border_width "${!status}"
+#done < <(bspc subscribe node_state)
 # }}}
 
 exec_once () { # {{{

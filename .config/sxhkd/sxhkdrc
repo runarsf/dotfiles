@@ -29,9 +29,6 @@ super + Escape
 alt + p
 	sharenix-section -n -c
 
-super + alt + c
-	roficmds
-
 super + shift + c
 	toggleprogram "picom" "-b"
 
