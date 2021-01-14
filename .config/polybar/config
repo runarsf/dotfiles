@@ -5,7 +5,7 @@ pseudo-transparency = true
 [colors]
 background = #bb000000
 foreground = #D8DEE9
-foreground-alt = #444
+dim = #666
 
 [bar/main]
 monitor = ${env:MONITOR:eDP1}
@@ -84,20 +84,20 @@ type = internal/xwindow
 format = <label>
 label = "%title%"
 label-maxlen = 75
-format-foreground = ${colors.foreground-alt}
+format-foreground = ${colors.dim}
 
 [module/backlight]
 type = internal/xbacklight
 format = <label>
-label = "盛%percentage%%"
+label = "盛 %percentage%%"
 
 [module/date]
 type = internal/date
 interval = 1
 date =
-date-alt = "%a %d %b "
+date-alt = " %a %d %b "
 time = "%H:%M"
-time-alt = "%H:%M:%S"
+time-alt = " %H:%M:%S"
 label = "%date%%time%"
 
 [module/audio]

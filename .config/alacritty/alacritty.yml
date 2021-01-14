@@ -246,13 +246,95 @@ colors: # {{{
   #
   # }}}
 
+  # Xterm {{{
+  #primary:
+  #  background: '0x000000'
+  #  foreground: '0xffffff'
+
+  #normal:
+  #  black:   '0x000000'
+  #  red:     '0xcd0000'
+  #  green:   '0x00cd00'
+  #  yellow:  '0xcdcd00'
+  #  blue:    '0x0000ee'
+  #  magenta: '0xcd00cd'
+  #  cyan:    '0x00cdcd'
+  #  white:   '0xe5e5e5'
+
+  #bright:
+  #  black:   '0x7f7f7f'
+  #  red:     '0xff0000'
+  #  green:   '0x00ff00'
+  #  yellow:  '0xffff00'
+  #  blue:    '0x5c5cff'
+  #  magenta: '0xff00ff'
+  #  cyan:    '0x00ffff'
+  #  white:   '0xffffff'
+  # }}}
+
+  # Dase16 Default Dark {{{
+  #primary:
+  #  background: '0x181818'
+  #  foreground: '0xd8d8d8'
+
+  ## Colors the cursor will use if `custom_cursor_colors` is true
+  #cursor:
+  #  text: '0xd8d8d8'
+  #  cursor: '0xd8d8d8'
+
+  #normal:
+  #  black:   '0x181818'
+  #  red:     '0xab4642'
+  #  green:   '0xa1b56c'
+  #  yellow:  '0xf7ca88'
+  #  blue:    '0x7cafc2'
+  #  magenta: '0xba8baf'
+  #  cyan:    '0x86c1b9'
+  #  white:   '0xd8d8d8'
+
+  #bright:
+  #  black:   '0x585858'
+  #  red:     '0xab4642'
+  #  green:   '0xa1b56c'
+  #  yellow:  '0xf7ca88'
+  #  blue:    '0x7cafc2'
+  #  magenta: '0xba8baf'
+  #  cyan:    '0x86c1b9'
+  #  white:   '0xf8f8f8'
+  # }}}
+
+  # Ayu Dark {{{
+  #primary:
+  #  background: '0x0A0E14'
+  #  foreground: '0xB3B1AD'
+
+  #normal:
+  #  black:   '0x01060E'
+  #  red:     '0xEA6C73'
+  #  green:   '0x91B362'
+  #  yellow:  '0xF9AF4F'
+  #  blue:    '0x53BDFA'
+  #  magenta: '0xFAE994'
+  #  cyan:    '0x90E1C6'
+  #  white:   '0xC7C7C7'
+
+  #bright:
+  #  black:   '0x686868'
+  #  red:     '0xF07178'
+  #  green:   '0xC2D94C'
+  #  yellow:  '0xFFB454'
+  #  blue:    '0x59C2FF'
+  #  magenta: '0xFFEE99'
+  #  cyan:    '0x95E6CB'
+  #  white:   '0xFFFFFF'
+  # }}}
+
   # One Dark {{{
   primary:
     background: '0x30333d'
     #background: '0x1e2127'
     foreground: '0xabb2bf'
 
-  # Normal colors
   normal:
     black:   '0x1e2127'
     red:     '0xe06c75'
@@ -263,7 +345,6 @@ colors: # {{{
     cyan:    '0x56b6c2'
     white:   '0xabb2bf'
 
-  # Bright colors
   bright:
     black:   '0x5c6370'
     red:     '0xe06c75'
@@ -280,7 +361,6 @@ colors: # {{{
   #  background: '0x2E3440'
   #  foreground: '0xD8DEE9'
 
-  ## Normal colors
   #normal:
   #  black:   '0x3B4252'
   #  red:     '0xBF616A'
@@ -291,7 +371,6 @@ colors: # {{{
   #  cyan:    '0x88C0D0'
   #  white:   '0xE5E9F0'
 
-  ## Bright colors
   #bright:
   #  black:   '0x4C566A'
   #  red:     '0xBF616A'
@@ -308,7 +387,6 @@ colors: # {{{
   #  background: '0x282c34'
   #  foreground: '0xbbc2cf'
 
-  ## Normal colors
   #normal:
   #  black:   '0x282c34'
   #  red:     '0xff6c6b'
@@ -325,7 +403,6 @@ colors: # {{{
   #  background: '0x282a36'
   #  foreground: '0xf8f8f2'
  
-  ## Normal colors
   #normal:
   #  black:   '0x000000'
   #  red:     '0xff5555'
@@ -336,7 +413,6 @@ colors: # {{{
   #  cyan:    '0x8be9fd'
   #  white:   '0xbbbbbb'
  
-  ## Bright colors
   #bright:
   #  black:   '0x555555'
   #  red:     '0xff5555'
@@ -355,7 +431,6 @@ colors: # {{{
   #  # soft contrast: background = '0x32302f'
   #  foreground: '0xebdbb2'
 
-  ## Normal colors
   #normal:
   #  black:   '0x282828'
   #  red:     '0xcc241d'
@@ -366,7 +441,6 @@ colors: # {{{
   #  cyan:    '0x689d6a'
   #  white:   '0xa89984'
 
-  ## Bright colors
   #bright:
   #  black:   '0x928374'
   #  red:     '0xfb4934'
@@ -385,7 +459,6 @@ colors: # {{{
   #  # soft contrast: background = '0xf2e5bc'
   #  foreground: '0x3c3836'
 
-  ## Normal colors
   #normal:
   #  black:   '0xfbf1c7'
   #  red:     '0xcc241d'
@@ -396,7 +469,6 @@ colors: # {{{
   #  cyan:    '0x689d6a'
   #  white:   '0x7c6f64'
 
-  ## Bright colors
   #bright:
   #  black:   '0x928374'
   #  red:     '0x9d0006'
@@ -413,7 +485,6 @@ colors: # {{{
   #  background: '0x002b36'
   #  foreground: '0x839496'
 
-  ## Normal colors
   #normal:
   #  black:   '0x073642'
   #  red:     '0xdc322f'
@@ -424,7 +495,6 @@ colors: # {{{
   #  cyan:    '0x2aa198'
   #  white:   '0xeee8d5'
 
-  ## Bright colors
   #bright:
   #  black:   '0x002b36'
   #  red:     '0xcb4b16'
@@ -441,7 +511,6 @@ colors: # {{{
   #  background: '0xfdf6e3'
   #  foreground: '0x586e75'
 
-  ## Normal colors
   #normal:
   #  black:   '0x073642'
   #  red:     '0xdc322f'
@@ -452,7 +521,6 @@ colors: # {{{
   #  cyan:    '0x2aa198'
   #  white:   '0xeee8d5'
 
-  ## Bright colors
   #bright:
   #  black:   '0x002b36'
   #  red:     '0xcb4b16'
