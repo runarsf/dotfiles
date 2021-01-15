@@ -17,8 +17,8 @@ if [ -d /etc/X11/xinit/xinitrc.d ]; then
   unset f
 fi
 
-if [systemd-detect-virt = "oracle"];
-	/usr/bin/VBoxClient-all
+if [systemd-detect-virt = "oracle"]; then
+  /usr/bin/VBoxClient-all
 fi
 
 # e.g. `WM=bspwm startx`
