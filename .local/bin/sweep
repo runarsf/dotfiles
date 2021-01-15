@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+for file in *; do
+  while true; do
+    read -p "Delete ${file} [y/N]? " yn
+    case $yn in
+      [Yy]*) rm -rf "${f}"; printf "Deleted ${file}\n"; break;;
+      [Nn]*|*) break;;
+    esac
+  done
+done
