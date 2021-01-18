@@ -1,5 +1,7 @@
 #!/usr/bin/env sh
 
+# This should only be in master; until merge.
+
 setxkbmap -option caps:escape -v no
 pulseaudio --start &
 #pulseaudio --log-level=4 --log-target=stderr &
