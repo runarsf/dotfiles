@@ -101,7 +101,8 @@ font: # {{{
     #   - (Linux) monospace
     #   - (Windows) Consolas
     #family: Ubuntu Mono
-    family: Source Code Pro
+    #family: Source Code Pro
+    family: Scientifica
     #family: Cozette
     #family: Iosevka Term
     #family: Input
@@ -133,7 +134,7 @@ font: # {{{
     #style: Italic
 
   # Point size
-  size: 8.5
+  size: 10
 
   # Offset is the extra space around each character. `offset.y` can be thought of
   # as modifying the line spacing, and `offset.x` as modifying the letter spacing.

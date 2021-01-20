@@ -93,14 +93,11 @@ exec_once () { # {{{
     fi
   fi
 }
-exec_once "xfce4-power-manager"
 
 #feh --bg-tile "${HOME}/.config/wall.png" &
 "${HOME}/.config/polybar/launch.sh" main &
 "${HOME}/.config/bspwm/cleanfullscreen" &
 "${HOME}/.config/bspwm/monitors.py" &
-nitrogen --restore &
-dunst &
 #pkill -USR1 picom
 killall -q sxhkd; sxhkd -m 1 -c "${HOME}/.config/sxhkd/sxhkdrc" "${HOME}/.config/bspwm/sxhkdrc" &
 #killall -q 2bspwm; 2bspwm &
