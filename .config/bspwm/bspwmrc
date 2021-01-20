@@ -37,10 +37,10 @@ bspc config top_padding 0
 bspc config bottom_padding 0
 bspc config left_padding 0
 bspc config right_padding 0
-bspc config border_width 3 # also set by 2bspwm
+bspc config border_width 1 # also set by 2bspwm
 bspc config window_gap 10
 
-xsetroot -cursor_name left_ptr
+#xsetroot -cursor_name left_ptr
 # }}}
 
 # Scratchpad {{{
@@ -68,12 +68,6 @@ bspc rule -a keepass2 floating=on
 bspc rule -a sun-awt-X11-XFramePeer floating=on
 bspc rule -a org-geogebra-desktop-GeoGebra3D floating=on
 bspc rule -a '*:scratchpad' sticky=on state=floating center=true rectangle=1600x1000+0+0
-
-title="$(xtitle ${1})"
-if [[ "${title}" =~ " - YouTube - " ]]; then
-  bspc config -n "${1}" bottom_padding -12
-  echo "border=off"
-fi
 
 #on=14 off=0
 #bspc query -N -n .floating.window | xargs -I {node} bspc config -n {node} border_width "$on"
