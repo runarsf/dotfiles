@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+SHARENIX_TEMPLATE_FILE="${1:-~/.config/dotfiles/bootstrap/sharenix/.sharenix.json.xbb-template}"
+read -p 'Enter sharenix token: ' SHARENIX_TOKEN
+SHARENIX_TOKEN="${SHARENIX_TOKEN}" envsubst '${SHARENIX_TOKEN}' < "${SHARENIX_TEMPLATE_FILE}" > ~/.sharenix.json
+
