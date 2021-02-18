@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 # cats {{{
 read -r -d '' CAT <<'EOF'
 ⣿⣿⣿⠟⠛⠛⠻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡟⢋⣩⣉⢻⣿⣿
