@@ -65,7 +65,7 @@ autocmd FileType netrw set nolist
 " General {{{
 "Plug 'Kody-Quintana/bspwm_border_color'
 Plug 'lifepillar/vim-cheat40', { 'on': 'Cheat40' }
-Plug 'tmhedberg/SimpylFold', { 'for': 'python' } " {{{
+"Plug 'tmhedberg/SimpylFold', { 'for': 'python' } " {{{
 "let g:SimpylFold_docstring_preview = 1
 "let g:SimpylFold_fold_docstring = 1
 "let g:SimpylFold_fold_import = 1
@@ -424,7 +424,8 @@ source $VIMRUNTIME/menu.vim
 " LaTeX {{{
 " https://github.com/LukeSmithxyz/voidrice/commit/a89697cd752329aa5fe36c82655862cb09a984ac#diff-53d6aeb99314b91adfd5bfd4b227589b
 " https://github.com/LukeSmithxyz/voidrice/blob/aa7a4af4612462f30668a7d161b2b75c9582bfcf/.config/nvim/init.vim
-"inoremap <expr> <leader><leader> exists('b:texmap') ? '<Esc>/<++><Enter>"_c4l<Esc>\:unlet b\:texmap' : '<leader><leader>'
+" inoremap <expr> <leader><leader> exists('b:texmap') ? '<Esc>/<++><Enter>"_c4l<Esc>\:unlet b\:texmap' : '<leader><leader>'
+inoremap <leader><leader> <Esc>/<++><Enter>"_c4l
 
 " Always open in tex filetype instead of plaintex
 "let g:tex_flavor = "latex"

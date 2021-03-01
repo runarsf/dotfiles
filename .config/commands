@@ -1,2 +1,3 @@
 remousable --event-file /dev/input/event1 --ssh-ip="<ip>:22" --ssh-password="<password>"
+# restart docker-compose container
 docker-compose down && docker-compose up -d --force-recreate <> && docker-compose logs -f <>
