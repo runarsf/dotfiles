@@ -54,21 +54,12 @@ if has("autocmd")
 endif
 
 silent! if plug#begin('~/.vim/plugged')
-" Built-in {{{
+" General {{{
 " netrw {{{
 let loaded_netrwPlugin = 0  " disable netrw
 let g:netrw_banner = 0
 let g:netrw_list_hide = '\(^\|\s\s\)\zs\.\S\+,\(^\|\s\s\)ntuser\.\S\+'
 autocmd FileType netrw set nolist
-" }}}
-" }}}
-" General {{{
-"Plug 'Kody-Quintana/bspwm_border_color'
-Plug 'lifepillar/vim-cheat40', { 'on': 'Cheat40' }
-"Plug 'tmhedberg/SimpylFold', { 'for': 'python' } " {{{
-"let g:SimpylFold_docstring_preview = 1
-"let g:SimpylFold_fold_docstring = 1
-"let g:SimpylFold_fold_import = 1
 " }}}
 Plug 'reedes/vim-textobj-quote' | Plug 'kana/vim-textobj-user' " {{{
 augroup textobj_quote | autocmd!
@@ -265,17 +256,6 @@ Plug 'kovetskiy/sxhkd-vim', { 'for': 'sxhkdrc' }
 " }}}
 " Colorschemes {{{
 let g:colorscheme = 'one'
-"Plug 'AlessandroYorba/Sierra' " {{{
-"let g:sierra_Sunset = 1
-"let g:sierra_Twilight = 1
-"let g:sierra_Midnight = 1
-"let g:sierra_Pitch = 1
-" }}}
-Plug 'NieTiger/halcyon-neovim'
-Plug 'tekannor/ayu-vim' " {{{ 'ayu-theme/ayu-vim'
-" light, mirage, dark
-let ayucolor="dark"
-" }}}
 Plug 'rakr/vim-one' " {{{
 let g:one_allow_italics = 1
 " }}}
@@ -284,7 +264,7 @@ call plug#end()
 endif
 
 " }}}======================
-" A E S T H E T I C S {{{
+" Colours {{{
 " =========================
 " For Neovim > 0.1.5 and Vim > patch 7.4.1799 - https://github.com/vim/vim/commit/61be73bb0f965a895bfb064ea3e55476ac175162
 " Based on Vim patch 7.4.1770 (`guicolors` option) - https://github.com/vim/vim/commit/8a633e3427b47286869aa4b96f2bfc1fe65b25cd
@@ -329,13 +309,17 @@ set splitbelow splitright
 set mouse=c
 set noerrorbells novisualbell
 set t_vb=
+
+" Time for key combinations to time out, like <leader>w in Normal mode.
 set ttimeout
 set ttimeoutlen=100
-set timeoutlen=500
+set timeoutlen=400
+
 augroup timeout | autocmd!
   autocmd InsertEnter * set timeoutlen=750
   autocmd InsertLeave * set timeoutlen=400
 augroup END
+
 set synmaxcol=250
 set scrolljump=0
 set nocursorline nocursorcolumn
@@ -347,7 +331,10 @@ set wildmenu
 set wildmode=longest:full,full
 set path+=**
 set wildignore+=**/node_modules/**
-set hidden " Allow switching buffers without writing
+
+" Allow switching buffers without writing
+set hidden
+
 set backspace=indent,eol,start
 set whichwrap+=<,>,h,l
 set ignorecase smartcase
@@ -494,9 +481,6 @@ nnoremap <silent> <leader>ll :set cursorcolumn!<CR>
 inoremap jk <esc>
 " esc in command mode
 cnoremap jk <C-C>
-
-" qq to record, Q to replay
-nnoremap Q @q
 
 " Toggle paste
 "nnoremap <leader>p :set invpaste<CR>
