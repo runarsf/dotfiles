@@ -668,4 +668,16 @@ function! s:OpenAnimatedHtop() abort " {{{
 endfunction
 command! Htop call s:OpenAnimatedHtop()
 " }}}
+
+function! s:Draw() abort " {{{
+  new term://tdrawvim
+  wincmd J | resize 1
+  setlocal norelativenumber
+  setlocal nonumber
+  setlocal mouse=a
+  startinsert
+  call animate#window_percent_height(0.66)
+endfunction
+command! Draw call s:Draw()
+" }}}
 " }}}======================

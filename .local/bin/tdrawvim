@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+# https://unix.stackexchange.com/questions/8101/how-to-insert-the-result-of-a-command-into-the-text-in-vim
+require () {
+  if ! command -v "${1}" >/dev/null 2>&1; then
+    printf "${1} not found"
+    if test -n "${2}"; then
+      printf "  ${2}"
+    fi
+    exit 1
+  fi
+}
+require "tdraw" "go get -u github.com/aca/tdraw"
+require "xclip"
+
+# Create a new temporary file
+tmpfile="$(mktemp /tmp/tdraw.XXXXXX)"
+# Could also use 3<> to open for reading and writing on the same descriptor
+exec 3> "${tmpfile}" # Open for reading
+exec 4< "${tmpfile}" # Open for writing
+
+rm "${tmpfile}"
+
+# Write the output of `tdraw` to the file descriptor 3
+>&3 tdraw
+# Read the contents of file descriptor 4 and copy it to the clipboard
+cat <&4 | xclip -selection c
