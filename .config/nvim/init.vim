@@ -296,6 +296,10 @@ execute "colorscheme " . g:colorscheme
 " }}}======================
 " General {{{
 " =========================
+
+" Performance, force vim to fall back to the old regex engine
+set re=1
+
 set clipboard+=unnamedplus
 set history=500
 set autoread

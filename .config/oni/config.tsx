@@ -23,7 +23,7 @@ export const deactivate = (oni: Oni.Plugin.Api) => {
 
 export const configuration = {
     //"ui.colorscheme": "n/a",
-    "ui.colorscheme": "nord",
+    "ui.colorscheme": "one",
     "autoClosingPairs.enabled": false, // handled by CoC
     "editor.textMateHighlighting.enabled": true, // Use vim syntax highlighting
     "achievements.enabled": false,
@@ -33,7 +33,7 @@ export const configuration = {
     "learning.enabled": false,
 
     "editor.fontSize": "14px",
-    "editor.fontFamily": "Mono,Ubuntu Mono",
+    "editor.fontFamily": "Source Code Pro",
     "editor.fontLigatures": false,
     "editor.linePadding": 1,
 

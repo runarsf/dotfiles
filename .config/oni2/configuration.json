@@ -1,5 +1,6 @@
 {
   "tabnine.experimentalAutoImports": true,
+  "todo-tree.ripgrep": "/usr/bin/rg",
   "workbench.colorTheme": "One Dark Pro Vivid",
   "editor.detectIndentation": true,
   "editor.fontFamily": "JetBrainsMono-Regular.ttf",
