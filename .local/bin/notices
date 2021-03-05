@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+printf "Incomplete"
+exit 0
+cat index.md | grep -E '^.*\[.*\].*$' | fzf
