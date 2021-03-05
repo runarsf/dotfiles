@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-# https://unix.stackexchange.com/questions/8101/how-to-insert-the-result-of-a-command-into-the-text-in-vim
 require () {
   if ! command -v "${1}" >/dev/null 2>&1; then
     printf "${1} not found"
