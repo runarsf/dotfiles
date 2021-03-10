@@ -22,4 +22,4 @@ rm "${tmpfile}"
 # Write the output of `tdraw` to the file descriptor 3
 >&3 tdraw
 # Read the contents of file descriptor 4 and copy it to the clipboard
-cat <&4 | xclip -selection c
+cat <&4 | xclip -selection clipboard

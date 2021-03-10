@@ -670,8 +670,14 @@ command! Htop call s:OpenAnimatedHtop()
 " }}}
 
 function! s:Draw() abort " {{{
-  new term://tdrawvim
-  wincmd J | resize 1
+  " https://vim.fandom.com/wiki/Display_output_of_shell_commands_in_new_window
+  " https://vim.fandom.com/wiki/Append_output_of_an_external_command
+  " https://github.com/runarsf/dotfiles/blob/3ab666e7ee92f1ddf3c00091304f43e604db2c00/.config/nvim/init.vim
+
+  "new term://tdrawvim
+  "execute "!tdraw"
+  split | wincmd J | resize 1
+  let @d = system("tdraw")
   setlocal norelativenumber
   setlocal nonumber
   setlocal mouse=a
