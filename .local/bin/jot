@@ -21,6 +21,8 @@ if command -v "insync" >/dev/null 2>&1; then
   fi
 fi
 
+# TODO: Colour/mark directories and only show files with the NOTE_EXTENSION
+
 make_selection () {
   DIR="${1}"
   ONLY_NOTES="${2:-}"
@@ -34,7 +36,7 @@ make_selection () {
     OPTIONS="${OPTIONS}..\nNew Note\nNew Category\nDelete Entry"
   fi
 
-  SELECTED_OPTION="$(printf "${OPTIONS}" | "${FZF_BIN}")"
+  SELECTED_OPTION="$(printf "${OPTIONS}" | "${FZF_BIN}" --info=hidden)"
 }
 
 # Note: $DIR is updated in make_selection()
