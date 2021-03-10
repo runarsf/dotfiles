@@ -53,6 +53,7 @@ if has("autocmd")
   filetype plugin indent on
 endif
 
+" call plug#begin(system('echo -n "${XDG_CONFIG_HOME:-$HOME/.config}/nvim/plugged"'))
 silent! if plug#begin('~/.vim/plugged')
 " General {{{
 " netrw {{{
@@ -60,6 +61,19 @@ let loaded_netrwPlugin = 0  " disable netrw
 let g:netrw_banner = 0
 let g:netrw_list_hide = '\(^\|\s\s\)\zs\.\S\+,\(^\|\s\s\)ntuser\.\S\+'
 autocmd FileType netrw set nolist
+" }}}
+Plug 'lervag/vimtex' " {{{
+let g:tex_flavor='latex'
+let g:vimtex_view_method='zathura'
+let g:vimtex_quickfix_mode=0
+set conceallevel=1
+let g:tex_conceal='abdmg'
+" }}}
+Plug 'sirver/ultisnips' " {{{
+let g:UltiSnipsExpandTrigger = '<tab>'
+let g:UltiSnipsJumpForwardTrigger = '<tab>'
+let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
+let g:UltiSnipsEditSplit="vertical"
 " }}}
 Plug 'reedes/vim-textobj-quote' | Plug 'kana/vim-textobj-user' " {{{
 augroup textobj_quote | autocmd!
@@ -515,14 +529,29 @@ inoreabbrev <expr> #!! "#!/usr/bin/env" . (empty(&filetype) ? '' : ' '.&filetype
 
 " Spell-check, english and norwegian
 map <leader>sp :setlocal spell! spelllang=en_us,nb<CR>:setlocal spell?<CR>
+inoremap <C-l> <c-g>u<Esc>[s1z=`]a<c-g>u
 
-augroup twig_ft | au!
-  autocmd BufRead,BufNewFile *.conf,*.toml,config setf dosini
-  autocmd BufRead,BufNewFile *.md set filetype=markdown
-  autocmd BufRead,BufNewFile *.txt set syntax=markdown | imap ... … | set wrap
-  autocmd FileType vimwiki set wrap
+augroup filetype_tweaks | autocmd!
+  " Assign filetypes
+  autocmd BufRead,BufNewFile *.conf,*.toml,config set filetype=dosini
+  autocmd BufRead,BufNewFile *.md,*.rmd,*.txt set filetype=markdown
   autocmd BufRead,BufNewFile *.rss set filetype=xml
-  autocmd FileType python set foldmethod=indent foldnestmax=1 nomodeline
+
+  " Modify filetypes
+  autocmd FileType markdown set
+    \ wrap
+    \ autoindent
+    \ colorcolumn=0
+    \ linebreak
+    \ nonumber
+    \ shiftwidth=4
+    \ spell
+    \ tabstop=4
+    \ | imap ... …
+  autocmd FileType python set
+    \ foldmethod=indent
+    \ foldnestmax=1
+    \ nomodeline
   autocmd FileType json syntax match Comment +\/\/.\+$+
 augroup END
 " }}}======================
