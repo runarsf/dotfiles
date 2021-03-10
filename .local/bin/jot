@@ -1,0 +1,67 @@
+#!/usr/bin/env bash
+set -o errexit
+
+set -o allexport
+test -f "${HOME:-~}/.config/.jotrc" && source "${HOME:-}/.config/.jotrc"
+set +o allexport
+
+# Change these in ~/.config/.jotrc
+NOTE_EXTENSION="${NOTE_EXTENSION:-.md}"
+DIR="${DIR:-${HOME:-~}/Documents/drive/notes}"
+FZF_BIN="${FZF_BIN:-$(which fzf)}"
+
+if command -v "insync" >/dev/null 2>&1; then
+  if test -z "$(pidof insync)"; then
+    printf "Insync not running, starting...\n"
+    insync start
+    if test "${?}" -ne "0"; then
+      printf "Failed to start insync"
+      exit 1
+    fi
+  fi
+fi
+
+make_selection () {
+  DIR="${1}"
+  ONLY_NOTES="${2:-}"
+
+  OPTIONS="$(\ls ${DIR})"
+  # Add a newline if there are any notes, to avoid empty lines in fzf
+  if test -n "${OPTIONS}"; then
+    OPTIONS="${OPTIONS}\n"
+  fi
+  if test -z "${ONLY_NOTES}"; then
+    OPTIONS="${OPTIONS}..\nNew Note\nNew Category\nDelete Entry"
+  fi
+
+  SELECTED_OPTION="$(printf "${OPTIONS}" | "${FZF_BIN}")"
+}
+
+# Note: $DIR is updated in make_selection()
+while true; do
+  make_selection "${DIR}"
+  if test "${SELECTED_OPTION}" = "New Note"; then
+    NOTE_NAME="$(set +e; printf '' | ${FZF_BIN} --print-query --info=hidden --prompt 'New note name: '; set -e)"
+    touch "${DIR}/${NOTE_NAME}${NOTE_EXTENSION}"
+  elif test "${SELECTED_OPTION}" = "New Category"; then
+    CATEGORY_NAME="$(set +e; printf '' | ${FZF_BIN} --print-query --info=hidden --prompt 'New category name: '; set -e)"
+    mkdir -p "${DIR}/${CATEGORY_NAME}"
+  elif test "${SELECTED_OPTION}" = ".."; then
+    DIR="$(dirname ${DIR})"
+  elif test -d "${DIR}/${SELECTED_OPTION}"; then
+    DIR="${DIR}/${SELECTED_OPTION}"
+  elif test -f "${DIR}/${SELECTED_OPTION}"; then
+    "${EDITOR}" "${DIR}/${SELECTED_OPTION}"
+  elif test "${SELECTED_OPTION}" = "Delete Entry"; then
+    make_selection "${DIR}" "yes"
+    if test -d "${DIR}/${SELECTED_OPTION}" -o -f "${DIR}/${SELECTED_OPTION}"; then
+      DELETE_ACCEPT="$(printf "Yes\nNo" | ${FZF_BIN} --info=hidden --prompt="Are you sure you want to delete ${DIR}/${SELECTED_OPTION}? ")"
+      if test "${DELETE_ACCEPT}" = "Yes"; then
+        rm -rf "${DIR}/${SELECTED_OPTION}"
+      fi
+    fi
+  else
+    printf "Something went wrong...\n"
+    break
+  fi
+done
