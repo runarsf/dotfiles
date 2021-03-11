@@ -62,6 +62,20 @@ let g:netrw_banner = 0
 let g:netrw_list_hide = '\(^\|\s\s\)\zs\.\S\+,\(^\|\s\s\)ntuser\.\S\+'
 autocmd FileType netrw set nolist
 " }}}
+"Plug 'neomake/neomake'
+"Plug 'dense-analysis/ale' " {{{
+"let g:ale_fix_on_save = 0
+"let g:ale_fixers = {
+"\   '*': ['remove_trailing_lines', 'trim_whitespace'],
+"\   'javascript': ['eslint'],
+"\}
+"" }}}
+"Plug 'vim-syntastic/syntastic' " {{{
+"let g:syntastic_always_populate_loc_list = 1
+"let g:syntastic_auto_loc_list = 1
+"let g:syntastic_check_on_open = 1
+"let g:syntastic_check_on_wq = 0
+"" }}}
 Plug 'lervag/vimtex' " {{{
 let g:tex_flavor='latex'
 let g:vimtex_view_method='zathura'
@@ -367,7 +381,6 @@ set updatetime=300
 set shortmess+=cI
 set signcolumn=no
 set list listchars=trail:·,nbsp:⎵,tab:┊» " ¦┆┊ eol:⏎ (		)
-set laststatus=2 cmdheight=1
 set foldmethod=marker foldmarker={{{,}}}
 
 " Tabs and lines {{{
@@ -495,15 +508,10 @@ nmap <leader>.. :messages<CR>
 nnoremap <silent> <leader>l :set cursorline!<CR>
 nnoremap <silent> <leader>ll :set cursorcolumn!<CR>
 
-" esc in insert mode, consider using kj instead, as it's no-op (up-down)
-inoremap jk <esc>
-" esc in command mode
-cnoremap jk <C-C>
-
 " Toggle paste
 "nnoremap <leader>p :set invpaste<CR>
 " Breaks if '<leader>pp' is in the pasted string
-set pastetoggle=<leader>pp
+set pastetoggle=<leader>p
 
 nmap <silent> <leader>wr :set wrap!<CR>
 
@@ -528,6 +536,7 @@ imap #dn >/dev/null<space>2>&1
 inoreabbrev <expr> #!! "#!/usr/bin/env" . (empty(&filetype) ? '' : ' '.&filetype)
 
 " Spell-check, english and norwegian
+set nospell
 map <leader>sp :setlocal spell! spelllang=en_us,nb<CR>:setlocal spell?<CR>
 inoremap <C-l> <c-g>u<Esc>[s1z=`]a<c-g>u
 
@@ -583,47 +592,21 @@ endif
 " }}}
 
 " Statusline {{{
-function! ModePaste()
-  return &paste ? '[p] ' : ''
-endfunction
-function! ModeMouse()
-  return &mouse == 'a' ? '[m] ' : ''
-endfunction
-function! ReadOnly()
-  return &readonly ? '[ro] ' : ''
-endfunction
-function! ModeSpell()
-  return &spell ? '[sp] ' : ''
-endfunction
-function! ModeWrap()
-  return &wrap == 'wrap' ? '[wr] ' : ''
-endfunction
+set laststatus=2
+set cmdheight=1
 
 set statusline=
-
-set statusline+=%F                            " current file path
-set statusline+=\                             " blank space
-set statusline+=%y                            " filetype
-set statusline+=\                             " blank space
-set statusline+=%m                            " modified flag [+]
-set statusline+=\                             " blank space
-
-set statusline+=%=                            " right-align from now on
-
-set statusline+=%{ReadOnly()}                 " mouse flag
-set statusline+=%{ModeMouse()}                " mouse flag
-set statusline+=%{ModePaste()}                " paste flag
-set statusline+=%{ModeWrap()}
-set statusline+=%{ModeSpell()}
-set statusline+=\[%{mode()}\]                 " current mode
-set statusline+=\                             " blank space
-set statusline+=%v                            " column number
-set statusline+=\:                            " colon separator
-set statusline+=%l                            " row number
-set statusline+=\/                            " slash separator
-set statusline+=%L                            " number of rows
-set statusline+=\                             " blank space
-set statusline+=%{winnr()}                    " buffer number
+set statusline+=%F\ %y\ %m\  " path filetype modified
+set statusline+=%=  " right-align from now on
+set statusline+=%#warningmsg#%*
+set statusline+=\[%{&fileformat}:%{&fileencoding?&fileencoding:&encoding}\]\ 
+set statusline+=%{&readonly?'[ro]\ ':''}
+set statusline+=%{&mouse=='a'?'[m]\ ':''}
+set statusline+=%{&paste?'[p]\ ':''}
+set statusline+=%{&wrap=='wrap'?'[wr]\ ':''}
+set statusline+=%{&spell?'[sp]\ ':''}
+"set statusline+=\[%{mode()}\]\ 
+set statusline+=%v\:%l\/%L\ %{winnr()}  " column:row/rows window
 " }}}
 
 " Autoreload .vimrc {{{
@@ -685,17 +668,6 @@ function! FoldText() " {{{
   return foldtextstart . repeat(foldchar, winwidth(0)-foldtextlength) . foldtextend
 endfunction
 set foldtext=FoldText()
-" }}}
-
-function! s:OpenAnimatedHtop() abort " {{{
-  " Open lf in a terminal
-  new term://htop
-  " Send window to bottom and start with small height
-  wincmd J | resize 1
-  " Animate height to 66%
-  call animate#window_percent_height(0.66)
-endfunction
-command! Htop call s:OpenAnimatedHtop()
 " }}}
 
 function! s:Draw() abort " {{{

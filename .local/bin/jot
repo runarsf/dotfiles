@@ -1,4 +1,18 @@
 #!/usr/bin/env bash
+replaceShell () {
+  source "${0}"
+}
+
+# Check if script is sourced
+if [[ $_ != $0 ]]; then
+  if test -n "${CHANGEDIR}"; then
+    cd "${CHANGEDIR}"
+    export CHANGEDIR=""
+  fi
+  # Replace current shell (this script, since it's sourced) with a new one with the updated path
+  exec "${SHELL:-bash}"
+fi
+
 set -o errexit
 
 set -o allexport
@@ -9,31 +23,43 @@ set +o allexport
 NOTE_EXTENSION="${NOTE_EXTENSION:-.md}"
 DIR="${DIR:-${HOME:-~}/Documents/drive/notes}"
 FZF_BIN="${FZF_BIN:-$(which fzf)}"
+SYNC_SERVICE="${SYNC_SERVICE:-}"
 
-if command -v "insync" >/dev/null 2>&1; then
-  if test -z "$(pidof insync)"; then
-    printf "Insync not running, starting...\n"
-    insync start
-    if test "${?}" -ne "0"; then
-      printf "Failed to start insync"
-      exit 1
+DIR="$(realpath ${DIR})"
+#cd "${DIR}"
+export CHANGEDIR="${DIR}"
+# No reason to trap before doing anything with the shell
+trap replaceShell EXIT
+
+if test "${SYNC_SERVICE}" = "insync"; then
+  if command -v "insync" >/dev/null 2>&1; then
+    if test -z "$(pidof insync)"; then
+      printf "Insync not running, starting...\n"
+      insync start
+      if test "${?}" -ne "0"; then
+        printf "Failed to start insync"
+        exit 1
+      fi
     fi
   fi
 fi
 
 # TODO: Colour/mark directories and only show files with the NOTE_EXTENSION
+# Allow making files with different extension
 
 make_selection () {
   DIR="${1}"
   ONLY_NOTES="${2:-}"
 
-  OPTIONS="$(\ls ${DIR} | grep '^d')"
+  OPTIONS="$(\ls -p ${DIR})"
   # Add a newline if there are any notes, to avoid empty lines in fzf
   if test -n "${OPTIONS}"; then
+    #while IFS= read -r option; do
+    #done <<< "${OPTIONS}"
     OPTIONS="${OPTIONS}\n"
   fi
   if test -z "${ONLY_NOTES}"; then
-    OPTIONS="${OPTIONS}..\nNew Note\nNew Category\nDelete Entry"
+    OPTIONS="${OPTIONS}..\nNew Note\nNew Folder\nDelete Entry"
   fi
 
   SELECTED_OPTION="$(printf "${OPTIONS}" | "${FZF_BIN}" --info=hidden)"
@@ -44,14 +70,37 @@ while true; do
   make_selection "${DIR}"
   if test "${SELECTED_OPTION}" = "New Note"; then
     NOTE_NAME="$(set +e; printf '' | ${FZF_BIN} --print-query --info=hidden --prompt 'New note name: '; set -e)"
-    touch "${DIR}/${NOTE_NAME}${NOTE_EXTENSION}"
-  elif test "${SELECTED_OPTION}" = "New Category"; then
-    CATEGORY_NAME="$(set +e; printf '' | ${FZF_BIN} --print-query --info=hidden --prompt 'New category name: '; set -e)"
-    mkdir -p "${DIR}/${CATEGORY_NAME}"
+    if test -z "${NOTE_NAME// }"; then
+      printf "Please provide a note name...\n"
+      continue
+    fi
+    if [[ ${NOTE_NAME} == *. ]]; then
+      NOTE="${DIR}/${NOTE_NAME%?}"
+    elif [[ ${NOTE_NAME} == *.* ]]; then
+      NOTE="${DIR}/${NOTE_NAME}"
+    else
+      NOTE="${DIR}/${NOTE_NAME}${NOTE_EXTENSION}"
+    fi
+    if test -f "${NOTE}"; then
+      printf "Note with the name already exists...\n"
+      continue
+    fi
+    touch "${NOTE}"
+  elif test "${SELECTED_OPTION}" = "New Folder"; then
+    FOLDER_NAME="$(set +e; printf '' | ${FZF_BIN} --print-query --info=hidden --prompt 'New folder name: '; set -e)"
+    if test -z "${FOLDER_NAME// }"; then
+      printf "Please provide a folder name...\n"
+      continue
+    fi
+    mkdir -p "${DIR}/${FOLDER_NAME}"
   elif test "${SELECTED_OPTION}" = ".."; then
     DIR="$(dirname ${DIR})"
+    #cd "${DIR}"
+    export CHANGEDIR="${DIR}"
   elif test -d "${DIR}/${SELECTED_OPTION}"; then
     DIR="${DIR}/${SELECTED_OPTION}"
+    #cd "${DIR}"
+    export CHANGEDIR="${DIR}"
   elif test -f "${DIR}/${SELECTED_OPTION}"; then
     "${EDITOR}" "${DIR}/${SELECTED_OPTION}"
   elif test "${SELECTED_OPTION}" = "Delete Entry"; then
@@ -64,6 +113,8 @@ while true; do
     fi
   else
     printf "Something went wrong...\n"
+    printf "Selected option: ${SELECTED_OPTION}\n"
+    printf "Directory: ${DIR}\n"
     break
   fi
 done
