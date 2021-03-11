@@ -601,16 +601,18 @@ endif
 set laststatus=2
 set cmdheight=1
 
+"highlight SpellHighlight guibg=SeaGreen guifg=003366
+
 set statusline=
 set statusline+=%F\ %y\ %m\  " path filetype modified
 
 set statusline+=%=  " right-align from now on
-set statusline+=%#warningmsg#%*
 set statusline+=\[%{&fileformat}:%{&fileencoding?&fileencoding:&encoding}\]\ 
 "set statusline+=%{&readonly?'[ro]\ ':''}
 set statusline+=%{&mouse=='a'?'[m]\ ':''}
 set statusline+=%{&paste?'[p]\ ':''}
 set statusline+=%{&wrap=='wrap'?'[wr]\ ':''}
+"set statusline+=%#SpellHighlight#%{&spell?'[sp]':''}%*\ 
 set statusline+=%{&spell?'[sp]\ ':''}
 "set statusline+=\[%{mode()}\]\ 
 set statusline+=%v\:%l\/%L\ %{winnr()}  " column:row/rows window
