@@ -357,6 +357,8 @@ set scrolljump=0
 set nocursorline nocursorcolumn
 set number relativenumber
 set showcmd
+set showfulltag
+set showmatch
 set scrolloff=7
 set langmenu=en
 set wildmenu
