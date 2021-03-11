@@ -27,7 +27,7 @@ make_selection () {
   DIR="${1}"
   ONLY_NOTES="${2:-}"
 
-  OPTIONS="$(\ls ${DIR})"
+  OPTIONS="$(\ls ${DIR} | grep '^d')"
   # Add a newline if there are any notes, to avoid empty lines in fzf
   if test -n "${OPTIONS}"; then
     OPTIONS="${OPTIONS}\n"
