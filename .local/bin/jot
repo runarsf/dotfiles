@@ -29,7 +29,7 @@ DIR="${DIR:-${HOME:-~}/Documents/drive/notes}"
 FZF_BIN="${FZF_BIN:-$(which fzf)}"
 SYNC_SERVICE="${SYNC_SERVICE:-}"
 
-DIR="$(realpath ${DIR})"
+DIR="$(realpath "${DIR}")"
 #[cd]
 #cd "${DIR}"
 #export CHANGEDIR="${DIR}"
@@ -49,15 +49,13 @@ if test "${SYNC_SERVICE}" = "insync"; then
   fi
 fi
 
-# FIXME: Folders/files? with spaces in the name break
-# TODO: Colour/mark directories and only show files with the NOTE_EXTENSION
-# Allow making files with different extension
+# TODO: Only show files matching pattern (.*\.${NOTE_EXTENSION})
 
 make_selection () {
   DIR="${1}"
   ONLY_NOTES="${2:-}"
 
-  OPTIONS="$(\ls -p ${DIR})"
+  OPTIONS="$(\ls -p "${DIR}")"
   # Add a newline if there are any notes, to avoid empty lines in fzf
   if test -n "${OPTIONS}"; then
     #while IFS= read -r option; do
@@ -75,14 +73,14 @@ make_selection () {
 while true; do
   make_selection "${DIR}"
   if test "${SELECTED_OPTION}" = "New Note"; then
-    NOTE_NAME="$(set +e; printf '' | ${FZF_BIN} --print-query --info=hidden --prompt 'New note name: '; set -e)"
+    NOTE_NAME="$(set +e; printf '' | "${FZF_BIN}" --print-query --info=hidden --prompt 'New note name: '; set -e)"
     if test -z "${NOTE_NAME// }"; then
       printf "Please provide a note name...\n"
       continue
     fi
-    if [[ ${NOTE_NAME} == *. ]]; then
+    if [[ "${NOTE_NAME}" == *. ]]; then
       NOTE="${DIR}/${NOTE_NAME%?}"
-    elif [[ ${NOTE_NAME} == *.* ]]; then
+    elif [[ "${NOTE_NAME}" == *.* ]]; then
       NOTE="${DIR}/${NOTE_NAME}"
     else
       NOTE="${DIR}/${NOTE_NAME}${NOTE_EXTENSION}"
@@ -94,7 +92,7 @@ while true; do
     touch "${NOTE}"
     "${EDITOR}" "${NOTE}"
   elif test "${SELECTED_OPTION}" = "New Folder"; then
-    FOLDER_NAME="$(set +e; printf '' | ${FZF_BIN} --print-query --info=hidden --prompt 'New folder name: '; set -e)"
+    FOLDER_NAME="$(set +e; printf '' | "${FZF_BIN}" --print-query --info=hidden --prompt 'New folder name: '; set -e)"
     if test -z "${FOLDER_NAME// }"; then
       printf "Please provide a folder name...\n"
       continue
@@ -102,17 +100,17 @@ while true; do
     mkdir -p "${DIR}/${FOLDER_NAME}"
     DIR="${DIR}/${FOLDER_NAME}"
   elif test "${SELECTED_OPTION}" = ".."; then
-    DIR="$(dirname ${DIR})"
+    DIR="$(dirname "${DIR}")"
     #[cd]#cd "${DIR}"
   elif test -d "${DIR}/${SELECTED_OPTION}"; then
     DIR="${DIR}/${SELECTED_OPTION}"
     #[cd]#cd "${DIR}"
   elif test -f "${DIR}/${SELECTED_OPTION}"; then
-    "${EDITOR}" "${DIR}/${SELECTED_OPTION}"
+    "${EDITOR:-vim}" "${DIR}/${SELECTED_OPTION}"
   elif test "${SELECTED_OPTION}" = "Delete Item"; then
     make_selection "${DIR}" "yes"
     if test -d "${DIR}/${SELECTED_OPTION}" -o -f "${DIR}/${SELECTED_OPTION}"; then
-      DELETE_ACCEPT="$(printf "Yes\nNo" | ${FZF_BIN} --info=hidden --prompt="Delete ${SELECTED_OPTION}? (${DIR}/${SELECTED_OPTION})")"
+      DELETE_ACCEPT="$(printf "Yes\nNo" | "${FZF_BIN}" --info=hidden --prompt="Delete ${SELECTED_OPTION}? (${DIR}/${SELECTED_OPTION})")"
       if test "${DELETE_ACCEPT}" = "Yes"; then
         rm -rf "${DIR}/${SELECTED_OPTION}"
       fi
