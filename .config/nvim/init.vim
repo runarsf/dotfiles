@@ -292,7 +292,7 @@ call plug#end()
 endif
 
 " }}}======================
-" Colours {{{
+" Aesthetics {{{
 " =========================
 " For Neovim > 0.1.5 and Vim > patch 7.4.1799 - https://github.com/vim/vim/commit/61be73bb0f965a895bfb064ea3e55476ac175162
 " Based on Vim patch 7.4.1770 (`guicolors` option) - https://github.com/vim/vim/commit/8a633e3427b47286869aa4b96f2bfc1fe65b25cd
@@ -344,13 +344,13 @@ set t_vb=
 
 " Time for key combinations to time out, like <leader>w in Normal mode.
 set ttimeout
-set ttimeoutlen=100
-set timeoutlen=400
+set ttimeoutlen=50 " affect Escape from insert mode delay
+set timeoutlen=600
 
-augroup timeout | autocmd!
-  autocmd InsertEnter * set timeoutlen=750
-  autocmd InsertLeave * set timeoutlen=400
-augroup END
+"augroup timeout | autocmd!
+"  autocmd InsertEnter * set timeoutlen=750
+"  autocmd InsertLeave * set timeoutlen=400
+"augroup END
 
 set synmaxcol=250
 set scrolljump=0
@@ -547,16 +547,20 @@ augroup filetype_tweaks | autocmd!
   autocmd BufRead,BufNewFile *.rss set filetype=xml
 
   " Modify filetypes
+  autocmd FileType help set
+    \ nospell
   autocmd FileType markdown set
     \ wrap
     \ autoindent
     \ colorcolumn=0
     \ linebreak
     \ nonumber
-    \ shiftwidth=4
+    \ shiftwidth=2
     \ spell
-    \ tabstop=4
+    \ tabstop=2
     \ | imap ... …
+    \ | imap -- –
+    \ | imap --- —
   autocmd FileType python set
     \ foldmethod=indent
     \ foldnestmax=1
@@ -597,10 +601,11 @@ set cmdheight=1
 
 set statusline=
 set statusline+=%F\ %y\ %m\  " path filetype modified
+
 set statusline+=%=  " right-align from now on
 set statusline+=%#warningmsg#%*
 set statusline+=\[%{&fileformat}:%{&fileencoding?&fileencoding:&encoding}\]\ 
-set statusline+=%{&readonly?'[ro]\ ':''}
+"set statusline+=%{&readonly?'[ro]\ ':''}
 set statusline+=%{&mouse=='a'?'[m]\ ':''}
 set statusline+=%{&paste?'[p]\ ':''}
 set statusline+=%{&wrap=='wrap'?'[wr]\ ':''}
