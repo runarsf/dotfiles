@@ -2,12 +2,19 @@
 #[cd] FIXME: Automatically cd
 # maybe export CHANGEDIR="${DIR}"
 # maybe PWD="${DIR}"
-replaceShell () {
+
+JOTRC="${HOME:-~}/.config/.jotrc"
+finish () {
 #  source "${0}"
-  if grep -q "^LASTDIR=.*$" "${HOME:-~}/.config/.jotrc"; then 
-        sed -i 's/string/newstring/' file
-      else
-            echo "newstring" >> file
+  if test ! -f "${JOTRC}"; then
+    touch "${JOTRC}"
+  fi
+  if test -n "${DIR}"; then
+    if grep -qE "^LAST=.*$" "${JOTRC}"; then 
+      sed -i "s|^LAST=.*$|LAST=${DIR}|" "${JOTRC}"
+    else
+      echo "LAST=${DIR}" >> "${JOTRC}"
+    fi
   fi
 }
 
@@ -25,7 +32,7 @@ replaceShell () {
 set -o errexit
 
 set -o allexport
-test -f "${HOME:-~}/.config/.jotrc" && source "${HOME:-}/.config/.jotrc"
+test -f "${JOTRC}" && source "${JOTRC}"
 set +o allexport
 
 # Change these in ~/.config/.jotrc
@@ -33,13 +40,16 @@ NOTE_EXTENSION="${NOTE_EXTENSION:-.md}"
 DIR="${DIR:-${HOME:-~}/Documents/drive/notes}"
 FZF_BIN="${FZF_BIN:-$(which fzf)}"
 SYNC_SERVICE="${SYNC_SERVICE:-}"
+if test "${REMEMBER_DIR}" != "no" -a "${1}" != "."; then
+  DIR="${LAST:-${DIR}}"
+fi
 
 DIR="$(realpath "${DIR}")"
 #[cd]
 #cd "${DIR}"
 #export CHANGEDIR="${DIR}"
 # No reason to trap before doing anything with the shell
-#trap replaceShell EXIT
+trap finish EXIT
 
 if test "${SYNC_SERVICE}" = "insync"; then
   if command -v "insync" >/dev/null 2>&1; then
@@ -49,6 +59,7 @@ if test "${SYNC_SERVICE}" = "insync"; then
       if test "${?}" -ne "0"; then
         printf "Failed to start insync"
         exit 1
+
       fi
     fi
   fi
