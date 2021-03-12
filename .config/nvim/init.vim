@@ -347,10 +347,10 @@ set ttimeout
 set ttimeoutlen=50 " affect Escape from insert mode delay
 set timeoutlen=600
 
-"augroup timeout | autocmd!
-"  autocmd InsertEnter * set timeoutlen=750
-"  autocmd InsertLeave * set timeoutlen=400
-"augroup END
+augroup timeout | autocmd!
+  autocmd InsertEnter * set timeoutlen=300
+  autocmd InsertLeave * set timeoutlen=600
+augroup END
 
 set synmaxcol=250
 set scrolljump=0
@@ -541,6 +541,19 @@ inoreabbrev <expr> #!! "#!/usr/bin/env" . (empty(&filetype) ? '' : ' '.&filetype
 set nospell
 map <leader>sp :setlocal spell! spelllang=en_us,nb<CR>:setlocal spell?<CR>
 inoremap <C-l> <c-g>u<Esc>[s1z=`]a<c-g>u
+map <leader>f 1z=
+imap <leader>f <Esc>1z=i
+
+function! EnableFasterInsertTimeout()
+  " Enables faster timeoutlen in insert mode in the current buffer
+  " Pairs with the default timeout augroup
+  " https://vi.stackexchange.com/a/4123
+  augroup timeout | autocmd! * <buffer>
+    autocmd BufEnter    <buffer> set timeoutlen=500
+    autocmd InsertEnter <buffer> set timeoutlen=150
+    autocmd InsertLeave <buffer> set timeoutlen=500
+  augroup END
+endfunction
 
 augroup filetype_tweaks | autocmd!
   " Assign filetypes
@@ -560,9 +573,11 @@ augroup filetype_tweaks | autocmd!
     \ shiftwidth=2
     \ spell
     \ tabstop=2
+    \ linebreak
     \ | imap ... …
     \ | imap -- –
     \ | imap --- —
+    \ | call EnableFasterInsertTimeout()
   autocmd FileType python set
     \ foldmethod=indent
     \ foldnestmax=1

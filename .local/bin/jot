@@ -10,10 +10,17 @@ finish () {
     touch "${JOTRC}"
   fi
   if test -n "${DIR}"; then
-    if grep -qE "^LAST=.*$" "${JOTRC}"; then 
-      sed -i "s|^LAST=.*$|LAST=${DIR}|" "${JOTRC}"
+    if grep -qE "^LASTDIR=.*$" "${JOTRC}"; then 
+      sed -i "s|^LASTDIR=.*$|LASTDIR='${DIR}'|" "${JOTRC}"
     else
-      echo "LAST=${DIR}" >> "${JOTRC}"
+      echo "LASTDIR='${DIR}'" >> "${JOTRC}"
+    fi
+  fi
+  if test -n "${LASTFILE}"; then
+    if grep -qE "^LASTFILE=.*$" "${JOTRC}"; then 
+      sed -i "s|^LASTFILE=.*$|LASTFILE='${LASTFILE}'|" "${JOTRC}"
+    else
+      echo "LASTFILE='${LASTFILE}'" >> "${JOTRC}"
     fi
   fi
 }
@@ -40,8 +47,11 @@ NOTE_EXTENSION="${NOTE_EXTENSION:-.md}"
 DIR="${DIR:-${HOME:-~}/Documents/drive/notes}"
 FZF_BIN="${FZF_BIN:-$(which fzf)}"
 SYNC_SERVICE="${SYNC_SERVICE:-}"
-if test "${REMEMBER_DIR}" != "no" -a "${1}" != "."; then
-  DIR="${LAST:-${DIR}}"
+LASTFILE="${LASTFILE:-}"
+if test "${REMEMBER_LAST}" = "yes" -a "${1}" != "."; then
+  DIR="${LASTDIR:-${DIR}}"
+else
+  LASTFILE=""
 fi
 
 DIR="$(realpath "${DIR}")"
@@ -82,7 +92,8 @@ make_selection () {
     OPTIONS="${OPTIONS}..\nNew Note\nNew Folder\nDelete Item"
   fi
 
-  SELECTED_OPTION="$(printf "${OPTIONS}" | "${FZF_BIN}" --info=hidden)"
+  SELECTED_OPTION="$(printf "${OPTIONS}" | "${FZF_BIN}" --query="${LASTFILE}" --info=hidden)"
+  LASTFILE=""
 }
 
 # Note: $DIR is updated in make_selection()
@@ -95,18 +106,21 @@ while true; do
       continue
     fi
     if [[ "${NOTE_NAME}" == *. ]]; then
-      NOTE="${DIR}/${NOTE_NAME%?}"
+      NOTE="${NOTE_NAME%?}"
     elif [[ "${NOTE_NAME}" == *.* ]]; then
-      NOTE="${DIR}/${NOTE_NAME}"
+      NOTE="${NOTE_NAME}"
     else
-      NOTE="${DIR}/${NOTE_NAME}${NOTE_EXTENSION}"
+      NOTE="${NOTE_NAME}${NOTE_EXTENSION}"
     fi
-    if test -f "${NOTE}"; then
+    if test -f "${DIR}/${NOTE}"; then
       printf "Note with the name already exists...\n"
       continue
     fi
-    touch "${NOTE}"
-    "${EDITOR}" "${NOTE}"
+    touch "${DIR}/${NOTE}"
+    "${EDITOR}" "${DIR}/${NOTE}"
+    if test "${REMEMBER_LAST}" = "yes"; then
+      LASTFILE="${NOTE}"
+    fi
   elif test "${SELECTED_OPTION}" = "New Folder"; then
     FOLDER_NAME="$(set +e; printf '' | "${FZF_BIN}" --print-query --info=hidden --prompt 'New folder name: '; set -e)"
     if test -z "${FOLDER_NAME// }"; then
@@ -123,6 +137,9 @@ while true; do
     #[cd]#cd "${DIR}"
   elif test -f "${DIR}/${SELECTED_OPTION}"; then
     "${EDITOR:-vim}" "${DIR}/${SELECTED_OPTION}"
+    if test "${REMEMBER_LAST}" = "yes"; then
+      LASTFILE="${SELECTED_OPTION}"
+    fi
   elif test "${SELECTED_OPTION}" = "Delete Item"; then
     make_selection "${DIR}" "yes"
     if test -d "${DIR}/${SELECTED_OPTION}" -o -f "${DIR}/${SELECTED_OPTION}"; then
