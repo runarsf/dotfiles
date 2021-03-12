@@ -16,6 +16,8 @@ finish () {
       else
         echo "LASTDIR='${DIR}'" >> "${JOTRC}"
       fi
+    else
+      sed -i '/^LASTDIR=.*$/d' "${JOTRC}"
     fi
     if test -n "${LASTFILE}"; then
       if grep -qE "^LASTFILE=.*$" "${JOTRC}"; then 
@@ -23,6 +25,8 @@ finish () {
       else
         echo "LASTFILE='${LASTFILE}'" >> "${JOTRC}"
       fi
+    else
+      sed -i '/^LASTFILE=.*$/d' "${JOTRC}"
     fi
   else
     sed -i '/^LASTFILE=.*$/d' "${JOTRC}"
@@ -134,11 +138,20 @@ while true; do
     fi
     mkdir -p "${DIR}/${FOLDER_NAME}"
     DIR="${DIR}/${FOLDER_NAME}"
+    if test "${REMEMBER_LAST}" = "yes"; then
+      LASTFILE=""
+    fi
   elif test "${SELECTED_OPTION}" = ".."; then
     DIR="$(dirname "${DIR}")"
+    if test "${REMEMBER_LAST}" = "yes"; then
+      LASTFILE=""
+    fi
     #[cd]#cd "${DIR}"
   elif test -d "${DIR}/${SELECTED_OPTION}"; then
     DIR="${DIR}/${SELECTED_OPTION}"
+    if test "${REMEMBER_LAST}" = "yes"; then
+      LASTFILE=""
+    fi
     #[cd]#cd "${DIR}"
   elif test -f "${DIR}/${SELECTED_OPTION}"; then
     "${EDITOR:-vim}" "${DIR}/${SELECTED_OPTION}"
@@ -152,6 +165,9 @@ while true; do
       if test "${DELETE_ACCEPT}" = "Yes"; then
         rm -rf "${DIR}/${SELECTED_OPTION}"
       fi
+    fi
+    if test "${REMEMBER_LAST}" = "yes"; then
+      LASTFILE=""
     fi
   else
     printf "Something went wrong...\n"
