@@ -2,9 +2,14 @@
 #[cd] FIXME: Automatically cd
 # maybe export CHANGEDIR="${DIR}"
 # maybe PWD="${DIR}"
-#replaceShell () {
+replaceShell () {
 #  source "${0}"
-#}
+  if grep -q "^LASTDIR=.*$" "${HOME:-~}/.config/.jotrc"; then 
+        sed -i 's/string/newstring/' file
+      else
+            echo "newstring" >> file
+  fi
+}
 
 #[cd]
 # Check if script is sourced
