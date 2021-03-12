@@ -63,6 +63,7 @@ let g:netrw_list_hide = '\(^\|\s\s\)\zs\.\S\+,\(^\|\s\s\)ntuser\.\S\+'
 autocmd FileType netrw set nolist
 " }}}
 "Plug 'neomake/neomake'
+Plug 'iamcco/markdown-preview.vim'
 "Plug 'dense-analysis/ale' " {{{
 "let g:ale_fix_on_save = 0
 "let g:ale_fixers = {
@@ -550,10 +551,13 @@ function! EnableFasterInsertTimeout()
   " https://vi.stackexchange.com/a/4123
   augroup timeout | autocmd! * <buffer>
     autocmd BufEnter    <buffer> set timeoutlen=500
-    autocmd InsertEnter <buffer> set timeoutlen=150
+    autocmd InsertEnter <buffer> set timeoutlen=250
     autocmd InsertLeave <buffer> set timeoutlen=500
   augroup END
 endfunction
+
+" markdown preview alternative, zathura
+nnoremap <leader>mc :execute '!${XDG_CONFIG_HOME:-${HOME}/.config}/nvim/mdconvert.sh %:p' <bar> :redraw! <Enter>
 
 augroup filetype_tweaks | autocmd!
   " Assign filetypes
