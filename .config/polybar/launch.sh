@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# CONFIG=${1}; shift
+# Test if config exists in ~/.config/polybar/${CONFIG}, if not then test if the absolute path exists
+
 killall -q polybar
 while pgrep -x polybar >/dev/null; do sleep 1; done
 
