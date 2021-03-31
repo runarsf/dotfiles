@@ -200,6 +200,7 @@ let g:coc_global_extensions = [
   \ 'coc-css',
   \ 'coc-yaml',
   \ 'coc-highlight',
+  \ 'coc-tabnine',
   \ ]
   " \ 'coc-vetur',
   " \ 'coc-snippets',
@@ -218,7 +219,7 @@ function! NiceCock()
   endfor
 endfunction
 command! Cock exec "CocInstall -sync " . join(get(g:, 'coc_global_extensions', []))
-command! Caulk call NiceCock() 
+command! Caulk call NiceCock()
 " Use `[g` and `]g` to navigate diagnostics
 nmap <silent> <space>G <Plug>(coc-diagnostic-prev)
 nmap <silent> <space>g <Plug>(coc-diagnostic-next)

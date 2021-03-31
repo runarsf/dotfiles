@@ -16,30 +16,30 @@ sysresources=/etc/X11/xinit/.Xresources
 sysmodmap=/etc/X11/xinit/.Xmodmap
 
 # merge in defaults and keymaps
-if [ -f $sysresources ]; then
-    xrdb -merge $sysresources
+if test -f "${sysresources}"; then
+    xrdb -merge "${sysresources}"
 fi
 
-if [ -f $sysmodmap ]; then
-    xmodmap $sysmodmap
+if test -f "${sysmodmap}"; then
+    xmodmap "${sysmodmap}"
 fi
 
-if [ -f "$userresources" ]; then
-    xrdb -merge "$userresources"
+if test -f "${userresources}"; then
+    xrdb -merge "${userresources}"
 fi
 
-if [ -f "$usermodmap" ]; then
-    xmodmap "$usermodmap"
+if test -f "${usermodmap}"; then
+    xmodmap "${usermodmap}"
 fi
 
-if [ -d /etc/X11/xinit/xinitrc.d ]; then
+if test -d /etc/X11/xinit/xinitrc.d; then
   for f in /etc/X11/xinit/xinitrc.d/*; do
     test -x "${f}" && source "${f}"
   done
   unset f
 fi
 
-xset +fp ${XG_HOME:-${HOME}}/.local/share/fonts/
+xset +fp "${XG_HOME:-${HOME}}/.local/share/fonts/"
 xset fp rehash
 
 # Increase key repeat rate
@@ -62,7 +62,7 @@ nm-applet &
 xfce4-power-manager &
 picom -fcCGb --xrender-sync-fence &
 pulseaudio --start &
-(nitrogen --restore || feh --bg-scale "${XDG_CONFIG_HOME:-${HOME}/.config}/wall/wall.png") &
+(nitrogen --restore || feh --bg-scale "${XDG_CONFIG_HOME:-${HOME}/.config}/wall/wall.jpg") &
 
 #xsetwacom --set "Wacom Intuos S Pen stylus" Suppress 2
 #xsetwacom --set "Wacom Intuos S Pen stylus" Rawsample 4
