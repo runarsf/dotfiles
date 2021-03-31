@@ -63,7 +63,12 @@ let g:netrw_list_hide = '\(^\|\s\s\)\zs\.\S\+,\(^\|\s\s\)ntuser\.\S\+'
 autocmd FileType netrw set nolist
 " }}}
 "Plug 'neomake/neomake'
+Plug 'voldikss/vim-floaterm' " {{{
+nmap <F5> :FloatermNew --height=0.6 --width=0.4 --wintype=float --name=Terminal --position=bottomright<CR>
+nmap <F6> :FloatermKill!<CR>
+" }}}
 Plug 'iamcco/markdown-preview.vim'
+"Plug 'jiangmiao/auto-pairs'
 "Plug 'dense-analysis/ale' " {{{
 "let g:ale_fix_on_save = 0
 "let g:ale_fixers = {
@@ -285,7 +290,8 @@ Plug 'ekalinin/Dockerfile.vim', { 'for': 'Dockerfile' }
 Plug 'kovetskiy/sxhkd-vim', { 'for': 'sxhkdrc' }
 " }}}
 " Colorschemes {{{
-let g:colorscheme = 'one'
+let g:colorscheme = 'iceburg'
+"Plug 'arcticicestudio/nord-vim'
 Plug 'rakr/vim-one' " {{{
 let g:one_allow_italics = 1
 " }}}
@@ -313,6 +319,11 @@ function! MyHighlights() abort
   highlight Normal     ctermbg=NONE guibg=NONE
   highlight LineNr     ctermbg=NONE guibg=NONE
   highlight SignColumn ctermbg=NONE guibg=NONE
+  highlight FloatermBorder guibg=#13141d
+  "highlight BufferLineFill guibg=NONE
+  "highlight TabLineFill ctermfg=LightGreen ctermbg=DarkGreen
+  "highlight TabLine ctermfg=Blue ctermbg=Yellow
+  "highlight TabLineSel ctermfg=Red ctermbg=Yellow
 endfunction
 
 augroup MyColors | autocmd!
@@ -518,6 +529,8 @@ nnoremap <silent> <leader>ll :set cursorcolumn!<CR>
 set pastetoggle=<leader>p
 
 nmap <silent> <leader>wr :set wrap!<CR>
+nmap <silent> <leader>r :set relativenumber!<CR>
+nmap <silent> <leader>rn :set number!<CR>
 
 nnoremap <silent> <leader><space> :nohlsearch<CR>
 
@@ -646,6 +659,18 @@ augroup END
 " }}}
 
 function! ToggleNumbers() " {{{
+  " This is based, but defaults have to be set if reading the vimrc isn't possible(?) {{{
+  if !exists("b:default_signcolumn")
+    let b:default_signcolumn = "no"
+  endif
+  if !exists("b:default_number")
+    let b:default_number = 1
+  endif
+  if !exists("b:default_relativenumber")
+    let b:default_relativenumber = 1
+  endif
+  " }}}
+
   if &number || &relativenumber
     let b:default_number = &number
     let b:default_relativenumber = &relativenumber

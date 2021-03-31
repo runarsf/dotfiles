@@ -1,37 +1,12 @@
 # vim: set foldmethod=marker foldlevel=0 nomodeline:
-
-# Any items in the `env` entry below will be added as
-# environment variables. Some entries may override variables
-# set by alacritty itself.
 env: # {{{
-  # This value is used to set the `$TERM` environment variable for
-  # each instance of Alacritty. If it is not present, alacritty will
-  # check the local terminfo database and use `alacritty` if it is
-  # available, otherwise `xterm-256color` is used.
   TERM: xterm-256color
 # }}}
 
 window: # {{{
-  # Window dimensions (changes require restart)
-  # Specified in number of columns/lines, not pixels.
-  # If both are `0`, this setting is ignored.
-  dimensions:
-    columns: 0
-    lines: 0
-
-  # Window position (changes require restart)
-  # Specified in number of pixels.
-  # If the position is not set, the window manager will handle the placement.
-  #position:
-  #  x: 0
-  #  y: 0
-
-  # Window padding (changes require restart)
-  # Blank space added around the window in pixels. This padding is scaled
-  # by DPI and the specified value is always added at both opposing sides.
   padding:
-    x: 0
-    y: 0
+    x: 24
+    y: 24
 
   # Spread additional padding evenly around the terminal content.
   dynamic_padding: true
@@ -41,16 +16,7 @@ window: # {{{
   #     - none: Neither borders nor title bar
   decorations: full
 
-  # Values for `startup_mode` (changes require restart):
-  #   - Windowed
-  #   - Maximized
-  #   - Fullscreen
-  startup_mode: Windowed
-
-  # Window title
   title: Alacritty
-
-  # Window class (Linux only):
   class: Alacritty
 # }}}
 
@@ -75,6 +41,7 @@ scrolling: # {{{
 
 font: # {{{
   normal:
+    style: Regular
     family: Scientifica
     #family: 'JetBrainsMono Nerd Font'
     #family: Ubuntu Mono
@@ -84,15 +51,11 @@ font: # {{{
     #family: Input
     #family: Terminess Powerline # Terminus
 
+  bold:
     style: Regular
 
-  #bold:
-    #family: monospace
-    #style: Bold
-
-  #italic:
-    #family: monospace
-    #style: Italic
+  italic:
+    style: Regular
 
   size: 10
 
@@ -105,7 +68,7 @@ font: # {{{
     y: 0
 
   # Thin stroke font rendering (macOS only)
-  use_thin_strokes: true
+  use_thin_strokes: false
 # }}}
 
 # If `true`, bold text is drawn using the bright color variants.
