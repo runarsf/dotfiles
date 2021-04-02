@@ -43,6 +43,7 @@ font: # {{{
   normal:
     style: Regular
     family: Scientifica
+    #family: Termsyn
     #family: 'JetBrainsMono Nerd Font'
     #family: Ubuntu Mono
     #family: Source Code Pro

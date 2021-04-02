@@ -171,6 +171,7 @@ alias lineinon='pactl load-module module-loopback latency_msec=1'
 alias whim='whim --editor "${EDITOR} +startinsert" --terminal "${TERMINAL} --class scratchpad -e"'
 alias passed='test "${?}" -eq "0" && lolcat ~/.local/bin/tp -s 40 -d 2'
 alias vw='vim +WikiIndex +CalendarVR "+wincmd p"'
+alias gitted='git ls-files --error-unmatch'
 #please () { test -z "${1}" && eval "sudo !!" || sudo "${@}" }
 dkhl () { docker inspect --format "{{json .State.Health }}" "${1}" | jq }
 wim () { ${EDITOR} "$(which ${1})" "${@:2}" }
@@ -251,4 +252,4 @@ export STARSHIP_CONFIG=~/.config/starship.toml
 eval "$(starship init zsh)"
 # }}}
 
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+test -f ~/.fzf.zsh && source ~/.fzf.zsh
