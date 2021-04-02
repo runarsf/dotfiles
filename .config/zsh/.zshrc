@@ -162,8 +162,8 @@ bindkey '^e' edit-command-line
 
 # Aliases{{{
 alias vim='${EDITOR}'
-#alias ls='ls -lAFh --color'
-alias ls='exa -GlxFa --colour=always'
+alias ls='ls -lAFh --color'
+#alias ls='exa -GlxFa --colour=always'
 alias grep='grep --color'
 alias c='xclip -selection clipboard'
 alias back='cd ${OLDPWD}'
