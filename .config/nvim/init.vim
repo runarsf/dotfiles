@@ -290,7 +290,8 @@ Plug 'ekalinin/Dockerfile.vim', { 'for': 'Dockerfile' }
 Plug 'kovetskiy/sxhkd-vim', { 'for': 'sxhkdrc' }
 " }}}
 " Colorschemes {{{
-let g:colorscheme = 'iceburg'
+"let g:colorscheme = 'iceburg'
+let g:colorscheme = 'one'
 "Plug 'arcticicestudio/nord-vim'
 Plug 'rakr/vim-one' " {{{
 let g:one_allow_italics = 1
