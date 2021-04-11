@@ -583,19 +583,18 @@ augroup filetype_tweaks | autocmd!
   " Modify filetypes
   autocmd FileType help set
     \ nospell
-  autocmd FileType markdown set
+  autocmd FileType markdown,tex set
     \ wrap
+    \ linebreak
     \ autoindent
     \ colorcolumn=0
-    \ linebreak
     \ nonumber
     \ shiftwidth=2
     \ spell
     \ tabstop=2
-    \ linebreak
     \ | imap ... …
-    \ | imap -- –
-    \ | imap --- —
+    \ | imap -- —
+    \ | imap --- –
     \ | call EnableFasterInsertTimeout()
   autocmd FileType python set
     \ foldmethod=indent
