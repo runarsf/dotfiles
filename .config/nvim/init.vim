@@ -596,6 +596,11 @@ augroup filetype_tweaks | autocmd!
     \ | imap -- —
     \ | imap --- –
     \ | call EnableFasterInsertTimeout()
+  autocmd FileType tex
+    \ inoremap <C-i> \textit{}<Esc>i
+    \ | inoremap <C-b> \textbf{}<Esc>i
+    \ | inoremap <C-u> \underline{}<Esc>i
+    \ | inoremap <C-e> \emph{}<Esc>i
   autocmd FileType python set
     \ foldmethod=indent
     \ foldnestmax=1

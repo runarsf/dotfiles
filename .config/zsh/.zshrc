@@ -53,6 +53,7 @@ if test -z ${NOPLUG}; then
 		zdharma/fast-syntax-highlighting
 		akarzim/zsh-docker-aliases
 		zdharma/zsh-diff-so-fancy
+		pierpo/fzf-docker
 		knu/zsh-manydots-magic
 		# kazhala/dotbare
 		# runarsf/rufus-zsh-theme path:rufus-nightly.zsh-theme
@@ -101,6 +102,7 @@ SAVEHIST=5000
 HISTCONTROL=ignoreboth:erasedumps
 PROMPT_EOL_MARK=''
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=067,underline'
+FZF_COMPLETION_TRIGGER=','
 #ZSH_AUTOSUGGEST_STRATEGY=(history completion) # (completion match_prev_cmd)
 # }}}
 
