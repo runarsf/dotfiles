@@ -35,10 +35,10 @@ super + shift + space
 super + alt + space
 	did="$(bspc query -D -n focused --names)"; layout="$(bsp-layout get ${did})"; test "${layout}" = "-" -o "${layout}" = "tile" && bsp-layout set tall "${did}" --master-size 0.70 || {bsp-layout remove "${did}"; bsp-layout once tile}
 
-super + {Left,Right}
-	bspc node --focus {west,east}
-super + {Down,Up}
-	bspwm_focus {south,north}
+#super + {Left,Right}
+	#	bspc node --focus {west,east}
+super + {Down,Up,Left,Right}
+	bspwm_focus {south,north,west,east}
 super + {h,l}
 	bspwm_focus {west,east}
 super + {j,k}

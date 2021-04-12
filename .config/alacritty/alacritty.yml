@@ -42,14 +42,14 @@ scrolling: # {{{
 font: # {{{
   normal:
     style: Regular
-    family: Scientifica
+    #family: Scientifica
     #family: Termsyn
     #family: 'JetBrainsMono Nerd Font'
     #family: Ubuntu Mono
     #family: Source Code Pro
     #family: Cozette
-    #family: Iosevka Term
     #family: Input
+    family: Operator Mono Lig Book
     #family: Terminess Powerline # Terminus
 
   bold:
