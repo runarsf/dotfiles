@@ -86,7 +86,6 @@ Plug 'lervag/vimtex' " {{{
 let g:tex_flavor='latex'
 let g:vimtex_view_method='zathura'
 let g:vimtex_quickfix_mode=0
-set conceallevel=1
 let g:tex_conceal='abdmg'
 " }}}
 Plug 'sirver/ultisnips' " {{{
@@ -110,7 +109,6 @@ let g:vim_markdown_folding_level = 6
 let g:vim_markdown_no_default_key_mappings = 1
 let g:vim_markdown_toc_autofit = 1
 let g:vim_markdown_emphasis_multiline = 1
-set conceallevel=2
 let g:vim_markdown_conceal = 1
 let g:vim_markdown_conceal_code_blocks = 1
 let g:vim_markdown_fenced_languages = ['c++=cpp', 'viml=vim', 'bash=sh', 'ini=dosini']
@@ -355,6 +353,7 @@ set splitbelow splitright
 set mouse=c
 set noerrorbells novisualbell
 set t_vb=
+set conceallevel=2
 
 " Time for key combinations to time out, like <leader>w in Normal mode.
 set ttimeout
@@ -592,6 +591,7 @@ augroup filetype_tweaks | autocmd!
     \ shiftwidth=2
     \ spell
     \ tabstop=2
+    \ synmaxcol=800
     \ | imap ... …
     \ | imap -- —
     \ | imap --- –
