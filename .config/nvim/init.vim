@@ -578,6 +578,7 @@ augroup filetype_tweaks | autocmd!
   autocmd BufRead,BufNewFile *.conf,*.toml,config set filetype=dosini
   autocmd BufRead,BufNewFile *.md,*.rmd,*.txt set filetype=markdown
   autocmd BufRead,BufNewFile *.rss set filetype=xml
+  autocmd BufRead,BufNewFile commands set filetype=sh
 
   " Modify filetypes
   autocmd FileType help set
