@@ -1,9 +1,3 @@
-snippet sign "Signature"
-Yours sincerely,
-
-Gilles Castel
-endsnippet
-
 snippet today "Date"
 `date +%F`
 endsnippet
@@ -20,4 +14,13 @@ snippet tbeg "begin{} / end{}" bA
 \begin{$1}
 	$0
 \end{$1}
+endsnippet
+
+snippet book "Cite book" bA
+@book{$0,
+	title = "$1"
+	author = "$3, $2"
+	publisher = "$4"
+	date = $5
+}
 endsnippet
