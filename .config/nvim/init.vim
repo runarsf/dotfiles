@@ -528,9 +528,8 @@ nnoremap <silent> <leader>ll :set cursorcolumn!<CR>
 " Breaks if '<leader>pp' is in the pasted string
 set pastetoggle=<leader>p
 
-nmap <silent> <leader>wr :set wrap!<CR>
-nmap <silent> <leader>r :set relativenumber!<CR>
-nmap <silent> <leader>rn :set number!<CR>
+"nmap <silent> <leader>r :set relativenumber!<CR>
+"nmap <silent> <leader>rn :set number!<CR>
 
 nnoremap <silent> <leader><space> :nohlsearch<CR>
 
@@ -572,6 +571,40 @@ endfunction
 
 " markdown preview alternative, zathura
 nnoremap <leader>mc :execute '!${XDG_CONFIG_HOME:-${HOME}/.config}/nvim/mdconvert.sh %:p' <bar> :redraw! <Enter>
+
+" Navigate inside wrapped lines
+" https://vim.fandom.com/wiki/Move_cursor_by_display_lines_when_wrapping
+"nmap <silent> <leader>wr :set wrap!<CR>
+noremap <silent> <Leader>wr :call ToggleWrap()<CR>
+function ToggleWrap()
+  if &wrap
+    echo "Wrap OFF"
+    setlocal nowrap
+    set virtualedit=all
+    silent! nunmap <buffer> <Up>
+    silent! nunmap <buffer> <Down>
+    silent! nunmap <buffer> <Home>
+    silent! nunmap <buffer> <End>
+    silent! iunmap <buffer> <Up>
+    silent! iunmap <buffer> <Down>
+    silent! iunmap <buffer> <Home>
+    silent! iunmap <buffer> <End>
+  else
+    echo "Wrap ON"
+    setlocal wrap linebreak nolist
+    set virtualedit=
+    setlocal display+=lastline
+    noremap  <buffer> <silent> <Up>   gk
+    noremap  <buffer> <silent> <Down> gj
+    noremap  <buffer> <silent> <Home> g<Home>
+    noremap  <buffer> <silent> <End>  g<End>
+    inoremap <buffer> <silent> <Up>   <C-o>gk
+    inoremap <buffer> <silent> <Down> <C-o>gj
+    inoremap <buffer> <silent> <Home> <C-o>g<Home>
+    inoremap <buffer> <silent> <End>  <C-o>g<End>
+  endif
+endfunction
+
 
 augroup filetype_tweaks | autocmd!
   " Assign filetypes
@@ -650,7 +683,7 @@ set statusline+=\[%{&fileformat}:%{&fileencoding?&fileencoding:&encoding}\]\
 "set statusline+=%{&readonly?'[ro]\ ':''}
 set statusline+=%{&mouse=='a'?'[m]\ ':''}
 set statusline+=%{&paste?'[p]\ ':''}
-set statusline+=%{&wrap=='wrap'?'[wr]\ ':''}
+set statusline+=%{&wrap=='1'?'[wr]\ ':''}
 "set statusline+=%#SpellHighlight#%{&spell?'[sp]':''}%*\ 
 set statusline+=%{&spell?'[sp]\ ':''}
 "set statusline+=\[%{mode()}\]\ 
