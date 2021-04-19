@@ -111,16 +111,16 @@ map <silent> <C-n> :Lexplore<CR>
 Plug 'mhinz/vim-startify' " {{{
 let g:startify_session_dir = '~/.config/nvim/session'
 let g:startify_lists = [
-          \ { 'type': 'files',     'header': ['   Files']            },
-          \ { 'type': 'dir',       'header': ['   Current Directory '. getcwd()] },
-          \ { 'type': 'bookmarks', 'header': ['   Bookmarks']      },
-          \ { 'type': 'sessions',  'header': ['   Sessions']       },
+          \ { 'type': 'files',     'header': [ '   Files' ] },
+          \ { 'type': 'dir',       'header': [ '   Current Directory ' . getcwd() ] },
+          \ { 'type': 'bookmarks', 'header': [ '   Bookmarks' ] },
+          \ { 'type': 'sessions',  'header': [ '   Sessions' ] }
           \ ]
 let g:startify_bookmarks = [
+            \ { 'h': expand('~') },
+            \ { 'n': '~/Documents/drive/obsidian' },
             \ { 'c': '~/.config/nvim/init.vim' },
-            \ { 'z': '~/.config/zsh/.zshrc' },
-            \ { 'n': '~/notes/' },
-            \ expand('~')
+            \ { 'z': '~/.config/zsh/.zshrc' }
             \ ]
 let g:startify_change_to_dir = 0
 let g:startify_change_to_vcs_root = 1
@@ -130,14 +130,9 @@ let g:startify_fortune_use_unicode = 1
 let g:startify_session_persistence = 1
 let g:startify_enable_special = 0
 autocmd User Startified setlocal cursorline
-"let g:startify_custom_header = 'startify#center(startify#fortune#cowsay())'
+"let g:startify_custom_header = 'startify#center(startify#fortune#boxed())'
 let g:startify_custom_header = []
-"let g:startify_custom_header = [
-        "\ '   _  __     _         __  ___         __     ___ ',
-        "\ '  / |/ /  __(_)_ _    /  |/  /__ _____/ /    |_  |',
-        "\ ' /    / |/ / /  ` \  / /|_/ / _ `/ __/ _ \  / __/ ',
-        "\ '/_/|_/|___/_/_/_/_/ /_/  /_/\_,_/\__/_//_/ /____/ ',
-        "\]
+
 " }}}
 Plug 'voldikss/vim-floaterm' " {{{
 nmap <F5> :FloatermNew --height=0.6 --width=0.4 --wintype=float --name=Terminal --position=bottomright<CR>
