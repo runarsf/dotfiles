@@ -57,18 +57,64 @@ endif
 silent! if plug#begin('~/.vim/plugged')
 " General {{{
 " netrw {{{
-let loaded_netrwPlugin = 0  " disable netrw
+"let loaded_netrwPlugin = 0 " netrw version, 0 to disable
 let g:netrw_banner = 0
+let g:netrw_liststyle = 3 " 1 or 3
+let g:netrw_browse_split = 4 " 1
+let g:netrw_altv = 1
+let g:netrw_winsize = 25
+let g:netrw_keepdir = 0
+let g:netrw_sort_options = 'i'
 let g:netrw_list_hide = '\(^\|\s\s\)\zs\.\S\+,\(^\|\s\s\)ntuser\.\S\+'
-autocmd FileType netrw set nolist
+let g:netrw_sort_sequence = '[\/]$,*'
+let g:netrw_list_hide = '.*.swp$, 
+                       \ *.pyc$,
+                       \ *.log$,
+                       \ *.o$,
+                       \ *.xmi$,
+                       \ *.swp$,
+                       \ *.bak$,
+                       \ *.pyc$,
+                       \ *.class$,
+                       \ *.jar$,
+                       \ *.war$,
+                       \ *.png$,
+                       \ *.jpg$,
+                       \ *.mkv$,
+                       \ *.mp4$,
+                       \ *.mp3$,
+                       \ *node_modules*,
+                       \ *__pycache__*'
+
+augroup ProjectDrawer
+  autocmd!
+  "autocmd VimEnter * silent Vexplore | wincmd p
+  "autocmd FileType netrw set nolist
+  " No argument was specified
+  autocmd VimEnter * if !argc() && !exists("s:std_in") | silent Vexplore | wincmd p | endif
+  autocmd StdinReadPre * let s:std_in=1
+  " Specified argument is a directory
+  autocmd VimEnter * if isdirectory(expand('<afile>')) && !exists("s:std_in") | silent vnew | endif
+  " Only window left
+  autocmd BufEnter * if (winnr("$") == 1 && getbufvar(winbufnr(winnr()), "&filetype") == "netrw") | q | endif
+  autocmd FileType netrw setlocal bufhidden=wipe
+augroup END
+
+" https://stackoverflow.com/a/23920240
+map <silent> <C-n> :Lexplore<CR>
+
+"map <silent> <C-n> :NetrwToggle <bar> wincmd p<CR>
+
+" https://vi.stackexchange.com/questions/10988/toggle-explorer-window
+
+"  \ ]
 " }}}
-"Plug 'neomake/neomake'
+Plug 'tpope/vim-vinegar'
 Plug 'voldikss/vim-floaterm' " {{{
 nmap <F5> :FloatermNew --height=0.6 --width=0.4 --wintype=float --name=Terminal --position=bottomright<CR>
 nmap <F6> :FloatermKill!<CR>
 " }}}
 Plug 'iamcco/markdown-preview.vim'
-"Plug 'jiangmiao/auto-pairs'
 "Plug 'dense-analysis/ale' " {{{
 "let g:ale_fix_on_save = 0
 "let g:ale_fixers = {
@@ -135,55 +181,55 @@ let g:Hexokinase_v2 = 0
 autocmd! VimEnter * HexokinaseRefresh
 " blue
 " }}}
-Plug 'preservim/nerdtree' " {{{
-" Open a NERDTree automatically when vim starts up if no files were specified
-"autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | silent NERDTree | endif
-autocmd StdinReadPre * let s:std_in=1
-autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | silent NERDTree | wincmd p | endif
-" Open NERDTree automatically when vim starts up on opening a directory
-autocmd StdinReadPre * let s:std_in=1
-"autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | exe 'cd '.argv()[0] | endif
-autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | endif
+"Plug 'preservim/nerdtree' " {{{
+"" Open a NERDTree automatically when vim starts up if no files were specified
+""autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | silent NERDTree | endif
 "autocmd StdinReadPre * let s:std_in=1
-"autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | silent NERDTree | wincmd p | ene | endif
-" Close vim if the only window left open is a NERDTree
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-
-"let g:NERDTreeDirArrowExpandable = '>'
-"let g:NERDTreeDirArrowCollapsible = 'v'
-
-" Toggle NERDTree and focus editor
-map <silent> <C-n> :NERDTreeToggle <bar> wincmd p<CR>
-
-let NERDTreeAutoDeleteBuffer = 0
-let NERDTreeQuitOnOpen = 1
-let NERDTreeMinimalUI = 1
-let NERDTreeDirArrows = 0
-let g:NERDTreeGitStatusWithFlags = 0
-let NERDTreeShowHidden = 1
-let g:NERDTreeWinPos = "left"
-let g:NERDTreeIgnore = [
-  \ '^node_modules$',
-  \ '^.*\.png$',
-  \ '^.*\.jpg$',
-  \ '^.*\.mkv$',
-  \ '^.*\.mp4$',
-  \ '^.*\.mp3$'
-  \ ]
-"let g:WebDevIconsUnicodeDecorateFolderNodes = 1
-"let g:NERDTreeGitStatusNodeColorization = 1
-"let g:NERDTreeColorMapCustom = {
-   "\ "Staged"    : "#0ee375",  
-   "\ "Modified"  : "#d9bf91",  
-   "\ "Renamed"   : "#51C9FC",  
-   "\ "Untracked" : "#FCE77C",  
-   "\ "Unmerged"  : "#FC51E6",  
-   "\ "Dirty"     : "#FFBD61",  
-   "\ "Clean"     : "#87939A",   
-   "\ "Ignored"   : "#808080"   
-   "\ }
-
-"autocmd VimEnter * silent NERDTree | wincmd p
+"autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | silent NERDTree | wincmd p | endif
+"" Open NERDTree automatically when vim starts up on opening a directory
+"autocmd StdinReadPre * let s:std_in=1
+""autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | exe 'cd '.argv()[0] | endif
+"autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | endif
+""autocmd StdinReadPre * let s:std_in=1
+""autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | silent NERDTree | wincmd p | ene | endif
+"" Close vim if the only window left open is a NERDTree
+"autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+"
+""let g:NERDTreeDirArrowExpandable = '>'
+""let g:NERDTreeDirArrowCollapsible = 'v'
+"
+"" Toggle NERDTree and focus editor
+"map <silent> <C-n> :NERDTreeToggle <bar> wincmd p<CR>
+"
+"let NERDTreeAutoDeleteBuffer = 0
+"let NERDTreeQuitOnOpen = 1
+"let NERDTreeMinimalUI = 1
+"let NERDTreeDirArrows = 0
+"let g:NERDTreeGitStatusWithFlags = 0
+"let NERDTreeShowHidden = 1
+"let g:NERDTreeWinPos = "left"
+"let g:NERDTreeIgnore = [
+"  \ '^node_modules$',
+"  \ '^.*\.png$',
+"  \ '^.*\.jpg$',
+"  \ '^.*\.mkv$',
+"  \ '^.*\.mp4$',
+"  \ '^.*\.mp3$'
+"  \ ]
+""let g:WebDevIconsUnicodeDecorateFolderNodes = 1
+""let g:NERDTreeGitStatusNodeColorization = 1
+""let g:NERDTreeColorMapCustom = {
+"   "\ "Staged"    : "#0ee375",  
+"   "\ "Modified"  : "#d9bf91",  
+"   "\ "Renamed"   : "#51C9FC",  
+"   "\ "Untracked" : "#FCE77C",  
+"   "\ "Unmerged"  : "#FC51E6",  
+"   "\ "Dirty"     : "#FFBD61",  
+"   "\ "Clean"     : "#87939A",   
+"   "\ "Ignored"   : "#808080"   
+"   "\ }
+"
+""autocmd VimEnter * silent NERDTree | wincmd p
 " }}}
 Plug 'nathanaelkane/vim-indent-guides' " {{{
 let g:indent_guides_enable_on_vim_startup = 1
@@ -340,6 +386,7 @@ execute "colorscheme " . g:colorscheme
 " Performance, force vim to fall back to the old regex engine
 set re=1
 
+"set autochdir " Change directory to the current buffer when opening files.
 set clipboard+=unnamedplus
 set history=500
 set autoread
