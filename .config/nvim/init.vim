@@ -57,6 +57,7 @@ endif
 silent! if plug#begin('~/.vim/plugged')
 " General {{{
 " netrw {{{
+Plug 'tpope/vim-vinegar'
 "let loaded_netrwPlugin = 0 " netrw version, 0 to disable
 let g:netrw_banner = 0
 let g:netrw_liststyle = 3 " 1 or 3
@@ -86,8 +87,7 @@ let g:netrw_list_hide = '.*.swp$,
                        \ *node_modules*,
                        \ *__pycache__*'
 
-augroup ProjectDrawer
-  autocmd!
+augroup ProjectDrawer | autocmd!
   "autocmd VimEnter * silent Vexplore | wincmd p
   "autocmd FileType netrw set nolist
   " No argument was specified
@@ -98,6 +98,7 @@ augroup ProjectDrawer
   " Only window left
   autocmd BufEnter * if (winnr("$") == 1 && getbufvar(winbufnr(winnr()), "&filetype") == "netrw") | q | endif
   autocmd FileType netrw setlocal bufhidden=wipe
+  autocmd FileType netrw vertical resize 25
 augroup END
 
 " https://stackoverflow.com/a/23920240
@@ -106,10 +107,38 @@ map <silent> <C-n> :Lexplore<CR>
 "map <silent> <C-n> :NetrwToggle <bar> wincmd p<CR>
 
 " https://vi.stackexchange.com/questions/10988/toggle-explorer-window
-
-"  \ ]
 " }}}
-Plug 'tpope/vim-vinegar'
+Plug 'mhinz/vim-startify' " {{{
+let g:startify_session_dir = '~/.config/nvim/session'
+let g:startify_lists = [
+          \ { 'type': 'files',     'header': ['   Files']            },
+          \ { 'type': 'dir',       'header': ['   Current Directory '. getcwd()] },
+          \ { 'type': 'bookmarks', 'header': ['   Bookmarks']      },
+          \ { 'type': 'sessions',  'header': ['   Sessions']       },
+          \ ]
+let g:startify_bookmarks = [
+            \ { 'c': '~/.config/nvim/init.vim' },
+            \ { 'z': '~/.config/zsh/.zshrc' },
+            \ { 'n': '~/notes/' },
+            \ expand('~')
+            \ ]
+let g:startify_change_to_dir = 0
+let g:startify_change_to_vcs_root = 1
+let g:startify_session_autoload = 1
+let g:startify_session_delete_buffers = 1
+let g:startify_fortune_use_unicode = 1
+let g:startify_session_persistence = 1
+let g:startify_enable_special = 0
+autocmd User Startified setlocal cursorline
+"let g:startify_custom_header = 'startify#center(startify#fortune#cowsay())'
+let g:startify_custom_header = []
+"let g:startify_custom_header = [
+        "\ '   _  __     _         __  ___         __     ___ ',
+        "\ '  / |/ /  __(_)_ _    /  |/  /__ _____/ /    |_  |',
+        "\ ' /    / |/ / /  ` \  / /|_/ / _ `/ __/ _ \  / __/ ',
+        "\ '/_/|_/|___/_/_/_/_/ /_/  /_/\_,_/\__/_//_/ /____/ ',
+        "\]
+" }}}
 Plug 'voldikss/vim-floaterm' " {{{
 nmap <F5> :FloatermNew --height=0.6 --width=0.4 --wintype=float --name=Terminal --position=bottomright<CR>
 nmap <F6> :FloatermKill!<CR>
