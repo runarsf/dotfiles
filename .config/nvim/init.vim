@@ -91,7 +91,7 @@ augroup ProjectDrawer | autocmd!
   "autocmd VimEnter * silent Vexplore | wincmd p
   "autocmd FileType netrw set nolist
   " No argument was specified
-  autocmd VimEnter * if !argc() && !exists("s:std_in") | silent Vexplore | wincmd p | endif
+  autocmd VimEnter * if !argc() && !exists("s:std_in") | silent Lexplore | wincmd p | endif
   autocmd StdinReadPre * let s:std_in=1
   " Specified argument is a directory
   autocmd VimEnter * if isdirectory(expand('<afile>')) && !exists("s:std_in") | silent vnew | endif
@@ -99,6 +99,7 @@ augroup ProjectDrawer | autocmd!
   autocmd BufEnter * if (winnr("$") == 1 && getbufvar(winbufnr(winnr()), "&filetype") == "netrw") | q | endif
   autocmd FileType netrw setlocal bufhidden=wipe
   autocmd FileType netrw vertical resize 25
+  autocmd FileType netrw nnoremap <buffer> q :q<CR>
 augroup END
 
 " https://stackoverflow.com/a/23920240
