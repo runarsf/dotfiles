@@ -713,7 +713,9 @@ augroup filetype_tweaks | autocmd!
     \ foldmethod=indent
     \ foldnestmax=1
     \ nomodeline
-  autocmd FileType json syntax match Comment +\/\/.\+$+
+  autocmd FileType json set
+    \ conceallevel=0
+    \ | syntax match Comment +\/\/.\+$+
 augroup END
 " }}}======================
 " Functions / Utilities {{{
