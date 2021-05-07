@@ -165,12 +165,12 @@ let g:UltiSnipsJumpForwardTrigger = '<tab>'
 let g:UltiSnipsJumpBackwardTrigger = '<s-tab>'
 let g:UltiSnipsEditSplit="vertical"
 " }}}
-Plug 'reedes/vim-textobj-quote' | Plug 'kana/vim-textobj-user' " {{{
-augroup textobj_quote | autocmd!
-  autocmd FileType markdown call textobj#quote#init()
-  autocmd FileType textile call textobj#quote#init()
-  autocmd FileType text call textobj#quote#init({'educate': 0})
-augroup END
+"Plug 'reedes/vim-textobj-quote' | Plug 'kana/vim-textobj-user' " {{{
+"augroup textobj_quote | autocmd!
+"  autocmd FileType markdown call textobj#quote#init()
+"  autocmd FileType textile call textobj#quote#init()
+"  autocmd FileType text call textobj#quote#init({'educate': 0})
+"augroup END
 " }}}
 Plug 'godlygeek/tabular' | Plug 'plasticboy/vim-markdown' " {{{
 " https://github.com/plasticboy/vim-markdown
