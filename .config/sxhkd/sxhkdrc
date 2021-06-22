@@ -35,6 +35,15 @@ super + shift + c
 super + shift + p
 	curl "https://push.runarsf.dev/message?token=$(cat ~/.config/.gotifytoken)" -F "title=$(echo '' | rofi -lines 0 -dmenu -p 'Title')" -F "message=$(echo '' | rofi -lines 0 -dmenu -p 'Message')" -F "priority=$(echo '0\n1\n2\n3\n4\n5' | rofi -lines 6 -dmenu -p 'Priority')"
 
+XF86Audio{LowerVolume,RaiseVolume}
+	pactl set-sink-volume 2 {-,+}5%
+
+XF86AudioMute
+	amixer -q -D pulse sset Master toggle
+
+XF86Audio{Next,Prev,Play,Stop}
+	playerctl {next,previous,play-pause,stop}
+
 #super + shift + v
 #	whim --editor "$EDITOR +startinsert" --terminal "$TERMINAL --class scratchpad -e"
 
