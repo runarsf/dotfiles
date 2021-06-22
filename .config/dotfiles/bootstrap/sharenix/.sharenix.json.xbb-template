@@ -12,7 +12,7 @@
         "token": "${SHARENIX_TOKEN}"
       },
       "ResponseType": "Text",
-      "URL": "$json:url$/raw"
+      "URL": "$json:url$"
     }
   ]
 }
