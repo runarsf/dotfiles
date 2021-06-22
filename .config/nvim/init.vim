@@ -109,35 +109,34 @@ map <silent> <C-n> :Lexplore<CR>
 
 " https://vi.stackexchange.com/questions/10988/toggle-explorer-window
 " }}}
-Plug 'mhinz/vim-startify' " {{{
-let g:startify_session_dir = '~/.config/nvim/session'
-let g:startify_lists = [
-          \ { 'type': 'files',     'header': [ '   Files' ] },
-          \ { 'type': 'dir',       'header': [ '   Current Directory ' . getcwd() ] },
-          \ { 'type': 'bookmarks', 'header': [ '   Bookmarks' ] },
-          \ { 'type': 'sessions',  'header': [ '   Sessions' ] }
-          \ ]
-let g:startify_bookmarks = [
-            \ { 'h': expand('~') },
-            \ { 'n': '~/Documents/drive/obsidian' },
-            \ { 'c': '~/.config/nvim/init.vim' },
-            \ { 'z': '~/.config/zsh/.zshrc' }
-            \ ]
-let g:startify_change_to_dir = 0
-let g:startify_change_to_vcs_root = 1
-let g:startify_session_autoload = 1
-let g:startify_session_delete_buffers = 1
-let g:startify_fortune_use_unicode = 1
-let g:startify_session_persistence = 1
-let g:startify_enable_special = 0
-autocmd User Startified setlocal cursorline
-"let g:startify_custom_header = 'startify#center(startify#fortune#boxed())'
-let g:startify_custom_header = []
-
-" }}}
-Plug 'voldikss/vim-floaterm' " {{{
-nmap <F5> :FloatermNew --height=0.6 --width=0.4 --wintype=float --name=Terminal --position=bottomright<CR>
-nmap <F6> :FloatermKill!<CR>
+"Plug 'mhinz/vim-startify' " {{{
+"let g:startify_session_dir = '~/.config/nvim/session'
+"let g:startify_lists = [
+"          \ { 'type': 'files',     'header': [ '   Files' ] },
+"          \ { 'type': 'dir',       'header': [ '   Current Directory ' . getcwd() ] },
+"          \ { 'type': 'bookmarks', 'header': [ '   Bookmarks' ] },
+"          \ { 'type': 'sessions',  'header': [ '   Sessions' ] }
+"          \ ]
+"let g:startify_bookmarks = [
+"            \ { 'h': expand('~') },
+"            \ { 'n': '~/Documents/drive/obsidian' },
+"            \ { 'c': '~/.config/nvim/init.vim' },
+"            \ { 'z': '~/.config/zsh/.zshrc' }
+"            \ ]
+"let g:startify_change_to_dir = 0
+"let g:startify_change_to_vcs_root = 1
+"let g:startify_session_autoload = 1
+"let g:startify_session_delete_buffers = 1
+"let g:startify_fortune_use_unicode = 1
+"let g:startify_session_persistence = 1
+"let g:startify_enable_special = 0
+"autocmd User Startified setlocal cursorline
+""let g:startify_custom_header = 'startify#center(startify#fortune#boxed())'
+"let g:startify_custom_header = []
+ " }}}
+"Plug 'voldikss/vim-floaterm' " {{{
+"nmap <F5> :FloatermNew --height=0.6 --width=0.4 --wintype=float --name=Terminal --position=bottomright<CR>
+"nmap <F6> :FloatermKill!<CR>
 " }}}
 Plug 'iamcco/markdown-preview.vim'
 "Plug 'dense-analysis/ale' " {{{
