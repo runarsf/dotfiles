@@ -15,7 +15,7 @@ else
   case "${motion}" in
     north) bspc node --focus next.local;;
     south) bspc node --focus prev.local;;
-    west) bspc node --focus prev.local;;
-    east) bspc node --focus next.local;;
+    west) bspc node --focus west;;
+    east) bspc node --focus east;;
   esac
 fi
