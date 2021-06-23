@@ -5,13 +5,17 @@
         "height": "100",
         "use-custom-color": "false",
         "fill": "true",
-        "show-bar-border": "true",
-        "scale": "1",
-        "exponent": "1",
+        "show-bar-border": "false",
         "sampling-freq": "10",
         "line-width": "2",
-        "type": "Bars",
+        "type": "Lines",
         "color": [
+            "1",
+            "1",
+            "1",
+            "1"
+        ],
+        "color-axis-labels": [
             "1",
             "1",
             "1",
@@ -25,10 +29,7 @@
         ]
     },
     "output": {
-        "blacklist": [
-            "virt-manager",
-            "VLC media player"
-        ],
+        "blocklist": "",
         "plugins_order": [
             "equalizer",
             "convolver",
@@ -49,13 +50,14 @@
             "loudness",
             "filter",
             "pitch",
-            "delay"
+            "delay",
+            "rnnoise"
         ],
         "bass_enhancer": {
             "state": "true",
             "input-gain": "0",
             "output-gain": "0",
-            "amount": "5",
+            "amount": "8.9999999999999858",
             "harmonics": "8.5",
             "scope": "80",
             "floor": "20",
@@ -68,12 +70,14 @@
             "input-gain": "0",
             "output-gain": "0",
             "mode": "Downward",
-            "attack": "3.10087",
+            "attack": "3.1000000000000001",
             "release": "25.001200000000001",
+            "release-threshold": "-200",
             "threshold": "-21.072093963623047",
             "ratio": "4.2500799999999996",
             "knee": "-6",
             "makeup": "13.726968765258789",
+            "boost-threshold": "-72",
             "sidechain": {
                 "listen": "false",
                 "type": "Feed-forward",
@@ -82,10 +86,14 @@
                 "preamp": "0",
                 "reactivity": "10",
                 "lookahead": "0"
-            }
+            },
+            "hpf-mode": "off",
+            "hpf-frequency": "10",
+            "lpf-mode": "off",
+            "lpf-frequency": "20000"
         },
         "crossfeed": {
-            "state": "true",
+            "state": "false",
             "fcut": "700",
             "feed": "4.5"
         },
@@ -105,7 +113,7 @@
             "sc-listen": "false"
         },
         "equalizer": {
-            "state": "true",
+            "state": "false",
             "mode": "IIR",
             "num-bands": "10",
             "input-gain": "-2",
@@ -347,6 +355,7 @@
             "threshold": "-18",
             "ratio": "2",
             "knee": "9",
+            "input": "0",
             "makeup": "0"
         },
         "limiter": {
@@ -355,12 +364,14 @@
             "limit": "0",
             "lookahead": "5",
             "release": "100",
+            "auto-level": "false",
             "asc": "false",
             "asc-level": "0.5",
-            "oversampling": "4"
+            "oversampling": "4",
+            "output-gain": "0"
         },
         "maximizer": {
-            "state": "true",
+            "state": "false",
             "release": "3.1600000000000001",
             "ceiling": "0",
             "threshold": "-3"
@@ -444,10 +455,11 @@
             }
         },
         "loudness": {
-            "state": "false",
-            "loudness": "-3.1000000000000001",
-            "output": "-6",
-            "link": "-9.0999999999999996"
+            "state": "true",
+            "fft": "4096",
+            "std": "ISO226-2003",
+            "input": "0",
+            "volume": "0"
         },
         "multiband_gate": {
             "state": "false",
@@ -528,7 +540,7 @@
             "stereo-phase": "0"
         },
         "convolver": {
-            "state": "true",
+            "state": "false",
             "input-gain": "-2",
             "output-gain": "0",
             "kernel-path": "\/home\/matteo\/.config\/PulseEffects\/irs\/Razor Surround ((48k Z-Edition)) 2.Stereo +20 bass.irs",
@@ -607,6 +619,8 @@
         },
         "autogain": {
             "state": "false",
+            "detect-silence": "false",
+            "use-geometric-mean": "true",
             "input-gain": "0",
             "output-gain": "0",
             "target": "-23",
@@ -620,6 +634,12 @@
             "output-gain": "0",
             "time-l": "0",
             "time-r": "0"
+        },
+        "rnnoise": {
+            "state": "false",
+            "input-gain": "0",
+            "output-gain": "0",
+            "model-path": ""
         }
     }
 }
