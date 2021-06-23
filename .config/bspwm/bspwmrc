@@ -10,9 +10,6 @@
 
 # General config {{{
 bspc config split_ratio 0.52
-bspc config borderless_monocle true
-bspc config gapless_monocle true
-bspc config single_monocle true
 bspc config automatic_scheme alternate
 bspc config initial_polarity second_child
 bspc config pointer_modifier mod4
@@ -21,28 +18,34 @@ bspc config pointer_action2 resize_side
 bspc config pointer_action3 resuze_corner
 bspc config click_to_focus any
 
-bspc config focus_follows_pointer true
-bspc config remove_disabled_monitors true
-bspc config remove_unplugged_monitors true
+bspc config focus_follows_pointer      true
+bspc config remove_disabled_monitors   true
+bspc config remove_unplugged_monitors  true
 bspc config merge_overlapping_monitors true
 
+bspc config border_width 2
 #bspc config normal_border_color "#2e2e2e"
 #bspc config active_border_color "#2e2e2e"
-#bspc config focused_border_color "#306998"
-#bspc config presel_feedback_color "#5e81ac"
-#bspc config urgent_border_color "#dd2727"
 bspc config normal_border_color  "#13141d"
 bspc config active_border_color  "#13141d"
-bspc config focused_border_color "#13141d"
+#bspc config focused_border_color "#13141d"
+bspc config focused_border_color "#306998"
+bspc config presel_feedback_color "#5e81ac"
+bspc config urgent_border_color "#dd2727"
 
-bspc config top_padding 0
+bspc config window_gap     25
+bspc config top_padding    0
 bspc config bottom_padding 0
-bspc config left_padding 0
-bspc config right_padding 0
-bspc config border_width 3
-bspc config window_gap 25
+bspc config left_padding   0
+bspc config right_padding  0
 
-#xsetroot -cursor_name left_ptr
+bspc config borderless_monocle true
+bspc config gapless_monocle    true
+bspc config single_monocle     true
+bspc config left_monocle_padding   500
+bspc config right_monocle_padding  500
+bspc config top_monocle_padding    80
+bspc config bottom_monocle_padding 80
 # }}}
 
 # Rules {{{
@@ -83,14 +86,16 @@ exec_once () { # {{{
 }
 
 #feh --bg-tile "${HOME}/.config/wall.png" &
+xsetroot -cursor_name left_ptr
 dunst --config "${XDG_CONFIG_HOME:-${HOME}/.config}/dunst/dunstrc" &
 picom --config "${XDG_CONFIG_HOME:-${HOME}/.config}/picom/picom.conf" -fcCGb --xrender-sync-fence &
-"${HOME}/.config/polybar/launch.sh" main &
-"${HOME}/.config/bspwm/cleanfullscreen" &
-"${HOME}/.config/bspwm/monitors.py" &
+"${XDG_CONFIG_HOME:-${HOME}/.config}/polybar/launch.sh" main &
+"${XDG_CONFIG_HOME:-${HOME}/.config}/bspwm/scripts/cleanfullscreen" &
+"${XDG_CONFIG_HOME:-${HOME}/.config}/bspwm/scripts/monitors.py" &
+"${XDG_CONFIG_HOME:-${HOME}/.config}/bspwm/scripts/single_node_border" &
 (nitrogen --restore || feh --bg-scale "${XDG_CONFIG_HOME:-${HOME}/.config}/wall/wall.jpg") &
 #pkill -USR1 picom
-killall -q sxhkd; sxhkd -m 1 -c "${HOME}/.config/sxhkd/sxhkdrc" "${HOME}/.config/bspwm/sxhkdrc" &
+killall -q sxhkd; sxhkd -m 1 -c "${XDG_CONFIG_HOME:-${HOME}/.config}/sxhkd/sxhkdrc" "${XDG_CONFIG_HOME:-${HOME}/.config}/bspwm/sxhkdrc" &
 # pgrep -x sxhkd > /dev/null || sxhkd &
 #killall -q 2bspwm; 2bspwm &
 # }}}
