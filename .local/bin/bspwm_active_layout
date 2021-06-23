@@ -1,0 +1,18 @@
+#!/bin/sh
+did="$(bspc query -D -n focused --names)"
+layout="$(bsp-layout get ${did})"
+
+test "${layout}" = "-" && layout="$(bspc query -T -d | jq '.layout')"
+
+case "${layout}" in
+  tall)    printf "[]="  ;;
+  rtall)   printf "=[]"  ;;
+  wide)    printf "TTT"  ;;
+  rwide)   printf "LLL"  ;;
+  tile*)   printf "[]-"  ;;
+  grid)    printf "|-|-|";;
+  rgrid)   printf "-|-|-";;
+  even)    printf "[][]" ;;
+  monocle) printf  "[M]" ;;
+  -|*)     printf "[?]"  ;;
+esac
