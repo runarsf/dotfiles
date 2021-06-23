@@ -92,7 +92,7 @@ exec_once () { # {{{
 #feh --bg-tile "${HOME}/.config/wall.png" &
 xsetroot -cursor_name left_ptr
 dunst --config "${XDG_CONFIG_HOME:-${HOME}/.config}/dunst/dunstrc" &
-picom --config "${XDG_CONFIG_HOME:-${HOME}/.config}/picom/picom.conf" -fcCGb --xrender-sync-fence &
+#picom --config "${XDG_CONFIG_HOME:-${HOME}/.config}/picom/picom.conf" -fcCGb --xrender-sync-fence &
 "${XDG_CONFIG_HOME:-${HOME}/.config}/polybar/launch.sh" main &
 "${XDG_CONFIG_HOME:-${HOME}/.config}/bspwm/scripts/cleanfullscreen" &
 "${XDG_CONFIG_HOME:-${HOME}/.config}/bspwm/scripts/monitors.py" &

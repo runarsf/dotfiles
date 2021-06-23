@@ -17,19 +17,19 @@ sysmodmap=/etc/X11/xinit/.Xmodmap
 
 # merge in defaults and keymaps
 if test -f "${sysresources}"; then
-    xrdb -merge "${sysresources}"
+  xrdb -merge "${sysresources}"
 fi
 
 if test -f "${sysmodmap}"; then
-    xmodmap "${sysmodmap}"
+  xmodmap "${sysmodmap}"
 fi
 
 if test -f "${userresources}"; then
-    xrdb -merge "${userresources}"
+  xrdb -merge "${userresources}"
 fi
 
 if test -f "${usermodmap}"; then
-    xmodmap "${usermodmap}"
+  xmodmap "${usermodmap}"
 fi
 
 if test -d /etc/X11/xinit/xinitrc.d; then
@@ -39,7 +39,7 @@ if test -d /etc/X11/xinit/xinitrc.d; then
   unset f
 fi
 
-xset +fp "${XG_HOME:-${HOME}}/.local/share/fonts/"
+xset +fp "${HOME}/.local/share/fonts/"
 xset fp rehash
 
 # Increase key repeat rate
@@ -57,10 +57,9 @@ setxkbmap -option caps:escape -v no &
 xsetroot -cursor_name left_ptr &
 
 dunst &
-picom &
 nm-applet &
 xfce4-power-manager &
-picom -fcCGb --xrender-sync-fence &
+picom --config "${XDG_CONFIG_HOME:-${HOME}/.config}/picom/picom.conf" -fcCGb --xrender-sync-fence &
 pulseaudio --start &
 (nitrogen --restore || feh --bg-scale "${XDG_CONFIG_HOME:-${HOME}/.config}/wall/wall.jpg") &
 
@@ -72,7 +71,7 @@ pulseaudio --start &
 #xsetwacom --set "Wacom Intuos S Pen stylus" Button 3 '0'
 #xsetwacom --set "Wacom Intuos S Pen stylus" MapToOutput HEAD-0
 
-if [systemd-detect-virt = "oracle"]; then
+if test systemd-detect-virt = "oracle"; then
   /usr/bin/VBoxClient-all
 fi
 
