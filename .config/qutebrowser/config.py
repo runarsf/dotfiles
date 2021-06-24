@@ -38,6 +38,7 @@ c.bindings.commands = {
         "<Ctrl+,>": "set",
         "<Ctrl+f>": "set-cmd-text /",
         "<Ctrl+o>": "back",
-        "gh": "home"
+        "gh": "home",
+        "<Ctrl+l>": "set-cmd-text :open "
     }
 }
