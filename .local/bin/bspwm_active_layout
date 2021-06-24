@@ -2,17 +2,18 @@
 did="$(bspc query -D -n focused --names)"
 layout="$(bsp-layout get ${did})"
 
-test "${layout}" = "-" && layout="$(bspc query -T -d | jq '.layout')"
+blayout="$(bspc query -T -d | jq --raw-output '.layout')"
+test "${layout}" = "-" -o "${blayout}" = "monocle" && layout="${blayout}"
 
 case "${layout}" in
-  tall)    printf "[]="  ;;
-  rtall)   printf "=[]"  ;;
-  wide)    printf "TTT"  ;;
-  rwide)   printf "LLL"  ;;
-  tile*)   printf "[]-"  ;;
-  grid)    printf "|-|-|";;
-  rgrid)   printf "-|-|-";;
-  even)    printf "[][]" ;;
-  monocle) printf  "[M]" ;;
-  -|*)     printf "[?]"  ;;
+  tall)       printf "[]="  ;;
+  rtall)      printf "=[]"  ;;
+  wide)       printf "TTT"  ;;
+  rwide)      printf "LLL"  ;;
+  tile|tiled) printf "[]-"  ;;
+  grid)       printf "|-|-|";;
+  rgrid)      printf "-|-|-";;
+  even)       printf "[][]" ;;
+  monocle)    printf "[M]"  ;;
+  -|*)        printf "[?]"  ;;
 esac

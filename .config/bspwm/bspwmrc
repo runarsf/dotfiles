@@ -88,6 +88,7 @@ exec_once () { # {{{
     fi
   fi
 }
+exec_once 2bspwm
 
 #feh --bg-tile "${HOME}/.config/wall.png" &
 xsetroot -cursor_name left_ptr

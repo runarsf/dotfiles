@@ -162,14 +162,15 @@ bindkey '^[[F' end-of-line
 bindkey '^e' edit-command-line
 # }}}
 
-# Aliases{{{
+# Aliases {{{
+alias p="test -z \"\${HISTFILE}\" && {HISTFILE=${HISTFILE}; printf \"o.o\\n\"} || {HISTFILE=''; printf \"-.-\\n\"}"
 alias vim='${EDITOR}'
 alias ls='ls -lAFh --color'
 #alias ls='exa -GlxFa --colour=always'
 alias grep='grep --color'
 alias c='xclip -selection clipboard'
 alias back='cd ${OLDPWD}'
-alias reload='source "${HOME}/.config/zsh/.zshrc"'
+alias reload='source "${XDG_CONFIG_:-${HOME}/.config}/zsh/.zshrc"'
 alias lineinon='pactl load-module module-loopback latency_msec=1'
 alias whim='whim --editor "${EDITOR} +startinsert" --terminal "${TERMINAL} --class scratchpad -e"'
 alias passed='test "${?}" -eq "0" && lolcat ~/.local/bin/tp -s 40 -d 2'
