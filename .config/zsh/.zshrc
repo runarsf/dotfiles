@@ -76,15 +76,6 @@ fi
 # Options {{{
 # http://zsh.sourceforge.net/Doc/Release/Options.html
 setopt MENU_COMPLETE
-setopt APPEND_HISTORY
-setopt INC_APPEND_HISTORY
-setopt SHARE_HISTORY
-setopt HIST_IGNORE_ALL_DUPS
-setopt HIST_REDUCE_BLANKS
-setopt HIST_IGNORE_DUPS
-setopt HIST_IGNORE_SPACE
-setopt HIST_VERIFY
-setopt HIST_EXPIRE_DUPS_FIRST
 setopt GLOB_DOTS
 CASE_SENSITIVE='false'
 HYPHEN_INSENSITIVE='true'
@@ -95,15 +86,36 @@ DISABLE_LS_COLORS='false'
 DISABLE_AUTO_TITLE='false'
 ENABLE_CORRECTION='true'
 COMPLETION_WAITING_DOTS='true'''
+PROMPT_EOL_MARK=''
+ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=067,underline'
+FZF_COMPLETION_TRIGGER=','
+#ZSH_AUTOSUGGEST_STRATEGY=(history completion) # (completion match_prev_cmd)
+
+# History {{{
+# Make sure to unset any option that writes history after session end.
+alias p="test -z \"\${HISTFILE}\" && {export HISTFILE=${HISTFILE}; printf \"o.o\\n\"} || {sed -i '\$ d' ${HISTFILE}; export HISTFILE=''; printf \"-.-\\n\"}"
+# The following 3 options are mutually exclusive, see `man zshoptions` for explanation.
+#unsetopt INC_APPEND_HISTORY
+#unsetopt APPEND_HISTORY
+#unsetopt INC_APPEND_HISTORY_TIME
+# This  option  both  imports  new commands from the history file,
+# and also causes your typed commands to be appended to the history file
+# (the latter is like specifying INC_APPEND_HISTORY,
+#  which should be turned off if this option is in effect).
+setopt SHARE_HISTORY
+#setopt HIST_IGNORE_DUPS
+setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_EXPIRE_DUPS_FIRST
+setopt HIST_REDUCE_BLANKS
+setopt HIST_IGNORE_SPACE
+setopt HIST_VERIFY
 HIST_STAMPS='dd/mm/yyyy'
 HISTFILE=~/.zsh_history
 HISTSIZE=5000
 SAVEHIST=5000
 HISTCONTROL=ignoreboth:erasedumps
-PROMPT_EOL_MARK=''
-ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=067,underline'
-FZF_COMPLETION_TRIGGER=','
-#ZSH_AUTOSUGGEST_STRATEGY=(history completion) # (completion match_prev_cmd)
+# }}}
+
 # }}}
 
 # https://github.com/denysdovhan/spaceship-prompt/blob/master/docs/Options.md {{{
@@ -163,7 +175,6 @@ bindkey '^e' edit-command-line
 # }}}
 
 # Aliases {{{
-alias p="test -z \"\${HISTFILE}\" && {HISTFILE=${HISTFILE}; printf \"o.o\\n\"} || {HISTFILE=''; printf \"-.-\\n\"}"
 alias vim='${EDITOR}'
 alias ls='ls -lAFh --color'
 #alias ls='exa -GlxFa --colour=always'
@@ -258,3 +269,4 @@ eval "$(starship init zsh)"
 # }}}
 
 test -f ~/.fzf.zsh && source ~/.fzf.zsh
+

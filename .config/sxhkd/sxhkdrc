@@ -28,6 +28,8 @@ super + Escape
 
 alt + p
 	sharenix-section -n -c
+alt + shift + p
+	xfce4-screenshooter -w -o 'sharenix -n -c'
 
 super + shift + c
 	toggleprogram "picom" "-b"

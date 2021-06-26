@@ -2,8 +2,8 @@
 did="$(bspc query -D -n focused --names)"
 layout="$(bsp-layout get ${did})"
 
-blayout="$(bspc query -T -d | jq --raw-output '.layout')"
-test "${layout}" = "-" -o "${blayout}" = "monocle" && layout="${blayout}"
+clayout="$(bspc query -T -d | jq --raw-output '.layout')"
+test "${layout}" = "-" -o "${clayout}" = "monocle" && layout="${clayout}"
 
 case "${layout}" in
   tall)       printf "[]="  ;;

@@ -109,6 +109,9 @@ map <silent> <C-n> :Lexplore<CR>
 
 " https://vi.stackexchange.com/questions/10988/toggle-explorer-window
 " }}}
+Plug 'jbyuki/instant.nvim' " {{{
+let g:instant_username = "Runar"
+" }}}
 "Plug 'mhinz/vim-startify' " {{{
 "let g:startify_session_dir = '~/.config/nvim/session'
 "let g:startify_lists = [

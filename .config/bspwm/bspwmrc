@@ -78,17 +78,16 @@ bspc rule -a '*:scratchpad' sticky=on state=floating center=true rectangle=1600x
 #done < <(bspc subscribe node_state)
 # }}}
 
-exec_once () { # {{{
-  # Note: Most programs are started in .xprofile
-  cmd="${1}" # $1: command to run
-  pid="${2:-${cmd%% *}}" # $2: what to check the pid of, defaults to first word of $1
-  if ! pgrep -f "${pid}" >/dev/null 2>&1; then
-    if command -v "${cmd}" >/dev/null 2>&1; then
-      eval "${cmd} &"
-    fi
-  fi
-}
-exec_once 2bspwm
+#exec_once () { # {{{
+#  # Note: Most programs are started in .xprofile
+#  cmd="${1}" # $1: command to run
+#  pid="${2:-${cmd%% *}}" # $2: what to check the pid of, defaults to first word of $1
+#  if ! pgrep -f "${pid}" >/dev/null 2>&1; then
+#    if command -v "${cmd}" >/dev/null 2>&1; then
+#      eval "${cmd} &"
+#    fi
+#  fi
+#}
 
 #feh --bg-tile "${HOME}/.config/wall.png" &
 xsetroot -cursor_name left_ptr
