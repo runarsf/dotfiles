@@ -62,6 +62,7 @@ xfce4-power-manager &
 picom --config "${XDG_CONFIG_HOME:-${HOME}/.config}/picom/picom.conf" -fcCGb --xrender-sync-fence &
 pulseaudio --start &
 (nitrogen --restore || feh --bg-scale "${XDG_CONFIG_HOME:-${HOME}/.config}/wall/wall.jpg") &
+autorandr --change &
 
 #xsetwacom --set "Wacom Intuos S Pen stylus" Suppress 2
 #xsetwacom --set "Wacom Intuos S Pen stylus" Rawsample 4
