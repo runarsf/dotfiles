@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+
+set +o errexit
+read -r -d '' layouts <<'EOLAYOUTS'
+tall
+rtall
+wide
+rwide
+monocle
+tiled
+grid
+rgrid
+even
+EOLAYOUTS
+set -o errexit
+
+lines=$(($(printf "${layouts}" | wc -l) + 1))
+clayout="$(bspwm_active_layout 2>/dev/null || bspc query -T -d | jq --raw-output '.layout')"
+
+layout="$(printf "${layouts}" | rofi -lines "${lines}" -dmenu -p "${clayout}")"
+
+did="$(bspc query -D -n focused --names)"
+ms="0.55"
+case "${layout}" in
+  tall|rtall|wide|rwide) bsp-layout set "${layout}" "${did}" --master-size "${ms}";;
+  grid|rgrid|even) bsp-layout set "${layout}" "${did}";;
+  tiled|monocle) bsp-layout remove "${did}"; bspc desktop --layout "${layout}";;
+  *);;
+esac
+
+#layout="$(bsp-layout get ${did})"
+#test "${layout}" = "-" -o "${layout}" = "tile" \
+#  && bsp-layout set tall "${did}" --master-size 0.55 \
+#  || {bsp-layout remove "${did}"; bsp-layout once tile}
