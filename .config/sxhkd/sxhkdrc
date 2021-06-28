@@ -27,9 +27,13 @@ super + Escape
 	pkill -USR1 -x sxhkd
 
 alt + p
-	sharenix-section -n -c
+	screenshot -r -f -o 'sharenix -n -c'
 alt + shift + p
-	xfce4-screenshooter -w -o 'sharenix -n -c'
+	screenshot -o 'sharenix -n -c'
+#alt + p
+#	sharenix-section -n -c
+#alt + shift + p
+#	xfce4-screenshooter -w -o 'sharenix -n -c'
 
 super + shift + c
 	toggleprogram "picom" "-b"

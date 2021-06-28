@@ -110,9 +110,9 @@ super + t
 #	bspc node --state {tiled,pseudo_tiled,floating,fullscreen}
 
 super + n
-	bspwm_scratchpad "scratchpad" "alacritty --class scratchpad --title scratchpad --command tmux"
+	bspwm_scratchpad "scratchpad" "alacritty --class scratchpad --title scratchpad --option font.size=18 --command tmux"
 super + m
-	bspwm_scratchpad "math" "alacritty --class math --title math --command python3"
+	bspwm_scratchpad "math" "alacritty --class math --title math --option font.size=18 --command python3"
 super + p
 	bspwm_scratchpad "pomotroid" "pomotroid"
 

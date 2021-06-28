@@ -142,6 +142,7 @@ let g:instant_username = "Runar"
 "nmap <F6> :FloatermKill!<CR>
 " }}}
 Plug 'iamcco/markdown-preview.vim'
+Plug 'freitass/todo.txt-vim'
 "Plug 'dense-analysis/ale' " {{{
 "let g:ale_fix_on_save = 0
 "let g:ale_fixers = {
@@ -155,11 +156,11 @@ Plug 'iamcco/markdown-preview.vim'
 "let g:syntastic_check_on_open = 1
 "let g:syntastic_check_on_wq = 0
 "" }}}
-Plug 'lervag/vimtex' " {{{
-let g:tex_flavor='latex'
-let g:vimtex_view_method='zathura'
-let g:vimtex_quickfix_mode=0
-let g:tex_conceal='abdmg'
+"Plug 'lervag/vimtex' " {{{
+"let g:tex_flavor='latex'
+"let g:vimtex_view_method='zathura'
+"let g:vimtex_quickfix_mode=0
+"let g:tex_conceal='abdmg'
 " }}}
 Plug 'sirver/ultisnips' " {{{
 let g:UltiSnipsExpandTrigger = '<tab>'
@@ -183,7 +184,7 @@ let g:vim_markdown_no_default_key_mappings = 1
 let g:vim_markdown_toc_autofit = 1
 let g:vim_markdown_emphasis_multiline = 1
 let g:vim_markdown_conceal = 1
-let g:vim_markdown_conceal_code_blocks = 1
+let g:vim_markdown_conceal_code_blocks = 0
 let g:vim_markdown_fenced_languages = ['c++=cpp', 'viml=vim', 'bash=sh', 'ini=dosini']
 "let g:vim_markdown_follow_anchor = 0
 "let g:vim_markdown_anchorexpr = "'<<'.v:anchor.'>>'"
@@ -427,7 +428,7 @@ set splitbelow splitright
 set mouse=c
 set noerrorbells novisualbell
 set t_vb=
-set conceallevel=2
+set conceallevel=0
 
 " Time for key combinations to time out, like <leader>w in Normal mode.
 set ttimeout
@@ -684,7 +685,7 @@ nnoremap <leader>mc :execute '!${XDG_CONFIG_HOME:-${HOME}/.config}/nvim/mdconver
 
 augroup filetype_tweaks | autocmd!
   " Assign filetypes
-  autocmd BufRead,BufNewFile *.conf,*.toml,config set filetype=dosini
+  "autocmd BufRead,BufNewFile *.conf,*.toml,config set filetype=dosini
   autocmd BufRead,BufNewFile *.md,*.rmd,*.txt set filetype=markdown
   autocmd BufRead,BufNewFile *.rss set filetype=xml
   autocmd BufRead,BufNewFile commands set filetype=sh
