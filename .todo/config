@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+# Add this as an alias in your shell, clearing every time the command is run by a non-user is not a good idea
+alias t='clear; todo.sh -c'
+
 export TODO_DIR="$(realpath "${HOME}/.todo")"
 
 export TODO_FILE="${TODO_DIR}/todo.txt"
@@ -7,16 +10,17 @@ export REPORT_FILE="${TODO_DIR}/report.txt"
 
 export TODO_ACTIONS_DIR="$(realpath "${XDG_CONFIG_HOME:-${HOME}/.config}/.todo.actions.d")"
 
-BASEDIR="$(dirname "$(realpath "$(git rev-parse --git-dir 2> /dev/null)")")"
+BASEDIR="$(realpath "$(dirname "$(git rev-parse --git-dir 2> /dev/null)")")"
 if test -f "${BASEDIR}/$(basename "${TODO_FILE}")"; then
   export TODO_FILE="${BASEDIR}/$(basename "${TODO_FILE}")"
   export DONE_FILE="${TODO_DIR}/$(basename ${BASEDIR})-done.txt"
   export REPORT_FILE="${TODO_DIR}/$(basename ${BASEDIR})-report.txt"
   export TODO_DIR="${BASEDIR}"
-  case "${1}" in
-    e|edit|ed|vim|vi|-e|--edit) ${EDITOR} "${TODO_FILE}"; exit 0;;
-  esac
 fi
+
+case "${1}" in
+  e|edit|ed|vim|vi|-e|--edit) ${EDITOR} "${TODO_FILE}"; exit 0;;
+esac
 
 export BLACK='\\033[0;30m'
 export RED='\\033[0;31m'

@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+
+action=${1}
+
+function usage {
+  echo "  $(basename ${0})"
+  echo "    Sort columns based on tags."
+  echo ""
+  exit
+}
+
+test "${action}" = "usage" && usage
+
+cd "${TODO_DIR}"
+
+# > Get all tasks containing +
+# > Remove the last two lines
+# > Remove color codes
+# > Get *only* all words starting with +
+# > Sort
+# > Remove duplicate words
+projects=$(${TODO_SH} ls "+" \
+         | head -n -2 \
+         | sed -r "s/\x1B\[([0-9]{1,3}(;[0-9]{1,2})?)?[mGK]//g" \
+         | \grep --color=never -oE '\+\S+' \
+         | sort \
+         | uniq)
+
+for proj in ${projects}; do
+  printf "${proj}\n"
+  seq -s= $((${#proj}+1)) | tr -d '[:digit:]'
+  ${TODO_SH} ls "${proj}" | head -n -2
+  printf "\n"
+done
+
+printf "Uncategorized\n=============\n"
+${TODO_SH} ls -"+" | head -n -2
+#printf ${projects} | grep -w -v -e "+wifi" -e "+unifi"
