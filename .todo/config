@@ -60,7 +60,7 @@ export TODOTXT_SORT_COMMAND='cat'
 
 export TODOTXT_FINAL_FILTER='cat'
 
-export TODOTXT_DEFAULT_ACTION='ls'
+export TODOTXT_DEFAULT_ACTION='col'
 
 # Addon configuration
 
