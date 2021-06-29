@@ -1,22 +1,20 @@
 #!/usr/bin/env bash
 # Add this as an alias in your shell, clearing every time the command is run by a non-user is not a good idea
-alias t='clear; todo.sh -c'
-
-export TODO_DIR="$(realpath "${HOME}/.todo")"
-
-export TODO_FILE="${TODO_DIR}/todo.txt"
-export DONE_FILE="${TODO_DIR}/done.txt"
-export REPORT_FILE="${TODO_DIR}/report.txt"
+alias t='clear; todo.sh -a -c'
 
 export TODO_ACTIONS_DIR="$(realpath "${XDG_CONFIG_HOME:-${HOME}/.config}/.todo.actions.d")"
 
+export TODO_DIR="$(realpath "${HOME}/.todo")"
+
+# Returns path of .git parent if you're in a git repo, otherwise $PWD
 BASEDIR="$(realpath "$(dirname "$(git rev-parse --git-dir 2> /dev/null)")")"
-if test -f "${BASEDIR}/$(basename "${TODO_FILE}")"; then
-  export TODO_FILE="${BASEDIR}/$(basename "${TODO_FILE}")"
-  export DONE_FILE="${BASEDIR}/done.txt"
-  export REPORT_FILE="${TODO_DIR}/$(basename ${BASEDIR})-report.txt"
+if test -f "${BASEDIR}/todo.txt"; then
   export TODO_DIR="${BASEDIR}"
 fi
+
+export TODO_FILE="${TODO_DIR}/todo.txt"
+export DONE_FILE="${TODO_DIR}/archive.txt"
+export REPORT_FILE="${TODO_DIR}/report.txt"
 
 case "${1}" in
   e|edit|ed|vim|vi|-e|--edit) ${EDITOR} "${TODO_FILE}"; exit 0;;
