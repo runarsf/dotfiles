@@ -1,178 +1,289 @@
 #!/usr/bin/env bash
-#[cd] FIXME: Automatically cd
-# maybe export CHANGEDIR="${DIR}"
-# maybe PWD="${DIR}"
+set -euo pipefail
 
-JOTRC="${HOME:-~}/.config/.jotrc"
-finish () {
+finish () { # {{{
 #  source "${0}"
-  if test ! -f "${JOTRC}"; then
-    touch "${JOTRC}"
+  if test ! -f "${CONFIG}"; then
+    touch "${CONFIG}"
   fi
   if test "${REMEMBER_LAST}" = "yes"; then
-    if test -n "${DIR}"; then
-      if grep -qE "^LASTDIR=.*$" "${JOTRC}"; then 
-        sed -i "s|^LASTDIR=.*$|LASTDIR='${DIR}'|" "${JOTRC}"
+    if test -n "${NOTES_DIR}"; then
+      if grep -qE "^LAST_DIR=.*$" "${CONFIG}"; then 
+        sed -i "s|^LAST_DIR=.*$|LAST_DIR='${NOTES_DIR}'|" "${CONFIG}"
       else
-        echo "LASTDIR='${DIR}'" >> "${JOTRC}"
+        echo "LAST_DIR='${NOTES_DIR}'" >> "${CONFIG}"
       fi
     else
-      sed -i '/^LASTDIR=.*$/d' "${JOTRC}"
+      sed -i '/^LAST_DIR=.*$/d' "${CONFIG}"
     fi
     if test -n "${LASTFILE}"; then
-      if grep -qE "^LASTFILE=.*$" "${JOTRC}"; then 
-        sed -i "s|^LASTFILE=.*$|LASTFILE='${LASTFILE}'|" "${JOTRC}"
+      if grep -qE "^LASTFILE=.*$" "${CONFIG}"; then 
+        sed -i "s|^LASTFILE=.*$|LASTFILE='${LASTFILE}'|" "${CONFIG}"
       else
-        echo "LASTFILE='${LASTFILE}'" >> "${JOTRC}"
+        echo "LASTFILE='${LASTFILE}'" >> "${CONFIG}"
       fi
     else
-      sed -i '/^LASTFILE=.*$/d' "${JOTRC}"
+      sed -i '/^LASTFILE=.*$/d' "${CONFIG}"
     fi
   else
-    sed -i '/^LASTFILE=.*$/d' "${JOTRC}"
-    sed -i '/^LASTDIR=.*$/d' "${JOTRC}"
+    sed -i '/^LASTFILE=.*$/d' "${CONFIG}"
+    sed -i '/^LAST_DIR=.*$/d' "${CONFIG}"
   fi
-}
+} # }}}
 
-#[cd]
-# Check if script is sourced
-#if [[ $_ != $0 ]]; then
-#  if test -n "${CHANGEDIR}"; then
-#    cd "${CHANGEDIR}"
-#    export CHANGEDIR=""
-#  fi
-#  # Replace current shell (this script, since it's sourced) with a new one with the updated path
-#  exec "${SHELL:-bash}"
-#fi
-
-set -o errexit
-
-set -o allexport
-test -f "${JOTRC}" && source "${JOTRC}"
-set +o allexport
-
-# Change these in ~/.config/.jotrc
-NOTE_EXTENSION="${NOTE_EXTENSION:-.md}"
-DIR="${DIR:-${HOME:-~}/Documents/drive/notes}"
+# Variables {{{
+CONFIG="${CONFIG:-${XDG_CONFIG_HOME:-${HOME}/.config}/.jotrc}"
+NOTES_DIR="${NOTES_DIR:-${HOME}/notes}"
+EXTENSION="${EXTENSION:-.md}"
 FZF_BIN="${FZF_BIN:-$(which fzf)}"
 SYNC_SERVICE="${SYNC_SERVICE:-}"
+
 LASTFILE="${LASTFILE:-}"
 if test "${REMEMBER_LAST}" = "yes" -a "${1}" != "."; then
-  DIR="${LASTDIR:-${DIR}}"
+  NOTES_DIR="${LAST_DIR:-${NOTES_DIR}}"
 else
   LASTFILE=""
 fi
+NOTES_DIR="$(realpath "${NOTES_DIR}")"
 
-DIR="$(realpath "${DIR}")"
-#[cd]
-#cd "${DIR}"
-#export CHANGEDIR="${DIR}"
-# No reason to trap before doing anything with the shell
-trap finish EXIT
 
-if test "${SYNC_SERVICE}" = "insync"; then
-  if command -v "insync" >/dev/null 2>&1; then
-    if test -z "$(pidof insync)"; then
-      printf "Insync not running, starting...\n"
-      insync start
-      if test "${?}" -ne "0"; then
-        printf "Failed to start insync"
-        exit 1
+set -o allexport
+test -f "${CONFIG}" && source "${CONFIG}"
+set +o allexport
 
-      fi
-    fi
-  fi
-fi
+colours () { # {{{
+  RESET=$'\e[0;39m'
 
-# TODO: Only show files matching pattern (.*\.${NOTE_EXTENSION})
+  E_BOLD=$'\e[1m'
+  E_DIM=$'\e[2m'
+  E_UNDERLINE=$'\e[4m'
+  E_BLINK=$'\e[5m'
+  E_INVERT=$'\e[7m'
+  E_HIDDEN=$'\e[8m'
 
-make_selection () {
-  DIR="${1}"
-  ONLY_NOTES="${2:-}"
+  R_NORMAL=$'\e[0m'
+  R_BOLD=$'\e[21m'
+  R_DIM=$'\e[22m'
+  R_UNDERLINE=$'\e[24m'
+  R_BLINK=$'\e[25m'
+  R_INVERT=$'\e[27m'
+  R_HIDDEN=$'\e[28m'
 
-  OPTIONS="$(\ls -p "${DIR}")"
-  # Add a newline if there are any notes, to avoid empty lines in fzf
-  if test -n "${OPTIONS}"; then
-    #while IFS= read -r option; do
-    #done <<< "${OPTIONS}"
-    OPTIONS="${OPTIONS}\n"
-  fi
-  if test -z "${ONLY_NOTES}"; then
-    OPTIONS="${OPTIONS}..\nNew Note\nNew Folder\nDelete Item"
-  fi
+  C_DEFAULT=$'\e[19m'
+  C_BLACK=$'\e[30m'
+  C_RED=$'\e[31m'
+  C_GREEN=$'\e[32m'
+  C_YELLOW=$'\e[33m'
+  C_BLUE=$'\e[34m'
+  C_MAGENTA=$'\e[35m'
+  C_CYAN=$'\e[36m'
+  C_LGRAY=$'\e[37m'
+  C_DGRAY=$'\e[90m'
+  C_LRED=$'\e[91m'
+  C_LGREEN=$'\e[92m'
+  C_LYELLOW=$'\e[93m'
+  C_LBLUE=$'\e[94m'
+  C_LMAGENTA=$'\e[95m'
+  C_LCYAN=$'\e[96m'
+  C_WHITE=$'\e[97m'
 
-  SELECTED_OPTION="$(printf "${OPTIONS}" | "${FZF_BIN}" --query="${LASTFILE}" --info=hidden)"
-  LASTFILE=""
+  B_DEFAULT=$'\e[49m'
+  B_BLACK=$'\e[40m'
+  B_RED=$'\e[41m'
+  B_GREEN=$'\e[42m'
+  B_YELLOW=$'\e[43m'
+  B_BLUE=$'\e[44m'
+  B_MAGENTA=$'\e[45m'
+  B_CYAN=$'\e[46m'
+  B_LGRAY=$'\e[47m'
+  B_DGRAY=$'\e[100m'
+  B_LRED=$'\e[101m'
+  B_LGREEN=$'\e[102m'
+  B_LYELLOW=$'\e[103m'
+  B_LBLUE=$'\e[104m'
+  B_LMAGENTA=$'\e[105m'
+  B_LCYAN=$'\e[106m'
+  B_WHITE=$'\e[106m'
 }
+colours
+# }}}
+# }}}
 
-# Note: $DIR is updated in make_selection()
-while true; do
-  make_selection "${DIR}"
-  if test "${SELECTED_OPTION}" = "New Note"; then
-    NOTE_NAME="$(set +e; printf '' | "${FZF_BIN}" --print-query --info=hidden --prompt 'New note name: '; set -e)"
-    if test -z "${NOTE_NAME// }"; then
-      printf "Please provide a note name...\n"
-      continue
-    fi
-    if [[ "${NOTE_NAME}" == *. ]]; then
-      NOTE="${NOTE_NAME%?}"
-    elif [[ "${NOTE_NAME}" == *.* ]]; then
-      NOTE="${NOTE_NAME}"
-    else
-      NOTE="${NOTE_NAME}${NOTE_EXTENSION}"
-    fi
-    if test -f "${DIR}/${NOTE}"; then
-      printf "Note with the name already exists...\n"
-      continue
-    fi
-    touch "${DIR}/${NOTE}"
-    "${EDITOR}" "${DIR}/${NOTE}"
-    if test "${REMEMBER_LAST}" = "yes"; then
-      LASTFILE="${NOTE}"
-    fi
-  elif test "${SELECTED_OPTION}" = "New Folder"; then
-    FOLDER_NAME="$(set +e; printf '' | "${FZF_BIN}" --print-query --info=hidden --prompt 'New folder name: '; set -e)"
-    if test -z "${FOLDER_NAME// }"; then
-      printf "Please provide a folder name...\n"
-      continue
-    fi
-    mkdir -p "${DIR}/${FOLDER_NAME}"
-    DIR="${DIR}/${FOLDER_NAME}"
-    if test "${REMEMBER_LAST}" = "yes"; then
-      LASTFILE=""
-    fi
-  elif test "${SELECTED_OPTION}" = ".."; then
-    DIR="$(dirname "${DIR}")"
-    if test "${REMEMBER_LAST}" = "yes"; then
-      LASTFILE=""
-    fi
-    #[cd]#cd "${DIR}"
-  elif test -d "${DIR}/${SELECTED_OPTION}"; then
-    DIR="${DIR}/${SELECTED_OPTION}"
-    if test "${REMEMBER_LAST}" = "yes"; then
-      LASTFILE=""
-    fi
-    #[cd]#cd "${DIR}"
-  elif test -f "${DIR}/${SELECTED_OPTION}"; then
-    "${EDITOR:-vim}" "${DIR}/${SELECTED_OPTION}"
-    if test "${REMEMBER_LAST}" = "yes"; then
-      LASTFILE="${SELECTED_OPTION}"
-    fi
-  elif test "${SELECTED_OPTION}" = "Delete Item"; then
-    make_selection "${DIR}" "yes"
-    if test -d "${DIR}/${SELECTED_OPTION}" -o -f "${DIR}/${SELECTED_OPTION}"; then
-      DELETE_ACCEPT="$(printf "Yes\nNo" | "${FZF_BIN}" --info=hidden --prompt="Delete ${SELECTED_OPTION}? (${DIR}/${SELECTED_OPTION})")"
-      if test "${DELETE_ACCEPT}" = "Yes"; then
-        rm -rf "${DIR}/${SELECTED_OPTION}"
+usage () { # {{{
+  SCRIPTNAME="$(basename $(realpath ${0}))"
+	cat <<-EOMAN
+  ${RESET}${C_GREEN}Usage:${RESET} ${SCRIPTNAME}  <${C_RED}options${RESET}>  [${C_BLUE}command${RESET}]
+	
+	${C_GREEN}Options:${RESET}
+	  -h, --help                 Display usage menu.
+	  -c, --countdown <${C_RED}seconds${RESET}>  Adjust countdown time.
+	
+	${C_GREEN}Commands:${RESET}
+	  stop                       Stop screen recording (GIF and MP4).
+	
+	${C_GREEN}Examples:${RESET}
+	  ${SCRIPTNAME} -h${RESET}
+	${RESET}
+	EOMAN
+} # }}}
+
+# Argument parsing {{{
+positional=()
+while test "${#}" -gt "0"; do
+  case "${1}" in
+    -h|--help) # {{{
+      usage
+      exit 0
+      shift;; # }}}
+    --*) # {{{
+      printf "Unknown option: ${1}\n"
+      exit 1
+      shift;;
+    -*)
+      shopts="${1}"
+      if test "${#shopts}" -le "2"; then
+        printf "Unknown option: ${shopts}\n"
+        exit 2
       fi
-    fi
-    if test "${REMEMBER_LAST}" = "yes"; then
-      LASTFILE=""
-    fi
-  else
-    printf "Something went wrong...\n"
-    printf "Selected option: ${SELECTED_OPTION}\n"
-    printf "Directory: ${DIR}\n"
-    break
-  fi
+      shift
+      set -- "${shopts:0:2}" "-${shopts:2}" "${@}"
+      ;;
+    *)
+      positional+=("${1}")
+      shift;; # }}}
+  esac
 done
+set -- "${positional[@]}"
+
+#if test "${#}" -gt "0"; then
+#  if test "${1}" = "stop"; then
+#    pkill -fxn '(/\S+)*ffmpeg\s.*\sx11grab\s.*'
+#    exit 0
+#  fi
+#fi
+# }}}
+
+##[cd]
+## Check if script is sourced
+##if [[ $_ != $0 ]]; then
+##  if test -n "${CHANGEDIR}"; then
+##    cd "${CHANGEDIR}"
+##    export CHANGEDIR=""
+##  fi
+##  # Replace current shell (this script, since it's sourced) with a new one with the updated path
+##  exec "${SHELL:-bash}"
+##fi
+#
+## Change these in ~/.config/.jotrc
+##[cd]
+##cd "${NOTES_DIR}"
+##export CHANGEDIR="${NOTES_DIR}"
+## No reason to trap before doing anything with the shell
+#trap finish EXIT
+#
+#if test "${SYNC_SERVICE}" = "insync"; then
+#  if command -v "insync" >/dev/null 2>&1; then
+#    if test -z "$(pidof insync)"; then
+#      printf "Insync not running, starting...\n"
+#      insync start
+#      if test "${?}" -ne "0"; then
+#        printf "Failed to start insync"
+#        exit 1
+#
+#      fi
+#    fi
+#  fi
+#fi
+#
+## TODO: Only show files matching pattern (.*\.${NOTE_EXTENSION})
+#
+#make_selection () {
+#  NOTES_DIR="${1}"
+#  ONLY_NOTES="${2:-}"
+#
+#  OPTIONS="$(\ls -p "${NOTES_DIR}")"
+#  # Add a newline if there are any notes, to avoid empty lines in fzf
+#  if test -n "${OPTIONS}"; then
+#    #while IFS= read -r option; do
+#    #done <<< "${OPTIONS}"
+#    OPTIONS="${OPTIONS}\n"
+#  fi
+#  if test -z "${ONLY_NOTES}"; then
+#    OPTIONS="${OPTIONS}..\nNew Note\nNew Folder\nDelete Item"
+#  fi
+#
+#  SELECTED_OPTION="$(printf "${OPTIONS}" | "${FZF_BIN}" --query="${LASTFILE}" --info=hidden)"
+#  LASTFILE=""
+#}
+#
+## Note: $DIR is updated in make_selection()
+#while true; do
+#  make_selection "${NOTES_DIR}"
+#  if test "${SELECTED_OPTION}" = "New Note"; then
+#    NOTE_NAME="$(set +e; printf '' | "${FZF_BIN}" --print-query --info=hidden --prompt 'New note name: '; set -e)"
+#    if test -z "${NOTE_NAME// }"; then
+#      printf "Please provide a note name...\n"
+#      continue
+#    fi
+#    if [[ "${NOTE_NAME}" == *. ]]; then
+#      NOTE="${NOTE_NAME%?}"
+#    elif [[ "${NOTE_NAME}" == *.* ]]; then
+#      NOTE="${NOTE_NAME}"
+#    else
+#      NOTE="${NOTE_NAME}${NOTE_EXTENSION}"
+#    fi
+#    if test -f "${NOTES_DIR}/${NOTE}"; then
+#      printf "Note with the name already exists...\n"
+#      continue
+#    fi
+#    touch "${NOTES_DIR}/${NOTE}"
+#    "${EDITOR}" "${NOTES_DIR}/${NOTE}"
+#    if test "${REMEMBER_LAST}" = "yes"; then
+#      LASTFILE="${NOTE}"
+#    fi
+#  elif test "${SELECTED_OPTION}" = "New Folder"; then
+#    FOLDER_NAME="$(set +e; printf '' | "${FZF_BIN}" --print-query --info=hidden --prompt 'New folder name: '; set -e)"
+#    if test -z "${FOLDER_NAME// }"; then
+#      printf "Please provide a folder name...\n"
+#      continue
+#    fi
+#    mkdir -p "${NOTES_DIR}/${FOLDER_NAME}"
+#    DIR="${NOTES_DIR}/${FOLDER_NAME}"
+#    if test "${REMEMBER_LAST}" = "yes"; then
+#      LASTFILE=""
+#    fi
+#  elif test "${SELECTED_OPTION}" = ".."; then
+#    DIR="$(dirname "${NOTES_DIR}")"
+#    if test "${REMEMBER_LAST}" = "yes"; then
+#      LASTFILE=""
+#    fi
+#    #[cd]#cd "${NOTES_DIR}"
+#  elif test -d "${NOTES_DIR}/${SELECTED_OPTION}"; then
+#    DIR="${NOTES_DIR}/${SELECTED_OPTION}"
+#    if test "${REMEMBER_LAST}" = "yes"; then
+#      LASTFILE=""
+#    fi
+#    #[cd]#cd "${NOTES_DIR}"
+#  elif test -f "${NOTES_DIR}/${SELECTED_OPTION}"; then
+#    "${EDITOR:-vim}" "${NOTES_DIR}/${SELECTED_OPTION}"
+#    if test "${REMEMBER_LAST}" = "yes"; then
+#      LASTFILE="${SELECTED_OPTION}"
+#    fi
+#  elif test "${SELECTED_OPTION}" = "Delete Item"; then
+#    make_selection "${NOTES_DIR}" "yes"
+#    if test -d "${NOTES_DIR}/${SELECTED_OPTION}" -o -f "${NOTES_DIR}/${SELECTED_OPTION}"; then
+#      DELETE_ACCEPT="$(printf "Yes\nNo" | "${FZF_BIN}" --info=hidden --prompt="Delete ${SELECTED_OPTION}? (${NOTES_DIR}/${SELECTED_OPTION})")"
+#      if test "${DELETE_ACCEPT}" = "Yes"; then
+#        rm -rf "${NOTES_DIR}/${SELECTED_OPTION}"
+#      fi
+#    fi
+#    if test "${REMEMBER_LAST}" = "yes"; then
+#      LASTFILE=""
+#    fi
+#  else
+#    printf "Something went wrong...\n"
+#    printf "Selected option: ${SELECTED_OPTION}\n"
+#    printf "Directory: ${NOTES_DIR}\n"
+#    break
+#  fi
+#done
