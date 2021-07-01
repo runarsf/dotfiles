@@ -10,8 +10,8 @@
 
 #test -f ~/.xprofile && source ~/.xprofile
 
-userresources=${XDG_CONFIG_HOME:-${HOME}/.config}/X/Xresources
-usermodmap=${XDG_CONFIG_HOME:-${HOME}/.config}/X/.Xmodmap
+userresources=${XDG_CONFIG_HOME:-${HOME}/.config}/.urxvt/Xresources
+usermodmap=${XDG_CONFIG_HOME:-${HOME}/.config}/.urxvt/Xmodmap
 sysresources=/etc/X11/xinit/.Xresources
 sysmodmap=/etc/X11/xinit/.Xmodmap
 
@@ -39,7 +39,9 @@ if test -d /etc/X11/xinit/xinitrc.d; then
   unset f
 fi
 
+# TODO: Move fonts to first fontpath
 xset +fp "${HOME}/.local/share/fonts/"
+xset +fp "${HOME}/.fonts/"
 xset fp rehash
 
 # Increase key repeat rate
