@@ -9,7 +9,7 @@ bshlcolor=13141dff
 # Small (~1px) border on the outer ring segment
 separatorcolor=161825FF
 # Inner circle colour when password verified
-insidevercolor=00FF00FF
+insidevercolor=39cc64FF
 # Inner circle colour when password wrong
 insidewrongcolor=fe7868bb
 # Outer ring colour when password verified
@@ -17,7 +17,7 @@ ringvercolor=42414D99
 # Outer ring colour when password wrong
 ringwrongcolor=42414D99
 # ?
-verifcolor=ffffffff
+verifcolor=39cc64bb
 # Time colour
 timecolor=ffffffff
 # Text colour
