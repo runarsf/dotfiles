@@ -4,7 +4,8 @@ super + Return
 	"${TERMINAL}"
 
 super + x
-	gllock || lock || i3lock-fancy || i3lock
+	betterlockscreen -l dimblur -b 8
+#	gllock || lock || i3lock-fancy || i3lock
 #super + l
 #	dm-tool lock
 

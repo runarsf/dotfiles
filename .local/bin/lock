@@ -2,6 +2,7 @@
 
 if ! command -v "i3lock" "convert" "scrot" >/dev/null 2>&1; then
   printf "i3lock, imagemagick, and scrot are required to run this script.\n"
+  exit 1
 fi
 
 PICTURE=/tmp/i3lock.png
