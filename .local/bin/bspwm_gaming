@@ -11,6 +11,7 @@
 #fi
 #
 #exit
+#https://www.reddit.com/r/bspwm/comments/5vsfa5/get_a_list_of_windows_on_a_desktop/
 
 
 mygames=$(ls "${HOME}/.local/share/Steam/steamapps" | grep appmanifest | sed 's/[^0-9]*//g')
