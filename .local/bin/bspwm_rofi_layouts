@@ -20,7 +20,10 @@ clayout="$(bspwm_active_layout 2>/dev/null || bspc query -T -d | jq --raw-output
 layout="$(printf "${layouts}" | rofi -lines "${lines}" -dmenu -p "${clayout}")"
 
 did="$(bspc query -D -n focused --names)"
-ms="0.55"
+case "${layout}" in
+  rtall) ms="0.7";;
+  *) ms="0.55";;
+esac
 case "${layout}" in
   tall|rtall|wide|rwide) bsp-layout set "${layout}" "${did}" --master-size "${ms}";;
   grid|rgrid|even) bsp-layout set "${layout}" "${did}";;
