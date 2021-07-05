@@ -262,7 +262,7 @@
     foreground = "#cfd1dd"
 
 [urgency_critical]
-    timeout = 0
+    timeout = 300
     #background = "#2b0e0f"
     #foreground = "#93a1a1"
     #frame_color = "#ff7043"

@@ -31,7 +31,7 @@ super + {0-9}
 #bsp-layout cycle --layouts tall,tile
 
 super + shift + space
-	did="$(bspc query -D -n focused --names)"; layout="$(bsp-layout get ${did})"; test "${layout}" = "-" -o "${layout}" = "tile" && bsp-layout set tall "${did}" --master-size 0.55 || {bsp-layout remove "${did}"; bsp-layout once tile}
+	did="$(bspc query -D -n focused --names)"; layout="$(bsp-layout get ${did})"; test "${layout}" = "-" -o "${layout}" = "tile" && bsp-layout set tall "${did}" --master-size 0.60 || {bsp-layout remove "${did}"; bsp-layout once tile}
 super + alt + space
 	did="$(bspc query -D -n focused --names)"; layout="$(bsp-layout get ${did})"; test "${layout}" = "-" -o "${layout}" = "tile" && bsp-layout set tall "${did}" --master-size 0.70 || {bsp-layout remove "${did}"; bsp-layout once tile}
 

@@ -23,6 +23,8 @@ map c
 map e
 map f
 
+map cfg $${EDITOR} "${XDG_CONFIG_HOME:-${HOME}/.config}/lf/lfrc"
+
 cmd open ${{
   case $(file --mime-type "${f}" -bL) in
     text/*|application/json) ${EDITOR} "${f}";;
@@ -121,6 +123,7 @@ cmd trash-restore $trash-restore "$(trash-list | fzf | cut -d' ' -f3)"
 map tr trash-restore
 
 map e $${EDITOR} "${f}"
+#map <right> $${EDITOR} "${f}"
 map z $zathura "${f}" &
 
 map sh set hidden!
@@ -166,7 +169,7 @@ map G bottom
 #  cat <&4 > "${markfile}"
 #}}
 #map m mark-add
-map m $marker add "$(pwd)"
+map bm $marker add "$(pwd)"
 
 #cmd mark-go ${{
 #  FZF="${1:-}"

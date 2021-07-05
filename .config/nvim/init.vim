@@ -137,9 +137,13 @@ let g:instant_username = "Runar"
 ""let g:startify_custom_header = 'startify#center(startify#fortune#boxed())'
 "let g:startify_custom_header = []
  " }}}
-"Plug 'voldikss/vim-floaterm' " {{{
+Plug 'voldikss/vim-floaterm' " {{{
 "nmap <F5> :FloatermNew --height=0.6 --width=0.4 --wintype=float --name=Terminal --position=bottomright<CR>
 "nmap <F6> :FloatermKill!<CR>
+" }}}
+Plug 'ptzz/lf.vim' " {{{
+let g:lf_replace_netrw = 0 " Open lf when vim opens a directory
+"let g:lf_command_override = 'lf -command "set hidden"'
 " }}}
 Plug 'iamcco/markdown-preview.vim'
 Plug 'freitass/todo.txt-vim'
