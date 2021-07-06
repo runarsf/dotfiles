@@ -1,122 +1,100 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-finish () { # {{{
-#  source "${0}"
-  if test ! -f "${CONFIG}"; then
-    touch "${CONFIG}"
-  fi
-  if test "${REMEMBER_LAST}" = "yes"; then
-    if test -n "${NOTES_DIR}"; then
-      if grep -qE "^LAST_DIR=.*$" "${CONFIG}"; then 
-        sed -i "s|^LAST_DIR=.*$|LAST_DIR='${NOTES_DIR}'|" "${CONFIG}"
-      else
-        echo "LAST_DIR='${NOTES_DIR}'" >> "${CONFIG}"
-      fi
-    else
-      sed -i '/^LAST_DIR=.*$/d' "${CONFIG}"
-    fi
-    if test -n "${LASTFILE}"; then
-      if grep -qE "^LASTFILE=.*$" "${CONFIG}"; then 
-        sed -i "s|^LASTFILE=.*$|LASTFILE='${LASTFILE}'|" "${CONFIG}"
-      else
-        echo "LASTFILE='${LASTFILE}'" >> "${CONFIG}"
-      fi
-    else
-      sed -i '/^LASTFILE=.*$/d' "${CONFIG}"
-    fi
-  else
-    sed -i '/^LASTFILE=.*$/d' "${CONFIG}"
-    sed -i '/^LAST_DIR=.*$/d' "${CONFIG}"
-  fi
-} # }}}
+# TODO Document modularization
+# TODO Use stderr for errors
+# TODO git repo README?
+# TODO Turn arguments into string instead of array?
 
-# Variables {{{
-CONFIG="${CONFIG:-${XDG_CONFIG_HOME:-${HOME}/.config}/.jotrc}"
-NOTES_DIR="${NOTES_DIR:-${HOME}/notes}"
-EXTENSION="${EXTENSION:-.md}"
-FZF_BIN="${FZF_BIN:-$(which fzf)}"
-SYNC_SERVICE="${SYNC_SERVICE:-}"
+# Variables - change these in the config (~/.config/jot/jotrc) {{{
+# TODO Test if these exist, maybe in the finish trap
+CONFIG_DIR="$(realpath "${CONFIG_DIR:-${XDG_CONFIG_HOME:-${HOME}/.config}/jot}")"
+CONFIG="${CONFIG:-${CONFIG_DIR}/jotrc}"
+MODULE_DIR="${MODULE_DIR:-${CONFIG_DIR}/d}"
+NOTES_DIR="$(realpath ${NOTES_DIR:-${HOME}/notes})"
+NOTE_EXTENSION="${NOTE_EXTENSION:-.md}"
+test -z "${USE_COLOUR+x}" && USE_COLOUR="true" # Set USE_COLOUR to "" to not use coloured output
+EDITOR="${EDITOR:-vim}"
+DEFAULT_ACTION="ls"
+declare -A ALIASES=( ["ls"]="list" ["e"]="edit" ["dir"]="mkdir" )
+#FZF_BIN="${FZF_BIN:-$(which fzf)}"
+#SYNC_SERVICE="${SYNC_SERVICE:-}"
 
-LASTFILE="${LASTFILE:-}"
-if test "${REMEMBER_LAST}" = "yes" -a "${1}" != "."; then
-  NOTES_DIR="${LAST_DIR:-${NOTES_DIR}}"
-else
-  LASTFILE=""
-fi
-NOTES_DIR="$(realpath "${NOTES_DIR}")"
-
-
-set -o allexport
-test -f "${CONFIG}" && source "${CONFIG}"
-set +o allexport
+#LASTFILE="${LASTFILE:-}"
+#if test "${REMEMBER_LAST}" = "yes" -a "${1}" != "."; then
+#  NOTES_DIR="${LAST_DIR:-${NOTES_DIR}}"
+#else
+#  LASTFILE=""
+#fi
+#NOTES_DIR="$(realpath "${NOTES_DIR}")"
 
 colours () { # {{{
-  RESET=$'\e[0;39m'
+  RESET="${USE_COLOUR:+$'\e[0;39m'}"
 
-  E_BOLD=$'\e[1m'
-  E_DIM=$'\e[2m'
-  E_UNDERLINE=$'\e[4m'
-  E_BLINK=$'\e[5m'
-  E_INVERT=$'\e[7m'
-  E_HIDDEN=$'\e[8m'
+  E_BOLD="${USE_COLOUR:+$'\e[1m'}"
+  E_DIM="${USE_COLOUR:+$'\e[2m'}"
+  E_UNDERLINE="${USE_COLOUR:+$'\e[4m'}"
+  E_BLINK="${USE_COLOUR:+$'\e[5m'}"
+  E_INVERT="${USE_COLOUR:+$'\e[7m'}"
+  E_HIDDEN="${USE_COLOUR:+$'\e[8m'}"
 
-  R_NORMAL=$'\e[0m'
-  R_BOLD=$'\e[21m'
-  R_DIM=$'\e[22m'
-  R_UNDERLINE=$'\e[24m'
-  R_BLINK=$'\e[25m'
-  R_INVERT=$'\e[27m'
-  R_HIDDEN=$'\e[28m'
+  R_NORMAL="${USE_COLOUR:+$'\e[0m'}"
+  R_BOLD="${USE_COLOUR:+$'\e[21m'}"
+  R_DIM="${USE_COLOUR:+$'\e[22m'}"
+  R_UNDERLINE="${USE_COLOUR:+$'\e[24m'}"
+  R_BLINK="${USE_COLOUR:+$'\e[25m'}"
+  R_INVERT="${USE_COLOUR:+$'\e[27m'}"
+  R_HIDDEN="${USE_COLOUR:+$'\e[28m'}"
 
-  C_DEFAULT=$'\e[19m'
-  C_BLACK=$'\e[30m'
-  C_RED=$'\e[31m'
-  C_GREEN=$'\e[32m'
-  C_YELLOW=$'\e[33m'
-  C_BLUE=$'\e[34m'
-  C_MAGENTA=$'\e[35m'
-  C_CYAN=$'\e[36m'
-  C_LGRAY=$'\e[37m'
-  C_DGRAY=$'\e[90m'
-  C_LRED=$'\e[91m'
-  C_LGREEN=$'\e[92m'
-  C_LYELLOW=$'\e[93m'
-  C_LBLUE=$'\e[94m'
-  C_LMAGENTA=$'\e[95m'
-  C_LCYAN=$'\e[96m'
-  C_WHITE=$'\e[97m'
+  C_DEFAULT="${USE_COLOUR:+$'\e[19m'}"
+  C_BLACK="${USE_COLOUR:+$'\e[30m'}"
+  C_RED="${USE_COLOUR:+$'\e[31m'}"
+  C_GREEN="${USE_COLOUR:+$'\e[32m'}"
+  C_BLUE="${USE_COLOUR:+$'\e[34m'}"
+  C_MAGENTA="${USE_COLOUR:+$'\e[35m'}"
+  C_LGRAY="${USE_COLOUR:+$'\e[37m'}"
+  C_GRAY="${USE_COLOUR:+$'\e[90m'}"
+  C_LRED="${USE_COLOUR:+$'\e[91m'}"
+  C_LGREEN="${USE_COLOUR:+$'\e[92m'}"
+  C_LYELLOW="${USE_COLOUR:+$'\e[93m'}"
+  C_LBLUE="${USE_COLOUR:+$'\e[94m'}"
+  C_LMAGENTA="${USE_COLOUR:+$'\e[95m'}"
+  C_LCYAN="${USE_COLOUR:+$'\e[96m'}"
+  C_WHITE="${USE_COLOUR:+$'\e[97m'}"
 
-  B_DEFAULT=$'\e[49m'
-  B_BLACK=$'\e[40m'
-  B_RED=$'\e[41m'
-  B_GREEN=$'\e[42m'
-  B_YELLOW=$'\e[43m'
-  B_BLUE=$'\e[44m'
-  B_MAGENTA=$'\e[45m'
-  B_CYAN=$'\e[46m'
-  B_LGRAY=$'\e[47m'
-  B_DGRAY=$'\e[100m'
-  B_LRED=$'\e[101m'
-  B_LGREEN=$'\e[102m'
-  B_LYELLOW=$'\e[103m'
-  B_LBLUE=$'\e[104m'
-  B_LMAGENTA=$'\e[105m'
-  B_LCYAN=$'\e[106m'
-  B_WHITE=$'\e[106m'
-}
+  B_DEFAULT="${USE_COLOUR:+$'\e[49m'}"
+  B_BLACK="${USE_COLOUR:+$'\e[40m'}"
+  B_RED="${USE_COLOUR:+$'\e[41m'}"
+  B_GREEN="${USE_COLOUR:+$'\e[42m'}"
+  B_YELLOW="${USE_COLOUR:+$'\e[43m'}"
+  B_BLUE="${USE_COLOUR:+$'\e[44m'}"
+  B_MAGENTA="${USE_COLOUR:+$'\e[45m'}"
+  B_CYAN="${USE_COLOUR:+$'\e[46m'}"
+  B_LGRAY="${USE_COLOUR:+$'\e[47m'}"
+  B_GRAY="${USE_COLOUR:+$'\e[100m'}"
+  B_LRED="${USE_COLOUR:+$'\e[101m'}"
+  B_LGREEN="${USE_COLOUR:+$'\e[102m'}"
+  B_LYELLOW="${USE_COLOUR:+$'\e[103m'}"
+  B_LBLUE="${USE_COLOUR:+$'\e[104m'}"
+  B_LMAGENTA="${USE_COLOUR:+$'\e[105m'}"
+  B_LCYAN="${USE_COLOUR:+$'\e[106m'}"
+  B_WHITE="${USE_COLOUR:+$'\e[106m'}"
+} # }}}
 colours
 # }}}
-# }}}
+
+COMMANDS=("add" "list" "archive")
 
 usage () { # {{{
+  # TODO Automatically call the usage function of each module
+  # TODO Automatic Command detection and help menu
   SCRIPTNAME="$(basename $(realpath ${0}))"
 	cat <<-EOMAN
-  ${RESET}${C_GREEN}Usage:${RESET} ${SCRIPTNAME}  <${C_RED}options${RESET}>  [${C_BLUE}command${RESET}]
+	${RESET}${C_GREEN}Usage:${RESET} ${E_BOLD}${SCRIPTNAME}${RESET}  <${C_RED}options${RESET}>  <${C_GRAY}[${C_BLUE}command${C_GRAY}] ${C_MAGENTA}arguments${RESET}>  <${C_GRAY}[${C_BLUE}module${C_GRAY}] ${C_MAGENTA}arguments${RESET}>
 	
 	${C_GREEN}Options:${RESET}
-	  -h, --help                 Display usage menu.
-	  -c, --countdown <${C_RED}seconds${RESET}>  Adjust countdown time.
+	  -h, --help                 Display usage menu. Use twice for more information.
+	  -c, --countdown ${C_GRAY}<${C_RED}seconds${RESET}${C_GRAY}>${RESET}  Adjust countdown time.
 	
 	${C_GREEN}Commands:${RESET}
 	  stop                       Stop screen recording (GIF and MP4).
@@ -125,15 +103,64 @@ usage () { # {{{
 	  ${SCRIPTNAME} -h${RESET}
 	${RESET}
 	EOMAN
-} # }}}
 
+  if test "${HELPLEVEL}" -gt "1"; then
+		cat <<-EOEXTMAN
+		${C_GREEN}Notable variables:${RESET}           ${E_UNDERLINE}current ${C_GRAY}(default | type: available options)${RESET}
+		  CONFIG_DIR                 ${CONFIG_DIR} ${C_GRAY}('${XDG_CONFIG_HOME:-${HOME}/.config}/jot' | path)${RESET}
+		  CONFIG                     ${CONFIG} ${C_GRAY}('${XDG_CONFIG_HOME:-${HOME}/.config}/jot/.jotrc' | filepath)${RESET}
+		  MODULE_DIR                 ${MODULE_DIR} ${C_GRAY}('${XDG_CONFIG_HOME:-${HOME}/.config}/jot/d' | path)${RESET}
+		  NOTES_DIR                  ${NOTES_DIR} ${C_GRAY}('${HOME}/notes' | path)${RESET}
+		  NOTE_EXTENSION             ${NOTE_EXTENSION} ${C_GRAY}('.md' | string)${RESET}
+		  USE_COLOUR                 ${USE_COLOUR} ${C_GRAY}('true' | string: 'true' or '')${RESET}
+		  EDITOR                     ${EDITOR} ${C_GRAY}('${EDITOR:-vim}' | executable)${RESET}
+		  DEFAULT_ACTION             ${DEFAULT_ACTION} ${C_GRAY}('ls' | command-argument)${RESET}
+		  ALIASES                    ${!ALIASES[@]} ${C_GRAY}(( ["ls"]="list" ["e"]="edit" ["dir"]="mkdir" ) | associative array)${RESET}
+		
+		Jot is an alternative to todotxt/todo.txt-cli primarily focused on quick note taking and hackability.
+		The config can be found at ${CONFIG}, and the modules are located at ${MODULE_DIR}.
+		To see usage of the default modules, run '${SCRIPTNAME} <module> usage'.
+		${RESET}
+		EOEXTMAN
+  for cmd in "${COMMANDS[@]}"; do
+  # TODO Also add user commands
+    printf "${B_BLUE}${C_BLACK} ${cmd} ${RESET}\n"
+    "c:${cmd}" usage
+    printf "\n"
+  done
+  fi
+} # }}}
 # Argument parsing {{{
+# Handle incoming arguments {{{
 positional=()
+HELPLEVEL=0
 while test "${#}" -gt "0"; do
   case "${1}" in
     -h|--help) # {{{
-      usage
-      exit 0
+      ((HELPLEVEL+=1))
+      shift;; # }}}
+    -c|--config) # {{{
+      _config="${2}"
+      # TODO Should this be handled when the variable is set? e.g. CONFIG='' And not just on --config?
+      if test -f "${_config}"; then
+        CONFIG="${_config}"
+      elif test -f "${CONFIG_DIR}/${_config}"; then
+        CONFIG="${CONFIG_DIR}/${_config}"
+      else
+        printf "Provided config '${_config}' doesn't exist... continue?\n"
+        exit 0
+        # TODO Check for yes/no prompt
+      fi
+      shift;shift;; # }}}
+    --cd|--config-dir) # {{{
+      _config_dir="${2}"
+      if test -d "${_config_dir}"; then
+        CONFIG_DIR="${_config_dir}"
+      fi
+      shift;shift;; # }}}
+    --no-colour|--no-color) # {{{
+      USE_COLOUR=""
+      colours
       shift;; # }}}
     --*) # {{{
       printf "Unknown option: ${1}\n"
@@ -153,15 +180,188 @@ while test "${#}" -gt "0"; do
       shift;; # }}}
   esac
 done
-set -- "${positional[@]}"
-
-#if test "${#}" -gt "0"; then
-#  if test "${1}" = "stop"; then
-#    pkill -fxn '(/\S+)*ffmpeg\s.*\sx11grab\s.*'
-#    exit 0
-#  fi
-#fi
 # }}}
+
+# Restore positional arguments {{{
+set -- "${positional[@]}"
+COMMAND="${1:-${DEFAULT_ACTION:?No command provided}}"
+test -n "${1+x}" && shift
+ARGS=("${@:-}")
+# }}}
+# }}}
+
+# Load user configuration {{{
+# TODO Consider removing allexport and just use export in config instead
+# TODO Move this to after parsing incoming arguments, --config should be allowed
+# TODO Ask to create config? Or just make it when saving last path. Should last path be saved in a separate auto-gen config?
+set -o allexport
+test -f "${CONFIG}" && source "${CONFIG}"
+set +o allexport
+# }}}
+
+# Pre-defined command functions {{{
+COMMANDS=("add")
+
+c:add () { # {{{
+  usage () { # {{{
+    :
+  }; test "${1:-}" = "usage" && usage && return 0 # }}}
+  local _args="${@}"
+  if test -z "${_args// }"; then
+    NOTE="${_args}"
+  else
+    printf "Note name: "
+    read NOTE_NAME
+    if test -z "${NOTE_NAME// }"; then # Zero or whitespace
+      printf "Please provide a note name...\n"
+      c:add
+      return 1
+    fi
+  fi
+  if [[ "${NOTE_NAME}" == *. ]]; then
+    NOTE="${NOTE_NAME%?}"
+  elif [[ "${NOTE_NAME}" == *.* ]]; then
+    NOTE="${NOTE_NAME}"
+  else
+    NOTE="${NOTE_NAME}${NOTE_EXTENSION}"
+  fi
+  if test -f "${NOTES_DIR}/${NOTE}"; then
+    printf "Note with the name already exists, opening ${EDITOR}...\n"
+    c:edit "${NOTES_DIR}/${NOTE}"
+  else
+    echo touch "${NOTES_DIR}/${NOTE}"
+    c:edit "${NOTES_DIR}/${NOTE}"
+  fi
+  #if test "${REMEMBER_LAST}" = "yes"; then
+  #  LASTFILE="${NOTE}"
+  #fi
+} # }}}
+
+c:edit () { # {{{
+  usage () { # {{{
+    :
+  }; test "${1:-}" = "usage" && usage && return 0 # }}}
+  echo "editing ${@}"
+} # }}}
+
+c:mkdir () { # {{{
+  usage () { # {{{
+    :
+  }; test "${1:-}" = "usage" && usage && return 0 # }}}
+} # }}}
+
+c:list () { # {{{
+  usage () { # {{{
+    :
+  }; test "${1:-}" = "usage" && usage && return 0 # }}}
+  printf "Listing stuffs\n"
+} # }}}
+
+c:archive () { # {{{
+  usage () { # {{{
+    :
+  }; test "${1:-}" = "usage" && usage && return 0 # }}}
+  printf "archiving stuffs\n"
+} # }}}
+# }}}
+
+# Handle intermediate arguments {{{
+if test "${HELPLEVEL}" -gt "0"; then
+  usage
+  exit 0
+fi
+# }}}
+
+check_deps () { # <dependencies:@string> -> Void {{{
+  local _deps=${@}
+  local _missing=""
+  for _dep in ${_deps}; do
+    if ! hash "${_dep}" 2>/dev/null; then
+      _missing="${_missing} ${_dep}"
+    fi
+  done
+  if test -n "${_missing}"; then
+    printf "Missing required dependencies:${_missing}\n"
+    exit 1
+  fi
+} # }}}
+check_deps
+
+arrContains () { # Helper function to check if an array contains an item {{{
+  local e match="${1}"
+  shift
+  for e; do
+    test "${e}" = "${match}" && return 0
+  done
+  return 1
+} # }}}
+
+# Commands {{{
+# Check if the current command is an alias {{{
+if test "${ALIASES[${COMMAND}]+x}"; then
+  COMMAND="${ALIASES[${COMMAND}]}"
+fi
+# }}}
+
+# Check which command to run {{{
+# TODO Add a custom command called 'watch' that always runs
+#       Add on-start and on-finish commands, and commands that run in the background &
+# TODO Double check if arrays should have "" around them when passing to scripts n stuff, space will break
+if test -f "${MODULE_DIR}/${COMMAND}"; then
+  source "${MODULE_DIR}/${COMMAND}" "${ARGS[@]}"
+#  # TODO If 1 argument, and USE_FZF, show interactive menu of which item to modify
+#  #       If 1 argument, and not USE_FZF, print output and read user input
+elif arrContains "${COMMAND}" "${COMMANDS[@]}"; then
+  "c:${COMMAND}" "${ARGS[@]}"
+else
+  printf "Unrecognized command or module: '${COMMAND}'\n"
+  exit 2
+fi
+# }}}
+# }}}
+
+exit 0
+
+
+
+
+
+
+
+
+# Things I've done before that could be useful {{{
+
+#finish () { # {{{
+##  source "${0}"
+#  if test ! -f "${CONFIG}"; then
+#    touch "${CONFIG}"
+#  fi
+#  if test "${REMEMBER_LAST}" = "yes"; then
+#    if test -n "${NOTES_DIR}"; then
+#      if grep -qE "^LAST_DIR=.*$" "${CONFIG}"; then 
+#        sed -i "s|^LAST_DIR=.*$|LAST_DIR='${NOTES_DIR}'|" "${CONFIG}"
+#      else
+#        echo "LAST_DIR='${NOTES_DIR}'" >> "${CONFIG}"
+#      fi
+#    else
+#      sed -i '/^LAST_DIR=.*$/d' "${CONFIG}"
+#    fi
+#    if test -n "${LASTFILE}"; then
+#      if grep -qE "^LASTFILE=.*$" "${CONFIG}"; then 
+#        sed -i "s|^LASTFILE=.*$|LASTFILE='${LASTFILE}'|" "${CONFIG}"
+#      else
+#        echo "LASTFILE='${LASTFILE}'" >> "${CONFIG}"
+#      fi
+#    else
+#      sed -i '/^LASTFILE=.*$/d' "${CONFIG}"
+#    fi
+#  else
+#    sed -i '/^LASTFILE=.*$/d' "${CONFIG}"
+#    sed -i '/^LAST_DIR=.*$/d' "${CONFIG}"
+#  fi
+#} # }}}
+# No reason to trap before doing anything with the shell
+#trap finish EXIT
 
 ##[cd]
 ## Check if script is sourced
@@ -174,12 +374,6 @@ set -- "${positional[@]}"
 ##  exec "${SHELL:-bash}"
 ##fi
 #
-## Change these in ~/.config/.jotrc
-##[cd]
-##cd "${NOTES_DIR}"
-##export CHANGEDIR="${NOTES_DIR}"
-## No reason to trap before doing anything with the shell
-#trap finish EXIT
 #
 #if test "${SYNC_SERVICE}" = "insync"; then
 #  if command -v "insync" >/dev/null 2>&1; then
@@ -195,7 +389,7 @@ set -- "${positional[@]}"
 #  fi
 #fi
 #
-## TODO: Only show files matching pattern (.*\.${NOTE_EXTENSION})
+## TODO Only show files matching pattern (.*\.${NOTE_EXTENSION})
 #
 #make_selection () {
 #  NOTES_DIR="${1}"
@@ -287,3 +481,73 @@ set -- "${positional[@]}"
 #    break
 #  fi
 #done
+
+# yaml frontmatter parsing {{{
+#GLOBS=("*.txt" "*.md")
+#DIR="$(realpath .)"
+##################################################
+## This function will parse a simple YAML file
+## and will output bash variables.
+## YAML frontmatter is also supported.
+##
+## Typical Usage:
+## eval $(parse_yaml sample.yml "PREFIX_")
+##
+## @param $1: The yaml file to parse
+## @param $2: The prefix to append to all of the
+##       variables to be created
+##################################################
+#function parse_yaml {
+#   local prefix=$2
+#   #local s='[[:space:]]*' w='[a-zA-Z0-9_]*' fs=$(echo @|tr @ '\034')
+#   local s='[[:space:]]*' w='[a-zA-Z0-9_\.]*' fs=$(echo @|tr @ '\034') #+ Work with . in variable names
+#   #+ Add between first and second line of sed command to avoid injection
+#   #-e 's|`||g;s|\$||g;' \
+#   sed -ne "s|^\($s\):|\1|" \
+#        -e 's|`||g;s|\$||g;' \
+#        -e "s|^\($s\)\($w\)$s:$s[\"']\(.*\)[\"']$s\$|\1$fs\2$fs\3|p" \
+#        -e "s|^\($s\)\($w\)$s:$s\(.*\)$s\$|\1$fs\2$fs\3|p"  $1 |
+#   awk -F$fs '{
+#      indent = length($1)/2;
+#      vname[indent] = $2;
+#      for (i in vname) {if (i > indent) {delete vname[i]}}
+#      if (length($3) > 0) {
+#         vn=""; for (i=0; i<indent; i++) {vn=(vn)(vname[i])("_")}
+#         gsub(/^[ \t]+/, "", $3); gsub(/[ \t]+$/, "", $3); #+ Strip trailing and leading whitespace
+#         gsub(/\s*#.*$/, "", $3); #+ Remove comments
+#         printf("%s%s%s=\"%s\"\n", "'$prefix'",vn, $2, $3);
+#      }
+#   }'
+#}
+#
+##YML_type=""
+#eval $(parse_yaml asd.md "YML_")
+## ---
+## type:    any[str, script, sheet] default(sheet)
+## aliases: [str]                   default(n/a)
+## ---
+##echo $YML_type
+#
+## https://leonid.shevtsov.me/post/find-files-that-have-yaml-frontmatter/
+#
+#globglogabgalab=""
+#i=1
+#for glob in "${GLOBS[@]}"; do
+#  test "${i}" -lt "${#GLOBS[@]}" \
+#    && binder="-o " \
+#    || binder=""
+#  globglogabgalab="${globglogabgalab}-iname '${glob}' ${binder}"
+#  ((i+=1))
+#done
+#
+#echo $globglogabgalab
+## -r recursive
+## -n line-number
+## -w word-regexp
+##grep -rn "${DIR}" ${globglogabgalab} -e '---.*---'  # '(?<=yeet).*(?=skote)' 
+#find "${DIR}" \
+#     -type f \
+#     \( ${globglogabgalab} \) \
+#     -exec sh -c 'if (head -n 1 "{}" | grep -- --- >/dev/null); then echo "{}"; fi' \;
+# }}}
+# }}}
