@@ -10,7 +10,7 @@ set ignorecase true
 set number true
 set relativenumber true
 set scrolloff 4
-set ratios 1:3:5
+set ratios 2:3:5
 
 set shell bash
 #set shellopts '-eu'
@@ -25,6 +25,10 @@ map d
 map c
 map e
 map f
+map q
+
+map <esc> quit
+map q quit
 
 map cfg $${EDITOR} "${XDG_CONFIG_HOME:-${HOME}/.config}/lf/lfrc"
 
