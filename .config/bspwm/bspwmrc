@@ -66,6 +66,7 @@ bspc rule -a Pavucontrol floating=on
 bspc rule -a mpv floating=on
 bspc rule -a keepass2 floating=on
 bspc rule -a sun-awt-X11-XFramePeer floating=on
+bspc rule -a com-sun-javaws-Main floating=on state=floating
 bspc rule -a org-geogebra-desktop-GeoGebra3D floating=on
 bspc rule -a Zathura state=tiled
 bspc rule -a '*:scratchpad' sticky=on state=floating center=true rectangle=1600x1000+0+0
