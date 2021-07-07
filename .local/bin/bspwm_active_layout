@@ -6,14 +6,14 @@ clayout="$(bspc query -T -d | jq --raw-output '.layout')"
 test "${layout}" = "-" -o "${clayout}" = "monocle" && layout="${clayout}"
 
 case "${layout}" in
-  tall)       printf "[]="  ;;
-  rtall)      printf "=[]"  ;;
-  wide)       printf "TTT"  ;;
-  rwide)      printf "LLL"  ;;
-  tile|tiled) printf "[]-"  ;;
-  grid)       printf "|-|-|";;
-  rgrid)      printf "-|-|-";;
-  even)       printf "[][]" ;;
-  monocle)    printf "[M]"  ;;
-  -|*)        printf "[?]"  ;;
+  tall)       printf -- '[]='  ;;
+  rtall)      printf -- '=[]'  ;;
+  wide)       printf -- 'TTT'  ;;
+  rwide)      printf -- 'LLL'  ;;
+  tile|tiled) printf -- '[]-'  ;;
+  grid)       printf -- '|-|-|';;
+  rgrid)      printf -- '-|-|-';;
+  even)       printf -- '[][]' ;;
+  monocle)    printf -- '[M]'  ;;
+  -|*)        printf -- '[?]'  ;;
 esac
