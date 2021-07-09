@@ -27,7 +27,7 @@ esac
 case "${layout}" in
   tall|rtall|wide|rwide) bsp-layout set "${layout}" "${did}" --master-size "${ms}";;
   grid|rgrid|even) bsp-layout set "${layout}" "${did}";;
-  tiled|monocle) bsp-layout remove "${did}"; bspc desktop --layout "${layout}";;
+  tiled|monocle) bsp-layout remove "${did}"; bspc desktop --layout "${layout}"; bsp-layout once "${layout}";;
   *);;
 esac
 
