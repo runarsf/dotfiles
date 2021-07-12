@@ -45,12 +45,12 @@ font: # {{{
     style: Regular
     #family: Scientifica
     #family: Termsyn
-    #family: 'JetBrainsMono Nerd Font'
+    family: JetBrains Mono
     #family: Ubuntu Mono
     #family: Source Code Pro
     #family: Cozette
     #family: Input
-    family: Operator Mono Lig Book
+    #family: Operator Mono Lig Book
     #family: Terminess Powerline # Terminus
 
   bold:
