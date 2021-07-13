@@ -45,7 +45,8 @@ font: # {{{
     style: Regular
     #family: Scientifica
     #family: Termsyn
-    family: JetBrains Mono
+    #family: JetBrains Mono
+    family: JetBrains Mono Nerd Font
     #family: Ubuntu Mono
     #family: Source Code Pro
     #family: Cozette
