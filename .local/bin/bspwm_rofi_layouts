@@ -21,7 +21,7 @@ layout="$(printf "${layouts}" | rofi -lines "${lines}" -dmenu -p "${clayout}")"
 
 did="$(bspc query -D -n focused --names)"
 case "${layout}" in
-  rtall) ms="0.7";;
+  rtall) ms="0.62";;
   *) ms="0.55";;
 esac
 case "${layout}" in
