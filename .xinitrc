@@ -10,22 +10,22 @@
 
 #test -f ~/.xprofile && source ~/.xprofile
 
-userresources=${XDG_CONFIG_HOME:-${HOME}/.config}/.urxvt/Xresources
-usermodmap=${XDG_CONFIG_HOME:-${HOME}/.config}/.urxvt/Xmodmap
-sysresources=/etc/X11/xinit/.Xresources
-sysmodmap=/etc/X11/xinit/.Xmodmap
+userresources="${XDG_CONFIG_HOME:-${HOME}/.config}/.xres/Xresources"
+usermodmap="${XDG_CONFIG_HOME:-${HOME}/.config}/.xres/Xmodmap"
+sysresources="/etc/X11/xinit/.Xresources"
+sysmodmap="/etc/X11/xinit/.Xmodmap"
 
-# merge in defaults and keymaps
+# Load defaults and merge user settings
 if test -f "${sysresources}"; then
   xrdb -merge "${sysresources}"
 fi
 
-if test -f "${sysmodmap}"; then
-  xmodmap "${sysmodmap}"
-fi
-
 if test -f "${userresources}"; then
   xrdb -merge "${userresources}"
+fi
+
+if test -f "${sysmodmap}"; then
+  xmodmap "${sysmodmap}"
 fi
 
 if test -f "${usermodmap}"; then
