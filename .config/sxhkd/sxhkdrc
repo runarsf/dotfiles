@@ -3,6 +3,9 @@
 super + Return
 	"${TERMINAL}"
 
+super + alt + b
+	bwmenu --clear 8 --auto-lock 28800 -- -location 2
+
 super + x
 	betterlockscreen -l dimblur -b 8
 #	gllock || lock || i3lock-fancy || i3lock
