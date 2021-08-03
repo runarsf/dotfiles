@@ -6,6 +6,6 @@ cat <<-EODUCK
       ${D_BODY}__
   ___( ${D_EYE}o${D_BODY})${D_BEAK}>
   ${D_BODY}\\ <_. )
-   \`---'
+   \`---´
 
 EODUCK

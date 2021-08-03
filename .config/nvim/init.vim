@@ -56,6 +56,21 @@ endif
 " call plug#begin(system('echo -n "${XDG_CONFIG_HOME:-$HOME/.config}/nvim/plugged"'))
 silent! if plug#begin('~/.vim/plugged')
 " General {{{
+Plug 'nvim-lua/popup.nvim'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim' " {{{
+" Find files using Telescope command-line sugar.
+nnoremap <leader>ff <cmd>Telescope find_files<cr>
+nnoremap <leader>fg <cmd>Telescope live_grep<cr>
+nnoremap <leader>fb <cmd>Telescope buffers<cr>
+nnoremap <leader>fh <cmd>Telescope help_tags<cr>
+
+" Using Lua functions
+"nnoremap <leader>ff <cmd>lua require('telescope.builtin').find_files()<cr>
+"nnoremap <leader>fg <cmd>lua require('telescope.builtin').live_grep()<cr>
+"nnoremap <leader>fb <cmd>lua require('telescope.builtin').buffers()<cr>
+"nnoremap <leader>fh <cmd>lua require('telescope.builtin').help_tags()<cr>
+" }}}
 " netrw {{{
 Plug 'tpope/vim-vinegar'
 "let loaded_netrwPlugin = 0 " netrw version, 0 to disable
@@ -650,6 +665,32 @@ endfunction
 
 " markdown preview alternative, zathura
 nnoremap <leader>mc :execute '!${XDG_CONFIG_HOME:-${HOME}/.config}/nvim/mdconvert.sh %:p' <bar> :redraw! <Enter>
+
+" Yank to the end of the line
+nnoremap Y y$
+" Keep cursor centered when jumping around
+nnoremap n nzzzv
+nnoremap N Nzzv
+nnoremap J mzJ`z
+nnoremap <C-j> :cnext<CR>zzzv
+
+" don't undo entire chunk
+inoremap , ,<c-g>u
+inoremap . .<c-g>u
+inoremap ! !<c-g>u
+inoremap ? ?<c-g>u
+
+" when jump lines is more than 5 add a jump point
+nnoremap <expr> k (v:count > 5 ? "m'" . v:count : "") . 'k'
+nnoremap <expr> j (v:count > 5 ? "m'" . v:count : "") . 'k'
+
+" moving lines around in all modes
+vnoremap J :m '>+1<CR>gv=gv
+vnoremap K :m '<-2<CR>gv=gv 
+inoremap <C-j> <esc>:m .+1<CR>==
+inoremap <C-k> <esc>:m .-2<CR>==
+nnoremap <leader>j :m .+1<CR>==
+nnoremap <leader>k :m .-2<CR>==
 
 " Navigate inside wrapped lines
 " https://vim.fandom.com/wiki/Move_cursor_by_display_lines_when_wrapping
