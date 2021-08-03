@@ -1,0 +1,138 @@
+#!/usr/bin/env python3
+import os
+import os.path as op
+import re
+import sys
+import yaml
+import string
+import urllib.request
+import argparse
+import requests
+import subprocess
+from requests.exceptions import RequestException
+
+def is_valid_file(parser, arg):
+    if not op.isfile(arg):
+        parser.error("The file %s does not exist!" % arg)
+    else:
+        return open(arg, 'r')  # return an open file handle
+
+parser = argparse.ArgumentParser(description='Download files')
+parser.add_argument('group', metavar='GROUP', type=str, nargs='?', help='The group to use', default=None)
+#parser.add_argument('-a', '--all', help='Get all the links!',
+#                    required=False, dest='all_groups',
+#                    action='store_const', const=True, default=False)
+parser.add_argument('-c', '--config', help='The yaml configuration file to use.',
+                    dest='config', metavar='FILE', type=lambda x: is_valid_file(parser, x),
+                    default = op.join(os.environ.get('XDG_CONFIG_HOME', op.join(os.environ.get('HOME', '~'), '.config')), '.succ.yml'))
+args = parser.parse_args()
+cfg = yaml.safe_load(args.config)
+
+# TODO Post-hook section to chmod +x files
+# TODO Types: script (use chmod), gist
+
+def get_filename_from_url(url: str):
+    #try:
+    with requests.get(url) as r:
+        filename = ''
+        if "Content-Disposition" in r.headers.keys():
+            filename = re.findall("filename=(.+)", r.headers["Content-Disposition"])[0]
+        else:
+            filename = url.split("/")[-1]
+    #except RequestException as e:
+    #    raise Exception(e)
+
+def query(question: str, options: list = ['Yes', 'No'], default_choice: int = 1):
+    cstring = list(options)
+    cstring[default_choice] = f'[{cstring[default_choice]}]'
+    cstring = '/'.join(cstring)
+
+    while True:
+        sys.stdout.write(f'{question} ({cstring}) ')
+        choice = input().lower()
+        if not choice:
+            return options[default_choice]
+        for option in options:
+            if choice and choice in option.lower():
+                return option
+        else:
+            sys.stdout.write(f"Please respond with {cstring}\n")
+
+def arcanine(cfg, url: str, fpath: str, hooks: list = None):
+    # This function downloads the file and asks to overwrite, clearly, should be obvious from its name
+    if op.isfile(fpath):
+        q = query(f"File '{fpath}' already exists, overwrite?", ['Yes', 'No'], 1)
+        if not q or q == "No":
+            return
+    print(f'curl {url} > {fpath}')
+    #q = query(f'Retrieve file?', ['Yes', 'No'], 0)
+    #if q and q == 'Yes':
+    urllib.request.urlretrieve(url, fpath)
+    template_strings = dict(file=fpath, url=url)
+    for hook in hooks:
+        try:
+            formatted_hook = []
+            for hook_part in cfg['hooks'][hook]:
+                formatted_hook.append(string.Template(hook_part).safe_substitute(template_strings))
+            print('$ ' + ' '.join(formatted_hook))
+            #q = query(f'Run hook?', ['Yes', 'No'], 0)
+            #if q and q == "Yes":
+            try:
+                hook_call = subprocess.run(formatted_hook, text=True, stdout=subprocess.PIPE, check=True)
+                for line in hook_call.stdout.split('\n'):
+                    print(f'> {line}')
+            except subprocess.CalledProcessError:
+                print('Command error, see output...')
+        except KeyError:
+            pass
+
+def bulbasaur(cfg, group: str = None):
+    try:
+        # Get all groups
+        if not group:
+            for group in cfg['groups']:
+                bulbasaur(cfg, group)
+            return
+        # Verify that all keys exist and aren't empty, this should be done with a try/except or the link below
+        # https://stackoverflow.com/questions/43491287/elegant-way-to-check-if-a-nested-key-exists-in-a-dict
+        if ('groups' in cfg                  and cfg['groups'] and
+               group in cfg['groups']        and cfg['groups'][group] and
+             'files' in cfg['groups'][group] and cfg['groups'][group]['files']):
+            #print(group)
+            for link in cfg['groups'][group]['files']:
+                if 'url' in link:
+                    # Should this bit be in arcanine or a different function?
+                    try:             gpath: str = cfg['settings']['path']
+                    except KeyError: gpath: str = None
+                    try:             gpath: str = cfg['groups'][group]['path']
+                    except KeyError: gpath: str = gpath
+                    try:             lpath: str = link['path']
+                    except KeyError: lpath: str = get_filename_from_url(link['url'])
+
+                    fpath: str = None
+                    if lpath and '/' in lpath:
+                        fpath = op.abspath(op.expanduser(lpath))
+                    elif gpath and lpath and not '/' in lpath:
+                        fpath = op.abspath(op.join(op.expanduser(gpath), lpath))
+                    if not fpath:
+                        continue
+
+                    try:             hooks: str = cfg['settings']['hooks']
+                    except KeyError: hooks: str = None
+                    try:             hooks: str = cfg['groups'][group]['hooks']
+                    except KeyError: hooks: str = hooks
+                    try:             hooks: str = link['hooks']
+                    except KeyError: hooks: str = hooks
+                    if hooks and type(hooks) == str:
+                        hooks = [hooks]
+
+                    arcanine(cfg, link['url'], fpath, hooks)
+                else:
+                    pass # Can't do anything without an url, but we won't complain, could also raise Exception('but eh who cares')
+        else:
+            print(f"Hmm... something ain't right, is '{group}' defined?")
+    except KeyboardInterrupt:
+        print("\n...ait")
+
+bulbasaur(cfg, args.group)
+
