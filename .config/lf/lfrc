@@ -69,7 +69,7 @@ map ch. chmod
 cmd chexec %chmod +x "${f}"
 map chx chexec
 
-cmd setbg %cp "${f}" ~/.config/wall.png && feh --bg-scale "${f}"
+cmd setbg % feh --bg-scale "${f}"
 map bg setbg
 
 cmd dragon ${{
