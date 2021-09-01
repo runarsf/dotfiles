@@ -1,4 +1,5 @@
 #!/usr/bin/env sh
+# quack!
 D_BEAK=$(tput setaf 202) # 1
 D_EYE=$(tput setaf 15) # 7
 D_BODY=$(tput setaf 11) # 3
