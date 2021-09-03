@@ -1,0 +1,22 @@
+hooks:
+    cat: [ "cat", "${file}" ]
+    chmod: [ "chmod", "+x", "${file}" ]
+    pip: [ "python3", "-m", "pip", "--no-input", "install", "${file}" ]
+
+settings:
+  default_group: "None"
+
+groups:
+  rofi:
+    path: ~/.config/rofi
+    hooks: chmod
+    files:
+      - url: https://raw.githubusercontent.com/mattydebie/bitwarden-rofi/master/bwmenu
+        path: bwmenu
+      - url: https://raw.githubusercontent.com/davatorium/rofi-scripts/master/tmux_session.sh
+        path: rofi-tmux
+      - url: https://raw.githubusercontent.com/M3NIX/rofi-spotify/master/requirements.txt
+        path: requirements.txt
+        hooks: pip
+      - url: https://raw.githubusercontent.com/M3NIX/rofi-spotify/master/rofi-spotify.py
+        path: rofi-spotify
