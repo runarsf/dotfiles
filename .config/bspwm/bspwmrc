@@ -95,7 +95,6 @@ bspc rule -a '*:scratchpad' sticky=on state=floating center=true rectangle=1600x
 #"${XDG_CONFIG_HOME:-${HOME}/.config}/bspwm/scripts/cleanfullscreen" &
 #"${XDG_CONFIG_HOME:-${HOME}/.config}/bspwm/scripts/single_node_border" &
 (~/.fehbg || (feh --bg-scale ~/.config/wall.jpg || nitrogen --restore)) &
-nitrogen --restore &
 killall -q sxhkd; sxhkd -m 1 -c "${XDG_CONFIG_HOME:-${HOME}/.config}/sxhkd/sxhkdrc" "${XDG_CONFIG_HOME:-${HOME}/.config}/bspwm/sxhkdrc" &
 #killall -q 2bspwm; 2bspwm &
 # }}}
