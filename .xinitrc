@@ -10,6 +10,8 @@
 
 #test -f ~/.xprofile && source ~/.xprofile
 
+DESKTOP="bspwm"
+
 userresources="${XDG_CONFIG_HOME:-${HOME}/.config}/.xres/Xresources"
 usermodmap="${XDG_CONFIG_HOME:-${HOME}/.config}/.xres/Xmodmap"
 sysresources="/etc/X11/xinit/.Xresources"
@@ -51,21 +53,22 @@ xset r rate 300 50 &
 xset b off &
 xset b 0 0 0 &
 
-# Swap caps and escape
+# Turn caps into escape
 setxkbmap -option caps:escape -v no &
-#setxkbmap -option caps:swapescape -v no&
 
 # Make sure cursor is not an X when hovering over root window
 xsetroot -cursor_name left_ptr &
 
-dunst &
-nm-applet &
-xfce4-power-manager &
-picom --config "${XDG_CONFIG_HOME:-${HOME}/.config}/picom/picom.conf" -fcCGb --xrender-sync-fence &
-pulseaudio --start &
-#(nitrogen --restore || feh --bg-scale "${XDG_CONFIG_HOME:-${HOME}/.config}/wall/wall.jpg") &
-("${HOME:-~}/.fehbg" || feh --bg-scale "${XDG_CONFIG_HOME:-${HOME}/.config}/wall/wall.jpg") &
-autorandr --change &
+# Start common apps
+if test "${DESKTOP}" = "bspwm"; then
+  autorandr --change &
+  nm-applet &
+  xfce4-power-manager &
+  pulseaudio --start &
+  dunst --config "${XDG_CONFIG_HOME:-${HOME}/.config}/dunst/dunstrc" &
+  (~/.fehbg || (feh --bg-scale ~/.config/wall.jpg || nitrogen --restore)) &
+  picom --config "${XDG_CONFIG_HOME:-${HOME}/.config}/picom/picom.conf" -fcCGb --xrender-sync-fence &
+fi
 
 #xsetwacom --set "Wacom Intuos S Pen stylus" Suppress 2
 #xsetwacom --set "Wacom Intuos S Pen stylus" Rawsample 4
@@ -79,4 +82,4 @@ if test systemd-detect-virt = "oracle"; then
   /usr/bin/VBoxClient-all
 fi
 
-exec bspwm
+exec "${DESKTOP}"
