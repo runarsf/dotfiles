@@ -14,7 +14,7 @@ settings:
 
 collections:
   dotfiles:
-    - rofi
+    - test
 
 # $1 can be a collection or a group, where collection takes precedence.
 # If you want to use a group over a collection, use -g|--group <group>.

@@ -189,7 +189,8 @@ def process_hooks(cfg, hooks: list = None, template_strings: dict = None):
             formatted_hook = []
             for hook_part in cfg['hooks'][hook]:
                 formatted_hook.append(string.Template(hook_part).safe_substitute(template_strings))
-            print('$ ' + ' '.join(formatted_hook))
+            if cfg['settings']['show_hook_content']:
+                print('$ ' + ' '.join(formatted_hook))
             #q = query(f'Run hook?', ['Yes', 'No'], 0)
             #if q and q == "Yes":
             try:
@@ -234,12 +235,15 @@ def main(cfg, group: str = None):
             #    print('No group provided.')
             return
 
+        if group in cfg['collections']:
+            for collection_group in cfg['collections'][group]:
+                main(cfg, collection_group)
+            return
         if group not in cfg['groups']:
             print(f'Invalid group \'{group}\'.')
             return
         for link in cfg['groups'][group]['files']:
             arcanine(cfg, link)
-            #print(link)
     except KeyboardInterrupt:
         print("\n...ait")
 
