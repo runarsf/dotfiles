@@ -4,6 +4,7 @@ import os.path as op
 import re
 import sys
 import string
+import json
 import urllib.request
 import argparse
 import requests
@@ -47,18 +48,18 @@ schema = {
         }
     },
     "properties": {
-        "version": { "type": "number" },
-        "handlers": {
-            "type": "object",
-            "properties": {
-                "git": { "type": "null" },
-                "git-bare": { "type": "null" },
-                "gist": { "type": "null" },
-                "raw": { "type": "null" },
-                "git": { "type": "null" }
-            },
-            "additionalProperties": { "type": ["string", "array"] }
-        },
+        #"version": { "type": "number" },
+        #"handlers": {
+        #    "type": "object",
+        #    "properties": {
+        #        "git": { "type": "null" },
+        #        "git-bare": { "type": "null" },
+        #        "gist": { "type": "null" },
+        #        "raw": { "type": "null" },
+        #        "git": { "type": "null" }
+        #    },
+        #    "additionalProperties": { "type": ["string", "array"] }
+        #},
         "hooks": {
             "type": "object",
             "additionalProperties": { "type": ["string", "array"] }
@@ -66,13 +67,20 @@ schema = {
         "settings": {
             "type": "object",
             "properties": {
-                "default_group": { "type": "string", "$ref": "#/definitions/nonEmptyString" }
-            }
+                "default_group": { "type": "string", "$ref": "#/definitions/nonEmptyString" },
+                "show_hook_content": { "type": "boolean" }
+            },
+            "additionalProperties": False
+        },
+        "collections": {
+            "type": "object",
+            "additionalProperties": { "type": "array" }
         },
         "groups": {
             "type": "object",
             "additionalProperties": {
                 "type": "object",
+                "required": [ "files" ],
                 "properties": {
                     "path": { "type": "string", "$ref": "#/definitions/nonEmptyString" },
                     "handler": { "type": "string", "$ref": "#/definitions/nonEmptyString" },
@@ -85,9 +93,11 @@ schema = {
                             "properties": {
                                 "url": { "type": "string", "$ref": "#/definitions/nonEmptyString" },
                                 "path": { "type": "string", "$ref": "#/definitions/nonEmptyString" },
-                                "handler": { "type": "string", "$ref": "#/definitions/nonEmptyString" },
-                                "hooks": { "type": [ "string", "array" ] }
-                            }
+                                "hooks": { "type": [ "string", "array" ] },
+                                "pre_hooks": { "type": [ "string", "array" ] },
+                                "strategy": { "type": "string", "enum": [ "yes", "no", "overwrite", "skip", "ask" ] }
+                            },
+                            "additionalProperties": False
                         }
                     }
                 }
@@ -99,7 +109,6 @@ schema = {
 }
 validate(cfg, schema)
 
-
 def get_filename_from_url(url: str):
     #try:
     with requests.get(url) as r:
@@ -110,6 +119,53 @@ def get_filename_from_url(url: str):
             filename = url.split("/")[-1]
     #except RequestException as e:
     #    raise Exception(e)
+
+def construct_cfg(cfg):
+    # groups and files essentially have the same config, so instead of "guessing"
+    # where the config is stored, we merge the objects (minus differences (g.files))
+    # and assume groups.files.file has the truth. additionally, mergin with a default
+    # set of values will let us skip checking if every item exists before using.
+    default_settings = {
+        "default_group": None,
+        "show_hook_content": True
+    }
+    cfg['settings'] = {**default_settings, **cfg['settings']}
+
+    for group in cfg['groups']:
+        default_file_cfg = {
+            "strategy": "ask",
+            "pre_hooks": [ None ],
+            "hooks": [ None ],
+            "url": None,
+            "path": None
+        }
+        g = {**default_file_cfg, **cfg['groups'][group].copy()}
+        del g['files']
+
+        for i, f in enumerate(cfg['groups'][group]['files']):
+            # If nothing is provided in f.path, retrieve filename from headers.
+            if 'path' not in f:
+                f['path'] = get_filename_from_url(f['url'])
+
+            # Generate absolute path from g.path + f.path.
+            if f['path'] and '/' in f['path']:
+                f['path'] = op.abspath(op.expanduser(f['path']))
+            elif g['path'] and f['path'] and not '/' in f['path']:
+                f['path'] = op.abspath(op.join(op.expanduser(g['path']), f['path']))
+
+            f = {**g, **f}
+
+            if f['pre_hooks'] and type(f['pre_hooks']) == str:
+                f['pre_hooks'] = [f['pre_hooks']]
+            if f['hooks'] and type(f['hooks']) == str:
+                f['hooks'] = [f['hooks']]
+
+            cfg['groups'][group]['files'][i] = f
+
+            #print(json.dumps(cfg, indent=2, sort_keys=True))
+    return cfg
+cfg = construct_cfg(cfg)
+
 
 def query(question: str, options: list = ['Yes', 'No'], default_choice: int = 1):
     cstring = list(options)
@@ -127,17 +183,7 @@ def query(question: str, options: list = ['Yes', 'No'], default_choice: int = 1)
         else:
             sys.stdout.write(f"Please respond with {cstring}\n")
 
-def arcanine(cfg, url: str, fpath: str, hooks: list = None):
-    # This function handles the handlers and executes post-hooks, clearly, should be obvious from the name...
-    if op.isfile(fpath):
-        q = query(f"File '{fpath}' already exists, overwrite?", ['Yes', 'No'], 1)
-        if not q or q == "No":
-            return
-    print(f'curl {url} > {fpath}')
-    #q = query(f'Retrieve file?', ['Yes', 'No'], 0)
-    #if q and q == 'Yes':
-    urllib.request.urlretrieve(url, fpath)
-    template_strings = dict(file=fpath, url=url)
+def process_hooks(cfg, hooks: list = None, template_strings: dict = None):
     for hook in hooks:
         try:
             formatted_hook = []
@@ -147,7 +193,9 @@ def arcanine(cfg, url: str, fpath: str, hooks: list = None):
             #q = query(f'Run hook?', ['Yes', 'No'], 0)
             #if q and q == "Yes":
             try:
-                hook_call = subprocess.run(formatted_hook, text=True, stdout=subprocess.PIPE, check=True)
+                # `text` required python >= 3.7, replacing with `universal_newlines=True` seems to work...
+                #hook_call = subprocess.run(formatted_hook, text=True, stdout=subprocess.PIPE, check=True)
+                hook_call = subprocess.run(formatted_hook, universal_newlines=True, stdout=subprocess.PIPE, check=True)
                 for line in hook_call.stdout.split('\n'):
                     print(f'> {line}')
             except subprocess.CalledProcessError:
@@ -155,54 +203,46 @@ def arcanine(cfg, url: str, fpath: str, hooks: list = None):
         except KeyError:
             pass
 
-def bulbasaur(cfg, group: str = None):
-    try:
-        # Get all groups
-        if not group:
-            for group in cfg['groups']:
-                bulbasaur(cfg, group)
+def arcanine(cfg: dict, link: dict):
+    if op.isfile(link['path']):
+        # TODO allow skipping
+        # TODO update cfg instead of passing fpath, hooks and prehooks?
+        if not link['strategy'] or link['strategy'].lower() == 'ask':
+            q = query(f"File '{link['path']}' already exists, overwrite?", ['Yes', 'No'], 1)
+            if not q or q == "No":
+                return
+        elif link['strategy'].lower() in ['overwrite', 'yes']:
+            pass
+        else: #elif link['strategy'].lower() in ['skip', 'no']:
             return
-        # Verify that all keys exist and aren't empty, this should be done with a try/except or the link below
-        # https://stackoverflow.com/questions/43491287/elegant-way-to-check-if-a-nested-key-exists-in-a-dict
-        if ('groups' in cfg                  and cfg['groups'] and
-               group in cfg['groups']        and cfg['groups'][group] and
-             'files' in cfg['groups'][group] and cfg['groups'][group]['files']):
-            #print(group)
-            for link in cfg['groups'][group]['files']:
-                if 'url' in link:
-                    # Should this bit be in arcanine or a different function?
-                    try:             gpath: str = cfg['settings']['path']
-                    except KeyError: gpath: str = None
-                    try:             gpath: str = cfg['groups'][group]['path']
-                    except KeyError: gpath: str = gpath
-                    try:             lpath: str = link['path']
-                    except KeyError: lpath: str = get_filename_from_url(link['url'])
+    print(f'retrieving {link["url"]} > {link["path"]}')
+    template_strings = dict(__file=link['path'], __path=os.path.dirname(link['path']), url=link['url'])
+    process_hooks(cfg, link['pre_hooks'], template_strings)
+    urllib.request.urlretrieve(link['url'], link['path'])
+    process_hooks(cfg, link['hooks'], template_strings)
 
-                    fpath: str = None
-                    if lpath and '/' in lpath:
-                        fpath = op.abspath(op.expanduser(lpath))
-                    elif gpath and lpath and not '/' in lpath:
-                        fpath = op.abspath(op.join(op.expanduser(gpath), lpath))
-                    if not fpath:
-                        continue
+def main(cfg, group: str = None):
+    try:
+        if not group:
+            #try:
+            #    if cfg['settings']['default_group'].lower() == 'none': raise KeyError('settings.default_group is None')
+            if not cfg['settings']['default_group']:
+                print('No group provided.')
+                return
+            main(cfg, cfg['settings']['default_group'])
+            #except KeyError:
+            #    print('No group provided.')
+            return
 
-                    try:             hooks: str = cfg['settings']['hooks']
-                    except KeyError: hooks: str = None
-                    try:             hooks: str = cfg['groups'][group]['hooks']
-                    except KeyError: hooks: str = hooks
-                    try:             hooks: str = link['hooks']
-                    except KeyError: hooks: str = hooks
-                    if hooks and type(hooks) == str:
-                        hooks = [hooks]
-
-                    arcanine(cfg, link['url'], fpath, hooks)
-                else:
-                    pass # Can't do anything without an url, but we won't complain, could also raise Exception('but eh who cares')
-        else:
-            print(f"Hmm... something ain't right, is '{group}' defined?")
+        if group not in cfg['groups']:
+            print(f'Invalid group \'{group}\'.')
+            return
+        for link in cfg['groups'][group]['files']:
+            arcanine(cfg, link)
+            #print(link)
     except KeyboardInterrupt:
         print("\n...ait")
 
-bulbasaur(cfg, args.group)
+main(cfg, args.group)
 
 

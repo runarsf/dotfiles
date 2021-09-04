@@ -1,15 +1,37 @@
 hooks:
-    cat: [ "cat", "${file}" ]
-    chmod: [ "chmod", "+x", "${file}" ]
-    pip: [ "python3", "-m", "pip", "--no-input", "install", "${file}" ]
+    none: [ "echo" ]
+    info: [ "echo", "-e", "\n - File: ${__file}\n - Path: ${__path}" ]
+    cat: [ "cat", "${__file}" ]
+    chmod: [ "chmod", "+x", "${__file}" ]
+    mkdir: [ "mkdir", "-p", "${__path}" ]
+    rm: [ "rm", "-f", "${__file}" ]
+    rmdir: [ "rm", "-rf", "${__path}" ]
+    pip: [ "python3", "-m", "pip", "--no-input", "install", "-r", "${__file}" ]
 
 settings:
-  default_group: "None"
+  #default_group: None
+  show_hook_content: false
+
+collections:
+  dotfiles:
+    - rofi
+
+# $1 can be a collection or a group, where collection takes precedence.
+# If you want to use a group over a collection, use -g|--group <group>.
 
 groups:
+  test:
+    pre_hooks: mkdir
+    hooks: [ info, rmdir ]
+    path: ~/.local/share/succ
+    files:
+      - url: https://raw.githubusercontent.com/runarsf/dotfiles/master/.local/bin/duck
+        path: ducc
   rofi:
     path: ~/.config/rofi
     hooks: chmod
+    strategy: skip # overwrite/yes, skip/no, ask
+    pre_hooks: mkdir
     files:
       - url: https://raw.githubusercontent.com/mattydebie/bitwarden-rofi/master/bwmenu
         path: bwmenu
