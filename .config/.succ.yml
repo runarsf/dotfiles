@@ -9,7 +9,7 @@ hooks:
     pip: [ "python3", "-m", "pip", "--no-input", "install", "-r", "${__file}" ]
 
 settings:
-  #default_group: None
+  default_group: None
   show_hook_content: false
 
 collections:
