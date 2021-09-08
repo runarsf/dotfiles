@@ -192,7 +192,7 @@ alias please='sudo $(fc -ln -1)'
 #please () { test -z "${1}" && eval "sudo !!" || sudo "${@}" }
 dkhl () { docker inspect --format "{{json .State.Health }}" "${1}" | jq }
 wim () { ${EDITOR} "$(which ${1})" "${@:2}" }
-test -n "${DISPLAY}" && alias lf='lfrun' || (alias lf && unalias lf)
+test -n "${DISPLAY}" && alias lf='~/.config/lf/lfrun' || (alias lf && unalias lf)
 
 #insert_sudo () { zle beginning-of-line; zle -U "sudo " }
 #zle -N insert-sudo insert_sudo

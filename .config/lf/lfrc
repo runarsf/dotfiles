@@ -1,7 +1,5 @@
 # Basic Settings
-set previewer lfpreview
-#set preview false
-#set previewer ~/.config/lf/preview
+set previewer ~/.config/lf/lfpreview
 set hidden true
 #set color256 true
 set drawbox true
@@ -219,7 +217,7 @@ map gtr cd ~/.local/share/Trash/files
 map gp cd ~/Pictures
 map gb cd ~/.local/bin
 map gdl cd ~/Downloads
-map gd. cd ~/data
+map gda cd ~/data
 map gdc cd ~/Documents
 map gdr cd ~/Documents/drive
 map gc cd ~/.config
