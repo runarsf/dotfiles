@@ -25,6 +25,7 @@ lfimage () {
 }
 
 lfimage clear
+sleep 0.7
 
 case "${1}" in
   *.bmp|*.jpg|*.jpeg|*.png|*.xpm) lfimage draw "${1}" "${num}" 2 "${numb}" "${numc}";;
