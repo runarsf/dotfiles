@@ -64,6 +64,9 @@ cmd chmod ${{
 }}
 map ch. chmod
 
+cmd upload %sharenix -n -c "${f}"
+map u upload
+
 cmd chexec %chmod +x "${f}"
 map chx chexec
 
