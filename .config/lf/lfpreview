@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+
+# Clear the last preview (if any)
+LINES=30
+# Calculate where the image should be placed on the screen.
+num="$(printf "%0.f\n" "`echo "$(tput cols) / 2" | bc`")"
+numb="$(printf "%0.f\n" "`echo "$(tput cols) - ${num} - 1" | bc`")"
+numc="$(printf "%0.f\n" "`echo "$(tput lines) - 2" | bc`")"
+readonly ID_PREVIEW="preview"
+
+lfimage () {
+  # Requires ueberzug
+  case "${1}" in
+    "clear")
+      declare -p -A cmd=([action]=remove [identifier]="${ID_PREVIEW}") \
+        > "${FIFO_UEBERZUG}"
+      ;;
+    "draw")
+      declare -p -A cmd=([action]=add [identifier]="${ID_PREVIEW}" \
+        [x]="${3}" [y]="${4}" [max_width]="${5}" [max_height]="${6}" \
+        [path]="${2}") > "${FIFO_UEBERZUG}"
+      ;;
+    "*") echo "Unknown command: '${1}', '${2}'" ;;
+  esac
+}
+
+lfimage clear
+sleep 0.7
+
+case "${1}" in
+  *.bmp|*.jpg|*.jpeg|*.png|*.xpm) lfimage draw "${1}" "${num}" 2 "${numb}" "${numc}";;
+  *.png|*.jpg|*.jpeg|*.mkv|*.mp4) mediainfo "${1}";;
+  #*.pdf)
+  #  CACHE="$(mktemp /tmp/thumbcache.XXXXX)"
+  #  pdftoppm -png -f 1 -singlefile "${1}" "${CACHE}"
+  #  lfimage draw "${CACHE}.png" "${num}" 1 "${numb}" "${numc}"
+  #  ;;
+  #*.epub)
+  #  CACHE="$(mktemp /tmp/thumbcache.XXXXX)"
+  #  epub-thumbnailer "${1}" "${CACHE}" 1024
+  #  lfimage draw "${CACHE}" "${num}" 1 "${numb}" "${numc}"
+  #  ;;
+  #*.wav|*.mp3|*.flac|*.m4a|*.wma|*.ape|*.ac3|*.og[agx]|*.spx|*.opus|*.as[fx]|*.flac) exiftool "${1}";;
+  #*.avi|*.mp4|*.wmv|*.dat|*.3gp|*.ogv|*.mkv|*.mpg|*.mpeg|*.vob|*.fl[icv]|*.m2v|*.mov|*.webm|*.ts|*.mts|*.m4v|*.r[am]|*.qt|*.divx)
+  #  CACHE="$(mktemp /tmp/thumbcache.XXXXX)"
+  #  ffmpegthumbnailer -i "${1}" -o "${CACHE}" -s 0
+  #  lfimage draw "${CACHE}" "${num}" 1 "${numb}" "${numc}"
+  #  ;;
+  *.md) glow -s dark "${1}";;
+  *.pdf) pdftotext "${1}" -;;
+  *.zip) zipinfo "${1}";;
+  *.tar.gz) tar -ztvf "${1}";;
+  *.tar.bz2) tar -jtvf "${1}";;
+  *.tar) tar -tvf "${1}";;
+  *.7z) 7z l "${1}";;
+  *.rar) unrar l "${1}";;
+  *.zsh*|*.bash*|*.git*) pistol "${1}";;
+  #*.html|*.xml) w3m -dump "$1";;
+  *) highlight "${1}" -O ansi --force;;
+esac
