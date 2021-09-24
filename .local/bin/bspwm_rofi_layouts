@@ -3,7 +3,9 @@
 set +o errexit
 read -r -d '' layouts <<'EOLAYOUTS'
 tall
+taller
 rtall
+rtaller
 wide
 rwide
 monocle
@@ -22,10 +24,12 @@ layout="$(printf "${layouts}" | rofi -lines "${lines}" -dmenu -p "${clayout}")"
 did="$(bspc query -D -n focused --names)"
 case "${layout}" in
   rtall) ms="0.62";;
+  taller) ms="0.42"; layout=tall;;
+  rtaller) ms="0.42"; layout=tall;;
   *) ms="0.55";;
 esac
 case "${layout}" in
-  tall|rtall|wide|rwide) bsp-layout set "${layout}" "${did}" --master-size "${ms}";;
+  tall|rtall|wide|rwide|taller|rtaller) bsp-layout set "${layout}" "${did}" --master-size "${ms}";;
   grid|rgrid|even) bsp-layout set "${layout}" "${did}";;
   tiled|monocle) bsp-layout remove "${did}"; bspc desktop --layout "${layout}"; bsp-layout once "${layout}";;
   *);;
