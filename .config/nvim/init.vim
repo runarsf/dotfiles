@@ -61,6 +61,18 @@ Plug 'tpope/vim-vinegar' " netrw {{{
   "map <silent> <C-n> :NetrwToggle <bar> wincmd p<CR>
   map <silent> <C-n> :Lexplore<CR>
 " }}}
+Plug 'nathanaelkane/vim-indent-guides' " {{{
+let g:indent_guides_enable_on_vim_startup = 1
+let g:indent_guides_start_level = 1
+let g:indent_guides_auto_colors = 0
+"let g:indent_guides_guide_size = 2
+let g:indent_guides_color_change_percent = 10
+"autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=gray ctermbg=236
+" vim-one
+" autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=#363840 ctermbg=237
+" gruvbox
+autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd guibg=#282828 ctermbg=237
+" }}}
 
 " Syntax highlighting {{{
   Plug 'chr4/nginx.vim', { 'for': 'nginx' }
