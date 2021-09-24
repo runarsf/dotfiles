@@ -83,39 +83,39 @@ let g:coc_global_extensions = [
   \ 'coc-yaml',
   \ 'coc-highlight',
   \ 'coc-tsserver',
+  \ 'coc-tabnine',
   \ ]
-  " \ 'coc-tabnine',
   " \ 'coc-vetur',
   " \ 'coc-snippets',
   " \ 'coc-markdownlint'
   " \ 'coc-python',
   " \ 'coc-emoji'
 command! Cock exec "CocInstall -sync " . join(get(g:, 'coc_global_extensions', []))
-" " Use `[g` and `]g` to navigate diagnostics
-" nmap <silent> <space>G <Plug>(coc-diagnostic-prev)
-" nmap <silent> <space>g <Plug>(coc-diagnostic-next)
-" " Remap keys for gotos
-" nmap <silent> gd <Plug>(coc-definition)
-" nmap <silent> gy <Plug>(coc-type-definition)
-" nmap <silent> gi <Plug>(coc-implementation)
-" nmap <silent> gr <Plug>(coc-references)
-" " Using CocList
-" " Show all diagnostics
-" nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
-" " Manage extensions
-" nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
-" " Show commands
-" nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
-" " Find symbol of current document
-" nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
-" " Search workspace symbols
-" nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
-" " Do default action for next item.
-" nnoremap <silent> <space>j  :<C-u>CocNext<CR>
-" " Do default action for previous item.
-" nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
-" " Resume latest coc list
-" nnoremap <silent> <space>p  :<C-u>CocListResume<CR><Paste>
+" Use `[g` and `]g` to navigate diagnostics
+nmap <silent> <space>G <Plug>(coc-diagnostic-prev)
+nmap <silent> <space>g <Plug>(coc-diagnostic-next)
+" Remap keys for gotos
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+" Using CocList
+" Show all diagnostics
+nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
+" Manage extensions
+nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
+" Show commands
+nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
+" Find symbol of current document
+nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
+" Search workspace symbols
+nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
+" Do default action for next item.
+nnoremap <silent> <space>j  :<C-u>CocNext<CR>
+" Do default action for previous item.
+nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
+" Resume latest coc list
+nnoremap <silent> <space>p  :<C-u>CocListResume<CR><Paste>
 
 " Use tab for trigger completion with characters ahead and navigate.
 " Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
@@ -149,6 +149,11 @@ function! s:show_documentation()
 endfunction
 endif
 " }}}
+Plug 'nvim-telescope/telescope.nvim'
+if (has('nvim-0.5.0'))
+  Plug 'nvim-lua/plenary.nvim' | Plug 'folke/todo-comments.nvim'
+  Plug 'kyazdani42/nvim-web-devicons' | Plug 'folke/trouble.nvim'
+endif
 
 " Syntax highlighting {{{
   Plug 'chr4/nginx.vim', { 'for': 'nginx' }
@@ -166,6 +171,69 @@ Plug 'gruvbox-community/gruvbox' " {{{
 
 let g:colorscheme = 'gruvbox'
 call plug#end() | endif " }}}
+
+if (has('nvim-0.5.0'))
+  lua << EOF
+  require("todo-comments").setup {
+    {
+      signs = true, -- show icons in the signs column
+      sign_priority = 8, -- sign priority
+      -- keywords recognized as todo comments
+      keywords = {
+        FIX = {
+          icon = " ", -- icon used for the sign, and in search results
+          color = "error", -- can be a hex color, or a named color (see below)
+          alt = { "FIXME", "BUG", "FIXIT", "ISSUE" }, -- a set of other keywords that all map to this FIX keywords
+          -- signs = false, -- configure signs for some keywords individually
+        },
+        TODO = { icon = " ", color = "info", alt = { "@todo", "todo" } },
+        HACK = { icon = " ", color = "warning" },
+        WARN = { icon = " ", color = "warning", alt = { "WARNING", "XXX" } },
+        PERF = { icon = " ", alt = { "OPTIM", "PERFORMANCE", "OPTIMIZE" } },
+        NOTE = { icon = " ", color = "hint", alt = { "INFO" } },
+      },
+      merge_keywords = true, -- when true, custom keywords will be merged with the defaults
+      -- highlighting of the line containing the todo comment
+      -- * before: highlights before the keyword (typically comment characters)
+      -- * keyword: highlights of the keyword
+      -- * after: highlights after the keyword (todo text)
+      highlight = {
+        before = "", -- "fg" or "bg" or empty
+        keyword = "wide", -- "fg", "bg", "wide" or empty. (wide is the same as bg, but will also highlight surrounding characters)
+        after = "fg", -- "fg" or "bg" or empty
+        pattern = [[.*<(KEYWORDS)\s*]], -- pattern or table of patterns, used for highlightng (vim regex)
+        comments_only = true, -- uses treesitter to match keywords in comments only
+        max_line_len = 400, -- ignore lines longer than this
+        exclude = {}, -- list of file types to exclude highlighting
+      },
+      -- list of named colors where we try to extract the guifg from the
+      -- list of hilight groups or use the hex color if hl not found as a fallback
+      colors = {
+        error = { "LspDiagnosticsDefaultError", "ErrorMsg", "#DC2626" },
+        warning = { "LspDiagnosticsDefaultWarning", "WarningMsg", "#FBBF24" },
+        info = { "LspDiagnosticsDefaultInformation", "#2563EB" },
+        hint = { "LspDiagnosticsDefaultHint", "#10B981" },
+        default = { "Identifier", "#7C3AED" },
+      },
+      search = {
+        command = "rg",
+        args = {
+          "--color=never",
+          "--no-heading",
+          "--with-filename",
+          "--line-number",
+          "--column",
+        },
+        -- regex that will be used to match keywords.
+        -- don't replace the (KEYWORDS) placeholder
+        pattern = [[\b(KEYWORDS):]], -- ripgrep regex
+        -- pattern = [[\b(KEYWORDS)\b]], -- match without the extra colon. You'll likely get false positives
+      },
+    }
+  }
+EOF
+  lua require("trouble").setup {}
+endif
 
 if (has('termguicolors'))
   set termguicolors
@@ -369,7 +437,8 @@ autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 
 " Persistent undo {{{
 if has("persistent_undo")
-  set undodir=stdpath('data').'/temp_dirs/undodir'
+  "set undodir=stdpath('data').'/temp_dirs/undodir'
+  set undodir=~/.vim_runtime/temp_dirs/undodir
   set undofile
 endif
 " }}}
