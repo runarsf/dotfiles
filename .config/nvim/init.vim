@@ -155,6 +155,10 @@ if (has('nvim-0.5.0'))
   Plug 'nvim-lua/plenary.nvim' | Plug 'folke/todo-comments.nvim'
   Plug 'kyazdani42/nvim-web-devicons' | Plug 'folke/trouble.nvim'
 endif
+Plug 'voldikss/vim-floaterm' | Plug 'ptzz/lf.vim' " {{{
+let g:lf_replace_netrw = 0 " Open lf when vim opens a directory
+"let g:lf_command_override = 'lf -command "set hidden"'
+" }}}
 
 " Syntax highlighting {{{
   Plug 'chr4/nginx.vim', { 'for': 'nginx' }
