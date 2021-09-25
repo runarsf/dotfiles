@@ -242,6 +242,7 @@ set showcmd
 set showfulltag
 set showmatch
 set langmenu=en
+set noautochdir
 set wildmenu
 set wildmode=longest:full,full
 set path+=**
