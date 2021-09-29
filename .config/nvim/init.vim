@@ -196,18 +196,18 @@ set t_AF=^[[38;5;%dm
 function! CustomHighlights() abort
   if (g:colors_name == 'gruvbox')
     if (&background == 'dark')
-      hi Visual cterm=NONE ctermfg=NONE ctermbg=237 guibg=#3a3a3a
+      highlight Visual      cterm=NONE ctermfg=NONE ctermbg=237 guibg=#3a3a3a
     else
-      hi Visual cterm=NONE ctermfg=NONE ctermbg=228 guibg=#f2e5bc
-      hi CursorLine cterm=NONE ctermfg=NONE ctermbg=228 guibg=#f2e5bc
-      hi ColorColumn cterm=NONE ctermfg=NONE ctermbg=228 guibg=#f2e5bc
+      highlight Visual      cterm=NONE ctermfg=NONE ctermbg=228 guibg=#f2e5bc
+      highlight CursorLine  cterm=NONE ctermfg=NONE ctermbg=228 guibg=#f2e5bc
+      highlight ColorColumn cterm=NONE ctermfg=NONE ctermbg=228 guibg=#f2e5bc
     endif
   endif
+  highlight Normal         ctermbg=NONE guibg=NONE
+  highlight LineNr         ctermbg=NONE guibg=NONE
+  highlight SignColumn     ctermbg=NONE guibg=NONE
+  highlight BufferLineFill guibg=NONE
   "highlight Comment        cterm=italic
-  "highlight Normal         ctermbg=NONE guibg=NONE
-  "highlight LineNr         ctermbg=NONE guibg=NONE
-  "highlight SignColumn     ctermbg=NONE guibg=NONE
-  "highlight BufferLineFill guibg=NONE
   "highlight TabLineFill ctermfg=LightGreen ctermbg=DarkGreen
   "highlight TabLine ctermfg=Blue ctermbg=Yellow
   "highlight TabLineSel ctermfg=Red ctermbg=Yellow
