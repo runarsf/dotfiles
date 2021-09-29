@@ -55,6 +55,7 @@ if test -z ${NOPLUG}; then
 		zdharma/zsh-diff-so-fancy
 		pierpo/fzf-docker
 		knu/zsh-manydots-magic
+		skywind3000/z.lua
 		# kazhala/dotbare
 		# runarsf/rufus-zsh-theme path:rufus-nightly.zsh-theme
 		# robbyrussell/oh-my-zsh path:themes/daveverwer.zsh-theme
