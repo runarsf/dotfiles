@@ -85,6 +85,7 @@ let g:coc_global_extensions = [
   \ 'coc-highlight',
   \ 'coc-tsserver',
   \ 'coc-tabnine',
+  \ 'coc-eslint',
   \ ]
   " \ 'coc-vetur',
   " \ 'coc-snippets',
@@ -150,6 +151,31 @@ function! s:show_documentation()
 endfunction
 endif
 " }}}
+Plug 'mhinz/vim-startify' " {{{
+let g:startify_session_dir = '~/.config/nvim/session'
+let g:startify_lists = [
+          \ { 'type': 'files',     'header': [ '   Files' ] },
+          \ { 'type': 'dir',       'header': [ '   Current Directory ' . getcwd() ] },
+          \ { 'type': 'bookmarks', 'header': [ '   Bookmarks' ] },
+          \ { 'type': 'sessions',  'header': [ '   Sessions' ] }
+          \ ]
+let g:startify_bookmarks = [
+            \ { 'h': expand('~') },
+            \ { 'd': '~/data' },
+            \ { 'c': '~/.config/nvim/init.vim' }
+            \ ]
+let g:startify_change_to_dir = 0
+let g:startify_change_to_vcs_root = 1
+let g:startify_session_autoload = 1
+let g:startify_session_delete_buffers = 1
+let g:startify_fortune_use_unicode = 1
+let g:startify_session_persistence = 1
+let g:startify_enable_special = 0
+autocmd User Startified setlocal cursorline
+"let g:startify_custom_header = 'startify#center(startify#fortune#boxed())'
+let g:startify_custom_header = []
+" }}}
+"Plug 'eslint/eslint'
 if (has('nvim-0.5.0'))
   Plug 'nvim-telescope/telescope.nvim'
   Plug 'nvim-lua/plenary.nvim' | Plug 'folke/todo-comments.nvim'
@@ -203,10 +229,11 @@ function! CustomHighlights() abort
       highlight ColorColumn cterm=NONE ctermfg=NONE ctermbg=228 guibg=#f2e5bc
     endif
   endif
-  highlight Normal         ctermbg=NONE guibg=NONE
-  highlight LineNr         ctermbg=NONE guibg=NONE
-  highlight SignColumn     ctermbg=NONE guibg=NONE
-  highlight BufferLineFill guibg=NONE
+  highlight IndentGuidesOdd ctermbg=NONE guibg=NONE
+  highlight Normal          ctermbg=NONE guibg=NONE
+  highlight LineNr          ctermbg=NONE guibg=NONE
+  highlight SignColumn      ctermbg=NONE guibg=NONE
+  highlight BufferLineFill  guibg=NONE
   "highlight Comment        cterm=italic
   "highlight TabLineFill ctermfg=LightGreen ctermbg=DarkGreen
   "highlight TabLine ctermfg=Blue ctermbg=Yellow

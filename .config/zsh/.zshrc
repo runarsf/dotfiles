@@ -28,6 +28,33 @@ compinit
 _comp_options+=(globdots)
 # }}}
 
+# thefuck {{{
+# Because this sucks: robbyrussell/oh-my-zsh path:plugins/thefuck
+export ZSH_CACHE_DIR="${HOME}/.cache"
+if [[ -z ${commands[thefuck]} ]]; then
+  printf "thefuck is not installed, see https://github.com/nvbn/thefuck/wiki/Installation\n"
+  printf "Ubuntu:\n - sudo apt install python3-dev python3-pip python3-setuptools\n - sudo pip3 install thefuck\n"
+  printf "Arch:\n - sudo pacman -S thefuck\n"
+  return 1
+fi
+
+# Register alias
+[[ ! -a ${ZSH_CACHE_DIR}/thefuck ]] && thefuck --alias heck --enable-experimental-instant-mode > ${ZSH_CACHE_DIR}/thefuck
+source ${ZSH_CACHE_DIR}/thefuck
+
+fuck-command-line() {
+  local FUCK="$(THEFUCK_REQUIRE_CONFIRMATION=0 thefuck $(fc -ln -1 | tail -n 1) 2> /dev/null)"
+  [[ -z ${FUCK} ]] && echo -n -e "\a" && return
+  BUFFER=$FUCK
+  zle end-of-line
+}
+zle -N fuck-command-line
+# Defined shortcut keys: [Esc] [Esc]
+bindkey -M emacs '\e\e' fuck-command-line
+bindkey -M vicmd '\e\e' fuck-command-line
+bindkey -M viins '\e\e' fuck-command-line
+# }}}
+
 # plugins {{{
 if test -z ${NOPLUG}; then
   command -v "antibody" >/dev/null 2>&1 \
@@ -35,40 +62,29 @@ if test -z ${NOPLUG}; then
     && source <(antibody init)
 	antibody bundle <<-EOBUNDLES
 		robbyrussell/oh-my-zsh path:lib
-		# robbyrussell/oh-my-zsh path:plugins/git
-		# robbyrussell/oh-my-zsh path:plugins/git-extras
-		# robbyrussell/oh-my-zsh path:plugins/colorize # sudo pip3 install pygments
 		robbyrussell/oh-my-zsh path:plugins/colored-man-pages
-		# robbyrussell/oh-my-zsh path:plugins/command-not-found
-		# robbyrussell/oh-my-zsh path:plugins/jump
-		# robbyrussell/oh-my-zsh path:plugins/thefuck
-		# robbyrussell/oh-my-zsh path:plugins/common-aliases
-		# robbyrussell/oh-my-zsh path:plugins/docker
+		robbyrussell/oh-my-zsh path:plugins/command-not-found
+		robbyrussell/oh-my-zsh path:plugins/common-aliases
+		robbyrussell/oh-my-zsh path:plugins/docker
 		robbyrussell/oh-my-zsh path:plugins/docker-compose
 		zsh-users/zsh-autosuggestions
 		zsh-users/zsh-history-substring-search
 		zsh-users/zsh-completions
-		# djui/alias-tips
+		djui/alias-tips
 		# zsh-users/zsh-syntax-highlighting
 		zdharma/fast-syntax-highlighting
 		akarzim/zsh-docker-aliases
 		zdharma/zsh-diff-so-fancy
-		pierpo/fzf-docker
 		knu/zsh-manydots-magic
 		skywind3000/z.lua
-		# kazhala/dotbare
-		# runarsf/rufus-zsh-theme path:rufus-nightly.zsh-theme
-		# robbyrussell/oh-my-zsh path:themes/daveverwer.zsh-theme
-		# robbyrussell/oh-my-zsh path:themes/miloshadzic.zsh-theme
-		# denysdovhan/spaceship-prompt
-		# romkatv/powerlevel10k
+		kazhala/dotbare
 	EOBUNDLES
   command -v starship >/dev/null 2>&1 || (curl -fsSL https://starship.rs/install.sh | bash)
   bindkey "$terminfo[kcuu1]" history-substring-search-up
   bindkey "$terminfo[kcud1]" history-substring-search-down
 else
   export ZSH="${HOME}/.oh-my-zsh"
-  ZSH_THEME='rufus-nightly'
+  #ZSH_THEME='miloshadzic'
   source "${ZSH}/oh-my-zsh.sh"
   eval "$(thefuck --alias fuck)"
 fi
@@ -203,13 +219,11 @@ test -n "${DISPLAY}" && alias lf='~/.config/lf/lfrun' || (alias lf && unalias lf
 # }}}
 
 # Dotfiles {{{
-export DOT_DIR="${HOME}/.config/dotfiles/.git"
-export DOT_TREE="${HOME}"
-export DOTBARE_DIR="${DOT_DIR}"
-export DOTBARE_TREE="${DOT_TREE}"
+export DOTBARE_DIR="${HOME}/.config/dotfiles/.git"
+export DOTBARE_TREE="${HOME}"
 
 alias dotted='dotfiles ls-files --error-unmatch'
-alias dirtydots="dirtygit --git-dir '${DOT_DIR}' --work-tree '${DOT_TREE}' --git-add '-u'"
+alias dirtydots="dirtygit --git-dir '${DOTBARE_DIR}' --work-tree '${DOTBARE_TREE}' --git-add '-u'"
 alias dots='dotfiles'
 dotfiles () {
   if test "${#}" -eq "0"; then
@@ -222,7 +236,7 @@ dotfiles () {
   #    return 1
   #  fi
   #done
-  git --git-dir="${DOT_DIR}" --work-tree="${DOT_TREE}" "${@}"
+  git --git-dir="${DOTBARE_DIR}" --work-tree="${DOTBARE_TREE}" "${@}"
 }
 # }}}
 
