@@ -64,7 +64,7 @@ if test -z ${NOPLUG}; then
 		robbyrussell/oh-my-zsh path:lib
 		robbyrussell/oh-my-zsh path:plugins/colored-man-pages
 		robbyrussell/oh-my-zsh path:plugins/command-not-found
-		robbyrussell/oh-my-zsh path:plugins/common-aliases
+		# robbyrussell/oh-my-zsh path:plugins/common-aliases # Removed because has annoying '_ > sudo' alias
 		robbyrussell/oh-my-zsh path:plugins/docker
 		robbyrussell/oh-my-zsh path:plugins/docker-compose
 		zsh-users/zsh-autosuggestions
