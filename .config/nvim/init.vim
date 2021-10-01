@@ -151,36 +151,12 @@ function! s:show_documentation()
 endfunction
 endif
 " }}}
-Plug 'mhinz/vim-startify' " {{{
-let g:startify_session_dir = '~/.config/nvim/session'
-let g:startify_lists = [
-          \ { 'type': 'files',     'header': [ '   Files' ] },
-          \ { 'type': 'dir',       'header': [ '   Current Directory ' . getcwd() ] },
-          \ { 'type': 'bookmarks', 'header': [ '   Bookmarks' ] },
-          \ { 'type': 'sessions',  'header': [ '   Sessions' ] }
-          \ ]
-let g:startify_bookmarks = [
-            \ { 'h': expand('~') },
-            \ { 'd': '~/data' },
-            \ { 'c': '~/.config/nvim/init.vim' }
-            \ ]
-let g:startify_change_to_dir = 0
-let g:startify_change_to_vcs_root = 1
-let g:startify_session_autoload = 1
-let g:startify_session_delete_buffers = 1
-let g:startify_fortune_use_unicode = 1
-let g:startify_session_persistence = 1
-let g:startify_enable_special = 0
-autocmd User Startified setlocal cursorline
-"let g:startify_custom_header = 'startify#center(startify#fortune#boxed())'
-let g:startify_custom_header = []
-" }}}
 "Plug 'eslint/eslint'
-if (has('nvim-0.5.0'))
-  Plug 'nvim-telescope/telescope.nvim'
-  Plug 'nvim-lua/plenary.nvim' | Plug 'folke/todo-comments.nvim'
-  Plug 'kyazdani42/nvim-web-devicons' | Plug 'folke/trouble.nvim'
-endif
+"if (has('nvim-0.5.0'))
+"  Plug 'nvim-telescope/telescope.nvim'
+"  Plug 'nvim-lua/plenary.nvim' | Plug 'folke/todo-comments.nvim'
+"  Plug 'kyazdani42/nvim-web-devicons' | Plug 'folke/trouble.nvim'
+"endif
 Plug 'voldikss/vim-floaterm' | Plug 'ptzz/lf.vim' " {{{
 let g:lf_replace_netrw = 0 " Open lf when vim opens a directory
 "let g:lf_command_override = 'lf -command "set hidden"'
@@ -204,10 +180,10 @@ let g:colorscheme = 'gruvbox'
 call plug#end() | endif " }}}
 
 " :lua print(vim.inspect(require("todo-comments.config")))
-if (has('nvim-0.5'))
-  lua require("todo-comments").setup {}
-  lua require("trouble").setup {}
-endif
+"if (has('nvim-0.5'))
+"  lua require("todo-comments").setup {}
+"  lua require("trouble").setup {}
+"endif
 
 if (has('termguicolors'))
   set termguicolors
