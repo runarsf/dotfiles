@@ -86,6 +86,7 @@ let g:coc_global_extensions = [
   \ 'coc-tsserver',
   \ 'coc-tabnine',
   \ 'coc-eslint',
+  \ 'coc-markmap',
   \ ]
   " \ 'coc-vetur',
   " \ 'coc-snippets',
@@ -163,6 +164,7 @@ let g:lf_replace_netrw = 0 " Open lf when vim opens a directory
 " }}}
 
 " Syntax highlighting {{{
+  Plug 'LnL7/vim-nix', { 'for': 'nix' }
   Plug 'chr4/nginx.vim', { 'for': 'nginx' }
   Plug 'storyn26383/vim-vue', { 'for': 'vue' }
   Plug 'ekalinin/Dockerfile.vim', { 'for': 'Dockerfile' }
