@@ -2,6 +2,8 @@
 # description: Launch terminal.
 super + Return
 	"${TERMINAL}"
+super + shift + Return
+	tabbed -df alacritty --embed
 
 super + alt + b
 	bwmenu --clear 8 --auto-lock 28800 -- -location 2
