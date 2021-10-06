@@ -70,9 +70,9 @@ let g:indent_guides_auto_colors = 0
 let g:indent_guides_color_change_percent = 10
 "autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd  guibg=gray ctermbg=236
 " vim-one
-" autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=#363840 ctermbg=237
+autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=#363840 ctermbg=237
 " gruvbox
-autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd guibg=#282828 ctermbg=237
+" autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd guibg=#282828 ctermbg=237
 " }}}
 if v:version >= 703 && executable('node') | Plug 'neoclide/coc.nvim', {'branch': 'release'} " {{{
 "if v:version >= 703 && executable('node') && executable('yarn') | Plug 'neoclide/coc.nvim', { 'branch': 'release', 'tag': '*', 'do': { -> coc#util#install()}}
@@ -171,14 +171,19 @@ let g:lf_replace_netrw = 0 " Open lf when vim opens a directory
   Plug 'kovetskiy/sxhkd-vim', { 'for': 'sxhkdrc' }
 " }}}
 
-"Plug 'rakr/vim-one' | let g:one_allow_italics = 0
+Plug 'rakr/vim-one' | let g:one_allow_italics = 0
+Plug 'joshdick/onedark.vim' " {{{
+let g:onedark_color_overrides = {
+  \ "background": {"gui": "#0D1117", "cterm": "234", "cterm16": "0" },
+  \}
+" }}}
 Plug 'gruvbox-community/gruvbox' " {{{
   if !exists('g:gruvbox_contrast_light')
     let g:gruvbox_contrast_light='hard'
   endif
 " }}}
 
-let g:colorscheme = 'gruvbox'
+let g:colorscheme = 'onedark'
 call plug#end() | endif " }}}
 
 " :lua print(vim.inspect(require("todo-comments.config")))
@@ -187,9 +192,17 @@ call plug#end() | endif " }}}
 "  lua require("trouble").setup {}
 "endif
 
-if (has('termguicolors'))
+"if (empty($TMUX))
+if (has("nvim"))
+  let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+endif
+if (has("termguicolors"))
   set termguicolors
 endif
+"else
+"  set t_8b=^[[48;2;%lu;%lu;%lum
+"  set t_8f=^[[38;2;%lu;%lu;%lum
+"endif
 
 " Enable 256-colors, has to be set before colorscheme
 set t_Co=256
@@ -362,10 +375,10 @@ inoreabbrev <expr> #!! "#!/usr/bin/env" . (empty(&filetype) ? '' : ' '.&filetype
 set pastetoggle=<leader>p
 
 " Keep cursor centered when jumping around
-nnoremap n nzzzv
-nnoremap N Nzzv
-nnoremap J mzJ`z
-nnoremap <C-j> :cnext<CR>zzzv
+"nnoremap n nzzzv
+"nnoremap N Nzzv
+"nnoremap J mzJ`z
+"nnoremap <C-j> :cnext<CR>zzzv
 
 " don't undo entire chunk
 inoremap , ,<c-g>u
