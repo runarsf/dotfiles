@@ -86,7 +86,6 @@ let g:coc_global_extensions = [
   \ 'coc-tsserver',
   \ 'coc-tabnine',
   \ 'coc-eslint',
-  \ 'coc-markmap',
   \ ]
   " \ 'coc-vetur',
   " \ 'coc-snippets',
