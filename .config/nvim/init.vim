@@ -62,6 +62,7 @@ Plug 'tpope/vim-vinegar' " netrw {{{
   "map <silent> <C-n> :NetrwToggle <bar> wincmd p<CR>
   map <silent> <C-n> :Lexplore<CR>
 " }}}
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'nathanaelkane/vim-indent-guides' " {{{
 let g:indent_guides_enable_on_vim_startup = 1
 let g:indent_guides_start_level = 1
