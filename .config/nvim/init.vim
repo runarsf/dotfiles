@@ -63,6 +63,11 @@ Plug 'tpope/vim-vinegar' " netrw {{{
   map <silent> <C-n> :Lexplore<CR>
 " }}}
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'voldikss/vim-floaterm' " {{{
+nnoremap <silent> <M-S-n> :FloatermNew --height=0.9 --width=0.9 --wintype=float --name=floaterm1 --position=topright --autoclose=2<CR>
+nnoremap <silent> <M-n>   :FloatermToggle<CR>
+tnoremap <silent> <M-n>   <C-\><C-n>:FloatermToggle<CR>
+" }}}
 Plug 'nathanaelkane/vim-indent-guides' " {{{
 let g:indent_guides_enable_on_vim_startup = 1
 let g:indent_guides_start_level = 1
