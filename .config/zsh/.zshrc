@@ -200,16 +200,22 @@ alias dirtydots="dirtygit --git-dir '${DOTBARE_DIR}' --work-tree '${DOTBARE_TREE
 alias dots='dotfiles'
 dotfiles () {
   if test "${#}" -eq "0"; then
-    dotfiles status
-    return 0
+    set - status
   fi
-  #for var in "${@}"; do
-  #  if test "${var}" = "."; then
-  #    printf "\'.\' argument disabled by dotfiles git wrapper."
-  #    return 1
-  #  fi
-  #done
   git --git-dir="${DOTBARE_DIR}" --work-tree="${DOTBARE_TREE}" "${@}"
+}
+# }}}
+
+# Docker outline {{{
+DOCKER_TREE="${HOME:-~}/data/docker"
+DOCKER_BARE="${DOCKER_TREE:-${HOME:-~}/data/docker}/bare/.git"
+alias docked='doutline ls-files --error-unmatch'
+alias dirtydocker="dirtygit --git-dir '${DOCKER_BARE}' --work-tree '${DOCKER_TREE}' --git-add '-u'"
+doutline () {
+  if test "${#}" -eq "0"; then
+    set -- status
+  fi
+  git --git-dir="${DOCKER_BARE}" --work-tree="${DOCKER_TREE}" "${@}"
 }
 # }}}
 
