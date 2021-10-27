@@ -158,11 +158,11 @@ endfunction
 endif
 " }}}
 "Plug 'eslint/eslint'
-"if (has('nvim-0.5.0'))
-"  Plug 'nvim-telescope/telescope.nvim'
-"  Plug 'nvim-lua/plenary.nvim' | Plug 'folke/todo-comments.nvim'
-"  Plug 'kyazdani42/nvim-web-devicons' | Plug 'folke/trouble.nvim'
-"endif
+if (has('nvim-0.5.0'))
+  Plug 'nvim-telescope/telescope.nvim'
+  Plug 'nvim-lua/plenary.nvim' | Plug 'folke/todo-comments.nvim'
+  Plug 'kyazdani42/nvim-web-devicons' | Plug 'folke/trouble.nvim'
+endif
 Plug 'voldikss/vim-floaterm' | Plug 'ptzz/lf.vim' " {{{
 let g:lf_replace_netrw = 0 " Open lf when vim opens a directory
 "let g:lf_command_override = 'lf -command "set hidden"'
@@ -192,10 +192,10 @@ let g:colorscheme = 'onedark'
 call plug#end() | endif " }}}
 
 " :lua print(vim.inspect(require("todo-comments.config")))
-"if (has('nvim-0.5'))
-"  lua require("todo-comments").setup {}
-"  lua require("trouble").setup {}
-"endif
+if (has('nvim-0.5'))
+  lua require("todo-comments").setup {}
+  lua require("trouble").setup {}
+endif
 
 "if (empty($TMUX))
 if (has("nvim"))
@@ -394,6 +394,9 @@ inoremap ? ?<c-g>u
 " when jump lines is more than 5 add a jump point
 nnoremap <expr> k (v:count > 5 ? "m'" . v:count : "") . 'k'
 nnoremap <expr> j (v:count > 5 ? "m'" . v:count : "") . 'k'
+
+" https://github.com/runarsf/dotfiles/blob/d695fadf5ae4704cfa0d084ec304f585ec30a679/.config/nvim/init.vim#L551
+inoremap <leader><leader> <Esc>/<++><Enter>
 
 " Return to last edit position when opening files {{{
 autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
