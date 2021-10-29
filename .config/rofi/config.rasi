@@ -8,7 +8,7 @@ configuration {
   color-urgent: "#201D1D, #e1b5ba, argb:21686c70, #59666e, #e1b5ba";
   */
   terminal: "alacritty";
-  modi: "combi,run,drun,window,ssh"; /* filebrowser,windowcd */
+  modi: "combi,window,ssh"; /* filebrowser,windowcd */
   /* location: 1;
   kb-row-tab: "";
   kb-row-select: "Tab"; */
