@@ -1,0 +1,34 @@
+/* https://www.reddit.com/r/voidlinux/comments/pl2jea/rofi_ignores_lines_and_columns_parameters/ */
+configuration {
+  /*color-enabled: true;*/
+  /*
+  color-window: "#282828, #928374, #ebdbb2";
+  color-normal: "#282828, #ebdbb2, argb:21686c70, #a89984, #ebdbb2";
+  color-active: "#201D1D, #b5bae1, argb:21686c70, #59666e, #b5bae1";
+  color-urgent: "#201D1D, #e1b5ba, argb:21686c70, #59666e, #e1b5ba";
+  */
+  terminal: "alacritty";
+  modi: "combi,run,drun,window,ssh"; /* filebrowser,windowcd */
+  /* location: 1;
+  kb-row-tab: "";
+  kb-row-select: "Tab"; */
+  combi-modi: "run,drun,window";
+  show-icons: true;
+  combi-hide-mode-prefix: false;
+  drun-show-actions: true;
+  drun-display-format: "{name}";
+  /*lines: 5;*/
+  eh: 2;
+  /*bw: 2;*/
+  /*padding: 0;*/
+  /*transparency: "real";*/
+  /*width: 30;*/
+  font: "JetBrains Mono 12";
+  /*hide-scrollbar: true;*/
+  theme: "./themes/dark.rasi";
+  /*opacity: 80;*/
+  /*line-margin: 0;*/
+  /*line-padding: 10;*/
+  /*separator-style: "none";*/
+  matching: "fuzzy";
+}

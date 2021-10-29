@@ -9,25 +9,15 @@ super + alt + b
 	bwmenu --clear 8 --auto-lock 28800 -- -location 2
 
 super + x
-	betterlockscreen -l dimblur -b 8
-#	gllock || lock || i3lock-fancy || i3lock
-#super + l
-#	dm-tool lock
+	betterlockscreen --lock dimblur --blur 8
 
 super + shift + x
 	prompt "Are you sure you want to shutdown?" "shutdown -h now"
 
 super + d
-	rofi -show run
-super + shift + d
-	rofi -combi-modi window,drun -show combi -modi combi
+	rofi -show
 super + Tab
-	rofi -show window
-super + shift + Tab
-	rofi -show ssh
-
-super + alt + e
-	emoji
+	rofi -show window -modi window
 
 super + Escape
 	pkill -USR1 -x sxhkd

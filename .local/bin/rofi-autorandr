@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+set -o errexit
+
+# https://stackoverflow.com/a/4495304
+
+profiles_prefix=""
+profiles_suffix="\n(Auto)\n(Select default profile)\n(Select profile to remove)\n(Save current layout as profile)"
+profiles="$(\ls ~/.config/autorandr)"
+lines=$(($(printf "${profiles}" | wc -l) + 1))
+profile="$(printf "${profiles_prefix:-}${profiles}${profiles_suffix:-}" | rofi -lines "${lines}" -dmenu -p 'Select profile')"
+
+case "${profile}" in
+  '(Auto)') autorandr --change;;
+  '(Save current layout as profile)')
+    profile_name="$(rofi -dmenu -i -no-fixed-num-lines -p 'Enter profile name: ')"
+    autorandr --save "${profile_name}";;
+  '(Select default profile)')
+    profile_name="$(printf "${profiles}" | rofi -lines "${lines}" -dmenu -p 'Select profile')"
+    autorandr --default "${profile_name}";;
+  '(Select profile to remove)')
+    profile_name="$(printf "${profiles}" | rofi -lines "${lines}" -dmenu -p 'Select profile')"
+    autorandr --remove "${profile_name}";;
+  *) autorandr --load "${profile}";;
+esac

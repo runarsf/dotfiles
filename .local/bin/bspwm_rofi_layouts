@@ -1,5 +1,28 @@
 #!/usr/bin/env bash
 
+# https://fontawesome.com/v5.15/icons?d=gallery&p=2
+if test "${1}" = "query"; then
+  did="$(bspc query -D -n focused --names)"
+  layout="$(bsp-layout get ${did})"
+
+  clayout="$(bspc query -T -d | jq --raw-output '.layout')"
+  test "${layout}" = "-" -o "${clayout}" = "monocle" && layout="${clayout}"
+
+  case "${layout}" in
+    tall)       printf -- '[]='  ;;
+    rtall)      printf -- '=[]'  ;;
+    wide)       printf -- 'TTT'  ;;
+    rwide)      printf -- 'LLL'  ;;
+    tile|tiled) printf -- '[]-'  ;;
+    grid)       printf -- '|-|-|';;
+    rgrid)      printf -- '-|-|-';;
+    even)       printf -- '[][]' ;;
+    monocle)    printf -- '[M]'  ;;
+    -|*)        printf -- '[?]'  ;;
+  esac
+  exit 0
+fi
+
 set +o errexit
 read -r -d '' layouts <<'EOLAYOUTS'
 tall
