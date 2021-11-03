@@ -56,11 +56,11 @@ bspc config bottom_monocle_padding 5
 bspc rule -r "*"
 bspc rule -a discord desktop=^2
 bspc rule -a Mattermost desktop=^2
-#bspc rule -a slack desktop=^2
-#bspc rule -a Steam desktop=^5
+bspc rule -a slack desktop=^2
+bspc rule -a Steam desktop=^5
 bspc rule -a org.remmina.Remmina desktop=^5
-#bspc rule -a Anki desktop=^9
-#bspc rule -a Insync desktop=^0
+bspc rule -a Anki desktop=^9
+bspc rule -a Insync desktop=^0
 bspc rule -a Screenkey manage=off
 bspc rule -a Pavucontrol floating=on
 bspc rule -a mpv floating=on
@@ -95,6 +95,6 @@ bspc rule -a '*:scratchpad' sticky=on state=floating center=true rectangle=1600x
 #"${XDG_CONFIG_HOME:-${HOME}/.config}/bspwm/scripts/cleanfullscreen" &
 #"${XDG_CONFIG_HOME:-${HOME}/.config}/bspwm/scripts/single_node_border" &
 (~/.fehbg || (feh --bg-scale ~/.config/wall.jpg || nitrogen --restore)) &
-killall -q sxhkd; sxhkd -m 1 -c "${XDG_CONFIG_HOME:-${HOME}/.config}/sxhkd/sxhkdrc" "${XDG_CONFIG_HOME:-${HOME}/.config}/bspwm/sxhkdrc" &
+killall -q sxhkd; sxhkd -m 1 -c ${XDG_CONFIG_HOME:-${HOME}/.config}/sxhkd/sxhkdrc ${XDG_CONFIG_HOME:-${HOME}/.config}/bspwm/sxhkdrc &
 #killall -q 2bspwm; 2bspwm &
 # }}}
