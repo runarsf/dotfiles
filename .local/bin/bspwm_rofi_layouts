@@ -25,24 +25,24 @@ fi
 
 set +o errexit
 read -r -d '' layouts <<'EOLAYOUTS'
+tiled
 tall
 taller
+wide
+grid
+even
+monocle
 rtall
 rtaller
-wide
 rwide
-monocle
-tiled
-grid
 rgrid
-even
 EOLAYOUTS
 set -o errexit
 
 lines=$(($(printf "${layouts}" | wc -l) + 1))
 clayout="$(bspwm_active_layout 2>/dev/null || bspc query -T -d | jq --raw-output '.layout')"
 
-layout="$(printf "${layouts}" | rofi -lines "${lines}" -dmenu -p "${clayout}")"
+layout="$(printf "${layouts}" | rofi -theme-str "configuration { fixed-num-lines: true; } listview { columns: 2; lines: 6; }" -dmenu -p "${clayout}")"
 
 did="$(bspc query -D -n focused --names)"
 case "${layout}" in
