@@ -45,9 +45,9 @@ if test -z ${NOPLUG}; then
 		zsh-users/zsh-completions
 		djui/alias-tips
 		# zsh-users/zsh-syntax-highlighting
-		zdharma/fast-syntax-highlighting
+		zdharma-continuum/fast-syntax-highlighting
 		akarzim/zsh-docker-aliases
-		zdharma/zsh-diff-so-fancy
+		zdharma-continuum/zsh-diff-so-fancy
 		knu/zsh-manydots-magic
 		skywind3000/z.lua
 		kazhala/dotbare

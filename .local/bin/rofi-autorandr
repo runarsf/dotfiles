@@ -2,22 +2,37 @@
 set -o errexit
 
 profiles_prefix=""
-profiles_suffix="\n(Auto)\n(Select default profile)\n(Select profile to remove)\n(Save current layout as profile)"
-profiles="$(\ls ~/.config/autorandr)"
-lines=$(($(printf "${profiles}" | wc -l) + 1))
-lines_full=$(($(printf "${profiles_prefix}${profiles}${profiles_suffix}" | wc -l) + 1))
-profile="$(printf "${profiles_prefix:-}${profiles}${profiles_suffix:-}" | rofi -theme-str "configuration { fixed-num-lines: true; } listview { lines: ${lines_full}; }" -dmenu -p 'Select profile')"
+profiles_suffix="(Auto)\n(Select default profile)\n(Select profile to remove)\n(Save current layout as profile)"
+lines="0"
+if test -d "${XDG_CONFIG_HOME:-${HOME:-~}/.config}/autorandr"; then
+  profiles="$(\ls ${XDG_CONFIG_HOME:-${HOME:-~}/.config}/autorandr)"
+else
+  profiles=""
+fi
+if test -n "${profiles//[[:blank:]]/}"; then
+  lines=$(($(printf "${profiles}" | wc -l) + 1))
+  profiles_suffix="\n${profiles_suffix}"
+fi
+lines_full=$(($(printf "${profiles_prefix}${profiles_suffix}" | wc -l) + ${lines} + 1))
+profile="$(printf "${profiles_prefix:-}${profiles:-}${profiles_suffix:-}" | rofi -theme-str "configuration { fixed-num-lines: true; } listview { lines: ${lines_full}; }" -dmenu -p 'Select profile')"
 
 case "${profile}" in
-  '(Auto)') autorandr --change;;
+  '(Auto)')
+    resp="$(autorandr --change)"
+    notify-send "Autorandr" "${resp}";;
   '(Save current layout as profile)')
     profile_name="$(rofi -theme-str "configuration { fixed-num-lines: true; } listview { lines: 0; }" -dmenu -i  -p 'Enter profile name: ')"
-    autorandr --save "${profile_name}";;
+    resp="$(autorandr --save "${profile_name}")"
+    notify-send "Autorandr" "${resp}";;
   '(Select default profile)')
     profile_name="$(printf "${profiles}" | rofi -theme-str "configuration { fixed-num-lines: true; } listview { lines: ${lines}; }" -dmenu -p 'Select profile')"
-    autorandr --default "${profile_name}";;
+    resp="$(autorandr --default "${profile_name}")"
+    notify-send "Autorandr" "${resp}";;
   '(Select profile to remove)')
     profile_name="$(printf "${profiles}" | rofi -theme-str "configuration { fixed-num-lines: true; } listview { lines: ${lines}; }" -dmenu -p 'Select profile')"
-    autorandr --remove "${profile_name}";;
-  *) autorandr --load "${profile}";;
+    resp="$(autorandr --remove "${profile_name}")"
+    notify-send "Autorandr" "${resp}";;
+  *)
+    resp="$(autorandr --load "${profile}")"
+    notify-send "Autorandr" "${resp}";;
 esac
