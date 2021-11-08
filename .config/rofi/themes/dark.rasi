@@ -1,19 +1,25 @@
 /* https://github.com/adi1090x/rofi */
 
 configuration {
+  modi: "combi,window,ssh";
+  combi-modi: "run,drun";
   fixed-num-lines: true;
   show-icons: false;
   sidebar-mode: true;
+  eh: 2;
   scroll-method: 0;
   window-format: "[{w}] ··· {c} ···   {t}";
   click-to-exit: true;
   combi-hide-mode-prefix: false;
+  drun-show-actions: true;
+  drun-display-format: "{name}";
   display-window: "";
   display-windowcd: "";
   display-run: "";
   display-ssh: "";
   display-drun: "";
   display-combi: "";
+  display-keys: "";
   display-filebrowser: "";
 }
 
