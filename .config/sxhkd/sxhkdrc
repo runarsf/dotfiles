@@ -23,7 +23,7 @@ super + Escape
 	pkill -USR1 -x sxhkd
 
 alt + p
-	screenshot -r -f -o 'sharenix -n -c'
+	screenshot -m region -t -c -o 'sharenix -n -c'
 alt + shift + p
 	screenshot -o 'sharenix -n -c'
 #alt + p
