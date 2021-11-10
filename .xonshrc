@@ -74,7 +74,7 @@ $(xontrib load @([
     'zoxide',
     'readable-traceback',
     # 'distributed',
-    # 'bashisms',
+    'bashisms',
 ]))
 
 # https://xon.sh/tutorial.html#customizing-the-prompt
@@ -91,13 +91,6 @@ $PROMPT = '{0}{1}'.format('{RESET}'.join([
     '{BOLD_BLUE}{ret_code_color}{ret_code}',
     '{prompt_end} ',
 ]), '{RESET}')
-
-# Inherited from zsh
-# aliases['dk']   = abbrevs['dk']   = 'docker'
-# aliases['dkps'] = abbrevs['dkps'] = 'docker ps'
-# aliases['dkc']  = abbrevs['dkc']  = 'docker-compose'
-# aliases['dkcl'] = abbrevs['dkcl'] = 'docker-compose logs'
-# aliases['dkcL'] = abbrevs['dkcL'] = 'docker-compose logs -f'
 
 if (os.path.isfile('/usr/bin/security') and
     !(ssh-add -lq a> /dev/null).returncode == 1):
