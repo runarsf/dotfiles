@@ -2,19 +2,19 @@
 import os
 from shutil import which
 
-if which('zsh') is not None:
-    source-foreign zsh --overwrite-aliases --interactive True --sourcer source 'echo loading xonsh foreign shell'
-
+# Helper function to join paths and get full path.
 path = lambda *arg: os.path.realpath(os.path.join(*arg))
 
-# The SQLite history backend saves command immediately 
+# Environment variables - https://xon.sh/envvars.html
+
+# The SQLite history backend saves command immediately
 # unlike JSON backend that save the commands at the end of the session.
 $XONSH_HISTORY_BACKEND = 'json'
 
-# What commands are saved to the history list. By default all commands are saved. 
+# What commands are saved to the history list. By default all commands are saved.
 # * The option 'ignoredups' will not save the command if it matches the previous command.
-# * The option 'erasedups' will remove all previous commands that matches and updates the command frequency. 
-#   The minus of 'erasedups' is that the history of every session becomes unrepeatable 
+# * The option 'erasedups' will remove all previous commands that matches and updates the command frequency.
+#   The minus of 'erasedups' is that the history of every session becomes unrepeatable
 #   because it will have a lack of the command you repeat in another session.
 # Docs: https://xonsh.github.io/envvars.html#histcontrol
 $HISTCONTROL = 'ignoredups'
@@ -22,80 +22,82 @@ $HISTCONTROL = 'ignoredups'
 # Remove front dot in multiline input to make the code copy-pastable.
 $MULTILINE_PROMPT = ' '
 
-# Avoid typing cd just directory path. 
+# Avoid typing cd just directory path.
 # Docs: https://xonsh.github.io/envvars.html#auto-cd
 $AUTO_CD = True
 
-$XONSH_COLOR_STYLE = 'monokai'
+# Sets the color style for xonsh colors.
+# Run `xonfig styles` to see the available styles.
+$XONSH_COLOR_STYLE = 'default'
 
+# Suppress the message that informs the user when a foreign alias has been skipped
+# because it already exists in xonsh.
 $FOREIGN_ALIASES_SUPPRESS_SKIP_MESSAGE = True
 
-$PROMPT_TOOLKIT_COLOR_DEPTH = 'DEPTH_24_BIT'
+# Show a traceback when exceptions occur in the shell.
 $XONSH_SHOW_TRACEBACK = True
-$COMPLETIONS_DISPLAY = 'single'
-$ENABLE_ASYNC_PROMPT = True
-$VC_BRANCH_TIMEOUT = .2
-$NPM_PACKAGES = path($HOME, '/.npm')
-$PYENV_ROOT = path($HOME, '/.pyenv')
 
+# Configure if and how Python completions are displayed by the `prompt_toolkit` shell.
+# This option does not affect Bash completions, auto-suggestions, etc.
+$COMPLETIONS_DISPLAY = 'multi'
+
+# When enabled the prompt is rendered using threads.
+$ENABLE_ASYNC_PROMPT = True
+
+# The timeout (in seconds) for version control branch computations.
+# This is a timeout per subprocess call,
+# so the total time to compute will be larger than this in many cases.
+$VC_BRANCH_TIMEOUT = .2
+
+# Automatically push directories onto the directory stack.
 $AUTO_PUSHD = True
+
+# Sets whether completions should be case sensitive or case insensitive.
 $CASE_SENSITIVE_COMPLETIONS = False
+
+# The string used to show a shortened directory in a shortened cwd.
 $DYNAMIC_CWD_ELISION_CHAR = '…'
+
+# nable automatic command suggestions based on history, like in the fish shell.
 $AUTO_SUGGEST = True
+
+# Places the auto-suggest result as the first option in the completions.
+# This enables you to tab complete the auto-suggestion.
 $AUTO_SUGGEST_IN_COMPLETIONS = True
+
+# Press <Enter> to confirm completion in tab-completions menu instead of running command.
+# This only affects the prompt-toolkit shell.
 $COMPLETIONS_CONFIRM = True
+
+# Auto-insert matching parentheses, brackets, and quotes.
+# Only available under the prompt-toolkit shell.
 $XONSH_AUTOPAIR = True
 
+# Value and units tuple that sets the size of history after garbage collection. Canonical units are:
+#   `commands` for the number of past commands executed,
+#   `files` for the number of history files to keep,
+#   `s` for the number of seconds in the past that are allowed, and
+#   `b` for the number of bytes that history may consume.
+# Common abbreviations, such as '6 months' or '1 GB' are also allowed.
 $XONSH_HISTORY_SIZE = (1073741824, 'commands')
+
+# Non-xonsh-related environment variables
+$NPM_PACKAGES = path($HOME, '/.npm')
+$PYENV_ROOT = path($HOME, '/.pyenv')
 $GOPATH = path($HOME, '/go/bin')
 
-$EDITOR = 'nvim'
+$EDITOR = 'nvim' if which('nvim') is not None else 'vim'
 
-
+# Aliases and abbreviations
 aliases['-'] = ['cd', '-']
 aliases['ls'] = ['ls', '-l', '-A', '-F', '-h']
 if $(ls --version 2>/dev/null).strip():
     aliases['ls'].append('--color=auto')
-aliases['grep'] = 'grep --color'
-aliases['c'] = 'xclip -selection clipboard'
+aliases['grep'] = ['grep', '--color']
+aliases['c'] = ['xclip', '-selection', 'clipboard']
 aliases['vim'] = $EDITOR
 
-# '/usr/local/bin/bash-completion/'
-$BASH_COMPLETIONS.insert(0, '/usr/local/share/bash-completion/bash_completion/')
-
-# Add paths that aren't already in PATH
-for pdir in reversed([
-        path($HOME, '/.local/bin'),
-        path($HOME, '/.cargo/bin'),
-        path($GOPATH[0], '/bin'),
-        path($NPM_PACKAGES, '/bin'),
-        path($PYENV_ROOT, '/bin'),
-        '/opt/X11/bin',
-        '/usr/local/bin',
-        '/usr/local/sbin',
-    ]):
-    if pdir not in $PATH:
-        $PATH.insert(0, pdir)
-
-$(xontrib load @([
-    'coreutils',
-    'docker_tabcomplete',
-    'mpl',
-    'apt_tabcomplete',
-    'prompt_ret_code',
-    'fzf-widgets',
-    'abbrevs',
-    'argcomplete',
-    'pipeliner',
-    'sh',
-    'zoxide', # curl -sS https://webinstall.dev/zoxide | bash
-    'readable-traceback',
-    # 'distributed',
-    'bashisms',
-    'whole_word_jumping', # Jumping across whole words (non-whitespace) with Ctrl + Left/Right and Alt + Left/Right.
-]))
-
-# https://xon.sh/tutorial.html#customizing-the-prompt
+# Prompt customization - https://xon.sh/tutorial.html#customizing-the-prompt
 $PROMPT_FIELDS['prompt_end'] = '{WHITE}@' if $PROMPT_FIELDS['prompt_end'] == '$' else '{WHITE}#' # '🐚'
 $PROMPT_FIELDS['uname'] = $USER[:1]
 $PROMPT_FIELDS['hname'] = $HOSTNAME[:1]
@@ -110,29 +112,93 @@ $PROMPT = '{0}{1}'.format('{RESET}'.join([
     '{prompt_end} ',
 ]), '{RESET}')
 
-if (os.path.isfile('/usr/bin/security') and
-    !(ssh-add -lq a> /dev/null).returncode == 1):
-    ssh-add -K
+# Xontribs - https://xon.sh/xontribs.html  |  Github topic with thumbnails - https://github.com/topics/xontrib
+_xontribs = [
+    'mpl',                # Matplotlib hooks for xonsh.
+    'prompt_ret_code',    # Adds return code info to the prompt.
+    'abbrevs',            # Command abbreviations (expandable aliases).
+    'readable-traceback', # Make traceback easier to read.
+    'whole_word_jumping', # Jumping across whole words (non-whitespace) with Ctrl+Left/Right and Alt+Left/Right.
+    'argcomplete',        # Argcomplete support to tab completion of python and xonsh scripts in xonsh.
+]
 
-def _x11docker(args, stdin=None, stdout=None, stderr=None):
-    xhost +
-    docker run -e DISPLAY=host.docker.internal:0 @(args)
-    xhost -
-    return 0
+# $BASH_COMPLETIONS.insert(0, '/usr/local/share/bash-completion/bash_completion/') # '/usr/local/bin/bash-completion/'
 
-aliases['x11docker'] = _x11docker
+# Add paths that aren't already in PATH
+for pdir in reversed([
+        path($HOME, '.local/bin'),
+        path($HOME, '.cargo/bin'),
+        path($HOME, 'bin'),
+        path($GOPATH[0], 'bin'),
+        path($NPM_PACKAGES, 'bin'),
+        path($PYENV_ROOT, 'bin'),
+        '/opt/X11/bin',
+        '/usr/local/bin',
+        '/usr/local/sbin',
+    ]):
+    if pdir not in $PATH:
+        $PATH.insert(0, pdir)
 
-$fzf_history_binding = "c-r"
-$FZF_DEFAULT_COMMAND="fd --type file --color=always --follow --hidden --exclude .git --exclude .hg --exclude node_modules"
-$FZF_DEFAULT_OPTS="--color 'bg:0,bg+:2,fg:8,fg+:15,hl:10,hl+:11,prompt:11,info:3,marker:11,pointer:11,spinner:1' --ansi --height 10"
+from xonsh.platform import ON_LINUX  # ON_DARWIN, ON_WINDOWS, ON_WSL, ON_CYGWIN, ON_MSYS, ON_POSIX, ON_FREEBSD, ON_DRAGONFLY, ON_NETBSD, ON_OPENBSD
 
-# sudo askpass for non SSH sessions
-#if 'SSH_CLIENT' not in ${...}:
-#  aliases['sudo'] = 'sudo -A'
-#  $SUDO_ASKPASS = '/home/dyuri/bin/askpass-rofi'
-#  $SSH_ASKPASS = '/home/dyuri/bin/askpass-rofi'
+if ON_LINUX:
 
-# json
+    if which('zsh') is not None:
+        source-foreign zsh --overwrite-aliases --interactive True --sourcer source 'echo Loading foreign shell zsh.'
+
+    _xontribs = list(set([
+        'coreutils',          # Additional core utilities that are implemented in xonsh.
+        'docker_tabcomplete', # Adds tabcomplete functionality to docker.
+        'apt_tabcomplete',    # Adds tabcomplete functionality to apt-get/apt-cache.
+        'fzf-widgets',        # Adds some fzf widgets.
+        'zoxide',             # - curl -sS https://webinstall.dev/zoxide | bash
+        'sh',                 # Paste and run commands from bash, zsh, fish in xonsh.
+        # 'pipeliner',          # Let your pipe lines flow thru the Python code in xonsh.
+        # 'distributed',        # The distributed parallel computing library hooks for xonsh.
+        # 'bashisms',           # Enables additional Bash-like syntax while at the command prompt.
+    ] + _xontribs))
+
+    def _git_bare(git_dir, work_tree, *args):
+        if not args:
+            args = ('status')
+        git --git-dir=@(git_dir) --work-tree=@(work_tree) @(args)
+
+    aliases['dotfiles'] = lambda args: _git_bare($DOTBARE_DIR, $DOTBARE_TREE, *args)
+    aliases['doutline'] = lambda args: _git_bare($DOCKER_BARE, $DOCKER_TREE, *args)
+    aliases['dkx'] = lambda args: $[docker exec -it @(args) sh]
+
+    $fzf_history_binding = "c-r"
+    $FZF_DEFAULT_COMMAND="fd --type file --color=always --follow --hidden --exclude .git --exclude .hg --exclude node_modules"
+    $FZF_DEFAULT_OPTS="--color 'bg:0,bg+:2,fg:8,fg+:15,hl:10,hl+:11,prompt:11,info:3,marker:11,pointer:11,spinner:1' --ansi --height 10"
+
+    # Add ssh-key to keychain.
+    # if (os.path.isfile('/usr/bin/security') and
+    #     !(ssh-add -lq a> /dev/null).returncode == 1):
+          # -K is only available on macOS.
+    #     ssh-add
+
+    # def ssh(args, stdin=None):
+    #     $TERM = 'xterm-256color'
+    #     ssh @(args) < @(stdin)
+
+    def _x11docker(args, stdin=None, stdout=None, stderr=None):
+        xhost +
+        docker run -e DISPLAY=host.docker.internal:0 @(args)
+        xhost -
+        return 0
+
+    aliases['x11docker'] = _x11docker
+
+    # GUI sudo-askpass for non SSH sessions
+    # if 'SSH_CLIENT' not in ${...}:
+    #   aliases['sudo'] = 'sudo -A'
+    #   $SUDO_ASKPASS = path($HOME, '.local/bin/rofi-askpass')
+    #   $SSH_ASKPASS = path($HOME, '.local/bin/rofi-askpass')
+
+if _xontribs:
+    xontrib load @(_xontribs)
+
+# JSON
 try:
     import __builtin__
 except ImportError:
@@ -140,14 +206,3 @@ except ImportError:
 __builtin__.true = True
 __builtin__.false = False
 __builtin__.null = None
-
-def _git_bare(git_dir, work_tree, *args):
-    if not args:
-        args = ('status')
-    git --git-dir=@(git_dir) --work-tree=@(work_tree) @(args)
-
-aliases['dotfiles'] = lambda args: _git_bare($DOTBARE_DIR, $DOTBARE_TREE, *args)
-aliases['doutline'] = lambda args: _git_bare($DOCKER_BARE, $DOCKER_TREE, *args)
-
-
-aliases['deb'] = lambda args: $[docker exec -it @(args) bash]
