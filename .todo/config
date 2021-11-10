@@ -1,0 +1,68 @@
+#!/usr/bin/env bash
+# https://help.nextcloud.com/t/integration-todo-txt-nextcloud-tasks/61721/3
+# https://github.com/todotxt/todo.txt-cli/issues/195
+# https://elektrubadur.se/nextcloud-to-do-automation/
+# Add this as an alias in your shell, clearing every time the command is run by a non-user is not a good idea
+alias t='clear; todo.sh -a -c'
+
+export TODO_ACTIONS_DIR="$(realpath "${XDG_CONFIG_HOME:-${HOME}/.config}/.todo.actions.d")"
+
+export TODO_DIR="$(realpath "${HOME}/.todo")"
+
+# Returns path of .git parent if you're in a git repo, otherwise $PWD
+BASEDIR="$(realpath "$(dirname "$(git rev-parse --git-dir 2> /dev/null)")")"
+if test -f "${BASEDIR}/todo.txt"; then
+  export TODO_DIR="${BASEDIR}"
+fi
+
+export TODO_FILE="${TODO_DIR}/todo.txt"
+export DONE_FILE="${TODO_DIR}/archive.txt"
+export REPORT_FILE="${TODO_DIR}/report.txt"
+
+case "${1}" in
+  e|edit|ed|vim|vi|-e|--edit) ${EDITOR} "${TODO_FILE}"; exit 0;;
+esac
+
+export BLACK='\\033[0;30m'
+export RED='\\033[0;31m'
+export GREEN='\\033[0;32m'
+export BROWN='\\033[0;33m'
+export BLUE='\\033[0;34m'
+export PURPLE='\\033[0;35m'
+export CYAN='\\033[0;36m'
+export LIGHT_GREY='\\033[0;37m'
+export DARK_GREY='\\033[1;30m'
+export LIGHT_RED='\\033[1;31m'
+export LIGHT_GREEN='\\033[1;32m'
+export YELLOW='\\033[1;33m'
+export LIGHT_BLUE='\\033[1;34m'
+export LIGHT_PURPLE='\\033[1;35m'
+export LIGHT_CYAN='\\033[1;36m'
+export WHITE='\\033[1;37m'
+export DEFAULT='\\033[0m'
+
+export PRI_A=${YELLOW}
+export PRI_B=${GREEN}
+export PRI_C=${LIGHT_BLUE}
+export PRI_D=${LIGH_CYAN}
+export PRI_X=${WHITE}
+
+export COLOR_DONE=${LIGHT_GREY}
+
+export COLOR_PROJECT=${RED}
+export COLOR_CONTEXT=${RED}
+export COLOR_DATE=${BLUE}
+export COLOR_NUMBER=${LIGHT_GREY}
+
+export COLOR_META=${CYAN}
+
+#export TODOTXT_SORT_COMMAND='env LC_COLLATE=C sort -f -k2'
+export TODOTXT_SORT_COMMAND='cat'
+
+export TODOTXT_FINAL_FILTER='cat'
+
+export TODOTXT_DEFAULT_ACTION='col'
+
+# Addon configuration
+
+export TODO_NOTE_EXT=.md
