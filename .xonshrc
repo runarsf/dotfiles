@@ -7,6 +7,25 @@ if which('zsh') is not None:
 
 path = lambda *arg: os.path.realpath(os.path.join(*arg))
 
+# The SQLite history backend saves command immediately 
+# unlike JSON backend that save the commands at the end of the session.
+$XONSH_HISTORY_BACKEND = 'json'
+
+# What commands are saved to the history list. By default all commands are saved. 
+# * The option 'ignoredups' will not save the command if it matches the previous command.
+# * The option 'erasedups' will remove all previous commands that matches and updates the command frequency. 
+#   The minus of 'erasedups' is that the history of every session becomes unrepeatable 
+#   because it will have a lack of the command you repeat in another session.
+# Docs: https://xonsh.github.io/envvars.html#histcontrol
+$HISTCONTROL = 'ignoredups'
+
+# Remove front dot in multiline input to make the code copy-pastable.
+$MULTILINE_PROMPT = ' '
+
+# Avoid typing cd just directory path. 
+# Docs: https://xonsh.github.io/envvars.html#auto-cd
+$AUTO_CD = True
+
 $XONSH_COLOR_STYLE = 'monokai'
 
 $FOREIGN_ALIASES_SUPPRESS_SKIP_MESSAGE = True
@@ -14,13 +33,11 @@ $FOREIGN_ALIASES_SUPPRESS_SKIP_MESSAGE = True
 $PROMPT_TOOLKIT_COLOR_DEPTH = 'DEPTH_24_BIT'
 $XONSH_SHOW_TRACEBACK = True
 $COMPLETIONS_DISPLAY = 'single'
-$HISTCONTROL = 'ignoredups,erasedups'
 $ENABLE_ASYNC_PROMPT = True
 $VC_BRANCH_TIMEOUT = .2
 $NPM_PACKAGES = path($HOME, '/.npm')
 $PYENV_ROOT = path($HOME, '/.pyenv')
 
-$AUTO_CD = True
 $AUTO_PUSHD = True
 $CASE_SENSITIVE_COMPLETIONS = False
 $DYNAMIC_CWD_ELISION_CHAR = '…'
@@ -71,10 +88,11 @@ $(xontrib load @([
     'argcomplete',
     'pipeliner',
     'sh',
-    'zoxide',
+    'zoxide', # curl -sS https://webinstall.dev/zoxide | bash
     'readable-traceback',
     # 'distributed',
     'bashisms',
+    'whole_word_jumping', # Jumping across whole words (non-whitespace) with Ctrl + Left/Right and Alt + Left/Right.
 ]))
 
 # https://xon.sh/tutorial.html#customizing-the-prompt
@@ -130,3 +148,6 @@ def _git_bare(git_dir, work_tree, *args):
 
 aliases['dotfiles'] = lambda args: _git_bare($DOTBARE_DIR, $DOTBARE_TREE, *args)
 aliases['doutline'] = lambda args: _git_bare($DOCKER_BARE, $DOCKER_TREE, *args)
+
+
+aliases['deb'] = lambda args: $[docker exec -it @(args) bash]
