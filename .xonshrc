@@ -88,14 +88,21 @@ $GOPATH = path($HOME, '/go/bin')
 
 $EDITOR = 'nvim' if which('nvim') is not None else 'vim'
 
-# Aliases and abbreviations
+# Aliases
 aliases['-'] = ['cd', '-']
 aliases['ls'] = ['ls', '-l', '-A', '-F', '-h']
 if $(ls --version 2>/dev/null).strip():
     aliases['ls'].append('--color=auto')
+aliases['sl'] = aliases['ls']
 aliases['grep'] = ['grep', '--color']
 aliases['c'] = ['xclip', '-selection', 'clipboard']
 aliases['vim'] = $EDITOR
+
+aliases['dk']    = ['docker']
+aliases['dkc']   = ['docker-compose']
+aliases['dkcL']  = ['docker-compose', 'logs', '-F']
+aliases['dkcU']  = ['docker-compose', 'up', '-d']
+aliases['dkcUf'] = ['docker-compose', 'up', '-d', '--force-recreate', '--remove-orphans']
 
 # Prompt customization - https://xon.sh/tutorial.html#customizing-the-prompt
 $PROMPT_FIELDS['prompt_end'] = '{WHITE}@' if $PROMPT_FIELDS['prompt_end'] == '$' else '{WHITE}#' # '🐚'
@@ -120,12 +127,14 @@ _xontribs = [
     'readable-traceback', # Make traceback easier to read.
     'whole_word_jumping', # Jumping across whole words (non-whitespace) with Ctrl+Left/Right and Alt+Left/Right.
     'argcomplete',        # Argcomplete support to tab completion of python and xonsh scripts in xonsh.
+    'output_search',      # Get identifiers from previous command and use for next command -> <identifier><Alt-f>.
+    # 'macro_lib',          # Library of the useful macros for the xonsh shell.
 ]
 
 # $BASH_COMPLETIONS.insert(0, '/usr/local/share/bash-completion/bash_completion/') # '/usr/local/bin/bash-completion/'
 
 # Add paths that aren't already in PATH
-for pdir in reversed([
+for pathdir in reversed([
         path($HOME, '.local/bin'),
         path($HOME, '.cargo/bin'),
         path($HOME, 'bin'),
@@ -136,8 +145,8 @@ for pdir in reversed([
         '/usr/local/bin',
         '/usr/local/sbin',
     ]):
-    if pdir not in $PATH:
-        $PATH.insert(0, pdir)
+    if pathdir not in $PATH and os.path.isdir(pathdir):
+        $PATH.insert(0, pathdir)
 
 from xonsh.platform import ON_LINUX  # ON_DARWIN, ON_WINDOWS, ON_WSL, ON_CYGWIN, ON_MSYS, ON_POSIX, ON_FREEBSD, ON_DRAGONFLY, ON_NETBSD, ON_OPENBSD
 
@@ -153,9 +162,11 @@ if ON_LINUX:
         'fzf-widgets',        # Adds some fzf widgets.
         'zoxide',             # - curl -sS https://webinstall.dev/zoxide | bash
         'sh',                 # Paste and run commands from bash, zsh, fish in xonsh.
+        # 'gitinfo',            # Displays git information on entering a repository folder.
         # 'pipeliner',          # Let your pipe lines flow thru the Python code in xonsh.
         # 'distributed',        # The distributed parallel computing library hooks for xonsh.
         # 'bashisms',           # Enables additional Bash-like syntax while at the command prompt.
+        # 'prompt_starship'     # Starship cross-shell prompt in xonsh shell.
     ] + _xontribs))
 
     def _git_bare(git_dir, work_tree, *args):
@@ -174,20 +185,24 @@ if ON_LINUX:
     # Add ssh-key to keychain.
     # if (os.path.isfile('/usr/bin/security') and
     #     !(ssh-add -lq a> /dev/null).returncode == 1):
-          # -K is only available on macOS.
+    #     # -K is only available on macOS.
     #     ssh-add
 
     # def ssh(args, stdin=None):
     #     $TERM = 'xterm-256color'
     #     ssh @(args) < @(stdin)
 
-    def _x11docker(args, stdin=None, stdout=None, stderr=None):
+    # aliases['ssh'] = ssh
+    # del ssh
+
+    def x11docker(args, stdin=None, stdout=None, stderr=None):
         xhost +
         docker run -e DISPLAY=host.docker.internal:0 @(args)
         xhost -
         return 0
 
-    aliases['x11docker'] = _x11docker
+    aliases['x11docker'] = x11docker
+    del x11docker
 
     # GUI sudo-askpass for non SSH sessions
     # if 'SSH_CLIENT' not in ${...}:
@@ -195,8 +210,18 @@ if ON_LINUX:
     #   $SUDO_ASKPASS = path($HOME, '.local/bin/rofi-askpass')
     #   $SSH_ASKPASS = path($HOME, '.local/bin/rofi-askpass')
 
+# Load xontribs
 if _xontribs:
     xontrib load @(_xontribs)
+
+# These habe to be set after the 'abbrevs' xontrib is loaded.
+abbrevs['dk']     = ' '.join(aliases['dk'])
+abbrevs['dkc']    = ' '.join(aliases['dkc'])
+abbrevs['dkcL']   = ' '.join(aliases['dkcL'])
+abbrevs['dkcU']   = ' '.join(aliases['dkcU'])
+abbrevs['dkcUl']  = ' '.join(aliases['dkcU'])  + ' && ' + ' '.join(aliases['dkcL'])
+abbrevs['dkcUf']  = ' '.join(aliases['dkcUf'])
+abbrevs['dkcUfl'] = ' '.join(aliases['dkcUf']) + ' && ' + ' '.join(aliases['dkcL'])
 
 # JSON
 try:
