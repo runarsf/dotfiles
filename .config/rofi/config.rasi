@@ -17,7 +17,7 @@ configuration {
   tokenize: true;
   scroll-method: 0;
   click-to-exit: true;
-  theme: "./themes/cherry.rasi";
+  theme: "./themes/dark.rasi";
   kb-mode-next: "Shift+Right,Control+Tab,Tab";
   kb-row-tab: "";
 }

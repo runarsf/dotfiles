@@ -196,7 +196,7 @@ export DOTBARE_DIR="${HOME}/.config/dotfiles/.git"
 export DOTBARE_TREE="${HOME}"
 
 alias dotted='dotfiles ls-files --error-unmatch'
-#alias dirtydots="dirtygit --git-dir '${DOTBARE_DIR}' --work-tree '${DOTBARE_TREE}' --git-add '-u'"
+alias dirtydots="dirtygit --git-dir '${DOTBARE_DIR}' --work-tree '${DOTBARE_TREE}' --git-add '-u'"
 alias dots='dotfiles'
 dotfiles () {
   if test "${#}" -eq "0"; then
@@ -210,7 +210,7 @@ dotfiles () {
 DOCKER_TREE="${HOME:-~}/data/docker"
 DOCKER_BARE="${DOCKER_TREE:-${HOME:-~}/data/docker}/bare/.git"
 alias docked='doutline ls-files --error-unmatch'
-#alias dirtydocker="dirtygit --git-dir '${DOCKER_BARE}' --work-tree '${DOCKER_TREE}' --git-add '-u'"
+alias dirtydocker="dirtygit --git-dir '${DOCKER_BARE}' --work-tree '${DOCKER_TREE}' --git-add '-u'"
 doutline () {
   if test "${#}" -eq "0"; then
     set -- status
