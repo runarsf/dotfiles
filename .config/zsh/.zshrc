@@ -44,10 +44,10 @@ if test -z ${NOPLUG}; then
 		zsh-users/zsh-history-substring-search
 		zsh-users/zsh-completions
 		djui/alias-tips
-		# zsh-users/zsh-syntax-highlighting
-		zdharma-continuum/fast-syntax-highlighting
+		zsh-users/zsh-syntax-highlighting
+		# zdharma-continuum/fast-syntax-highlighting
+		# zdharma-continuum/zsh-diff-so-fancy
 		akarzim/zsh-docker-aliases
-		zdharma-continuum/zsh-diff-so-fancy
 		knu/zsh-manydots-magic
 		skywind3000/z.lua
 		kazhala/dotbare
@@ -171,12 +171,6 @@ alias ls='ls -lAFh --color'
 #alias ls='exa -GlxFa --colour=always'
 alias grep='grep --color'
 alias c='xclip -selection clipboard'
-alias back='cd ${OLDPWD}'
-alias reload='source "${XDG_CONFIG_:-${HOME}/.config}/zsh/.zshrc"'
-alias lineinon='pactl load-module module-loopback latency_msec=1'
-alias whim='whim --editor "${EDITOR} +startinsert" --terminal "${TERMINAL} --class scratchpad -e"'
-alias passed='test "${?}" -eq "0" && lolcat ~/.local/bin/tp -s 40 -d 2'
-alias vw='vim +WikiIndex +CalendarVR "+wincmd p"'
 alias gitted='git ls-files --error-unmatch'
 alias please='sudo $(fc -ln -1)'
 #please () { test -z "${1}" && eval "sudo !!" || sudo "${@}" }
@@ -196,7 +190,7 @@ export DOTBARE_DIR="${HOME}/.config/dotfiles/.git"
 export DOTBARE_TREE="${HOME}"
 
 alias dotted='dotfiles ls-files --error-unmatch'
-alias dirtydots="dirtygit --git-dir '${DOTBARE_DIR}' --work-tree '${DOTBARE_TREE}' --git-add '-u'"
+alias dirtydots='dirtygit --git-dir "${DOTBARE_DIR}" --work-tree "${DOTBARE_TREE}" --git-add "-u"'
 alias dots='dotfiles'
 dotfiles () {
   if test "${#}" -eq "0"; then
@@ -210,7 +204,7 @@ dotfiles () {
 DOCKER_TREE="${HOME:-~}/data/docker"
 DOCKER_BARE="${DOCKER_TREE:-${HOME:-~}/data/docker}/bare/.git"
 alias docked='doutline ls-files --error-unmatch'
-alias dirtydocker="dirtygit --git-dir '${DOCKER_BARE}' --work-tree '${DOCKER_TREE}' --git-add '-u'"
+alias dirtydocker='dirtygit --git-dir "${DOCKER_BARE}" --work-tree "${DOCKER_TREE}" --git-add "-u"'
 doutline () {
   if test "${#}" -eq "0"; then
     set -- status

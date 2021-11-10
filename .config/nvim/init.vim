@@ -174,6 +174,7 @@ let g:lf_replace_netrw = 0 " Open lf when vim opens a directory
   Plug 'storyn26383/vim-vue', { 'for': 'vue' }
   Plug 'ekalinin/Dockerfile.vim', { 'for': 'Dockerfile' }
   Plug 'kovetskiy/sxhkd-vim', { 'for': 'sxhkdrc' }
+  Plug 'linkinpark342/xonsh-vim'
 " }}}
 
 Plug 'rakr/vim-one' | let g:one_allow_italics = 0

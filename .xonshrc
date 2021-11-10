@@ -1,34 +1,38 @@
 import os
+from shutil import which
 
-$XONSH_COLOR_STYLE="monokai"
+if which('zsh') is not None:
+    source-foreign zsh --overwrite-aliases --interactive True --sourcer source 'echo loading xonsh foreign shell'
 
-$FOREIGN_ALIASES_SUPPRESS_SKIP_MESSAGE=True
+path = lambda *arg: os.path.realpath(os.path.join(*arg))
 
-$PROMPT_TOOLKIT_COLOR_DEPTH='DEPTH_24_BIT'
-$XONSH_SHOW_TRACEBACK=False
-$COMPLETIONS_DISPLAY='single'
-$HISTCONTROL='ignoredups,erasedups'
-$ENABLE_ASYNC_PROMPT=True
-$VC_BRANCH_TIMEOUT=.2
-$NPM_PACKAGES=$HOME+'/.npm'
-$PYENV_ROOT=$HOME+"/.pyenv"
+$XONSH_COLOR_STYLE = 'monokai'
 
+$FOREIGN_ALIASES_SUPPRESS_SKIP_MESSAGE = True
 
-#$AUTO_CD = True
-#$AUTO_PUSHD = True
-#$BASH_COMPLETIONS = '/usr/local/bin/bash-completion/'
-#$CASE_SENSITIVE_COMPLETIONS = False
-#$DYNAMIC_CWD_ELISION_CHAR = '…'
-#$AUTO_SUGGEST = True
-#$AUTO_SUGGEST_IN_COMPLETIONS = True
-#$COMPLETIONS_CONFIRM = True
-#$XONSH_AUTOPAIR = True
-#$XONSH_SHOW_TRACEBACK = True
+$PROMPT_TOOLKIT_COLOR_DEPTH = 'DEPTH_24_BIT'
+$XONSH_SHOW_TRACEBACK = True
+$COMPLETIONS_DISPLAY = 'single'
+$HISTCONTROL = 'ignoredups,erasedups'
+$ENABLE_ASYNC_PROMPT = True
+$VC_BRANCH_TIMEOUT = .2
+$NPM_PACKAGES = path($HOME, '/.npm')
+$PYENV_ROOT = path($HOME, '/.pyenv')
 
-$XONSH_HISTORY_SIZE = (1073741824, "commands")
-$GOPATH = $HOME + '/go/bin'
+$AUTO_CD = True
+$AUTO_PUSHD = True
+$CASE_SENSITIVE_COMPLETIONS = False
+$DYNAMIC_CWD_ELISION_CHAR = '…'
+$AUTO_SUGGEST = True
+$AUTO_SUGGEST_IN_COMPLETIONS = True
+$COMPLETIONS_CONFIRM = True
+$XONSH_AUTOPAIR = True
+
+$XONSH_HISTORY_SIZE = (1073741824, 'commands')
+$GOPATH = path($HOME, '/go/bin')
 
 $EDITOR = 'nvim'
+
 
 aliases['-'] = ['cd', '-']
 aliases['ls'] = ['ls', '-l', '-A', '-F', '-h']
@@ -38,22 +42,61 @@ aliases['grep'] = 'grep --color'
 aliases['c'] = 'xclip -selection clipboard'
 aliases['vim'] = $EDITOR
 
-# source-bash --overwrite-aliases --interactive True --sourcer source "echo loading xonsh foreign shell"
+# '/usr/local/bin/bash-completion/'
+$BASH_COMPLETIONS.insert(0, '/usr/local/share/bash-completion/bash_completion/')
 
-# only add paths that aren't already in PATH
-# use reverse since we're prepending
-for p in reversed([
-        $HOME + "/.local/bin",
-        $HOME + "/.cargo/bin",
-        $GOPATH[0] + "/bin",
-        $NPM_PACKAGES + "/bin",
-        $PYENV_ROOT + "/bin"
-        "/opt/X11/bin",
-        "/usr/local/bin",
-        "/usr/local/sbin",
+# Add paths that aren't already in PATH
+for pdir in reversed([
+        path($HOME, '/.local/bin'),
+        path($HOME, '/.cargo/bin'),
+        path($GOPATH[0], '/bin'),
+        path($NPM_PACKAGES, '/bin'),
+        path($PYENV_ROOT, '/bin'),
+        '/opt/X11/bin',
+        '/usr/local/bin',
+        '/usr/local/sbin',
     ]):
-    if p not in $PATH:
-        $PATH.insert(0, p)
+    if pdir not in $PATH:
+        $PATH.insert(0, pdir)
+
+$(xontrib load @([
+    'coreutils',
+    'docker_tabcomplete',
+    'mpl',
+    'apt_tabcomplete',
+    'prompt_ret_code',
+    'fzf-widgets',
+    'abbrevs',
+    'argcomplete',
+    'pipeliner',
+    'sh',
+    'zoxide',
+    'readable-traceback',
+    # 'distributed',
+    # 'bashisms',
+]))
+
+# https://xon.sh/tutorial.html#customizing-the-prompt
+$PROMPT_FIELDS['prompt_end'] = '{WHITE}@' if $PROMPT_FIELDS['prompt_end'] == '$' else '{WHITE}#' # '🐚'
+$PROMPT_FIELDS['uname'] = $USER[:1]
+$PROMPT_FIELDS['hname'] = $HOSTNAME[:1]
+$PROMPT = '{0}{1}'.format('{RESET}'.join([
+    '{WHITE}{env_name}',
+    '{#CB241E}[',
+    '{#D99824}{uname}{#989718}@{#42858B}{hname}', # '{BOLD_GREEN}{user}@{hostname}',
+    ' {#B26287}{short_cwd}',
+    '{#CB241E}]',
+    '{branch_color}{curr_branch:[{}]}',
+    '{BOLD_BLUE}{ret_code_color}{ret_code}',
+    '{prompt_end} ',
+]), '{RESET}')
+
+# Inherited from zsh
+# aliases['dk']   = abbrevs['dk']   = 'docker'
+# aliases['dkps'] = abbrevs['dkps'] = 'docker ps'
+# aliases['dkc']  = abbrevs['dkc']  = 'docker-compose'
+# aliases['dkcl'] = abbrevs['dkcl'] = 'docker-compose logs'
+# aliases['dkcL'] = abbrevs['dkcL'] = 'docker-compose logs -f'
 
 if (os.path.isfile('/usr/bin/security') and
     !(ssh-add -lq a> /dev/null).returncode == 1):
@@ -67,14 +110,9 @@ def _x11docker(args, stdin=None, stdout=None, stderr=None):
 
 aliases['x11docker'] = _x11docker
 
-$BASH_COMPLETIONS.insert(0, '/usr/local/share/bash-completion/bash_completion')
-
-xontrib load z coreutils distributed docker_tabcomplete mpl apt_tabcomplete
-xontrib load vox prompt_ret_code vox_tabcomplete fzf-widgets # xontrib-z
-#xontrib load avox
-#$fzf_history_binding = "c-r"
-#$FZF_DEFAULT_COMMAND="fd --type file --color=always --follow --hidden --exclude .git --exclude .hg"
-#$FZF_DEFAULT_OPTS="--color 'bg:0,bg+:2,fg:8,fg+:15,hl:10,hl+:11,prompt:11,info:3,marker:11,pointer:11,spinner:1' --ansi --height 10"
+$fzf_history_binding = "c-r"
+$FZF_DEFAULT_COMMAND="fd --type file --color=always --follow --hidden --exclude .git --exclude .hg --exclude node_modules"
+$FZF_DEFAULT_OPTS="--color 'bg:0,bg+:2,fg:8,fg+:15,hl:10,hl+:11,prompt:11,info:3,marker:11,pointer:11,spinner:1' --ansi --height 10"
 
 # sudo askpass for non SSH sessions
 #if 'SSH_CLIENT' not in ${...}:
