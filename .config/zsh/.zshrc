@@ -201,8 +201,8 @@ dotfiles () {
 # }}}
 
 # Docker outline {{{
-DOCKER_TREE="${HOME:-~}/data/docker"
-DOCKER_BARE="${DOCKER_TREE:-${HOME:-~}/data/docker}/bare/.git"
+export DOCKER_TREE="${HOME:-~}/data/docker"
+export DOCKER_BARE="${DOCKER_TREE:-${HOME:-~}/data/docker}/bare/.git"
 alias docked='doutline ls-files --error-unmatch'
 alias dirtydocker='dirtygit --git-dir "${DOCKER_BARE}" --work-tree "${DOCKER_TREE}" --git-add "-u"'
 doutline () {

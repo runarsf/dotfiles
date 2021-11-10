@@ -1,3 +1,4 @@
+# vim: set syntax=python foldmethod=indent:
 import os
 from shutil import which
 
@@ -129,3 +130,10 @@ __builtin__.true = True
 __builtin__.false = False
 __builtin__.null = None
 
+def _git_bare(git_dir, work_tree, *args):
+    if not args:
+        args = ('status')
+    git --git-dir=@(git_dir) --work-tree=@(work_tree) @(args)
+
+aliases['dotfiles'] = lambda args: _git_bare($DOTBARE_DIR, $DOTBARE_TREE, *args)
+aliases['doutline'] = lambda args: _git_bare($DOCKER_BARE, $DOCKER_TREE, *args)
