@@ -160,11 +160,11 @@ if ON_LINUX:
 
     _xontribs = list(set([
         'coreutils',          # Additional core utilities that are implemented in xonsh.
-        'docker_tabcomplete', # Adds tabcomplete functionality to docker.
         'apt_tabcomplete',    # Adds tabcomplete functionality to apt-get/apt-cache.
         'fzf-widgets',        # Adds some fzf widgets.
         'zoxide',             # - curl -sS https://webinstall.dev/zoxide | bash
         'sh',                 # Paste and run commands from bash, zsh, fish in xonsh.
+        # 'docker_tabcomplete', # Adds tabcomplete functionality to docker. Broken for docker-py >= 2.0.0.
         # 'gitinfo',            # Displays git information on entering a repository folder.
         # 'pipeliner',          # Let your pipe lines flow thru the Python code in xonsh.
         # 'distributed',        # The distributed parallel computing library hooks for xonsh.
