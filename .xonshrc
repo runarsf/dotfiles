@@ -86,7 +86,7 @@ $NPM_PACKAGES = path($HOME, '/.npm')
 $PYENV_ROOT = path($HOME, '/.pyenv')
 $GOPATH = path($HOME, '/go/bin')
 
-$EDITOR = 'nvim' if which('nvim') is not None else 'vim'
+$EDITOR = vim
 
 # Aliases
 aliases['-'] = ['cd', '-']
