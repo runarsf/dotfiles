@@ -101,6 +101,9 @@ aliases['vim'] = $EDITOR
 aliases['dk']    = ['docker']
 aliases['dkc']   = ['docker-compose']
 aliases['dkcL']  = ['docker-compose', 'logs', '-F']
+aliases['dkcb']  = ['docker-compose', 'build']
+aliases['dkcB']  = ['docker-compose', 'build', '--no-cache']
+aliases['dkcd']  = ['docker-compose', 'down']
 aliases['dkcU']  = ['docker-compose', 'up', '-d']
 aliases['dkcUf'] = ['docker-compose', 'up', '-d', '--force-recreate', '--remove-orphans']
 
@@ -218,6 +221,9 @@ if _xontribs:
 abbrevs['dk']     = ' '.join(aliases['dk'])
 abbrevs['dkc']    = ' '.join(aliases['dkc'])
 abbrevs['dkcL']   = ' '.join(aliases['dkcL'])
+abbrevs['dkcb']   = ' '.join(aliases['dkcb'])
+abbrevs['dkcB']   = ' '.join(aliases['dkcB'])
+abbrevs['dkcd']   = ' '.join(aliases['dkcd'])
 abbrevs['dkcU']   = ' '.join(aliases['dkcU'])
 abbrevs['dkcUl']  = ' '.join(aliases['dkcU'])  + ' && ' + ' '.join(aliases['dkcL'])
 abbrevs['dkcUf']  = ' '.join(aliases['dkcUf'])
