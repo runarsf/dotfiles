@@ -166,7 +166,7 @@ bindkey '^e' edit-command-line
 
 # Aliases {{{
 alias t='clear; todo.sh -a -c'
-alias vim='${EDITOR}'
+alias vim="${EDITOR}"
 alias ls='ls -lAFh --color'
 #alias ls='exa -GlxFa --colour=always'
 alias grep='grep --color'
