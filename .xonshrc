@@ -1,11 +1,17 @@
-# vim: set syntax=python foldmethod=indent:
+# vim: set syntax=python foldmethod=marker:
 import os
 from shutil import which
+
+# Stuff:
+# - Redirect output of python command to file
+#   >>> echo @(__import__('inspect').getsource($PROMPT_FIELDS['gitstatus'])) >> FILE
+# - Inspec function
+#   >>> __import__('inspect').getsource($PROMPT_FIELDS['gitstatus'])
 
 # Helper function to join paths and get full path.
 path = lambda *arg: os.path.realpath(os.path.join(*arg))
 
-# Environment variables - https://xon.sh/envvars.html
+# Environment variables - https://xon.sh/envvars.html {{{
 
 # The SQLite history backend saves command immediately
 # unlike JSON backend that save the commands at the end of the session.
@@ -42,7 +48,8 @@ $XONSH_SHOW_TRACEBACK = True
 $COMPLETIONS_DISPLAY = 'multi'
 
 # When enabled the prompt is rendered using threads.
-$ENABLE_ASYNC_PROMPT = True
+# Should be True, but eeeeeh
+$ENABLE_ASYNC_PROMPT = False
 
 # The timeout (in seconds) for version control branch computations.
 # This is a timeout per subprocess call,
@@ -82,21 +89,102 @@ $XONSH_AUTOPAIR = True
 $XONSH_HISTORY_SIZE = (1073741824, 'commands')
 
 # Non-xonsh-related environment variables
-$NPM_PACKAGES = path($HOME, '/.npm')
-$PYENV_ROOT = path($HOME, '/.pyenv')
-$GOPATH = path($HOME, '/go/bin')
+$NPM_PACKAGES = path(${'HOME'}, '.npm')
+$PYENV_ROOT = path(${'HOME'}, '.pyenv')
+$GOPATH = path(${'HOME'}, 'go/bin')
 
 $EDITOR = 'nvim'
+# }}}
 
-# Aliases
+# Prompt customization - https://xon.sh/tutorial.html#customizing-the-prompt {{{
+# Seems to only work with `$ENABLE_ASYNC_PROMPT = False`, which is dumb.
+# https://github.com/anki-code/xontrib-prompt-bar
+
+def _prompt_ret_color(): # {{{
+    if __xonsh__.history.rtns and __xonsh__.history.rtns[-1] != 0:
+        return '{#cc6666}' # red
+    else:
+        return '{#ffffff}' # '{#f0c674}'
+
+$PROMPT_FIELDS['ret_color'] = _prompt_ret_color
+del _prompt_ret_color
+# }}}
+
+# def _prompt_git_prefix(): # {{{
+#     import xonsh.tools as xt
+# 
+#     prefix = $(git rev-parse --show-prefix 2>/dev/null).strip()
+#     sep = xt.get_sep()
+# 
+#     if len(prefix) == 0:
+#         return prefix
+#     return sep + prefix if prefix[0] != sep else prefix
+
+# $PROMPT_FIELDS['git_prefix'] = _prompt_git_prefix
+# del _prompt_git_prefix
+# }}}
+
+def _prompt_git_status(): # {{{
+    from re import sub as rs
+
+    _status = $PROMPT_FIELDS['gitstatus']() or ''
+    # Can you replace $PROMPT_FIELDS['branch_color'] instead?
+    _status = rs(r'^\{.+?\}', '{RED}', _status, count=1)
+    _status = rs(r'\|', '', _status, count=1)
+
+    return '{INTENSE_BLACK}['+_status+'{INTENSE_BLACK}]' if _status else None
+
+$PROMPT_FIELDS['git_status'] = _prompt_git_status
+del _prompt_git_status
+# }}}
+
+def _prompt_git_cwd(): # {{{
+    import xonsh.tools as xt
+    from xonsh.prompt.cwd import _replace_home
+
+    toplevel = $(git rev-parse --show-toplevel 2>/dev/null).strip()
+    pwd = toplevel if toplevel else $PWD
+
+    sep = xt.get_sep()
+    pwd = _replace_home(pwd).split(sep)
+    l = len(pwd)
+    leader = sep if l > 0 and len(pwd[0]) == 0 else ""
+    base = [i[0]
+            if ix != l - 1 and i[0] != '.' else i[0:2]
+            if ix != l - 1 else i for ix, i in enumerate(pwd) if len(i) > 0]
+    return leader + sep.join(base)
+
+$PROMPT_FIELDS['git_cwd'] = _prompt_git_cwd
+del _prompt_git_cwd
+# }}}
+
+# PROMPT_FIELDS {{{
+$PROMPT_FIELDS['prompt_end'] = '@' if $PROMPT_FIELDS['prompt_end'] == '$' else '#' # '🐚'
+$PROMPT_FIELDS['short_username'] = ${'USER'}[:1]
+$PROMPT_FIELDS['short_hostname'] = ${'HOSTNAME'}[:1]
+# }}}
+
+$PROMPT = '{0}{1}'.format('{RESET}'.join([
+    '{WHITE}{env_name}',
+    '{INTENSE_BLACK}[',
+    '{#D99824}{short_username}',
+    '{#989718}@',
+    '{#42858B}{short_hostname}',
+    ' {#B26287}{git_cwd}',
+    '{INTENSE_BLACK}]',
+    '{git_status: {}}',
+    '{ret_color}{prompt_end} ',
+]), '{RESET}')
+# }}}
+
+# Aliases {{{
 aliases['-'] = ['cd', '-']
 aliases['ls'] = ['ls', '-l', '-A', '-F', '-h']
 if $(ls --version 2>/dev/null).strip():
     aliases['ls'].append('--color=auto')
 aliases['sl'] = aliases['ls']
 aliases['grep'] = ['grep', '--color']
-aliases['c'] = ['xclip', '-selection', 'clipboard']
-aliases['vim'] = $EDITOR
+aliases['vim'] = ${'EDITOR'}
 
 aliases['dk']    = ['docker']
 aliases['dkc']   = ['docker-compose']
@@ -106,23 +194,9 @@ aliases['dkcB']  = ['docker-compose', 'build', '--no-cache']
 aliases['dkcd']  = ['docker-compose', 'down']
 aliases['dkcU']  = ['docker-compose', 'up', '-d']
 aliases['dkcUf'] = ['docker-compose', 'up', '-d', '--force-recreate', '--remove-orphans']
+# }}}
 
-# Prompt customization - https://xon.sh/tutorial.html#customizing-the-prompt
-$PROMPT_FIELDS['prompt_end'] = '{WHITE}@' if $PROMPT_FIELDS['prompt_end'] == '$' else '{WHITE}#' # '🐚'
-$PROMPT_FIELDS['uname'] = $USER[:1]
-$PROMPT_FIELDS['hname'] = $HOSTNAME[:1]
-$PROMPT = '{0}{1}'.format('{RESET}'.join([
-    '{WHITE}{env_name}',
-    '{#CB241E}[',
-    '{#D99824}{uname}{#989718}@{#42858B}{hname}', # '{BOLD_GREEN}{user}@{hostname}',
-    ' {#B26287}{short_cwd}',
-    '{#CB241E}]',
-    '{branch_color}{curr_branch:[{}]}',
-    '{BOLD_BLUE}{ret_code_color}{ret_code}',
-    '{prompt_end} ',
-]), '{RESET}')
-
-# Xontribs - https://xon.sh/xontribs.html  |  Github topic with thumbnails - https://github.com/topics/xontrib
+# Base xontribs - https://xon.sh/xontribs.html  |  Github topic with thumbnails - https://github.com/topics/xontrib {{{
 _xontribs = [
     'mpl',                # Matplotlib hooks for xonsh.
     'prompt_ret_code',    # Adds return code info to the prompt.
@@ -133,30 +207,43 @@ _xontribs = [
     'output_search',      # Get identifiers from previous command and use for next command -> <identifier><Alt-f>.
     # 'macro_lib',          # Library of the useful macros for the xonsh shell.
 ]
+# }}}
 
 # $BASH_COMPLETIONS.insert(0, '/usr/local/share/bash-completion/bash_completion/') # '/usr/local/bin/bash-completion/'
 
-# Add paths that aren't already in PATH
+# Add directories to $PATH {{{
 for pathdir in reversed([
-        path($HOME, '.local/bin'),
-        path($HOME, '.cargo/bin'),
-        path($HOME, 'bin'),
-        path($GOPATH[0], 'bin'),
-        path($NPM_PACKAGES, 'bin'),
-        path($PYENV_ROOT, 'bin'),
+        path(${'HOME'}, '.local/bin'),
+        path(${'HOME'}, '.cargo/bin'),
+        path(${'HOME'}, 'bin'),
+        path(${'GOPATH'}[0], 'bin'),
+        path(${'NPM_PACKAGES'}, 'bin'),
+        path(${'PYENV_ROOT'}, 'bin'),
         '/opt/X11/bin',
         '/usr/local/bin',
         '/usr/local/sbin',
     ]):
-    if pathdir not in $PATH and os.path.isdir(pathdir):
-        $PATH.insert(0, pathdir)
+    if pathdir not in ${'PATH'} and os.path.isdir(pathdir):
+        ${'PATH'}.insert(0, pathdir)
+# }}}
 
+# JSON support {{{
+try:
+    import __builtin__
+except ImportError:
+    import builtins as __builtin__
+__builtin__.true = True
+__builtin__.false = False
+__builtin__.null = None
+# }}}
+
+# Platform-specific settings {{{
 from xonsh.platform import ON_LINUX  # ON_DARWIN, ON_WINDOWS, ON_WSL, ON_CYGWIN, ON_MSYS, ON_POSIX, ON_FREEBSD, ON_DRAGONFLY, ON_NETBSD, ON_OPENBSD
 
 if ON_LINUX:
 
-    if which('zsh') is not None:
-        source-foreign zsh --overwrite-aliases --interactive True --sourcer source 'echo Loading foreign shell zsh.'
+    # if which('zsh') is not None:
+    #     source-foreign zsh --overwrite-aliases --interactive True --sourcer source 'echo Loading foreign shell zsh.'
 
     _xontribs = list(set([
         'coreutils',          # Additional core utilities that are implemented in xonsh.
@@ -177,13 +264,25 @@ if ON_LINUX:
             args = ('status')
         git --git-dir=@(git_dir) --work-tree=@(work_tree) @(args)
 
-    aliases['dotfiles'] = lambda args: _git_bare($DOTBARE_DIR, $DOTBARE_TREE, *args)
-    aliases['doutline'] = lambda args: _git_bare($DOCKER_BARE, $DOCKER_TREE, *args)
-    aliases['dkx'] = lambda args: $[docker exec -it @(args) sh]
+    $DOTBARE_DIR = path(${'HOME'}, '.config/dotfiles/.git')
+    $DOTBARE_TREE = path(${'HOME'})
+
+    aliases['dotfiles']  = lambda args: _git_bare(${'DOTBARE_DIR'}, ${'DOTBARE_TREE'}, *args)
+    aliases['dots']      = ['dotfiles']
+    aliases['dirtydots'] = ['dirtygit', '--git-dir', ${'DOTBARE_DIR'}, '--work-tree', ${'DOTBARE_TREE'}, '--git-add', '-u']
+    aliases['dotted']    = ['dotfiles', 'ls-files', '--error-unmatch']
+    aliases['dkx']       = lambda args: $[docker exec -it @(args) sh]
+    aliases['gitted']    = ['git', 'ls-files', '--error-unmatch']
+    aliases['c']         = ['xclip', '-selection', 'clipboard']
+    aliases['t']         = ['todo.sh', '-a', '-c']
 
     $fzf_history_binding = "c-r"
     $FZF_DEFAULT_COMMAND="fd --type file --color=always --follow --hidden --exclude .git --exclude .hg --exclude node_modules"
     $FZF_DEFAULT_OPTS="--color 'bg:0,bg+:2,fg:8,fg+:15,hl:10,hl+:11,prompt:11,info:3,marker:11,pointer:11,spinner:1' --ansi --height 10"
+    $FZF_COMPLETION_TRIGGER=','
+
+    if os.environ.get('DISPLAY', False):
+        aliases['lf'] = [path(${'HOME'}, '.config/lf/lfrun')]
 
     # Add ssh-key to keychain.
     # if (os.path.isfile('/usr/bin/security') and
@@ -212,28 +311,22 @@ if ON_LINUX:
     #   aliases['sudo'] = 'sudo -A'
     #   $SUDO_ASKPASS = path($HOME, '.local/bin/rofi-askpass')
     #   $SSH_ASKPASS = path($HOME, '.local/bin/rofi-askpass')
+# }}}
 
 # Load xontribs
 if _xontribs:
     xontrib load @(_xontribs)
 
-# These habe to be set after the 'abbrevs' xontrib is loaded.
-abbrevs['dk']     = ' '.join(aliases['dk'])
-abbrevs['dkc']    = ' '.join(aliases['dkc'])
-abbrevs['dkcL']   = ' '.join(aliases['dkcL'])
-abbrevs['dkcb']   = ' '.join(aliases['dkcb'])
-abbrevs['dkcB']   = ' '.join(aliases['dkcB'])
-abbrevs['dkcd']   = ' '.join(aliases['dkcd'])
-abbrevs['dkcU']   = ' '.join(aliases['dkcU'])
-abbrevs['dkcUl']  = ' '.join(aliases['dkcU'])  + ' && ' + ' '.join(aliases['dkcL'])
-abbrevs['dkcUf']  = ' '.join(aliases['dkcUf'])
-abbrevs['dkcUfl'] = ' '.join(aliases['dkcUf']) + ' && ' + ' '.join(aliases['dkcL'])
-
-# JSON
-try:
-    import __builtin__
-except ImportError:
-    import builtins as __builtin__
-__builtin__.true = True
-__builtin__.false = False
-__builtin__.null = None
+# These have to be set after the 'abbrevs' xontrib is loaded {{{
+if ON_LINUX:
+    abbrevs['dk']     = ' '.join(aliases['dk'])
+    abbrevs['dkc']    = ' '.join(aliases['dkc'])
+    abbrevs['dkcL']   = ' '.join(aliases['dkcL'])
+    abbrevs['dkcb']   = ' '.join(aliases['dkcb'])
+    abbrevs['dkcB']   = ' '.join(aliases['dkcB'])
+    abbrevs['dkcd']   = ' '.join(aliases['dkcd'])
+    abbrevs['dkcU']   = ' '.join(aliases['dkcU'])
+    abbrevs['dkcUl']  = ' '.join(aliases['dkcU'])  + ' && ' + ' '.join(aliases['dkcL'])
+    abbrevs['dkcUf']  = ' '.join(aliases['dkcUf'])
+    abbrevs['dkcUfl'] = ' '.join(aliases['dkcUf']) + ' && ' + ' '.join(aliases['dkcL'])
+# }}}

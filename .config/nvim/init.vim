@@ -290,6 +290,7 @@ set list listchars=trail:·,nbsp:⎵,tab:┊» " ¦┆┊ eol:⏎ (          )
 set foldmethod=marker foldmarker={{{,}}}
 
 " Tabs and lines {{{
+set autoindent
 set smarttab        " Enabling this will make the tab key
                     " (in insert mode) insert spaces or
                     " tabs to go to the next indent of the
@@ -447,7 +448,19 @@ augroup myvimrchooks | autocmd!
 augroup END
 " }}}
 
-function! ToggleNumbers() " {{{
+nmap <silent> <leader>ff :call <SID>ToggleFold()<CR> " {{{
+function! s:ToggleFold()
+    if &foldmethod == 'marker'
+        let &l:foldmethod = 'syntax'
+    else
+        let &l:foldmethod = 'marker'
+    endif
+    echo 'foldmethod is now ' . &l:foldmethod
+endfunction
+" }}}
+
+nmap <silent> <leader>n :call <SID>ToggleNumbers()<CR> " {{{
+function! s:ToggleNumbers()
   " This is based, but defaults have to be set if reading the vimrc isn't possible(?) {{{
   if !exists("b:default_signcolumn")
     let b:default_signcolumn = "no"
@@ -475,17 +488,16 @@ function! ToggleNumbers() " {{{
     execute 'set signcolumn=' . b:default_signcolumn
   endif
 endfunction
-nmap <silent> <leader>n :call ToggleNumbers()<CR>
 " }}}
 
-function! ToggleMouse() " {{{
+nmap <silent> <leader>m :call <SID>ToggleMouse()<CR> " {{{
+function! s:ToggleMouse()
   if &mouse == 'a'
     set mouse=c
   else
     set mouse=a
   endif
 endfunction
-nmap <silent> <leader>m :call ToggleMouse()<CR>
 " }}}
 
 function! FoldText() " {{{
