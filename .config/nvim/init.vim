@@ -92,6 +92,7 @@ let g:coc_global_extensions = [
   \ 'coc-tsserver',
   \ 'coc-tabnine',
   \ 'coc-eslint',
+  \ 'coc-pyright',
   \ ]
   " \ 'coc-vetur',
   " \ 'coc-snippets',
