@@ -175,6 +175,7 @@ let g:lf_replace_netrw = 0 " Open lf when vim opens a directory
   Plug 'ekalinin/Dockerfile.vim', { 'for': 'Dockerfile' }
   Plug 'kovetskiy/sxhkd-vim', { 'for': 'sxhkdrc' }
   Plug 'linkinpark342/xonsh-vim'
+  Plug 'neoclide/jsonc.vim', { 'for': ['json', 'jsonc'] } " json comment support
 " }}}
 
 Plug 'rakr/vim-one' | let g:one_allow_italics = 0
@@ -194,8 +195,17 @@ call plug#end() | endif " }}}
 
 " :lua print(vim.inspect(require("todo-comments.config")))
 if (has('nvim-0.5'))
-  lua require("todo-comments").setup {}
-  lua require("trouble").setup {}
+lua << EOF
+  require("todo-comments").setup {
+    highlight = {
+      pattern = [[.*<(KEYWORDS)\s*]]
+    },
+    search = {
+      pattern = [[\b(KEYWORDS)\b]]
+    }
+  }
+  require("trouble").setup {}
+EOF
 endif
 
 "if (empty($TMUX))

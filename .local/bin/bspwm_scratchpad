@@ -5,11 +5,11 @@
 # 	bspwm_scratchpad "math" "${TERMINAL} --class math --title math --command python3"
 
 class="${1:-scratchpad}"
-command="${2:-${TERMINAL} --class ${class} --title scratchpad}"
+terminal_command="${2:-${TERMINAL} --class ${class} --title scratchpad}"
+size="${3:-1600x1000+0+0}"
 sticky="${4:-on}"
 state="${5:-floating}"
 center="${6:-true}"
-rectangle="${3:-1600x1000+0+0}"
 
 #dependencies=("xdo" "xprop" "awk")
 #for cmd in "${dependencies[@]}"; do
@@ -23,8 +23,17 @@ rectangle="${3:-1600x1000+0+0}"
 
 id="$(xdo id -n ${class} | head -1)"
 if test -z "${id}"; then
+  bspc rule -r "*:${class}"
   bspc rule -a "*:${class}" sticky=on state=floating center=true rectangle="${size}"
-  eval "${command}"
+  eval "${terminal_command}" &
+  # Sleep until window has started
+  until test ! -z $(xdo id -n ${class} | head -1); do
+    sleep 0.5
+  done
+  sleep 0.5
+  # Position and size should be up to the user
+  bspc rule -r "*:${class}"
+  bspc rule -a "*:${class}" sticky=on state=floating
 else
   action='hide'
   if test "$(xprop -id ${id} | awk '/window state: / {print $3}')" = 'Withdrawn'; then

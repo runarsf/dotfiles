@@ -251,8 +251,10 @@ doutline () {
 # Sourcing {{{
 #test -f "/etc/profile.d/undistract-me.sh" && source /etc/profile.d/undistract-me.sh
 test -s "${HOME}/.nvm/nvm.sh" && source "${HOME}/.nvm/nvm.sh"
-test -f "${HOME}/.fzf.zsh" && source "${HOME}/.fzf.zsh"
 #test -f "${HOME}/.config/p10k/.p10k.zsh" && source "${HOME}/.config/p10k/.p10k.zsh" || (test -f "${HOME}/.p10k.zsh" && source "${HOME}/.p10k.zsh")
 export STARSHIP_CONFIG=~/.config/starship.toml
 eval "$(starship init zsh)"
 # }}}
+
+# FZF is STUBBORN and will automatically add this line. Just leave it be -.-
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
