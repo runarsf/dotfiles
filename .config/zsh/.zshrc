@@ -171,6 +171,7 @@ alias ls='ls -lAFh --color'
 #alias ls='exa -GlxFa --colour=always'
 alias grep='grep --color'
 alias c='xclip -selection clipboard'
+alias paste='sharenix -n -c -m f'
 alias gitted='git ls-files --error-unmatch'
 alias please='sudo $(fc -ln -1)'
 #please () { test -z "${1}" && eval "sudo !!" || sudo "${@}" }

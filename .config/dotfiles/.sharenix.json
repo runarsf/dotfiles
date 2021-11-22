@@ -1,7 +1,7 @@
 {
   "DefaultFileUploader": "xBackBone",
   "DefaultImageUploader": "xBackBone",
-  "DefaultTextUploader": "Pastor",
+  "DefaultTextUploader": "xBackBone",
 
   "Services": [
     {
@@ -33,9 +33,9 @@
       "RegexList": [
         "^(https?:\\/\\/.+\\/)([^\\s]+)\\s(.*)$"
       ],
-      "URL": "$regex:1|1$$regex:1|2$",
-      "ThumbnailURL": "$regex:1|1$$regex:1|2$",
-      "DeletionURL": "$regex:1|1$delete/$regex:1|2$?token=$regex:1|3$"
+      "URL": "$regex:0|1$$regex:0|2$",
+      "ThumbnailURL": "$regex:0|1$$regex:0|2$",
+      "DeletionURL": "$regex:0|1$delete/$regex:0|2$?token=$regex:0|3$"
     },
     {
       "Name": "Chibisafe",
