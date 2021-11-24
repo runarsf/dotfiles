@@ -202,6 +202,15 @@ lua << EOF
       pattern = [[.*<(KEYWORDS)\s*]]
     },
     search = {
+      args = {
+        "--color=never",
+        "--no-heading",
+        "--with-filename",
+        "--line-number",
+        "--column",
+        "--glob=!node_modules",
+        "--glob=!lib"
+      },
       pattern = [[\b(KEYWORDS)\b]]
     }
   }
