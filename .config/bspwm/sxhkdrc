@@ -70,7 +70,7 @@ super + shift + {h,j,k,l}
 # super + ctrl + shift + {h,j,k,l}
 # 	bspc node --resize {left -20 0,bottom 0 20,top 0 -20,right 20 0}
 
-super + alt + {Left,Down,Up,Right}
+super + ctrl + {Left,Down,Up,Right}
 	{bspc node @parent/second -z left -20 0; \
 	bspc node @parent/first -z right -20 0, \
 	bspc node @parent/second -z top 0 +20; \
@@ -85,10 +85,10 @@ super + alt + {Left,Down,Up,Right}
 #super + r : {h,j,k,l}
 #	bspc node --resize {left 20 0,bottom 0 -20,top 0 20,right -20 0}
 
-super + ctrl + r : {Left,Down,Up,Right}
-	bspc node --resize {left -20 0,bottom 0 20,top 0 -20,right 20 0}
-super + ctrl + r : {h,j,k,l}
-	bspc node --resize {left -20 0,bottom 0 20,top 0 -20,right 20 0}
+# super + ctrl + r : {Left,Down,Up,Right}
+# 	bspc node --resize {left -20 0,bottom 0 20,top 0 -20,right 20 0}
+# super + ctrl + r : {h,j,k,l}
+# 	bspc node --resize {left -20 0,bottom 0 20,top 0 -20,right 20 0}
 
 #super {_,ctrl + }r : {Left,Down,Up,Right}
 #	bspwm_resize {contract,expand} {west,south,north,east} 20
