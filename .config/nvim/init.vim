@@ -482,6 +482,9 @@ function! s:ToggleNumbers()
   if !exists("b:default_relativenumber")
     let b:default_relativenumber = 1
   endif
+  if !exists("b:default_wrap")
+    let b:default_wrap = 0
+  endif
   " }}}
 
   if &number || &relativenumber
@@ -492,9 +495,11 @@ function! s:ToggleNumbers()
     set list!
     set norelativenumber
     set signcolumn=no
+    set wrap
   else
     if b:default_number | set number | endif
     if b:default_relativenumber | set relativenumber | endif
+    if !b:default_wrap | set nowrap | endif
     set list
     execute 'set signcolumn=' . b:default_signcolumn
   endif

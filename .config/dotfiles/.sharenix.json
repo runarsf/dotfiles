@@ -17,7 +17,6 @@
         "text": "$input$",
         "token": "<++>"
       },
-      "FileFormName": "upload",
       "URL": "$json:url$",
       "ThumbnailURL": "$json:url$/raw",
       "DeletionURL": "$json:url$/delete/<++>"
