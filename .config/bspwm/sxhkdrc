@@ -124,7 +124,7 @@ super + n
 super + m
 	bspwm_scratchpad "math" "alacritty --class math --title math --option font.size=18 --command tmux new-session -A -s math xonsh" "1200x800+0+0"
 super + p
-	bspwm_scratchpad "pomotroid" "pomotroid"
+	bspwm_scratchpad "spotify" "spotify" "1000x1600+0+0"
 
 super + c ; p
 	bspc config focus_follows_pointer {false,true}
