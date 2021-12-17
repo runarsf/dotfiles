@@ -5,14 +5,15 @@ return {
     "JetBrains Mono",
     "Operator Mono",
   }),
-  color_scheme = "Batman",
+  color_scheme = "OneHalfDark",
 
   -- https://wezfurlong.org/wezterm/config/keys.html#default-shortcut--key-binding-assignments
   disable_default_key_bindings = true,
   leader = { key="a", mods="CTRL", timeout_milliseconds=1000 },
   keys = {
-    {key="t",          mods="CTRL",           action=wezterm.action{SpawnTab="CurrentPaneDomain"}},
-    {key="t",          mods="CTRL|SHIFT",     action=wezterm.action{SpawnTab="DefaultDomain"}},
+    {key="n",          mods="LEADER",         action=wezterm.action{SpawnTab="CurrentPaneDomain"}},
+    -- {key="t",          mods="CTRL",           action=wezterm.action{SpawnTab="CurrentPaneDomain"}},
+    -- {key="t",          mods="CTRL|SHIFT",     action=wezterm.action{SpawnTab="DefaultDomain"}},
     {key="w",          mods="CTRL",           action=wezterm.action{CloseCurrentTab={confirm=true}}},
     {key="c",          mods="ALT",            action=wezterm.action{CopyTo="Clipboard"}},
     {key="v",          mods="ALT",            action=wezterm.action{PasteFrom="Clipboard"}},
