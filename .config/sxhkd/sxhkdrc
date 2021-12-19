@@ -23,13 +23,9 @@ super + Escape
 	pkill -USR1 -x sxhkd
 
 alt + p
-	screenshot -m region -t -c -o 'sharenix -n -c'
+	screenshot -m region -t -c -o 'screenshot-xbackbone'
 alt + shift + p
-	screenshot -o 'sharenix -n -c'
-#alt + p
-#	sharenix-section -n -c
-#alt + shift + p
-#	xfce4-screenshooter -w -o 'sharenix -n -c'
+	screenshot -o 'screenshot-xbackbone'
 
 super + shift + c
 	toggleprogram picom --config "${HOME}/.config/picom.conf" -fcCGb --xrender-sync-fence
