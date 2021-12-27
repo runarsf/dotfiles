@@ -1,19 +1,56 @@
-#!/bin/bash
-# arg 1: vaultfile name
-if test -z "${1}"; then
-  vaultdir="${HOME}/.vault"
-  vaultfile="${vaultdir}/.vault"
-else
-  vaultfile="$(readlink -f ${1})"
-  vaultdir="$(dirname ${vaultfile})"
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Argument parsing {{{
+# TODO Vault by default ~/.vault, ./vault if it exists
+# VAULT="${HOME:-~}/.vault"
+VAULT="./vault"
+positional=()
+while test "${#}" -gt "0"; do
+  case "${1}" in
+    --*) # {{{
+      printf "Unknown option: ${1}\n"
+      exit 1
+      shift;;
+    -*)
+      shopts="${1}"
+      if test "${#shopts}" -le "2"; then
+        printf "Unknown option: ${shopts}\n"
+        exit 2
+      fi
+      shift
+      set -- "${shopts:0:2}" "-${shopts:2}" "${@}"
+      ;;
+    *)
+      positional+=("${1}")
+      shift;; # }}}
+  esac
+done
+set -- "${positional[@]}"
+
+if test "${#}" -gt "0"; then
+  VAULT="${@}"
 fi
-cryptofile="${vaultfile}.aes"
+# }}}
 
-printf "vaultdir: ${vaultdir}\n"
-printf "vaultfile: ${vaultfile}\n"
-printf "cryptofile: ${cryptofile}\n\n"
+check_deps () { # <dependencies:@string> -> Void {{{
+  _deps=${@}
+  _missing=""
+  for _dep in ${_deps}; do
+    if ! hash "${_dep}" 2>/dev/null; then
+      _missing="${_missing} ${_dep}"
+    fi
+  done
+  if test -n "${_missing}"; then
+    printf "Missing required dependencies:${_missing}\n"
+    exit 1
+  fi
+}
 
-prompt () {
+check_deps md5sum gpg
+# }}}
+
+prompt () { # -> Boolean {{{
   printf "${1} [y/N]"
   read -p " " -n 1 -r </dev/tty
   printf "\n"
@@ -21,116 +58,142 @@ prompt () {
     return 1
   fi
 }
+# }}}
 
-if test -z "${EDITOR}"; then
-  if prompt "\$EDITOR not set, consider running \`EDITOR=vim ${0}\`. Run with vim?"; then
-    EDITOR="vim"
-  else
-    printf "No editor set. Aborting.\n"
-    exit 1
-  fi
-fi
+archive () { # -> Boolean {{{
+  # TODO readlink -f?
+  local INPUT="$(realpath "${1}")" # directory
+  printf "Archiving ${INPUT}...\n"
+  # TODO Match checksums
+  # tar -cvpzf "${VAULT_ARCHIVE}" "${VAULT}" \
+  #   | xargs -I '{}' sh -c "test -f '{}' && md5sum '{}'" \
+  #   | tee "${VAULT_CHECKSUMS}"
 
-encrypt () {
+  local TMP="$(mktemp "/tmp/vault-XXXXXX.tar.gz")"
+  exec 3> "${TMP}"
+  exec 4< "${TMP}"
+  rm "${TMP}"
+
+  # --gzip vs. --verify
+  tar --create \
+      --verbose \
+      --gzip \
+      --preserve-permissions \
+      --directory "$(realpath "${INPUT}")" \
+      --file - \
+      . \
+      >&3
+      # "$(basename "$(realpath "${INPUT}")")" \
+      # --absolute-names \
+
+  rm -rf "${INPUT}"
+
+  cat <&4 > "${INPUT}"
+  # TODO Close file descriptor manually?
+} # }}}
+
+unarchive () { # -> Boolean {{{
+  local INPUT="${1}"
+  printf "Unarchiving ${INPUT}...\n"
+
+  local TMP="$(mktemp "/tmp/vault-XXXXXX.tar.gz")"
+  exec 3> "${TMP}"
+  exec 4< "${TMP}"
+  rm "${TMP}"
+
+  # "mv" INPUT to TMP_ARCHIVE
+  >&3 cat "${INPUT}" # cat "${INPUT}" >&3
+  # cat <&4
+
+  # This is dangerous, if the next tar command fails
+  rm -f "${INPUT}"
+
+  mkdir "${INPUT}"
+
+  tar --extract \
+      --verbose \
+      --gzip \
+      --file - \
+      --directory "${INPUT}" \
+      <&4
+      # --directory "$(dirname "$(realpath "${INPUT}")")" \
+      # --one-top-level \ # --strip-components 1 \
+} # }}}
+
+encrypt () { # -> Void {{{
+  local INPUT="${1}"
+  # local OUTPUT="${2}"
+  read -p "Enter encryption password > " -s PASSWORD
+
+  local TMP="$(mktemp "/tmp/vault-XXXXXX.gpg")"
+  exec 3> "${TMP}"
+  exec 4< "${TMP}"
+  rm "${TMP}"
+
   # aescrypt -e -p "${password}" "${vaultfile}" -o "${cryptofile}"
-  local input="${1}"
-  local output="${2}"
-  local password="${3}"
-  gpg \
-    --symmetric \
-    --yes \
-    --batch \
-    --cipher-algo aes256 \
-    --passphrase "${password}" \
-    --output "${output}" \
-    "${input}"
-    #--pinentry-mode loopback \
-}
+  gpg --symmetric \
+      --yes \
+      --batch \
+      --cipher-algo aes256 \
+      --passphrase "${PASSWORD}" \
+      --output - \
+      "${INPUT}" \
+      >&3
+      #--pinentry-mode loopback \
 
-decrypt () {
+  rm -f "${INPUT}"
+
+  cat <&4 > "${INPUT}"
+} # }}}
+
+decrypt () { # -> Void {{{
   # aescrypt -d -p "${password}" "${cryptofile}" -o "${vaultfile}"
-  local input="${1}"
-  local output="${2}"
-  local password="${3}"
-  gpg \
-    --decrypt \
-    --yes \
-    --batch \
-    --cipher-algo aes256 \
-    --passphrase "${password}" \
-    --output "${output}" \
-    "${input}"
-   #--pinentry-mode loopback \
-}
+  local INPUT="${1}"
+  read -p "Enter encryption password > " -s PASSWORD
 
-if test -f "${vaultfile}"; then
-  printf "The unencrypted vaultfile was found, this is bad!\n"
-  printf "Either someone is using the file or something has gone wrong.\n"
-  printf "Type 'w' to see if someone is using the file.\n"
-  prompt "Show active users?" && printf '%s\n' "$(w)"
-fi
+  local TMP="$(mktemp "/tmp/vault-XXXXXX.gpg")"
+  exec 3> "${TMP}"
+  exec 4< "${TMP}"
+  rm "${TMP}"
 
-read -p "Enter decryption password > " -s password
-printf "\n"
+  gpg --decrypt \
+      --yes \
+      --batch \
+      --cipher-algo aes256 \
+      --passphrase "${PASSWORD}" \
+      --output - \
+      "${INPUT}" \
+      >&3
+      #--pinentry-mode loopback \
 
-if test ! -f "${cryptofile}"; then
-  printf "Cryptofile not detected, verifying prerequisites and creating.\n"
-  prompt "Password not entered, continue without password?" || exit 1
-  if test ! -d "${vaultdir}"; then
-    printf "Vault directory not detected, creating.\n"
-    mkdir -p "${vaultdir}"
-  else
-    if test -d "${vaultdir}/.git"; then
-      printf "Git directory detected, attempting checkout.\n"
-      git -C "${vaultdir}" checkout "${cryptofile}"
+  rm -f "${INPUT}"
+
+  cat <&4 > "${INPUT}"
+} # }}}
+
+main () { # -> Void {{{
+  local VAULT="$(realpath "${@}")" # The unencrypted vault, file or directory.
+
+  # https://stackoverflow.com/a/49197786
+  if file "${VAULT}" | awk -F ': ' '{print $NF}' | grep "GPG symmetrically encrypted data (AES256 cipher)" >/dev/null 2>&1; then
+    printf "Unencrypting ${VAULT}\n"
+
+    decrypt "${VAULT}"
+
+    if file "${VAULT}" | awk -F ': ' '{print $NF}' | grep "gzip compressed data" >/dev/null 2>&1; then
+      unarchive "${VAULT}" || exit "${?}"
     fi
-  fi
-  if test ! -f "${cryptofile}"; then
-    if test ! -f "${vaultfile}"; then
-      printf "Vaultfile not detected, creating dummy file.\n"
-      printf "Unencrypted vaultfile." >> "${vaultfile}"
-    fi
-    encrypt "${vaultfile}" "${cryptofile}" "${password}"
-    printf "Vault has been encrypted.\n"
-    rm -f "${vaultfile}"
-  fi
-fi
-
-decrypt "${cryptofile}" "${vaultfile}" "${password}"
-
-if test ! -f "${vaultfile}"; then
-  printf "The key was not found. Wrong password?\n"
-  exit 1
-else
-  chmod 600 "${vaultfile}"
-  premd5=$(md5sum -b "${vaultfile}" | awk '{print $1}')
-  printf "Vault decrypted, opening in ${EDITOR}.\n"
-  printf "Remember to verify that the file was successfully reencrypted.\n"
-  #sleep 1
-
-  eval "${EDITOR} ${vaultfile}"
-  encrypt "${vaultfile}" "${cryptofile}" "${password}"
-  printf "Vault has been reencrypted.\n"
-fi
-
-if test -f "${vaultfile}"; then
-  postmd5=$(md5sum -b "${vaultfile}" | awk '{print $1}')
-  rm -f "${vaultfile}"
-fi
-
-# FIXME: What does this check __actually__ do?
-if test "${premd5}" = "${postmd5}"; then
-  printf "File unencrypted. Aborting commit.\n"
-else
-  if prompt "Changes to crypto detected. Commit to revision system?"; then
-    printf "Proceeding with checkin.\n"
-    git -C "${vaultdir}" add "${cryptofile}"
-    printf "Reason for change? > "
-    read commitmsg
-    git -C "${vaultdir}" commit -m "${commitmsg}"
-    git -C "${vaultdir}" push origin master
   else
-    printf "Aborting revision checkin.\n"
-    #sleep 3
+    printf "Encrypting ${VAULT}...\n"
+
+    if test -d "${VAULT}"; then
+       archive "${VAULT}" || exit "${?}"
+    fi
+
+    encrypt "${VAULT}"
   fi
-fi
+} # }}}
+
+main "${VAULT}"
+
+printf "Done!\n"
