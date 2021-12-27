@@ -239,6 +239,17 @@ doutline () {
 #bindkey "^M" magic-enter
 # }}}
 
+# https://unix.stackexchange.com/a/180305
+# check_ssh () { # {{{
+#   [[ $3 =~ '\bssh\b' ]] || return
+#   [[ -n "$SSH_AGENT_PID" && -e "/proc/$SSH_AGENT_PID" ]] \
+#     && ssh-add -l >/dev/null && return
+#   eval `keychain --eval id_dsa --timeout 60`
+# }
+# autoload -U add-zsh-hook
+# add-zsh-hook preexec check_ssh
+# }}}
+
 # Add aliases to all files in .local/bin {{{
 #for script in "${HOME}/.local/"bin/*.*; do
 #  # Without file extension
