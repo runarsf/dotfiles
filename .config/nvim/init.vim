@@ -180,6 +180,24 @@ let g:lf_replace_netrw = 0 " Open lf when vim opens a directory
 " }}}
 
 Plug 'rakr/vim-one' | let g:one_allow_italics = 0
+Plug 'projekt0n/github-nvim-theme'
+" lua << EOF
+" require('github-theme').setup({
+"   theme_style = "dark",
+"   function_style = "italic",
+"   sidebars = {"qf", "vista_kind", "terminal", "packer"},
+" 
+"   colors = {hint = "orange", error = "#ff0000"},
+" 
+"   overrides = function(c)
+"     return {
+"       htmlTag = {fg = c.red, bg = "#282c34", sp = c.hint, style = "underline"},
+"       DiagnosticHint = {link = "LspDiagnosticsDefalutHint"},
+"       TSField = {},
+"     }
+"   end
+" })
+" EOF
 Plug 'joshdick/onedark.vim' " {{{
 let g:onedark_color_overrides = {
   \ "background": {"gui": "#0D1117", "cterm": "234", "cterm16": "0" },
@@ -191,7 +209,7 @@ Plug 'gruvbox-community/gruvbox' " {{{
   endif
 " }}}
 
-let g:colorscheme = 'onedark'
+let g:colorscheme = 'github_dark_default'
 call plug#end() | endif " }}}
 
 " :lua print(vim.inspect(require("todo-comments.config")))
