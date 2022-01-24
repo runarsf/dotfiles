@@ -19,6 +19,11 @@ window: # {{{
 
   title: Alacritty
   class: Alacritty
+
+  # Allow terminal applications to change Alacritty's window title.
+  dynamic_title: true
+
+  opacity: 1
 # }}}
 
 scrolling: # {{{
@@ -528,12 +533,6 @@ bell:
   duration: 0
   color: '0xffffff'
 
-# Background opacity
-#
-# Window opacity as a floating point number from `0.0` to `1.0`.
-# The value `0.0` is completely transparent and `1.0` is opaque.
-background_opacity: 1
-
 # Mouse bindings
 #
 # Available fields:
@@ -569,9 +568,6 @@ selection:
 
   # When set to `true`, selected text will be copied to the primary clipboard.
   save_to_clipboard: false
-
-# Allow terminal applications to change Alacritty's window title.
-window.dynamic_title: true
 
 cursor:
   # Cursor style
