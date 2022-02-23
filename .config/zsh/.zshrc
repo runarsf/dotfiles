@@ -217,6 +217,7 @@ doutline () {
 # }}}
 
 men () { # {{{
+  # https://serverfault.com/a/206830
   local pages string
   if test -n "${2}"; then
     pages=(${@:2})
