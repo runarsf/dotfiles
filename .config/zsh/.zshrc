@@ -216,6 +216,21 @@ doutline () {
 }
 # }}}
 
+men () { # {{{
+  local pages string
+  if test -n "${2}"; then
+    pages=(${@:2})
+    string="${1}"
+  else
+    pages=${1}
+  fi
+  # GNU man
+  man ${2:+--pager="less -p \"$string\" -G"} ${pages[@]}
+  # BSD man
+  # man ${2:+-P "less -p \"$string\" -G"} ${pages[@]}
+}
+# }}}
+
 #magic-enter () { # {{{ (breaks zsh-autosuggestions)
 #  MAGIC_ENTER_GIT_COMMAND="git status -u ."
 #  MAGIC_ENTER_OTHER_COMMAND="ls -lh ."
