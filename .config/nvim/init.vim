@@ -15,52 +15,52 @@ set nocompatible
 " Automatically calls `filetype plugin indent on` and `syntax enable`
 silent! if plug#begin(stdpath('data') . '/plugged') " {{{
 Plug 'tpope/vim-vinegar' " netrw {{{
-  "let loaded_netrwPlugin = 0 " netrw version, 0 to disable
-  let g:netrw_banner = 0
-  let g:netrw_liststyle = 3 " 1 or 3
-  let g:netrw_browse_split = 4 " 1
-  let g:netrw_altv = 1
-  let g:netrw_winsize = 25
-  let g:netrw_keepdir = 0
-  let g:netrw_sort_options = 'i'
-  let g:netrw_list_hide = '\(^\|\s\s\)\zs\.\S\+,\(^\|\s\s\)ntuser\.\S\+'
-  let g:netrw_sort_sequence = '[\/]$,*'
-  let g:netrw_list_hide = '.*.swp$,
-                        \ *.pyc$,
-                        \ *.log$,
-                        \ *.o$,
-                        \ *.xmi$,
-                        \ *.swp$,
-                        \ *.bak$,
-                        \ *.pyc$,
-                        \ *.class$,
-                        \ *.jar$,
-                        \ *.war$,
-                        \ *.png$,
-                        \ *.jpg$,
-                        \ *.mkv$,
-                        \ *.mp4$,
-                        \ *.mp3$,
-                        \ *node_modules*,
-                        \ *__pycache__*'
+"let loaded_netrwPlugin = 0 " netrw version, 0 to disable
+let g:netrw_banner = 0
+let g:netrw_liststyle = 3 " 1 or 3
+let g:netrw_browse_split = 4 " 1
+let g:netrw_altv = 1
+let g:netrw_winsize = 25
+let g:netrw_keepdir = 0
+let g:netrw_sort_options = 'i'
+let g:netrw_list_hide = '\(^\|\s\s\)\zs\.\S\+,\(^\|\s\s\)ntuser\.\S\+'
+let g:netrw_sort_sequence = '[\/]$,*'
+let g:netrw_list_hide = '.*.swp$,
+                      \ *.pyc$,
+                      \ *.log$,
+                      \ *.o$,
+                      \ *.xmi$,
+                      \ *.swp$,
+                      \ *.bak$,
+                      \ *.pyc$,
+                      \ *.class$,
+                      \ *.jar$,
+                      \ *.war$,
+                      \ *.png$,
+                      \ *.jpg$,
+                      \ *.mkv$,
+                      \ *.mp4$,
+                      \ *.mp3$,
+                      \ *node_modules*,
+                      \ *__pycache__*'
 
-  augroup ProjectDrawer | autocmd!
-    "autocmd VimEnter * silent Vexplore | wincmd p
-    "autocmd FileType netrw set nolist
-    " No argument was specified
-    autocmd VimEnter * if !argc() && !exists("s:std_in") | silent Lexplore | wincmd p | endif
-    autocmd StdinReadPre * let s:std_in=1
-    " Specified argument is a directory
-    autocmd VimEnter * if isdirectory(expand('<afile>')) && !exists("s:std_in") | silent vnew | endif
-    " Only window left
-    autocmd BufEnter * if (winnr("$") == 1 && getbufvar(winbufnr(winnr()), "&filetype") == "netrw") | q | endif
-    autocmd FileType netrw setlocal bufhidden=wipe
-    autocmd FileType netrw vertical resize 25
-    autocmd FileType netrw nnoremap <buffer> q :q<CR>
-  augroup END
+augroup ProjectDrawer | autocmd!
+  "autocmd VimEnter * silent Vexplore | wincmd p
+  "autocmd FileType netrw set nolist
+  " No argument was specified
+  autocmd VimEnter * if !argc() && !exists("s:std_in") | silent Lexplore | wincmd p | endif
+  autocmd StdinReadPre * let s:std_in=1
+  " Specified argument is a directory
+  autocmd VimEnter * if isdirectory(expand('<afile>')) && !exists("s:std_in") | silent vnew | endif
+  " Only window left
+  autocmd BufEnter * if (winnr("$") == 1 && getbufvar(winbufnr(winnr()), "&filetype") == "netrw") | q | endif
+  autocmd FileType netrw setlocal bufhidden=wipe
+  autocmd FileType netrw vertical resize 25
+  autocmd FileType netrw nnoremap <buffer> q :q<CR>
+augroup END
 
-  "map <silent> <C-n> :NetrwToggle <bar> wincmd p<CR>
-  map <silent> <C-n> :Lexplore<CR>
+"map <silent> <C-n> :NetrwToggle <bar> wincmd p<CR>
+map <silent> <C-n> :Lexplore<CR>
 " }}}
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'voldikss/vim-floaterm' " {{{
@@ -83,22 +83,22 @@ autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=#363840 ctermbg=237
 if v:version >= 703 && executable('node') | Plug 'neoclide/coc.nvim', {'branch': 'release'} " {{{
 "if v:version >= 703 && executable('node') && executable('yarn') | Plug 'neoclide/coc.nvim', { 'branch': 'release', 'tag': '*', 'do': { -> coc#util#install()}}
 let g:coc_global_extensions = [
-  \ 'coc-pairs',
-  \ 'coc-html',
-  \ 'coc-json',
-  \ 'coc-css',
-  \ 'coc-yaml',
-  \ 'coc-highlight',
-  \ 'coc-tabnine',
-  \ 'coc-eslint',
-  \ 'coc-pyright',
-  \ ]
-  " \ 'coc-tsserver',
-  " \ 'coc-vetur',
-  " \ 'coc-snippets',
-  " \ 'coc-markdownlint'
-  " \ 'coc-python',
-  " \ 'coc-emoji'
+\ 'coc-pairs',
+\ 'coc-html',
+\ 'coc-json',
+\ 'coc-css',
+\ 'coc-yaml',
+\ 'coc-highlight',
+\ 'coc-tabnine',
+\ 'coc-eslint',
+\ 'coc-pyright',
+\ ]
+" \ 'coc-tsserver',
+" \ 'coc-vetur',
+" \ 'coc-snippets',
+" \ 'coc-markdownlint'
+" \ 'coc-python',
+" \ 'coc-emoji'
 command! Cock exec "CocInstall -sync " . join(get(g:, 'coc_global_extensions', []))
 " Use `[g` and `]g` to navigate diagnostics
 nmap <silent> <space>G <Plug>(coc-diagnostic-prev)
@@ -129,13 +129,13 @@ nnoremap <silent> <space>p  :<C-u>CocListResume<CR><Paste>
 " Use tab for trigger completion with characters ahead and navigate.
 " Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
 inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
+    \ pumvisible() ? "\<C-n>" :
+    \ <SID>check_back_space() ? "\<TAB>" :
+    \ coc#refresh()
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
+let col = col('.') - 1
+return !col || getline('.')[col - 1]  =~# '\s'
 endfunction
 
 " Use <c-space> to trigger completion.
@@ -150,19 +150,19 @@ inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
 " Use K to show documentation in preview window
 nnoremap <silent> K :call <SID>show_documentation()<CR>
 function! s:show_documentation()
-  if (index(['vim','help'], &filetype) >= 0)
-    execute 'h '.expand('<cword>')
-  else
-    call CocAction('doHover')
-  endif
+if (index(['vim','help'], &filetype) >= 0)
+  execute 'h '.expand('<cword>')
+else
+  call CocAction('doHover')
+endif
 endfunction
 endif
 " }}}
 "Plug 'eslint/eslint'
 if (has('nvim-0.5.0'))
-  Plug 'nvim-telescope/telescope.nvim'
-  Plug 'nvim-lua/plenary.nvim' | Plug 'folke/todo-comments.nvim'
-  Plug 'kyazdani42/nvim-web-devicons' | Plug 'folke/trouble.nvim'
+Plug 'nvim-telescope/telescope.nvim'
+Plug 'nvim-lua/plenary.nvim' | Plug 'folke/todo-comments.nvim'
+Plug 'kyazdani42/nvim-web-devicons' | Plug 'folke/trouble.nvim'
 endif
 Plug 'voldikss/vim-floaterm' | Plug 'ptzz/lf.vim' " {{{
 let g:lf_replace_netrw = 0 " Open lf when vim opens a directory
@@ -170,13 +170,14 @@ let g:lf_replace_netrw = 0 " Open lf when vim opens a directory
 " }}}
 
 " Syntax highlighting {{{
-  Plug 'LnL7/vim-nix', { 'for': 'nix' }
-  Plug 'chr4/nginx.vim', { 'for': 'nginx' }
-  Plug 'storyn26383/vim-vue', { 'for': 'vue' }
-  Plug 'ekalinin/Dockerfile.vim', { 'for': 'Dockerfile' }
-  Plug 'kovetskiy/sxhkd-vim', { 'for': 'sxhkdrc' }
-  Plug 'linkinpark342/xonsh-vim'
-  Plug 'neoclide/jsonc.vim', { 'for': ['json', 'jsonc'] } " json comment support
+Plug 'tpope/vim-liquid', { 'for': ['markdown', 'html'] }
+Plug 'LnL7/vim-nix', { 'for': 'nix' }
+Plug 'chr4/nginx.vim', { 'for': 'nginx' }
+Plug 'storyn26383/vim-vue', { 'for': 'vue' }
+Plug 'ekalinin/Dockerfile.vim', { 'for': 'Dockerfile' }
+Plug 'kovetskiy/sxhkd-vim', { 'for': 'sxhkdrc' }
+Plug 'linkinpark342/xonsh-vim'
+Plug 'neoclide/jsonc.vim', { 'for': ['json', 'jsonc'] } " json comment support
 " }}}
 
 Plug 'rakr/vim-one' | let g:one_allow_italics = 0
@@ -200,13 +201,13 @@ Plug 'projekt0n/github-nvim-theme'
 " EOF
 Plug 'joshdick/onedark.vim' " {{{
 let g:onedark_color_overrides = {
-  \ "background": {"gui": "#0D1117", "cterm": "234", "cterm16": "0" },
-  \}
+\ "background": {"gui": "#0D1117", "cterm": "234", "cterm16": "0" },
+\}
 " }}}
 Plug 'gruvbox-community/gruvbox' " {{{
-  if !exists('g:gruvbox_contrast_light')
-    let g:gruvbox_contrast_light='hard'
-  endif
+if !exists('g:gruvbox_contrast_light')
+  let g:gruvbox_contrast_light='hard'
+endif
 " }}}
 
 let g:colorscheme = 'github_dark_default'
@@ -215,8 +216,8 @@ call plug#end() | endif " }}}
 " :lua print(vim.inspect(require("todo-comments.config")))
 if (has('nvim-0.5'))
 lua << EOF
-  require("todo-comments").setup {
-    highlight = {
+require("todo-comments").setup {
+  highlight = {
       pattern = [[.*<(KEYWORDS)\s*]]
     },
     search = {

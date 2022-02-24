@@ -2,11 +2,9 @@
 # description: Launch terminal.
 super + Return
 	"${TERMINAL}"
-super + shift + Return
-	tabbed -df alacritty --embed
 
-super + alt + b
-	bwmenu --clear 8 --auto-lock 28800 -- -location 2
+# super + alt + b
+# 	bwmenu --clear 8 --auto-lock 28800 -- -location 2
 
 super + x
 	betterlockscreen --lock dimblur --blur 8
@@ -25,7 +23,7 @@ super + Escape
 alt + p
 	screenshot -m region -t -c -o 'screenshot-xbackbone'
 alt + shift + p
-	screenshot -o 'screenshot-xbackbone'
+	screenshot -m region -c
 
 super + shift + c
 	toggleprogram picom --config "${HOME}/.config/picom.conf" -fcCGb --xrender-sync-fence

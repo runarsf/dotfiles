@@ -10,7 +10,8 @@
 
 #test -f ~/.xprofile && source ~/.xprofile
 
-DESKTOP="bspwm"
+# DESKTOP="bspwm"
+DESKTOP="xmonad" # $XDG_CACHE_HOME:-$HOME/.cache/xmonad/xmonad-x86_64-linux # to stop recompilation on every build
 
 userresources="${XDG_CONFIG_HOME:-${HOME}/.config}/.xres/Xresources"
 usermodmap="${XDG_CONFIG_HOME:-${HOME}/.config}/.xres/Xmodmap"
@@ -68,6 +69,15 @@ if test "${DESKTOP}" = "bspwm"; then
   dunst --config "${XDG_CONFIG_HOME:-${HOME}/.config}/dunst/dunstrc" &
   (~/.fehbg || (feh --bg-scale ~/.config/wall.jpg || nitrogen --restore)) &
   picom --config "${XDG_CONFIG_HOME:-${HOME}/.config}/picom/picom.conf" -fcCGb --xrender-sync-fence &
+fi
+if test "${DESKTOP}" = "xmonad"; then
+  trayer --edge top --align right --SetDockType true --SetPartialStrut true --expand true --width 10 --transparent true --tint 0x5f5f5f --height 18 &
+  xscreensaver -no-splash &
+  xfce4-power-manager &
+  (~/.fehbg || (feh --bg-scale ~/.config/wall.jpg || nitrogen --restore)) &
+  if test -x /usr/bin/nm-applet; then
+    nm-applet --sm-disable &
+  fi
 fi
 
 #xsetwacom --set "Wacom Intuos S Pen stylus" Suppress 2
