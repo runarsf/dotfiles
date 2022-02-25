@@ -170,6 +170,7 @@ let g:lf_replace_netrw = 0 " Open lf when vim opens a directory
 " }}}
 
 " Syntax highlighting {{{
+Plug 'rodjek/vim-puppet', { 'for': 'puppet' }
 Plug 'tpope/vim-liquid', { 'for': ['markdown', 'html'] }
 Plug 'LnL7/vim-nix', { 'for': 'nix' }
 Plug 'chr4/nginx.vim', { 'for': 'nginx' }
