@@ -71,7 +71,7 @@ if test "${DESKTOP}" = "bspwm"; then
   picom --config "${XDG_CONFIG_HOME:-${HOME}/.config}/picom/picom.conf" -fcCGb --xrender-sync-fence &
 fi
 if test "${DESKTOP}" = "xmonad"; then
-  trayer --edge top --align right --SetDockType true --SetPartialStrut true --expand true --width 5 --transparent true --tint 0x5f5f5f --height 18 --monitor "primary" &
+  trayer --edge top --align right --SetDockType true --SetPartialStrut true --expand true --width 5 --transparent false --tint 0x13141D --height 20 --monitor "primary" &
   xscreensaver -no-splash &
   xfce4-power-manager &
   (~/.fehbg || (feh --bg-scale ~/.config/wall.jpg || nitrogen --restore)) &

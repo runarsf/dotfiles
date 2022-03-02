@@ -1,7 +1,8 @@
 -- Imports {{{
 import XMonad
-import qualified XMonad.StackSet as W
 import XMonad.Actions.Promote
+import qualified XMonad.StackSet as W
+import qualified XMonad.Layout.WindowNavigation as WN
 
 -- Hooks {{{
 import XMonad.Hooks.DynamicLog
@@ -26,18 +27,19 @@ import XMonad.Layout.Spacing
 -- }}}
 -- }}}
 
-main :: IO ()
+main :: IO () -- {{{
 main = xmonad
      . ewmhFullscreen
      . ewmh
      . withEasySB (statusBarProp "xmobar ${XDG_CONFIG_HOME:-${HOME:-~}/.config}/xmobar/xmobarrc" (pure myXmobarPP)) defToggleStrutsKey
      $ myConfig
+-- }}}
 
-myConfig = def
+myConfig = def -- {{{
     { modMask            = mod4Mask      -- Rebind Mod to the Super key
-    , layoutHook         = spacingWithEdge 5 $ myLayout      -- Use custom layouts
+    , layoutHook         = myLayout      -- Use custom layouts
     , manageHook         = myManageHook  -- Match on certain windows
-    , terminal           = "alacritty"
+    , terminal           = "alacritty"   -- TODO Use ENV
     , focusFollowsMouse  = True
     , clickJustFocuses   = True
     , borderWidth        = 3
@@ -50,38 +52,43 @@ myConfig = def
     -- , startupHook        = 
     }
   `additionalKeysP` -- https://xmonad.github.io/xmonad-docs/xmonad-contrib/XMonad-Util-EZConfig.html
-    [ ("M-q"         , kill                                                                                           )
-    , ("M-S-r"       , spawn "xmonad --recompile && xmonad --restart"                                                 )
-    , ("M-<Return>"  , spawn "${TERMINAL:-alacritty}"                                                                 )
-    , ("M-S-<Return>", promote                                                                                        )
-    , ("M-d"         , spawn "rofi -show"                                                                             )
-    , ("M-S-d"       , spawn "dmenu_run"                                                                              )
-    , ("M-S-c"       , spawn "toggleprogram picom --config \"${HOME}/.config/picom.conf\" -fcCGb --xrender-sync-fence")
-    , ("M-x"         , spawn "betterlockscreen --lock dimblur --blur 8"                                               )
-    , ("M1-p"        , spawn "screenshot -m region -t -c -o 'screenshot-xbackbone'"                                   )
-    , ("M1-S-p"      , spawn "screenshot -m region -c"                                                                )
-    , ("M-<Space>"   , sendMessage NextLayout                                                                         )
-    , ("M-r"         , refresh                                                                                        )
-    , ("M-n"         , namedScratchpadAction myScratchPads "terminal"                                                 )
-    , ("M-<Tab>"     , windows W.focusDown                                                                            )
-    , ("M-j"         , windows W.focusDown                                                                            )
-    , ("M-<Down>"    , windows W.focusDown                                                                            )
-    , ("M-k"         , windows W.focusUp                                                                              )
-    , ("M-<Up>"      , windows W.focusUp                                                                              )
-    , ("M-m"         , windows W.focusMaster                                                                          )
-    , ("M-S-j"       , windows W.swapDown                                                                             )
-    , ("M-S-<Down>"  , windows W.swapDown                                                                             )
-    , ("M-S-k"       , windows W.swapUp                                                                               )
-    , ("M-S-<Up>"    , windows W.swapUp                                                                               )
-    , ("M-h"         , sendMessage Shrink                                                                             )
-    , ("M-l"         , sendMessage Expand                                                                             )
-    , ("M-,"         , sendMessage (IncMasterN 1)                                                                     )
-    , ("M-."         , sendMessage (IncMasterN (-1))                                                                  )
-    , ("M-b"         , sendMessage ToggleStruts                                                                       )
+    [ ("M-q"         , kill                                                             )
+    , ("M-S-r"       , spawn "xmonad --recompile && xmonad --restart"                   )
+    , ("M-<Return>"  , spawn "${TERMINAL:-alacritty}"                                   )
+    , ("M-S-<Return>", promote                                                          )
+    , ("M-d"         , spawn "rofi -show"                                               )
+    , ("M-S-d"       , spawn "dmenu_run"                                                )
+    , ("M-S-c"       , spawn "toggleprogram picom --config -fcCGb --xrender-sync-fence" )
+    , ("M-x"         , spawn "betterlockscreen --lock dimblur --blur 8"                 )
+    , ("M1-p"        , spawn "screenshot -m region -t -c -o 'screenshot-xbackbone'"     )
+    , ("M1-S-p"      , spawn "screenshot -m region -c"                                  )
+    , ("M-<Space>"   , sendMessage NextLayout                                           )
+    , ("M-r"         , refresh                                                          )
+    , ("M-n"         , namedScratchpadAction myScratchPads "terminal"                   )
+    , ("M-<Tab>"     , windows W.focusDown                                              )
+    , ("M-j"         , windows W.focusDown                                              )
+    , ("M-k"         , windows W.focusUp                                                )
+    , ("M-m"         , windows W.focusMaster                                            )
+    , ("M-S-j"       , windows W.swapDown                                               )
+    , ("M-S-k"       , windows W.swapUp                                                 )
+    , ("M-h"         , sendMessage Shrink                                               )
+    , ("M-l"         , sendMessage Expand                                               )
+    , ("M-,"         , sendMessage (IncMasterN 1)                                       )
+    , ("M-."         , sendMessage (IncMasterN (-1))                                    )
+    , ("M-b"         , sendMessage ToggleStruts                                         )
+    , ("M-<Right>"   , sendMessage $ WN.Go R                                            )
+    , ("M-<Left>"    , sendMessage $ WN.Go L                                            )
+    , ("M-<Up>"      , sendMessage $ WN.Go U                                            )
+    , ("M-<Down>"    , sendMessage $ WN.Go D                                            )
+    , ("M-S-<Right>" , sendMessage $ WN.Swap R                                          )
+    , ("M-S-<Left>"  , sendMessage $ WN.Swap L                                          )
+    , ("M-S-<Up>"    , sendMessage $ WN.Swap U                                          )
+    , ("M-S-<Down>"  , sendMessage $ WN.Swap D                                          )
     ]
+-- }}}
 
-myScratchPads :: [NamedScratchpad]
-myScratchPads = [ NS "terminal" spawnTerm findTerm manageTerm]
+myScratchPads :: [NamedScratchpad] -- {{{
+myScratchPads = [NS "terminal" spawnTerm findTerm manageTerm]
   where
     spawnTerm  = "alacritty" ++ " --class scratchpad --title scratchpad --option font.size=14 --command tmux new-session -A -s scratchpad"
     findTerm   = title =? "scratchpad"
@@ -91,22 +98,31 @@ myScratchPads = [ NS "terminal" spawnTerm findTerm manageTerm]
         w = 0.9
         t = 0.95 -h
         l = 0.95 -w
+-- }}}
 
-myManageHook :: ManageHook
+myManageHook :: ManageHook -- {{{
 myManageHook = composeAll
     [ className =? "Gimp" --> doFloat
     , isDialog            --> doFloat
     ]
+-- }}}
 
-myLayout = tiled ||| Mirror tiled ||| Full ||| threeCol
+myLayout -- {{{
+  = spacingWithEdge 5
+  $ WN.windowNavigation
+  $ tiled
+  ||| Mirror tiled
+  ||| Full
+  ||| threeCol
   where
-    threeCol = magnifiercz' 1.5 $ ThreeColMid nmaster delta ratio
+    threeCol = magnifiercz' 1.35 $ ThreeColMid nmaster delta ratio
     tiled    = Tall nmaster delta ratio
     nmaster  = 1      -- Default number of windows in the master pane
     ratio    = 1/2    -- Default proportion of screen occupied by master pane
     delta    = 3/100  -- Percent of screen to increment by when resizing panes
+-- }}}
 
-myXmobarPP :: PP
+myXmobarPP :: PP -- {{{
 myXmobarPP = def
     { ppSep             = magenta " • "
     , ppTitleSanitize   = xmobarStrip
@@ -133,3 +149,4 @@ myXmobarPP = def
     yellow   = xmobarColor "#f1fa8c" ""
     red      = xmobarColor "#ff5555" ""
     lowWhite = xmobarColor "#bbbbbb" ""
+-- }}}
