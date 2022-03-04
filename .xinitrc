@@ -13,8 +13,8 @@
 # DESKTOP="bspwm"
 DESKTOP="xmonad" # $XDG_CACHE_HOME:-$HOME/.cache/xmonad/xmonad-x86_64-linux # to stop recompilation on every build
 
-userresources="${XDG_CONFIG_HOME:-${HOME}/.config}/.xres/Xresources"
-usermodmap="${XDG_CONFIG_HOME:-${HOME}/.config}/.xres/Xmodmap"
+userresources="${XDG_CONFIG_HOME:-${HOME:-~}/.config}/.xres/Xresources"
+usermodmap="${XDG_CONFIG_HOME:-${HOME:-~}/.config}/.xres/Xmodmap"
 sysresources="/etc/X11/xinit/.Xresources"
 sysmodmap="/etc/X11/xinit/.Xmodmap"
 
@@ -43,8 +43,8 @@ if test -d /etc/X11/xinit/xinitrc.d; then
 fi
 
 # TODO: Move fonts to first fontpath
-xset +fp "${HOME}/.local/share/fonts/"
-xset +fp "${HOME}/.fonts/"
+xset +fp "${HOME:-~}/.local/share/fonts/"
+xset +fp "${HOME:-~}/.fonts/"
 xset fp rehash
 
 # Increase key repeat rate
@@ -66,14 +66,15 @@ if test "${DESKTOP}" = "bspwm"; then
   nm-applet &
   xfce4-power-manager &
   pulseaudio --start &
-  dunst --config "${XDG_CONFIG_HOME:-${HOME}/.config}/dunst/dunstrc" &
+  dunst --config "${XDG_CONFIG_HOME:-${HOME:-~}/.config}/dunst/dunstrc" &
   (~/.fehbg || (feh --bg-scale ~/.config/wall.jpg || nitrogen --restore)) &
-  picom --config "${XDG_CONFIG_HOME:-${HOME}/.config}/picom/picom.conf" -fcCGb --xrender-sync-fence &
+  picom --config "${XDG_CONFIG_HOME:-${HOME:-~}/.config}/picom/picom.conf" -fcCGb --xrender-sync-fence &
 fi
 if test "${DESKTOP}" = "xmonad"; then
   trayer --edge top --align right --SetDockType true --SetPartialStrut true --expand true --width 5 --transparent false --tint 0x13141D --height 20 --monitor "primary" &
   xscreensaver -no-splash &
   xfce4-power-manager &
+  dunst --config "${XDG_CONFIG_HOME:-${HOME:-~}/.config}/dunst/dunstrc" &
   (~/.fehbg || (feh --bg-scale ~/.config/wall.jpg || nitrogen --restore)) &
   if test -x /usr/bin/nm-applet; then
     nm-applet --sm-disable &

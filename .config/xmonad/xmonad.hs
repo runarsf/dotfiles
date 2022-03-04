@@ -1,8 +1,11 @@
 -- Imports {{{
 import XMonad
-import XMonad.Actions.Promote
 import qualified XMonad.StackSet as W
-import qualified XMonad.Layout.WindowNavigation as WN
+
+-- Actions {{{
+import XMonad.Actions.Promote
+-- import XMonad.Actions.MouseResize
+--- }}}
 
 -- Hooks {{{
 import XMonad.Hooks.DynamicLog
@@ -21,9 +24,17 @@ import XMonad.Util.NamedScratchpad
 -- }}}
 
 -- Layout {{{
+import qualified XMonad.Layout.WindowNavigation as WN
 import XMonad.Layout.Magnifier
 import XMonad.Layout.ThreeColumns
 import XMonad.Layout.Spacing
+import XMonad.Layout.BinarySpacePartition
+import XMonad.Layout.MultiToggle
+import XMonad.Layout.MultiToggle.Instances
+import XMonad.Layout.Reflect
+import XMonad.Layout.Fullscreen
+-- import XMonad.Layout.WindowArranger
+-- import XMonad.Layout.BorderResize
 -- }}}
 -- }}}
 
@@ -37,9 +48,9 @@ main = xmonad
 
 myConfig = def -- {{{
     { modMask            = mod4Mask      -- Rebind Mod to the Super key
-    , layoutHook         = myLayout      -- Use custom layouts
+    , layoutHook         = myLayoutHook  -- Use custom layouts
     , manageHook         = myManageHook  -- Match on certain windows
-    , terminal           = "alacritty"   -- TODO Use ENV
+    , terminal           = "${TERMINAL:-alacritty}"   -- TODO Use ENV
     , focusFollowsMouse  = True
     , clickJustFocuses   = True
     , borderWidth        = 3
@@ -90,7 +101,7 @@ myConfig = def -- {{{
 myScratchPads :: [NamedScratchpad] -- {{{
 myScratchPads = [NS "terminal" spawnTerm findTerm manageTerm]
   where
-    spawnTerm  = "alacritty" ++ " --class scratchpad --title scratchpad --option font.size=14 --command tmux new-session -A -s scratchpad"
+    spawnTerm  = "${TERMINAL:-alacritty}" ++ " --class scratchpad --title scratchpad --option font.size=14 --command tmux new-session -A -s scratchpad"
     findTerm   = title =? "scratchpad"
     manageTerm = customFloating $ W.RationalRect l t w h
       where
@@ -107,14 +118,17 @@ myManageHook = composeAll
     ]
 -- }}}
 
-myLayout -- {{{
-  = spacingWithEdge 5
-  $ WN.windowNavigation
-  $ tiled
-  ||| Mirror tiled
-  ||| Full
+myLayoutHook -- {{{
+  = spacing
+  . avoidStruts
+  . WN.windowNavigation
+  . mkToggle (NOBORDERS ?? FULL ?? EOT)
+  $ reflectHoriz (reflectVert emptyBSP)
+  ||| tiled
   ||| threeCol
+  ||| Full
   where
+    spacing  = spacingRaw True (Border 0 10 10 10) True (Border 5 5 5 5) True -- spacingWithEdge 5
     threeCol = magnifiercz' 1.35 $ ThreeColMid nmaster delta ratio
     tiled    = Tall nmaster delta ratio
     nmaster  = 1      -- Default number of windows in the master pane
