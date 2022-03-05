@@ -1,6 +1,12 @@
 -- Imports {{{
 import XMonad
+import System.Exit
+import Graphics.X11.ExtraTypes.XF86
 import qualified XMonad.StackSet as W
+
+-- Data {{{
+import qualified Data.Map as M
+-- }}}
 
 -- Actions {{{
 import XMonad.Actions.Promote
@@ -25,7 +31,7 @@ import XMonad.Util.NamedScratchpad
 
 -- Layout {{{
 import qualified XMonad.Layout.WindowNavigation as WN
-import XMonad.Layout.Magnifier
+import qualified XMonad.Layout.Magnifier as Magn
 import XMonad.Layout.ThreeColumns
 import XMonad.Layout.Spacing
 import XMonad.Layout.BinarySpacePartition
@@ -57,49 +63,71 @@ myConfig = def -- {{{
     , workspaces         = ["1","2","3","4","5","6","7","8","9", "10"]
     , normalBorderColor  = "#383a4a"
     , focusedBorderColor = "#306998"
-    -- , keys               = 
+    , keys               = myKeys
     -- , mouseBindings      = 
     -- , handleEventHook    = 
     -- , startupHook        = 
     }
-  `additionalKeysP` -- https://xmonad.github.io/xmonad-docs/xmonad-contrib/XMonad-Util-EZConfig.html
-    [ ("M-q"         , kill                                                             )
-    , ("M-S-r"       , spawn "xmonad --recompile && xmonad --restart"                   )
-    , ("M-<Return>"  , spawn "${TERMINAL:-alacritty}"                                   )
-    , ("M-S-<Return>", promote                                                          )
-    , ("M-d"         , spawn "rofi -show"                                               )
-    , ("M-S-d"       , spawn "dmenu_run"                                                )
-    , ("M-S-c"       , spawn "toggleprogram picom --config -fcCGb --xrender-sync-fence" )
-    , ("M-x"         , spawn "betterlockscreen --lock dimblur --blur 8"                 )
-    , ("M1-p"        , spawn "screenshot -m region -t -c -o 'screenshot-xbackbone'"     )
-    , ("M1-S-p"      , spawn "screenshot -m region -c"                                  )
-    , ("M-<Space>"   , sendMessage NextLayout                                           )
-    , ("M-r"         , refresh                                                          )
-    , ("M-n"         , namedScratchpadAction myScratchPads "terminal"                   )
-    , ("M-<Tab>"     , windows W.focusDown                                              )
-    , ("M-j"         , windows W.focusDown                                              )
-    , ("M-k"         , windows W.focusUp                                                )
-    , ("M-m"         , windows W.focusMaster                                            )
-    , ("M-S-j"       , windows W.swapDown                                               )
-    , ("M-S-k"       , windows W.swapUp                                                 )
-    , ("M-h"         , sendMessage Shrink                                               )
-    , ("M-l"         , sendMessage Expand                                               )
-    , ("M-,"         , sendMessage (IncMasterN 1)                                       )
-    , ("M-."         , sendMessage (IncMasterN (-1))                                    )
-    , ("M-b"         , sendMessage ToggleStruts                                         )
-    , ("M-<Right>"   , sendMessage $ WN.Go R                                            )
-    , ("M-<Left>"    , sendMessage $ WN.Go L                                            )
-    , ("M-<Up>"      , sendMessage $ WN.Go U                                            )
-    , ("M-<Down>"    , sendMessage $ WN.Go D                                            )
-    , ("M-S-<Right>" , sendMessage $ WN.Swap R                                          )
-    , ("M-S-<Left>"  , sendMessage $ WN.Swap L                                          )
-    , ("M-S-<Up>"    , sendMessage $ WN.Swap U                                          )
-    , ("M-S-<Down>"  , sendMessage $ WN.Swap D                                          )
-    ]
 -- }}}
 
-myScratchPads :: [NamedScratchpad] -- {{{
-myScratchPads = [NS "terminal" spawnTerm findTerm manageTerm]
+myKeys conf@XConfig {XMonad.modMask = modm} = M.fromList $ -- {{{
+  [ ((modm                  , xK_Return              ), spawn $ XMonad.terminal conf)
+  , ((modm                  , xK_n                   ), namedScratchpadAction myScratchpads "terminal")
+  , ((modm     .|. shiftMask, xK_r                   ), spawn "xmonad --recompile && xmonad --restart")
+  , ((modm     .|. shiftMask, xK_Return              ), promote)
+  , ((modm                  , xK_q                   ), kill)
+  , ((modm                  , xK_d                   ), spawn "rofi -show")
+  , ((modm     .|. shiftMask, xK_d                   ), spawn "dmenu_run")
+  , ((modm     .|. shiftMask, xK_c                   ), spawn "toggleprogram picom -fcCGb --xrender-sync-fence")
+  , ((modm                  , xK_x                   ), spawn "betterlockscreen --lock dimblur --blur 8")
+  , ((mod1Mask              , xK_p                   ), spawn "screenshot -m region -t -c -o 'screenshot-xbackbone'")
+  , ((mod1Mask .|. shiftMask, xK_p                   ), spawn "screenshot -m region -c")
+  , ((modm     .|. shiftMask, xK_space               ), setLayout $ XMonad.layoutHook conf)
+  , ((modm                  , xK_space               ), sendMessage NextLayout)
+  , ((modm                  , xK_f                   ), sequence_ [sendMessage $ Toggle FULL, sendMessage ToggleStruts])
+  , ((modm                  , xK_b                   ), sendMessage ToggleStruts)
+  , ((modm                  , xK_j                   ), windows W.focusDown)
+  , ((modm                  , xK_k                   ), windows W.focusUp)
+  , ((modm                  , xK_m                   ), windows W.focusMaster)
+  , ((modm     .|. shiftMask, xK_j                   ), windows W.swapDown)
+  , ((modm     .|. shiftMask, xK_k                   ), windows W.swapUp)
+  , ((modm                  , xK_h                   ), sendMessage Shrink)
+  , ((modm                  , xK_l                   ), sendMessage Expand)
+  , ((modm                  , xK_comma               ), sendMessage (IncMasterN 1))
+  , ((modm                  , xK_period              ), sendMessage (IncMasterN (-1)))
+  , ((modm                  , xK_b                   ), sendMessage ToggleStruts)
+  , ((modm                  , xK_Right               ), sendMessage $ WN.Go R)
+  , ((modm                  , xK_Left                ), sendMessage $ WN.Go L)
+  , ((modm                  , xK_Up                  ), sendMessage $ WN.Go U)
+  , ((modm                  , xK_Down                ), sendMessage $ WN.Go D)
+  , ((modm     .|. shiftMask, xK_Right               ), sendMessage $ WN.Swap R)
+  , ((modm     .|. shiftMask, xK_Left                ), sendMessage $ WN.Swap L)
+  , ((modm     .|. shiftMask, xK_Up                  ), sendMessage $ WN.Swap U)
+  , ((modm     .|. shiftMask, xK_Down                ), sendMessage $ WN.Swap D)
+  , ((modm     .|. shiftMask .|. mod1Mask, xK_q      ), io (exitWith ExitSuccess))
+  , ((0                     , xF86XK_AudioPlay       ), spawn "playerctl play-pause")
+  , ((0                     , xF86XK_AudioPause      ), spawn "playerctl play-pause")
+  , ((0                     , xF86XK_AudioNext       ), spawn "playerctl next")
+  , ((0                     , xF86XK_AudioPrev       ), spawn "playerctl previous")
+  , ((0                     , xF86XK_AudioLowerVolume), spawn "pactl set-sink-volume 2 -5%")
+  , ((0                     , xF86XK_AudioRaiseVolume), spawn "pactl set-sink-volume 2 +5%")
+  ] ++
+  -- mod-[1..9], Switch to workspace N
+  -- mod-shift-[1..9], Move client to workspace N
+  [ ((m        .|. modm     , k                      ), windows $ f i)
+    | (i, k) <- zip (XMonad.workspaces conf) ([xK_1 .. xK_9] ++ [xK_0])
+    , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]
+  ]
+  -- mod-{w,e,r}, Switch to physical/Xinerama screens 1, 2, or 3
+  -- mod-shift-{w,e,r}, Move client to screen 1, 2, or 3
+  -- [ ((m        .|. modm     , key                    ), screenWorkspace sc >>= flip whenJust (windows . f))
+  --   | (key, sc) <- zip [xK_w, xK_e, xK_r] [0..]
+  --   , (f, m)    <- [(W.view, 0), (W.shift, shiftMask)]
+  -- ]
+-- }}}
+
+myScratchpads :: [NamedScratchpad] -- {{{
+myScratchpads = [NS "terminal" spawnTerm findTerm manageTerm]
   where
     spawnTerm  = "${TERMINAL:-alacritty}" ++ " --class scratchpad --title scratchpad --option font.size=14 --command tmux new-session -A -s scratchpad"
     findTerm   = title =? "scratchpad"
@@ -113,9 +141,18 @@ myScratchPads = [NS "terminal" spawnTerm findTerm manageTerm]
 
 myManageHook :: ManageHook -- {{{
 myManageHook = composeAll
-    [ className =? "Gimp" --> doFloat
-    , isDialog            --> doFloat
-    ]
+    [ className =? "Gimp"           --> doFloat
+    , className =? "Sxiv"           --> doFloat
+    , className =? "Pavucontrol"    --> doCenterFloat
+    , title     =? "scratchpad"     --> doCenterFloat
+    , className =? "discord"        --> doShift "2" -- TODO Use second item in workspaces
+    , className =? "Steam"          --> doShift "5"
+    , className =? "Remmina"        --> doShift "5"
+    , className =? "Spotify"        --> doShift "8"
+    , resource  =? "desktop_window" --> doIgnore
+    , (className =? "firefox" <&&> resource =? "Dialog") --> doFloat
+    , isDialog                      --> doFloat
+    ] <+> namedScratchpadManageHook myScratchpads
 -- }}}
 
 myLayoutHook -- {{{
@@ -129,7 +166,7 @@ myLayoutHook -- {{{
   ||| Full
   where
     spacing  = spacingRaw True (Border 0 10 10 10) True (Border 5 5 5 5) True -- spacingWithEdge 5
-    threeCol = magnifiercz' 1.35 $ ThreeColMid nmaster delta ratio
+    threeCol = Magn.magnifiercz' 1.35 $ ThreeColMid nmaster delta ratio
     tiled    = Tall nmaster delta ratio
     nmaster  = 1      -- Default number of windows in the master pane
     ratio    = 1/2    -- Default proportion of screen occupied by master pane
