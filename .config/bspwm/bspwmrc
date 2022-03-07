@@ -91,11 +91,12 @@ bspc rule -a '*:math'                        state=floating sticky=on
 #  fi
 #}
 
-"${XDG_CONFIG_HOME:-${HOME}/.config}/polybar/launch.sh" main &
-"${XDG_CONFIG_HOME:-${HOME}/.config}/bspwm/scripts/monitors.py" &
+# Programs that should be executed once generally belong in ~/.xinitrc
+"${XDG_CONFIG_HOME:-${HOME:-~}/.config}/polybar/launch.sh" main &
+"${XDG_CONFIG_HOME:-${HOME:-~}/.config}/bspwm/scripts/monitors.py" &
 #"${XDG_CONFIG_HOME:-${HOME}/.config}/bspwm/scripts/cleanfullscreen" &
 #"${XDG_CONFIG_HOME:-${HOME}/.config}/bspwm/scripts/single_node_border" &
-(~/.fehbg || (feh --bg-scale ~/.config/wall.jpg || nitrogen --restore)) &
-killall -q sxhkd; sxhkd -m 1 -c ${XDG_CONFIG_HOME:-${HOME}/.config}/sxhkd/sxhkdrc ${XDG_CONFIG_HOME:-${HOME}/.config}/bspwm/sxhkdrc &
-#killall -q 2bspwm; 2bspwm &
+(~/.fehbg || (feh --bg-scale "${XDG_CONFIG_HOME:-${HOME:-~}/.config}/wall.jpg" || nitrogen --restore)) &
+killall -q sxhkd; sxhkd -m 1 -c "${XDG_CONFIG_HOME:-${HOME:-~}/.config}/sxhkd/sxhkdrc" "${XDG_CONFIG_HOME:-${HOME:-~}/.config}/bspwm/sxhkdrc" &
+# killall -q 2bspwm; "${XDG_CONFIG_HOME:-${HOME:-~}/.config}/bspwm/scripts/2bspwm" &
 # }}}

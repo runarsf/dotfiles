@@ -4,6 +4,7 @@ amount="${2:-70}"
 floating="$(bspc query --tree --node focused | grep '"state":"floating"')"
 
 # TODO: When moving a node from left monitor to right, don't move it to the last position on the monitor, but rather the first.
+# TODO: Should call --to-monitor {west,south,north,east}
 
 move_node () {
   motion="${1}"

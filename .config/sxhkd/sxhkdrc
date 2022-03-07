@@ -1,10 +1,5 @@
-# vim: set foldmethod=marker foldlevel=0 nomodeline:
-# description: Launch terminal.
 super + Return
 	"${TERMINAL}"
-
-# super + alt + b
-# 	bwmenu --clear 8 --auto-lock 28800 -- -location 2
 
 super + x
 	betterlockscreen --lock dimblur --blur 8
@@ -17,9 +12,10 @@ super + d
 super + Tab
 	rofi -show window -modi window
 
-super + Escape
-	pkill -USR1 -x sxhkd
+super + shift + Escape
+	notify-send "sxhkd" "restarting..."; pkill -USR1 -x sxhkd
 
+# https://github.com/runarsf/screenshot
 alt + p
 	screenshot -m region -t -c -o 'screenshot-xbackbone'
 alt + shift + p
@@ -28,21 +24,12 @@ alt + shift + p
 super + shift + c
 	toggleprogram picom --config "${HOME}/.config/picom.conf" -fcCGb --xrender-sync-fence
 
-super + shift + p
-	curl "https://push.runarsf.dev/message?token=$(cat ~/.config/.gotifytoken)" -F "title=$(echo '' | rofi -lines 0 -dmenu -p 'Title')" -F "message=$(echo '' | rofi -lines 0 -dmenu -p 'Message')" -F "priority=$(echo '0\n1\n2\n3\n4\n5' | rofi -lines 6 -dmenu -p 'Priority')"
-
 XF86Audio{LowerVolume,RaiseVolume}
 	pactl set-sink-volume 2 {-,+}5%
-
 XF86AudioMute
 	amixer -q -D pulse sset Master toggle
-
 XF86Audio{Next,Prev,Play,Stop}
 	playerctl {next,previous,play-pause,stop}
 
-#super + shift + v
-#	whim --editor "$EDITOR +startinsert" --terminal "$TERMINAL --class scratchpad -e"
-
-super + o ; {v,w}
-	{"${TERMINAL}" -e "${EDITOR}", \
-	 "${BROWSER}"}
+# super + alt + b
+# 	bwmenu --clear 8 --auto-lock 28800 -- -location 2

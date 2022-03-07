@@ -3,6 +3,7 @@
 # Adds `~/bin` to $PATH
 #export PATH="${PATH}:$(du "${HOME}/bin/" | cut -f2 | tr '\n' ':' | sed 's/:*$//')"
 export PATH="${PATH}:${HOME}/.local/bin"
+export PATH="${PATH}:${XDG_CONFIG_HOME:-${HOME}/.config}/bspwm/scripts"
 export PATH="${PATH}:${HOME}/go/bin"
 export PATH="${PATH}:${HOME}/.gem/ruby/*/bin"
 export PATH="${PATH}:/snap/bin"
@@ -22,7 +23,7 @@ export PYTHONDONTWRITEBYTECODE=1
 export ZDOTDIR="${XDG_CONFIG_HOME:-${HOME}/.config}/zsh"
 export FZF_DEFAULT_OPTS="--layout=reverse --height 40%"
 
-export BYOBU_CONFIG_DIR=${XDG_CONFIG_HOME:-${HOME}}/.config/byobu
+export BYOBU_CONFIG_DIR="${XDG_CONFIG_HOME:-${HOME}/.config}/byobu"
 export CALIBRE_USE_DARK_PALETTE=1
 export QT_QPA_PLATFORMTHEME="qt5ct"
 export QT_AUTO_SCREEN_SCALE_FACTOR=0

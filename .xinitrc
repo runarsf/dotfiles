@@ -10,8 +10,8 @@
 
 #test -f ~/.xprofile && source ~/.xprofile
 
-# DESKTOP="bspwm"
-DESKTOP="xmonad" # $XDG_CACHE_HOME:-$HOME/.cache/xmonad/xmonad-x86_64-linux # to stop recompilation on every build
+DESKTOP="bspwm"
+# DESKTOP="xmonad" # $XDG_CACHE_HOME:-$HOME/.cache/xmonad/xmonad-x86_64-linux # to stop recompilation on every build
 
 userresources="${XDG_CONFIG_HOME:-${HOME:-~}/.config}/.xres/Xresources"
 usermodmap="${XDG_CONFIG_HOME:-${HOME:-~}/.config}/.xres/Xmodmap"
@@ -61,24 +61,19 @@ setxkbmap -option caps:escape -v no &
 xsetroot -cursor_name left_ptr &
 
 # Start common apps
-if test "${DESKTOP}" = "bspwm"; then
-  autorandr --change &
-  nm-applet &
-  xfce4-power-manager &
-  pulseaudio --start &
-  dunst --config "${XDG_CONFIG_HOME:-${HOME:-~}/.config}/dunst/dunstrc" &
-  (~/.fehbg || (feh --bg-scale ~/.config/wall.jpg || nitrogen --restore)) &
-  picom --config "${XDG_CONFIG_HOME:-${HOME:-~}/.config}/picom/picom.conf" -fcCGb --xrender-sync-fence &
+autorandr --change &
+dunst --config "${XDG_CONFIG_HOME:-${HOME:-~}/.config}/dunst/dunstrc" &
+xscreensaver -no-splash &
+xfce4-power-manager &
+pulseaudio --start &
+(~/.fehbg || (feh --bg-scale ~/.config/wall.jpg || nitrogen --restore)) &
+if test -x /usr/bin/nm-applet; then
+  nm-applet --sm-disable &
 fi
+# picom --config "${XDG_CONFIG_HOME:-${HOME:-~}/.config}/picom/picom.conf" -fcCGb --xrender-sync-fence &
+
 if test "${DESKTOP}" = "xmonad"; then
   trayer --edge top --align right --SetDockType true --SetPartialStrut true --expand true --width 5 --transparent false --tint 0x13141D --height 20 --monitor "primary" &
-  xscreensaver -no-splash &
-  xfce4-power-manager &
-  dunst --config "${XDG_CONFIG_HOME:-${HOME:-~}/.config}/dunst/dunstrc" &
-  (~/.fehbg || (feh --bg-scale ~/.config/wall.jpg || nitrogen --restore)) &
-  if test -x /usr/bin/nm-applet; then
-    nm-applet --sm-disable &
-  fi
 fi
 
 #xsetwacom --set "Wacom Intuos S Pen stylus" Suppress 2

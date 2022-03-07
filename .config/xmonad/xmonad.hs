@@ -41,6 +41,10 @@ import XMonad.Layout.Reflect
 import XMonad.Layout.Fullscreen
 -- import XMonad.Layout.WindowArranger
 -- import XMonad.Layout.BorderResize
+import XMonad.Layout.ResizableTile -- for resizeable tall layout
+import XMonad.Layout.MouseResizableTile -- for mouse control
+import XMonad.Layout.Grid          -- for additional grid layout
+import XMonad.Layout.NoBorders     -- for fullscreen without borders
 -- }}}
 -- }}}
 
@@ -96,6 +100,7 @@ myKeys conf@XConfig {XMonad.modMask = modm} = M.fromList $ -- {{{
   , ((modm                  , xK_comma               ), sendMessage (IncMasterN 1))
   , ((modm                  , xK_period              ), sendMessage (IncMasterN (-1)))
   , ((modm                  , xK_b                   ), sendMessage ToggleStruts)
+  , ((modm                  , xK_t                   ), withFocused $ windows . W.sink)
   , ((modm                  , xK_Right               ), sendMessage $ WN.Go R)
   , ((modm                  , xK_Left                ), sendMessage $ WN.Go L)
   , ((modm                  , xK_Up                  ), sendMessage $ WN.Go U)
@@ -156,7 +161,8 @@ myManageHook = composeAll
 -- }}}
 
 myLayoutHook -- {{{
-  = spacing
+  = smartBorders
+  . spacing
   . avoidStruts
   . WN.windowNavigation
   . mkToggle (NOBORDERS ?? FULL ?? EOT)
@@ -165,12 +171,13 @@ myLayoutHook -- {{{
   ||| threeCol
   ||| Full
   where
-    spacing  = spacingRaw True (Border 0 10 10 10) True (Border 5 5 5 5) True -- spacingWithEdge 5
-    threeCol = Magn.magnifiercz' 1.35 $ ThreeColMid nmaster delta ratio
-    tiled    = Tall nmaster delta ratio
-    nmaster  = 1      -- Default number of windows in the master pane
-    ratio    = 1/2    -- Default proportion of screen occupied by master pane
-    delta    = 3/100  -- Percent of screen to increment by when resizing panes
+    spacing   = spacingRaw True (Border 0 10 10 10) True (Border 5 5 5 5) True -- spacingWithEdge 5
+    threeCol  = Magn.magnifiercz' magnifier $ ThreeColMid nmaster delta ratio
+    magnifier = 1.35   -- Amount to zoom the windows by
+    tiled     = Tall nmaster delta ratio
+    nmaster   = 1      -- Default number of windows in the master pane
+    ratio     = 1/2    -- Default proportion of screen occupied by master pane
+    delta     = 3/100  -- Percent of screen to increment by when resizing panes
 -- }}}
 
 myXmobarPP :: PP -- {{{
