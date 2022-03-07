@@ -2,6 +2,10 @@
 import os
 import subprocess
 
+# TODO General cleanup
+# TODO Max amount of wses per monitor?
+# TODO Floating wses (don't assign to monitor)
+
 # List the IDs (or names) of the matching monitors
 # -> CompletedProcess(args=['bspc', 'query', '-M'], returncode=0, stdout=b'0x0040000E\n0x00400010\n0x00400012\n')
 monitors_output = subprocess.run(['bspc', 'query', '--monitors', '--names'], stdout=subprocess.PIPE)
