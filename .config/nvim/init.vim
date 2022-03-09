@@ -181,8 +181,8 @@ Plug 'linkinpark342/xonsh-vim'
 Plug 'neoclide/jsonc.vim', { 'for': ['json', 'jsonc'] } " json comment support
 " }}}
 
-Plug 'rakr/vim-one' | let g:one_allow_italics = 0
-Plug 'projekt0n/github-nvim-theme'
+" Plug 'rakr/vim-one' | let g:one_allow_italics = 0
+Plug 'projekt0n/github-nvim-theme' " {{{
 " lua << EOF
 " require('github-theme').setup({
 "   theme_style = "dark",
@@ -200,18 +200,19 @@ Plug 'projekt0n/github-nvim-theme'
 "   end
 " })
 " EOF
+" }}}
 Plug 'joshdick/onedark.vim' " {{{
 let g:onedark_color_overrides = {
 \ "background": {"gui": "#0D1117", "cterm": "234", "cterm16": "0" },
 \}
 " }}}
-Plug 'gruvbox-community/gruvbox' " {{{
-if !exists('g:gruvbox_contrast_light')
-  let g:gruvbox_contrast_light='hard'
-endif
+" Plug 'gruvbox-community/gruvbox' " {{{
+" if !exists('g:gruvbox_contrast_light')
+"   let g:gruvbox_contrast_light='hard'
+" endif
 " }}}
 
-let g:colorscheme = 'github_dark_default'
+let g:colorscheme = 'onedark'
 call plug#end() | endif " }}}
 
 " :lua print(vim.inspect(require("todo-comments.config")))
@@ -266,6 +267,7 @@ function! CustomHighlights() abort
       highlight ColorColumn cterm=NONE ctermfg=NONE ctermbg=228 guibg=#f2e5bc
     endif
   endif
+  highlight Folded          guibg=#1E2030
   highlight IndentGuidesOdd ctermbg=NONE guibg=NONE
   highlight Normal          ctermbg=NONE guibg=NONE
   highlight LineNr          ctermbg=NONE guibg=NONE
