@@ -63,7 +63,7 @@ xsetroot -cursor_name left_ptr &
 # Start common apps
 autorandr --change &
 dunst --config "${XDG_CONFIG_HOME:-${HOME:-~}/.config}/dunst/dunstrc" &
-xscreensaver -no-splash &
+# xscreensaver -no-splash &
 xfce4-power-manager &
 pulseaudio --start &
 (~/.fehbg || (feh --bg-scale ~/.config/wall.jpg || nitrogen --restore)) &
