@@ -5,7 +5,7 @@ shift
 cmd="${@}"
 
 if command -v "rofi" >/dev/null 2>&1; then
-  test "$(printf 'No\nYes' | rofi -lines 2 -dmenu -p "${msg}")" = "Yes" && command ${cmd}
+  test "$(printf 'No\nYes' | rofi -theme-str "configuration { fixed-num-lines: true; } listview { columns: 1; lines: 2; }" -dmenu -p "${msg}")" = "Yes" && command ${cmd}
 elif command -v "dmenu" >/dev/null 2>&1; then
   test "$(printf 'No\nYes' | dmenu -i -p "${msg}")" = "Yes" && command ${cmd}
 else
