@@ -38,7 +38,7 @@ super + ctrl + {Left,Down,Up,Right}
 # 	did="$(bspc query -D -n focused --names)"; layout="$(bsp-layout get ${did})"; test "${layout}" = "-" -o "${layout}" = "tile" && bsp-layout set tall "${did}" --master-size 0.70 || {bsp-layout remove "${did}"; bsp-layout once tile}
 
 super + shift + b
-	toggleprogram "2bspwm"
+	toggleprogram "bspwm_double_borders"
 
 # super {_,shift + }Tab
 # 	bspc node --focus {next,prev}.local
