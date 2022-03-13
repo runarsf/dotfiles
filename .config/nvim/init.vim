@@ -158,12 +158,11 @@ endif
 endfunction
 endif
 " }}}
-"Plug 'eslint/eslint'
-if (has('nvim-0.5.0'))
-Plug 'nvim-telescope/telescope.nvim'
-Plug 'nvim-lua/plenary.nvim' | Plug 'folke/todo-comments.nvim'
-Plug 'kyazdani42/nvim-web-devicons' | Plug 'folke/trouble.nvim'
-endif
+if (has('nvim-0.5.0')) " {{{
+  Plug 'nvim-telescope/telescope.nvim'
+  Plug 'nvim-lua/plenary.nvim' | Plug 'folke/todo-comments.nvim'
+  Plug 'kyazdani42/nvim-web-devicons' | Plug 'folke/trouble.nvim'
+endif " }}}
 Plug 'voldikss/vim-floaterm' | Plug 'ptzz/lf.vim' " {{{
 let g:lf_replace_netrw = 0 " Open lf when vim opens a directory
 "let g:lf_command_override = 'lf -command "set hidden"'
@@ -181,8 +180,14 @@ Plug 'linkinpark342/xonsh-vim'
 Plug 'neoclide/jsonc.vim', { 'for': ['json', 'jsonc'] } " json comment support
 " }}}
 
+" Themes {{{
+let g:colorscheme = 'onedark'
+
+" Plug 'ayu-theme/ayu-vim' " {{{
+" let ayucolor="dark" " light / mirage / dark
+" }}}
 " Plug 'rakr/vim-one' | let g:one_allow_italics = 0
-Plug 'projekt0n/github-nvim-theme' " {{{
+" Plug 'projekt0n/github-nvim-theme' " {{{
 " lua << EOF
 " require('github-theme').setup({
 "   theme_style = "dark",
@@ -211,8 +216,8 @@ let g:onedark_color_overrides = {
 "   let g:gruvbox_contrast_light='hard'
 " endif
 " }}}
+" }}}
 
-let g:colorscheme = 'onedark'
 call plug#end() | endif " }}}
 
 " :lua print(vim.inspect(require("todo-comments.config")))
