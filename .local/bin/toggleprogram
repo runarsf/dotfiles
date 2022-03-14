@@ -1,8 +1,12 @@
 #!/usr/bin/env bash
 
-if test -z "$(pgrep ${1})"; then
-    command "${1}" "${@:2}"
-  else
-    pkill "${1}"
+# `pgrep -fl`: pgrep for -full process names (not just first 15 chars) and -list the process names as well
+# `printf "${1}" | awk '{print $1}'`: using the first argument passed to the script
+# `awk '{print $2}'`: remove the PIDs so you're left with the process names
+# `grep "$(printf "${1}" | awk '{print $1}' | head -c 15)"`: grep for the process name passed to the script (first 15 chars) in case the script is open in vim or other program has similar name
+if test -z "$(pgrep -fl "$(printf "${1}" | awk '{print $1}')" | awk '{print $2}' | grep "$(printf "${1}" | awk '{print $1}' | head -c 15)")"; then
+  command "${1}" "${@:2}" &
+else
+  killall "${1}" && notify-send "${1}" "${1} killed"
 fi
 

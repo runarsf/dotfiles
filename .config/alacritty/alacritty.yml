@@ -213,78 +213,52 @@ colors: # {{{
   #   white:   '0xffffff'
   # }}}
 
-  # Halcyon {{{
-  # primary:
-  #   background: '0x1d2433'
-  #   foreground: '0xa2aabc'
-  # normal:
-  #   black:   '0x171c28'
-  #   red:     '0xef6b73'
-  #   green:   '0xbae67e'
-  #   yellow:  '0xffd580'
-  #   blue:    '0x5ccfe6'
-  #   magenta: '0xc3a6ff'
-  #   cyan:    '0x5ccfe6'
-  #   white:   '0xd7dce2'
-  # bright:
-  #   black:   '0x8695b7'
-  #   red:     '0xf07178'
-  #   green:   '0xbae67e'
-  #   yellow:  '0xffd580'
-  #   blue:    '0x5ccfe6'
-  #   magenta: '0xc3a6ff'
-  #   cyan:    '0x5ccfe6'
-  #   white:   '0xd7dce2'
-  # }}}
-
   # Xterm {{{
-  #primary:
-  #  background: '0x000000'
-  #  foreground: '0xffffff'
-  #normal:
-  #  black:   '0x000000'
-  #  red:     '0xcd0000'
-  #  green:   '0x00cd00'
-  #  yellow:  '0xcdcd00'
-  #  blue:    '0x0000ee'
-  #  magenta: '0xcd00cd'
-  #  cyan:    '0x00cdcd'
-  #  white:   '0xe5e5e5'
-  #bright:
-  #  black:   '0x7f7f7f'
-  #  red:     '0xff0000'
-  #  green:   '0x00ff00'
-  #  yellow:  '0xffff00'
-  #  blue:    '0x5c5cff'
-  #  magenta: '0xff00ff'
-  #  cyan:    '0x00ffff'
-  #  white:   '0xffffff'
+  # primary:
+  #   background: '0x000000'
+  #   foreground: '0xffffff'
+  # normal:
+  #   black:   '0x000000'
+  #   red:     '0xcd0000'
+  #   green:   '0x00cd00'
+  #   yellow:  '0xcdcd00'
+  #   blue:    '0x0000ee'
+  #   magenta: '0xcd00cd'
+  #   cyan:    '0x00cdcd'
+  #   white:   '0xe5e5e5'
+  # bright:
+  #   black:   '0x7f7f7f'
+  #   red:     '0xff0000'
+  #   green:   '0x00ff00'
+  #   yellow:  '0xffff00'
+  #   blue:    '0x5c5cff'
+  #   magenta: '0xff00ff'
+  #   cyan:    '0x00ffff'
+  #   white:   '0xffffff'
   # }}}
 
   # Dracula {{{
-  #primary:
-  #  background: '0x282a36'
-  #  foreground: '0xf8f8f2'
- 
-  #normal:
-  #  black:   '0x000000'
-  #  red:     '0xff5555'
-  #  green:   '0x50fa7b'
-  #  yellow:  '0xf1fa8c'
-  #  blue:    '0xbd93f9'
-  #  magenta: '0xff79c6'
-  #  cyan:    '0x8be9fd'
-  #  white:   '0xbbbbbb'
- 
-  #bright:
-  #  black:   '0x555555'
-  #  red:     '0xff5555'
-  #  green:   '0x50fa7b'
-  #  yellow:  '0xf1fa8c'
-  #  blue:    '0xcaa9fa'
-  #  magenta: '0xff79c6'
-  #  cyan:    '0x8be9fd'
-  #  white:   '0xffffff'
+  # primary:
+  #   background: '0x282a36'
+  #   foreground: '0xf8f8f2'
+  # normal:
+  #   black:   '0x000000'
+  #   red:     '0xff5555'
+  #   green:   '0x50fa7b'
+  #   yellow:  '0xf1fa8c'
+  #   blue:    '0xbd93f9'
+  #   magenta: '0xff79c6'
+  #   cyan:    '0x8be9fd'
+  #   white:   '0xbbbbbb'
+  # bright:
+  #   black:   '0x555555'
+  #   red:     '0xff5555'
+  #   green:   '0x50fa7b'
+  #   yellow:  '0xf1fa8c'
+  #   blue:    '0xcaa9fa'
+  #   magenta: '0xff79c6'
+  #   cyan:    '0x8be9fd'
+  #   white:   '0xffffff'
   # }}}
 
   # Gruvbox dark {{{
