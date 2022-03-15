@@ -22,6 +22,9 @@ export READER="zathura"
 export PYTHONDONTWRITEBYTECODE=1
 export ZDOTDIR="${XDG_CONFIG_HOME:-${HOME}/.config}/zsh"
 export FZF_DEFAULT_OPTS="--layout=reverse --height 40%"
+export TODOIST_API_KEY="$(pass Todoist/API)"
+export XBB_URL="https://i.runarsf.dev/upload"
+export XBB_TOKEN="$(pass Screenshot/XBB_TOKEN)"
 
 export BYOBU_CONFIG_DIR="${XDG_CONFIG_HOME:-${HOME}/.config}/byobu"
 export CALIBRE_USE_DARK_PALETTE=1
