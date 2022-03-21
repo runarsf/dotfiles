@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# TODO $1 daemon -> refresh some settings more often than polybar would
+
 # NB! Decimals are delimited by a comma, *not* a period
 : "${DIM_AFTER:=5}"
 : "${DIM_LEVEL:=40}"
