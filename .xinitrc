@@ -10,6 +10,7 @@
 
 #test -f ~/.xprofile && source ~/.xprofile
 
+# DESKTOP="awesome"
 DESKTOP="bspwm"
 # DESKTOP="xmonad" # $XDG_CACHE_HOME:-$HOME/.cache/xmonad/xmonad-x86_64-linux # to stop recompilation on every build
 
@@ -65,7 +66,8 @@ autorandr --change &
 dunst --config "${XDG_CONFIG_HOME:-${HOME:-~}/.config}/dunst/dunstrc" &
 # xscreensaver -no-splash &
 xfce4-power-manager &
-pulseaudio --start &
+# https://forums.fedoraforum.org/showthread.php?326248-Just-upgraded-pipewire-and-want-to-reload-it-without-rebooting
+# pulseaudio --start &
 (~/.fehbg || (feh --bg-scale ~/.config/wall.jpg || nitrogen --restore)) &
 if test -x /usr/bin/nm-applet; then
   nm-applet --sm-disable &
