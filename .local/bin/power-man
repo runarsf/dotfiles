@@ -62,8 +62,12 @@ pm::warn () { # <warn_percentage:Int> <warn_time:String> -> String {{{
   local -r _warn_battery_remaining_percentage="${1:-15}"
   local -r _warn_battery_remaining_time="${2:-00:15:00}"
 
+  # TODO  ~ » acpi -b
+  #  Battery 0: Not charging, 96%
+  #  Battery 1: Discharging, 0%, rate information unavailable
+
   # Battery 0: Discharging/Charging/Not charging, 38%, 23:42:36 remaining/until charged
-  local -r _battery_info="$(acpi -b)"
+  local -r _battery_info="$(acpi -b | head -1)"
   # Charging, Not charging, Discharging
   local -r _battery_status="$(printf '%s\n' "${_battery_info}" | awk '{print $3}' | tr -d ',')"
   # 00:32:29
@@ -94,9 +98,6 @@ pm::screensaver () { # <dim_after:Number> <dim_level:Number> <lock_after:Number>
   local -r _suspend_after="$(pm::util::float2int "$((${5:-20} * 60000))")"
   local -r _suspend_method="${6:-sleep}"
   local -r _idle_time="$(xprintidle)"
-
-  echo $_idle_time
-  echo $_dim_after
 
   if test ! -f /tmp/power-man-backlight.dat \
        -a "${_idle_time}" -gt "${_dim_after}"; then
