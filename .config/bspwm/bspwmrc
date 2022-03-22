@@ -60,6 +60,7 @@ bspc rule -r "*"
 bspc rule -a discord                         desktop=^2
 bspc rule -a Mattermost                      desktop=^2
 bspc rule -a slack                           desktop=^2
+bspc rule -a TelegramDesktop                 desktop=^2 state=floating rectangle="1066x600+0+0"
 bspc rule -a Steam                           desktop=^5
 bspc rule -a org.remmina.Remmina             desktop=^5
 bspc rule -a Anki                            desktop=^9
@@ -72,6 +73,7 @@ bspc rule -a keepass2                        state=floating
 bspc rule -a sun-awt-X11-XFramePeer          state=floating
 bspc rule -a com-sun-javaws-Main             state=floating
 bspc rule -a org-geogebra-desktop-GeoGebra3D state=floating
+bspc rule -a Dragon-drop                     state=floating sticky=on border=off
 bspc rule -a '*:scratchpad'                  state=floating sticky=on
 bspc rule -a '*:math'                        state=floating sticky=on
 
@@ -101,5 +103,5 @@ bspc rule -a '*:math'                        state=floating sticky=on
 #"${XDG_CONFIG_HOME:-${HOME}/.config}/bspwm/scripts/single_node_border" &
 (~/.fehbg || (feh --bg-scale "${XDG_CONFIG_HOME:-${HOME:-~}/.config}/wall.jpg" || nitrogen --restore)) &
 killall -q sxhkd; sxhkd -m 1 -c "${XDG_CONFIG_HOME:-${HOME:-~}/.config}/sxhkd/sxhkdrc" "${XDG_CONFIG_HOME:-${HOME:-~}/.config}/bspwm/sxhkdrc" &
-killall -q bspwm_double_borders; "${XDG_CONFIG_HOME:-${HOME:-~}/.config}/bspwm/scripts/bspwm_double_borders" &
+# killall -q bspwm_double_borders; "${XDG_CONFIG_HOME:-${HOME:-~}/.config}/bspwm/scripts/bspwm_double_borders" &
 # }}}
