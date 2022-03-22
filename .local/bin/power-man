@@ -2,16 +2,27 @@
 set -euo pipefail
 
 # TODO $1 daemon -> refresh some settings more often than polybar would
+# FIXME notify-send from crontab
+# TODO Become hostile towards xfce4-power-man and xfce4-screensav
+# TODO args (debug, polybar)
 
-# NB! Decimals are delimited by a comma, *not* a period
+# This script is intended to be scheduled by cron or polybar.
+
+# */5 * * * * /bin/bash /path/to/power-man
+
+DEBUG="${1:+1}"
+
+# NB! Decimals are delimited by a comma, *not* a period, and they're a bit funky
 : "${DIM_AFTER:=5}"
 : "${DIM_LEVEL:=40}"
 : "${LOCK_AFTER:=10}"
 : "${LOCK_COMMAND:=betterlockscreen --lock dimblur --blur 8}"
+: "${LOCK_PROCESS:=i3lock}"
 : "${SUSPEND_AFTER:=20}"
-: "${SUSPEND_METHOD:=sleep}"
+: "${SUSPEND_METHOD:=suspend}" # suspend / hibernate
 : "${WARN_PERCENTAGE:=15}"
-: "${WARN_TIME:=00:15:00}"
+: "${WARN_MINUTES:=15}"
+: "${FULL_THRESHOLD:=95}"
 
 pm::util::check_deps () { # <dependencies:@String> -> Void {{{
   local -r _deps=${@}
@@ -54,78 +65,133 @@ pm::util::float2int () { # <float:@Number> -> Int {{{
    printf "%.0f\n", ARGV[i]}' "${_float}"
 } # }}}
 
-pm::polybarpp () { # -> Void {{{
-  : # TODO https://github.com/polybar/polybar/wiki/Formatting#foreground-color-f
+pm::util::uq () { # <data|String> <key:String> -> String {{{
+  # jq for upower-syntax
+  local -r _data="$(</dev/stdin)"
+  local -r _key="${1}"
+
+  printf '%s\n' "${_data}" \
+    | grep -E "${_key}" \
+    | sed -E "s/^\s*${_key}\s+//"
 } # }}}
 
-pm::warn () { # <warn_percentage:Int> <warn_time:String> -> String {{{
-  local -r _warn_battery_remaining_percentage="${1:-15}"
-  local -r _warn_battery_remaining_time="${2:-00:15:00}"
+pm::polybarpp () { # <percentage:Int> -> Void {{{
+  # https://github.com/polybar/polybar/wiki/Formatting#foreground-color-f
+  local -r _battery_level="$(pm::util::float2int "${1:?}")"
+  local -r _low_threshold="$(pm::util::float2int "${2:?}")"
+  local -r _full_threshold="$(pm::util::float2int "${3:?}")"
+  local -r _battery_state="${4:?}"
 
-  # TODO  ~ » acpi -b
-  #  Battery 0: Not charging, 96%
-  #  Battery 1: Discharging, 0%, rate information unavailable
+  local -r _icon_urgent=' '
+  local -r _icon_charging=' '
+  local -r _icon_discharging=' '
+  local -r _icon_full=' '
+  local -r _color_urgent='%{F#e27878}'
+  local -r _color_charging=''
+  local -r _color_discharging=''
+  local -r _color_full='%{F#3fbf77}'
 
-  # Battery 0: Discharging/Charging/Not charging, 38%, 23:42:36 remaining/until charged
-  local -r _battery_info="$(acpi -b | head -1)"
-  # Charging, Not charging, Discharging
-  local -r _battery_status="$(printf '%s\n' "${_battery_info}" | awk '{print $3}' | tr -d ',')"
-  # 00:32:29
-  local -r _battery_time="$(printf '%s\n' "${_battery_info}" | awk '{print $5}')"
-  # 0-100
-  local -r _battery_level="$(printf '%s\n' "${_battery_info}" | grep -P -o '[0-9]+(?=%)')"
+  local _icon=""
+  local _color=""
+  if test "${_battery_level}" -le "${_low_threshold}"; then
+    readonly _icon="${_icon_discharging}"
+    readonly _color="${_color_urgent}"
+  elif test "${_battery_level}" -ge "${_full_threshold}"; then
+    readonly _icon="${_icon_full}"
+    readonly _color="${_color_full}"
+  elif test "${_battery_state}" = "charging"; then
+    readonly _icon="${_icon_charging}"
+    readonly _color="${_color_charging}"
+  else
+    readonly _icon="${_icon_discharging}"
+    readonly _color="${_color_discharging}"
+  fi
 
-  # TODO Polybar colors, own function
-  printf '%s\n' "${_battery_level}%"
+  printf '%s\n' "${_color}${_icon}${_battery_level}%"
+} # }}}
+
+pm::battery () { # <warn_percentage:Int> -> String {{{
+  local -r _warn_percentage="$(pm::util::float2int "${1:-15}")"
+  local -r _warn_minutes="$(pm::util::float2int "${2:-15}")"
+  local -r _full_threshold="$(pm::util::float2int "${3:-95}")"
+
+  # TODO sleep if battery very low?
+  # TODO Notify when battery at normal levels
+
+  # local -r _battery_info="$(acpi -b | head -1)"
+  # local -r _battery_level="$(printf '%s\n' "${_battery_info}" | grep -P -o '[0-9]+(?=%)')"
+  # local -r _battery_state="$(printf '%s\n' "${_battery_info}" | awk '{print $3}' | tr -d ',')"
+  # local -r _battery_time="$(printf '%s\n' "${_battery_info}" | awk '{print $5}')"
+
+  # upower seems to update rather weirdly
+  local -r _battery_path="$(upower -e | grep 'battery')"
+  local -r _battery_info="$(upower -i "${_battery_path}")"
+  local -r _battery_level="$(printf '%s\n' "${_battery_info}" | pm::util::uq 'percentage:' | sed -r 's/[%]+//g')"
+  local -r _battery_state="$(printf '%s\n' "${_battery_info}" | pm::util::uq 'state:')"
+  local -r _battery_time="$(printf '%s\n' "${_battery_info}" | pm::util::uq 'time to .+:')"
+  local -r _battery_time_int="$(pm::util::float2int "$(printf '%s\n' "${_battery_time}" | awk '{print $1}')")"
+  local -r _battery_time_unit="$(printf '%s\n' "${_battery_time}" | awk '{print $2}')"
+  # Alternative to _battery_state
+  # local -r _line_path="$(upower -e | grep line_power)"
+  # local -r _line_charging="$(upower -i "${_line_path}" | grep -A2 'line-power' | grep online | awk '{print $2}')"
+
+  pm::polybarpp "${_battery_level}" "${_warn_percentage}" "${_full_threshold}" "${_battery_state}"
 
   # TODO Only send one notif
-  if test "${_battery_status}" = "Discharging" \
-     && ( \
-       test "${_battery_level}" -le "${_warn_battery_remaining_percentage}" \
-       || [[ "${_battery_time}"  <  "${_warn_battery_remaining_time}" ]] \
-    ); then
+  # if test "${_battery_status}" = "Discharging" \
+  #    && ( test "${_battery_level}" -le "${_warn_battery_remaining_percentage}" \
+  #      || [[ "${_battery_time}"  <  "${_warn_battery_remaining_time}" ]] ); then
+  if test "${_battery_state}" = "discharging" \
+     && ( test "${_battery_level}" -le "${_warn_percentage}" \
+       || ( test "${_battery_time_int}" -le "${_warn_minutes}" -a "${_battery_time_unit}" = "minutes" ) ); then
     DISPLAY=:0 notify-send -u critical --hint int:transient:1 "Battery low!" "Battery level is ${_battery_level}%, you have ${_battery_time} left"
   fi
 } # }}}
 
-pm::screensaver () { # <dim_after:Number> <dim_level:Number> <lock_after:Number> <lock_command:String> <suspend_after:Number> <suspend_method:String[sleep|hibernate]> -> Void {{{
+pm::screensaver () { # <dim_after:Number> <dim_level:Number> <lock_after:Number> <lock_command:String> <lock_process:String> <suspend_after:Number> <suspend_method:String[sleep|hibernate]> -> Void {{{
   local -r _dim_after="$(pm::util::float2int "$((${1:-5} * 60000))")"
   local -r _dim_level="$(pm::util::float2int "${2:-40}")"
   local -r _lock_after="$(pm::util::float2int "$((${3:-15} * 60000))")"
   local -r _lock_command="${4:-betterlockscreen --lock dimblur --blur 8}"
   local -r _lock_base="$(printf '%s\n' "${_lock_command}" | awk '{print $1}')"
   local -r _lock_args=$(printf '%s\n' "${_lock_command}" | cut -f 2- -d ' ')
-  local -r _suspend_after="$(pm::util::float2int "$((${5:-20} * 60000))")"
-  local -r _suspend_method="${6:-sleep}"
+  local -r _lock_process="${5}"
+  local -r _suspend_after="$(pm::util::float2int "$((${6:-20} * 60000))")"
+  local -r _suspend_method="${7:-sleep}"
   local -r _idle_time="$(xprintidle)"
 
   if test ! -f /tmp/power-man-backlight.dat \
-       -a "${_idle_time}" -gt "${_dim_after}"; then
-    # mktemp "/tmp/power-man-backlight.dat"
+       -a "${_idle_time}" -gt "${_dim_after}" \
+       -a "${_dim_after}" -ne "0"; then
+    test "${DEBUG}" = "1" && printf '[PM] Dimming monitor\n'
     printf '%s\n' "$(pm::util::float2int "$(xbacklight -get)")" > /tmp/power-man-backlight.dat
     xbacklight -set "${_dim_level}"
   fi
 
   if test -f /tmp/power-man-backlight.dat \
        -a "${_idle_time}" -le "${_dim_after}"; then
+     test "${DEBUG}" = "1" && printf '[PM] Restoring monitor brightness\n'
      xbacklight -set "$(cat /tmp/power-man-backlight.dat)"
      rm -f /tmp/power-man-backlight.dat
   fi
 
-  if ! pm::util::procgrep "${_lock_base}" \
-    && test "${_idle_time}" -gt "${_lock_after}"; then
+  if ! pm::util::procgrep "${_lock_process}" \
+     && test "${_idle_time}" -gt "${_lock_after}" \
+          -a "${_lock_after}" -ne "0"; then
+    test "${DEBUG}" = "1" && printf '[PM] Locking screen\n'
     command "${_lock_base}" ${_lock_args} &
   fi
 
-  # TODO Test if _suspend_after is 0 and skip if it is
-  if test "${_idle_time}" -gt "${_suspend_after}"; then
+  if test "${_idle_time}" -gt "${_suspend_after}" \
+       -a "${_suspend_after}" -ne "0"; then
+    test "${DEBUG}" = "1" && printf '[PM] Suspending system\n'
     systemctl "${_suspend_method}"
   fi
 } # }}}
 
 main () { # -> Void {{{
-  pm::util::check_deps xprintidle acpi xbacklight
-  pm::warn "${WARN_PERCENTAGE:-}" "${WARN_TIME:-}"
-  pm::screensaver "${DIM_AFTER:-}" "${DIM_LEVEL:-}" "${LOCK_AFTER:-}" "${LOCK_COMMAND:-}" "${SUSPEND_AFTER:-}" "${SUSPEND_METHOD:-}"
+  pm::util::check_deps xprintidle xbacklight upower # acpi
+  pm::battery "${WARN_PERCENTAGE:-}" "${WARN_MINUTES:-}" "${FULL_THRESHOLD:-}"
+  pm::screensaver "${DIM_AFTER:-}" "${DIM_LEVEL:-}" "${LOCK_AFTER:-}" "${LOCK_COMMAND:-}" "${LOCK_PROCESS:-}" "${SUSPEND_AFTER:-}" "${SUSPEND_METHOD:-}"
 } # }}}
 main
