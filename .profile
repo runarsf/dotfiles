@@ -25,6 +25,7 @@ export FZF_DEFAULT_OPTS="--layout=reverse --height 40%"
 export TODOIST_API_KEY="$(pass Todoist/API)"
 export XBB_URL="https://i.runarsf.dev/upload"
 export XBB_TOKEN="$(pass Screenshot/XBB_TOKEN)"
+export XBB_RAW="true"
 
 export BYOBU_CONFIG_DIR="${XDG_CONFIG_HOME:-${HOME}/.config}/byobu"
 export CALIBRE_USE_DARK_PALETTE=1

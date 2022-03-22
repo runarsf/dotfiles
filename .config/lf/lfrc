@@ -81,7 +81,7 @@ cmd dragon ${{
   while IFS= read -r line; do
     files+=("${line}")
   done <<< "$fx"
-  dragon-drag-and-drop -a -x "${files[@]}"
+  dragon-drop -a -x "${files[@]}"
 }}
 map dr dragon
 
