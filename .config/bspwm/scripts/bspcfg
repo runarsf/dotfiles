@@ -1,0 +1,79 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+bspcfg::core::argparse () { # <positionals_nameref> <@args> {{{
+  # Requires bash >=4.3
+  local -n _nameref="${1}"
+  _nameref=()
+  shift
+  set -- "${@}"
+
+  while test "${#}" -gt "0"; do
+    case "${1}" in
+      (--*) # {{{
+        printf "Unknown option: ${1}\n"
+        exit 1
+        shift;;
+      (-*)
+        # FIXME Make posix
+        shopts="${1}"
+        if test "${#shopts}" -le "2"; then
+          printf "Unknown option: ${shopts}\n"
+          exit 2
+        fi
+        shift
+        set -- "${shopts:0:2}" "-${shopts:2}" "${@}"
+        ;;
+      (*)
+        _nameref+=("$(printf '%s\n' "${1}" | tr '[:upper:]' '[:lower:]')")
+        shift;; # }}}
+    esac
+  done
+} # }}}
+
+bspcfg::utils::check_deps () { # <dependencies:*string> -> Void {{{
+  local _deps=${@}
+  local _missing=""
+  for _dep in ${_deps}; do
+    if ! hash "${_dep}" 2>/dev/null; then
+      _missing="${_missing} ${_dep}"
+    fi
+  done
+  if test -n "${_missing}"; then
+    printf "Missing required dependencies:${_missing}\n"
+    notify-send "$(basename "${0}")" "Missing required dependencies:${_missing}"
+    exit 1
+  fi
+} # }}}
+
+bspcfg::cmd::focus () { # {{{
+  test "${#}" -eq "1" || { printf "'focus' requires exactly 1 argument, but ${#} were given...\n"; exit 1; }
+
+  local -r _motion="${1}"
+  #layout="$(bspc query -T -d | jq --raw-output '.layout')"
+  local _layout=""
+  bspc query -T -d | grep '"layout":"monocle"' \
+    && readonly _layout="monocle"
+
+  case "${_layout}:${_motion}" in
+    monocle:north|monocle:east) bspc node --focus next.local.\!hidden.window;;
+    monocle:south|monocle:west) bspc node --focus prev.local.\!hidden.window;;
+    *) bspc node --focus "${_motion}" || bspc monitor --focus "${_motion}";;
+  esac
+} # }}}
+
+bspcfg::main () { # <@args> {{{
+  local -r ARGS=("${@}")
+
+  : "${DISPLAY:?X server doesn\'t seem to be running...}"
+
+  bspcfg::utils::check_deps bspc
+
+  local POSITIONALS
+  bspcfg::core::argparse POSITIONALS "${ARGS[@]}"
+  # declare -p POSITIONALS
+  : "${POSITIONALS:?No commands provided...}"
+
+  "bspcfg::cmd::${POSITIONALS[0]}" "${POSITIONALS[@]:1}"
+} # }}}
+bspcfg::main "${@}"

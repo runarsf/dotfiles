@@ -32,7 +32,8 @@ super + {_,shift + }Tab
 	bspc {node,desktop} --focus last.local
 
 super + {Left,Down,Up,Right}
-	bspwm_focus {west,south,north,east}
+	bspcfg focus {west,south,north,east}
+#	bspwm_focus {west,south,north,east}
 # super + {h,j,k,l}
 # 	bspwm_focus {west,south,north,east}
 
