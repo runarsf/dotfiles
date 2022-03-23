@@ -4,10 +4,12 @@
 #export PATH="${PATH}:$(du "${HOME}/bin/" | cut -f2 | tr '\n' ':' | sed 's/:*$//')"
 export PATH="${PATH}:${HOME}/.local/bin"
 export PATH="${PATH}:${XDG_CONFIG_HOME:-${HOME}/.config}/bspwm/scripts"
+export PATH="${PATH}:${XDG_CONFIG_HOME:-${HOME}/.config}/polybar/scripts"
 export PATH="${PATH}:${HOME}/go/bin"
 export PATH="${PATH}:${HOME}/.gem/ruby/*/bin"
 export PATH="${PATH}:/snap/bin"
 export PATH="${PATH}:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl"
+
 export LANG="en_US.UTF-8"
 export LC_ALL="${LANG}"
 

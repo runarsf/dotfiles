@@ -1,47 +1,70 @@
 # bspwm-specific sxhkd config, extends ~/.config/sxhkd/sxhkdrc
 
 # https://www.reddit.com/r/bspwm/comments/6nclzv/presel_border_toolscript/
-
 # https://www.reddit.com/r/bspwm/comments/ceu0za/help_with_sxhkdrc_config_for_multiple_monitors/
 # bspc monitor -f next
+
+# All bspwm-related scripts are located in ~/.config/bspwm/scripts/
+# Added to PATH in ~/.profile
 
 super + {_,shift + }q
 	bspc node --{close,kill}
 
-super + shift + {0-9} + {_,alt}
-	bspc node --to-desktop '{0-9}' { ,--follow}
+# super + <number> = focus the given desktop
+# super + shift + <number> = send focused window to given desktop
+# super + ctrl + shift + <number> = as above, but send to next monitor
+# super + ctrl + <number> = switches the active (visible) desktop of the
+# --ns -> --nsf & --nm -> --nmf to follow node
+super + {_,shift + ,ctrl + shift +,ctrl +}{0-9}
+	;bspwm_dynamic_desktops {--df,--ns,--nm,--da} {0-9}
 
-super + {0-9}
-	bspc desktop --focus '{0-9}'
+# super + {0-9}
+# 	bspc desktop --focus '{0-9}'
+
+# super + shift + {0-9} + {_,alt}
+# 	bspc node --to-desktop '{0-9}' { ,--follow}
+
+super + shift + Return
+	bspc node --swap biggest
+
+# Focus last active node/desktop on active monitor
+super + {_,shift + }Tab
+	bspc {node,desktop} --focus last.local
 
 super + {Left,Down,Up,Right}
 	bspwm_focus {west,south,north,east}
-super + {h,j,k,l}
-	bspwm_focus {west,south,north,east}
+# super + {h,j,k,l}
+# 	bspwm_focus {west,south,north,east}
 
 super + shift + {Left,Down,Up,Right}
-	bspwm_move {west,south,north,east}
+	bspwm_smart_move {west,south,north,east}
+# super + shift + {Left,Down,Up,Right}
+# 	bspwm_move {west,south,north,east}
+# super + shift + {h,j,k,l}
+# 	bspwm_move {west,south,north,east}
 
+# TODO Fix resizing of floating nodes
 super + ctrl + {Left,Down,Up,Right}
-	{bspc node @parent/second -z left  -20 0; \
-	 bspc node @parent/first  -z right -20 0, \
-	 bspc node @parent/second -z top    0 +20; \
-	 bspc node @parent/first  -z bottom 0 +20, \
-	 bspc node @parent/first  -z bottom 0 -20; \
-	 bspc node @parent/second -z top    0 -20, \
-	 bspc node @parent/first  -z right +20 0; \
-	 bspc node @parent/second -z left  +20 0}
+	bspwm_smart_resize {west,south,north,east} 50
+# super + ctrl + {Left,Down,Up,Right}
+# 	{bspc node @parent/second --resize left  -20 0; \
+# 	 bspc node @parent/first  --resize right -20 0, \
+# 	 bspc node @parent/second --resize top    0 +20; \
+# 	 bspc node @parent/first  --resize bottom 0 +20, \
+# 	 bspc node @parent/first  --resize bottom 0 -20; \
+# 	 bspc node @parent/second --resize top    0 -20, \
+# 	 bspc node @parent/first  --resize right +20 0; \
+# 	 bspc node @parent/second --resize left  +20 0}
 
-# super + shift + space
-# 	did="$(bspc query -D -n focused --names)"; layout="$(bsp-layout get ${did})"; test "${layout}" = "-" -o "${layout}" = "tile" && bsp-layout set tall "${did}" --master-size 0.60 || {bsp-layout remove "${did}"; bsp-layout once tile}
-# super + alt + space
-# 	did="$(bspc query -D -n focused --names)"; layout="$(bsp-layout get ${did})"; test "${layout}" = "-" -o "${layout}" = "tile" && bsp-layout set tall "${did}" --master-size 0.70 || {bsp-layout remove "${did}"; bsp-layout once tile}
+super + @space
+	bspc desktop --layout next
 
-super + shift + b
-	toggleprogram "bspwm_double_borders"
+super {_,shift + ,alt + }f
+	bspc node --state \~{fullscreen,floating,pseudo_tiled}
 
-# super {_,shift + }Tab
-# 	bspc node --focus {next,prev}.local
+# Toggle master/stack layout
+super + shift + space
+	did="$(bspc query -D -n focused --names)"; layout="$(bsp-layout get ${did})"; test "${layout}" = "-" -o "${layout}" = "tile" && bsp-layout set tall "${did}" --master-size 0.55 || {bsp-layout remove "${did}"; bsp-layout once tile}
 
 super + shift + r
 	bspc wm --restart
@@ -49,124 +72,71 @@ super + shift + r
 super + shift + e
 	prompt "Exit bspwm?" "bspc quit"
 
-super + @space
-	bspc desktop --layout next
-super {_,shift + ,ctrl + shift }f
-	bspc node --state \~{fullscreen,floating,pseudo_tiled}
-super + shift + m
-	bspc node --state \~monocle
-super + t
-	bspc node --state {tiled,pseudo_tiled,floating,fullscreen}
-
-super + alt + {1-9}
-	bspc node --presel-ratio 0.{1-9}
-super + alt + {Left,Down,Up,Right}
-	bspc node --presel-dir {west,south,north,east}
-# cancel the preselection for the current node
-super + ctrl + space
-	bspc node --presel-dir cancel
-# cancel the preselection for the focused desktop
-super + ctrl + shift + space
-	bspc query -N -d | xargs -I id -n 1 bspc node id -p cancel
-
-# move to receptacle
-super + r
-	bspc node $(bspc query -N -n focused) -n $(bspc query -N -n .leaf.\!window)
-# Balance nodes
-super + e
-	bspc node @/ -B
-# Insert receptacle
-super + i; {Left,Down,Up,Right}
-	bspc node --presel-dir {west,south,north,east} -i
-# Close all receptacles
-super + shift + i
-	for win in `bspc query -N -n .leaf.\!window`; do bspc node $win -k; done;
+super + shift + b
+	toggleprogram "bspwm_double_borders"
 
 super + n
 	bspwm_scratchpad "scratchpad" "alacritty --class scratchpad --title scratchpad --option font.size=14 --command tmux new-session -A -s scratchpad" "1600x1000+0+0"
 super + m
 	bspwm_scratchpad "math" "alacritty --class math --title math --option font.size=18 --command tmux new-session -A -s math xonsh" "1200x800+0+0"
 
-## Split vertical, horizontal, or cancel
-#super + {n,e,s,w,r}
-#        bspc node -p {north, east, south, west, cancel}
+super + alt + {minus,plus}
+	bspc config --desktop focused window_gap $((`bspc config --desktop focused window_gap` {+,-} 2 ))
+super + alt + shift + plus
+	bspc config --desktop focused window_gap 0
+
+super + alt + {Left,Down,Up,Right}
+	bspc node --presel-dir {west,south,north,east}
+
+# Move active node to preselection
+super + alt + Return
+	bspc node --to-node last.!automatic
+
+# Cancel all preselections on active desktop
+super + alt + space
+	bspc query -N -d | xargs -I id -n 1 bspc node id -p cancel
+
+# Insert receptacle
+super + alt + ctrl + {Left,Down,Up,Right}
+	bspc node --presel-dir {west,south,north,east} --insert-receptacle
+
+# Close all receptacles
+super + alt + ctrl + space
+	for win in `bspc query -N -n .leaf.\!window`; do bspc node $win -k; done;
+
+# Move to receptacle
+super + alt + ctrl + Return
+	bspc node $(bspc query -N -n focused) -n $(bspc query -N -n .leaf.\!window)
+
+super + x ; f ; {l,m,s,p}
+	bspc node -g {locked,marked,sticky,private}
+
+# Other neat binds {{{
+
+# https://gitlab.com/protesilaos/dotfiles/-/blob/master/xorg-twm/.config/sxhkd/sxhkdrc_bspc
+
+# Balance nodes
+# super + e
+# 	bspc node @/ -B
+
+# Focus the older or newer node in the focus history
+# super + {o,i}
+# 	bspc wm -h off; \
+# 	bspc node {older,newer} -f; \
+# 	bspc wm -h on
+
+# Focus the node for the given path jump
+# super + {p,b,comma,period}
+# 	bspc node -f @{parent,brother,first,second}
+
+# super + alt + {1-9}
+# 	bspc node --presel-ratio 0.{1-9}
 
 # Change focus or move container
-#super + alt + {Left,Right}
-#	desk=`bspc query -D -d focused`; \
-#	bspc desktop -m {prev,next}; \
-#	bspc monitor -f {prev,next}; \
-#	bspc desktop -f $desk
+# super + alt + {Left,Right}
+# 	desk=`bspc query -D -d focused`; \
+# 	bspc desktop -m {prev,next}; \
+# 	bspc monitor -f {prev,next}; \
+# 	bspc desktop -f $desk
 
-#bspc node -s biggest.local
-#bspc desktop -f {prev.occupied,next.occupied} 
-#bspc window -t locked 
-#bspc window -f {next.floating,next.tiled}
-
-## Change desktop padding
-#alt + {_, shift} + bracketright
-#	bspc config -d focused right_padding $((`bspc config -d focused right_padding` {+,-} 20 ))
-
-#alt + {_, shift} + bracketleft
-#	bspc config -d focused left_padding $((`bspc config -d focused left_padding` {+,-} 20 ))
-
-#ctrl + {_, shift} + bracketright
-#	bspc config -d focused bottom_padding $((`bspc config -d focused bottom_padding` {+,-} 20 ))
-
-#ctrl + {_, shift} + bracketleft
-#	bspc config -d focused top_padding $((`bspc config -d focused top_padding` {+,-} 20 ))
-
-#alt + shift + {minus,equal}
-#	bspc config -d focused right_padding $((`bspc config -d focused right_padding` {+,-} 20 )); \
-#	bspc config -d focused left_padding $((`bspc config -d focused left_padding` {+,-} 20 )); \
-#	bspc config -d focused bottom_padding $((`bspc config -d focused bottom_padding` {+,-} 20 )); \
-#	bspc config -d focused top_padding $((`bspc config -d focused top_padding` {+,-} 20 ));
-
-## Change window gap
-#alt + {minus,equal}
-#	bspc config -d focused window_gap $((`bspc config -d focused window_gap` {+,-} 2 ))
-
-## Presel window for splitting
-#alt + ctrl + {h,j,k,l}
-#	bspc window -p {left,down,up,right}
-#
-## Move window into presel position
-#alt + shift {a,s,d,f}
-#	bspc window -w {left.manual,down.manual,up.manual,right.manual}
-
-#super + {t,shift + t,s,f}
-#	bspc node -t '~{tiled,pseudo_tiled,floating,fullscreen}'
-
-# swap the current node and the biggest node
-#super + g
-#	bspc node -s biggest
-
-# set the window state
-#super + {t,shift + t,s,f}
-#	bspc node -t {tiled,pseudo_tiled,floating,fullscreen}
-
-# set the node flags
-#super + ctrl + {m,x,y,z}
-#	bspc node -g {marked,locked,sticky,private}
-
-# focus the node for the given path jump
-#super + {p,b,comma,period}
-#	bspc node -f @{parent,brother,first,second}
-
-# focus the next/previous node in the current desktop
-#super + {_,shift + }c
-#	bspc node -f {next,prev}.local
-
-# focus the next/previous desktop in the current monitor
-#super + bracket{Left,Right}
-#	bspc desktop -f {prev,next}.local
-
-# focus the last node/desktop
-#super + {grave,Tab}
-#	bspc {node,desktop} -f last
-
-# focus the older or newer node in the focus history
-#super + {o,i}
-#	bspc wm -h off; \
-#	bspc node {older,newer} -f; \
-#	bspc wm -h on
+# }}}

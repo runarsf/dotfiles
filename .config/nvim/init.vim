@@ -167,6 +167,11 @@ Plug 'voldikss/vim-floaterm' | Plug 'ptzz/lf.vim' " {{{
 let g:lf_replace_netrw = 0 " Open lf when vim opens a directory
 "let g:lf_command_override = 'lf -command "set hidden"'
 " }}}
+Plug 'metakirby5/codi.vim' " {{{
+" Codi [filetype] activates Codi for the current buffer, using the provided filetype or the buffer's filetype.
+" Codi! deactivates Codi for the current buffer.
+" Codi!! [filetype] toggles Codi for the current buffer, using the provided filetype or the buffer's filetype.
+" }}}
 
 " Syntax highlighting {{{
 Plug 'rodjek/vim-puppet', { 'for': 'puppet' }

@@ -5,6 +5,7 @@ set -euo pipefail
 # FIXME notify-send from crontab
 # TODO Become hostile towards xfce4-power-man and xfce4-screensav
 # TODO args (debug, polybar)
+# ??? Use xset dpms force standby for turning off screen?
 
 # This script is intended to be scheduled by cron or polybar.
 
