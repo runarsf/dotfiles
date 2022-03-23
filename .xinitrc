@@ -65,7 +65,7 @@ xsetroot -cursor_name left_ptr &
 autorandr --change &
 dunst --config "${XDG_CONFIG_HOME:-${HOME:-~}/.config}/dunst/dunstrc" &
 # xscreensaver -no-splash &
-xfce4-power-manager &
+# xfce4-power-manager &
 # https://forums.fedoraforum.org/showthread.php?326248-Just-upgraded-pipewire-and-want-to-reload-it-without-rebooting
 # pulseaudio --start &
 (~/.fehbg || (feh --bg-scale ~/.config/wall.jpg || nitrogen --restore)) &

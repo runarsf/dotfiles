@@ -95,6 +95,12 @@ bspcfg::cmd::scratchpad () { # {{{
   fi
 } # }}}
 
+bspcfg::cmd::dynws () { # {{{
+  for i in $(bspc query -D -d '.!focused.!occupied' --names); do
+    bspc desktop "${i}" -r
+  done
+} # }}}
+
 bspcfg::main () { # <@args> {{{
   local -r ARGS=("${@}")
 
