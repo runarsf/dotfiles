@@ -97,7 +97,8 @@ bspc rule -a '*:math'                        state=floating sticky=on
 # done
 
 # Programs that should be executed once generally belong in ~/.xinitrc
-"${XDG_CONFIG_HOME:-${HOME:-~}/.config}/polybar/launch.sh" main &
+# "${XDG_CONFIG_HOME:-${HOME:-~}/.config}/polybar/launch.sh" main &
+polybar_run &
 # "${XDG_CONFIG_HOME:-${HOME:-~}/.config}/bspwm/scripts/bspwm_monitors" &
 # "${XDG_CONFIG_HOME:-${HOME}/.config}/bspwm/scripts/cleanfullscreen" &
 # "${XDG_CONFIG_HOME:-${HOME}/.config}/bspwm/scripts/single_node_border" &

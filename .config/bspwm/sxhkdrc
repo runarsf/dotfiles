@@ -77,9 +77,9 @@ super + shift + b
 	toggleprogram "bspwm_double_borders"
 
 super + n
-	bspcfg scratchpad "scratchpad" "alacritty --class scratchpad --title scratchpad --option font.size=14 --command tmux new-session -A -s scratchpad" "1600x1000+0+0"
+	bspwm_scratchpad "scratchpad" "alacritty --class scratchpad --title scratchpad --option font.size=14 --command tmux new-session -A -s scratchpad" "1600x1000+0+0"
 super + m
-	bspcfg scratchpad "math" "alacritty --class math --title math --option font.size=18 --command tmux new-session -A -s math xonsh" "1200x800+0+0"
+	bspwm_scratchpad "math" "alacritty --class math --title math --option font.size=18 --command tmux new-session -A -s math xonsh" "1200x800+0+0"
 
 super + alt + {minus,plus}
 	bspc config --desktop focused window_gap $((`bspc config --desktop focused window_gap` {+,-} 2 ))

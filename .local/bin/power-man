@@ -2,6 +2,7 @@
 set -euo pipefail
 
 # TODO $1 daemon -> refresh some settings more often than polybar would
+# TODO   daemonize undim-task and lock further processing of that part https://stackoverflow.com/a/1715151
 # FIXME notify-send from crontab
 # TODO Become hostile towards xfce4-power-man and xfce4-screensav
 # TODO args (debug, polybar)
@@ -87,10 +88,10 @@ pm::polybarpp () { # <percentage:Int> -> Void {{{
   local -r _icon_charging=' '
   local -r _icon_discharging=' '
   local -r _icon_full=' '
-  local -r _color_urgent='%{F#e27878}'
+  local -r _color_urgent='%{F#E27878}'
   local -r _color_charging=''
   local -r _color_discharging=''
-  local -r _color_full='%{F#3fbf77}'
+  local -r _color_full='%{F#A3BE8C}'
 
   local _icon=""
   local _color=""

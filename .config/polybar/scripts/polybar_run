@@ -6,20 +6,19 @@
 killall -q polybar
 while pgrep -x polybar >/dev/null; do sleep 1; done
 
-CONFIG="${HOME}/.config/polybar/config.ini"
-BARS=("main" "secondary")
+CONFIG="${XDG_CONFIG_HOME:-${HOME:-~}/.config}/polybar/config-spaced.ini"
+BARS=("main")
 
 if test -z "$(pgrep -x polybar)"; then
   for MONITOR in $(polybar --list-monitors | cut -d" " -f1 | cut -d":" -f1); do
     IS_PRIMARY="$(polybar --list-monitors | grep "${MONITOR}" | cut -d" " -f3)"
+    TRAY=none
     if [[ $IS_PRIMARY == *"primary"* ]]; then
-      TRAY=right
-    else
-      TRAY=none
+      TRAY=center
     fi
     for BAR in "${BARS[@]}"; do
       printf "Launching bar: ${BAR}\n"
-      TRAY="${TRAY}" MONITOR="${MONITOR}" polybar --config="${CONFIG}" --reload "${BAR}" &
+      TRAY="${TRAY}" MONITOR="${MONITOR}" polybar --config="${CONFIG}" --reload "${BAR}" -l info # &
     done
   done
 else
