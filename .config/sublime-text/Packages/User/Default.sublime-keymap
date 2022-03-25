@@ -9,11 +9,11 @@
 	},
 	{
 		"keys": ["ctrl+alt+e"],
-		"command": "open_dir", "args": {"dir": "$file_path", "file": "$file_name"}
+		"command": "open_dir", "args": {"file": "$file_name", "dir": "$file_path"}
 	},
 	{
 		"keys": ["ctrl+comma"],
-		"command": "edit_settings", "args": {"base_file": "${packages}/Default/Preferences.sublime-settings", "default": "[\n\t$0\n]\n"}
+		"command": "edit_settings", "args": {"default": "[\n\t$0\n]\n", "base_file": "${packages}/Default/Preferences.sublime-settings"}
 	},
 	{
 		"keys": ["ctrl+d"],
@@ -21,10 +21,10 @@
 	},
 	{
 		"keys": ["ctrl+period"],
-		"command": "edit_settings", "args": {"base_file": "${packages}/User/Default.sublime-keymap", "default": "[\n\t$0\n]\n"}
+		"command": "edit_settings", "args": {"default": "[\n\t$0\n]\n", "base_file": "${packages}/User/Default.sublime-keymap"}
 	},
 	{
 		"keys": ["ctrl+shift+period"],
-		"command": "edit_settings", "args": {"base_file": "${packages}/User/Default ($platform).sublime-keymap", "default": "[\n\t$0\n]\n"}
+		"command": "edit_settings", "args": {"default": "[\n\t$0\n]\n", "base_file": "${packages}/User/Default ($platform).sublime-keymap"}
 	}
 ]

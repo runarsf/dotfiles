@@ -1,7 +1,5 @@
 /* https://github.com/davatorium/rofi/blob/next/doc/rofi-theme.5.markdown#all-widgets */
 
-/* TODO When no icon, background is still visible where icon would've been */
-
 configuration {
   combi-hide-mode-prefix: true;
   fixed-num-lines: true;
@@ -37,7 +35,7 @@ configuration {
   border-color: #2B2D43;
   border-radius: 5px;
   y-offset:  10px;
-  padding: 6px;
+  padding: 5px 6px 4px 6px;
   x-offset:  -1px; /* fix horizontal border-offset */
   children: [ horibox ];
 }
@@ -47,7 +45,11 @@ configuration {
   children: [ prompt, entry, listview ];
 }
 
+#prompt {
+  padding: 2px;
+}
 #entry {
+  padding: 2px;
   expand: false;
   width: 10em;
 }
@@ -58,6 +60,9 @@ configuration {
   lines: 50;
 }
 
+element-text {
+  padding: 2px 5px;
+}
 element-text selected {
   background-color: #2B2D43;
   border-radius:  2px;
