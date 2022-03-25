@@ -1,0 +1,255 @@
+/* https://github.com/davatorium/rofi/blob/next/doc/rofi-theme.5.markdown#all-widgets */
+
+/* TODO When no icon, background is still visible where icon would've been */
+
+configuration {
+  combi-hide-mode-prefix: true;
+  fixed-num-lines: true;
+  show-icons: true;
+  display-combi: "";
+  sidebar-mode: false;
+  eh: 1;
+  scroll-method: 0;
+  window-format: "[{w}] ··· {c} ···   {t}";
+  drun-show-actions: true;
+  drun-display-format: "{name}";
+  display-window: "";
+  display-windowcd: "";
+  display-run: "";
+  display-ssh: "";
+  display-drun: "";
+  display-keys: "";
+  display-filebrowser: "";
+}
+
+* {
+  background-color: #0D1117;
+  text-color: #9DA2AB;
+  font: "Rubik 10";
+}
+
+#window {
+  anchor: north;
+  location: north;
+  width: 99.4%;
+  height: 32px; /* polybar + 2 (border) */
+  border: 1px;
+  border-color: #2B2D43;
+  border-radius: 5px;
+  y-offset:  10px;
+  padding: 6px;
+  x-offset:  -1px; /* fix horizontal border-offset */
+  children: [ horibox ];
+}
+
+#horibox {
+  orientation: horizontal;
+  children: [ prompt, entry, listview ];
+}
+
+#entry {
+  expand: false;
+  width: 10em;
+}
+
+#listview {
+  layout: horizontal;
+  spacing: 10px; /* Spacing between programs */
+  lines: 50;
+}
+
+element-text selected {
+  background-color: #2B2D43;
+  border-radius:  2px;
+}
+
+
+
+/*
+configuration {
+  modi: "combi,window,ssh";
+  combi-modi: "run,drun";
+  fixed-num-lines: true;
+  show-icons: false;
+  sidebar-mode: true;
+  scroll-method: 0;
+  window-format: "[{w}] ··· {c} ···   {t}";
+  click-to-exit: true;
+  combi-hide-mode-prefix: false;
+  drun-show-actions: true;
+  drun-display-format: "{name}";
+  display-window: "";
+  display-windowcd: "";
+  display-run: "";
+  display-ssh: "";
+  display-drun: "";
+  display-combi: "";
+  display-keys: "";
+  display-filebrowser: "";
+}
+*/
+
+
+/*
+* {
+  al: #00000000;
+  bg: #13141DFF;
+  se: #151515ff;
+  fg: #b9bfc9ff;
+  fg-dark: #1e2030ff;
+  ac: #306998ff;
+  red: #EC7875ff;
+  green: #4aa14eff;
+  yellow: #FDD835ff;
+  blue: #42A5F5ff;
+  purple: #BA68C8ff;
+  cyan: #4DD0E1ff;
+  background-color: @bg;
+}
+
+window {
+  border: 0px;
+  border-color: @ac;
+  border-radius: 6px;
+  padding: 15;
+  width: 20%;
+}
+
+prompt {
+  spacing: 0;
+  border: 0;
+  text-color: @fg;
+}
+
+textbox-prompt-colon {
+  expand: false;
+  str: " ";
+  margin: 0px 4px 0px 0px;
+  text-color: inherit;
+}
+
+entry {
+  spacing: 0;
+  text-color: @fg;
+}
+
+case-indicator {
+  spacing: 0;
+  text-color: @fg;
+}
+
+inputbar {
+  spacing: 0px;
+  text-color: @fg;
+  padding: 1px;
+  children: [ prompt,textbox-prompt-colon,entry,case-indicator ];
+}
+
+mainbox {
+  border: 0px;
+  border-color: @ac;
+  padding: 6;
+}
+
+listview {
+  lines: 6;
+  columns: 1;
+  fixed-height: 0;
+  border: 0px;
+  border-color: @ac;
+  spacing: 4px;
+  scrollbar: false;
+  padding: 5px 5px 0px 5px;
+}
+
+element-text, element-icon {
+  background-color: #00000000;
+  text-color: inherit;
+}
+
+element {
+  border: 0px;
+  border-radius: 4px;
+  padding: 5px;
+}
+element normal.normal {
+  background-color: @bg;
+  text-color: @fg;
+}
+element normal.urgent {
+  background-color: @bg;
+  text-color: @red;
+}
+element normal.active {
+  background-color: @ac;
+  text-color: @bg;
+}
+element selected.normal {
+  background-color: @fg;
+  text-color: @bg;
+}
+element selected.urgent {
+  background-color: @bg;
+  text-color: @red;
+}
+element selected.active {
+  background-color: @fg;
+  text-color: @bg;
+}
+element alternate.normal {
+  background-color: @bg;
+  text-color: @fg;
+}
+element alternate.urgent {
+  background-color: @bg;
+  text-color: @fg;
+}
+element alternate.active {
+  background-color: @bg;
+  text-color: @fg;
+}
+
+sidebar {
+  border: 0px;
+  border-color: @ac;
+  border-radius: 0px;
+}
+
+button {
+  horizontal-align: 0.5;
+  vertical-align: 0.5;
+  background-color: @fg-dark;
+  margin: 5px;
+  padding: 5px;
+  text-color: @fg;
+  border: 0px;
+  border-radius: 4px;
+  border-color: @fg;
+}
+
+button selected {
+  background-color: @ac;
+  text-color: @fg;
+  border: 0px;
+  border-radius: 4px;
+  border-color: @fg;
+}
+
+scrollbar {
+  width: 4px;
+  border: 0px;
+  handle-color: @fg;
+  handle-width: 8px;
+  padding: 0;
+}
+
+message {
+  border: 0px;
+  border-color: @ac;
+  padding: 1px;
+}
+
+textbox {
+  text-color: @fg;
+}
+*/

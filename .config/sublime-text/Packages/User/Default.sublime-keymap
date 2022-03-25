@@ -9,7 +9,7 @@
 	},
 	{
 		"keys": ["ctrl+alt+e"],
-		"command": "open_dir", "args": {"file": "$file_name", "dir": "$file_path"}
+		"command": "open_dir", "args": {"dir": "$file_path", "file": "$file_name"}
 	},
 	{
 		"keys": ["ctrl+comma"],

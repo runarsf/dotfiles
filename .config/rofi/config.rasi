@@ -5,19 +5,20 @@
 configuration {
   modi: "combi";
   combi-modi: "run,drun";
-  combi-hide-mode-prefix: true;
-  show-icons: false;
-  display-combi: "";
-  sidebar-mode: false;
-  font: "Rubik 10";
   terminal: "alacritty";
   sorting-method: "fzf";
   case-sensitive: false;
   matching: "fuzzy";
   tokenize: true;
-  scroll-method: 0;
   click-to-exit: true;
   kb-mode-next: "Shift+Right,Control+Tab,Tab";
   kb-row-tab: "";
+
+  /* combi-hide-mode-prefix: true;
+  show-icons: false;
+  display-combi: "";
+  sidebar-mode: false;
+  scroll-method: 0;
+  font: "Rubik 10"; */
 }
-@theme "./themes/dark.rasi"
+@theme "./themes/poly.rasi"
