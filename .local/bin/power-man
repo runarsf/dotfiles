@@ -15,6 +15,7 @@ set -euo pipefail
 DEBUG="${1:+1}"
 
 # NB! Decimals are delimited by a comma, *not* a period, and they're a bit funky
+# TODO Don't pass global variables to functions? Or do? More maintainable
 : "${DIM_AFTER:=5}"
 : "${DIM_LEVEL:=40}"
 : "${LOCK_AFTER:=10}"
@@ -25,8 +26,9 @@ DEBUG="${1:+1}"
 : "${WARN_PERCENTAGE:=15}"
 : "${WARN_MINUTES:=15}"
 : "${FULL_THRESHOLD:=95}"
+: "${LOCKDIR:=/tmp/power-man-lock}"
 
-pm::util::check_deps () { # <dependencies:@String> -> Void {{{
+pm::utils::check_deps () { # <dependencies:@String> -> Void {{{
   local -r _deps=${@}
   local _missing=""
   # Could also shift instead
@@ -42,7 +44,7 @@ pm::util::check_deps () { # <dependencies:@String> -> Void {{{
   fi
 } # }}}
 
-pm::util::procgrep () { # <process_name:String> -> Void {{{
+pm::utils::procgrep () { # <process_name:String> -> Void {{{
   local -r _process="${1}"
   # This is, AFAIK, the only clean way of actually detect a running process from a program name.
   #   `pgrep -fl`: pgrep for -full process names (not just first 15 chars) and -list the process names as well
@@ -60,14 +62,14 @@ pm::util::procgrep () { # <process_name:String> -> Void {{{
   return 0
 } # }}}
 
-pm::util::float2int () { # <float:@Number> -> Int {{{
+pm::utils::float2int () { # <float:@Number> -> Int {{{
   local -r _float="$(printf '%s\n' "${@}" | sed -r 's/[.]+/,/g' | sed -r 's/[ ]+//g')"
 
   awk 'BEGIN{for (i=1; i<ARGC;i++)
    printf "%.0f\n", ARGV[i]}' "${_float}"
 } # }}}
 
-pm::util::uq () { # <data|String> <key:String> -> String {{{
+pm::utils::uq () { # <data|String> <key:String> -> String {{{
   # jq for upower-syntax
   local -r _data="$(</dev/stdin)"
   local -r _key="${1}"
@@ -79,9 +81,9 @@ pm::util::uq () { # <data|String> <key:String> -> String {{{
 
 pm::polybarpp () { # <percentage:Int> -> Void {{{
   # https://github.com/polybar/polybar/wiki/Formatting#foreground-color-f
-  local -r _battery_level="$(pm::util::float2int "${1:?}")"
-  local -r _low_threshold="$(pm::util::float2int "${2:?}")"
-  local -r _full_threshold="$(pm::util::float2int "${3:?}")"
+  local -r _battery_level="$(pm::utils::float2int "${1:?}")"
+  local -r _low_threshold="$(pm::utils::float2int "${2:?}")"
+  local -r _full_threshold="$(pm::utils::float2int "${3:?}")"
   local -r _battery_state="${4:?}"
 
   local -r _icon_urgent=' '
@@ -113,9 +115,9 @@ pm::polybarpp () { # <percentage:Int> -> Void {{{
 } # }}}
 
 pm::battery () { # <warn_percentage:Int> -> String {{{
-  local -r _warn_percentage="$(pm::util::float2int "${1:-15}")"
-  local -r _warn_minutes="$(pm::util::float2int "${2:-15}")"
-  local -r _full_threshold="$(pm::util::float2int "${3:-95}")"
+  local -r _warn_percentage="$(pm::utils::float2int "${1:-15}")"
+  local -r _warn_minutes="$(pm::utils::float2int "${2:-15}")"
+  local -r _full_threshold="$(pm::utils::float2int "${3:-95}")"
 
   # TODO sleep if battery very low?
   # TODO Notify when battery at normal levels
@@ -128,10 +130,10 @@ pm::battery () { # <warn_percentage:Int> -> String {{{
   # upower seems to update rather weirdly
   local -r _battery_path="$(upower -e | grep 'battery')"
   local -r _battery_info="$(upower -i "${_battery_path}")"
-  local -r _battery_level="$(printf '%s\n' "${_battery_info}" | pm::util::uq 'percentage:' | sed -r 's/[%]+//g')"
-  local -r _battery_state="$(printf '%s\n' "${_battery_info}" | pm::util::uq 'state:')"
-  local -r _battery_time="$(printf '%s\n' "${_battery_info}" | pm::util::uq 'time to .+:')"
-  local -r _battery_time_int="$(pm::util::float2int "$(printf '%s\n' "${_battery_time}" | awk '{print $1}')")"
+  local -r _battery_level="$(printf '%s\n' "${_battery_info}" | pm::utils::uq 'percentage:' | sed -r 's/[%]+//g')"
+  local -r _battery_state="$(printf '%s\n' "${_battery_info}" | pm::utils::uq 'state:')"
+  local -r _battery_time="$(printf '%s\n' "${_battery_info}" | pm::utils::uq 'time to .+:')"
+  local -r _battery_time_int="$(pm::utils::float2int "$(printf '%s\n' "${_battery_time}" | awk '{print $1}')")"
   local -r _battery_time_unit="$(printf '%s\n' "${_battery_time}" | awk '{print $2}')"
   # Alternative to _battery_state
   # local -r _line_path="$(upower -e | grep line_power)"
@@ -150,34 +152,68 @@ pm::battery () { # <warn_percentage:Int> -> String {{{
   fi
 } # }}}
 
+pm::utils::cleanup () { # {{{
+  if ! rmdir "${LOCKDIR:?}" >/dev/null 2>&1; then
+    test "${DEBUG}" = "1" && printf "[PM] Failed to remove lock directory\n"
+    # Failed to remove lock directory
+    exit 1
+  fi
+} # }}}
+
+pm::utils::daemonize () { # {{{
+  # TODO https://stackoverflow.com/a/169969
+  # me="$(basename "$0")";
+  # running=$(ps h -C "$me" | grep -wv $$ | wc -l);
+  # [[ $running > 1 ]] && exit;
+  if ! mkdir "${LOCKDIR}" >/dev/null 2>&1; then
+    # Couldn't acquire lock
+    test "${DEBUG}" = "1" && printf "[PM] Couldn't acquire lock\n"
+    exit 1
+  fi
+  # Acquired lock
+  trap "pm::utils::cleanup" EXIT
+
+  while true; do
+    if ! test -d "${LOCKDIR}"; then
+      # Run until no lockdir is found;
+      #   rmdir "${LOCKDIR}" >/dev/null 2>&1
+      exit 0
+    fi
+    sleep 5
+    power-man
+  done
+} # }}}
+
 pm::screensaver () { # <dim_after:Number> <dim_level:Number> <lock_after:Number> <lock_command:String> <lock_process:String> <suspend_after:Number> <suspend_method:String[sleep|hibernate]> -> Void {{{
-  local -r _dim_after="$(pm::util::float2int "$((${1:-5} * 60000))")"
-  local -r _dim_level="$(pm::util::float2int "${2:-40}")"
-  local -r _lock_after="$(pm::util::float2int "$((${3:-15} * 60000))")"
+  local -r _dim_after="$(pm::utils::float2int "$((${1:-5} * 60000))")"
+  local -r _dim_level="$(pm::utils::float2int "${2:-40}")"
+  local -r _lock_after="$(pm::utils::float2int "$((${3:-15} * 60000))")"
   local -r _lock_command="${4:-betterlockscreen --lock dimblur --blur 8}"
   local -r _lock_base="$(printf '%s\n' "${_lock_command}" | awk '{print $1}')"
   local -r _lock_args=$(printf '%s\n' "${_lock_command}" | cut -f 2- -d ' ')
   local -r _lock_process="${5}"
-  local -r _suspend_after="$(pm::util::float2int "$((${6:-20} * 60000))")"
-  local -r _suspend_method="${7:-sleep}"
+  local -r _suspend_after="$(pm::utils::float2int "$((${6:-20} * 60000))")"
+  local -r _suspend_method="${7:-suspend}"
   local -r _idle_time="$(xprintidle)"
-
-  if test ! -f /tmp/power-man-backlight.dat \
-       -a "${_idle_time}" -gt "${_dim_after}" \
-       -a "${_dim_after}" -ne "0"; then
-    test "${DEBUG}" = "1" && printf '[PM] Dimming monitor\n'
-    printf '%s\n' "$(pm::util::float2int "$(xbacklight -get)")" > /tmp/power-man-backlight.dat
-    xbacklight -set "${_dim_level}"
-  fi
 
   if test -f /tmp/power-man-backlight.dat \
        -a "${_idle_time}" -le "${_dim_after}"; then
-     test "${DEBUG}" = "1" && printf '[PM] Restoring monitor brightness\n'
-     xbacklight -set "$(cat /tmp/power-man-backlight.dat)"
-     rm -f /tmp/power-man-backlight.dat
+    test "${DEBUG}" = "1" && printf '[PM] Restoring monitor brightness\n'
+    xbacklight -set "$(cat /tmp/power-man-backlight.dat)"
+    rm -f /tmp/power-man-backlight.dat
+    rmdir "${LOCKDIR}" >/dev/null 2>&1
   fi
 
-  if ! pm::util::procgrep "${_lock_process}" \
+  if test ! -f /tmp/power-man-backlight.dat \
+       -a "${_idle_time}" -gt "${_dim_after}"; then
+       -a "${_dim_after}" -ne "0"; then
+    test "${DEBUG}" = "1" && printf '[PM] Dimming monitor\n'
+    printf '%s\n' "$(pm::utils::float2int "$(xbacklight -get)")" > /tmp/power-man-backlight.dat
+    xbacklight -set "${_dim_level}"
+    pm::utils::daemonize
+  fi
+
+  if ! pm::utils::procgrep "${_lock_process}" \
      && test "${_idle_time}" -gt "${_lock_after}" \
           -a "${_lock_after}" -ne "0"; then
     test "${DEBUG}" = "1" && printf '[PM] Locking screen\n'
@@ -192,7 +228,7 @@ pm::screensaver () { # <dim_after:Number> <dim_level:Number> <lock_after:Number>
 } # }}}
 
 main () { # -> Void {{{
-  pm::util::check_deps xprintidle xbacklight upower # acpi
+  pm::utils::check_deps xprintidle xbacklight upower # acpi
   pm::battery "${WARN_PERCENTAGE:-}" "${WARN_MINUTES:-}" "${FULL_THRESHOLD:-}"
   pm::screensaver "${DIM_AFTER:-}" "${DIM_LEVEL:-}" "${LOCK_AFTER:-}" "${LOCK_COMMAND:-}" "${LOCK_PROCESS:-}" "${SUSPEND_AFTER:-}" "${SUSPEND_METHOD:-}"
 } # }}}
