@@ -205,7 +205,7 @@ pm::screensaver () { # <dim_after:Number> <dim_level:Number> <lock_after:Number>
   fi
 
   if test ! -f /tmp/power-man-backlight.dat \
-       -a "${_idle_time}" -gt "${_dim_after}"; then
+       -a "${_idle_time}" -gt "${_dim_after}" \
        -a "${_dim_after}" -ne "0"; then
     test "${DEBUG}" = "1" && printf '[PM] Dimming monitor\n'
     printf '%s\n' "$(pm::utils::float2int "$(xbacklight -get)")" > /tmp/power-man-backlight.dat
