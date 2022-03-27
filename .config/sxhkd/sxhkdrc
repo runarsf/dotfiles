@@ -22,7 +22,8 @@ alt + shift + p
 	screenshot -m region -c
 
 super + shift + c
-	toggleprogram picom --config "${HOME}/.config/picom.conf" -fcCGb --xrender-sync-fence
+	toggleprogram picom
+#	toggleprogram picom --config "${HOME}/.config/picom.conf" -fcCGb --xrender-sync-fence
 
 XF86Audio{LowerVolume,RaiseVolume}
 	pactl set-sink-volume 2 {-,+}5%
@@ -34,6 +35,5 @@ XF86Audio{Next,Prev,Play,Stop}
 # super + alt + b
 # 	bwmenu --clear 8 --auto-lock 28800 -- -location 2
 
-# Generate password
-super + r ; g ; p
-    tr -dc "a-zA-Z0-9_#@.-" < /dev/urandom | head -c 14 | xclip -selection clipboard
+# super + r ; g ; p
+#   tr -dc "a-zA-Z0-9_#@.-" < /dev/urandom | head -c 14 | xclip -selection clipboard

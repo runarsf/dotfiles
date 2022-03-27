@@ -167,13 +167,9 @@ Plug 'voldikss/vim-floaterm' | Plug 'ptzz/lf.vim' " {{{
 let g:lf_replace_netrw = 0 " Open lf when vim opens a directory
 "let g:lf_command_override = 'lf -command "set hidden"'
 " }}}
-Plug 'metakirby5/codi.vim' " {{{
-" Codi [filetype] activates Codi for the current buffer, using the provided filetype or the buffer's filetype.
-" Codi! deactivates Codi for the current buffer.
-" Codi!! [filetype] toggles Codi for the current buffer, using the provided filetype or the buffer's filetype.
-" }}}
 
 " Syntax highlighting {{{
+Plug 'elkowar/yuck.vim', { 'for': 'yuck' }
 Plug 'rodjek/vim-puppet', { 'for': 'puppet' }
 Plug 'tpope/vim-liquid', { 'for': ['markdown', 'html'] }
 Plug 'LnL7/vim-nix', { 'for': 'nix' }
@@ -226,7 +222,7 @@ let g:onedark_color_overrides = {
 call plug#end() | endif " }}}
 
 " :lua print(vim.inspect(require("todo-comments.config")))
-if (has('nvim-0.5'))
+if (has('nvim-0.5')) " {{{
 lua << EOF
 require("todo-comments").setup {
   highlight = {
@@ -247,7 +243,7 @@ require("todo-comments").setup {
   }
   require("trouble").setup {}
 EOF
-endif
+endif " }}}
 
 "if (empty($TMUX))
 if (has("nvim"))
