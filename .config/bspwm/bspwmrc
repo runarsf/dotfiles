@@ -66,6 +66,9 @@ bspc rule -a org-geogebra-desktop-GeoGebra3D state=floating
 bspc rule -a Dragon-drop                     state=floating sticky=on border=off
 bspc rule -a '*:scratchpad'                  state=floating sticky=on
 bspc rule -a '*:math'                        state=floating sticky=on
+# Doesn't seem to work
+bspc rule -a eww-bar layer=below
+bspc rule -a trayer layer=above
 
 #on=14 off=0
 #bspc query -N -n .floating.window | xargs -I {node} bspc config -n {node} border_width "$on"
@@ -95,11 +98,15 @@ bspc rule -a '*:math'                        state=floating sticky=on
 
 # Programs that should be executed once generally belong in ~/.xinitrc
 # "${XDG_CONFIG_HOME:-${HOME:-~}/.config}/polybar/launch.sh" main &
-polybar_run &
+# polybar_run &
 # "${XDG_CONFIG_HOME:-${HOME:-~}/.config}/bspwm/scripts/bspwm_monitors" &
 # "${XDG_CONFIG_HOME:-${HOME}/.config}/bspwm/scripts/cleanfullscreen" &
 # "${XDG_CONFIG_HOME:-${HOME}/.config}/bspwm/scripts/single_node_border" &
 (~/.fehbg || (feh --bg-scale "${XDG_CONFIG_HOME:-${HOME:-~}/.config}/wall.jpg" || nitrogen --restore)) &
 killall -q sxhkd; sxhkd -m 1 -c "${XDG_CONFIG_HOME:-${HOME:-~}/.config}/sxhkd/sxhkdrc" "${XDG_CONFIG_HOME:-${HOME:-~}/.config}/bspwm/sxhkdrc" &
+
+eww close bar || killall -q eww; eww open bar
+sleep 1.5 # We need to wait until eww has started so trayer will overlap eww
+killall -q trayer; trayer --edge top --align right --SetDockType true --SetPartialStrut true --expand false --width 100 --widthtype pixel --transparent true --alpha 0 --tint 0x0D1117 --height 30 --heighttype pixel --monitor "primary" --margin 14 --distance 11 --padding 0 &
 # killall -q bspwm_double_borders; "${XDG_CONFIG_HOME:-${HOME:-~}/.config}/bspwm/scripts/bspwm_double_borders" &
 # }}}

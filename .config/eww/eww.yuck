@@ -1,0 +1,75 @@
+; Docs: https://elkowar.github.io/eww/configuration.html
+; Tray support: https://github.com/elkowar/eww/issues/111
+; Author dotfiles: https://github.com/elkowar/dots-of-war/tree/master/eww-bar/.config/eww-bar
+
+; Variables {{{
+(defvar eww "eww -c ~/.config/eww")
+(defvar reveal-audio false)
+; }}}
+
+(defwindow bar ; {{{
+  :monitor 0
+  :windowtype "dock"
+  :hexpand false
+  :vexpand false
+  :geometry (geometry :x "0%"
+                      :y "10px"
+                      :width "99%"
+                      :height "32px"
+                      :anchor "top center")
+  :reserve (struts :side "top" :distance "40px")
+  (bar)) ; }}}
+
+(defwidget bar [] ; {{{
+  (centerbox :orientation "h"
+    (bspws)
+    (info)
+    (modules))) ; }}}
+
+(defwidget bspws [] ; {{{
+  (literal :content bspws_listen))
+(deflisten bspws_listen "modules/bspws") ; }}}
+
+(defwidget info []
+  (box :class "modules"
+       :orientation "h"
+       :space-evenly false
+       :halign "center"
+  {music != "" ? "🎵 ${music}" : "${title}"}))
+
+(defwidget modules []
+    (box :class "modules" :orientation "h" :space-evenly false :halign "end"
+      (metric :label "🔊"
+              :value volume
+              :onchange "amixer -D pulse sset Master {}%")
+      (metric :label ""
+              :value {EWW_RAM.used_mem_perc}
+              :onchange "")
+      (metric :label "💾"
+              :value {round((1 - (EWW_DISK["/"].free / EWW_DISK["/"].total)) * 100, 0)}
+              :onchange "")
+      time))
+
+(defwidget metric [label value onchange]
+  (box :orientation "h"
+       :class "metric"
+       :space-evenly false
+    (box :class "label" label)
+    (scale :min 0
+           :max 101
+           :active {onchange != ""}
+           :value value
+           :onchange onchange)))
+
+(deflisten music :initial ""
+  "playerctl --follow metadata --format '{{ artist }} - {{ title }}' || true")
+
+(defpoll title :initial ""
+               :interval "250ms"
+  "xdotool getactivewindow getwindowname")
+
+(defpoll volume :interval "1s"
+  "modules/getvol")
+
+(defpoll time :interval "10s"
+  "date '+%H:%M %b %d, %Y'")

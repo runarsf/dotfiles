@@ -29,14 +29,14 @@ configuration {
 #window {
   anchor: north;
   location: north;
-  width: 99.4%;
+  width: 99%;
   height: 32px; /* polybar + 2 (border) */
   border: 1px;
   border-color: #2B2D43;
   border-radius: 5px;
   y-offset:  10px;
   padding: 5px 6px 4px 6px;
-  x-offset:  -1px; /* fix horizontal border-offset */
+  /* x-offset:  -1px; (polybar) fix horizontal border-offset */
   children: [ horibox ];
 }
 

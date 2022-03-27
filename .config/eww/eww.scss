@@ -1,0 +1,105 @@
+$background: #0D1117;
+
+* {
+  all: unset;
+}
+
+window {
+  background-color: $background;
+  color: #9DA2AB;
+
+  /* & > * {
+    margin: 3px;
+  } */
+}
+
+.bar {
+  font-family: "Noto Sans";
+  font-size: 13px;
+  padding: 0 10px;
+  border-radius: 5px;
+  border: 1px solid #25293E;
+}
+
+.modules {
+  // For trayer-srg
+  padding-right: 100px;
+
+  slider {
+    color: #ffd5cd;
+  }
+}
+
+.metric scale trough {
+  background-color: #4e4e4e;
+  border-radius: 50px;
+  min-height: 3px;
+  min-width: 50px;
+  margin-left: 10px;
+  margin-right: 20px;
+
+  highlight {
+    background-color: #D35D6E;
+    color: #000000;
+    border-radius: 10px;
+  }
+}
+
+.label-ram {
+  font-size: large;
+}
+
+.workspaces {
+  button {
+    background: none;
+    margin: 3px;
+    /* padding: 0 5px; */
+
+    &.occupied {
+      /* font-size: 1.01rem; */
+      color: #aaaaaa;
+    }
+    &.focused {
+      font-weight: bold;
+      color: #ffffff;
+    }
+    &.urgent {
+      color: #ff6565;
+    }
+    &.empty {
+      /* font-size: 0.8rem; */
+      color: #465059;
+    }
+
+    &:hover {
+      color: #D35D6E;
+    }
+  }
+}
+
+scale trough {
+  background-color: #161B22;
+  border-radius: 2px;
+  min-height: 10px;
+  min-width: 100px;
+  margin: 0 10px 0 20px;
+}
+scale trough highlight {
+  background-color: #5295cc;
+  border-radius: 2px;
+}
+
+.hover-module {
+  .icon, .hovered-sign, .revealed-content {
+    padding: 0 7px;
+    margin: 3px 0;
+    border-radius: 5px;
+  }
+  .icon, .hovered-sign {
+    background: #1C252C;
+  }
+  /* .revealed-content { background: $magenta; } */
+}
+/* .hover-module .eventbox { color: #000000; }
+.hover-module .eventbox:hover { color: $foreground; } */
+

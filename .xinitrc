@@ -61,6 +61,8 @@ setxkbmap -option caps:escape -v no &
 # Make sure cursor is not an X when hovering over root window
 xsetroot -cursor_name left_ptr &
 
+/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
+
 # Start common apps
 autorandr --change &
 dunst --config "${XDG_CONFIG_HOME:-${HOME:-~}/.config}/dunst/dunstrc" &
@@ -73,9 +75,12 @@ if test -x /usr/bin/nm-applet; then
   nm-applet --sm-disable &
 fi
 # picom --config "${XDG_CONFIG_HOME:-${HOME:-~}/.config}/picom/picom.conf" -fcCGb --xrender-sync-fence &
+picom &
 
 if test "${DESKTOP}" = "xmonad"; then
   trayer --edge top --align right --SetDockType true --SetPartialStrut true --expand true --width 5 --transparent false --tint 0x13141D --height 20 --monitor "primary" &
+elif test "${DESKTOP}" = "bspwm"; then
+  trayer --edge top --align right --SetDockType true --SetPartialStrut true --expand false --width 5 --transparent false --tint 0x0D1117 --height 30 --monitor "primary" --margin 14 --distance 11 --padding 0 &
 fi
 
 #xsetwacom --set "Wacom Intuos S Pen stylus" Suppress 2

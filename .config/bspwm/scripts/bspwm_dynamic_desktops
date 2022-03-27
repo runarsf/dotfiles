@@ -204,9 +204,9 @@ case "$option" in
         ;;
     --df|--focus-desktop)
         if [ -n "$dedicated_desktops" ]; then
-            _desk_or_node monitor desktop -f "${target_desktop}"
+            _desk_or_node monitor desktop -f ${target_desktop}
         else
-            _desk_or_node desktop -f "${target_desktop}"
+            _desk_or_node desktop -f ${target_desktop}
         fi
         ;;
     *)
