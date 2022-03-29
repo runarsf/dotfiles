@@ -74,6 +74,9 @@ super + shift + e
 	prompt "Exit bspwm?" "bspc quit"
 
 super + shift + b
+	toggleprogram "eww" open bar
+
+super + alt + b
 	toggleprogram "bspwm_double_borders"
 
 super + n

@@ -182,11 +182,9 @@ Plug 'neoclide/jsonc.vim', { 'for': ['json', 'jsonc'] } " json comment support
 " }}}
 
 " Themes {{{
-let g:colorscheme = 'onedark'
+let g:colorscheme = 'ayu-dark'
 
-" Plug 'ayu-theme/ayu-vim' " {{{
-" let ayucolor="dark" " light / mirage / dark
-" }}}
+Plug 'Shatur/neovim-ayu'
 " Plug 'rakr/vim-one' | let g:one_allow_italics = 0
 " Plug 'projekt0n/github-nvim-theme' " {{{
 " lua << EOF

@@ -7,6 +7,7 @@ set -euo pipefail
 # TODO Become hostile towards xfce4-power-man and xfce4-screensav
 # TODO args (debug, polybar)
 # ??? Use xset dpms force standby for turning off screen?
+# TODO Make more modular: custom_timings=("15" "systemctl suspend")
 
 # This script is intended to be scheduled by cron or polybar.
 
@@ -27,6 +28,7 @@ DEBUG="${1:+1}"
 : "${WARN_MINUTES:=15}"
 : "${FULL_THRESHOLD:=95}"
 : "${LOCKDIR:=/tmp/power-man-lock}"
+FORMAT="${FORMAT:+true}"
 
 pm::utils::check_deps () { # <dependencies:@String> -> Void {{{
   local -r _deps=${@}
@@ -139,7 +141,11 @@ pm::battery () { # <warn_percentage:Int> -> String {{{
   # local -r _line_path="$(upower -e | grep line_power)"
   # local -r _line_charging="$(upower -i "${_line_path}" | grep -A2 'line-power' | grep online | awk '{print $2}')"
 
-  pm::polybarpp "${_battery_level}" "${_warn_percentage}" "${_full_threshold}" "${_battery_state}"
+  if test "${FORMAT}" = "true"; then
+    pm::polybarpp "${_battery_level}" "${_warn_percentage}" "${_full_threshold}" "${_battery_state}"
+  else
+    printf '%s\n' "${_battery_level}"
+  fi
 
   # TODO Only send one notif
   # if test "${_battery_status}" = "Discharging" \

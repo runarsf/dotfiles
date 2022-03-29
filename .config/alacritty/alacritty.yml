@@ -38,11 +38,9 @@ scrolling: # {{{
 font: # {{{
   normal:
     style: Regular
-    #family: Scientifica
-    #family: JetBrains Mono
     # family: JetBrainsMono Nerd Font
-    #family: Ubuntu Mono
-    family: Terminess Powerline # Terminus
+    # family: Ubuntu Mono
+    family: Terminess Powerline # Terminus, CozetteVector
 
   bold:
     style: Regular
@@ -50,7 +48,7 @@ font: # {{{
   italic:
     style: Regular
 
-  size: 10
+  size: 9
 
   offset:
     x: 0
@@ -65,73 +63,57 @@ draw_bold_text_with_bright_colors: true
 
 colors: # {{{
 
-  # Default (Tomorrow Night Bright) {{{
-  # primary:
-  #   background: '0x000000'
-  #   foreground: '0xeaeaea'
-  # dim_foreground: '0x9a9a9a'
-  # bright_foreground: '0xffffff'
-  # cursor:
-  #   text: '0x000000'
-  #   cursor: '0xffffff'
-  # selection:
-  #   text: '0xeaeaea'
-  #   background: '0x404040'
-  # normal:
-  #   black:   '0x000000'
-  #   red:     '0xd54e53'
-  #   green:   '0xb9ca4a'
-  #   yellow:  '0xe6c547'
-  #   blue:    '0x7aa6da'
-  #   magenta: '0xc397d8'
-  #   cyan:    '0x70c0ba'
-  #   white:   '0xeaeaea'
-  # bright:
-  #   black:   '0x666666'
-  #   red:     '0xff3334'
-  #   green:   '0x9ec400'
-  #   yellow:  '0xe7c547'
-  #   blue:    '0x7aa6da'
-  #   magenta: '0xb77ee0'
-  #   cyan:    '0x54ced6'
-  #   white:   '0xffffff'
-  # dim:
-  #   black:   '0x000000'
-  #   red:     '0x8c3336'
-  #   green:   '0x7a8530'
-  #   yellow:  '0x97822e'
-  #   blue:    '0x506d8f'
-  #   magenta: '0x80638e'
-  #   cyan:    '0x497e7a'
-  #   white:   '0x9a9a9a'
-  # indexed_colors: []
-  # }}}
+  # https://github.com/alacritty/alacritty/wiki/Color-schemes
 
   # GitHub Dark Default {{{
+  # primary:
+  #   background: '0x0d1117'
+  #   foreground: '0xb3b1ad'
+  # normal:
+  #   black:   '0x484f58'
+  #   red:     '0xff7b72'
+  #   green:   '0x3fb950'
+  #   yellow:  '0xd29922'
+  #   blue:    '0x58a6ff'
+  #   magenta: '0xbc8cff'
+  #   cyan:    '0x39c5cf'
+  #   white:   '0xb3b1ad'
+  # bright:
+  #   black:   '0x6e7681'
+  #   red:     '0xffa198'
+  #   green:   '0x56d364'
+  #   yellow:  '0xe3b341'
+  #   blue:    '0x79c0ff'
+  #   magenta: '0xd2a8ff'
+  #   cyan:    '0x39c5cf'
+  #   white:   '0xb3b1ad'
+  # indexed_colors:
+  #   - { index: 16, color: '0xd18616' }
+  #   - { index: 17, color: '0xffa198' }
+  # }}}
+
+  # Ayu Dark {{{
   primary:
-    background: '0x0d1117'
-    foreground: '0xb3b1ad'
+    background: '#0A0E14'
+    foreground: '#B3B1AD'
   normal:
-    black:   '0x484f58'
-    red:     '0xff7b72'
-    green:   '0x3fb950'
-    yellow:  '0xd29922'
-    blue:    '0x58a6ff'
-    magenta: '0xbc8cff'
-    cyan:    '0x39c5cf'
-    white:   '0xb3b1ad'
+    black: '#01060E'
+    red: '#EA6C73'
+    green: '#91B362'
+    yellow: '#F9AF4F'
+    blue: '#53BDFA'
+    magenta: '#FAE994'
+    cyan: '#90E1C6'
+    white: '#C7C7C7'
   bright:
-    black:   '0x6e7681'
-    red:     '0xffa198'
-    green:   '0x56d364'
-    yellow:  '0xe3b341'
-    blue:    '0x79c0ff'
-    magenta: '0xd2a8ff'
-    cyan:    '0x39c5cf'
-    white:   '0xb3b1ad'
-  indexed_colors:
-    - { index: 16, color: '0xd18616' }
-    - { index: 17, color: '0xffa198' }
+    black: '#686868'
+    red: '#F07178'
+    green: '#C2D94C'
+    yellow: '#FFB454'
+    blue: '#59C2FF'
+    magenta: '#FFEE99'
+    cyan: '#95E6CB'
+    white: '#FFFFFF'
   # }}}
 
   # One Dark {{{
@@ -170,108 +152,6 @@ colors: # {{{
   #   magenta: '0xc678dd'
   #   cyan:    '0x56b6c2'
   #   white:   '0x828791'
-  # indexed_colors: []
-  # }}}
-
-  # Ayu Dark {{{
-  # primary:
-  #   background: '0x0f1419'
-  #   foreground: '0xe6e1cf'
-  # normal:
-  #   black:   '0x000000'
-  #   red:     '0xf34a4a'
-  #   green:   '0xbae67e'
-  #   yellow:  '0xffee99'
-  #   blue:    '0x73d0ff'
-  #   magenta: '0xd4bfff'
-  #   cyan:    '0x83CEC6'
-  #   white:   '0xf2f2f2'
-  # bright:
-  #   black:   '0x737d87'
-  #   red:     '0xff3333'
-  #   green:   '0xc2d94c'
-  #   yellow:  '0xe7c547'
-  #   blue:    '0x59c2ff'
-  #   magenta: '0xb77ee0'
-  #   cyan:    '0x5ccfe6'
-  #   white:   '0xffffff'
-  # indexed_colors: []
-  # }}}
-
-  # Xterm {{{
-  # primary:
-  #   background: '0x000000'
-  #   foreground: '0xffffff'
-  # normal:
-  #   black:   '0x000000'
-  #   red:     '0xcd0000'
-  #   green:   '0x00cd00'
-  #   yellow:  '0xcdcd00'
-  #   blue:    '0x0000ee'
-  #   magenta: '0xcd00cd'
-  #   cyan:    '0x00cdcd'
-  #   white:   '0xe5e5e5'
-  # bright:
-  #   black:   '0x7f7f7f'
-  #   red:     '0xff0000'
-  #   green:   '0x00ff00'
-  #   yellow:  '0xffff00'
-  #   blue:    '0x5c5cff'
-  #   magenta: '0xff00ff'
-  #   cyan:    '0x00ffff'
-  #   white:   '0xffffff'
-  # indexed_colors: []
-  # }}}
-
-  # Dracula {{{
-  # primary:
-  #   background: '0x282a36'
-  #   foreground: '0xf8f8f2'
-  # normal:
-  #   black:   '0x000000'
-  #   red:     '0xff5555'
-  #   green:   '0x50fa7b'
-  #   yellow:  '0xf1fa8c'
-  #   blue:    '0xbd93f9'
-  #   magenta: '0xff79c6'
-  #   cyan:    '0x8be9fd'
-  #   white:   '0xbbbbbb'
-  # bright:
-  #   black:   '0x555555'
-  #   red:     '0xff5555'
-  #   green:   '0x50fa7b'
-  #   yellow:  '0xf1fa8c'
-  #   blue:    '0xcaa9fa'
-  #   magenta: '0xff79c6'
-  #   cyan:    '0x8be9fd'
-  #   white:   '0xffffff'
-  # indexed_colors: []
-  # }}}
-
-  # Gruvbox dark {{{
-  #primary:
-  #  # hard contrast: background = '0x1d2021'
-  #  background: '0x282828'
-  #  # soft contrast: background = '0x32302f'
-  #  foreground: '0xebdbb2'
-  #normal:
-  #  black:   '0x282828'
-  #  red:     '0xcc241d'
-  #  green:   '0x98971a'
-  #  yellow:  '0xd79921'
-  #  blue:    '0x458588'
-  #  magenta: '0xb16286'
-  #  cyan:    '0x689d6a'
-  #  white:   '0xa89984'
-  #bright:
-  #  black:   '0x928374'
-  #  red:     '0xfb4934'
-  #  green:   '0xb8bb26'
-  #  yellow:  '0xfabd2f'
-  #  blue:    '0x83a598'
-  #  magenta: '0xd3869b'
-  #  cyan:    '0x8ec07c'
-  #  white:   '0xebdbb2'
   # indexed_colors: []
   # }}}
 

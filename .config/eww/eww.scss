@@ -1,4 +1,27 @@
+// Variables {{{
 $background: #0D1117;
+$background-alt: #25293E;
+$foreground: #9da2ab;
+$foreground-alt: #757680;
+$font: 'cozette';
+$font-alt: 'rissole';
+
+$white: #ffffff;
+$black: #000000;
+$gray: #aaaaaa;
+$gray-alt: #465059;
+$red: #E27878;
+$red-alt: #ff6565;
+$green: #A3BE8C;
+$green-alt: #b8cc52;
+$yellow: #EBCB8B;
+$yellow-alt: #e6c446;
+$blue: #306998;
+$blue-alt: #78a6e2;
+$magenta: #e278db;
+$cyan: #89B8C2;
+$purple: #a07acf;
+// }}}
 
 * {
   all: unset;
@@ -6,100 +29,84 @@ $background: #0D1117;
 
 window {
   background-color: $background;
-  color: #9DA2AB;
-
-  /* & > * {
-    margin: 3px;
-  } */
+  color: $foreground;
 }
 
 .bar {
-  font-family: "Noto Sans";
-  font-size: 13px;
-  padding: 0 10px;
+  font-family: $font;
+  font-size: 1rem;
+  padding: 0 15px;
   border-radius: 5px;
-  border: 1px solid #25293E;
-}
+  border: 1px solid $background-alt;
 
-.modules {
   // For trayer-srg
   padding-right: 100px;
 
-  slider {
-    color: #ffd5cd;
-  }
 }
 
-.metric scale trough {
-  background-color: #4e4e4e;
-  border-radius: 50px;
-  min-height: 3px;
-  min-width: 50px;
-  margin-left: 10px;
-  margin-right: 20px;
+scale trough {
+  background-color: $background-alt;
+  border-radius: 5px;
+  min-height: 4px;
+  min-width: 45px;
+  margin: 0 7px;
+  /* margin: 0 10px 0 20px; */
 
   highlight {
-    background-color: #D35D6E;
-    color: #000000;
-    border-radius: 10px;
+    background-color: $foreground-alt;
+    border-radius: 5px;
   }
 }
+.adjustable trough highlight {
+  background-color: $blue;
+}
 
-.label-ram {
-  font-size: large;
+.info {
+  font-family: $font-alt;
+  font-size: 0.9rem;
+}
+
+label.icon,
+.hover label {
+  padding: 0 9px;
+  margin: 4px 0;
+  border-radius: 5px;
+  background: $background-alt;
+  // ??? Why doesn't this work
+  /* &:hover {
+    color: green;
+  } */
+}
+
+.modules > * {
+  margin: 0 5px;
 }
 
 .workspaces {
   button {
-    background: none;
-    margin: 3px;
-    /* padding: 0 5px; */
+    background-color: $background-alt;
+    margin: 0 3px;
+    padding: 2px 6px;
+    border-radius: 3px;
 
     &.occupied {
       /* font-size: 1.01rem; */
-      color: #aaaaaa;
+      color: $gray;
     }
     &.focused {
       font-weight: bold;
-      color: #ffffff;
+      color: $white;
     }
     &.urgent {
-      color: #ff6565;
+      color: $red;
     }
     &.empty {
       /* font-size: 0.8rem; */
-      color: #465059;
+      color: $gray-alt;
     }
 
     &:hover {
-      color: #D35D6E;
+      color: $blue;
     }
   }
 }
-
-scale trough {
-  background-color: #161B22;
-  border-radius: 2px;
-  min-height: 10px;
-  min-width: 100px;
-  margin: 0 10px 0 20px;
-}
-scale trough highlight {
-  background-color: #5295cc;
-  border-radius: 2px;
-}
-
-.hover-module {
-  .icon, .hovered-sign, .revealed-content {
-    padding: 0 7px;
-    margin: 3px 0;
-    border-radius: 5px;
-  }
-  .icon, .hovered-sign {
-    background: #1C252C;
-  }
-  /* .revealed-content { background: $magenta; } */
-}
-/* .hover-module .eventbox { color: #000000; }
-.hover-module .eventbox:hover { color: $foreground; } */
-

@@ -4,12 +4,17 @@
 
 ; Variables {{{
 (defvar eww "eww -c ~/.config/eww")
-(defvar reveal-audio false)
+(defvar revealvol false)
+(defvar revealbat false)
+(defvar revealram false)
+(defvar revealdisk false)
 ; }}}
 
 (defwindow bar ; {{{
   :monitor 0
   :windowtype "dock"
+  :stacking "bg"
+  :wm-ignore false
   :hexpand false
   :vexpand false
   :geometry (geometry :x "0%"
@@ -17,59 +22,88 @@
                       :width "99%"
                       :height "32px"
                       :anchor "top center")
-  :reserve (struts :side "top" :distance "40px")
+  :reserve (struts :side "top"
+                   :distance "40px")
   (bar)) ; }}}
 
 (defwidget bar [] ; {{{
   (centerbox :orientation "h"
-    (bspws)
+    (workspaces)
     (info)
     (modules))) ; }}}
 
-(defwidget bspws [] ; {{{
-  (literal :content bspws_listen))
-(deflisten bspws_listen "modules/bspws") ; }}}
+(defwidget workspaces [] ; {{{
+  (box :space-evenly false
+       :orientation "h"
+       :halign "start"
+    (literal :content bspws)))
+(deflisten bspws "modules/bspws") ; }}}
 
-(defwidget info []
-  (box :class "modules"
+(defwidget info [] ; {{{
+  (box :class "info"
        :orientation "h"
        :space-evenly false
        :halign "center"
-  {music != "" ? "🎵 ${music}" : "${title}"}))
+  {music != "" ? "🎵 ${music}" : "${title}"})) ; }}}
 
 (defwidget modules []
-    (box :class "modules" :orientation "h" :space-evenly false :halign "end"
-      (metric :label "🔊"
-              :value volume
-              :onchange "amixer -D pulse sset Master {}%")
-      (metric :label ""
-              :value {EWW_RAM.used_mem_perc}
-              :onchange "")
-      (metric :label "💾"
-              :value {round((1 - (EWW_DISK["/"].free / EWW_DISK["/"].total)) * 100, 0)}
-              :onchange "")
-      time))
+  (box :class "modules"
+       :orientation "h"
+       :space-evenly false
+       :halign "end"
+    (box :tooltip "Memory" (hover-module :var revealram :varname "revealram"
+        (scale :min 0 :max 101 :value {EWW_RAM.used_mem_perc})
+        (label :text "")))
+    (box :tooltip "Disk" (hover-module :var revealdisk :varname "revealdisk"
+        (scale :min 0 :max 101 :value {round((1 - (EWW_DISK["/"].free / EWW_DISK["/"].total)) * 100, 0)})
+        (label :text "💿")))
+    (box :tooltip "Battery" (hover-module :var revealbat :varname "revealbat"
+        (scale :min 0 :max 101 :value battery)
+        (label :text "")))
+    (box :tooltip "Volume" (hover-module :var revealvol :varname "revealvol"
+        (scale :min 0 :max 101 :value volume :onchange "amixer -D pulse sset Master {}%" :class "adjustable")
+        (label :text "")))
+    time))
 
-(defwidget metric [label value onchange]
+(defwidget hover-module [var varname ?class ?duration ?transition]
+  (box :class "${class} hover"
+       :orientation "h"
+       :space-evenly false
+    (eventbox :onhover "${eww} update ${varname}=true"
+              :onhoverlost "${eww} update ${varname}=false"
+      (box :space-evenly false
+        (revealer :reveal var
+                  :transition {transition ?: "slideleft"}
+                  :duration {duration ?: "350ms"}
+          (children :nth 0))
+        (children :nth 1)))))
+
+
+(defwidget metric [label value ?onchange] ; {{{
   (box :orientation "h"
-       :class "metric"
        :space-evenly false
     (box :class "label" label)
     (scale :min 0
            :max 101
            :active {onchange != ""}
            :value value
-           :onchange onchange)))
+           :onchange onchange))) ; }}}
 
+; Listeners / pollers {{{
 (deflisten music :initial ""
   "playerctl --follow metadata --format '{{ artist }} - {{ title }}' || true")
 
+; TODO Ellipsis after n chars
 (defpoll title :initial ""
                :interval "250ms"
-  "xdotool getactivewindow getwindowname")
+  "xdotool getactivewindow getwindowname | head -c 40")
 
 (defpoll volume :interval "1s"
   "modules/getvol")
 
 (defpoll time :interval "10s"
-  "date '+%H:%M %b %d, %Y'")
+  "date '+%b %d %H:%M'")
+
+(defpoll battery :interval "5m"
+  "power-man")
+; }}}
