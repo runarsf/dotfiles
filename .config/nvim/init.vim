@@ -1,20 +1,25 @@
 " vim: set foldmethod=marker foldlevel=0 nomodeline:
-" Neat minimal things: https://github.com/nickjj/dotfiles/blob/master/.vimrc
 let mapleader = ','
 let maplocalleader = ','
 
-" Auto install vim-plug {{{
-let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
-if empty(glob(data_dir . '/autoload/plug.vim'))
-  silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
-endif
+function! s:InstallVimPlug() " {{{
+  let l:data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
+  if empty(glob(data_dir . '/autoload/plug.vim'))
+    silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+    autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+    echo 'Installed vim-plug'
+  else
+    echo 'Vim-plug already installed'
+  endif
+endfunction
+command! InstallVimPlug call s:InstallVimPlug()
 " }}}
 
 set nocompatible
-" Automatically calls `filetype plugin indent on` and `syntax enable`
+
 silent! if plug#begin(stdpath('data') . '/plugged') " {{{
-Plug 'tpope/vim-vinegar' " netrw {{{
+
+Plug 'tpope/vim-vinegar' " {{{
 "let loaded_netrwPlugin = 0 " netrw version, 0 to disable
 let g:netrw_banner = 0
 let g:netrw_liststyle = 3 " 1 or 3
@@ -62,12 +67,15 @@ augroup END
 "map <silent> <C-n> :NetrwToggle <bar> wincmd p<CR>
 map <silent> <C-n> :Lexplore<CR>
 " }}}
+
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+
 Plug 'voldikss/vim-floaterm' " {{{
 nnoremap <silent> <M-S-n> :FloatermNew --height=0.9 --width=0.9 --wintype=float --name=floaterm1 --position=topright --autoclose=2<CR>
 nnoremap <silent> <M-n>   :FloatermToggle<CR>
 tnoremap <silent> <M-n>   <C-\><C-n>:FloatermToggle<CR>
 " }}}
+
 Plug 'nathanaelkane/vim-indent-guides' " {{{
 let g:indent_guides_enable_on_vim_startup = 1
 let g:indent_guides_start_level = 1
@@ -80,6 +88,7 @@ autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=#363840 ctermbg=237
 " gruvbox
 " autocmd VimEnter,Colorscheme * :hi IndentGuidesOdd guibg=#282828 ctermbg=237
 " }}}
+
 if v:version >= 703 && executable('node') | Plug 'neoclide/coc.nvim', {'branch': 'release'} " {{{
 "if v:version >= 703 && executable('node') && executable('yarn') | Plug 'neoclide/coc.nvim', { 'branch': 'release', 'tag': '*', 'do': { -> coc#util#install()}}
 let g:coc_global_extensions = [
@@ -99,7 +108,7 @@ let g:coc_global_extensions = [
 " \ 'coc-markdownlint'
 " \ 'coc-python',
 " \ 'coc-emoji'
-command! Cock exec "CocInstall -sync " . join(get(g:, 'coc_global_extensions', []))
+command! InstallCocExtensions exec "CocInstall -sync " . join(get(g:, 'coc_global_extensions', []))
 " Use `[g` and `]g` to navigate diagnostics
 nmap <silent> <space>G <Plug>(coc-diagnostic-prev)
 nmap <silent> <space>g <Plug>(coc-diagnostic-next)
@@ -158,15 +167,22 @@ endif
 endfunction
 endif
 " }}}
-if (has('nvim-0.5.0')) " {{{
+
+if (has('nvim-0.5')) " {{{
   Plug 'nvim-telescope/telescope.nvim'
   Plug 'nvim-lua/plenary.nvim' | Plug 'folke/todo-comments.nvim'
   Plug 'kyazdani42/nvim-web-devicons' | Plug 'folke/trouble.nvim'
 endif " }}}
-Plug 'voldikss/vim-floaterm' | Plug 'ptzz/lf.vim' " {{{
-let g:lf_replace_netrw = 0 " Open lf when vim opens a directory
+
+Plug 'voldikss/vim-floaterm'
+
+Plug 'ptzz/lf.vim' " {{{
+let g:lf_replace_netrw = 1 " Open lf when vim opens a directory
 "let g:lf_command_override = 'lf -command "set hidden"'
+let g:lf_map_keys = 0
+map <leader>f :Lf<CR>
 " }}}
+
 
 " Syntax highlighting {{{
 Plug 'elkowar/yuck.vim', { 'for': 'yuck' }
@@ -178,14 +194,14 @@ Plug 'storyn26383/vim-vue', { 'for': 'vue' }
 Plug 'ekalinin/Dockerfile.vim', { 'for': 'Dockerfile' }
 Plug 'kovetskiy/sxhkd-vim', { 'for': 'sxhkdrc' }
 Plug 'linkinpark342/xonsh-vim'
-Plug 'neoclide/jsonc.vim', { 'for': ['json', 'jsonc'] } " json comment support
+Plug 'neoclide/jsonc.vim', { 'for': ['json', 'jsonc'] }
 " }}}
 
 " Themes {{{
-let g:colorscheme = 'ayu-dark'
+let s:colorscheme = 'ayu-dark'
 
 Plug 'Shatur/neovim-ayu'
-" Plug 'rakr/vim-one' | let g:one_allow_italics = 0
+
 " Plug 'projekt0n/github-nvim-theme' " {{{
 " lua << EOF
 " require('github-theme').setup({
@@ -205,22 +221,19 @@ Plug 'Shatur/neovim-ayu'
 " })
 " EOF
 " }}}
-Plug 'joshdick/onedark.vim' " {{{
-let g:onedark_color_overrides = {
-\ "background": {"gui": "#0D1117", "cterm": "234", "cterm16": "0" },
-\}
+
+" Plug 'joshdick/onedark.vim' " {{{
+" let g:onedark_color_overrides = {
+" \ "background": {"gui": "#0D1117", "cterm": "234", "cterm16": "0" },
+" \}
 " }}}
-" Plug 'gruvbox-community/gruvbox' " {{{
-" if !exists('g:gruvbox_contrast_light')
-"   let g:gruvbox_contrast_light='hard'
-" endif
-" }}}
+
 " }}}
 
 call plug#end() | endif " }}}
 
-" :lua print(vim.inspect(require("todo-comments.config")))
 if (has('nvim-0.5')) " {{{
+" :lua print(vim.inspect(require("todo-comments.config")))
 lua << EOF
 require("todo-comments").setup {
   highlight = {
@@ -243,17 +256,12 @@ require("todo-comments").setup {
 EOF
 endif " }}}
 
-"if (empty($TMUX))
 if (has("nvim"))
   let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 endif
 if (has("termguicolors"))
   set termguicolors
 endif
-"else
-"  set t_8b=^[[48;2;%lu;%lu;%lum
-"  set t_8f=^[[38;2;%lu;%lu;%lum
-"endif
 
 " Enable 256-colors, has to be set before colorscheme
 set t_Co=256
@@ -261,7 +269,7 @@ set t_AB=^[[48;5;%dm
 set t_AF=^[[38;5;%dm
 
 " Specific colorscheme settings (must come after setting your colorscheme).
-function! CustomHighlights() abort
+function! CustomHighlights() abort " {{{
   if (g:colors_name == 'gruvbox')
     if (&background == 'dark')
       highlight Visual      cterm=NONE ctermfg=NONE ctermbg=237 guibg=#3a3a3a
@@ -288,8 +296,10 @@ augroup MyColors | autocmd!
 augroup END
 
 set background=dark
-execute "colorscheme " . g:colorscheme
+execute "colorscheme " . s:colorscheme
+" }}}
 
+" Settings {{{
 "if !exists("g:syntax_on") | syntax enable | endif
 syntax on
 set regexpengine=0
@@ -326,6 +336,8 @@ set magic
 set incsearch
 set noshowmatch
 set hlsearch
+set laststatus=2
+set cmdheight=1
 set mat=2
 set foldcolumn=0 numberwidth=1
 set updatetime=300
@@ -376,9 +388,7 @@ if exists('g:gui_oni')
   set laststatus=0
   set noshowcmd
 endif
-
-"source $VIMRUNTIME/delmenu.vim
-"source $VIMRUNTIME/menu.vim
+" }}}
 
 " Use ctrl-[hjkl] to select the active split!
 " https://vim.fandom.com/wiki/Switch_between_Vim_window_splits_easily
@@ -408,12 +418,6 @@ nnoremap <leader>wq :wq<CR>
 nnoremap <leader>q :q<CR>
 nnoremap <leader>Q :q!<CR>
 
-" Move a line of text using ALT+[jk] or Command+[jk] on mac
-"nmap <silent> <M-j> mz:m+<cr>`z
-"nmap <silent> <M-k> mz:m-2<cr>`z
-"vmap <silent> <M-j> :m'>+<cr>`<my`>mzgv`yo`z
-"vmap <silent> <M-k> :m'<-2<cr>`>my`<mzgv`yo`zs
-
 " Moving lines around in all modes
 vnoremap J :m '>+1<CR>gv=gv
 vnoremap K :m '<-2<CR>gv=gv
@@ -426,12 +430,6 @@ imap #dn >/dev/null<space>2>&1
 inoreabbrev <expr> #!! "#!/usr/bin/env" . (empty(&filetype) ? '' : ' '.&filetype)
 
 set pastetoggle=<leader>p
-
-" Keep cursor centered when jumping around
-"nnoremap n nzzzv
-"nnoremap N Nzzv
-"nnoremap J mzJ`z
-"nnoremap <C-j> :cnext<CR>zzzv
 
 " don't undo entire chunk
 inoremap , ,<c-g>u
@@ -459,96 +457,83 @@ autocmd BufWinEnter *.* silent! loadview
 autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 " }}}
 
-" Persistent undo {{{
-if has("persistent_undo")
-  "set undodir=stdpath('data').'/temp_dirs/undodir'
-  set undodir=~/.vim_runtime/temp_dirs/undodir
+if has("persistent_undo") " {{{
+  set undodir=stdpath('data').'/temp_dirs/undodir'
   set undofile
-endif
-" }}}
+endif " }}}
 
-" Statusline {{{
-set laststatus=2
-set cmdheight=1
+function! s:statusline_expr() " {{{
+  " ~/.config/nvim/init.vim [vim]   <<   >>   [unix:utf-8] 1:257/572 1
+  "      "set statusline+=%#SpellHighlight#%{&spell?'[sp]':''}%*\
+  "    set statusline+=
+  "      "set statusline+=\[%{mode()}\]\
+  let l:pth = "%f" " %F filepath
+  let l:mod = "%{&modified ? '[+] ' : !&modifiable ? '[x] ' : ''}" " %m
+  let l:ro  = "%{&readonly ? '[RO] ' : ''}"
+  let l:ft  = "%{len(&filetype) ? '['.&filetype.'] ' : ''}" " %y
+  let l:enc = " [%{&fileformat}:%{&fileencoding?&fileencoding:&encoding}]"
+  let l:fug = "%{exists('g:loaded_fugitive') ? fugitive#statusline() : ''}"
+  let l:sep = ' %= ' " right-align from now on
+  let l:pos = ' %-12(%l : %c%V%) ' " %v\:%l\/%L\ %{winnr()}  column:row/rows window
+  let l:pct = ' %P'
+  let l:mus = "%{&mouse == 'a' ? '[m] ' : ''}"
+  let l:pst = "%{&paste ? '[p] ' : ''}"
+  let l:wrp = "%{&wrap == '1' ? '[wr] ' : ''}"
+  let l:spl = "%{&spell ? '[sp] ' : ''}"
 
-"highlight SpellHighlight guibg=SeaGreen guifg=003366
-
-set statusline=
-set statusline+=%F\ %y\ %m\  " path filetype modified
-
-set statusline+=%=  " right-align from now on
-set statusline+=\[%{&fileformat}:%{&fileencoding?&fileencoding:&encoding}\]\ 
-"set statusline+=%{&readonly?'[ro]\ ':''}
-set statusline+=%{&mouse=='a'?'[m]\ ':''}
-set statusline+=%{&paste?'[p]\ ':''}
-set statusline+=%{&wrap=='1'?'[wr]\ ':''}
-"set statusline+=%#SpellHighlight#%{&spell?'[sp]':''}%*\
-set statusline+=%{&spell?'[sp]\ ':''}
-"set statusline+=\[%{mode()}\]\
-set statusline+=%v\:%l\/%L\ %{winnr()}  " column:row/rows window
-" }}}
-
-" Autoreload .vimrc {{{
-augroup myvimrchooks | autocmd!
-  autocmd BufWritePost $MYVIMRC nested source $MYVIMRC
-augroup END
-" }}}
-
-nmap <silent> <leader>ff :call <SID>ToggleFold()<CR> " {{{
-function! s:ToggleFold()
-    if &foldmethod == 'marker'
-        let &l:foldmethod = 'syntax'
-    else
-        let &l:foldmethod = 'marker'
-    endif
-    echo 'foldmethod is now ' . &l:foldmethod
+  return '[%n] '.l:pth.l:enc.' %<'.l:mod.l:ro.l:ft.l:fug.l:sep.l:pos.'%*'.l:pct.l:mus.l:pst.l:wrp
 endfunction
+let &statusline = s:statusline_expr()
 " }}}
 
-nmap <silent> <leader>n :call <SID>ToggleNumbers()<CR> " {{{
-function! s:ToggleNumbers()
-  " This is based, but defaults have to be set if reading the vimrc isn't possible(?) {{{
-  if !exists("b:default_signcolumn")
-    let b:default_signcolumn = "no"
-  endif
-  if !exists("b:default_number")
-    let b:default_number = 1
-  endif
-  if !exists("b:default_relativenumber")
-    let b:default_relativenumber = 1
-  endif
-  if !exists("b:default_wrap")
-    let b:default_wrap = 0
-  endif
-  " }}}
+augroup MyVimrcHooks " {{{
+  autocmd!
+  " Autoreload vimrc
+  autocmd BufWritePost $MYVIMRC nested source $MYVIMRC
+augroup END " }}}
+
+function! s:ToggleFold() " {{{
+  let &l:foldmethod = &foldmethod == 'marker' ? 'syntax' : 'marker'
+  echo 'foldmethod is now ' . &l:foldmethod
+endfunction
+nmap <silent> <leader>ff :call <SID>ToggleFold()<CR>
+" }}}
+
+function! s:ToggleNumbers() " {{{
+  " This function makes it easier to copy file contents using the mouse by hiding the signcolumn, line numbers, and enables wrapping while retaining the user-defined defaults.
+  let b:def_signcolumn     = !exists("b:def_signcolumn")     ? "no" : b:def_signcolumn
+  let b:def_number         = !exists("b:def_number")         ? 1    : b:def_number
+  let b:def_relativenumber = !exists("b:def_relativenumber") ? 1    : b:def_relativenumber
+  let b:def_wrap           = !exists("b:def_wrap")           ? 0    : b:def_wrap
 
   if &number || &relativenumber
-    let b:default_number = &number
-    let b:default_relativenumber = &relativenumber
-    let b:default_signcolumn = &signcolumn
+    let b:def_number = &number
+    let b:def_relativenumber = &relativenumber
+    let b:def_signcolumn = &signcolumn
     set nonumber
     set list!
     set norelativenumber
     set signcolumn=no
     set wrap
   else
-    if b:default_number | set number | endif
-    if b:default_relativenumber | set relativenumber | endif
-    if !b:default_wrap | set nowrap | endif
+    if b:def_number | set number | endif
+    if b:def_relativenumber | set relativenumber | endif
+    if !b:def_wrap | set nowrap | endif
     set list
-    execute 'set signcolumn=' . b:default_signcolumn
+    execute 'set signcolumn=' . b:def_signcolumn
   endif
 endfunction
+nmap <silent> <leader>n :call <SID>ToggleNumbers()<CR>
 " }}}
 
-nmap <silent> <leader>m :call <SID>ToggleMouse()<CR> " {{{
-function! s:ToggleMouse()
+function! s:ToggleMouse() " {{{
   if &mouse == 'a'
     set mouse=c
   else
     set mouse=a
   endif
 endfunction
+nmap <silent> <leader>m :call <SID>ToggleMouse()<CR>
 " }}}
 
 function! FoldText() " {{{
