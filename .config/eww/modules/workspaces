@@ -35,5 +35,5 @@ gib_workspace_yuck() {
 }
 
 xprop -spy -root _NET_CURRENT_DESKTOP | while read -r; do
-  printf '%s\n' '(box :orientation "h" :class "workspaces" :space-evenly false :halign "center" :valign "center" :vexpand true '"$(gib_workspace_yuck)"')'
+  printf '%s\n' '(box :orientation "h" :class "workspaces" :space-evenly true :halign "center" :valign "center" :vexpand true '"$(gib_workspace_yuck)"')'
 done
