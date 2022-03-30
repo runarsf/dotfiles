@@ -130,7 +130,8 @@ pm::battery () { # <warn_percentage:Int> -> String {{{
   # local -r _battery_time="$(printf '%s\n' "${_battery_info}" | awk '{print $5}')"
 
   # upower seems to update rather weirdly
-  local -r _battery_path="$(upower -e | grep 'battery')"
+  # TODO Get the builtin battery, not mouse battery
+  local -r _battery_path="$(upower -e | grep 'battery' | head -1)"
   local -r _battery_info="$(upower -i "${_battery_path}")"
   local -r _battery_level="$(printf '%s\n' "${_battery_info}" | pm::utils::uq 'percentage:' | sed -r 's/[%]+//g')"
   local -r _battery_state="$(printf '%s\n' "${_battery_info}" | pm::utils::uq 'state:')"

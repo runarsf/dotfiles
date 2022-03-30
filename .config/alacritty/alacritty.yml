@@ -48,7 +48,7 @@ font: # {{{
   italic:
     style: Regular
 
-  size: 9
+  size: 10
 
   offset:
     x: 0

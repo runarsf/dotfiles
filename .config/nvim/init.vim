@@ -174,15 +174,8 @@ if (has('nvim-0.5')) " {{{
   Plug 'kyazdani42/nvim-web-devicons' | Plug 'folke/trouble.nvim'
 endif " }}}
 
-Plug 'voldikss/vim-floaterm'
-
-Plug 'ptzz/lf.vim' " {{{
-let g:lf_replace_netrw = 1 " Open lf when vim opens a directory
-"let g:lf_command_override = 'lf -command "set hidden"'
-let g:lf_map_keys = 0
-map <leader>f :Lf<CR>
-" }}}
-
+Plug 'eraserhd/parinfer-rust', {'do':
+        \  'cargo build --release', 'for': 'yuck'}
 
 " Syntax highlighting {{{
 Plug 'elkowar/yuck.vim', { 'for': 'yuck' }
@@ -458,7 +451,9 @@ autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 " }}}
 
 if has("persistent_undo") " {{{
-  set undodir=stdpath('data').'/temp_dirs/undodir'
+  " This creates unwanted shit in home dir
+  " set undodir=stdpath('data').'/temp_dirs/undodir'
+  set undodir=~/.vim_runtime/temp_dirs/undodir
   set undofile
 endif " }}}
 

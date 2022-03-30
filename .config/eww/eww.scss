@@ -40,7 +40,7 @@ window {
   border: 1px solid $background-alt;
 
   // For trayer-srg
-  padding-right: 100px;
+  padding-right: 110px;
 }
 
 scale trough {
@@ -78,6 +78,9 @@ label.button,
   }
 }
 
+.hover:hover .time {
+  font-weight: bold;
+}
 
 // TODO Add border to button without completely restyling
 label.icon,
@@ -86,7 +89,7 @@ label.icon,
     margin: 4px 0;
     border-radius: 5px;
     background-color: $background-alt;
-    
+
     font-size: 1rem;
 }
 
@@ -94,7 +97,7 @@ label.icon,
   margin: 0 5px;
 }
 .container {
-  background-color: $background-alt;
+  // background-color: $background-alt;
   margin: 3px;
   padding: 2px;
   border-radius: 5px;
@@ -105,6 +108,7 @@ label.icon,
     margin: 0 3px;
     padding: 2px 6px;
     border-radius: 3px;
+    border: 1px solid $background;
 
     &.occupied {
       /* font-size: 1.01rem; */

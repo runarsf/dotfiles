@@ -1,3 +1,4 @@
+; -*- mode: lisp -*-
 ; Docs: https://elkowar.github.io/eww/configuration.html
 ; Tray support: https://github.com/elkowar/eww/issues/111
 ; Author dotfiles: https://github.com/elkowar/dots-of-war/tree/master/eww-bar/.config/eww-bar
@@ -35,7 +36,7 @@
     (workspaces)
     (info)
     (modules)))
-; }}}p
+; }}}
 
 ; TODO Scroll to change ws (eventbox?)
 (defwidget workspaces [] ; {{{
@@ -65,7 +66,7 @@
        :orientation "h"
        :space-evenly false
        :halign "center"
-  {music != "" ? "🎵 ${music}" : "${title}"}))
+   {music != "" ? "🎵 ${music}" : "${title}"}))
 ; }}}
 
 (defwidget modules [] ; {{{
@@ -80,22 +81,22 @@
         (label :class "nodefault"
                :text "")))
     (box :tooltip "Memory"
-      (hover-module :var revealram
-                    :varname "revealram"
+      (hover-left :var revealram
+                  :varname "revealram"
         (scale :min 0
                :max 101
                :value {EWW_RAM.used_mem_perc})
         (label :text "")))
     (box :tooltip "Disk"
-      (hover-module :var revealdisk
-                    :varname "revealdisk"
+      (hover-left :var revealdisk
+                  :varname "revealdisk"
         (scale :min 0
                :max 101
                :value {round((1 - (EWW_DISK["/"].free / EWW_DISK["/"].total)) * 100, 0)})
         (label :text "💿")))
     (box :tooltip "Battery"
-      (hover-module :var revealbat
-                    :varname "revealbat"
+      (hover-left :var revealbat
+                  :varname "revealbat"
         (scale :min 0
                :max 101
                :value battery)
@@ -103,8 +104,8 @@
                 :class "nodefault"
           (label :text ""))))
     (box :tooltip "Volume"
-      (hover-module :var revealvol
-                    :varname "revealvol"
+      (hover-left :var revealvol
+                  :varname "revealvol"
         ; TODO Mute on click
         (scale :min 0
                :max 101
@@ -114,17 +115,19 @@
         (button :onclick "amixer -D pulse set Master 1+ toggle"
           (label :class "nodefault"
                  :text mutestatus))))
-    (box
-      (hover-module :var revealtime
-                    :varname "revealtime"
-        ; TODO Expand seconds to right
-        (label :class "nodefault"
-               :text "${datetime}-")
-        (label :class "nodefault"
+    (eventbox :class "hover"
+      (hover-double-module :var revealtime
+                           :varname "revealtime"
+        ; TODO Underline time on expand
+        (label :class "nodefault date"
+               :text "${date}-")
+        (label :class "nodefault seconds"
+               :text ":${seconds}")
+        (label :class "nodefault time"
                :text time)))))
 ; }}}
 
-(defwidget hover-module [var varname ?class ?duration ?transition] ; {{{
+(defwidget hover-left [var varname ?class ?duration ?transition] ; {{{
   (box :class "${class} hover"
        :orientation "h"
        :space-evenly false
@@ -136,6 +139,38 @@
                   :duration {duration ?: "350ms"}
           (children :nth 0))
         (children :nth 1)))))
+; }}}
+
+(defwidget hover-right [var varname ?class ?duration ?transition] ; {{{
+  (box :class "${class} hover"
+       :orientation "h"
+       :space-evenly false
+    (eventbox :onhover "${eww} update ${varname}=true"
+              :onhoverlost "${eww} update ${varname}=false"
+      (box :space-evenly false
+        (revealer :reveal var
+                  :transition {transition ?: "slideright"}
+                  :duration {duration ?: "350ms"}
+          (children :nth 0))
+        (children :nth 1)))))
+; }}}
+
+(defwidget hover-double-module [var varname ?class ?duration ?transition] ; {{{
+  (box :class "${class} hover"
+       :orientation "h"
+       :space-evenly false
+    (eventbox :onhover "${eww} update ${varname}=true"
+              :onhoverlost "${eww} update ${varname}=false"
+      (box :space-evenly false
+        (revealer :reveal var
+                  :transition {transition ?: "slideleft"}
+                  :duration {duration ?: "350ms"}
+          (children :nth 0))
+        (children :nth 2)
+        (revealer :reveal var
+                  :transition {transition ?: "slideright"}
+                  :duration {duration ?: "350ms"}
+          (children :nth 1))))))
 ; }}}
 
 (defwidget metric [label value ?onchange] ; {{{
@@ -162,10 +197,12 @@
 (defpoll volume :interval "1s"
   "amixer -D pulse sget Master | grep 'Left:' | awk -F'[][]' '{ print $2 }' | tr -d '%' | head -1")
 
-(defpoll datetime :interval "10s"
+(defpoll date :interval "30m"
   "date '+%a %b %d'")
 (defpoll time :interval "10s"
   "date '+%H:%M'")
+(defpoll seconds :interval "1s"
+  "date '+%S'")
 
 (defpoll battery :interval "5m"
   "power-man")

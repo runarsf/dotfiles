@@ -105,6 +105,6 @@ killall -q sxhkd; sxhkd -m 1 -c "${XDG_CONFIG_HOME:-${HOME:-~}/.config}/sxhkd/sx
 
 eww close bar || killall -q eww; eww open bar
 sleep 1 # We need to wait until eww has started so trayer will overlap eww
-killall -q trayer; trayer --edge top --align right --SetDockType true --SetPartialStrut false --expand false --width 100 --widthtype pixel --transparent true --alpha 0 --tint 0x0D1117 --height 30 --heighttype pixel --monitor "primary" --margin 14 --distance 11 --padding 0 &
+killall -q trayer; trayer --edge top --align right --SetDockType true --SetPartialStrut false --expand false --width 100 --widthtype pixel --transparent true --alpha 0 --tint 0x0D1117 --height 30 --heighttype pixel --monitor "primary" --margin 20 --distance 11 --padding 0 &
 # killall -q bspwm_double_borders; "${XDG_CONFIG_HOME:-${HOME:-~}/.config}/bspwm/scripts/bspwm_double_borders" &
 # }}}
