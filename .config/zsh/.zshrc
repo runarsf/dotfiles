@@ -179,7 +179,19 @@ alias dkcol='docker-compose logs -f 2>&1 | ccze -m ansi'
 #please () { test -z "${1}" && eval "sudo !!" || sudo "${@}" }
 dkhl () { docker inspect --format "{{json .State.Health }}" "${1}" | jq }
 wim () { ${EDITOR} "$(which ${1})" "${@:2}" }
-test -n "${DISPLAY}" && alias lf='~/.config/lf/lfrun' || (alias lf && unalias lf)
+lfcd () {
+  # https://github.com/slavistan/lf-gadgets/tree/master/lf-shellcd
+	LF_SHELLCD_TEMPDIR="$(mktemp -d -t lf-shellcd-XXXXXX)"
+	export LF_SHELLCD_TEMPDIR
+	~/.config/lf/lfrun -last-dir-path "$LF_SHELLCD_TEMPDIR/lastdir" "$@"
+	if [ -e "$LF_SHELLCD_TEMPDIR/changecwd" ] && \
+		dir="$(cat "$LF_SHELLCD_TEMPDIR/lastdir")" 2>/dev/null; then
+		cd "$dir"
+	fi
+	rm -rf "$LF_SHELLCD_TEMPDIR"
+	unset LF_SHELLCD_TEMPDIR
+}
+alias lf=lfcd
 
 #insert_sudo () { zle beginning-of-line; zle -U "sudo " }
 #zle -N insert-sudo insert_sudo
@@ -279,6 +291,16 @@ men () { # {{{
 # }}}
 
 # Sourcing {{{
+if test -f "${XDG_CONFIG_HOME:-${HOME:-~}/.config}/lf/lficons"; then
+  LF_ICONS=$(sed "${XDG_CONFIG_HOME:-${HOME:-~}/.config}/lf/lficons" \
+              -e '/^[ \t]*#/d'   \
+              -e '/^[ \t]*$/d'   \
+              -e 's/[ \t]\+/=/g' \
+              -e 's/$/ /')
+  LF_ICONS=${LF_ICONS//$'\n'/:}
+  export LF_ICONS
+fi
+
 #test -f "/etc/profile.d/undistract-me.sh" && source /etc/profile.d/undistract-me.sh
 test -s "${HOME}/.nvm/nvm.sh" && source "${HOME}/.nvm/nvm.sh"
 #test -f "${HOME}/.config/p10k/.p10k.zsh" && source "${HOME}/.config/p10k/.p10k.zsh" || (test -f "${HOME}/.p10k.zsh" && source "${HOME}/.p10k.zsh")

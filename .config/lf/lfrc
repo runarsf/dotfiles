@@ -1,18 +1,36 @@
-# Basic Settings
-set previewer ~/.config/lf/lfpreview
-set hidden true
-#set color256 true
-set drawbox true
-set icons true
-set ignorecase true
-set number true
-set relativenumber true
+# General settings {{{
+set previewer ~/.config/lf/lfpreviewer
+set cleaner ~/.config/lf/lfcleaner
+set hidden
+set nodrawbox
+set icons
+set ignorecase
+set nonumber
+set norelativenumber
 set scrolloff 4
 set ratios 2:3:5
 
 set shell bash
-#set shellopts '-eu'
-#set ifs "\n"
+set ifs "\n"
+
+# https://github.com/gokcehan/lf/wiki/Tips#split-words-by-default-in-zsh=
+# set shell zsh
+# set shellopts '-euy'
+# set ifs "\n"
+# set filesep "\n"
+# }}}
+
+${{ # Dynamically allocate number of panes {{{
+  width="$(tput cols)"
+
+  if test "${width}" -le "80"; then
+    lf -remote "send ${id} set ratios 1:2"
+  elif test "${width}" -le "280"; then
+    lf -remote "send ${id} set ratios 1:2:3"
+  else
+    lf -remote "send ${id} set ratios 1:2:3:5"
+  fi
+}} # }}}
 
 map m
 map o
@@ -23,90 +41,74 @@ map d
 map c
 map e
 map f
-map q
+
+map . set hidden!
+map p paste
+map x cut
+map y copy
+map H top
+map L bottom
+map r rename
+map R reload
+map C clear
+map <space> :toggle; down
+map gg top
+map G bottom
+map e $${EDITOR} "${f}"
+map z $zathura "${f}" &
 
 map <esc> quit
 map q quit
+map cfg $${EDITOR} "${XDG_CONFIG_HOME:-${HOME:-~}/.config}/lf/lfrc"
+map chx %chmod +x "${f}"
 
-map cfg $${EDITOR} "${XDG_CONFIG_HOME:-${HOME}/.config}/lf/lfrc"
+map u
+map up $screenshot-xbackbone "${f}"
 
-cmd open ${{
-  case $(file --mime-type "${f}" -bL) in
-    text/*|application/json) ${EDITOR} "${f}";;
-    video/*|image/*/application/pdf) xdg-open "${f}" & disown;;
-    *) xdg-open "${f}";;
-  esac
-}}
-map <enter> open
+# goto-binds {{{
+map gc cd ~/.config
+map gp cd ~/Pictures
+map gb cd ~/.local/bin
+map gdl cd ~/Downloads
+map gda cd ~/data
+map gdc cd ~/Documents
+map gtr cd ~/.local/share/Trash/files
+# }}}
 
-cmd mkdir ${{
-  printf "Directory name: "
-  read dir
-  mkdir "${dir}"
-}}
-map md mkdir
+cmd mkdir %{{ # {{{
+  mkdir -p "${@}"
+  lf -remote "send ${id} select \"${1}\""
+}} # }}}
+map md push :mkdir<space>
 
-cmd mkfile ${{
-  printf "File name: "
-  read file
-  touch "${file}"
-  #${EDITOR} "${file}"
-}}
-map mf mkfile
+cmd mkfile ${{ # {{{
+  touch "${@}"
+  lf -remote "send ${id} select \"${1}\""
+}} # }}}
+map mf push :mkfile<space>
 
-cmd chmod ${{
-  printf "Mode Bits: "
-  read bits
+cmd quitcd ${{ # {{{
+	echo "1" > "$LF_SHELLCD_TEMPDIR/changecwd"
+	lf -remote "send $id quit"
+}} # }}}
+map Q quitcd
 
-  for file in "${fx}"; do
-    chmod "${bits}" "${file}"
-  done
-}}
-map ch. chmod
-
-cmd upload %sharenix -n -c "${f}"
-map u upload
-
-cmd chexec %chmod +x "${f}"
-map chx chexec
-
-cmd setbg ${{
+cmd setbg ${{ # {{{
   convert "${f}" ~/.config/wall.jpg
   feh --bg-scale ~/.config/wall.jpg
-}}
+}} # }}}
 map bg setbg
 
-cmd dragon ${{
+cmd dragon ${{ # {{{
   files=()
   while IFS= read -r line; do
     files+=("${line}")
   done <<< "$fx"
   dragon-drop -a -x "${files[@]}"
-}}
+}} # }}}
 map dr dragon
 
-# Archive bindings
-cmd unarchive ${{
-  case "${f}" in
-    *.zip) unzip "${f}";;
-    *.tar.gz) tar -xzvf "${f}";;
-    *.tar.bz2) tar -xjvf "${f}";;
-    *.tar) tar -xvf "${f}";;
-    *) printf "Unsupported format\n";;
-  esac
-}}
-map au unarchive
-
-cmd zip %zip -r "${f}" "${f}"
-map az zip
-cmd tar %tar cvf "${f}.tar" "${f}"
-map at tar
-cmd targz %tar cvzf "${f}.tar.gz" "${f}"
-map ag targz
-cmd tarbz2 %tar cjvf "${f}.tar.bz2" "${f}"
-map ab tarbz2
-
-cmd trash ${{
+cmd trash ${{ # {{{
   files=$(printf "$fx" | tr '\n' ';')
   while test "${files}"; do
     # extract the substring from start of string up to delimiter.
@@ -123,104 +125,106 @@ cmd trash ${{
       files="${files#*;}"
     fi
   done
-}}
+}} # }}}
 map dd trash
+map tl $trash-list | less
+map td $trash-empty
+map tr $trash-restore "$(trash-list | fzf | cut -d' ' -f3)"
 
-cmd trash-list $trash-list; read trash
-map tl trash-list
-map trash-empty %trash-empty
-map tc trash-empty
-cmd trash-restore $trash-restore "$(trash-list | fzf | cut -d' ' -f3)"
-map tr trash-restore
+cmd open ${{ # {{{
+  case $(file --mime-type "${f}" -bL) in
+    text/*|application/json) ${EDITOR} "${f}";;
+    video/*|image/*/application/pdf) xdg-open "${f}" & disown;;
+    *) xdg-open "${f}";;
+  esac
+}} # }}}
+map o open
+map <enter> open
 
-map e $${EDITOR} "${f}"
-#map <right> $${EDITOR} "${f}"
-map z $zathura "${f}" &
+#   # Archive bindings
+#   cmd unarchive ${{
+#     case "${f}" in
+#       *.zip) unzip "${f}";;
+#       *.tar.gz) tar -xzvf "${f}";;
+#       *.tar.bz2) tar -xjvf "${f}";;
+#       *.tar) tar -xvf "${f}";;
+#       *) printf "Unsupported format\n";;
+#     esac
+#   }}
+#   map au unarchive
+#
+#   cmd zip %zip -r "${f}" "${f}"
+#   map az zip
+#   cmd tar %tar cvf "${f}.tar" "${f}"
+#   map at tar
+#   cmd targz %tar cvzf "${f}.tar.gz" "${f}"
+#   map ag targz
+#   cmd tarbz2 %tar cjvf "${f}.tar.bz2" "${f}"
+#   map ab tarbz2
 
-map sh set hidden!
-#map dd delete
-map p paste
-map x cut
-map y copy
-map r rename
-map H top
-map L bottom
-map R reload
-
-map gg top
-map G bottom
-
-# Requires bash (not sh) to be set as the shell in lf
-#cmd mark-add ${{
-#  # querying mark
-#  read -e -p "Mark as: " -n 1 markchar
-#  test -z "${markchar}" && exit 0
-#  markfile="${XDG_CONFIG_HOME:-${HOME}/.config}/lf/marks"
-#  location="$(pwd)"
-#
-#  # removing old mark (from character and path)
-#  if test -f "${markfile}"; then
-#    sed -i "\|^${markchar} .*$|d" "${markfile}"
-#    sed -i "\|^.* ${location}$|d" "${markfile}"
-#  else
-#    mkdir -p "$(dirname "$(realpath ${markfile})")"
-#    touch "$(realpath ${markfile})"
-#  fi
-#  test "${markchar}" = "-" && exit 0
-#
-#  # adding new mark
-#  tmpfile="$(mktemp ${TMPDIR:-/tmp/}lfmark.XXXXXX)"
-#  exec 3> "${tmpfile}" # Open &3 for writing
-#  exec 4< "${tmpfile}" # Open &4 for reading
-#  rm "${tmpfile}"
-#
-#  { cat "${markfile}" 2>/dev/null;
-#    printf "${markchar}" "${location}\n";
-#  } | sort >&3
-#  cat <&4 > "${markfile}"
-#}}
-#map m mark-add
-map bm $marker add "$(pwd)"
-
-#cmd mark-go ${{
-#  FZF="${1:-}"
-#  markfile="${XDG_CONFIG_HOME:-${HOME}/.config}/lf/marks"
-#
-#  test ! -f "${markfile}" && exit 1
-#
-#  # Remove recent dir if you're currently at it
-#  sed -i "\|^' $(pwd)$|d" "${markfile}"
-#
-#  if test -n "${FZF}"; then
-#    markdirs="$(sed 's/^. //' "${markfile}" 2>/dev/null)"
-#    markstring="$(printf "${markdirs}\n" | fzf --preview 'ls {}')"
-#    markchar="$(cat ${markfile} | grep "${markstring}$" | cut -d' ' -f1)"
-#  else
-#    printf "Marks:\n"
-#    # Add two spaces in front of every line
-#    sed 's/^/  /' "${markfile}" 2>/dev/null
-#    # Querying mark
-#    read -e -p "Go to mark: " -n 1 markchar
-#  fi
-#  test -z "${markchar}" && exit 0
-#  dir=$(grep -e "^${markchar}" < "${markfile}" | cut -d' ' -f2)
-#
-#  # setting last visited dir
-#  sed -i "/^' .*$/d" "${markfile}"
-#  printf "' $(pwd)\n$(cat ${markfile})\n" > "${markfile}"
-#
-#  # going to wanted dir
-#  test -n "${dir}" && lf -remote "send ${id} cd ${dir}"
-#}}
-map "'" $ "$(marker get)"
-#map "'" mark-go fzf
-#map '"' mark-go
-
-map gtr cd ~/.local/share/Trash/files
-map gp cd ~/Pictures
-map gb cd ~/.local/bin
-map gdl cd ~/Downloads
-map gda cd ~/data
-map gdc cd ~/Documents
-map gdr cd ~/Documents/drive
-map gc cd ~/.config
+#   # Requires bash (not sh) to be set as the shell in lf
+#   #cmd mark-add ${{
+#   #  # querying mark
+#   #  read -e -p "Mark as: " -n 1 markchar
+#   #  test -z "${markchar}" && exit 0
+#   #  markfile="${XDG_CONFIG_HOME:-${HOME}/.config}/lf/marks"
+#   #  location="$(pwd)"
+#   #
+#   #  # removing old mark (from character and path)
+#   #  if test -f "${markfile}"; then
+#   #    sed -i "\|^${markchar} .*$|d" "${markfile}"
+#   #    sed -i "\|^.* ${location}$|d" "${markfile}"
+#   #  else
+#   #    mkdir -p "$(dirname "$(realpath ${markfile})")"
+#   #    touch "$(realpath ${markfile})"
+#   #  fi
+#   #  test "${markchar}" = "-" && exit 0
+#   #
+#   #  # adding new mark
+#   #  tmpfile="$(mktemp ${TMPDIR:-/tmp/}lfmark.XXXXXX)"
+#   #  exec 3> "${tmpfile}" # Open &3 for writing
+#   #  exec 4< "${tmpfile}" # Open &4 for reading
+#   #  rm "${tmpfile}"
+#   #
+#   #  { cat "${markfile}" 2>/dev/null;
+#   #    printf "${markchar}" "${location}\n";
+#   #  } | sort >&3
+#   #  cat <&4 > "${markfile}"
+#   #}}
+#   #map m mark-add
+#   #map bm $marker add "$(pwd)"
+#   
+#   #cmd mark-go ${{
+#   #  FZF="${1:-}"
+#   #  markfile="${XDG_CONFIG_HOME:-${HOME}/.config}/lf/marks"
+#   #
+#   #  test ! -f "${markfile}" && exit 1
+#   #
+#   #  # Remove recent dir if you're currently at it
+#   #  sed -i "\|^' $(pwd)$|d" "${markfile}"
+#   #
+#   #  if test -n "${FZF}"; then
+#   #    markdirs="$(sed 's/^. //' "${markfile}" 2>/dev/null)"
+#   #    markstring="$(printf "${markdirs}\n" | fzf --preview 'ls {}')"
+#   #    markchar="$(cat ${markfile} | grep "${markstring}$" | cut -d' ' -f1)"
+#   #  else
+#   #    printf "Marks:\n"
+#   #    # Add two spaces in front of every line
+#   #    sed 's/^/  /' "${markfile}" 2>/dev/null
+#   #    # Querying mark
+#   #    read -e -p "Go to mark: " -n 1 markchar
+#   #  fi
+#   #  test -z "${markchar}" && exit 0
+#   #  dir=$(grep -e "^${markchar}" < "${markfile}" | cut -d' ' -f2)
+#   #
+#   #  # setting last visited dir
+#   #  sed -i "/^' .*$/d" "${markfile}"
+#   #  printf "' $(pwd)\n$(cat ${markfile})\n" > "${markfile}"
+#   #
+#   #  # going to wanted dir
+#   #  test -n "${dir}" && lf -remote "send ${id} cd ${dir}"
+#   #}}
+#   #map "'" $ "$(marker get)"
+#   #map "'" mark-go fzf
+#   #map '"' mark-go
+#   

@@ -40,7 +40,7 @@ font: # {{{
     style: Regular
     # family: JetBrainsMono Nerd Font
     # family: Ubuntu Mono
-    family: Terminess Powerline # Terminus, CozetteVector
+    family: TerminessTTF Nerd Font # Terminus, CozetteVector
 
   bold:
     style: Regular
