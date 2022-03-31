@@ -10,6 +10,7 @@
 (defvar revealvol false)
 (defvar revealbat false)
 (defvar revealram false)
+(defvar revealcpu false)
 (defvar revealdisk false)
 (defvar revealtime false)
 ; }}}
@@ -24,7 +25,7 @@
   :geometry (geometry :x "0%"
                       :y "10px"
                       :width "99%"
-                      :height "34px" ; NOTE Has to be odd for vertical centering?
+                      :height "35px" ; NOTE Has to be odd for pixel-perfect vertical centering
                       :anchor "top center")
   :reserve (struts :side "top"
                    :distance "40px")
@@ -52,12 +53,11 @@
       (button :onclick "bspwm_rofi_layouts"
         ; TODO Middle-click autorandr --change
         ; TODO Hover-effect for buttons
-        (label :text bsplayout
-               :class "nodefault icon")))))
+        (label :text bsplayout)))))
 ; (deflisten bspws
 ;   "modules/bspws")
 (deflisten workspaces
-  "modules/workspaces")
+  "modules/ws")
 (defpoll bsplayout :interval "5s"
   "bspwm_rofi_layouts query")
 ; }}}
@@ -80,15 +80,23 @@
       (button :onclick "rofi-autorandr" ; TODO Symlink rofi-autorandr into modules
         ; TODO Middle-click autorandr --change
         ; TODO Hover-effect for buttons
-        (label :class "nodefault"
-               :text "")))
+        (label :text "")))
     (box :tooltip "Memory"
-      (hover-left :var revealram
-                  :varname "revealram"
+      (hover-double :var revealram
+                    :varname "revealram"
         (scale :min 0
                :max 101
                :value {EWW_RAM.used_mem_perc})
+        (label :text "${round(EWW_RAM.used_mem_perc, 0)}%")
         (label :text "")))
+    (box :tooltip "CPU"
+      (hover-double :var revealcpu
+                    :varname "revealcpu"
+        (scale :min 0
+               :max 101
+               :value {EWW_CPU.avg})
+        (label :text "${round(EWW_CPU.avg, 0)}%")
+        (label :text "﬙")))
     (box :tooltip "Disk"
       (hover-left :var revealdisk
                   :varname "revealdisk"
@@ -103,7 +111,6 @@
                :max 101
                :value battery)
         (button :onclick "power-man"
-                :class "nodefault"
           (label :text ""))))
     (box :tooltip "Volume"
       (hover-left :var revealvol
@@ -115,18 +122,18 @@
                :onchange "amixer -D pulse sset Master {}%"
                :class "adjustable")
         (button :onclick "amixer -D pulse set Master 1+ toggle"
-          (label :class "nodefault"
-                 :text mutestatus))))
+          (label :text mutestatus))))
     (box :class "spaced"
       (eventbox
-        (hover-double-module :var revealtime
-                             :varname "revealtime"
+        (hover-double :var revealtime
+                      :varname "revealtime"
+                      :class "condensed"
           ; TODO Underline time on expand
-          (label :class "nodefault"
-                 :text "${date}-")
-          (label :class "nodefault"
-                 :text ":${seconds}")
-          (label :class "nodefault time"
+          (label :text "${date}-"
+                 :style "padding: 0;")
+          (label :text ":${seconds}"
+                 :style "padding: 0;")
+          (label :class "nobox"
                  :text time))))))
 ; }}}
 
@@ -158,20 +165,20 @@
         (children :nth 1)))))
 ; }}}
 
-(defwidget hover-double-module [var varname ?class ?duration ?transition] ; {{{
-  (box :class "${class} hover"
+(defwidget hover-double [var varname ?class ?duration] ; {{{
+  (box :class "${class} hover hover-double"
        :orientation "h"
        :space-evenly false
     (eventbox :onhover "${eww} update ${varname}=true"
               :onhoverlost "${eww} update ${varname}=false"
       (box :space-evenly false
         (revealer :reveal var
-                  :transition {transition ?: "slideleft"}
+                  :transition "slideleft"
                   :duration {duration ?: "350ms"}
           (children :nth 0))
         (children :nth 2)
         (revealer :reveal var
-                  :transition {transition ?: "slideright"}
+                  :transition "slideright"
                   :duration {duration ?: "350ms"}
           (children :nth 1))))))
 ; }}}

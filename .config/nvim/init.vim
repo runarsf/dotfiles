@@ -169,13 +169,31 @@ endif
 " }}}
 
 if (has('nvim-0.5')) " {{{
-  Plug 'nvim-telescope/telescope.nvim'
-  Plug 'nvim-lua/plenary.nvim' | Plug 'folke/todo-comments.nvim'
-  Plug 'kyazdani42/nvim-web-devicons' | Plug 'folke/trouble.nvim'
+  " Plug 'nvim-telescope/telescope.nvim'
+  " Plug 'nvim-lua/plenary.nvim'
+  Plug 'folke/todo-comments.nvim'
+  " Plug 'kyazdani42/nvim-web-devicons'
+  " Plug 'folke/trouble.nvim'
 endif " }}}
 
 Plug 'eraserhd/parinfer-rust', {'do':
         \  'cargo build --release', 'for': 'yuck'}
+
+Plug 'rrethy/vim-hexokinase', { 'do': 'make hexokinase' } " {{{
+let g:Hexokinase_highlighters = [
+\   'sign_column',
+\   'backgroundfull',
+\ ]
+let g:Hexokinase_optInPatterns = [
+\     'full_hex',
+\     'triple_hex',
+\     'rgb',
+\     'rgba',
+\     'hsl',
+\     'hsla',
+\     'colour_names'
+\ ]
+" }}}
 
 " Syntax highlighting {{{
 Plug 'elkowar/yuck.vim', { 'for': 'yuck' }
@@ -245,7 +263,7 @@ require("todo-comments").setup {
       pattern = [[\b(KEYWORDS)\b]]
     }
   }
-  require("trouble").setup {}
+  -- require("trouble").setup {}
 EOF
 endif " }}}
 
@@ -421,6 +439,11 @@ nnoremap <leader>k :m .-2<CR>==
 
 imap #dn >/dev/null<space>2>&1
 inoreabbrev <expr> #!! "#!/usr/bin/env" . (empty(&filetype) ? '' : ' '.&filetype)
+
+xnoremap <leader>b :w !bash<cr>
+nnoremap <leader>B :w !bash<cr>
+xnoremap <leader>p :w !python<cr>
+nnoremap <leader>P :w !python<cr>
 
 set pastetoggle=<leader>p
 

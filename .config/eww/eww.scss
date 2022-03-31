@@ -3,8 +3,7 @@ $background: #0D1117;
 $background-alt: #25293E;
 $foreground: #9da2ab;
 $foreground-alt: #757680;
-$font: 'cozette';
-$font-alt: 'rissole';
+$highlight: #9aa9ce;
 
 $white: #ffffff;
 $black: #000000;
@@ -21,6 +20,10 @@ $blue-alt: #78a6e2;
 $magenta: #e278db;
 $cyan: #89B8C2;
 $purple: #a07acf;
+
+$font: 'cozette';
+$font-alt: 'rissole';
+$tray-size: 110px;
 // }}}
 
 * {
@@ -39,37 +42,39 @@ window {
   border: 1px solid $background-alt;
 
   // For trayer-srg
-  padding-right: 110px;
+  padding-right: $tray-size;
 
   // & > * {
   //   margin-top: 9px;
   //   margin-bottom: 9px;
   // }
   & > * > * {
-    padding-left: 5px;
-    padding-right: 5px;
+    padding: 0 5px;
   }
 
-
-
-  //   // padding: 0 9px;
-  //   // margin: 4px 0;
-  //   // border-radius: 5px;
-
-  & label {
-    padding-left: 9px;
-    padding-right: 9px;
-    margin-top: 4px;
-    margin-bottom: 4px;
+  & .hover label:not(.nobox),
+  & button label {
+    padding: 0 9px;
+    margin: 4px 0;
     border-radius: 3px;
     background-color: $background-alt;
   }
-  & button label {
-    background-color: $background-alt;
-    border: 1px solid $gray-alt;
+  & button {
+    label {
+      background-color: $background-alt;
+      border: 1px solid $gray-alt;
+    }
+    &:hover label {
+      background-color: $gray-alt;
+    }
   }
-  & button:hover label {
-    background-color: $gray-alt;
+  & .hover-double > * > * > :nth-child(3) label,
+  & .hover-double > * > * > :nth-child(1) label {
+    padding: 0 5px;
+    background-color: transparent;
+  }
+  & .hover-double > *:hover > * > :nth-child(2) label {
+    font-weight: bold;
   }
 }
 
@@ -80,15 +85,21 @@ window {
 .info {
   font-family: $font-alt;
   font-size: 0.9rem;
+  // label {
+  //   background: transparent;
+  // }
 }
+
+// .nobg label {
+//   background: transparent;
+// }
 
 scale trough {
   background-color: $background-alt;
   border-radius: 5px;
   min-height: 4px;
   min-width: 45px;
-  margin-left: 5px;
-  margin-right: 5px;
+  margin: 0 5px;
 
   highlight {
     background-color: $foreground-alt;
@@ -99,12 +110,8 @@ scale.adjustable trough highlight {
   background-color: $blue;
 }
 
-:hover .time {
-  font-weight: bold;
-}
-
 .workspaces {
-  background-color: $gray-alt;
+  background-color: $background-alt;
   border-radius: 3px;
 
   // & > * {
@@ -112,44 +119,26 @@ scale.adjustable trough highlight {
   // }
 
   button {
-    label {
+    & label {
       border: none;
+      border-radius: 3px;
       background-color: transparent;
+      padding: 1px 5px;
+      margin: 3px;
     }
 
-    &.focused label {
-      background-color: $blue;
+    &.occupied label {
+      color: $gray;
+    }
+    &:not(.occupied) label {
+      color: $gray-alt;
+    }
+    &.active label {
+      background-color: $highlight;
       color: $background;
     }
+    &.urgent label {
+      color: $red;
+    }
   }
-
-//   button {
-//     margin: 0 3px;
-//     padding: 2px 6px;
-//     border-radius: 3px;
-//     border: 1px solid transparent;
-// 
-//     &.occupied {
-//       /* font-size: 1.01rem; */
-//       color: $gray;
-//     }
-//     &.focused {
-//       /* font-weight: bold; */
-//       color: $white;
-//       background-color: $background;
-//       border: 1px solid $background-alt;
-//       border-radius: 5px;
-//     }
-//     &.urgent {
-//       color: $red;
-//     }
-//     &.empty {
-//       /* font-size: 0.8rem; */
-//       color: $gray-alt;
-//     }
-// 
-//     &:hover {
-//       font-weight: bold;
-//     }
-//   }
 }

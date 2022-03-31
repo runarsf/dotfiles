@@ -30,7 +30,7 @@ configuration {
   anchor: north;
   location: north;
   width: 99%;
-  height: 34px; /* eww || polybar + 2 (border) */
+  height: 35px; /* eww || polybar + 2 (border) */
   border: 1px;
   border-color: #2B2D43;
   border-radius: 5px;
