@@ -40,6 +40,7 @@
 ; }}}
 
 ; TODO Scroll to change ws (eventbox?)
+; TODO click module
 (defwidget workspaces [] ; {{{
   (box :space-evenly false
        :orientation "h"
@@ -48,16 +49,11 @@
       (eventbox
         (literal :class "container"
                  :content workspaces))) ; :onscroll "modules/workspaces {}"
-    ; FIXME Button / icon styles
     (box :class "spaced"
       (button :onclick "bspwm_rofi_layouts"
-        ; TODO Middle-click autorandr --change
-        ; TODO Hover-effect for buttons
         (label :text bsplayout)))))
-; (deflisten bspws
-;   "modules/bspws")
 (deflisten workspaces
-  "modules/ws")
+  "modules/workspaces")
 (defpoll bsplayout :interval "5s"
   "bspwm_rofi_layouts query")
 ; }}}
@@ -79,7 +75,6 @@
          :class "spaced"
       (button :onclick "rofi-autorandr" ; TODO Symlink rofi-autorandr into modules
         ; TODO Middle-click autorandr --change
-        ; TODO Hover-effect for buttons
         (label :text "")))
     (box :tooltip "Memory"
       (hover-double :var revealram
@@ -115,7 +110,6 @@
     (box :tooltip "Volume"
       (hover-left :var revealvol
                   :varname "revealvol"
-        ; TODO Mute on click
         (scale :min 0
                :max 101
                :value volume
@@ -128,7 +122,6 @@
         (hover-double :var revealtime
                       :varname "revealtime"
                       :class "condensed"
-          ; TODO Underline time on expand
           (label :text "${date}-"
                  :style "padding: 0;")
           (label :text ":${seconds}"
