@@ -13,6 +13,7 @@
 (defvar revealcpu false)
 (defvar revealdisk false)
 (defvar revealtime false)
+(defvar revealpower false)
 ; }}}
 
 (defwindow bar ; {{{
@@ -40,7 +41,6 @@
 ; }}}
 
 ; TODO Scroll to change ws (eventbox?)
-; TODO click module
 (defwidget workspaces [] ; {{{
   (box :space-evenly false
        :orientation "h"
@@ -71,43 +71,43 @@
        :orientation "h"
        :space-evenly false
        :halign "end"
-    (box :tooltip "Autorandr"
+    (box :tooltip "Autorandr" ; {{{
          :class "spaced"
       (button :onclick "rofi-autorandr" ; TODO Symlink rofi-autorandr into modules
         ; TODO Middle-click autorandr --change
-        (label :text "")))
-    (box :tooltip "Memory"
+        (label :text ""))) ; }}}
+    (box :tooltip "Memory" ; {{{
       (hover-double :var revealram
                     :varname "revealram"
         (scale :min 0
                :max 101
                :value {EWW_RAM.used_mem_perc})
         (label :text "${round(EWW_RAM.used_mem_perc, 0)}%")
-        (label :text "")))
-    (box :tooltip "CPU"
+        (label :text ""))) ; }}}
+    (box :tooltip "CPU" ; {{{
       (hover-double :var revealcpu
                     :varname "revealcpu"
         (scale :min 0
                :max 101
                :value {EWW_CPU.avg})
         (label :text "${round(EWW_CPU.avg, 0)}%")
-        (label :text "﬙")))
-    (box :tooltip "Disk"
+        (label :text "﬙"))) ; }}}
+    (box :tooltip "Disk" ; {{{
       (hover-left :var revealdisk
                   :varname "revealdisk"
         (scale :min 0
                :max 101
                :value {round((1 - (EWW_DISK["/"].free / EWW_DISK["/"].total)) * 100, 0)})
-        (label :text "💿")))
-    (box :tooltip "Battery"
+        (label :text "💿"))) ; }}}
+    (box :tooltip "Battery" ; {{{
       (hover-left :var revealbat
                   :varname "revealbat"
         (scale :min 0
                :max 101
                :value battery)
         (button :onclick "power-man"
-          (label :text ""))))
-    (box :tooltip "Volume"
+          (label :text "")))) ; }}}
+    (box :tooltip "Volume" ; {{{
       (hover-left :var revealvol
                   :varname "revealvol"
         (scale :min 0
@@ -116,8 +116,14 @@
                :onchange "amixer -D pulse sset Master {}%"
                :class "adjustable")
         (button :onclick "amixer -D pulse set Master 1+ toggle"
-          (label :text mutestatus))))
-    (box :class "spaced"
+          (label :text mutestatus)))) ; }}}
+    ; (box :tooltip "Power" ; {{{
+    ;   (click-left :var revealpower
+    ;               :varname "revealpower"
+    ;     (box
+    ;       (button :onclick "notify-send asd" "asd"))
+    ;     (label :text "⏻"))) ; }}}
+    (box :class "spaced" ; {{{
       (eventbox
         (hover-double :var revealtime
                       :varname "revealtime"
@@ -127,7 +133,21 @@
           (label :text ":${seconds}"
                  :style "padding: 0;")
           (label :class "nobox"
-                 :text time))))))
+                 :text time)))))) ; }}}
+; }}}
+
+(defwidget click-left [var varname ?class ?duration ?transition] ; {{{
+  (box :class "${class}"
+       :orientation "h"
+       :space-evenly false
+    (eventbox :onhoverlost "${eww} update ${varname}=false"
+      (button :onclick "${eww} update ${varname}=true"
+        (box :space-evenly false
+          (revealer :reveal var
+                    :transition {transition ?: "slideleft"}
+                    :duration {duration ?: "350ms"}
+            (children :nth 0))
+          (children :nth 1))))))
 ; }}}
 
 (defwidget hover-left [var varname ?class ?duration ?transition] ; {{{
