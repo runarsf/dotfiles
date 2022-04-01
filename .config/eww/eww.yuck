@@ -29,7 +29,7 @@
                       :height "35px" ; NOTE Has to be odd for pixel-perfect vertical centering
                       :anchor "top center")
   :reserve (struts :side "top"
-                   :distance "40px")
+                   :distance "45px")
   (bar))
 ; }}}
 

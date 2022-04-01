@@ -69,12 +69,12 @@ window {
       background-color: $gray-alt;
     }
   }
-  & .hover > * > * > :nth-child(3) label,
-  & .hover > * > * > :nth-child(1) label {
+  & .hover-double > * > * > :nth-child(3) label,
+  & .hover-double > * > * > :nth-child(1) label {
     padding: 0 5px;
     background-color: transparent;
   }
-  & .hover > *:hover > * > :nth-child(2) label {
+  & .hover-double > *:hover > * > :nth-child(2) label {
     font-weight: bold;
   }
 }
