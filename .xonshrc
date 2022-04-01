@@ -179,10 +179,12 @@ $PROMPT = '{0}{1}'.format('{RESET}'.join([
 
 # Aliases {{{
 aliases['-'] = ['cd', '-']
-aliases['ls'] = ['ls', '-l', '-A', '-F', '-h']
-if $(ls --version 2>/dev/null).strip():
-    aliases['ls'].append('--color=auto')
-aliases['sl'] = aliases['ls']
+if which('exa') is not None:
+    aliases['ls'] = ['exa', '--group-directories-first', '--git', '--long', '--all']
+else:
+    aliases['ls'] = ['ls', '-l', '-A', '-F', '-h']
+    if $(ls --version 2>/dev/null).strip():
+        aliases['ls'].append('--color=auto')
 aliases['grep'] = ['grep', '--color']
 aliases['vim'] = ${'EDITOR'}
 
@@ -239,6 +241,7 @@ __builtin__.null = None
 
 # Platform-specific settings {{{
 from xonsh.platform import ON_LINUX  # ON_DARWIN, ON_WINDOWS, ON_WSL, ON_CYGWIN, ON_MSYS, ON_POSIX, ON_FREEBSD, ON_DRAGONFLY, ON_NETBSD, ON_OPENBSD
+
 
 if ON_LINUX:
 
