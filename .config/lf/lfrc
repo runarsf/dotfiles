@@ -96,6 +96,7 @@ map Q quitcd
 cmd setbg ${{ # {{{
   convert "${f}" ~/.config/wall.jpg
   feh --bg-scale ~/.config/wall.jpg
+  betterlockscreen --update ~/.config/wall.jpg
 }} # }}}
 map bg setbg
 

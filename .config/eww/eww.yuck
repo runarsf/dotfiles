@@ -85,12 +85,13 @@
         (label :text "${round(EWW_RAM.used_mem_perc, 0)}%")
         (label :text ""))) ; }}}
     (box :tooltip "CPU" ; {{{
-      (hover-double :var revealcpu
-                    :varname "revealcpu"
-        (scale :min 0
-               :max 101
-               :value {EWW_CPU.avg})
-        (label :text "${round(EWW_CPU.avg, 0)}%")
+      (hover-left :var revealcpu
+                  :varname "revealcpu"
+        (box
+          (scale :min 0
+                 :max 101
+                 :value {EWW_CPU.avg})
+          (label :text "${round(EWW_CPU.avg, 0)}%"))
         (label :text "﬙"))) ; }}}
     (box :tooltip "Disk" ; {{{
       (hover-left :var revealdisk

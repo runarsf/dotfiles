@@ -176,6 +176,8 @@ if (has('nvim-0.5')) " {{{
   " Plug 'folke/trouble.nvim'
 endif " }}}
 
+" NOTE When undo fails, press 2u
+" https://github.com/eraserhd/parinfer-rust/issues/74
 Plug 'eraserhd/parinfer-rust', {'do':
         \  'cargo build --release', 'for': 'yuck'}
 
