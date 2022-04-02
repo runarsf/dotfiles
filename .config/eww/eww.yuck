@@ -86,8 +86,8 @@
           (metric :value {EWW_CPU.avg})
           (label :text "${round(EWW_CPU.avg, 0)}%"))
         (bbutton :onclick "(sleep 1; ${eww} update revealcpu=true)"
-          (label :text "﬙" ; }}}
-                 :style "border: none;"))))
+          (label :text "﬙"
+                 :style "border: none;")))) ; }}}
     (bbox :tooltip "Disk" ; {{{
       (hover-left :var revealdisk
                   :varname "revealdisk"
