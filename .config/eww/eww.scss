@@ -3,8 +3,6 @@ $background: #0D1117;
 $background-alt: #25293E;
 $foreground: #9da2ab;
 $foreground-alt: #757680;
-$highlight: #68729D;
-$highlight-alt: #9aa9ce;
 
 $white: #ffffff;
 $black: #000000;
@@ -16,8 +14,9 @@ $green: #A3BE8C;
 $green-alt: #b8cc52;
 $yellow: #EBCB8B;
 $yellow-alt: #e6c446;
-$blue: #306998;
-$blue-alt: #78a6e2;
+$blue: #68729D;
+$blue-alt: #9aa9ce;
+//$blue-alt: #78a6e2;
 $magenta: #e278db;
 $cyan: #89B8C2;
 $purple: #a07acf;
@@ -82,9 +81,9 @@ button:hover label {
   background-color: transparent;
 }
 
-.spaced {
-  margin: 0 10px;
-}
+// .spaced {
+//   margin: 0 10px;
+// }
 
 .info {
   font-family: $font-alt;
@@ -104,29 +103,7 @@ scale trough {
   }
 }
 scale.modifiable trough highlight {
-  background-color: $blue;
-}
-
-.sleep label,
-.sleep:hover label {
-  border: none;
-  background-color: $purple;
-  color: $background;
-  border-radius: 2px;
-}
-.reboot label,
-.reboot:hover label {
-  border: none;
-  background-color: $yellow;
-  color: $background;
-  border-radius: 2px;
-}
-.shutdown label,
-.shutdown:hover label {
-  border-radius: 2px;
-  border: none;
-  background-color: $red;
-  color: $background;
+  background-color: $blue-alt;
 }
 
 .workspaces {
@@ -159,11 +136,45 @@ scale.modifiable trough highlight {
       color: $gray-alt;
     }
     &.active label {
-      background-color: $highlight;
+      background-color: $blue;
       color: $background;
     }
     &.urgent label {
       color: $red;
+    }
+  }
+}
+
+.powermenu {
+  label {
+    border: none;
+    color: $background;
+    border-radius: 3px;
+    margin: 7px 3px 7px 0;
+  }
+
+  & .sleep {
+    & label {
+      background-color: $blue;
+    }
+    & button > label {
+      margin-right: 0;
+    }
+  }
+  & .reboot {
+    & label {
+      background-color: $yellow;
+    }
+    & button > label {
+      margin-right: 0;
+    }
+  }
+  & .shutdown {
+    & label {
+      background-color: $red;
+    }
+    & button > label {
+      margin-right: 0;
     }
   }
 }

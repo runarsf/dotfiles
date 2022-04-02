@@ -46,8 +46,9 @@
       (eventbox
         (literal :class "container"
                  :content workspaces))) ; :onscroll "modules/workspaces {}"
-    (bbox :class "spaced"
-      (button :onclick "bspwm_rofi_layouts"
+    (delim)
+    (bbox
+      (bbutton :onclick "bspwm_rofi_layouts"
         (label :text bsplayout)))))
 (deflisten workspaces
   "modules/workspaces")
@@ -65,24 +66,28 @@
   (bbox :class "modules"
         :halign "end"
     (bbox :tooltip "Autorandr" ; {{{
-          :class "spaced"
-      (button :onclick "rofi-autorandr" ; TODO Symlink rofi-autorandr into modules
+      (bbutton :onclick "rofi-autorandr" ; TODO Symlink rofi-autorandr into modules
         ; TODO Middle-click autorandr --change
         (label :text ""))) ; }}}
+    (delim)
     (bbox :tooltip "Memory" ; {{{
       (hover-left :var revealram
                   :varname "revealram"
         (bbox
           (metric :value {EWW_RAM.used_mem_perc})
           (label :text "${round(EWW_RAM.used_mem_perc, 0)}%"))
-        (label :text ""))) ; }}}
+        (bbutton :onclick "(sleep 1; ${eww} update revealram=true)"
+          (label :text ""
+                 :style "border: none;")))) ; }}}
     (bbox :tooltip "CPU" ; {{{
       (hover-left :var revealcpu
                   :varname "revealcpu"
         (bbox
           (metric :value {EWW_CPU.avg})
           (label :text "${round(EWW_CPU.avg, 0)}%"))
-        (label :text "﬙"))) ; }}}
+        (bbutton :onclick "(sleep 1; ${eww} update revealcpu=true)"
+          (label :text "﬙" ; }}}
+                 :style "border: none;"))))
     (bbox :tooltip "Disk" ; {{{
       (hover-left :var revealdisk
                   :varname "revealdisk"
@@ -93,21 +98,22 @@
                   :varname "revealbat"
         (bbox
           (metric :value battery)
-          (label :text "${battery}%"))
-        (button :onclick "power-man"
+          (dlabel :text {battery <= 15 ? "${battery}%" : ""}))
+        (bbutton :onclick "power-man"
           (label :text "")))) ; }}}
     (bbox :tooltip "Volume" ; {{{
       (hover-left :var revealvol
                   :varname "revealvol"
         (metric :value volume
                 :onchange "amixer -D pulse sset Master {}%")
-        (button :onclick "amixer -D pulse set Master 1+ toggle"
+        (bbutton :onclick "amixer -D pulse set Master 1+ toggle"
           (label :text mutestatus)))) ; }}}
+    (delim)
     (bbox :tooltip "Power" ; {{{
       (click-left :var revealpower
                   :varname "revealpower"
-        (bbox
-          (click-left :var revealpowerc
+        (bbox :class "powermenu"
+          (hover-left :var revealpowerc
                       :varname "revealpowerc"
                       :class "sleep"
             (button :onclick "notify-send '>_' 'Sleeping...'; systemctl suspend"
@@ -126,7 +132,8 @@
               (label :text "<"))
             (label :text "Shutdown")))
         (label :text "⏻"))) ; }}}
-    (bbox :class "spaced" ; {{{
+    (delim)
+    (bbox ; {{{
       (hover-double :var revealtime
                     :varname "revealtime"
                     :class "condensed"
@@ -135,8 +142,24 @@
         (label :text time))))) ; }}}
 ; }}}
 
-(defwidget bbox [?class ?tooltip ?orientation ?space-evenly ?spacing ?halign ?valign] ; A box, but based. {{{
+(defwidget bbutton [?class ?onclick ?onmiddleclick ?onrightclick ?timeout] ; Based button with pointer-cursor {{{
+  (eventbox :cursor {"${onclick}${onmiddleclick}${onrightclick}" != "" ? "pointer" : "default"}
+    (button :onclick onclick
+            :onmiddleclick onmiddleclick
+            :onrightclick onrightclick
+            :class {"${onclick}${onmiddleclick}${onrightclick}" != "" ? "clickable ${class}" : class}
+      (children)))) ; }}}
+
+(defwidget dlabel [?class ?style ?text ?markup] ; A dynamic label {{{
+  (label :class class
+         :style {text != "" ? style : "padding: 0 0px; ${style}"}
+         :text text
+         :markup markup
+    (children))) ; }}}
+
+(defwidget bbox [?class ?style ?tooltip ?orientation ?space-evenly ?spacing ?halign ?valign] ; A based box {{{
   (box :class class
+       :style style
        :tooltip tooltip
        :orientation {orientation ?: "h"}
        :space-evenly {space-evenly ?: false}
@@ -146,13 +169,14 @@
     (children))) ; }}}
 
 (defwidget metric [value ?class ?onchange ?min ?max] ; {{{
-  (scale :min {min ?: 0}
-         :max {max ?: 101}
-         :active {onchange != ""}
-         :value value
-         :onchange onchange
-         :class "metric ${class} ${onchange != "" ? 'modifiable' : ''}"
-    (children)))
+  (eventbox :cursor {onchange != "" ? "col-resize" : "default"}
+    (scale :min {min ?: 0}
+           :max {max ?: 101}
+           :active {onchange != ""}
+           :value value
+           :onchange onchange
+           :class "metric ${class} ${onchange != "" ? 'modifiable' : ''}"
+      (children))))
 ; }}}
 
 (defwidget hover-left [var varname ?class ?duration] ; {{{
@@ -215,6 +239,7 @@
 (defwidget click-left [var varname ?class ?duration] ; {{{
   (eventbox :onhoverlost "${eww} update ${varname}=false"
             :class "hover ${class}"
+            :cursor "pointer"
     (box :orientation "h"
          :space-evenly false
       (revealer :reveal var
@@ -227,6 +252,16 @@
               :onclick "${eww} update ${varname}=true"
         (children :nth 1)))))
 ; }}}
+
+(defwidget delim [] ; A module delimiter {{{
+  (box :style "margin: 0 5px; padding: 0;"
+       ;:tooltip tooltip
+       :orientation "h"
+       :space-evenly false
+       :spacing 0
+       :halign "center"
+       :valign "fill"
+    (children))) ; }}}
 
 ; Listeners / pollers {{{
 (deflisten music :initial ""
