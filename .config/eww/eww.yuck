@@ -1,5 +1,5 @@
 ; -*- mode: lisp -*-
-; TODO wlan backlight date powermenu
+; TODO wlan calendar
 
 ; Variables {{{
 (defvar eww "eww -c ~/.config/eww")
@@ -9,6 +9,7 @@
 (defvar revealcpu false)
 (defvar revealdisk false)
 (defvar revealtime false)
+(defvar reveallight false)
 (defvar revealpower false)
 (defvar revealpowera false)
 (defvar revealpowerb false)
@@ -93,6 +94,12 @@
                   :varname "revealdisk"
         (metric :value {round((1 - (EWW_DISK["/"].free / EWW_DISK["/"].total)) * 100, 0)})
         (label :text "💿"))) ; }}}
+    (bbox :tooltip "Backlight" ; {{{
+      (hover-left :var reveallight
+                  :varname "reveallight"
+        (metric :value backlight
+                :onchange "xbacklight -set {}")
+        (label :text "盛"))) ; }}}
     (bbox :tooltip "Battery" ; {{{
       (hover-left :var revealbat
                   :varname "revealbat"
@@ -287,6 +294,9 @@
 
 (defpoll mutestatus :interval "5s"
   "amixer get Master | tail -2 | grep -c '\\[on\\]' >/dev/null 2>&1 && printf  || printf  ")
+
+(defpoll backlight :interval "5s"
+  "xbacklight")
 
 ;(defpoll ram :interval "25s"
 ;  "printf "%.0f\n" $(free -m | grep Mem | awk '{print ($3/$2)*100}')")
