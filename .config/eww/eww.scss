@@ -52,31 +52,34 @@ window {
   & > * > * {
     padding: 0 5px;
   }
+}
 
-  & .hover label:not(.nobox),
-  & button label {
-    padding: 0 9px;
-    margin: 4px 0;
-    border-radius: 3px;
-    background-color: $background-alt;
-  }
-  & button {
-    label {
-      background-color: $background-alt;
-      border: 1px solid $gray-alt;
-    }
-    &:hover label {
-      background-color: $gray-alt;
-    }
-  }
-  & .hover-double > * > * > :nth-child(3) label,
-  & .hover-double > * > * > :nth-child(1) label {
-    padding: 0 5px;
-    background-color: transparent;
-  }
-  & .hover-double > *:hover > * > :nth-child(2) label {
-    font-weight: bold;
-  }
+.hover label,
+button label {
+  padding: 0 9px;
+  margin: 4px 0;
+  border-radius: 3px;
+  background-color: $background-alt;
+}
+button label {
+  background-color: $background-alt;
+  border: 1px solid $gray-alt;
+}
+button:hover label {
+  background-color: $gray-alt;
+}
+.child label {
+  padding: 0 5px;
+  background-color: transparent;
+}
+.hover-double:hover .main label {
+  font-weight: bold;
+  // text-decoration: underline wavy;
+}
+.condensed .main label,
+.condensed .child label {
+  padding: 0;
+  background-color: transparent;
 }
 
 .spaced {
@@ -86,14 +89,7 @@ window {
 .info {
   font-family: $font-alt;
   font-size: 0.9rem;
-  // label {
-  //   background: transparent;
-  // }
 }
-
-// .nobg label {
-//   background: transparent;
-// }
 
 scale trough {
   background-color: $background-alt;
@@ -107,8 +103,30 @@ scale trough {
     border-radius: 5px;
   }
 }
-scale.adjustable trough highlight {
+scale.modifiable trough highlight {
   background-color: $blue;
+}
+
+.sleep label,
+.sleep:hover label {
+  border: none;
+  background-color: $purple;
+  color: $background;
+  border-radius: 2px;
+}
+.reboot label,
+.reboot:hover label {
+  border: none;
+  background-color: $yellow;
+  color: $background;
+  border-radius: 2px;
+}
+.shutdown label,
+.shutdown:hover label {
+  border-radius: 2px;
+  border: none;
+  background-color: $red;
+  color: $background;
 }
 
 .workspaces {
@@ -120,6 +138,12 @@ scale.adjustable trough highlight {
   // }
 
   button {
+    &:hover label {
+      // background-color: $background;
+      border: 1px solid $gray-alt;
+      margin: 2px;
+      padding: 0 2px;
+    }
     & label {
       border: none;
       border-radius: 3px;

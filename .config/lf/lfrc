@@ -34,7 +34,6 @@ ${{ # Dynamically allocate number of panes {{{
 
 map m
 map o
-map n
 map "'"
 map '"'
 map d
@@ -142,8 +141,13 @@ cmd open ${{ # {{{
 map o open
 map <enter> open
 
+cmd on-cd &{{
+    printf "\033]0; $PWD\007" > /dev/tty
+}}
+on-cd
+
 #   # Archive bindings
-#   cmd unarchive ${{
+#   cmd unarchive ${{ # {{{
 #     case "${f}" in
 #       *.zip) unzip "${f}";;
 #       *.tar.gz) tar -xzvf "${f}";;
@@ -152,6 +156,7 @@ map <enter> open
 #       *) printf "Unsupported format\n";;
 #     esac
 #   }}
+#   # }}}
 #   map au unarchive
 #
 #   cmd zip %zip -r "${f}" "${f}"
@@ -164,7 +169,7 @@ map <enter> open
 #   map ab tarbz2
 
 #   # Requires bash (not sh) to be set as the shell in lf
-#   #cmd mark-add ${{
+#   #cmd mark-add ${{ # {{{
 #   #  # querying mark
 #   #  read -e -p "Mark as: " -n 1 markchar
 #   #  test -z "${markchar}" && exit 0
@@ -191,11 +196,11 @@ map <enter> open
 #   #    printf "${markchar}" "${location}\n";
 #   #  } | sort >&3
 #   #  cat <&4 > "${markfile}"
-#   #}}
+#   #}} # }}}
 #   #map m mark-add
 #   #map bm $marker add "$(pwd)"
 #   
-#   #cmd mark-go ${{
+#   #cmd mark-go ${{ # {{{
 #   #  FZF="${1:-}"
 #   #  markfile="${XDG_CONFIG_HOME:-${HOME}/.config}/lf/marks"
 #   #
@@ -224,7 +229,7 @@ map <enter> open
 #   #
 #   #  # going to wanted dir
 #   #  test -n "${dir}" && lf -remote "send ${id} cd ${dir}"
-#   #}}
+#   #}} # }}}
 #   #map "'" $ "$(marker get)"
 #   #map "'" mark-go fzf
 #   #map '"' mark-go
