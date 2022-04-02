@@ -122,7 +122,7 @@
           (click-left :var revealpowera
                       :varname "revealpowera"
                       :class "shutdown"
-            (button :onclick "notify-send '>_' 'Shutting down...'; shutdown -t now"
+            (button :onclick "notify-send '>_' 'Shutting down...'; shutdown 0"
               (label :text "<"))
             (label :text "Shutdown")))
         (label :text "⏻"))) ; }}}
