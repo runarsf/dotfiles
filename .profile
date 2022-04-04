@@ -1,7 +1,6 @@
-# Profile file. Runs on login.
+# Runs when logging in. Used for setting up the environment.
+# .xprofile is run when logging in through a Display Manager.
 
-# Adds `~/bin` to $PATH
-#export PATH="${PATH}:$(du "${HOME}/bin/" | cut -f2 | tr '\n' ':' | sed 's/:*$//')"
 export PATH="${PATH}:${HOME}/.local/bin"
 export PATH="${PATH}:${XDG_CONFIG_HOME:-${HOME}/.config}/bspwm/scripts"
 export PATH="${PATH}:${XDG_CONFIG_HOME:-${HOME}/.config}/polybar/scripts"

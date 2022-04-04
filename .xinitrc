@@ -1,18 +1,8 @@
 #!/usr/bin/env sh
 
-# xinitrc runs automatically when you run startx.
+# Runs when you start X from outside of a Display Manager. Used to set up the X session.
 
-# There are some small but important commands that need to be run when we start
-# the graphical environment. I keep those commands in ~/.xprofile because that
-# file is run automatically if someone uses a display manager (login screen)
-# and so they are needed there. To prevent doubling up commands, I source them
-# here with the line below.
-
-#test -f ~/.xprofile && source ~/.xprofile
-
-# DESKTOP="awesome"
 DESKTOP="bspwm"
-# DESKTOP="xmonad" # $XDG_CACHE_HOME:-$HOME/.cache/xmonad/xmonad-x86_64-linux # to stop recompilation on every build
 
 userresources="${XDG_CONFIG_HOME:-${HOME:-~}/.config}/.xres/Xresources"
 usermodmap="${XDG_CONFIG_HOME:-${HOME:-~}/.config}/.xres/Xmodmap"
@@ -94,5 +84,7 @@ fi
 if test systemd-detect-virt = "oracle"; then
   /usr/bin/VBoxClient-all
 fi
+
+# test -f ~/.xsession && source ~/.xsession
 
 exec "${DESKTOP}"
