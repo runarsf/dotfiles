@@ -24,11 +24,11 @@ ${{ # Dynamically allocate number of panes {{{
   width="$(tput cols)"
 
   if test "${width}" -le "80"; then
-    lf -remote "send ${id} set ratios 1:2"
+    lf -remote "send $id set ratios 1:2"
   elif test "${width}" -le "280"; then
-    lf -remote "send ${id} set ratios 1:2:3"
+    lf -remote "send $id set ratios 1:2:3"
   else
-    lf -remote "send ${id} set ratios 1:2:3:5"
+    lf -remote "send $id set ratios 1:2:3:5"
   fi
 }} # }}}
 
@@ -140,6 +140,46 @@ cmd open ${{ # {{{
 }} # }}}
 map o open
 map <enter> open
+
+cmd pcf2bdf ${{ # {{{
+  for font in ${fx}; do
+    fontname="$(basename -- "${font}")"
+    fontext="${fontname##*.}"
+    fontname="${fontname%.*}"
+
+    if test "${fontext}" != "pcf"; then
+      printf "Font-extension isn't .pcf...\n"
+      read
+      exit 1
+    fi
+
+    pcf2bdf "${font}" -o "${fontname}.bdf"
+  done
+
+  lf -remote "send $id unselect"
+}} # }}}
+map fpb pcf2bdf
+
+cmd bdfresize ${{ # {{{
+  for font in ${fx}; do
+    fontname="$(basename -- "${font}")"
+    fontext="${fontname##*.}"
+    fontname="${fontname%.*}"
+
+    if test "${fontext}" != "bdf"; then
+      printf "Font-extension isn't .bdf...\n"
+      read
+      exit 1
+    fi
+
+    read -e -p "Factor: " factor
+
+    bdfresize -f "${factor}" "${font}" > "${fontname}x${factor}.bdf"
+  done
+
+  lf -remote "send $id unselect"
+}} # }}}
+map fbr bdfresize
 
 cmd on-cd &{{
     printf "\033]0; $PWD\007" > /dev/tty

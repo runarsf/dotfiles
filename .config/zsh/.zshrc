@@ -175,6 +175,8 @@ alias paste='sharenix -n -c -m f'
 alias gitted='git ls-files --error-unmatch'
 alias please='sudo $(fc -ln -1)'
 alias dkcol='docker-compose logs -f 2>&1 | ccze -m ansi'
+alias vw='vim -c VimwikiIndex'
+alias wk='vim -c NV'
 # alias docker-compose='docker compose'
 #please () { test -z "${1}" && eval "sudo !!" || sudo "${@}" }
 dkhl () { docker inspect --format "{{json .State.Health }}" "${1}" | jq }

@@ -40,7 +40,8 @@ font: # {{{
     style: Regular
     # family: JetBrainsMono Nerd Font
     # family: Ubuntu Mono
-    family: TerminessTTF Nerd Font # Terminus, CozetteVector
+    # family: TerminessTTF Nerd Font # Terminus, CozetteVector
+    family: Termsynu
 
   bold:
     style: Regular
@@ -48,7 +49,7 @@ font: # {{{
   italic:
     style: Regular
 
-  size: 10
+  size: 18
 
   offset:
     x: 0
