@@ -49,7 +49,7 @@ font: # {{{
   italic:
     style: Regular
 
-  size: 18
+  size: 14
 
   offset:
     x: 0

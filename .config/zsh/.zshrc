@@ -177,6 +177,7 @@ alias please='sudo $(fc -ln -1)'
 alias dkcol='docker-compose logs -f 2>&1 | ccze -m ansi'
 alias vw='vim -c VimwikiIndex'
 alias wk='vim -c NV'
+alias yay='paru'
 # alias docker-compose='docker compose'
 #please () { test -z "${1}" && eval "sudo !!" || sudo "${@}" }
 dkhl () { docker inspect --format "{{json .State.Health }}" "${1}" | jq }
