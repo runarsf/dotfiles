@@ -186,6 +186,9 @@ cmd on-cd &{{
 }}
 on-cd
 
+cmd dots-add ${{ # {{{
+}} # }}}
+
 #   # Archive bindings
 #   cmd unarchive ${{ # {{{
 #     case "${f}" in

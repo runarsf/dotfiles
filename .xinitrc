@@ -66,6 +66,7 @@ if test -x /usr/bin/nm-applet; then
 fi
 # picom --config "${XDG_CONFIG_HOME:-${HOME:-~}/.config}/picom/picom.conf" -fcCGb --xrender-sync-fence &
 picom &
+test -f "${XDG_CONFIG_HOME:-${HOME:-~}/.config}/dotfiles/autorun-once.sh" && "${XDG_CONFIG_HOME:-${HOME:-~}/.config}/dotfiles/autorun-once.sh"
 
 if test "${DESKTOP}" = "xmonad"; then
   trayer --edge top --align right --SetDockType true --SetPartialStrut true --expand true --width 5 --transparent false --tint 0x13141D --height 20 --monitor "primary" &
