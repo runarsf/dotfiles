@@ -85,7 +85,47 @@ let g:vimwiki_list = [ { 'path': expand(g:wikidir . 'notes/Work'),
                      \   'syntax': 'default' }]
 let g:vimwiki_key_mappings = { 'all_maps': 0 }
 nnoremap <silent> <leader>ww :VimwikiIndex<CR>
-" }}}
+
+" " WikiSyncPull {{{
+" function! WikiSyncPull()
+"   silent execute "!git -C " . g:wikidir . " pull"
+" endfunction
+" " }}}
+" " WikiSyncSave {{{
+" function! WikiSyncSave()
+"   if &ft =~ 'asciidoctor'
+"     silent Asciidoctor2HTML
+"   elseif &ft =~ 'vimwiki'
+"     silent VimwikiAll2HTML
+"     "call vimwiki#html#WikiAll2HTML(g:wikidir)
+"   endif
+"   let g:has_modified = 1
+" endfunction
+" " }}}
+" " WikiSyncPush {{{
+" function! WikiSyncPush()
+"   if exists('g:has_modified')
+"     silent execute '!git -C ' . g:wikidir . ' pull'
+"     silent execute '!git -C ' . g:wikidir . ' add .'
+"     silent execute '!git -C ' . g:wikidir . ' commit -m"Auto push of %:t"'
+"     silent execute '!git -C ' . g:wikidir . ' push origin master'
+"     unlet g:has_modified
+"   endif
+" endfunction
+" " }}}
+" 
+" augroup WikiSync " {{{
+"   autocmd!
+"   autocmd FileType vimwiki call WikiSyncPull()
+"   autocmd FileType vimwiki cabbrev wq write <bar> quit
+" 
+"   autocmd BufWritePost *.adoc :call WikiSyncSave()
+"   autocmd BufWritePost *.wiki :call WikiSyncSave()
+" 
+"   autocmd BufWinLeave *.adoc :call WikiSyncPush()
+"   autocmd BufWinLeave *.wiki :call WikiSyncPush()
+" augroup END " }}}
+" " }}}
 
 Plug 'alok/notational-fzf-vim' " {{{
 let g:vimwiki_list_dirs = []
@@ -260,6 +300,13 @@ endfunction
 endif
 " }}}
 
+" Plug 'liuchengxu/vim-which-key', { 'on': ['WhichKey', 'WhichKey!'] } " {{{
+" nnoremap <silent> <leader>      :<c-u>WhichKey '<leader>'<CR>
+" nnoremap <silent> <localleader> :<c-u>WhichKey '<localleader>'<CR>
+" }}}
+
+Plug 'folke/which-key.nvim'
+
 if (has('nvim-0.5')) " {{{
   " Plug 'nvim-telescope/telescope.nvim'
   " Plug 'nvim-lua/plenary.nvim'
@@ -360,6 +407,11 @@ require("todo-comments").setup {
   -- require("trouble").setup {}
 EOF
 endif " }}}
+
+lua << EOF
+  require("which-key").setup {
+  }
+EOF
 
 if (has("nvim"))
   let $NVIM_TUI_ENABLE_TRUE_COLOR=1

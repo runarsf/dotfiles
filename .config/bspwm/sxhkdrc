@@ -24,9 +24,6 @@ super + {_,shift + ,ctrl + shift +,ctrl +}{0-9}
 # super + shift + {0-9} + {_,alt}
 # 	bspc node --to-desktop '{0-9}' { ,--follow}
 
-super + shift + Return
-	bspc node --swap biggest
-
 # Focus last active node/desktop on active monitor
 super + {_,shift + }Tab
 	bspc {node,desktop} --focus last.local
@@ -80,7 +77,9 @@ super + alt + b
 	toggleprogram "bspwm_double_borders"
 
 super + n
-	bspwm_scratchpad "scratchpad" "alacritty --class scratchpad --title scratchpad --option font.size=14 --command tmux new-session -A -s scratchpad" "1600x1000+0+0"
+	bspwm_scratchpad "scratchpad" "alacritty --class scratchpad --title scratchpad --command tmux new-session -A -s scratchpad" "1600x1000+0+0"
+super + N
+	bspwm_scratchpad "scratch" "alacritty --class scratch --title scratch" "1600x1000+0+0"
 super + m
 	bspwm_scratchpad "math" "alacritty --class math --title math --option font.size=18 --command tmux new-session -A -s math xonsh" "1200x800+0+0"
 
@@ -89,28 +88,30 @@ super + alt + {minus,plus}
 super + alt + shift + plus
 	bspc config --desktop focused window_gap 0
 
-super + alt + {Left,Down,Up,Right}
-	bspc node --presel-dir {west,south,north,east}
+# super + alt + ctrl + {Left,Down,Up,Right}
+# 	bspc node --presel-dir {west,south,north,east}
 
 # Move active node to preselection
-super + alt + Return
-	bspc node --to-node last.!automatic
+# super + alt + ctrl + Return
+# 	bspc node --to-node last.!automatic
 
 # Cancel all preselections on active desktop
-super + alt + space
+super + alt + ctrl + space
 	bspc query -N -d | xargs -I id -n 1 bspc node id -p cancel
 
 # Insert receptacle
-super + alt + ctrl + {Left,Down,Up,Right}
+super + alt + {Left,Down,Up,Right}
 	bspc node --presel-dir {west,south,north,east} --insert-receptacle
 
 # Close all receptacles
-super + alt + ctrl + space
+super + alt + space
 	for win in `bspc query -N -n .leaf.\!window`; do bspc node $win -k; done;
 
-# Move to receptacle
-super + alt + ctrl + Return
-	bspc node $(bspc query -N -n focused) -n $(bspc query -N -n .leaf.\!window)
+# Move to receptacle or swap with biggest node on active desktop
+super + shift + Return
+	bspc node $(bspc query -N -n focused) -n $(bspc query -N -n .leaf.\!window) || bspc node --swap biggest.local
+super + alt + Return
+	bspc node $(bspc query -N -n focused) -n $(bspc query -N -n .leaf.\!window) || bspc node --swap biggest.local
 
 super + x ; f ; {l,m,s,p}
 	bspc node -g {locked,marked,sticky,private}
