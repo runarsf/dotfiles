@@ -51,6 +51,10 @@ setxkbmap -option caps:escape -v no &
 # Make sure cursor is not an X when hovering over root window
 xsetroot -cursor_name left_ptr &
 
+if test command -v "numlockx" &>/dev/null; then
+  numlockx on
+fi
+
 /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
 
 # Start common apps
