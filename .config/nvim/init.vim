@@ -541,12 +541,10 @@ nnoremap <leader>j :m .+1<CR>==
 nnoremap <leader>k :m .-2<CR>==
 
 imap #dn >/dev/null<space>2>&1
-inoreabbrev <expr> #!! "#!/usr/bin/env" . (empty(&filetype) ? '' : ' '.&filetype)
+inoremap <expr> #!! "#!/usr/bin/env" . (empty(&filetype) ? '' : ' '.&filetype)
 
 xnoremap <leader>b :w !bash<cr>
 nnoremap <leader>B :w !bash<cr>
-xnoremap <leader>p :w !python<cr>
-nnoremap <leader>P :w !python<cr>
 
 set pastetoggle=<leader>p
 
