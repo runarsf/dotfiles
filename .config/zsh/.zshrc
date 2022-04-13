@@ -165,7 +165,7 @@ bindkey '^e' edit-command-line
 # }}}
 
 # Aliases {{{
-alias t='clear; todo.sh -a -c'
+alias t='clear; todo.sh -a -c -d ${XDG_CONFIG_HOME:-${HOME:-~}/.config}/.todo.actions.d/config'
 alias vim="${EDITOR}"
 alias ls='ls -lAFh --color'
 #alias ls='exa -GlxFa --colour=always'
