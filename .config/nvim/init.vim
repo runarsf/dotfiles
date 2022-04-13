@@ -2,10 +2,11 @@
 let mapleader = ','
 let maplocalleader = ','
 
+" Plugins {{{
 " Automatically install vim-plug {{{
-let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
-if empty(glob(data_dir . '/autoload/plug.vim'))
-  silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+let s:data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
+if empty(glob(s:data_dir . '/autoload/plug.vim'))
+  silent execute '!curl -fLo '.s:data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
   autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
   echo 'Installed vim-plug!'
 endif
@@ -179,6 +180,7 @@ autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=#363840 ctermbg=237
 " }}}
 
 if v:version >= 703 && executable('node') | Plug 'neoclide/coc.nvim', {'branch': 'release'} " {{{
+" TODO https://vi.stackexchange.com/questions/23328/change-color-of-coc-suggestion-box
 "if v:version >= 703 && executable('node') && executable('yarn') | Plug 'neoclide/coc.nvim', { 'branch': 'release', 'tag': '*', 'do': { -> coc#util#install()}}
 let g:coc_global_extensions = [
 \ 'coc-pairs',
@@ -341,6 +343,10 @@ Plug 'Shatur/neovim-ayu'
 
 call plug#end() | endif " }}}
 
+
+" TODO Only load todo-comments, which-key + hexokinase when running :IDE
+" https://github.com/junegunn/vim-plug/wiki/tips#loading-plugins-manually
+
 " if (has('nvim-0.5')) " {{{
 " " :lua print(vim.inspect(require("todo-comments.config")))
 " lua << EOF
@@ -369,6 +375,8 @@ call plug#end() | endif " }}}
 "   require("which-key").setup {
 "   }
 " EOF
+
+" }}}
 
 if (has("nvim"))
   let $NVIM_TUI_ENABLE_TRUE_COLOR=1
@@ -565,21 +573,9 @@ inoremap <leader>. <Esc>/<++><Enter>
 autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 " }}}
 
-" Save and restore code folding {{{
-autocmd BufWinLeave *.* mkview
-autocmd BufWinEnter *.* silent! loadview
-" }}}
-
 " Disable automatic commenting on newline {{{
 autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 " }}}
-
-if has("persistent_undo") " {{{
-  " This creates unwanted shit in home dir
-  " set undodir=stdpath('data').'/temp_dirs/undodir'
-  set undodir=~/.vim_runtime/temp_dirs/undodir
-  set undofile
-endif " }}}
 
 function! s:statusline_expr() " {{{
   " ~/.config/nvim/init.vim [vim]   <<   >>   [unix:utf-8] 1:257/572 1
@@ -604,6 +600,18 @@ function! s:statusline_expr() " {{{
 endfunction
 let &statusline = s:statusline_expr()
 " }}}
+
+" Save and restore code folding {{{
+autocmd BufWinLeave *.* mkview
+autocmd BufWinEnter *.* silent! loadview
+" }}}
+
+if has("persistent_undo") " {{{
+  " This creates unwanted shit in home dir
+  " set undodir=stdpath('data').'/temp_dirs/undodir'
+  set undodir=~/.vim_runtime/temp_dirs/undodir
+  set undofile
+endif " }}}
 
 augroup MyVimrcHooks " {{{
   autocmd!
