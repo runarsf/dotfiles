@@ -28,6 +28,7 @@ antibody bundle <<-EOBUNDLES
 	robbyrussell/oh-my-zsh path:lib
 	robbyrussell/oh-my-zsh path:plugins/colored-man-pages
 	robbyrussell/oh-my-zsh path:plugins/command-not-found
+	olets/zsh-abbr
 	robbyrussell/oh-my-zsh path:plugins/docker
 	robbyrussell/oh-my-zsh path:plugins/docker-compose
 	zsh-users/zsh-autosuggestions
@@ -119,6 +120,7 @@ alias c='xclip -selection clipboard'
 alias gitted='git ls-files --error-unmatch'
 alias dkcol='docker-compose logs -f 2>&1 | ccze -m ansi'
 alias yay='paru'
+abbr -S -qq yay='paru'
 wim () { ${EDITOR} "$(which ${1})" "${@:2}" }
 # }}}
 
