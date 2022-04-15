@@ -27,6 +27,7 @@ export TODOIST_API_KEY="$(pass Todoist/API)"
 export XBB_URL="https://i.runarsf.dev/upload"
 export XBB_TOKEN="$(pass Screenshot/XBB_TOKEN)"
 export XBB_RAW="true"
+export STARSHIP_CONFIG=~/.config/starship.toml
 
 export BYOBU_CONFIG_DIR="${XDG_CONFIG_HOME:-${HOME}/.config}/byobu"
 export CALIBRE_USE_DARK_PALETTE=1
