@@ -3,16 +3,16 @@
 [[ $- != *i* ]] && return # don't do anything if not running interactively
 # Auto start tmux, chsh alternative: sudo chsh -s /bin/tmux ${USER}
 # TODO nvim doesn't set $VIM
-if command -v "tmux" >/dev/null 2>&1 \
-    && test -n "${PS1}" \
-         -a -z "${TMUX+x}" \
-         -a -z "${INSIDE_EMACS+x}" \
-         -a -z "${EMACS+x}" \
-         -a -z "${VIM+x}" \
-    && [[ ! "${TERM}" =~ screen ]] \
-    && [[ ! "${TERM}" =~ tmux ]]; then
-  exec tmux
-fi
+#if command -v "tmux" >/dev/null 2>&1 \
+#    && test -n "${PS1}" \
+#         -a -z "${TMUX+x}" \
+#         -a -z "${INSIDE_EMACS+x}" \
+#         -a -z "${EMACS+x}" \
+#         -a -z "${VIM+x}" \
+#    && [[ ! "${TERM}" =~ screen ]] \
+#    && [[ ! "${TERM}" =~ tmux ]]; then
+#  exec tmux
+#fi
 # }}}
 
 # Completions {{{
