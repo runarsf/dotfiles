@@ -519,6 +519,9 @@ nmap <silent> <c-j> :wincmd j<CR>
 nmap <silent> <c-h> :wincmd h<CR>
 nmap <silent> <c-l> :wincmd l<CR>
 
+" Disable command-line window (:help command-line-window)
+nmap q: <Nop>
+
 " Tab navigation
 nnoremap <C-t> :tabnew<CR>
 nnoremap H gT
