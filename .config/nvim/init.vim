@@ -189,10 +189,10 @@ let g:coc_global_extensions = [
 \ 'coc-css',
 \ 'coc-yaml',
 \ 'coc-highlight',
-\ 'coc-tabnine',
 \ 'coc-eslint',
 \ 'coc-pyright',
 \ ]
+" \ 'coc-tabnine',
 " \ 'coc-tsserver',
 " \ 'coc-vetur',
 " \ 'coc-snippets',

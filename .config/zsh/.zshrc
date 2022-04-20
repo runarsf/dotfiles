@@ -2,9 +2,17 @@
 # vim: set foldmethod=marker foldlevel=0 nomodeline:
 [[ $- != *i* ]] && return # don't do anything if not running interactively
 # Auto start tmux, chsh alternative: sudo chsh -s /bin/tmux ${USER}
-# if command -v "tmux" >/dev/null 2>&1 && test -n "${PS1}" -a -z "${TMUX}" && [[ ! "${TERM}" =~ screen ]] && [[ ! "${TERM}" =~ tmux ]]; then
-#   exec tmux
-# fi
+# TODO nvim doesn't set $VIM
+if command -v "tmux" >/dev/null 2>&1 \
+    && test -n "${PS1}" \
+         -a -z "${TMUX+x}" \
+         -a -z "${INSIDE_EMACS+x}" \
+         -a -z "${EMACS+x}" \
+         -a -z "${VIM+x}" \
+    && [[ ! "${TERM}" =~ screen ]] \
+    && [[ ! "${TERM}" =~ tmux ]]; then
+  exec tmux
+fi
 # }}}
 
 # Completions {{{
@@ -21,6 +29,11 @@ _comp_options+=(globdots)
 # }}}
 
 # plugins {{{
+
+# ZSH_TMUX_AUTOSTART=true
+# ZSH_TMUX_AUTOQUIT=false
+# ZSH_TMUX_AUTOCONNECT=false
+
 command -v "antibody" >/dev/null 2>&1 \
   || (printf "Installing Antibody...\n"; curl -sfL git.io/antibody | sudo sh -s - -b /usr/local/bin) \
   && source <(antibody init)
@@ -28,12 +41,14 @@ antibody bundle <<-EOBUNDLES
 	robbyrussell/oh-my-zsh path:lib
 	robbyrussell/oh-my-zsh path:plugins/colored-man-pages
 	robbyrussell/oh-my-zsh path:plugins/command-not-found
+	# robbyrussell/oh-my-zsh path:plugins/tmux
 	olets/zsh-abbr
 	robbyrussell/oh-my-zsh path:plugins/docker
 	robbyrussell/oh-my-zsh path:plugins/docker-compose
 	zsh-users/zsh-autosuggestions
 	zsh-users/zsh-history-substring-search
 	zsh-users/zsh-completions
+	# laggardkernel/zsh-tmux
 	# djui/alias-tips
 	# zsh-users/zsh-syntax-highlighting
 	zdharma-continuum/fast-syntax-highlighting
