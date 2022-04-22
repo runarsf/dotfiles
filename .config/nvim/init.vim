@@ -295,7 +295,15 @@ Plug 'eraserhd/parinfer-rust', {'do': 'cargo build --release',
 " \ ]
 " }}}
 
+Plug 'tmhedberg/SimpylFold', { 'for': 'python' } " {{{
+let g:SimpylFold_docstring_preview = 1
+let g:SimpylFold_fold_docstring = 1
+let g:SimpylFold_fold_import = 1
+let g:SimpylFold_fold_blank = 1
+" }}}
+
 " Syntax highlighting {{{
+Plug 'vim-python/python-syntax', { 'for': 'python' }
 Plug 'elkowar/yuck.vim', { 'for': 'yuck' }
 Plug 'rodjek/vim-puppet', { 'for': 'puppet' }
 Plug 'tpope/vim-liquid', { 'for': ['markdown', 'html'] }
