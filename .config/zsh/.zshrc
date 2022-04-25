@@ -1,143 +1,168 @@
-# runarsf's Zoomer SHell config {{{
-# vim: set foldmethod=marker foldlevel=0 nomodeline:
-[[ $- != *i* ]] && return # don't do anything if not running interactively
-# Auto start tmux, chsh alternative: sudo chsh -s /bin/tmux ${USER}
-# TODO nvim doesn't set $VIM
-#if command -v "tmux" >/dev/null 2>&1 \
-#    && test -n "${PS1}" \
-#         -a -z "${TMUX+x}" \
-#         -a -z "${INSIDE_EMACS+x}" \
-#         -a -z "${EMACS+x}" \
-#         -a -z "${VIM+x}" \
-#    && [[ ! "${TERM}" =~ screen ]] \
-#    && [[ ! "${TERM}" =~ tmux ]]; then
-#  exec tmux
-#fi
+# Zinit {{{
+ZINIT_HOME="${XDG_DATA_HOME:-${HOME:-~}/.local/share}/zinit"
+
+# rm -rf .local/share/zinit/plugins/* .local/share/zinit/snippets/*
+
+# Install and load zinit {{{
+if test ! -f "${ZINIT_HOME}/zinit.git/zinit.zsh"; then
+  print -P '%F{33} %F{220}Installing %F{33}Zinit%F{220}...%f'
+  mkdir -p "${ZINIT_HOME}" \
+    && chmod g-rwX "${ZINIT_HOME}"
+  git clone https://github.com/zdharma-continuum/zinit.git "${ZINIT_HOME}/zinit.git" \
+    && print -P '%F{33} %F{34}Installation successful!%f%b' \
+    || print -P '%F{160} Cloning failed...%f%b'
+fi
+
+source "${HOME:-~}/.local/share/zinit/zinit.git/zinit.zsh"
+
+autoload -Uz _zinit
+(( ${+_comps} )) && _comps[zinit]=_zinit
+# }}}
+
+# Profile plugins - https://zdharma-continuum.github.io/zinit/wiki/Profiling-plugins/
+if test ! -z "${ZPROF+x}"; then
+  zinit ice atinit'zmodload zsh/zprof' \
+            atload'zprof | head -n 20; zmodload -u zsh/zprof'
+  zinit light zdharma-continuum/fast-syntax-highlighting
+fi
+
+zinit wait lucid for \
+  atinit'ZINIT[COMPINIT_OPTS]=-C; zicompinit; zicdreplay' \
+    zdharma-continuum/fast-syntax-highlighting \
+  blockf \
+    zsh-users/zsh-completions \
+  atload'!_zsh_autosuggest_start' \
+    zsh-users/zsh-autosuggestions \
+  hlissner/zsh-autopair \
+  zdharma-continuum/history-search-multi-word
+
+zinit wait'1' lucid for \
+  akarzim/zsh-docker-aliases \
+  zdharma-continuum/zui \
+  zdharma-continuum/zbrowse \
+  skywind3000/z.lua
+
+zinit ice wait'1' lucid
+zinit snippet OMZP::colored-man-pages
+
+zinit ice wait'5' lucid
+zinit light kazhala/dotbare
+
+zinit ice wait'1' as'completion' lucid
+zinit snippet https://github.com/docker/cli/blob/master/contrib/completion/zsh/_docker
+
+# TODO Setting abbreviations doesn't work
+# zinit light olets/zsh-abbr
+#   abbr -S -qq yay='paru'
+
+# zinit snippet OMZP::tmux
+
+# zinit ice pick'init.zsh'
+# zinit light laggardkernel/zsh-tmux
+
+# zinit ice lucid atload"unalias gcd"
+# zinit snippet OMZP::git
+# zinit snippet OMZP::docker
+# zinit snippet OMZP::docker-compose
+# zinit snippet OMZP::magic-enter
+
+# zinit light zsh-users/zsh-history-substring-search
+#   zmodload zsh/terminfo
+#   test -n "${terminfo[kcuu1]}" && bindkey "${terminfo[kcuu1]}" history-substring-search-up
+#   test -n "${terminfo[kcud1]}" && bindkey "${terminfo[kcud1]}" history-substring-search-down
+#   bindkey -M vicmd 'k' history-substring-search-up
+#   bindkey -M vicmd 'j' history-substring-search-down
+
+# zinit ice lucid wait from'gh-r' sbin'def-matcher'
+# zinit light sei40kr/fast-alias-tips-bin
+# zinit light sei40kr/zsh-fast-alias-tips
+
+zinit ice lucid wait atclone"sed -ie 's/fc -rl 1/fc -rli 1/' shell/key-bindings.zsh" \
+                atpull"%atclone" multisrc"shell/{completion,key-bindings}.zsh" id-as"junegunn/fzf_completions" \
+                pick"/dev/null"
+zinit light junegunn/fzf
+  export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow --glob "!.git/*" 2> /dev/null'
+  export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+  export FZF_ALT_C_COMMAND="fd -t d ."
+  export FZF_CTRL_T_OPTS="--preview '(highlight -O ansi -l {} 2> /dev/null || cat {} || tree -C {}) 2> /dev/null | head -200'"
+  export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window down:3:hidden:wrap --bind '?:toggle-preview'"
+
+zinit ice as'command' from'gh-r' \
+          atclone'./starship init zsh > init.zsh; ./starship completions zsh > _starship' \
+          atpull'%atclone' src'init.zsh'
+zinit light starship/starship
+
+# Prezto {{{
+# https://github.com/sorin-ionescu/prezto/tree/master/modules
+# https://github.com/sorin-ionescu/prezto/blob/master/runcoms/zpreztorc
+
+zinit snippet PZT::modules/environment/init.zsh
+
+zstyle ':prezto:module:terminal' auto-title 'yes'
+zinit snippet PZT::modules/terminal/init.zsh
+
+zstyle ':prezto:module:editor' dot-expansion 'yes'
+zstyle ':prezto:module:editor' key-bindings 'emacs'
+zstyle ':prezto:module:editor' ps-context 'yes'
+zstyle ':prezto:module:prompt' managed 'yes'
+zinit snippet PZTM::editor
+
+zinit snippet PZT::modules/history/init.zsh
+
+zinit ice wait'1' lucid
+zinit snippet PZT::modules/directory/init.zsh
+
+zinit ice wait'1' lucid
+zinit snippet PZT::modules/spectrum/init.zsh
+
+zinit snippet PZT::modules/gnu-utility/init.zsh
+zstyle ':prezto:module:utility' safe-ops 'no'
+zinit snippet PZTM::utility
+
+zinit snippet PZT::modules/completion/init.zsh
+# zinit snippet PZT::modules/gpg/init.zsh
+
+# zinit ice wait'1' lucid
+# zinit snippet PZT::modules/history-substring-search/init.zsh
+
+zstyle ':prezto:*:*' case-sensitive 'no'
+zstyle ':prezto:*:*' color 'yes'
+# }}}
 # }}}
 
 # Completions {{{
-#zstyle :compinstall filename "${HOME}/.config/zsh/.zshrc"
-#zstyle ':completion:*:(cd|mv|cp):*' menu select ignore-parents parent pwd
+# TODO prezto-equivalent
+# correct_all
+unsetopt correct \
+         prompt_cr \
+         prompt_sp
+
+setopt globdots \
+       histignorealldups \
+       sharehistory \
+       menucomplete
+
 autoload -Uz compinit
 
-autoload -z edit-command-line
-zle -N edit-command-line
-bindkey "^X^E" edit-command-line
-
-compinit
-_comp_options+=(globdots)
-# }}}
-
-# plugins {{{
-
-# ZSH_TMUX_AUTOSTART=true
-# ZSH_TMUX_AUTOQUIT=false
-# ZSH_TMUX_AUTOCONNECT=false
-
-command -v "antibody" >/dev/null 2>&1 \
-  || (printf "Installing Antibody...\n"; curl -sfL git.io/antibody | sudo sh -s - -b /usr/local/bin) \
-  && source <(antibody init)
-antibody bundle <<-EOBUNDLES
-	robbyrussell/oh-my-zsh path:lib
-	robbyrussell/oh-my-zsh path:plugins/colored-man-pages
-	robbyrussell/oh-my-zsh path:plugins/command-not-found
-	# robbyrussell/oh-my-zsh path:plugins/tmux
-	olets/zsh-abbr
-	robbyrussell/oh-my-zsh path:plugins/docker
-	robbyrussell/oh-my-zsh path:plugins/docker-compose
-	zsh-users/zsh-autosuggestions
-	zsh-users/zsh-history-substring-search
-	zsh-users/zsh-completions
-	# laggardkernel/zsh-tmux
-	# djui/alias-tips
-	# zsh-users/zsh-syntax-highlighting
-	zdharma-continuum/fast-syntax-highlighting
-	zdharma-continuum/zbrowse
-	zdharma-continuum/zui
-	akarzim/zsh-docker-aliases
-	knu/zsh-manydots-magic
-	skywind3000/z.lua
-	kazhala/dotbare
-EOBUNDLES
-command -v starship >/dev/null 2>&1 || (curl -fsSL https://starship.rs/install.sh | bash)
-# }}}
-
-# Options {{{
-# http://zsh.sourceforge.net/Doc/Release/Options.html
-setopt MENU_COMPLETE
-setopt GLOB_DOTS
-CASE_SENSITIVE='false'
-HYPHEN_INSENSITIVE='true'
-DISABLE_AUTO_UPDATE='true'
-DISABLE_UPDATE_PROMPT='true'
-DISABLE_MAGIC_FUNCTIONS='false'
-DISABLE_LS_COLORS='false'
-DISABLE_AUTO_TITLE='false'
-ENABLE_CORRECTION='true'
-COMPLETION_WAITING_DOTS='true'''
-PROMPT_EOL_MARK=''
-ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=067,underline'
-FZF_COMPLETION_TRIGGER=','
-#ZSH_AUTOSUGGEST_STRATEGY=(history completion) # (completion match_prev_cmd)
-
-# History {{{
-# Make sure to unset any option that writes history after session end.
-alias p="test -z \"\${HISTFILE}\" && {export HISTFILE=${HISTFILE}; printf \"o.o\\n\"} || {sed -i '\$ d' ${HISTFILE}; export HISTFILE=''; printf \"-.-\\n\"}"
-# The following 3 options are mutually exclusive, see `man zshoptions` for explanation.
-#unsetopt INC_APPEND_HISTORY
-#unsetopt APPEND_HISTORY
-#unsetopt INC_APPEND_HISTORY_TIME
-# This  option  both  imports  new commands from the history file,
-# and also causes your typed commands to be appended to the history file
-# (the latter is like specifying INC_APPEND_HISTORY,
-#  which should be turned off if this option is in effect).
-setopt SHARE_HISTORY
-#setopt HIST_IGNORE_DUPS
-setopt HIST_IGNORE_ALL_DUPS
-setopt HIST_EXPIRE_DUPS_FIRST
-setopt HIST_REDUCE_BLANKS
-setopt HIST_IGNORE_SPACE
-setopt HIST_VERIFY
-HIST_STAMPS='dd/mm/yyyy'
-HISTFILE=~/.zsh_history
-HISTSIZE=5000
-SAVEHIST=5000
-HISTCONTROL=ignoreboth:erasedumps
-# }}}
-
-# }}}
-
-# Binds {{{
-bindkey "$terminfo[kcuu1]" history-substring-search-up
-bindkey "$terminfo[kcud1]" history-substring-search-down
-bindkey '^ ' autosuggest-accept
-bindkey "$terminfo[kcuu1]" up-line-or-beginning-search
-bindkey "$terminfo[kcud1]" down-line-or-beginning-search
-bindkey "$terminfo[cuu1]" up-line-or-beginning-search
-bindkey "$terminfo[cud1]" down-line-or-beginning-search
-bindkey '^[^[[D' backward-word
-bindkey '^[b' backward-word
-bindkey '^[^[[C' forward-word
-bindkey '^[f' forward-word
-bindkey "${terminfo[khome]}" beginning-of-line
-bindkey '^[[H' beginning-of-line
-bindkey "${terminfo[kend]}" end-of-line
-bindkey '^[[F' end-of-line
-bindkey '^e' edit-command-line
+# If zsh completion cache was updated today
+if test "$(date +'%j')" != "$(date -r ${ZDOTDIR:-$HOME}/.zcompdump +'%j')"; then
+  compinit
+else
+  # Bypass the check for rebuilding the dump file and the usual call to compaudit
+  compinit -C
+fi
 # }}}
 
 # Aliases {{{
-alias t='clear; todo.sh -a -c -d ${XDG_CONFIG_HOME:-${HOME:-~}/.config}/.todo.actions.d/config'
 alias vim='nvim'
+alias yay='paru'
 alias ls='ls -lAFh --color=always'
 alias grep='grep --color=always'
 alias c='xclip -selection clipboard'
 alias gitted='git ls-files --error-unmatch'
-alias dkcol='docker-compose logs -f 2>&1 | ccze -m ansi'
-alias yay='paru'
-abbr -S -qq yay='paru'
-wim () { ${EDITOR} "$(which ${1})" "${@:2}" }
-# }}}
+alias p="test -z \"\${HISTFILE}\" && {export HISTFILE=${HISTFILE}; printf \"o.o\\n\"} || {sed -i '\$ d' ${HISTFILE}; export HISTFILE=''; printf \"-.-\\n\"}"
+alias t='clear; todo.sh -a -c -d ${XDG_CONFIG_HOME:-${HOME:-~}/.config}/.todo.actions.d/config'
+wim () { ${EDITOR} "$(which ${1:?No file selected...})" "${@:2}" }
 
 # Dotfiles {{{
 export DOTBARE_DIR="${HOME}/.config/dotfiles/.git"
@@ -153,29 +178,3 @@ dotfiles () {
   git --git-dir="${DOTBARE_DIR}" --work-tree="${DOTBARE_TREE}" "${@}"
 }
 # }}}
-
-#magic-enter () { # {{{ (breaks zsh-autosuggestions)
-#  MAGIC_ENTER_GIT_COMMAND="git status -u ."
-#  MAGIC_ENTER_OTHER_COMMAND="ls -lh ."
-#  if test -z "${BUFFER}"; then
-#    printf "\n"
-#    if git rev-parse --is-inside-work-tree &>/dev/null; then
-#      if git diff-index --quiet HEAD --; then
-#        eval "${MAGIC_ENTER_OTHER_COMMAND}"
-#      else
-#        eval "${MAGIC_ENTER_GIT_COMMAND}"
-#      fi
-#    else
-#      eval "${MAGIC_ENTER_OTHER_COMMAND}"
-#    fi
-#    zle redisplay
-#  else
-#    zle accept-line
-#  fi
-#}
-#zle -N magic-enter
-#bindkey "^M" magic-enter
-# }}}
-
-eval "$(starship init zsh)"
-test -f ~/.fzf.zsh && source ~/.fzf.zsh
