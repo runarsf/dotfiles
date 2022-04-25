@@ -52,8 +52,8 @@ zinit ice wait'1' as'completion' lucid
 zinit snippet https://github.com/docker/cli/blob/master/contrib/completion/zsh/_docker
 
 # TODO Setting abbreviations doesn't work
-# zinit light olets/zsh-abbr
-#   abbr -S -qq yay='paru'
+zinit light olets/zsh-abbr
+  abbr -S -qq yay='paru'
 
 # zinit snippet OMZP::tmux
 
@@ -131,6 +131,10 @@ zstyle ':prezto:*:*' color 'yes'
 # }}}
 
 # Completions {{{
+# NOTE Has to be loaded after ':prezto:module:editor'
+#  see https://github.com/olets/zsh-abbr/issues/29
+bindkey " " abbr-expand-and-space
+
 # TODO prezto-equivalent
 # correct_all
 unsetopt correct \
@@ -140,7 +144,8 @@ unsetopt correct \
 setopt globdots \
        histignorealldups \
        sharehistory \
-       menucomplete
+       menucomplete \
+       extendedglob
 
 autoload -Uz compinit
 
