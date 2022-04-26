@@ -90,10 +90,11 @@ zinit snippet https://github.com/docker/cli/blob/master/contrib/completion/zsh/_
 zinit light olets/zsh-abbr
   abbr -S -qq yay='paru'
 
-zinit ice atload'!_zsh_autosuggest_start'
+#zinit ice atload'!_zsh_autosuggest_start'
+# FIXME tab doesn't work
 zinit light zsh-users/zsh-autosuggestions
-  bindkey '\t' autosuggest-accept
-  bindkey '^I' autosuggest-accept
+  #bindkey '\t' autosuggest-accept
+  #bindkey '^I' autosuggest-accept
 
 # zinit snippet OMZP::tmux
 
