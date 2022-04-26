@@ -19,79 +19,6 @@ autoload -Uz _zinit
 (( ${+_comps} )) && _comps[zinit]=_zinit
 # }}}
 
-# Profile plugins - https://zdharma-continuum.github.io/zinit/wiki/Profiling-plugins/
-if test ! -z "${ZPROF+x}"; then
-  zinit ice atinit'zmodload zsh/zprof' \
-            atload'zprof | head -n 20; zmodload -u zsh/zprof'
-  zinit light zdharma-continuum/fast-syntax-highlighting
-fi
-
-zinit wait lucid for \
-  atinit'ZINIT[COMPINIT_OPTS]=-C; zicompinit; zicdreplay' \
-    zdharma-continuum/fast-syntax-highlighting \
-  blockf \
-    zsh-users/zsh-completions \
-  atload'!_zsh_autosuggest_start' \
-    zsh-users/zsh-autosuggestions \
-  hlissner/zsh-autopair \
-  zdharma-continuum/history-search-multi-word
-
-zinit wait'1' lucid for \
-  akarzim/zsh-docker-aliases \
-  zdharma-continuum/zui \
-  zdharma-continuum/zbrowse \
-  skywind3000/z.lua
-
-zinit ice wait'1' lucid
-zinit snippet OMZP::colored-man-pages
-
-zinit ice wait'5' lucid
-zinit light kazhala/dotbare
-
-zinit ice wait'1' as'completion' lucid
-zinit snippet https://github.com/docker/cli/blob/master/contrib/completion/zsh/_docker
-
-# TODO Setting abbreviations doesn't work
-zinit light olets/zsh-abbr
-  abbr -S -qq yay='paru'
-
-# zinit snippet OMZP::tmux
-
-# zinit ice pick'init.zsh'
-# zinit light laggardkernel/zsh-tmux
-
-# zinit ice lucid atload"unalias gcd"
-# zinit snippet OMZP::git
-# zinit snippet OMZP::docker
-# zinit snippet OMZP::docker-compose
-# zinit snippet OMZP::magic-enter
-
-# zinit light zsh-users/zsh-history-substring-search
-#   zmodload zsh/terminfo
-#   test -n "${terminfo[kcuu1]}" && bindkey "${terminfo[kcuu1]}" history-substring-search-up
-#   test -n "${terminfo[kcud1]}" && bindkey "${terminfo[kcud1]}" history-substring-search-down
-#   bindkey -M vicmd 'k' history-substring-search-up
-#   bindkey -M vicmd 'j' history-substring-search-down
-
-# zinit ice lucid wait from'gh-r' sbin'def-matcher'
-# zinit light sei40kr/fast-alias-tips-bin
-# zinit light sei40kr/zsh-fast-alias-tips
-
-zinit ice lucid wait atclone"sed -ie 's/fc -rl 1/fc -rli 1/' shell/key-bindings.zsh" \
-                atpull"%atclone" multisrc"shell/{completion,key-bindings}.zsh" id-as"junegunn/fzf_completions" \
-                pick"/dev/null"
-zinit light junegunn/fzf
-  export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow --glob "!.git/*" 2> /dev/null'
-  export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
-  export FZF_ALT_C_COMMAND="fd -t d ."
-  export FZF_CTRL_T_OPTS="--preview '(highlight -O ansi -l {} 2> /dev/null || cat {} || tree -C {}) 2> /dev/null | head -200'"
-  export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window down:3:hidden:wrap --bind '?:toggle-preview'"
-
-zinit ice as'command' from'gh-r' \
-          atclone'./starship init zsh > init.zsh; ./starship completions zsh > _starship' \
-          atpull'%atclone' src'init.zsh'
-zinit light starship/starship
-
 # Prezto {{{
 # https://github.com/sorin-ionescu/prezto/tree/master/modules
 # https://github.com/sorin-ionescu/prezto/blob/master/runcoms/zpreztorc
@@ -128,6 +55,82 @@ zinit snippet PZT::modules/completion/init.zsh
 zstyle ':prezto:*:*' case-sensitive 'no'
 zstyle ':prezto:*:*' color 'yes'
 # }}}
+
+# Profile plugins - https://zdharma-continuum.github.io/zinit/wiki/Profiling-plugins/
+if test ! -z "${ZPROF+x}"; then
+  zinit ice atinit'zmodload zsh/zprof' \
+            atload'zprof | head -n 20; zmodload -u zsh/zprof'
+  zinit light zdharma-continuum/fast-syntax-highlighting
+fi
+
+zinit wait lucid for \
+  atinit'ZINIT[COMPINIT_OPTS]=-C; zicompinit; zicdreplay' \
+    zdharma-continuum/fast-syntax-highlighting \
+  blockf \
+    zsh-users/zsh-completions \
+  hlissner/zsh-autopair \
+  zdharma-continuum/history-search-multi-word
+
+zinit wait'1' lucid for \
+  akarzim/zsh-docker-aliases \
+  zdharma-continuum/zui \
+  zdharma-continuum/zbrowse \
+  skywind3000/z.lua
+
+zinit ice wait'1' lucid
+zinit snippet OMZP::colored-man-pages
+
+zinit ice wait'5' lucid
+zinit light kazhala/dotbare
+
+zinit ice wait'1' as'completion' lucid
+zinit snippet https://github.com/docker/cli/blob/master/contrib/completion/zsh/_docker
+
+# TODO Setting abbreviations doesn't work
+zinit light olets/zsh-abbr
+  abbr -S -qq yay='paru'
+
+zinit ice atload'!_zsh_autosuggest_start'
+zinit light zsh-users/zsh-autosuggestions
+  bindkey '\t' autosuggest-accept
+  bindkey '^I' autosuggest-accept
+
+# zinit snippet OMZP::tmux
+
+# zinit ice pick'init.zsh'
+# zinit light laggardkernel/zsh-tmux
+
+# zinit ice lucid atload"unalias gcd"
+# zinit snippet OMZP::git
+# zinit snippet OMZP::docker
+# zinit snippet OMZP::docker-compose
+# zinit snippet OMZP::magic-enter
+
+zinit light zsh-users/zsh-history-substring-search
+  zmodload zsh/terminfo
+  test -n "${terminfo[kcuu1]}" && bindkey "${terminfo[kcuu1]}" history-substring-search-up
+  test -n "${terminfo[kcud1]}" && bindkey "${terminfo[kcud1]}" history-substring-search-down
+  bindkey '^[[A' history-substring-search-up
+  bindkey '^[[B' history-substring-search-down
+
+# zinit ice lucid wait from'gh-r' sbin'def-matcher'
+# zinit light sei40kr/fast-alias-tips-bin
+# zinit light sei40kr/zsh-fast-alias-tips
+
+zinit ice lucid wait atclone"sed -ie 's/fc -rl 1/fc -rli 1/' shell/key-bindings.zsh" \
+                atpull"%atclone" multisrc"shell/{completion,key-bindings}.zsh" id-as"junegunn/fzf_completions" \
+                pick"/dev/null"
+zinit light junegunn/fzf
+  export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow --glob "!.git/*" 2> /dev/null'
+  export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+  export FZF_ALT_C_COMMAND="fd -t d ."
+  export FZF_CTRL_T_OPTS="--preview '(highlight -O ansi -l {} 2> /dev/null || cat {} || tree -C {}) 2> /dev/null | head -200'"
+  export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window down:3:hidden:wrap --bind '?:toggle-preview'"
+
+zinit ice as'command' from'gh-r' \
+          atclone'./starship init zsh > init.zsh; ./starship completions zsh > _starship' \
+          atpull'%atclone' src'init.zsh'
+zinit light starship/starship
 # }}}
 
 # Completions {{{
