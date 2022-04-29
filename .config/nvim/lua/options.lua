@@ -1,15 +1,37 @@
-local options = {
+local globals = { -- {{{
+  loaded_gzip = 1,
+  loaded_fzf = 1,
+  loaded_tar = 1,
+  loaded_tarPlugin = 1,
+  loaded_zipPlugin = 1,
+  loaded_2html_plugin = 1,
+  loaded_netrw = 1,
+  loaded_netrwPlugin = 1,
+  loaded_matchit = 1,
+  loaded_matchparen = 1,
+}
+
+for k, v in pairs(globals) do
+  vim.g[k] = v
+end
+-- }}}
+
+local options = { -- {{{
   backup = false,                          -- creates a backup file
   clipboard = "unnamedplus",               -- allows neovim to access the system clipboard
-  cmdheight = 2,                           -- more space in the neovim command line for displaying messages
+  cmdheight = 1,                           -- more space in the neovim command line for displaying messages
   completeopt = { "menuone", "noselect" }, -- mostly just for cmp
-  conceallevel = 0,                        -- so that `` is visible in markdown files
+  conceallevel = 2,                        -- so that `` is visible in markdown files
+  concealcursor = "n",                     -- Hide * markup for bold and italic
   fileencoding = "utf-8",                  -- the encoding written to a file
   hlsearch = true,                         -- highlight all matches on previous search pattern
   ignorecase = true,                       -- ignore case in search patterns
+  inccommand = "split",                    -- preview incremental substitute
   mouse = "c",                             -- allow the mouse to be used in neovim
-  pumheight = 10,                          -- pop up menu height
-  showmode = false,                        -- we don't need to see things like -- INSERT -- anymore
+  pumblend = 10,                           -- Popup blend
+  pumheight = 10,                          -- Maximum number of entries in a popup
+  shiftround = true,                       -- Round indent
+  showmode = false,                        -- we don't need to see things like                                                                                                        -- INSERT                -- anymore
   showtabline = 2,                         -- always show tabs
   smartcase = true,                        -- smart case
   autoindent = true,
@@ -19,12 +41,13 @@ local options = {
   splitright = true,                       -- force all vertical splits to go to the right of current window
   swapfile = false,                        -- creates a swapfile
   termguicolors = true,                    -- set term gui colors (most terminals support this)
-  timeoutlen = 300,                        -- time to wait for a mapped sequence to complete (in milliseconds)
-  ttimeoutlen = 50,                        -- affects escape from insert mode
   undofile = true,                         -- enable persistent undo
+  undolevels = 10000,
   updatetime = 300,                        -- faster completion (4000ms default)
   writebackup = false,                     -- if a file is being edited by another program (or was written to file while editing with another program), it is not allowed to be edited
   expandtab = true,                        -- convert tabs to spaces
+  grepprg = "rg --vimgrep",
+  grepformat = "%f:%l:%c:%m",
   shiftwidth = 2,                          -- the number of spaces inserted for each indentation
   tabstop = 2,                             -- insert 2 spaces for a tab
   softtabstop = 0,
@@ -35,46 +58,42 @@ local options = {
   numberwidth = 4,                         -- set number column width
   signcolumn = "yes",                      -- always show the sign column, otherwise it would shift the text each time
   wrap = false,                            -- display lines as one long line
+  linebreak = true,
   scrolloff = 7,
   history = 10000,
   sidescrolloff = 7,
   autoread = false,
-  cmdheight = 1,
   modeline = true,
   modelines = 5,
   errorbells = false,
   visualbell = false,
   synmaxcol = 1000,
-  -- scrolljump = 0,
-  showcmd = false,
+  --scrolljump = 0,
+  showcmd = false,                         -- NOTE good for seeing leader-maps
   autochdir = false,
   wildmenu = true,
-  hidden = false,
-  wildmode = "longest:full,full",
+  sessionoptions = { "buffers", "curdir", "tabpages", "winsize" },
+  hidden = false,                          -- Enable modified buffers in background
+  wildmode = "longest:full,full",          -- Command-line completion mode
   backspace = "indent,eol,start",
   lazyredraw = false,
+  confirm = true,                          -- confirm to save changes before exiting modified buffer
   magic = true,
   incsearch = true,
   laststatus = 2,
-  -- mat = 2,
-  list = true,
-  listchars = "trail:·,nbsp:⎵,tab:┊» ",    -- ¦┆┊ eol:⏎ (          )
+  --mat = 2,
+  joinspaces = false,                      -- No double spaces with join after a dot
+  --list = true,                             -- Show some invisible characters (tabs...
+  --listchars = "trail:·,nbsp:⎵,tab:┊» ",    -- ¦┆┊ eol:⏎ (          )
   foldmethod = "marker",
   foldmarker = "{{{,}}}",
+  -- autowrite = true                      -- enable auto write
+  shortmess = vim.opt.shortmess + "cI",
+  iskeyword = vim.opt.iskeyword + "-",     -- Treat dash-splitted words as one word
   guifont = "monospace:h17",               -- the font used in graphical neovim applications
 }
-
-vim.opt.shortmess:append "cI"
 
 for k, v in pairs(options) do
   vim.opt[k] = v
 end
-
--- Automatically go to next line - https://vim.fandom.com/wiki/Automatically_wrap_left_and_right
--- vim.cmd "set whichwrap+=<,>,[,],h,l"
--- vim.cmd "set whichwrap+=<,>,h,l"
--- Treat dash-splitted words as one word
-vim.cmd [[set iskeyword+=-]]
--- vim.cmd [[set formatoptions-=cro]] -- TODO: this doesn't seem to work
--- vim.cmd [[set path+=**]]
--- vim.cmd [[set wildignore+=**/node_modules/**]]
+-- }}}
