@@ -64,3 +64,36 @@ cfg.map("t", "<C-l>", "<C-\\><C-N><C-w>l")
 cfg.map("n", "<C-n>", ":NvimTreeToggle<CR>")
 cfg.map("v", "<C-n>", "<ESC>:NvimTreeToggle<CR>")
 cfg.map("i", "<C-n>", "<ESC>:NvimTreeToggle<CR>")
+
+function ToggleNumbers()
+  local g = vim.g
+  local w = vim.wo
+  g.def_number         = g.def_number         ~= nil and true  or g.def_number
+  g.def_relativenumber = g.def_relativenumber ~= nil and true  or g.def_relativenumber
+  g.def_wrap           = g.def_wrap           ~= nil and false or g.def_wrap
+  g.def_signcolumn     = g.def_signcolumn     ~= nil and "yes" or g.def_signcolumn
+
+  local int_to_bool = function(int)
+    if     int == 0 then return false
+    elseif int == 1 then return true end
+    return int
+  end
+
+  if w.number or w.relativenumber then
+    g.def_number         = int_to_bool(w.number)
+    g.def_relativenumber = int_to_bool(w.relativenumber)
+    g.def_wrap           = int_to_bool(w.wrap)
+    g.def_signcolumn     =             w.signcolumn
+
+    w.number         = false
+    w.relativenumber = false
+    w.wrap           = false
+    w.signcolumn     = "no"
+  else
+    w.number         = g.def_number
+    w.relativenumber = g.def_relativenumber
+    w.wrap           = g.def_wrap
+    w.signcolumn     = g.def_signcolumn
+  end
+end
+cfg.map("n", "<leader>n", "<cmd>lua ToggleNumbers()<CR>")
