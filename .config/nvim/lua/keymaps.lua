@@ -52,7 +52,7 @@ cfg.map("n", "<leader>l", ":set cursorline!<CR>")
 
 cfg.map("i", "jk", "<ESC>")
 cfg.map("i", "#dn", ">/dev/null<space>2>&1")
--- keymap("i", "<expr> #!!", '"#!/usr/bin/env" . (empty(&filetype) ? "" : " ".&filetype)', opts)
+-- vim.cmd("cnoreabbrev <expr> #!!", '"#!/usr/bin/env" . (empty(&filetype) ? "" : " ".&filetype)', opts)
 
 -- Better terminal navigation
 cfg.map("t", "<C-h>", "<C-\\><C-N><C-w>h")
@@ -66,3 +66,5 @@ cfg.map("v", "<C-n>", "<ESC>:NvimTreeToggle<CR>")
 cfg.map("i", "<C-n>", "<ESC>:NvimTreeToggle<CR>")
 
 cfg.map("n", "<leader>n", "<CMD>lua require'util'.CopyMode()<CR>")
+
+vim.cmd("cnoreabbrev q1 q!")

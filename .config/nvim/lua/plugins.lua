@@ -13,7 +13,7 @@ local plugins = function(use)
     "Shatur/neovim-ayu",
     -- "folke/tokyonight.nvim",
     config = function()
-      require("config.theme").scheme("ayu-dark", "ayu")
+      -- require("config.theme").scheme("ayu-dark", "ayu")
     end,
   })
 
