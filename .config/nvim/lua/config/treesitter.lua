@@ -1,16 +1,48 @@
-require("nvim-treesitter.configs").setup({
-  ensure_installed = "maintained", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
-  sync_install = false, -- install languages synchronously (only applied to `ensure_installed`)
-  ignore_install = { "" }, -- List of parsers to ignore installing
+local ok, plugin = pcall(require, "nvim-treesitter.configs")
+if not ok then return end
+
+plugin.setup({
+  ensure_installed = {
+    "bash",
+    "c",
+    "cmake",
+    "comment",
+    "cpp",
+    "css",
+    "go",
+    "html",
+    "javascript",
+    "jsonc",
+    "markdown",
+    "latex",
+    "bibtex",
+    "lua",
+    "python",
+    "regex",
+    "rust",
+    "toml",
+    "tsx",
+    "typescript",
+    "vue",
+    "vim",
+    "yaml",
+    "scss",
+    "nix",
+    "http",
+    "dockerfile",
+    "cooklang",
+  },
+  highlight = {
+    enable = true,
+    use_languagetree = true,
+    additional_vim_regex_highlighting = true,
+  },
   autopairs = {
     enable = true,
   },
-  highlight = {
-    enable = true, -- false will disable the whole extension
-    disable = { "" }, -- list of language that will be disabled
-    additional_vim_regex_highlighting = true,
+  indent = {
+    enable = false,
   },
-  indent = { enable = true, disable = { "yaml" } },
   context_commentstring = {
     enable = true,
     enable_autocmd = false,

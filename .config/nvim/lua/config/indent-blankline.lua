@@ -1,3 +1,6 @@
+local ok, plugin = pcall(require, "indent_blankline")
+if not ok then return end
+
 -- require("indent_blankline").setup {
 --   char = "│",
 --   use_treesitter = false,
@@ -17,7 +20,12 @@
 -- }
 
 -- https://github.com/lukas-reineke/indent-blankline.nvim/blob/master/lua/indent_blankline/init.lua
-require("indent_blankline").setup({
+plugin.setup({
+  -- for example, context is off by default, use this to turn it on
+  show_current_context = true,
+  show_current_context_start = true,
+})
+--[[ require("indent_blankline").setup({
   enabled = true,
   char = "▏", -- │▏▎
   buftype_exclude = { "terminal", "nofile" },
@@ -56,7 +64,7 @@ require("indent_blankline").setup({
     "import_statement",
     "operation_type",
   },
-})
+}) ]]
 
 -- HACK: work-around for https://github.com/lukas-reineke/indent-blankline.nvim/issues/59
 vim.wo.colorcolumn = "99999"
