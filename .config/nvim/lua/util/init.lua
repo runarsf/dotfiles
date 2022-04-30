@@ -62,7 +62,7 @@ Util.CopyMode = function()
     g.def_signcolumn     = w.signcolumn
 
     -- Disable
-    if has_blankline then vim.cmd("IndentBlanklineToggle") end
+    if has_blankline then vim.cmd("IndentBlanklineDisable") end
     w.number         = false
     w.relativenumber = false
     w.wrap           = false
@@ -72,7 +72,7 @@ Util.CopyMode = function()
     -- vim.api.nvim_input("zRzz")
   else
     -- Restore previous state
-    if has_blankline then vim.cmd("IndentBlanklineToggle") end
+    if has_blankline then vim.cmd("IndentBlanklineEnable") end
     w.number         = g.def_number
     w.relativenumber = g.def_relativenumber
     w.wrap           = g.def_wrap
