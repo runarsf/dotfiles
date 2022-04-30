@@ -52,6 +52,8 @@ Util.CopyMode = function()
     return int
   end
 
+  local has_blankline, _ = pcall(require, "indent_blankline")
+
   if w.number or w.relativenumber then
     g.def_number         = int_to_bool(w.number)
     g.def_relativenumber = int_to_bool(w.relativenumber)
@@ -60,21 +62,23 @@ Util.CopyMode = function()
     g.def_signcolumn     = w.signcolumn
 
     -- Disable
+    if has_blankline then vim.cmd("IndentBlanklineToggle") end
     w.number         = false
     w.relativenumber = false
     w.wrap           = false
     w.list           = false
     w.signcolumn     = "no"
-    vim.cmd("mkview 3")
-    vim.api.nvim_input("zRzz")
+    -- vim.cmd("mkview 3")
+    -- vim.api.nvim_input("zRzz")
   else
     -- Restore previous state
+    if has_blankline then vim.cmd("IndentBlanklineToggle") end
     w.number         = g.def_number
     w.relativenumber = g.def_relativenumber
     w.wrap           = g.def_wrap
     w.list           = g.def_list
     w.signcolumn     = g.def_signcolumn
-    vim.cmd("loadview 3")
+    -- vim.cmd("loadview 3")
   end
 end
 
