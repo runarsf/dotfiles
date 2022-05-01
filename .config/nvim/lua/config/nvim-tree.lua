@@ -1,8 +1,8 @@
 local cfg = require("util")
-local ok, plugin = pcall(require, "nvim-tree")
+local ok, nvimtree = pcall(require, "nvim-tree")
 if not ok then return end
 
-plugin.setup({
+nvimtree.setup({
   disable_netrw = true,
   ignore_ft_on_setup = {
     "startify",

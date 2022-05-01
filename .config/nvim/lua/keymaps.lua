@@ -25,10 +25,10 @@ cfg.map("v", ">", ">gv")
 
 -- Better tab movement
 cfg.map("n", "<C-t>", ":tabnew<CR>")
---map("n", "<S-l>", ":bnext<CR>")
---map("n", "<S-h>", ":bprevious<CR>")
-cfg.map("n", "H", "gT")
-cfg.map("n", "L", "gt")
+cfg.map("n", "<S-l>", ":bnext<CR>")
+cfg.map("n", "<S-h>", ":bprevious<CR>")
+-- cfg.map("n", "H", "gT")
+-- cfg.map("n", "L", "gt")
 
 -- Better window navigation
 cfg.map("n", "<C-h>", ":wincmd h<CR>")

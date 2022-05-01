@@ -1,10 +1,10 @@
-local ok, plugin = pcall(require, "bufferline")
+local ok, bufferline = pcall(require, "bufferline")
 if not ok then return end
 
 -- TODO Tab groups
-plugin.setup({
+bufferline.setup({
   options = {
-    mode = "buffers",
+    mode = "tabs",
     buffer_close_icon = "",
   }
 })

@@ -1,4 +1,4 @@
-local ok, plugin = pcall(require, "indent_blankline")
+local ok, indentblankline = pcall(require, "indent_blankline")
 if not ok then return end
 
 -- require("indent_blankline").setup {
@@ -20,7 +20,7 @@ if not ok then return end
 -- }
 
 -- https://github.com/lukas-reineke/indent-blankline.nvim/blob/master/lua/indent_blankline/init.lua
-plugin.setup({
+indentblankline.setup({
   -- for example, context is off by default, use this to turn it on
   show_current_context = true,
   show_current_context_start = true,

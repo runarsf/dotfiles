@@ -1,9 +1,10 @@
-local ok, plugin = pcall(require, "pretty-fold")
+local ok, prettyfold = pcall(require, "pretty-fold")
 if not ok then return end
 
-require('pretty-fold.preview').setup()
+local ok, prettyfold_preview = pcall(require, 'pretty-fold.preview')
+if ok then prettyfold_preview.setup() end
 
-plugin.setup({
+prettyfold.setup({
   keep_indentation = false,
   fill_char = ' ',
   sections = {
