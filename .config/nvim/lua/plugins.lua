@@ -1,4 +1,3 @@
-local cfg = require("util")
 local pkg = require("util.pkg")
 
 local plugins = function(use)
@@ -16,7 +15,7 @@ local plugins = function(use)
     -- "folke/tokyonight.nvim",
     config = function()
       require("config.theme").scheme({"ayu-dark", "ayu"})
-      -- require("config.theme").scheme({"tokyonight", pre_conf=true})
+      -- require("config.theme").scheme({"tokyonight", source_conf="pre"})
     end,
   })
 
