@@ -1,11 +1,26 @@
-local Colors = {}
-Colors.scheme = "default"
-Colors.background = "dark"
+local M = {}
 
-Colors.scheme = function(scheme, scheme_config, background)
-  scheme = scheme or Colors.scheme
-  background = background or Colors.background
-  scheme_config = scheme_config or scheme
+M.scheme = function(opts)
+  setmetatable(opts, {__index={scheme="default", config=opts[1], background="dark", pre_conf=false}})
+  local scheme, config, background, pre_conf =
+    opts[1] or opts.scheme,
+    opts[2] or opts.config,
+    opts[3] or opts.background,
+    opts[4] or opts.pre_conf
+
+  local source_conf = function(conf)
+    if conf then
+      local ok, loaded_config = pcall(require, "config." .. conf)
+      if ok and type(loaded_config) == "function" then
+        loaded_config()
+      end
+    end
+  end
+
+  if config and pre_conf then
+    print("pre")
+    source_conf(config)
+  end
 
   local ok, _ = pcall(vim.cmd, "colorscheme " .. scheme)
   if ok then
@@ -17,10 +32,10 @@ Colors.scheme = function(scheme, scheme_config, background)
     ]]
   end
 
-  local ok, loaded_config = pcall(require, "config." .. scheme_config)
-  if ok and type(loaded_config) == "function" then
-    loaded_config()
+  if config and not pre_conf then
+    print("post")
+    source_conf(config)
   end
 end
 
-return Colors
+return M
