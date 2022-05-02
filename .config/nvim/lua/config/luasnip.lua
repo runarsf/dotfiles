@@ -20,7 +20,7 @@ local function on_s_tab()
   return luasnip.jump(-1) and "" or util.t("<S-Tab>")
 end
 
-cfg.map("i", "<Tab>", on_tab, { expr=true })
-cfg.map("s", "<Tab>", on_tab, { expr=true })
+-- cfg.map("i", "<Tab>", on_tab, { expr=true })
+-- cfg.map("s", "<Tab>", on_tab, { expr=true })
 cfg.map("i", "<S-Tab>", on_s_tab, { expr=true })
 cfg.map("s", "<S-Tab>", on_s_tab, { expr=true })

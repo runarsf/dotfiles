@@ -75,7 +75,10 @@ local plugins = function(use)
   use({ "anuvyklack/pretty-fold.nvim",
     config = function()
       require("config.pretty-fold")
-    end
+    end,
+    requires = {
+      "anuvyklack/nvim-keymap-amend",
+    },
   })
 
   use({ "stevearc/dressing.nvim",
@@ -93,7 +96,10 @@ local plugins = function(use)
   })
 
   use({ "norcalli/nvim-terminal.lua",
-    ft = "terminal",
+    ft = {
+      "terminal",
+      "toggleterm"
+    },
     config = function()
       require("terminal").setup()
     end,
@@ -153,13 +159,13 @@ local plugins = function(use)
       "hrsh7th/cmp-buffer",
       "hrsh7th/cmp-path",
       "hrsh7th/cmp-nvim-lsp",
-      "saadparwaiz1/cmp_luasnip",
+      -- "saadparwaiz1/cmp_luasnip",
       "rafamadriz/friendly-snippets",
-      { "L3MON4D3/LuaSnip",
-        config = function()
-          require("config.luasnip")
-        end,
-      },
+      -- { "L3MON4D3/LuaSnip",
+      --   config = function()
+      --     require("config.luasnip")
+      --   end,
+      -- },
       { "windwp/nvim-autopairs",
         module = "nvim-autopairs",
         config = function()
@@ -168,6 +174,45 @@ local plugins = function(use)
       }
     },
   })
+
+  use({ "neovim/nvim-lspconfig",
+    config = function()
+      require("config.lsp")
+    end,
+    after = "cmp-nvim-lsp",
+    requires = {
+      "williamboman/nvim-lsp-installer",
+      "tamago324/nlsp-settings.nvim",
+      "jose-elias-alvarez/null-ls.nvim",
+    },
+  })
+
+  use({ "folke/todo-comments.nvim",
+    config = function()
+      require("config.todo-comments")
+    end,
+  })
+
+  use({ "folke/trouble.nvim",
+    config = function()
+      require("trouble").setup({})
+    end,
+    requires = {
+      "kyazdani42/nvim-web-devicons",
+    },
+  })
+
+  use({ "ggandor/lightspeed.nvim",
+    config = function()
+     require("lightspeed").setup({})
+    end,
+  })
+
+  -- use({ "phaazon/hop.nvim",
+  --   config = function()
+  --     require("hop").setup()
+  --   end,
+  -- })
 
   if pkg.Bootstrap then
     pkg.update()
@@ -183,12 +228,6 @@ end
 -- plasticboy/vim-markdown
 -- godlygeek/tabular
 -- mbbill/undotree
-
--- phaazon/hop.nvim
--- ggandor/lightspeed.nvim
-
--- folke/trouble.nvim
--- folke/todo-comments.nvim
 
 -- "nvim-telescope/telescope-project.nvim",
 -- "nvim-telescope/telescope-fzy-native.nvim",

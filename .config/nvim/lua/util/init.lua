@@ -1,17 +1,17 @@
-local Util = {}
-Util.funcs = {}
+local M = {}
+M.funcs = {}
 
 -- :h map-listing
-Util.map = function(mode, key, cmd, opts)
+M.map = function(mode, key, cmd, opts)
   local defaults = { noremap=true, silent=true }
   opts = vim.tbl_deep_extend("force", defaults, opts or {})
 
   if type(cmd) == "function" then
-    table.insert(Util.funcs, cmd)
+    table.insert(M.funcs, cmd)
     if opts.expr then
-      cmd = ([[luaeval('require("util").execute(%d)')]]):format(#Util.funcs)
+      cmd = ([[luaeval('require("util").execute(%d)')]]):format(#M.funcs)
     else
-      cmd = ("<cmd>lua require('util').execute(%d)<cr>"):format(#Util.funcs)
+      cmd = ("<cmd>lua require('util').execute(%d)<cr>"):format(#M.funcs)
     end
   end
 
@@ -24,18 +24,7 @@ Util.map = function(mode, key, cmd, opts)
   end
 end
 
---[[ Util.prequire = function(fn, post_call)
-  local ok, fun = pcall(require, fn)
-  if ok then
-    if post_call then
-      fun(post_call)()
-    end
-    return fun
-  end
-  return nil
-end ]]
-
-Util.CopyMode = function()
+M.CopyMode = function()
   local g = vim.g
   local w = vim.wo
   vim.cmd("stopinsert")
@@ -62,7 +51,7 @@ Util.CopyMode = function()
     g.def_signcolumn     = w.signcolumn
 
     -- Disable
-    if has_blankline then vim.cmd("IndentBlanklineDisable") end
+    if has_blankline then vim.cmd[[IndentBlanklineDisable]] end
     w.number         = false
     w.relativenumber = false
     w.wrap           = false
@@ -72,7 +61,7 @@ Util.CopyMode = function()
     -- vim.api.nvim_input("zRzz")
   else
     -- Restore previous state
-    if has_blankline then vim.cmd("IndentBlanklineEnable") end
+    if has_blankline then vim.cmd[[IndentBlanklineEnable]] end
     w.number         = g.def_number
     w.relativenumber = g.def_relativenumber
     w.wrap           = g.def_wrap
@@ -82,4 +71,12 @@ Util.CopyMode = function()
   end
 end
 
-return Util
+M.ToggleMouse = function()
+  if vim.o.mouse == 'a' then
+    vim.o.mouse = 'v'
+  else
+    vim.o.mouse = 'a'
+  end
+end
+
+return M

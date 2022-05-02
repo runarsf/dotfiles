@@ -33,15 +33,15 @@ nvimtree.setup({
 -- cfg.map("v", "<C-n>", "<ESC>:NvimTreeToggle<CR>")
 -- cfg.map("i", "<C-n>", "<ESC>:NvimTreeToggle<CR>")
 
--- vim.cmd [[
---   augroup _nvim_tree
---     autocmd!
---     " autocmd StdinReadPre * let s:std_in=1
---     " No argument was specified
---     " autocmd VimEnter * ++nested if !argc() && !exists("s:std_in") | NvimTreeOpen | endif
---     " Specified argument is a directory
---     " autocmd VimEnter * ++nested if isdirectory(expand('<afile>')) && !exists("s:std_in") | NvimTreeOpen | endif
---     " Auto close if last window left
---     " autocmd BufEnter * ++nested if winnr('$') == 1 && bufname() == 'NvimTree_' . tabpagenr() | quit | endif
---   augroup end
--- ]]
+vim.cmd [[
+  augroup _nvim_tree
+    autocmd!
+    " autocmd StdinReadPre * let s:std_in=1
+    " No argument was specified
+    " autocmd VimEnter * ++nested if !argc() && !exists("s:std_in") | NvimTreeOpen | endif
+    " Specified argument is a directory
+    autocmd VimEnter * ++nested if isdirectory(expand('<afile>')) && !exists("s:std_in") | NvimTreeOpen | endif
+    " Auto close if last window left
+    autocmd BufEnter * ++nested if winnr('$') == 1 && bufname() == 'NvimTree_' . tabpagenr() | quit | endif
+  augroup end
+]]

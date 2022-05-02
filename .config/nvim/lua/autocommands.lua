@@ -21,4 +21,7 @@ vim.cmd [[
     autocmd InsertLeave,WinEnter * set cursorline
     autocmd InsertEnter,WinLeave * set nocursorline
   augroup end
+
+  " Disable automatic commenting on newline
+  autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
 ]]

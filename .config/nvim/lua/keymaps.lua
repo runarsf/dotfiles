@@ -66,5 +66,6 @@ cfg.map("v", "<C-n>", "<ESC>:NvimTreeToggle<CR>")
 cfg.map("i", "<C-n>", "<ESC>:NvimTreeToggle<CR>")
 
 cfg.map("n", "<leader>n", "<CMD>lua require'util'.CopyMode()<CR>")
+cfg.map("n", "<leader>m", "<CMD>lua require'util'.ToggleMouse()<CR>")
 
 vim.cmd("cnoreabbrev q1 q!")

@@ -5,6 +5,8 @@ whichkey.setup({
   plugins = {
     presets = {
       operators = false,
+      -- TODO Remove when https://github.com/folke/which-key.nvim/pull/275 is merged
+      windows = false,
     },
   },
   key_labels = {
@@ -36,7 +38,7 @@ local mappings = {
     "Buffers",
   },
   ["e"] = { "<cmd>NvimTreeToggle<cr>", "Explorer" },
-  ["w"] = { "<cmd>w!<CR>", "Save" },
+  -- ["w"] = { "<cmd>w!<CR>", "Save" },
   ["q"] = { "<cmd>q!<CR>", "Quit" },
   ["c"] = { "<cmd>Bdelete!<CR>", "Close Buffer" },
   ["f"] = {
