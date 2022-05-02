@@ -18,7 +18,6 @@ M.scheme = function(opts)
   end
 
   if config and pre_conf then
-    print("pre")
     source_conf(config)
   end
 
@@ -33,7 +32,6 @@ M.scheme = function(opts)
   end
 
   if config and not pre_conf then
-    print("post")
     source_conf(config)
   end
 end
