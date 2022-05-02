@@ -48,6 +48,7 @@ cfg.map("n", "<leader>q", ":q<CR>")
 cfg.map("n", "<leader>wq", ":wq<CR>")
 cfg.map("n", "<leader>..", ":messages<CR>")
 cfg.map("n", "<leader>l", ":set cursorline!<CR>")
+cfg.map("n", "<leader>u", ":UndotreeToggle<CR>")
 -- util.nnoremap("<leader>ll", ":set cursorcolumn!<CR>")
 
 cfg.map("i", "jk", "<ESC>")

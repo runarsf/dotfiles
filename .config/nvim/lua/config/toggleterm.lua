@@ -19,3 +19,17 @@ toggleterm.setup({
 })
 
 cfg.map("t", "<ESC><ESC>", "<C-\\><C-N>")
+
+local Terminal = require('toggleterm.terminal').Terminal
+
+Glow = function()
+  local file = vim.fn.expand("%:p") -- current file
+  if file:sub(-#'.md') ~= '.md' then
+    file = vim.fn.expand("%:p:h") -- current directory
+  end
+  local glow = Terminal:new({ cmd="PAGER='less -r' glow -s dark -p "..file, hidden=false })
+  glow:toggle()
+end
+
+-- vim.api.nvim_set_keymap("n", "<leader>g", "<cmd>lua Glow()<CR>", {noremap = true, silent = true})
+cfg.map("n", "<leader>g", "<CMD>lua Glow()<CR>")

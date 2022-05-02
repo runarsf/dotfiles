@@ -1,3 +1,4 @@
+local cfg = require("util")
 local pkg = require("util.pkg")
 
 local plugins = function(use)
@@ -106,8 +107,8 @@ local plugins = function(use)
   })
 
   use({ "akinsho/toggleterm.nvim",
-    keys = "<M-n>",
-    cmd = { "ToggleTerm" },
+    -- keys = "<M-n>",
+    -- cmd = { "ToggleTerm" },
     config = function()
       require("config.toggleterm")
     end,
@@ -130,7 +131,7 @@ local plugins = function(use)
     config = function()
       require("config.telescope")
     end,
-    cmd = { "Telescope" },
+    cmd = "Telescope",
     module = "telescope",
     keys = { "<leader>ff", "<leader>pp" },
     requires = {
@@ -208,6 +209,23 @@ local plugins = function(use)
     end,
   })
 
+  use({ "mbbill/undotree",
+    cmd = {
+      "UndotreeToggle",
+      "UndotreeShow",
+    },
+  })
+
+  use({ "preservim/tagbar",
+    cmd = {
+      "TagbarToggle",
+      "TagbarOpen",
+      "TagbarOpenAutoClose"
+    },
+  })
+
+  -- use({ "godlygeek/tabular" })
+
   -- use({ "phaazon/hop.nvim",
   --   config = function()
   --     require("hop").setup()
@@ -220,14 +238,10 @@ local plugins = function(use)
 end
 
 -- use({ "kazhala/close-buffers.nvim", cmd = "BDelete" })
--- preservim/tagbar
 -- "moll/vim-bbye"
 -- SmiteshP/nvim-gps
--- simrat39/symbols-outline.nvim
--- npxbr/glow.nvim
 -- plasticboy/vim-markdown
 -- godlygeek/tabular
--- mbbill/undotree
 
 -- "nvim-telescope/telescope-project.nvim",
 -- "nvim-telescope/telescope-fzy-native.nvim",
