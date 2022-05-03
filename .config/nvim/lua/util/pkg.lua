@@ -14,7 +14,7 @@ M.bootstrap = function()
   if M.Bootstrap then
     vim.fn.system({ "git", "clone", "--depth", "1", "https://github.com/wbthomason/packer.nvim", install_path })
     vim.cmd("packadd packer.nvim")
-    print("Installed Packer, please reopen Neovim...")
+    print("Installed Packer, please reopen Neovim after plugins are done with the initial setup...")
   end
 
   -- Automatically update Packer when updating plugins.lua

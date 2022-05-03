@@ -171,6 +171,7 @@ alias c='xclip -selection clipboard'
 alias gitted='git ls-files --error-unmatch'
 alias p="test -z \"\${HISTFILE}\" && {export HISTFILE=${HISTFILE}; printf \"o.o\\n\"} || {sed -i '\$ d' ${HISTFILE}; export HISTFILE=''; printf \"-.-\\n\"}"
 alias t='clear; todo.sh -a -c -d ${XDG_CONFIG_HOME:-${HOME:-~}/.config}/.todo.actions.d/config'
+alias \$=':;'
 wim () { ${EDITOR} "$(which ${1:?No file selected...})" "${@:2}" }
 
 # Dotfiles {{{

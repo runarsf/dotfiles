@@ -4,7 +4,7 @@ if not ok then return end
 -- TODO Tab groups
 bufferline.setup({
   options = {
-    mode = "tabs",
+    mode = "buffers",
     buffer_close_icon = "",
   }
 })

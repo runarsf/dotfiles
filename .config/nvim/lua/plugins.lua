@@ -41,9 +41,15 @@ local plugins = function(use)
     -- opt = true,
     -- event = "BufRead",
     -- module = "treesitter",
+    -- requires = "nvim-treesitter/playground"
     config = function()
       require("config.treesitter")
     end,
+  })
+
+  use({ "p00f/nvim-ts-rainbow",
+    requires = "nvim-treesitter/nvim-treesitter",
+    after = "nvim-treesitter",
   })
 
   use({ "lukas-reineke/indent-blankline.nvim",
