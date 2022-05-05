@@ -66,6 +66,10 @@ local plugins = function(use)
     config = function()
       require("config.bufferline")
     end,
+    requires = {
+      "kyazdani42/nvim-web-devicons",
+      "moll/vim-bbye",
+    },
   })
 
   -- use({ "lewis6991/gitsigns.nvim",
@@ -263,7 +267,6 @@ local plugins = function(use)
 end
 
 -- use({ "kazhala/close-buffers.nvim", cmd = "BDelete" })
--- "moll/vim-bbye"
 -- SmiteshP/nvim-gps
 -- plasticboy/vim-markdown
 -- godlygeek/tabular
