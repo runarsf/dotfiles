@@ -13,6 +13,7 @@ local plugins = function(use)
   use({ -- Themes
     "Shatur/neovim-ayu",
     -- "folke/tokyonight.nvim",
+    -- "projekt0n/github-nvim-theme",
     config = function()
       require("config.theme").scheme({"ayu-dark", "ayu"})
       -- require("config.theme").scheme({"tokyonight", source_conf="pre"})
@@ -178,7 +179,13 @@ local plugins = function(use)
         config = function()
           require('nvim-autopairs').setup({})
         end,
-      }
+      },
+      -- { "tzachar/cmp-tabnine",
+      --   run = "./install.sh",
+      --   config = function()
+      --     require("cmp_tabnine.config"):setup({})
+      --   end,
+      -- },
     },
   })
 
@@ -228,6 +235,18 @@ local plugins = function(use)
       "TagbarOpen",
       "TagbarOpenAutoClose"
     },
+  })
+
+  use({ "eraserhd/parinfer-rust",
+    run = "cargo build --release",
+    ft = "yuck",
+  })
+
+  use({ "tmhedberg/SimpylFold",
+    ft = "python",
+    config = function()
+      require("config.simpylfold")
+    end,
   })
 
   -- use({ "godlygeek/tabular" })
