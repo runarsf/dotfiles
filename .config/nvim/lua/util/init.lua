@@ -80,7 +80,7 @@ M.ToggleMouse = function()
 end
 
 -- https://codereview.stackexchange.com/a/268289
-M.Bbq = function()
+M.Bbq = function(write)
   local buffers = {}
   local bufs = 0
 
@@ -90,6 +90,9 @@ M.Bbq = function()
     end
   end
 
+  if write then
+    vim.cmd("write!")
+  end
   if bufs <= 1 then
     vim.cmd("quitall")
   else
