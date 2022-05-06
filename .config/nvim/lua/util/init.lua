@@ -79,4 +79,26 @@ M.ToggleMouse = function()
   end
 end
 
+-- https://codereview.stackexchange.com/a/268289
+M.Bbq = function()
+  local buffers = {}
+  local bufs = 0
+
+  for buffer = 1, vim.fn.bufnr('$') do
+    if vim.fn.buflisted(buffer) == 1 then
+      bufs = bufs + 1
+    end
+  end
+
+  if bufs <= 1 then
+    vim.cmd("quitall")
+  else
+    if packer_plugins['vim-bbye'] ~= nil then
+      vim.cmd("Bdelete")
+    else
+      vim.cmd("bdelete")
+    end
+  end
+end
+
 return M

@@ -8,11 +8,13 @@ vim.cmd [[
   " Check if we need to reload the file when it changed
   autocmd FocusGained * :checktime
 
-  " Save and restore code folding
-  augroup _fold
-    autocmd!
-    autocmd BufWinLeave *.* mkview
-    autocmd BufWinEnter *.* silent! loadview
+  " Save and restore code folding - https://vi.stackexchange.com/a/13874
+  augroup AutoSaveGroup
+  autocmd!
+    " autocmd BufWinLeave *.* mkview
+    " autocmd BufWinEnter *.* silent! loadview
+    autocmd BufWinLeave,BufLeave,BufWritePost,BufHidden,QuitPre ?* nested silent! mkview!
+    autocmd BufWinEnter ?* silent! loadview
   augroup end
 
   " Only show cursorline in active window
