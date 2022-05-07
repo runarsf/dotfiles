@@ -15,14 +15,14 @@ super + {_,shift + }q
 # super + ctrl + shift + <number> = as above, but send to next monitor
 # super + ctrl + <number> = switches the active (visible) desktop of the
 # --ns -> --nsf & --nm -> --nmf to follow node
-super + {_,shift + ,ctrl + shift +,ctrl +}{0-9}
-	;bspwm_dynamic_desktops {--df,--ns,--nm,--da} {0-9}
+#super + {_,shift + ,ctrl + shift +,ctrl +}{0-9}
+#	;bspwm_dynamic_desktops {--df,--ns,--nm,--da} {0-9}
 
-# super + {0-9}
-# 	bspc desktop --focus '{0-9}'
+super + {0-9}
+	bspc desktop --focus '{0-9}'
 
-# super + shift + {0-9} + {_,alt}
-# 	bspc node --to-desktop '{0-9}' { ,--follow}
+super + shift + {0-9} + {_,alt}
+	bspc node --to-desktop '{0-9}' { ,--follow}
 
 # Focus last active node/desktop on active monitor
 super + {_,shift + }Tab
