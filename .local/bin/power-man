@@ -186,7 +186,7 @@ pm::utils::daemonize () { # {{{
       #   rmdir "${LOCKDIR}" >/dev/null 2>&1
       exit 0
     fi
-    sleep 5
+    sleep 2.5
     power-man
   done
 } # }}}
@@ -230,12 +230,16 @@ pm::screensaver () { # <dim_after:Number> <dim_level:Number> <lock_after:Number>
   if test "${_idle_time}" -gt "${_suspend_after}" \
        -a "${_suspend_after}" -ne "0"; then
     test "${DEBUG}" = "1" && printf '[PM] Suspending system\n'
+    # Reset idle time before sleeping to prevent auto-sleep when waking - https://askubuntu.com/a/1257610
+    for _angle in 0 90 180 270; do
+      xdotool mousemove_relative --polar "${_angle}" 0.1
+    done
     systemctl "${_suspend_method}"
   fi
 } # }}}
 
 main () { # -> Void {{{
-  pm::utils::check_deps xprintidle xbacklight upower # acpi
+  pm::utils::check_deps xprintidle xbacklight upower xdotool # acpi
   pm::battery "${WARN_PERCENTAGE:-}" "${WARN_MINUTES:-}" "${FULL_THRESHOLD:-}"
   pm::screensaver "${DIM_AFTER:-}" "${DIM_LEVEL:-}" "${LOCK_AFTER:-}" "${LOCK_COMMAND:-}" "${LOCK_PROCESS:-}" "${SUSPEND_AFTER:-}" "${SUSPEND_METHOD:-}"
 } # }}}
