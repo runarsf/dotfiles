@@ -253,6 +253,12 @@ local plugins = function(use)
     end,
   })
 
+  use({ "andweeb/presence.nvim",
+    config = function()
+      require("config.presence")
+    end,
+  })
+
   -- use({ "godlygeek/tabular" })
 
   -- use({ "phaazon/hop.nvim",

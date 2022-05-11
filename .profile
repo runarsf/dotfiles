@@ -24,7 +24,7 @@ export PYTHONDONTWRITEBYTECODE=1
 export ZDOTDIR="${XDG_CONFIG_HOME:-${HOME}/.config}/zsh"
 export FZF_DEFAULT_OPTS="--layout=reverse --height 40%"
 export XBB_URL="https://i.runarsf.dev/upload"
-export XBB_TOKEN="$(pass Screenshot/XBB_TOKEN)"
+# export XBB_TOKEN="$(pass Screenshot/XBB_TOKEN)"
 export XBB_RAW="true"
 export STARSHIP_CONFIG=~/.config/starship.toml
 
