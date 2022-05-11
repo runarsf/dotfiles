@@ -531,9 +531,14 @@ awful.keyboard.append_client_keybindings({
             { description="focus next window left", group="client" }),
   awful.key({ modkey }, "n",
             function()
-              scratch.toggle("alacritty --class scratch", {instance="scratch"})
+              scratch.toggle("alacritty --class scratch --title scratchpad --command tmux new-session -A -s scratchpad", {instance="scratch"})
             end,
-            { description="toggle alacritty", group="client" }),
+            { description="toggle scratchpad", group="client" }),
+  awful.key({ modkey, "Shift" }, "n",
+            function()
+              scratch.toggle("alacritty --class math --title math --option font.size=18 --command tmux new-session -A -s math python3", {instance="math"})
+            end,
+            { description="toggle math scratchpad", group="client" }),
 })
 
 client.connect_signal("request::default_mousebindings", function()
@@ -630,16 +635,21 @@ ruled.client.connect_signal("request::rules", function()
   ruled.client.append_rule {
     id         = "titlebars",
     rule_any   = { type = { "normal", "dialog" } },
-    properties = { titlebars_enabled=true      }
+    properties = { titlebars_enabled=true }
   }
 
   ruled.client.append_rule {
-    rule       = { class="discord"   },
+    rule       = { class="discord" },
     properties = { screen=1, tag="2" }
   }
 
   ruled.client.append_rule {
-    rule       = { instance="scratch"   },
+    rule       = { instance="scratch" },
+    properties = { floating=true, titlebars_enabled=false }
+  }
+
+  ruled.client.append_rule {
+    rule       = { instance="math" },
     properties = { floating=true, titlebars_enabled=false }
   }
 end)
