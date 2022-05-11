@@ -625,7 +625,7 @@ ruled.client.connect_signal("request::rules", function()
 
   ruled.client.append_rule {
     rule       = { instance="scratch"   },
-    properties = { floating=true }
+    properties = { floating=true, titlebars_enabled=false }
   }
 end)
 
