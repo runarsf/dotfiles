@@ -3,6 +3,8 @@
 -- found (e.g. lgi). If LuaRocks is not installed, do nothing.
 pcall(require, "luarocks.loader")
 
+local scratch = require("scratch")
+
 -- Standard awesome library
 local gears = require("gears")
 local awful = require("awful")
@@ -512,6 +514,11 @@ awful.keyboard.append_client_keybindings({
               c:lower()
             end,
             { description="focus next window left", group="client" }),
+  awful.key({ modkey }, "n",
+            function()
+              scratch.toggle("alacritty --class scratch", {instance="scratch"})
+            end,
+            { description="toggle alacritty", group="client" }),
 })
 
 client.connect_signal("request::default_mousebindings", function()
@@ -614,6 +621,11 @@ ruled.client.connect_signal("request::rules", function()
   ruled.client.append_rule {
     rule       = { class="discord"   },
     properties = { screen=1, tag="2" }
+  }
+
+  ruled.client.append_rule {
+    rule       = { instance="scratch"   },
+    properties = { floating=true }
   }
 end)
 
