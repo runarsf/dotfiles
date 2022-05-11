@@ -38,8 +38,8 @@ scrolling: # {{{
 font: # {{{
   normal:
     style: Regular
-    family: Noto Sans Mono Nerd Font
-    # family: JetBrainsMono Nerd Font
+    # family: Noto Sans Mono Nerd Font
+    family: JetBrainsMono Nerd Font
     # family: Ubuntu Mono
     # family: TerminessTTF Nerd Font # Terminus, CozetteVector
     # family: Termsynu
