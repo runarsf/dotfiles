@@ -249,6 +249,9 @@ awful.keyboard.append_global_keybindings({
   awful.key({ modkey }, "x",
             function() awful.spawn("betterlockscreen --lock dimblur --blur 8") end,
             { description="lock screen", group="awesome" }),
+  awful.key({ modkey, "Shift" }, "c",
+            function() awful.spawn("toggleprogram picom") end,
+            { description="toggle compositor", group="awesome" }),
   awful.key({ modkey }, "d",
             function() awful.screen.focused().mypromptbox:run() end,
             { description="run prompt", group="launcher" }),
@@ -320,10 +323,10 @@ awful.keyboard.append_global_keybindings({
   -- awful.key({ modkey, "Control" }, "Left",
   --           function() awful.tag.incmwfact(-0.05) end,
   --           { description="decrease master width factor", group="layout" }),
-  awful.key({ modkey }, "c",
+  awful.key({ modkey }, "m",
             function() awful.tag.incnmaster(1, nil, true) end,
             { description="increase the number of master clients", group="layout" }),
-  awful.key({ modkey, "Shift" }, "c",
+  awful.key({ modkey, "Shift" }, "m",
             function() awful.tag.incnmaster(-1, nil, true) end,
             { description="decrease the number of master clients", group="layout" }),
   awful.key({ modkey }, "v",
@@ -340,9 +343,14 @@ awful.keyboard.append_global_keybindings({
             { description="select previous", group="layout" }),
 })
 
+local tableLength = function(T)
+  local count = 0
+  for _ in pairs(T) do count = count + 1 end
+  return count
+end
+
 awful.keyboard.append_global_keybindings({
   awful.key {
-    -- TODO If attempting to focus current tag, focus previous
     modifiers   = { modkey },
     keygroup    = "numrow",
     description = "only view tag",
@@ -350,8 +358,15 @@ awful.keyboard.append_global_keybindings({
     on_press    = function(index)
       local screen = awful.screen.focused()
       local tag = screen.tags[index]
+      local tags = awful.screen.focused().selected_tags
+      local tagslen = tableLength(tags)
       if tag then
-        tag:view_only()
+        -- If attempting to focus current tag, focus previous from history
+        if tagslen == 1 and tag.name == tags[1].name then
+          awful.tag.history.restore()
+        else
+          tag:view_only()
+        end
       end
     end,
   },
