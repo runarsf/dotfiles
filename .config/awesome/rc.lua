@@ -153,6 +153,7 @@ screen.connect_signal("request::desktop_decoration", function(s)
     screen  = s,
     filter  = awful.widget.taglist.filter.all,
     buttons = {
+      -- TODO view_only -> same function as super+#
       awful.button({ }, 1, function(t) t:view_only() end),
       awful.button({ modkey }, 3, function(t)
                                     if client.focus then
