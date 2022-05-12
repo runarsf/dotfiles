@@ -1,6 +1,14 @@
 --[[{{{ Resources
  * https://awesomewm.org/apidoc/
  * https://github.com/atsepkov/awesome-awesome-wm
+ * Convert unicode character to png icon:
+   $ convert -background transparent -fill '#E6E6E6' -font ~/.fonts/JetBrains/JetBrains\ Mono\ Bold\ Italic\ Nerd\ Font\ Complete\ Mono.ttf -pointsize 48 -size 64x64 -gravity center label:TEXT output.png
+ * Debug lua:
+   $ awesome-client 'return require("gears").filesystem.get_configuration_dir()'
+ * https://github.com/frioux/charitable
+ * https://github.com/Drauthius/awesome-sharedtags
+ * https://stackoverflow.com/questions/69574689/how-to-limit-the-width-of-window-entries-on-the-wibar
+ * https://github.com/mut-ex/awesome-wm-nice
 --}}}]]
 
 -- {{{ Packages
@@ -12,7 +20,7 @@ pcall(require, "luarocks.loader")
 require("eminent")
 -- Scratchpad
 local scratch = require("scratch")
-local sharedtags = require("sharedtags")
+-- local sharedtags = require("sharedtags")
 
 -- Standard awesome library
 local gears = require("gears")
@@ -95,6 +103,7 @@ menubar.utils.terminal = terminal -- Set the terminal for applications that requ
 tag.connect_signal("request::default_layouts", function()
   awful.layout.append_default_layouts({
     awful.layout.suit.tile,
+    awful.layout.suit.max,
     -- awful.layout.suit.floating,
     -- awful.layout.suit.tile.left,
     -- awful.layout.suit.tile.bottom,
@@ -103,9 +112,8 @@ tag.connect_signal("request::default_layouts", function()
     -- awful.layout.suit.fair.horizontal,
     awful.layout.suit.spiral,
     awful.layout.suit.spiral.dwindle,
-    awful.layout.suit.max,
-    -- awful.layout.suit.max.fullscreen,
     awful.layout.suit.magnifier,
+    -- awful.layout.suit.max.fullscreen,
     -- awful.layout.suit.corner.nw,
   })
 end)
@@ -140,19 +148,20 @@ mykeyboardlayout = awful.widget.keyboardlayout()
 -- Create a textclock widget
 mytextclock = wibox.widget.textclock()
 
-local tags = sharedtags({
-    { name = "main", layout = awful.layout.layouts[2] },
-    { name = "www", layout = awful.layout.layouts[10] },
-    { name = "game", layout = awful.layout.layouts[1] },
-    { name = "misc", layout = awful.layout.layouts[2] },
-    { name = "chat", screen = 2, layout = awful.layout.layouts[2] },
-    { layout = awful.layout.layouts[2] },
-    { screen = 2, layout = awful.layout.layouts[2] }
-})
+-- local tags = sharedtags({
+--     { name = "main", layout = awful.layout.layouts[2] },
+--     { name = "www", layout = awful.layout.layouts[10] },
+--     { name = "game", layout = awful.layout.layouts[1] },
+--     { name = "misc", layout = awful.layout.layouts[2] },
+--     { name = "chat", screen = 2, layout = awful.layout.layouts[2] },
+--     { layout = awful.layout.layouts[2] },
+--     { screen = 2, layout = awful.layout.layouts[2] }
+-- })
 
 screen.connect_signal("request::desktop_decoration", function(s)
   -- Each screen has its own tag table.
   -- awful.tag({ "1", "2", "3", "4", "5", "6", "7", "8", "9" }, s, awful.layout.layouts[1])
+  awful.tag({ "  ", "  ", "  ", " ﮑ ", " 龎 ", " ﮠ ", "  ", " 煉 ", "  " }, s, awful.layout.layouts[1])
 
   -- Create a promptbox for each screen
   s.mypromptbox = awful.widget.prompt()
@@ -198,9 +207,9 @@ screen.connect_signal("request::desktop_decoration", function(s)
     filter  = awful.widget.tasklist.filter.currenttags,
     buttons = {
       awful.button({ }, 1, function(c)
-                             c:activate { context = "tasklist", action = "toggle_minimization" }
+                             c:activate { context="tasklist", action="toggle_minimization" }
                            end),
-      awful.button({ }, 3, function() awful.menu.client_list { theme = { width = 250 } } end),
+      awful.button({ }, 3, function() awful.menu.client_list { theme = { width=250 } } end),
       awful.button({ }, 4, function() awful.client.focus.byidx(-1) end),
       awful.button({ }, 5, function() awful.client.focus.byidx( 1) end),
     }
@@ -211,17 +220,26 @@ screen.connect_signal("request::desktop_decoration", function(s)
     position = "top",
     screen   = s,
     ontop    = false,
-    margins  = 5,
-    border_width = 3,
-    border_color = "#0D1117",
+    margins  = beautiful.useless_gap + beautiful.border_width,
+    border_width = 4,
+    border_color = beautiful.bg_normal,
     widget   = {
       layout = wibox.layout.align.horizontal,
       { -- Left widgets
         layout = wibox.layout.fixed.horizontal,
         mylauncher,
+        -- {
+        --   {
+        --     widget = s.mytaglist,
+        --   },
+        --   margins = 4,
+        --   color = beautiful.secondary,
+        --   widget = wibox.container.margin,
+        -- },
         s.mytaglist,
         s.mypromptbox,
       },
+      -- wibox.container.margin(s.mytasklist, 10,10,10,10),
       s.mytasklist, -- Middle widget
       { -- Right widgets
         layout = wibox.layout.fixed.horizontal,
@@ -392,8 +410,8 @@ awful.keyboard.append_global_keybindings({
         if tagslen == 1 and tag.name == tags[1].name then
           awful.tag.history.restore()
         else
-          -- tag:view_only()
-          sharedtags.viewonly(tag, screen)
+          tag:view_only()
+          -- sharedtags.viewonly(tag, screen)
         end
       end
     end,
@@ -407,8 +425,8 @@ awful.keyboard.append_global_keybindings({
       local screen = awful.screen.focused()
       local tag = screen.tags[index]
       if tag then
-        -- awful.tag.viewtoggle(tag)
-        sharedtags.viewtoggle(tag, screen)
+        awful.tag.viewtoggle(tag)
+        -- sharedtags.viewtoggle(tag, screen)
       end
     end,
   },
@@ -670,15 +688,16 @@ ruled.client.connect_signal("request::rules", function()
 
   ruled.client.append_rule {
     rule       = { class="discord" },
-    properties = { tag=tags[2] }
+    properties = { screen=1, tag="2" }
+    -- properties = { tag=tags[2] }
   }
 
   local scratch_props = {
     floating=true,
     titlebars_enabled=false,
     minimized=true,
-    width=1300,
-    height=900,
+    -- width=1300,
+    -- height=900,
     sticky=false,
     above=true,
     ontop=true,
