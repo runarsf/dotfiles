@@ -1,6 +1,8 @@
 local theme_assets = require("beautiful.theme_assets")
 local xresources = require("beautiful.xresources")
 local dpi = xresources.apply_dpi
+local gears = require("gears")
+local wibox = require("wibox")
 
 local gfs = require("gears.filesystem")
 local themes_path = gfs.get_themes_dir()
@@ -115,9 +117,14 @@ theme.layout_cornersw = themes_path.."default/layouts/cornersww.png"
 theme.layout_cornerse = themes_path.."default/layouts/cornersew.png"
 
 -- Generate Awesome icon:
-theme.awesome_icon = theme_assets.awesome_icon(
-  theme.menu_height, theme.bg_focus, theme.fg_focus
-)
+-- theme.awesome_icon = theme_assets.awesome_icon(
+--   theme.menu_height, theme.bg_focus, theme.fg_focus
+-- )
+local myshape = function(cr, width, height)
+  gears.shape.rounded_rect(cr, width/2, height/2, 2)
+  gears.shape.transform(gears.shape.rounded_rect) : translate(10, 10)(cr, 10, 10, 2)
+end
+theme.awesome_icon = gears.surface.load_from_shape (20, 20, myshape,"#D12D2D")
 
 -- Define the icon theme for application icons. If not set then the icons
 -- from /usr/share/icons and /usr/share/icons/hicolor will be used.

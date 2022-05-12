@@ -1,9 +1,18 @@
+--[[{{{ Resources
+ * https://awesomewm.org/apidoc/
+ * https://github.com/atsepkov/awesome-awesome-wm
+--}}}]]
+
 -- {{{ Packages
 -- If LuaRocks is installed, make sure that packages installed through it are
 -- found (e.g. lgi). If LuaRocks is not installed, do nothing.
 pcall(require, "luarocks.loader")
 
+-- Dynamic tags
+require("eminent")
+-- Scratchpad
 local scratch = require("scratch")
+local sharedtags = require("sharedtags")
 
 -- Standard awesome library
 local gears = require("gears")
@@ -39,6 +48,7 @@ end)
 -- {{{ Variables
 -- Themes define colours, icons, font and wallpapers.
 beautiful.init(gears.filesystem.get_configuration_dir() .. "theme.lua")
+-- beautiful.init(gears.filesystem.get_themes_dir() .. "gtk/theme.lua")
 
 awesome.set_preferred_icon_size(32)
 
@@ -122,6 +132,7 @@ end)
 -- }}}
 
 -- {{{ Wibar
+-- https://awesomewm.org/apidoc/popups_and_bars/awful.wibar.html
 
 -- Keyboard map indicator and switcher
 mykeyboardlayout = awful.widget.keyboardlayout()
@@ -129,9 +140,19 @@ mykeyboardlayout = awful.widget.keyboardlayout()
 -- Create a textclock widget
 mytextclock = wibox.widget.textclock()
 
+local tags = sharedtags({
+    { name = "main", layout = awful.layout.layouts[2] },
+    { name = "www", layout = awful.layout.layouts[10] },
+    { name = "game", layout = awful.layout.layouts[1] },
+    { name = "misc", layout = awful.layout.layouts[2] },
+    { name = "chat", screen = 2, layout = awful.layout.layouts[2] },
+    { layout = awful.layout.layouts[2] },
+    { screen = 2, layout = awful.layout.layouts[2] }
+})
+
 screen.connect_signal("request::desktop_decoration", function(s)
   -- Each screen has its own tag table.
-  awful.tag({ "1", "2", "3", "4", "5", "6", "7", "8", "9" }, s, awful.layout.layouts[1])
+  -- awful.tag({ "1", "2", "3", "4", "5", "6", "7", "8", "9" }, s, awful.layout.layouts[1])
 
   -- Create a promptbox for each screen
   s.mypromptbox = awful.widget.prompt()
@@ -189,6 +210,10 @@ screen.connect_signal("request::desktop_decoration", function(s)
   s.mywibox = awful.wibar {
     position = "top",
     screen   = s,
+    ontop    = false,
+    margins  = 5,
+    border_width = 3,
+    border_color = "#0D1117",
     widget   = {
       layout = wibox.layout.align.horizontal,
       { -- Left widgets
@@ -328,6 +353,7 @@ awful.keyboard.append_global_keybindings({
             function() awful.tag.incnmaster(1, nil, true) end,
             { description="increase the number of master clients", group="layout" }),
   awful.key({ modkey, "Shift" }, "m",
+            -- TODO Don't decrease masters to 0
             function() awful.tag.incnmaster(-1, nil, true) end,
             { description="decrease the number of master clients", group="layout" }),
   awful.key({ modkey }, "v",
@@ -366,7 +392,8 @@ awful.keyboard.append_global_keybindings({
         if tagslen == 1 and tag.name == tags[1].name then
           awful.tag.history.restore()
         else
-          tag:view_only()
+          -- tag:view_only()
+          sharedtags.viewonly(tag, screen)
         end
       end
     end,
@@ -380,7 +407,8 @@ awful.keyboard.append_global_keybindings({
       local screen = awful.screen.focused()
       local tag = screen.tags[index]
       if tag then
-        awful.tag.viewtoggle(tag)
+        -- awful.tag.viewtoggle(tag)
+        sharedtags.viewtoggle(tag, screen)
       end
     end,
   },
@@ -595,9 +623,10 @@ end)
 -- }}}
 
 -- {{{ Rules
--- Rules to apply to new clients.
+-- https://awesomewm.org/doc/api/libraries/awful.rules.html
+
 ruled.client.connect_signal("request::rules", function()
-  -- All clients will match this rule.
+  -- All clients will match this rule
   ruled.client.append_rule {
     id         = "global",
     rule       = { },
@@ -609,7 +638,7 @@ ruled.client.connect_signal("request::rules", function()
     }
   }
 
-  -- Floating clients.
+  -- Floating clients
   ruled.client.append_rule {
     id       = "floating",
     rule_any = {
@@ -641,17 +670,31 @@ ruled.client.connect_signal("request::rules", function()
 
   ruled.client.append_rule {
     rule       = { class="discord" },
-    properties = { screen=1, tag="2" }
+    properties = { tag=tags[2] }
+  }
+
+  local scratch_props = {
+    floating=true,
+    titlebars_enabled=false,
+    minimized=true,
+    width=1300,
+    height=900,
+    sticky=false,
+    above=true,
+    ontop=true,
+    border_width=0,
+    skip_taskbar=true,
+    honor_padding=true,
+    honor_workarea=true
   }
 
   ruled.client.append_rule {
     rule       = { instance="scratch" },
-    properties = { floating=true, titlebars_enabled=false }
+    properties = scratch_props
   }
-
   ruled.client.append_rule {
     rule       = { instance="math" },
-    properties = { floating=true, titlebars_enabled=false }
+    properties = scratch_props
   }
 end)
 
