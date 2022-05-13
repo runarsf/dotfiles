@@ -259,6 +259,12 @@ local plugins = function(use)
     end,
   })
 
+  use({ "chentau/marks.nvim",
+    config = function()
+     require("marks").setup({})
+    end,
+  })
+
   -- use({ "godlygeek/tabular" })
 
   -- use({ "phaazon/hop.nvim",
