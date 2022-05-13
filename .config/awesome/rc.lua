@@ -1,64 +1,79 @@
 --[[{{{ Resources
- * https://awesomewm.org/apidoc/
- * https://github.com/atsepkov/awesome-awesome-wm
- * Convert unicode character to png icon:
+ - https://awesomewm.org/apidoc/
+ - https://github.com/atsepkov/awesome-awesome-wm
+ - Convert unicode character to png icon:
    $ convert -background transparent -fill '#E6E6E6' -font ~/.fonts/JetBrains/JetBrains\ Mono\ Bold\ Italic\ Nerd\ Font\ Complete\ Mono.ttf -pointsize 48 -size 64x64 -gravity center label:TEXT output.png
- * Debug lua:
+ - Debug lua:
    $ awesome-client 'return require("gears").filesystem.get_configuration_dir()'
- * https://github.com/frioux/charitable
- * https://github.com/Drauthius/awesome-sharedtags
- * https://stackoverflow.com/questions/69574689/how-to-limit-the-width-of-window-entries-on-the-wibar
- * https://github.com/mut-ex/awesome-wm-nice
+ - https://github.com/frioux/charitable
+ - https://github.com/Drauthius/awesome-sharedtags
+ - https://stackoverflow.com/questions/69574689/how-to-limit-the-width-of-window-entries-on-the-wibar
+ - https://github.com/mut-ex/awesome-wm-nice
+ - https://www.reddit.com/r/awesomewm/comments/gehk1g/cursor_follows_focus_possible/
+ - https://awesomewm.org/recipes/
 --}}}]]
 
 -- {{{ Packages
--- If LuaRocks is installed, make sure that packages installed through it are
--- found (e.g. lgi). If LuaRocks is not installed, do nothing.
 pcall(require, "luarocks.loader")
 
 -- Dynamic tags
-require("eminent")
+-- require("eminent")
 -- Scratchpad
-local scratch = require("scratch")
--- local sharedtags = require("sharedtags")
+local scratch       = require("scratch")
+-- XMonad-like workspaces
+local charitable    = require("charitable")
+-- OSX-like titlebars
+local nice          = require("nice")
 
--- Standard awesome library
-local gears = require("gears")
-local awful = require("awful")
+local gears         = require("gears")
+local awful         = require("awful")
 require("awful.autofocus")
--- Widget and layout library
-local wibox = require("wibox")
--- Theme handling library
-local beautiful = require("beautiful")
--- Notification library
-local naughty = require("naughty")
--- Declarative object management
-local ruled = require("ruled")
-local menubar = require("menubar")
+local wibox         = require("wibox")
+local beautiful     = require("beautiful")
+local naughty       = require("naughty")
+local ruled         = require("ruled")
+local menubar       = require("menubar")
 local hotkeys_popup = require("awful.hotkeys_popup")
--- Enable hotkeys help widget for VIM and other apps
--- when client with a matching name is opened:
 require("awful.hotkeys_popup.keys")
+local xresources    = require("beautiful.xresources")
+local dpi           = xresources.apply_dpi
 -- }}}
 
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
--- another config (This code will only ever execute for the fallback config)
+-- another config (this code will only ever execute for the fallback config).
 naughty.connect_signal("request::display_error", function(message, startup)
-    naughty.notification {
-        urgency = "critical",
-        title   = "Oops, an error happened"..(startup and " during startup!" or "!"),
-        message = message
-    }
+  naughty.notification {
+    urgency = "critical",
+    title   = "Oops, an error happened"..(startup and " during startup!" or "!"),
+    message = message
+  }
 end)
 -- }}}
 
 -- {{{ Variables
--- Themes define colours, icons, font and wallpapers.
 beautiful.init(gears.filesystem.get_configuration_dir() .. "theme.lua")
--- beautiful.init(gears.filesystem.get_themes_dir() .. "gtk/theme.lua")
 
-awesome.set_preferred_icon_size(32)
+-- WARN: nice breaks with gtk4, temporary workaround is to uninstall it - https://github.com/mut-ex/awesome-wm-nice/issues/22
+
+nice {
+  -- To disable titlebars, set titlebar_height and titlebar_radius to 3,
+  -- and remove the titlebar_items or set button_size to 0.
+  -- titlebar_color = beautiful.bg
+  titlebar_height = 28,
+  titlebar_radius = 9,
+  titlebar_font = beautiful.font,
+  win_shade_enabled = true,
+  no_titlebar_maximized = false,
+  button_size = 12,
+  titlebar_items = {
+    left = {}, -- {"sticky", "ontop", "floating"},
+    middle = "title",
+    right = {"minimize", "maximize", "close"}
+  }
+}
+
+-- awesome.set_preferred_icon_size(32)
 
 -- beautiful.useless_gap = 3
 -- beautiful.gap_single_client = true
@@ -74,29 +89,27 @@ modkey = "Mod4"
 -- }}}
 
 -- {{{ Menu
--- Create a launcher widget and a main menu
-myawesomemenu = {
-  { "hotkeys", function() hotkeys_popup.show_help(nil, awful.screen.focused()) end },
-  { "manual", terminal .. " -e man awesome" },
-  { "edit config", editor_cmd .. " " .. awesome.conffile },
-  { "restart", awesome.restart },
-  { "quit", function() awesome.quit() end },
-}
-
-mymainmenu = awful.menu({
-  items = {
-    { "awesome", myawesomemenu, beautiful.awesome_icon },
-    { "open terminal", terminal }
-  }
-})
-
 mylauncher = awful.widget.launcher({
   image = beautiful.awesome_icon,
-  menu = mymainmenu
+  menu = awful.menu({
+    items = {
+      { "awesome",
+        {
+          { "hotkeys", function() hotkeys_popup.show_help(nil, awful.screen.focused()) end },
+          { "manual", terminal .. " -e man awesome" },
+          { "edit config", editor_cmd .. " " .. awesome.conffile },
+          { "restart", awesome.restart },
+          { "quit", function() awesome.quit() end },
+        },
+        beautiful.awesome_icon
+      },
+      { "open terminal", terminal }
+    }
+  })
 })
 
 -- Menubar configuration
-menubar.utils.terminal = terminal -- Set the terminal for applications that require it
+menubar.utils.terminal = terminal
 -- }}}
 
 -- {{{ Layouts
@@ -148,37 +161,55 @@ mykeyboardlayout = awful.widget.keyboardlayout()
 -- Create a textclock widget
 mytextclock = wibox.widget.textclock()
 
--- local tags = sharedtags({
---     { name = "main", layout = awful.layout.layouts[2] },
---     { name = "www", layout = awful.layout.layouts[10] },
---     { name = "game", layout = awful.layout.layouts[1] },
---     { name = "misc", layout = awful.layout.layouts[2] },
---     { name = "chat", screen = 2, layout = awful.layout.layouts[2] },
---     { layout = awful.layout.layouts[2] },
---     { screen = 2, layout = awful.layout.layouts[2] }
--- })
+-- [[+CHARITABLE
+local tags = charitable.create_tags(
+   { "1", "2", "3", "4", "5", "6", "7", "8", "9" },
+   {
+      awful.layout.layouts[1],
+      awful.layout.layouts[1],
+      awful.layout.layouts[1],
+      awful.layout.layouts[1],
+      awful.layout.layouts[1],
+      awful.layout.layouts[1],
+      awful.layout.layouts[1],
+      awful.layout.layouts[1],
+      awful.layout.layouts[1],
+   }
+)
+--]]
 
 screen.connect_signal("request::desktop_decoration", function(s)
   -- Each screen has its own tag table.
+  --[[-CHARITABLE
   -- awful.tag({ "1", "2", "3", "4", "5", "6", "7", "8", "9" }, s, awful.layout.layouts[1])
   awful.tag({ "  ", "  ", "  ", " ﮑ ", " 龎 ", " ﮠ ", "  ", " 煉 ", "  " }, s, awful.layout.layouts[1])
+  --]]
 
-  -- Create a promptbox for each screen
-  s.mypromptbox = awful.widget.prompt()
+  -- [[+CHARITABLE
+  -- Show an unselected tag when a screen is connected
+  for i = 1, #tags do
+       if not tags[i].selected then
+           tags[i].screen = s
+           tags[i]:view_only()
+           break
+       end
+  end
 
-  -- Create an imagebox widget which will contain an icon indicating which layout we're using.
-  -- We need one layoutbox per screen.
-  s.mylayoutbox = awful.widget.layoutbox {
-    screen  = s,
-    buttons = {
-      awful.button({ }, 1, function() awful.layout.inc( 1) end),
-      awful.button({ }, 3, function() awful.layout.inc(-1) end),
-      awful.button({ }, 4, function() awful.layout.inc(-1) end),
-      awful.button({ }, 5, function() awful.layout.inc( 1) end),
-    }
-  }
+  -- create a special scratch tag for double buffering
+  s.scratch = awful.tag.add('~' .. s.index, {})
 
-  -- Create a taglist widget
+  s.mytaglist = awful.widget.taglist({
+     screen = s,
+     filter  = awful.widget.taglist.filter.all,
+     buttons = gears.table.join(
+       awful.button({ }, 1, function(t) charitable.select_tag(t, awful.screen.focused()) end),
+       awful.button({ }, 3, function(t) charitable.toggle_tag(t, awful.screen.focused()) end)
+     ),
+     source = function(screen, args) return tags end,
+  })
+  --]]
+
+  --[[-CHARITABLE
   s.mytaglist = awful.widget.taglist {
     screen  = s,
     filter  = awful.widget.taglist.filter.all,
@@ -198,6 +229,22 @@ screen.connect_signal("request::desktop_decoration", function(s)
                                   end),
       awful.button({ }, 4, function(t) awful.tag.viewprev(t.screen) end),
       awful.button({ }, 5, function(t) awful.tag.viewnext(t.screen) end),
+    }
+  }
+  --]]
+
+  -- Create a promptbox for each screen
+  s.mypromptbox = awful.widget.prompt()
+
+  -- Create an imagebox widget which will contain an icon indicating which layout we're using.
+  -- We need one layoutbox per screen.
+  s.mylayoutbox = awful.widget.layoutbox {
+    screen  = s,
+    buttons = {
+      awful.button({ }, 1, function() awful.layout.inc( 1) end),
+      awful.button({ }, 3, function() awful.layout.inc(-1) end),
+      awful.button({ }, 4, function() awful.layout.inc(-1) end),
+      awful.button({ }, 5, function() awful.layout.inc( 1) end),
     }
   }
 
@@ -228,15 +275,15 @@ screen.connect_signal("request::desktop_decoration", function(s)
       { -- Left widgets
         layout = wibox.layout.fixed.horizontal,
         mylauncher,
-        -- {
-        --   {
-        --     widget = s.mytaglist,
-        --   },
-        --   margins = 4,
-        --   color = beautiful.secondary,
-        --   widget = wibox.container.margin,
-        -- },
-        s.mytaglist,
+        {
+          {
+            widget = s.mytaglist,
+          },
+          margins = 4,
+          color = beautiful.secondary,
+          widget = wibox.container.margin,
+        },
+        -- s.mytaglist,
         s.mypromptbox,
       },
       -- wibox.container.margin(s.mytasklist, 10,10,10,10),
@@ -401,6 +448,14 @@ awful.keyboard.append_global_keybindings({
     description = "only view tag",
     group       = "tag",
     on_press    = function(index)
+      -- [[+CHARITABLE
+      -- TODO Raise tag after swapping
+      local tag = tags[index]
+      if tag then
+        charitable.select_tag(tag, awful.screen.focused())
+      end
+      --]]
+      --[[-CHARITABLE
       local screen = awful.screen.focused()
       local tag = screen.tags[index]
       local tags = awful.screen.focused().selected_tags
@@ -411,9 +466,9 @@ awful.keyboard.append_global_keybindings({
           awful.tag.history.restore()
         else
           tag:view_only()
-          -- sharedtags.viewonly(tag, screen)
         end
       end
+      --]]
     end,
   },
   awful.key {
@@ -422,12 +477,19 @@ awful.keyboard.append_global_keybindings({
     description = "toggle tag",
     group       = "tag",
     on_press    = function(index)
+      -- [[+CHARITABLE
+      local tag = tags[index]
+      if tag then
+        charitable.toggle_tag(tag, awful.screen.focused())
+      end
+      --]]
+      --[[-CHARITABLE
       local screen = awful.screen.focused()
       local tag = screen.tags[index]
       if tag then
         awful.tag.viewtoggle(tag)
-        -- sharedtags.viewtoggle(tag, screen)
       end
+      --]]
     end,
   },
   awful.key {
@@ -437,7 +499,8 @@ awful.keyboard.append_global_keybindings({
     group       = "tag",
     on_press    = function(index)
       if client.focus then
-        local tag = client.focus.screen.tags[index]
+        -- local tag = client.focus.screen.tags[index]
+        local tag = tags[index]
         if tag then
           client.focus:move_to_tag(tag)
         end
@@ -451,7 +514,8 @@ awful.keyboard.append_global_keybindings({
     group       = "tag",
     on_press    = function(index)
       if client.focus then
-        local tag = client.focus.screen.tags[index]
+        -- local tag = client.focus.screen.tags[index]
+        local tag = tags[index]
         if tag then
           client.focus:toggle_tag(tag)
         end
@@ -652,7 +716,7 @@ ruled.client.connect_signal("request::rules", function()
       focus     = awful.client.focus.filter,
       raise     = true,
       screen    = awful.screen.preferred,
-      placement = awful.placement.no_overlap+awful.placement.no_offscreen
+      placement = awful.placement.no_overlap+awful.placement.no_offscreen,
     }
   }
 
@@ -688,13 +752,13 @@ ruled.client.connect_signal("request::rules", function()
 
   ruled.client.append_rule {
     rule       = { class="discord" },
-    properties = { screen=1, tag="2" }
-    -- properties = { tag=tags[2] }
+    -- properties = { screen=1, tag="2" }
+    properties = { tag=tags[2] }
   }
 
   local scratch_props = {
     floating=true,
-    titlebars_enabled=false,
+    titlebars_enabled=true,
     minimized=true,
     -- width=1300,
     -- height=900,
@@ -721,40 +785,40 @@ end)
 
 -- {{{ Titlebars
 -- Add a titlebar if titlebars_enabled is set to true in the rules.
-client.connect_signal("request::titlebars", function(c)
-  -- buttons for the titlebar
-  local buttons = {
-    awful.button({ }, 1,
-                 function() c:activate { context="titlebar", action="mouse_move" } end),
-    awful.button({ }, 3,
-                 function() c:activate { context="titlebar", action="mouse_resize" } end),
-  }
-
-  awful.titlebar(c).widget = {
-    { -- Left
-      awful.titlebar.widget.iconwidget(c),
-      buttons = buttons,
-      layout  = wibox.layout.fixed.horizontal
-    },
-    { -- Middle
-      { -- Title
-        align  = "center",
-        widget = awful.titlebar.widget.titlewidget(c)
-      },
-      buttons = buttons,
-      layout  = wibox.layout.flex.horizontal
-    },
-    { -- Right
-      awful.titlebar.widget.floatingbutton (c),
-      awful.titlebar.widget.maximizedbutton(c),
-      awful.titlebar.widget.stickybutton   (c),
-      awful.titlebar.widget.ontopbutton    (c),
-      awful.titlebar.widget.closebutton    (c),
-      layout = wibox.layout.fixed.horizontal()
-    },
-    layout = wibox.layout.align.horizontal
-  }
-end)
+-- client.connect_signal("request::titlebars", function(c)
+--   -- buttons for the titlebar
+--   local buttons = {
+--     awful.button({ }, 1,
+--                  function() c:activate { context="titlebar", action="mouse_move" } end),
+--     awful.button({ }, 3,
+--                  function() c:activate { context="titlebar", action="mouse_resize" } end),
+--   }
+-- 
+--   awful.titlebar(c).widget = {
+--     { -- Left
+--       awful.titlebar.widget.iconwidget(c),
+--       buttons = buttons,
+--       layout  = wibox.layout.fixed.horizontal
+--     },
+--     { -- Middle
+--       { -- Title
+--         align  = "center",
+--         widget = awful.titlebar.widget.titlewidget(c)
+--       },
+--       buttons = buttons,
+--       layout  = wibox.layout.flex.horizontal
+--     },
+--     { -- Right
+--       awful.titlebar.widget.floatingbutton (c),
+--       awful.titlebar.widget.maximizedbutton(c),
+--       awful.titlebar.widget.stickybutton   (c),
+--       awful.titlebar.widget.ontopbutton    (c),
+--       awful.titlebar.widget.closebutton    (c),
+--       layout = wibox.layout.fixed.horizontal()
+--     },
+--     layout = wibox.layout.align.horizontal
+--   }
+-- end)
 
 -- {{{ Notifications
 
@@ -775,10 +839,27 @@ end)
 
 -- }}}
 
+-- [[+CHARITABLE
+-- Ensure that removing screens doesn't kill tags
+tag.connect_signal("request::screen", function(t)
+    t.selected = false
+    for s in capi.screen do
+        if s ~= t.screen then
+            t.screen = s
+            return
+        end
+    end
+end)
+
+-- work around bugs in awesome 4.0 through 4.3+
+-- see https://github.com/awesomeWM/awesome/issues/2780
+awful.tag.history.restore = function() end
+--]]
+
 -- Enable sloppy focus, so that focus follows mouse.
 client.connect_signal("mouse::enter", function(c)
   c:activate { context="mouse_enter", raise=false }
 end)
 
-client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
-client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
+-- client.connect_signal("focus", function(c) c.border_width = beautiful.border_width end)
+-- client.connect_signal("unfocus", function(c) c.border_width = dpi(0) end)

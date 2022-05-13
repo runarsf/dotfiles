@@ -34,11 +34,11 @@ theme.wallpaper                             = "~/.config/wall.jpg"
 theme.menu_icon                             = config_path .. "icons/menu.png"
 theme.task_width                            = dpi(250)
 
-theme.bg                                    = "#262643"
-theme.fg                                    = "#F8F2EC"
-theme.fg_secondary                          = "#474A7C"
-theme.secondary                             = "#C49DA3"
-theme.tertiary                              = "#876A97"
+theme.bg                                    = "#0D1117"
+theme.fg                                    = "#A9A9A9"
+theme.fg_secondary                          = "#454E58"
+theme.secondary                             = "#25293E"
+theme.tertiary                              = "#9AA9CE"
 
 -- theme.black                                 = "#000000" -- xrdb.color0
 -- theme.dark_red                              = "#c23621" -- xrdb.color1
@@ -74,40 +74,47 @@ theme.fg_urgent                             = theme.fg
 -- theme.wibar_bg                              = theme.black
 
 theme.gap_single_client                     = true
-theme.useless_gap                           = dpi(4)
-theme.border_width                          = dpi(2)
+theme.useless_gap                           = dpi(5)
+--[[NICE-OFF
+theme.border_width                          = dpi(1)
 theme.border_radius                         = dpi(5)
+--]]
+-- [[NICE-ON
+theme.border_width                          = dpi(0)
+--]]
 theme.bar_height                            = dpi(20)
 
 theme.border_color_marked                   = theme.red -- .. theme.opacity
 -- theme.border_color_floating                 = theme.blue .. theme.opacity
 -- theme.border_color_maximized                = theme.dark_gray .. theme.opacity
 -- theme.border_color_fullscreen               = theme.dark_gray .. theme.opacity
+--[[NICE-OFF
 theme.border_color_active                   = theme.tertiary -- .. theme.opacity
-theme.border_color_normal                   = theme.bg -- .. theme.opacity
+theme.border_color_normal                   = "#00000000" -- .. theme.opacity
+--]]
 -- theme.border_color_urgent                   = theme.cyan .. theme.opacity
 -- theme.border_color_new                      = theme.yellow .. theme.opacity
 
--- theme.taglist_bg_focus                      = theme.blue
--- theme.taglist_bg_urgent                     = theme.cyan
+theme.taglist_bg_focus                      = theme.tertiary
+theme.taglist_bg_urgent                     = theme.red
 theme.taglist_bg_occupied                   = theme.secondary
 theme.taglist_bg_empty                      = theme.secondary
 -- theme.taglist_bg_volatile                   = theme.red
-theme.taglist_fg_focus                      = theme.secondary
+theme.taglist_fg_focus                      = theme.bg
 -- theme.taglist_fg_urgent                     = theme.black
-theme.taglist_fg_occupied                   = theme.bg
-theme.taglist_fg_empty                      = theme.bg
+theme.taglist_fg_occupied                   = theme.fg
+theme.taglist_fg_empty                      = theme.fg_secondary
 -- theme.taglist_fg_volatile                   = theme.black
 -- theme.taglist_spacing                       = dpi(2)
 -- theme.taglist_shape                         = gears_shape.rectangle
-theme.taglist_shape_border_width            = dpi(3)
-theme.taglist_shape_border_color            = theme.secondary
+-- theme.taglist_shape_border_width            = dpi(3)
+-- theme.taglist_shape_border_color            = theme.secondary
 -- theme.taglist_shape_border_color_empty      = theme.black
-theme.taglist_shape_border_color_focus      = theme.bg
+-- theme.taglist_shape_border_color_focus      = theme.bg
 -- theme.taglist_shape_border_color_urgent     = theme.cyan
 -- theme.taglist_shape_border_color_volatile   = theme.red
-theme.taglist_squares_sel                   = theme_assets.taglist_squares_sel(dpi(6), theme.secondary)
-theme.taglist_squares_unsel                 = theme_assets.taglist_squares_unsel(dpi(6), theme.bg)
+theme.taglist_squares_sel                   = theme_assets.taglist_squares_sel(dpi(5), theme.secondary)
+theme.taglist_squares_unsel                 = theme_assets.taglist_squares_unsel(dpi(5), theme.bg)
 -- theme.tasklist_fg_normal                    = theme.gray
 -- theme.tasklist_bg_normal                    = theme.black
 -- theme.tasklist_fg_focus                     = theme.black
@@ -120,34 +127,6 @@ theme.taglist_squares_unsel                 = theme_assets.taglist_squares_unsel
 -- theme.tasklist_shape_border_color_focus     = theme.blue
 -- theme.tasklist_shape_border_color_minimized = theme.dark_gray
 -- theme.tasklist_shape_border_color_urgent    = theme.cyan
-
--- theme.tasklist_widget_template = {
---     {
---         {
---             {
---                 {
---                     id     = 'clienticon',
---                     widget = clienticon,
---                 },
---                 margins = dpi(4),
---                 widget  = wibox.container.margin,
---             },
---             {
---                 id     = 'text_role',
---                 widget = wibox.widget.textbox,
---             },
---             layout = wibox.layout.fixed.horizontal,
---         },
---         left  = dpi(4),
---         right = dpi(4),
---         widget = wibox.container.margin
---     },
---     id     = 'background_role',
---     widget = wibox.container.background,
---     create_callback = function(self, c)
---         self:get_children_by_id('clienticon')[1].client = c
---     end,
--- }
 
 -- theme.titlebar_font_normal                  = theme.font
 -- theme.titlebar_fg_normal                    = theme.dark_gray
@@ -193,8 +172,8 @@ theme.icon_theme                             = nil
 -- theme.awesome_icon                           = config_path .. "icons/menu.png"
 
 local myshape = function(cr, width, height)
-  local opad = 4
-  local ipad = 1
+  local opad = 5
+  local ipad = 2
   gears_shape.transform(gears_shape.rectangle) : translate(opad,                      opad)(cr, width/2-ipad/2-opad, height/2-ipad/2-opad)
   gears_shape.transform(gears_shape.rectangle) : translate(width/2+ipad/2,            opad)(cr, width/2-ipad/2-opad, height/2-ipad/2-opad)
   gears_shape.transform(gears_shape.rectangle) : translate(opad,           height/2+ipad/2)(cr, width/2-ipad/2-opad, height/2-ipad/2-opad)

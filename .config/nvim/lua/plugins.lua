@@ -259,13 +259,20 @@ local plugins = function(use)
     end,
   })
 
-  use({ "chentau/marks.nvim",
+  use({ "chentoast/marks.nvim",
     config = function()
      require("marks").setup({})
     end,
   })
 
-  -- use({ "godlygeek/tabular" })
+  use({ "godlygeek/tabular",
+    cmd = "Tabularize"
+  })
+  use({ "junegunn/vim-easy-align",
+    config = function()
+      require("config.easy-align")
+    end,
+  })
 
   -- use({ "phaazon/hop.nvim",
   --   config = function()
