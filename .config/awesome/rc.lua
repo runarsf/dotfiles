@@ -12,6 +12,7 @@
  - https://www.reddit.com/r/awesomewm/comments/gehk1g/cursor_follows_focus_possible/
  - https://awesomewm.org/recipes/
  - https://www.reddit.com/r/awesomewm/comments/mfklx5/shadow_only_for_floating_windows/
+ - https://www.reddit.com/r/awesomewm/comments/bki1md/show_titlebar_only_when_window_is_floating/
 --}}}]]
 
 -- {{{ Packages
