@@ -14,6 +14,8 @@ menu_[bg|fg]_[normal|focus]
 menu_[border_color|border_width]
 --}}}]]
 
+-- https://elv13.github.io/documentation/06-appearance.md.html
+
 local theme_assets                          = require("beautiful.theme_assets")
 local xresources                            = require("beautiful.xresources")
 local dpi                                   = xresources.apply_dpi
@@ -23,9 +25,11 @@ local config_path                           = gfs.get_configuration_dir()
 local themes_path                           = gfs.get_themes_dir()
 local wibox                                 = require("wibox")
 local gears_shape                           = require("gears.shape")
+local gears_color                           = require("gears.color")
 local gears_surface                         = require("gears.surface")
 local clienticon                            = require("awful.widget.clienticon")
 local rnotification                         = require("ruled.notification")
+-- local cairo = require("lgi").cairo
 
 local theme                                 = dofile(themes_path.."default/theme.lua")
 
@@ -95,6 +99,28 @@ theme.border_color_normal                   = "#00000000" -- .. theme.opacity
 -- theme.border_color_urgent                   = theme.cyan .. theme.opacity
 -- theme.border_color_new                      = theme.yellow .. theme.opacity
 
+local myshape = function(cr, width, height)
+  local opad = 5
+  local ipad = 2
+  gears_shape.transform(gears_shape.rectangle) : translate(opad,                      opad)(cr, width/2-ipad/2-opad, height/2-ipad/2-opad)
+  gears_shape.transform(gears_shape.rectangle) : translate(width/2+ipad/2,            opad)(cr, width/2-ipad/2-opad, height/2-ipad/2-opad)
+  gears_shape.transform(gears_shape.rectangle) : translate(opad,           height/2+ipad/2)(cr, width/2-ipad/2-opad, height/2-ipad/2-opad)
+  gears_shape.transform(gears_shape.rectangle) : translate(width/2+ipad/2, height/2+ipad/2)(cr, width/2-ipad/2-opad, height/2-ipad/2-opad)
+  -- gears_shape.transform(gears_shape.rectangle) : translate(opad,         opad         )(cr, width/2-opad-ipad, height/2-opad-ipad)
+  -- gears_shape.transform(gears_shape.rectangle) : translate(width/2+ipad, opad         )(cr, width/2-opad-ipad, height/2-opad-ipad)
+  -- gears_shape.transform(gears_shape.rectangle) : translate(opad,         height/2+ipad)(cr, width/2-opad-ipad, height/2-opad-ipad)
+  -- gears_shape.transform(gears_shape.rectangle) : translate(width/2+ipad, height/2+ipad)(cr, width/2-opad-ipad, height/2-opad-ipad)
+end
+local mytagshape = function(cr, width, height)
+  -- gears_shape.rounded_rect(cr, width, height-5, 2)
+  gears_shape.transform(gears_shape.rounded_rect) : translate(0, 3)(cr, width, height-6, 2)
+end
+local mysquare = function(cr, width, height)
+  -- load_from_shape width has to be translate-x + width, and height has to be translate-y+height
+  -- translate-x is the padding from the cell, translate-y is translate_x+mytagshape_translate_y
+  gears_shape.transform(gears_shape.rounded_rect) : translate(2, 5)(cr, 7, 7, 1)
+end
+
 theme.taglist_bg_focus                      = theme.tertiary
 theme.taglist_bg_urgent                     = theme.red
 theme.taglist_bg_occupied                   = theme.secondary
@@ -105,28 +131,29 @@ theme.taglist_fg_focus                      = theme.bg
 theme.taglist_fg_occupied                   = theme.fg
 theme.taglist_fg_empty                      = theme.fg_secondary
 -- theme.taglist_fg_volatile                   = theme.black
--- theme.taglist_spacing                       = dpi(2)
--- theme.taglist_shape                         = gears_shape.rectangle
+theme.taglist_spacing                       = dpi(3)
+theme.taglist_shape                         = mytagshape
 -- theme.taglist_shape_border_width            = dpi(3)
 -- theme.taglist_shape_border_color            = theme.secondary
 -- theme.taglist_shape_border_color_empty      = theme.black
 -- theme.taglist_shape_border_color_focus      = theme.bg
 -- theme.taglist_shape_border_color_urgent     = theme.cyan
 -- theme.taglist_shape_border_color_volatile   = theme.red
-theme.taglist_squares_sel                   = theme_assets.taglist_squares_sel(dpi(5), theme.secondary)
-theme.taglist_squares_unsel                 = theme_assets.taglist_squares_unsel(dpi(5), theme.bg)
+theme.taglist_squares_sel                   = nil -- gears_surface.load_from_shape(9, 12, mysquare, "#ffffff")
+theme.taglist_squares_unsel                 = nil -- theme_assets.taglist_squares_unsel(dpi(5), theme.bg)
 -- theme.tasklist_fg_normal                    = theme.gray
 -- theme.tasklist_bg_normal                    = theme.black
 -- theme.tasklist_fg_focus                     = theme.black
 -- theme.tasklist_bg_focus                     = theme.blue
 -- theme.tasklist_font_focus                   = theme.font
--- theme.tasklist_spacing                      = dpi(2)
+theme.tasklist_spacing                      = dpi(5)
 
 -- theme.tasklist_shape_border_width           = dpi(1)
 -- theme.tasklist_shape_border_color           = theme.black
 -- theme.tasklist_shape_border_color_focus     = theme.blue
 -- theme.tasklist_shape_border_color_minimized = theme.dark_gray
 -- theme.tasklist_shape_border_color_urgent    = theme.cyan
+theme.tasklist_disable_task_name = true
 
 -- theme.titlebar_font_normal                  = theme.font
 -- theme.titlebar_fg_normal                    = theme.dark_gray
@@ -144,7 +171,7 @@ theme.taglist_squares_unsel                 = theme_assets.taglist_squares_unsel
 -- theme.menu_border_color                     = theme.blue
 theme.menu_width                            = dpi(160)
 theme.menu_height                           = dpi(theme.bar_height)
-theme.menu_submenu                          = "▸ "
+theme.menu_submenu                          = "🢒 "
 theme.menu_submenu_icon                     = nil
 
 -- theme.notification_font                     = theme.font
@@ -159,6 +186,10 @@ theme.menu_submenu_icon                     = nil
 -- theme.notification_height                   = dpi(100)
 -- theme.notification_spacing                  = dpi(2)
 
+theme.icon_theme                             = nil
+
+theme.awesome_icon                           = gears_surface.load_from_shape(20, 20, myshape, theme.tertiary)
+
 theme = theme_assets.recolor_layout(theme, theme.tertiary)
 theme = theme_assets.recolor_titlebar(theme, theme.tertiary, "normal")
 theme = theme_assets.recolor_titlebar(theme, theme.tertiary, "normal", "hover")
@@ -166,26 +197,6 @@ theme = theme_assets.recolor_titlebar(theme, theme.tertiary, "normal", "press")
 theme = theme_assets.recolor_titlebar(theme, theme.tertiary, "focus")
 theme = theme_assets.recolor_titlebar(theme, theme.tertiary, "focus", "hover")
 theme = theme_assets.recolor_titlebar(theme, theme.tertiary, "focus", "press")
-
-theme.icon_theme                             = nil
-
--- theme.awesome_icon                           = config_path .. "icons/menu.png"
-
-local myshape = function(cr, width, height)
-  local opad = 5
-  local ipad = 2
-  gears_shape.transform(gears_shape.rectangle) : translate(opad,                      opad)(cr, width/2-ipad/2-opad, height/2-ipad/2-opad)
-  gears_shape.transform(gears_shape.rectangle) : translate(width/2+ipad/2,            opad)(cr, width/2-ipad/2-opad, height/2-ipad/2-opad)
-  gears_shape.transform(gears_shape.rectangle) : translate(opad,           height/2+ipad/2)(cr, width/2-ipad/2-opad, height/2-ipad/2-opad)
-  gears_shape.transform(gears_shape.rectangle) : translate(width/2+ipad/2, height/2+ipad/2)(cr, width/2-ipad/2-opad, height/2-ipad/2-opad)
-  -- gears_shape.transform(gears_shape.rectangle) : translate(opad,         opad         )(cr, width/2-opad-ipad, height/2-opad-ipad)
-  -- gears_shape.transform(gears_shape.rectangle) : translate(width/2+ipad, opad         )(cr, width/2-opad-ipad, height/2-opad-ipad)
-  -- gears_shape.transform(gears_shape.rectangle) : translate(opad,         height/2+ipad)(cr, width/2-opad-ipad, height/2-opad-ipad)
-  -- gears_shape.transform(gears_shape.rectangle) : translate(width/2+ipad, height/2+ipad)(cr, width/2-opad-ipad, height/2-opad-ipad)
-end
-theme.awesome_icon = gears_surface.load_from_shape(20, 20, myshape, theme.tertiary)
-
--- theme.awesome_icon = theme_assets.awesome_icon(theme.menu_height, theme.magenta, theme.black)
 
 -- rnotification.connect_signal('request::rules', function()
 --     rnotification.append_rule {

@@ -17,7 +17,7 @@
 pcall(require, "luarocks.loader")
 
 -- Dynamic tags
--- require("eminent")
+require("eminent")
 -- Scratchpad
 local scratch       = require("scratch")
 -- XMonad-like workspaces
@@ -275,15 +275,15 @@ screen.connect_signal("request::desktop_decoration", function(s)
       { -- Left widgets
         layout = wibox.layout.fixed.horizontal,
         mylauncher,
-        {
-          {
-            widget = s.mytaglist,
-          },
-          margins = 4,
-          color = beautiful.secondary,
-          widget = wibox.container.margin,
-        },
-        -- s.mytaglist,
+        -- {
+        --   {
+        --     widget = s.mytaglist,
+        --   },
+        --   margins = 4,
+        --   color = beautiful.secondary,
+        --   widget = wibox.container.margin,
+        -- },
+        s.mytaglist,
         s.mypromptbox,
       },
       -- wibox.container.margin(s.mytasklist, 10,10,10,10),
@@ -435,11 +435,13 @@ awful.keyboard.append_global_keybindings({
             { description="select previous", group="layout" }),
 })
 
+--[[-CHARITABLE
 local tableLength = function(T)
   local count = 0
   for _ in pairs(T) do count = count + 1 end
   return count
 end
+--]]
 
 awful.keyboard.append_global_keybindings({
   awful.key {
@@ -447,17 +449,17 @@ awful.keyboard.append_global_keybindings({
     keygroup    = "numrow",
     description = "only view tag",
     group       = "tag",
-    on_press    = function(index)
+    on_press    = function(i)
       -- [[+CHARITABLE
       -- TODO Raise tag after swapping
-      local tag = tags[index]
+      local tag = tags[i]
       if tag then
         charitable.select_tag(tag, awful.screen.focused())
       end
       --]]
       --[[-CHARITABLE
       local screen = awful.screen.focused()
-      local tag = screen.tags[index]
+      local tag = screen.tags[i]
       local tags = awful.screen.focused().selected_tags
       local tagslen = tableLength(tags)
       if tag then
@@ -476,16 +478,16 @@ awful.keyboard.append_global_keybindings({
     keygroup    = "numrow",
     description = "toggle tag",
     group       = "tag",
-    on_press    = function(index)
+    on_press    = function(i)
       -- [[+CHARITABLE
-      local tag = tags[index]
+      local tag = tags[i]
       if tag then
         charitable.toggle_tag(tag, awful.screen.focused())
       end
       --]]
       --[[-CHARITABLE
       local screen = awful.screen.focused()
-      local tag = screen.tags[index]
+      local tag = screen.tags[i]
       if tag then
         awful.tag.viewtoggle(tag)
       end
@@ -497,10 +499,10 @@ awful.keyboard.append_global_keybindings({
     keygroup    = "numrow",
     description = "move focused client to tag",
     group       = "tag",
-    on_press    = function(index)
+    on_press    = function(i)
       if client.focus then
-        -- local tag = client.focus.screen.tags[index]
-        local tag = tags[index]
+        -- local tag = client.focus.screen.tags[i]
+        local tag = tags[i]
         if tag then
           client.focus:move_to_tag(tag)
         end
@@ -512,10 +514,10 @@ awful.keyboard.append_global_keybindings({
     keygroup    = "numrow",
     description = "toggle focused client on tag",
     group       = "tag",
-    on_press    = function(index)
+    on_press    = function(i)
       if client.focus then
-        -- local tag = client.focus.screen.tags[index]
-        local tag = tags[index]
+        -- local tag = client.focus.screen.tags[i]
+        local tag = tags[i]
         if tag then
           client.focus:toggle_tag(tag)
         end
@@ -527,10 +529,10 @@ awful.keyboard.append_global_keybindings({
     keygroup    = "numpad",
     description = "select layout directly",
     group       = "layout",
-    on_press    = function(index)
+    on_press    = function(i)
       local t = awful.screen.focused().selected_tag
       if t then
-        t.layout = t.layouts[index] or t.layout
+        t.layout = t.layouts[i] or t.layout
       end
     end,
   }
@@ -764,7 +766,7 @@ ruled.client.connect_signal("request::rules", function()
     -- height=900,
     sticky=false,
     above=true,
-    ontop=true,
+    ontop=false,
     border_width=0,
     skip_taskbar=true,
     honor_padding=true,
