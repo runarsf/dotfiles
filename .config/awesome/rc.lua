@@ -11,6 +11,7 @@
  - https://github.com/mut-ex/awesome-wm-nice
  - https://www.reddit.com/r/awesomewm/comments/gehk1g/cursor_follows_focus_possible/
  - https://awesomewm.org/recipes/
+ - https://www.reddit.com/r/awesomewm/comments/mfklx5/shadow_only_for_floating_windows/
 --}}}]]
 
 -- {{{ Packages
@@ -433,6 +434,23 @@ awful.keyboard.append_global_keybindings({
   awful.key({ modkey, "Shift" }, "space",
             function() awful.layout.inc(-1) end,
             { description="select previous", group="layout" }),
+})
+
+awful.keyboard.append_global_keybindings({
+  awful.key({}, "XF86AudioPlay",
+             function() awful.util.spawn("playerctl play-pause") end),
+  awful.key({}, "XF86AudioPause",
+             function() awful.util.spawn("playerctl play-pause") end),
+  awful.key({}, "XF86AudioNext",
+             function() awful.util.spawn("playerctl next") end),
+  awful.key({}, "XF86AudioPrev",
+             function() awful.util.spawn("playerctl previous") end),
+  awful.key({}, "XF86AudioLowerVolume",
+             function() awful.util.spawn("pactl set-sink-volume 2 -5%") end),
+  awful.key({}, "XF86AudioRaiseVolume",
+            function() awful.util.spawn("pactl set-sink-volume 2 +5%") end),
+  awful.key({}, "XF86AudioMute",
+            function() awful.util.spawn("amixer -q -D pulse sset Master toggle") end),
 })
 
 --[[-CHARITABLE
@@ -865,3 +883,58 @@ end)
 
 -- client.connect_signal("focus", function(c) c.border_width = beautiful.border_width end)
 -- client.connect_signal("unfocus", function(c) c.border_width = dpi(0) end)
+
+--[[+Only borders for tiling windows
+client.connect_signal("property::floating", function(c)
+    if c.floating then
+        awful.titlebar.show(c)
+    else
+        awful.titlebar.hide(c)
+    end
+end)
+client.connect_signal("manage", function(c)
+    if c.floating or c.first_tag.layout.name == "floating" then
+        awful.titlebar.show(c)
+    else
+        awful.titlebar.hide(c)
+    end
+end)
+tag.connect_signal("property::layout", function(t)
+    local clients = t:clients()
+    for k,c in pairs(clients) do
+        if c.floating or c.first_tag.layout.name == "floating" then
+            awful.titlebar.show(c)
+        else
+            awful.titlebar.hide(c)
+        end
+    end
+end)
+--]]
+
+--[[+Make all floating clients on top
+client.connect_signal("property::floating", function(c)
+  if c.floating then
+    c.ontop = true
+  else
+    c.ontop = false
+  end
+end)
+client.connect_signal("manage", function(c)
+  if c.floating or c.first_tag.layout.name == "floating" then
+    c.ontop = true
+  else
+    c.ontop = false
+  end
+end)
+tag.connect_signal("property::layout", function(t)
+  local clients = t:clients()
+  for k,c in pairs(clients) do
+    if c.floating or c.first_tag.layout.name == "floating" then
+      c.ontop = true
+    else
+      c.ontop = false
+    end
+  end
+end)
+--]]
+-- }}}
