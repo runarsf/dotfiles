@@ -1,17 +1,17 @@
 --[[{{{ Keys
-taglist_[bg|fg]_[focus|urgent|occupied|empty|volatile]
-tasklist_[bg|fg]_[focus|urgent]
-titlebar_[bg|fg]_[normal|focus]
-tooltip_[font|opacity|fg_color|bg_color|border_width|border_color]
-mouse_finder_[color|timeout|animate_timeout|radius|factor]
-prompt_[fg|bg|fg_cursor|bg_cursor|font]
-hotkeys_[bg|fg|border_width|border_color|shape|opacity|modifiers_fg|label_bg|label_fg|group_margin|font|description_font]
-notification_font
-notification_[bg|fg]
-notification_[width|height|margin]
-notification_[border_color|border_width|shape|opacity]
-menu_[bg|fg]_[normal|focus]
-menu_[border_color|border_width]
+  taglist_[bg|fg]_[focus|urgent|occupied|empty|volatile]
+  tasklist_[bg|fg]_[focus|urgent]
+  titlebar_[bg|fg]_[normal|focus]
+  tooltip_[font|opacity|fg_color|bg_color|border_width|border_color]
+  mouse_finder_[color|timeout|animate_timeout|radius|factor]
+  prompt_[fg|bg|fg_cursor|bg_cursor|font]
+  hotkeys_[bg|fg|border_width|border_color|shape|opacity|modifiers_fg|label_bg|label_fg|group_margin|font|description_font]
+  notification_font
+  notification_[bg|fg]
+  notification_[width|height|margin]
+  notification_[border_color|border_width|shape|opacity]
+  menu_[bg|fg]_[normal|focus]
+  menu_[border_color|border_width]
 --}}}]]
 
 -- https://elv13.github.io/documentation/06-appearance.md.html
@@ -29,7 +29,6 @@ local gears_color                           = require("gears.color")
 local gears_surface                         = require("gears.surface")
 local clienticon                            = require("awful.widget.clienticon")
 local rnotification                         = require("ruled.notification")
--- local cairo = require("lgi").cairo
 
 local theme                                 = dofile(themes_path.."default/theme.lua")
 
@@ -99,7 +98,7 @@ theme.border_color_normal                   = "#00000000" -- .. theme.opacity
 -- theme.border_color_urgent                   = theme.cyan .. theme.opacity
 -- theme.border_color_new                      = theme.yellow .. theme.opacity
 
-local myshape = function(cr, width, height)
+local myawesomeicon = function(cr, width, height)
   local opad = 5
   local ipad = 2
   gears_shape.transform(gears_shape.rectangle) : translate(opad,                      opad)(cr, width/2-ipad/2-opad, height/2-ipad/2-opad)
@@ -116,9 +115,17 @@ local mytagshape = function(cr, width, height)
   gears_shape.transform(gears_shape.rounded_rect) : translate(0, 3)(cr, width, height-6, 2)
 end
 local mysquare = function(cr, width, height)
+  -- Width/height should be the width/height of the visible tag shape
+  local x_offset = 0
+  local y_offset = 3
   -- load_from_shape width has to be translate-x + width, and height has to be translate-y+height
   -- translate-x is the padding from the cell, translate-y is translate_x+mytagshape_translate_y
-  gears_shape.transform(gears_shape.rounded_rect) : translate(2, 5)(cr, 7, 7, 1)
+  -- Topleft square
+  -- gears_shape.transform(gears_shape.rounded_rect) : translate(1+x_offset, 1+y_offset)(cr, 5, 5, 2)
+  -- Underline
+  gears_shape.transform(gears_shape.rounded_rect) : translate(3+x_offset, height-y_offset)(cr, width-6-(x_offset*2), 2, 2)
+  -- Top left circle
+  -- gears_shape.transform(gears_shape.circle) : translate(2+x_offset, 2+y_offset)(cr, 4, 4)
 end
 
 theme.taglist_bg_focus                      = theme.tertiary
@@ -127,7 +134,7 @@ theme.taglist_bg_occupied                   = theme.secondary
 theme.taglist_bg_empty                      = theme.secondary
 -- theme.taglist_bg_volatile                   = theme.red
 theme.taglist_fg_focus                      = theme.bg
--- theme.taglist_fg_urgent                     = theme.black
+theme.taglist_fg_urgent                     = theme.bg
 theme.taglist_fg_occupied                   = theme.fg
 theme.taglist_fg_empty                      = theme.fg_secondary
 -- theme.taglist_fg_volatile                   = theme.black
@@ -139,13 +146,13 @@ theme.taglist_shape                         = mytagshape
 -- theme.taglist_shape_border_color_focus      = theme.bg
 -- theme.taglist_shape_border_color_urgent     = theme.cyan
 -- theme.taglist_shape_border_color_volatile   = theme.red
-theme.taglist_squares_sel                   = nil -- gears_surface.load_from_shape(9, 12, mysquare, "#ffffff")
-theme.taglist_squares_unsel                 = nil -- theme_assets.taglist_squares_unsel(dpi(5), theme.bg)
+theme.taglist_squares_sel                   = gears_surface.load_from_shape(16, 24, mysquare, theme.bg)
+theme.taglist_squares_unsel                 = nil
 -- theme.tasklist_fg_normal                    = theme.gray
 -- theme.tasklist_bg_normal                    = theme.black
 -- theme.tasklist_fg_focus                     = theme.black
 -- theme.tasklist_bg_focus                     = theme.blue
--- theme.tasklist_font_focus                   = theme.font
+theme.tasklist_font_focus                   = theme.font
 theme.tasklist_spacing                      = dpi(5)
 
 -- theme.tasklist_shape_border_width           = dpi(1)
@@ -188,7 +195,7 @@ theme.menu_submenu_icon                     = nil
 
 theme.icon_theme                             = nil
 
-theme.awesome_icon                           = gears_surface.load_from_shape(20, 20, myshape, theme.tertiary)
+theme.awesome_icon                           = gears_surface.load_from_shape(20, 20, myawesomeicon, theme.tertiary)
 
 theme = theme_assets.recolor_layout(theme, theme.tertiary)
 theme = theme_assets.recolor_titlebar(theme, theme.tertiary, "normal")

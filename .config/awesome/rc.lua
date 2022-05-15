@@ -13,6 +13,7 @@
  - https://awesomewm.org/recipes/
  - https://www.reddit.com/r/awesomewm/comments/mfklx5/shadow_only_for_floating_windows/
  - https://www.reddit.com/r/awesomewm/comments/bki1md/show_titlebar_only_when_window_is_floating/
+ - https://www.reddit.com/r/awesomewm/comments/box4jk/my_functional_dynamic_border_gap_and_titlebar/
 --}}}]]
 
 -- {{{ Packages
@@ -65,7 +66,7 @@ nice {
   titlebar_height = 28,
   titlebar_radius = 9,
   titlebar_font = beautiful.font,
-  win_shade_enabled = true,
+  win_shade_enabled = false,
   no_titlebar_maximized = false,
   button_size = 12,
   titlebar_items = {
@@ -190,24 +191,24 @@ screen.connect_signal("request::desktop_decoration", function(s)
   -- [[+CHARITABLE
   -- Show an unselected tag when a screen is connected
   for i = 1, #tags do
-       if not tags[i].selected then
-           tags[i].screen = s
-           tags[i]:view_only()
-           break
-       end
+     if not tags[i].selected then
+       tags[i].screen = s
+       tags[i]:view_only()
+       break
+     end
   end
 
   -- create a special scratch tag for double buffering
   s.scratch = awful.tag.add('~' .. s.index, {})
 
   s.mytaglist = awful.widget.taglist({
-     screen = s,
-     filter  = awful.widget.taglist.filter.all,
-     buttons = gears.table.join(
-       awful.button({ }, 1, function(t) charitable.select_tag(t, awful.screen.focused()) end),
-       awful.button({ }, 3, function(t) charitable.toggle_tag(t, awful.screen.focused()) end)
-     ),
-     source = function(screen, args) return tags end,
+    screen = s,
+    filter = awful.widget.taglist.filter.all,
+    buttons = gears.table.join(
+      awful.button({ }, 1, function(t) charitable.select_tag(t, awful.screen.focused()) end),
+      awful.button({ }, 3, function(t) charitable.toggle_tag(t, awful.screen.focused()) end)
+    ),
+    source = function(screen, args) return tags end,
   })
   --]]
 
@@ -255,16 +256,15 @@ screen.connect_signal("request::desktop_decoration", function(s)
     screen  = s,
     filter  = awful.widget.tasklist.filter.currenttags,
     buttons = {
-      awful.button({ }, 1, function(c)
-                             c:activate { context="tasklist", action="toggle_minimization" }
-                           end),
-      awful.button({ }, 3, function() awful.menu.client_list { theme = { width=250 } } end),
+      awful.button({ }, 1, function(c) c:activate { context="tasklist", action="toggle_minimization" } end),
+      awful.button({ }, 3, function() awful.menu.client_list { theme={ width=250 } } end),
       awful.button({ }, 4, function() awful.client.focus.byidx(-1) end),
-      awful.button({ }, 5, function() awful.client.focus.byidx( 1) end),
+      awful.button({ }, 5, function() awful.client.focus.byidx(1) end),
     }
   }
 
   -- Create the wibox
+  local padding = wibox.widget.textbox(" ")
   s.mywibox = awful.wibar {
     position = "top",
     screen   = s,
@@ -274,6 +274,7 @@ screen.connect_signal("request::desktop_decoration", function(s)
     border_color = beautiful.bg_normal,
     widget   = {
       layout = wibox.layout.align.horizontal,
+      expand = "none",
       { -- Left widgets
         layout = wibox.layout.fixed.horizontal,
         mylauncher,
@@ -285,16 +286,19 @@ screen.connect_signal("request::desktop_decoration", function(s)
         --   color = beautiful.secondary,
         --   widget = wibox.container.margin,
         -- },
+        padding,
         s.mytaglist,
         s.mypromptbox,
       },
-      -- wibox.container.margin(s.mytasklist, 10,10,10,10),
-      s.mytasklist, -- Middle widget
+      -- Middle widget
+      wibox.container.margin(s.mytasklist, 5, 5, 5, 5),
       { -- Right widgets
         layout = wibox.layout.fixed.horizontal,
         mykeyboardlayout,
         wibox.widget.systray(),
+        padding,
         mytextclock,
+        padding,
         s.mylayoutbox,
       },
     }
@@ -305,8 +309,8 @@ end)
 -- {{{ Mouse bindings
 awful.mouse.append_global_mousebindings({
   awful.button({ }, 3, function() mymainmenu:toggle() end),
-  awful.button({ }, 4, awful.tag.viewprev),
-  awful.button({ }, 5, awful.tag.viewnext),
+  -- awful.button({ }, 4, awful.tag.viewprev),
+  -- awful.button({ }, 5, awful.tag.viewnext),
 })
 -- }}}
 
@@ -471,6 +475,7 @@ awful.keyboard.append_global_keybindings({
     on_press    = function(i)
       -- [[+CHARITABLE
       -- TODO Raise tag after swapping
+      -- TODO Tag history toggle with charitable
       local tag = tags[i]
       if tag then
         charitable.select_tag(tag, awful.screen.focused())
@@ -662,14 +667,10 @@ awful.keyboard.append_client_keybindings({
             end,
             { description="focus next window left", group="client" }),
   awful.key({ modkey }, "n",
-            function()
-              scratch.toggle("alacritty --class scratch --title scratchpad --command tmux new-session -A -s scratchpad", {instance="scratch"})
-            end,
+            function() scratch.toggle("alacritty --class scratch --title scratchpad --command tmux new-session -A -s scratchpad", {instance="scratch"}) end,
             { description="toggle scratchpad", group="client" }),
   awful.key({ modkey, "Shift" }, "n",
-            function()
-              scratch.toggle("alacritty --class math --title math --option font.size=18 --command tmux new-session -A -s math python3", {instance="math"})
-            end,
+            function() scratch.toggle("alacritty --class math --title math --option font.size=18 --command tmux new-session -A -s math python3", {instance="math"}) end,
             { description="toggle math scratchpad", group="client" }),
 })
 
@@ -708,11 +709,9 @@ client.connect_signal("request::default_keybindings", function()
               function(c) c.ontop = not c.ontop end,
               { description="toggle keep on top", group="client" }),
     awful.key({ modkey }, "-",
-              function(c)
                 -- The client currently has the input focus, so it cannot be
                 -- minimized, since minimized clients can't have the focus.
-                c.minimized = true
-              end,
+              function(c) c.minimized = true end,
               { description="minimize", group="client" }),
     awful.key({ modkey }, "f",
               function(c)
@@ -731,31 +730,31 @@ end)
 ruled.client.connect_signal("request::rules", function()
   -- All clients will match this rule
   ruled.client.append_rule {
-    id         = "global",
-    rule       = { },
+    id = "global",
+    rule = { },
     properties = {
-      focus     = awful.client.focus.filter,
-      raise     = true,
-      screen    = awful.screen.preferred,
+      focus = awful.client.focus.filter,
+      raise = true,
+      screen = awful.screen.preferred,
       placement = awful.placement.no_overlap+awful.placement.no_offscreen,
     }
   }
 
   -- Floating clients
   ruled.client.append_rule {
-    id       = "floating",
+    id = "floating",
     rule_any = {
       instance = { "copyq", "pinentry" },
-      class    = {
+      class = {
         "Arandr", "Blueman-manager", "Gpick", "Kruler", "Sxiv",
         "Tor Browser", "Wpa_gui", "veromix", "xtightvncviewer"
       },
       -- Note that the name property shown in xprop might be set slightly after creation of the client
       -- and the name shown there might not match defined rules here.
-      name    = {
+      name = {
         "Event Tester",  -- xev.
       },
-      role    = {
+      role = {
         "AlarmWindow",    -- Thunderbird's calendar.
         "ConfigManager",  -- Thunderbird's about:config.
         "pop-up",         -- e.g. Google Chrome's (detached) Developer Tools.
