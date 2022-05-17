@@ -98,13 +98,13 @@ theme.border_color_normal                   = "#00000000" -- .. theme.opacity
 -- theme.border_color_urgent                   = theme.cyan .. theme.opacity
 -- theme.border_color_new                      = theme.yellow .. theme.opacity
 
-local myawesomeicon = function(cr, width, height)
-  local opad = 5
-  local ipad = 2
-  gears_shape.transform(gears_shape.rectangle) : translate(opad,                      opad)(cr, width/2-ipad/2-opad, height/2-ipad/2-opad)
-  gears_shape.transform(gears_shape.rectangle) : translate(width/2+ipad/2,            opad)(cr, width/2-ipad/2-opad, height/2-ipad/2-opad)
-  gears_shape.transform(gears_shape.rectangle) : translate(opad,           height/2+ipad/2)(cr, width/2-ipad/2-opad, height/2-ipad/2-opad)
-  gears_shape.transform(gears_shape.rectangle) : translate(width/2+ipad/2, height/2+ipad/2)(cr, width/2-ipad/2-opad, height/2-ipad/2-opad)
+local myawesomeicon = function(cr, w, h)
+  local o = 5
+  local i = 2
+  gears_shape.transform(gears_shape.rectangle) : translate(o,             o)(cr, w/2-i/2-o, h/2-i/2-o)
+  gears_shape.transform(gears_shape.rectangle) : translate(w/2+i/2,       o)(cr, w/2-i/2-o, h/2-i/2-o)
+  gears_shape.transform(gears_shape.rectangle) : translate(o,       h/2+i/2)(cr, w/2-i/2-o, h/2-i/2-o)
+  gears_shape.transform(gears_shape.rectangle) : translate(w/2+i/2, h/2+i/2)(cr, w/2-i/2-o, h/2-i/2-o)
   -- gears_shape.transform(gears_shape.rectangle) : translate(opad,         opad         )(cr, width/2-opad-ipad, height/2-opad-ipad)
   -- gears_shape.transform(gears_shape.rectangle) : translate(width/2+ipad, opad         )(cr, width/2-opad-ipad, height/2-opad-ipad)
   -- gears_shape.transform(gears_shape.rectangle) : translate(opad,         height/2+ipad)(cr, width/2-opad-ipad, height/2-opad-ipad)
@@ -215,5 +215,31 @@ theme = theme_assets.recolor_titlebar(theme, theme.tertiary, "focus", "press")
 --         properties = { bg = theme.black, fg = theme.gray, border_color = theme.dark_gray }
 --     }
 -- end)
+
+local mylayouttileicon = function(cr, w, h)
+  i = 1
+  gears_shape.transform(gears_shape.rounded_rect) : translate(0, 0)(cr, w/2-i/2, h, 1)
+  gears_shape.transform(gears_shape.rectangle) : translate(w/2+i/2, (h/4+i/2)*0)(cr, w/2-i/2, h/4-i/2)
+  gears_shape.transform(gears_shape.rectangle) : translate(w/2+i/2, (h/4+i/2)*1)(cr, w/2-i/2, h/4-i/2)
+  gears_shape.transform(gears_shape.rectangle) : translate(w/2+i/2, (h/4+i/2)*2)(cr, w/2-i/2, h/4-i/2)
+  gears_shape.transform(gears_shape.rectangle) : translate(w/2+i/2, (h/4+i/2)*3)(cr, w/2-i/2, h/4-i/2)
+end
+
+-- theme.layout_fairh = themes_path.."default/layouts/fairhw.png"
+-- theme.layout_fairv = themes_path.."default/layouts/fairvw.png"
+-- theme.layout_floating  = themes_path.."default/layouts/floatingw.png"
+-- theme.layout_magnifier = themes_path.."default/layouts/magnifierw.png"
+-- theme.layout_max = themes_path.."default/layouts/maxw.png"
+-- theme.layout_fullscreen = themes_path.."default/layouts/fullscreenw.png"
+-- theme.layout_tilebottom = themes_path.."default/layouts/tilebottomw.png"
+-- theme.layout_tileleft   = themes_path.."default/layouts/tileleftw.png"
+theme.layout_tile = gears_surface.load_from_shape(20, 20, mylayouttileicon, theme.tertiary)
+-- theme.layout_tiletop = themes_path.."default/layouts/tiletopw.png"
+-- theme.layout_spiral  = themes_path.."default/layouts/spiralw.png"
+-- theme.layout_dwindle = themes_path.."default/layouts/dwindlew.png"
+-- theme.layout_cornernw = themes_path.."default/layouts/cornernww.png"
+-- theme.layout_cornerne = themes_path.."default/layouts/cornernew.png"
+-- theme.layout_cornersw = themes_path.."default/layouts/cornersww.png"
+-- theme.layout_cornerse = themes_path.."default/layouts/cornersew.png"
 
 return theme

@@ -70,9 +70,10 @@ nice {
   no_titlebar_maximized = false,
   button_size = 12,
   titlebar_items = {
-    left = {}, -- {"sticky", "ontop", "floating"},
+    -- {"sticky", "ontop", "floating"},
+    left = {"close", "minimize", "maximize"},
     middle = "title",
-    right = {"minimize", "maximize", "close"}
+    right = {}
   }
 }
 
@@ -92,27 +93,28 @@ modkey = "Mod4"
 -- }}}
 
 -- {{{ Menu
-mylauncher = awful.widget.launcher({
-  image = beautiful.awesome_icon,
-  menu = awful.menu({
-    items = {
-      { "awesome",
-        {
-          { "hotkeys", function() hotkeys_popup.show_help(nil, awful.screen.focused()) end },
-          { "manual", terminal .. " -e man awesome" },
-          { "edit config", editor_cmd .. " " .. awesome.conffile },
-          { "restart", awesome.restart },
-          { "quit", function() awesome.quit() end },
-        },
-        beautiful.awesome_icon
-      },
-      { "open terminal", terminal }
-    }
-  })
+-- Create a launcher widget and a main menu
+myawesomemenu = {
+  { "hotkeys", function() hotkeys_popup.show_help(nil, awful.screen.focused()) end },
+  { "manual", terminal .. " -e man awesome" },
+  { "edit config", editor_cmd .. " " .. awesome.conffile },
+  { "restart", awesome.restart },
+  { "quit", function() awesome.quit() end },
+}
+
+mymainmenu = awful.menu({
+  items = {
+    { "awesome", myawesomemenu, beautiful.awesome_icon },
+    { "open terminal", terminal }
+  }
 })
 
--- Menubar configuration
-menubar.utils.terminal = terminal
+mylauncher = awful.widget.launcher({
+  image = beautiful.awesome_icon,
+  menu = mymainmenu
+})
+
+menubar.utils.terminal = terminal -- Set the terminal for applications that require it
 -- }}}
 
 -- {{{ Layouts
@@ -124,10 +126,10 @@ tag.connect_signal("request::default_layouts", function()
     -- awful.layout.suit.tile.left,
     -- awful.layout.suit.tile.bottom,
     -- awful.layout.suit.tile.top,
-    awful.layout.suit.fair,
     -- awful.layout.suit.fair.horizontal,
-    awful.layout.suit.spiral,
+    awful.layout.suit.fair,
     awful.layout.suit.spiral.dwindle,
+    awful.layout.suit.spiral,
     awful.layout.suit.magnifier,
     -- awful.layout.suit.max.fullscreen,
     -- awful.layout.suit.corner.nw,
