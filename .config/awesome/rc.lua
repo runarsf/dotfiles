@@ -728,15 +728,11 @@ end)
 
 -- {{{ Rules
 -- https://awesomewm.org/doc/api/libraries/awful.rules.html
+-- xprop ->
+ -- WM_CLASS[1] => instance
+ -- WM_CLASS[2] => class
 
 ruled.client.connect_signal("request::rules", function()
-  local r = function(class, tag)
-    ruled.client.append_rule {
-      rule = { class=class },
-      properties = { tag=tags[tag] }
-    }
-  end
-
   -- All clients will match this rule
   ruled.client.append_rule {
     id = "global",
@@ -781,13 +777,30 @@ ruled.client.connect_signal("request::rules", function()
 
   ruled.client.append_rule {
     rule = { name="Remmina Remote Desktop Client" },
-    properties = { floating=true, width=800, height=600 }
+    properties = { floating=true, ontop=true, width=800, height=600 }
   }
 
-  r("KeePassXC", 9)
-  r("org.remmina.Remmina", 5)
-  r("discord", 2)
-  r("Mattermost", 2)
+  -- TODO Move to own file
+  local ws = function(opts)
+    setmetatable(opts, {__index={tag=1, classes={""}}})
+    local tag, classes =
+      opts[1] or opts.tag,
+      opts[2] or opts.classes
+
+    ruled.client.append_rule {
+      rule_any = {
+        class = classes
+      },
+      properties = { tag=tags[tag] }
+    }
+  end
+
+  ws {2,{
+    "Mattermost",
+    "discord"
+  }}
+  ws {5, "org.remmina.Remmina"}
+  ws {9, "KeePassXC"}
 
   local scratch_props = {
     floating=true,
@@ -894,59 +907,24 @@ client.connect_signal("mouse::enter", function(c)
   c:activate { context="mouse_enter", raise=false }
 end)
 
--- client.connect_signal("focus", function(c) c.border_width = beautiful.border_width end)
--- client.connect_signal("unfocus", function(c) c.border_width = dpi(0) end)
-
---[[+Only borders for tiling windows
-client.connect_signal("property::floating", function(c)
-    if c.floating then
-        awful.titlebar.show(c)
-    else
-        awful.titlebar.hide(c)
-    end
-end)
-client.connect_signal("manage", function(c)
-    if c.floating or c.first_tag.layout.name == "floating" then
-        awful.titlebar.show(c)
-    else
-        awful.titlebar.hide(c)
-    end
-end)
-tag.connect_signal("property::layout", function(t)
-    local clients = t:clients()
-    for k,c in pairs(clients) do
-        if c.floating or c.first_tag.layout.name == "floating" then
-            awful.titlebar.show(c)
-        else
-            awful.titlebar.hide(c)
-        end
-    end
-end)
---]]
-
---[[+Make all floating clients on top
-client.connect_signal("property::floating", function(c)
-  if c.floating then
-    c.ontop = true
-  else
-    c.ontop = false
-  end
-end)
-client.connect_signal("manage", function(c)
+--[[+Floating node behaviors
+local floatnode = function(opts)
+  -- TODO c.first_tag equivalent with tags[]
   if c.floating or c.first_tag.layout.name == "floating" then
     c.ontop = true
+    awful.titlebar.show(c)
   else
     c.ontop = false
+    awful.titlebar.hide(c)
   end
-end)
+end
+
+client.connect_signal("property::floating", floatnode(c))
+client.connect_signal("manage", function(c) floatnode(c) end)
 tag.connect_signal("property::layout", function(t)
   local clients = t:clients()
   for k,c in pairs(clients) do
-    if c.floating or c.first_tag.layout.name == "floating" then
-      c.ontop = true
-    else
-      c.ontop = false
-    end
+    floatnode(c)
   end
 end)
 --]]

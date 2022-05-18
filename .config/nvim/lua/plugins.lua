@@ -246,12 +246,12 @@ local plugins = function(use)
     ft = "yuck",
   })
 
-  use({ "tmhedberg/SimpylFold",
-    ft = "python",
-    config = function()
-      require("config.simpylfold")
-    end,
-  })
+  -- use({ "tmhedberg/SimpylFold",
+  --   ft = "python",
+  --   config = function()
+  --     require("config.simpylfold")
+  --   end,
+  -- })
 
   use({ "andweeb/presence.nvim",
     config = function()
