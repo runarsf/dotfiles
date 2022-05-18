@@ -59,6 +59,7 @@ beautiful.init(gears.filesystem.get_configuration_dir() .. "theme.lua")
 
 -- WARN: nice breaks with gtk4, temporary workaround is to uninstall it - https://github.com/mut-ex/awesome-wm-nice/issues/22
 
+--[[+NICE
 nice {
   -- To disable titlebars, set titlebar_height and titlebar_radius to 3,
   -- and remove the titlebar_items or set button_size to 0.
@@ -76,6 +77,7 @@ nice {
     right = {}
   }
 }
+--]]
 
 -- awesome.set_preferred_icon_size(32)
 
@@ -129,7 +131,7 @@ tag.connect_signal("request::default_layouts", function()
     -- awful.layout.suit.fair.horizontal,
     awful.layout.suit.fair,
     awful.layout.suit.spiral.dwindle,
-    awful.layout.suit.spiral,
+    -- awful.layout.suit.spiral,
     awful.layout.suit.magnifier,
     -- awful.layout.suit.max.fullscreen,
     -- awful.layout.suit.corner.nw,
@@ -782,7 +784,7 @@ ruled.client.connect_signal("request::rules", function()
 
   -- TODO Move to own file
   local ws = function(opts)
-    setmetatable(opts, {__index={tag=1, classes={""}}})
+    setmetatable(opts, {__index={ tag=1, classes={""} }})
     local tag, classes =
       opts[1] or opts.tag,
       opts[2] or opts.classes
@@ -831,40 +833,41 @@ end)
 
 -- {{{ Titlebars
 -- Add a titlebar if titlebars_enabled is set to true in the rules.
--- client.connect_signal("request::titlebars", function(c)
---   -- buttons for the titlebar
---   local buttons = {
---     awful.button({ }, 1,
---                  function() c:activate { context="titlebar", action="mouse_move" } end),
---     awful.button({ }, 3,
---                  function() c:activate { context="titlebar", action="mouse_resize" } end),
---   }
--- 
---   awful.titlebar(c).widget = {
---     { -- Left
---       awful.titlebar.widget.iconwidget(c),
---       buttons = buttons,
---       layout  = wibox.layout.fixed.horizontal
---     },
---     { -- Middle
---       { -- Title
---         align  = "center",
---         widget = awful.titlebar.widget.titlewidget(c)
---       },
---       buttons = buttons,
---       layout  = wibox.layout.flex.horizontal
---     },
---     { -- Right
---       awful.titlebar.widget.floatingbutton (c),
---       awful.titlebar.widget.maximizedbutton(c),
---       awful.titlebar.widget.stickybutton   (c),
---       awful.titlebar.widget.ontopbutton    (c),
---       awful.titlebar.widget.closebutton    (c),
---       layout = wibox.layout.fixed.horizontal()
---     },
---     layout = wibox.layout.align.horizontal
---   }
--- end)
+client.connect_signal("request::titlebars", function(c)
+  -- buttons for the titlebar
+  local buttons = {
+    awful.button({ }, 1,
+                 function() c:activate { context="titlebar", action="mouse_move" } end),
+    awful.button({ }, 3,
+                 function() c:activate { context="titlebar", action="mouse_resize" } end),
+  }
+
+  awful.titlebar(c).widget = {
+    {
+      awful.titlebar.widget.iconwidget(c),
+      buttons = buttons,
+      layout  = wibox.layout.fixed.horizontal
+    },
+    {
+      {
+        align  = "center",
+        widget = awful.titlebar.widget.titlewidget(c)
+      },
+      buttons = buttons,
+      layout  = wibox.layout.flex.horizontal
+    },
+    {
+      -- awful.titlebar.widget.floatingbutton (c),
+      awful.titlebar.widget.minimizebutton(c),
+      awful.titlebar.widget.maximizedbutton(c),
+      -- awful.titlebar.widget.stickybutton   (c),
+      -- awful.titlebar.widget.ontopbutton    (c),
+      awful.titlebar.widget.closebutton    (c),
+      layout = wibox.layout.fixed.horizontal()
+    },
+    layout = wibox.layout.align.horizontal
+  }
+end)
 
 -- {{{ Notifications
 
@@ -907,24 +910,39 @@ client.connect_signal("mouse::enter", function(c)
   c:activate { context="mouse_enter", raise=false }
 end)
 
---[[+Floating node behaviors
-local floatnode = function(opts)
+-- [[+Floating node behaviors
+local floatnode = function(c)
   -- TODO c.first_tag equivalent with tags[]
-  if c.floating or c.first_tag.layout.name == "floating" then
     c.ontop = true
     awful.titlebar.show(c)
-  else
+end
+local unfloatnode = function(c)
     c.ontop = false
     awful.titlebar.hide(c)
-  end
 end
 
-client.connect_signal("property::floating", floatnode(c))
-client.connect_signal("manage", function(c) floatnode(c) end)
+client.connect_signal("property::floating", function(c)
+  if c.floating then
+    floatnode(c)
+  else
+    unfloatnode(c)
+  end
+end)
+client.connect_signal("manage", function(c)
+  if c.floating or c.first_tag.layout.name == "floating" then
+    floatnode(c)
+  else
+    unfloatnode(c)
+  end
+end)
 tag.connect_signal("property::layout", function(t)
   local clients = t:clients()
   for k,c in pairs(clients) do
-    floatnode(c)
+    if c.floating or c.first_tag.layout.name == "floating" then
+      floatnode(c)
+    else
+      unfloatnode(c)
+    end
   end
 end)
 --]]

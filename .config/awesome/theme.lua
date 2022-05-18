@@ -61,8 +61,10 @@ theme.red                                   = "#E27878" -- xrdb.color9
 -- theme.white                                 = "#e9ebeb" -- xrdb.color15
 -- theme.opacity                               = "e6" -- 90%
 
-theme.font                                  = "JetBrainsMonoMedium Nerd Font 10"
-theme.font_bold                             = "JetBrainsMonoExtraBold Nerd Font 10"
+theme.font_base                             = "JetBrainsMonoMedium Nerd Font"
+theme.font                                  = theme.font_base .. " 10"
+theme.font_bold_base                        = "JetBrainsMonoExtraBold Nerd Font"
+theme.font_bold                             = theme.font_bold_base .. "10"
 theme.bg_normal                             = theme.bg
 theme.bg_focus                              = theme.bg
 theme.bg_urgent                             = theme.red
@@ -78,11 +80,11 @@ theme.fg_urgent                             = theme.fg
 
 theme.gap_single_client                     = true
 theme.useless_gap                           = dpi(5)
---[[NICE-OFF
-theme.border_width                          = dpi(1)
+-- [[NICE-OFF
+theme.border_width                          = dpi(2)
 theme.border_radius                         = dpi(5)
 --]]
--- [[NICE-ON
+--[[NICE-ON
 theme.border_width                          = dpi(0)
 --]]
 theme.bar_height                            = dpi(20)
@@ -91,9 +93,9 @@ theme.border_color_marked                   = theme.red -- .. theme.opacity
 -- theme.border_color_floating                 = theme.blue .. theme.opacity
 -- theme.border_color_maximized                = theme.dark_gray .. theme.opacity
 -- theme.border_color_fullscreen               = theme.dark_gray .. theme.opacity
---[[NICE-OFF
-theme.border_color_active                   = theme.tertiary -- .. theme.opacity
-theme.border_color_normal                   = "#00000000" -- .. theme.opacity
+-- [[NICE-OFF
+theme.border_color_active                   = "#306998"
+theme.border_color_normal                   = "#0A0E1400"
 --]]
 -- theme.border_color_urgent                   = theme.cyan .. theme.opacity
 -- theme.border_color_new                      = theme.yellow .. theme.opacity
@@ -225,18 +227,26 @@ local mylayouttileicon = function(cr, w, h)
   gears_shape.transform(gears_shape.rectangle) : translate(w/2+i/2, (h/4+i/2)*3)(cr, w/2-i/2, h/4-i/2)
 end
 
+local icon = function(text)
+  return wibox.widget.draw_to_image_surface(
+    wibox.widget.textbox(
+      "<span color='"..theme.fg.."' font='"..theme.font_base.." 16".."'>"..text.."</span>"
+    ), 65, 50)
+end
+
 -- theme.layout_fairh = themes_path.."default/layouts/fairhw.png"
--- theme.layout_fairv = themes_path.."default/layouts/fairvw.png"
+theme.layout_fairv = icon("[][]")
 -- theme.layout_floating  = themes_path.."default/layouts/floatingw.png"
--- theme.layout_magnifier = themes_path.."default/layouts/magnifierw.png"
--- theme.layout_max = themes_path.."default/layouts/maxw.png"
+theme.layout_magnifier = icon("[-]")
+theme.layout_max = icon("[M]")
 -- theme.layout_fullscreen = themes_path.."default/layouts/fullscreenw.png"
 -- theme.layout_tilebottom = themes_path.."default/layouts/tilebottomw.png"
 -- theme.layout_tileleft   = themes_path.."default/layouts/tileleftw.png"
-theme.layout_tile = gears_surface.load_from_shape(20, 20, mylayouttileicon, theme.tertiary)
+-- theme.layout_tile = gears_surface.load_from_shape(20, 20, mylayouttileicon, theme.tertiary)
 -- theme.layout_tiletop = themes_path.."default/layouts/tiletopw.png"
+theme.layout_tile = icon("[]=")
 -- theme.layout_spiral  = themes_path.."default/layouts/spiralw.png"
--- theme.layout_dwindle = themes_path.."default/layouts/dwindlew.png"
+theme.layout_dwindle = icon("[];")
 -- theme.layout_cornernw = themes_path.."default/layouts/cornernww.png"
 -- theme.layout_cornerne = themes_path.."default/layouts/cornernew.png"
 -- theme.layout_cornersw = themes_path.."default/layouts/cornersww.png"
