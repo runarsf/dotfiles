@@ -730,6 +730,13 @@ end)
 -- https://awesomewm.org/doc/api/libraries/awful.rules.html
 
 ruled.client.connect_signal("request::rules", function()
+  local r = function(class, tag)
+    ruled.client.append_rule {
+      rule = { class=class },
+      properties = { tag=tags[tag] }
+    }
+  end
+
   -- All clients will match this rule
   ruled.client.append_rule {
     id = "global",
@@ -773,10 +780,14 @@ ruled.client.connect_signal("request::rules", function()
   }
 
   ruled.client.append_rule {
-    rule       = { class="discord" },
-    -- properties = { screen=1, tag="2" }
-    properties = { tag=tags[2] }
+    rule = { name="Remmina Remote Desktop Client" },
+    properties = { floating=true, width=800, height=600 }
   }
+
+  r("KeePassXC", 9)
+  r("org.remmina.Remmina", 5)
+  r("discord", 2)
+  r("Mattermost", 2)
 
   local scratch_props = {
     floating=true,
