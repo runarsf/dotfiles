@@ -35,3 +35,5 @@ disabled = true
 
 [git_branch]
 format = "[$symbol$branch]($style) "
+[git_status]
+ignore_submodules = true
