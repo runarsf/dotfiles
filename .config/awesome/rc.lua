@@ -782,6 +782,12 @@ ruled.client.connect_signal("request::rules", function()
     properties = { floating=true, ontop=true, width=800, height=600 }
   }
 
+  ruled.client.append_rule {
+    rule = { class="Nm-connection-editor" },
+    properties = { floating=true, ontop=true, width=600, height=800 }
+  }
+  -- TODO Cleaner rule-function rule("class" or {name="name"}, {floating=true})
+
   -- TODO Move to own file
   local ws = function(opts)
     setmetatable(opts, {__index={ tag=1, classes={""} }})
