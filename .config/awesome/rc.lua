@@ -160,13 +160,7 @@ end)
 -- }}}
 
 -- {{{ Wibar
--- https://awesomewm.org/apidoc/popups_and_bars/awful.wibar.html
-
--- Keyboard map indicator and switcher
-mykeyboardlayout = awful.widget.keyboardlayout()
-
--- Create a textclock widget
-mytextclock = wibox.widget.textclock()
+-- https://awesomewm.org/apidoc/popups_and_bars/awful.wibar.html 
 
 -- [[+CHARITABLE
 local tags = charitable.create_tags(
@@ -195,11 +189,11 @@ screen.connect_signal("request::desktop_decoration", function(s)
   -- [[+CHARITABLE
   -- Show an unselected tag when a screen is connected
   for i = 1, #tags do
-     if not tags[i].selected then
-       tags[i].screen = s
-       tags[i]:view_only()
-       break
-     end
+    if not tags[i].selected then
+      tags[i].screen = s
+      tags[i]:view_only()
+      break
+    end
   end
 
   -- create a special scratch tag for double buffering
@@ -268,7 +262,6 @@ screen.connect_signal("request::desktop_decoration", function(s)
   }
 
   -- Create the wibox
-  local padding = wibox.widget.textbox(" ")
   s.mywibox = awful.wibar {
     position = "top",
     screen   = s,
@@ -282,6 +275,7 @@ screen.connect_signal("request::desktop_decoration", function(s)
       { -- Left widgets
         layout = wibox.layout.fixed.horizontal,
         mylauncher,
+        wibox.widget.textbox(' '),
         -- {
         --   {
         --     widget = s.mytaglist,
@@ -290,7 +284,6 @@ screen.connect_signal("request::desktop_decoration", function(s)
         --   color = beautiful.secondary,
         --   widget = wibox.container.margin,
         -- },
-        padding,
         s.mytaglist,
         s.mypromptbox,
       },
@@ -298,11 +291,17 @@ screen.connect_signal("request::desktop_decoration", function(s)
       wibox.container.margin(s.mytasklist, 5, 5, 5, 5),
       { -- Right widgets
         layout = wibox.layout.fixed.horizontal,
-        mykeyboardlayout,
+        -- awful.widget.keyboardlayout(),
         wibox.widget.systray(),
-        padding,
-        mytextclock,
-        padding,
+        wibox.widget.textclock(),
+        wibox.widget.textbox('| '),
+        awful.widget.watch('power-man', 150, function(widget, stdout)
+          for line in stdout:gmatch("[^\r\n]+") do
+            widget:set_text(line..'%')
+            return
+          end
+        end),
+        wibox.widget.textbox('  '),
         s.mylayoutbox,
       },
     }
