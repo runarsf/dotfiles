@@ -20,13 +20,14 @@
 pcall(require, "luarocks.loader")
 
 -- Dynamic tags
-require("eminent")
+require("eminent.eminent")
 -- Scratchpad
-local scratch       = require("scratch")
+local scratch       = require("scratch.scratch")
 -- XMonad-like workspaces
 local charitable    = require("charitable")
 -- OSX-like titlebars
 local nice          = require("nice")
+local lain          = require("lain")
 
 local gears         = require("gears")
 local awful         = require("awful")
@@ -132,7 +133,7 @@ tag.connect_signal("request::default_layouts", function()
     awful.layout.suit.fair,
     awful.layout.suit.spiral.dwindle,
     -- awful.layout.suit.spiral,
-    awful.layout.suit.magnifier,
+    -- awful.layout.suit.magnifier,
     -- awful.layout.suit.max.fullscreen,
     -- awful.layout.suit.corner.nw,
   })

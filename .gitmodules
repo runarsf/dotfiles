@@ -4,3 +4,12 @@
 [submodule ".config/awesome/nice"]
 	path = .config/awesome/nice
 	url = https://github.com/mut-ex/awesome-wm-nice
+[submodule ".config/awesome/charitable"]
+	path = .config/awesome/charitable
+	url = https://github.com/frioux/charitable
+[submodule ".config/awesome/eminent"]
+	path = .config/awesome/eminent
+	url = https://github.com/guotsuan/eminent
+[submodule ".config/awesome/scratch"]
+	path = .config/awesome/scratch
+	url = https://github.com/notnew/awesome-scratch
