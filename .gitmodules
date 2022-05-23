@@ -1,0 +1,6 @@
+[submodule ".config/awesome/lain"]
+	path = .config/awesome/lain
+	url = https://github.com/lcpz/lain
+[submodule ".config/awesome/nice"]
+	path = .config/awesome/nice
+	url = https://github.com/mut-ex/awesome-wm-nice
