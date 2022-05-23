@@ -124,6 +124,7 @@ menubar.utils.terminal = terminal -- Set the terminal for applications that requ
 tag.connect_signal("request::default_layouts", function()
   awful.layout.append_default_layouts({
     awful.layout.suit.tile,
+    lain.layout.centerwork,
     awful.layout.suit.max,
     -- awful.layout.suit.floating,
     -- awful.layout.suit.tile.left,
@@ -649,25 +650,25 @@ awful.keyboard.append_client_keybindings({
   awful.key({ modkey }, "Down",
             function(c)
               awful.client.focus.global_bydirection("down")
-              c:lower()
+              if c.focus then c.focus:raise() end
             end,
             { description="focus next window up", group="client" }),
   awful.key({ modkey }, "Up",
             function(c)
               awful.client.focus.global_bydirection("up")
-              c:lower()
+              if c.focus then c.focus:raise() end
             end,
             { description="focus next window down", group="client" }),
   awful.key({ modkey }, "Right",
             function(c)
               awful.client.focus.global_bydirection("right")
-              c:lower()
+              if c.focus then c.focus:raise() end
             end,
             { description="focus next window right", group="client" }),
   awful.key({ modkey }, "Left",
             function(c)
               awful.client.focus.global_bydirection("left")
-              c:lower()
+              if c.focus then c.focus:raise() end
             end,
             { description="focus next window left", group="client" }),
   awful.key({ modkey }, "n",
@@ -952,4 +953,16 @@ tag.connect_signal("property::layout", function(t)
   end
 end)
 --]]
+
+client.connect_signal("manage", function (c)
+  -- TODO Spawn below current node, not the overall slave
+  if not awesome.startup then awful.client.setslave(c) end
+
+  if awesome.startup
+    and not c.size_hints.user_position
+    and not c.size_hints.program_position then
+      -- Prevent clients from being unreachable after screen count changes.
+      awful.placement.no_offscreen(c)
+  end
+end)
 -- }}}
