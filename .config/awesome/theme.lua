@@ -78,7 +78,7 @@ theme.fg_urgent                             = theme.fg
 -- theme.wibar_fg                              = theme.gray
 -- theme.wibar_bg                              = theme.black
 
-theme.gap_single_client                     = true
+theme.gap_single_client                     = false
 theme.useless_gap                           = dpi(5)
 -- [[NICE-OFF
 theme.border_width                          = dpi(2)

@@ -692,7 +692,7 @@ end)
 
 client.connect_signal("request::default_keybindings", function()
   awful.keyboard.append_client_keybindings({
-    awful.key({ "Mod1" }, "Return",
+    awful.key({ modkey }, "f",
               function(c)
                 c.fullscreen = not c.fullscreen
                 c:raise()
@@ -718,12 +718,12 @@ client.connect_signal("request::default_keybindings", function()
                 -- minimized, since minimized clients can't have the focus.
               function(c) c.minimized = true end,
               { description="minimize", group="client" }),
-    awful.key({ modkey }, "f",
-              function(c)
-                c.maximized = not c.maximized
-                c:raise()
-              end,
-              { description="(un)maximize", group="client" }),
+    -- awful.key({ modkey }, "f",
+    --           function(c)
+    --             c.maximized = not c.maximized
+    --             c:raise()
+    --           end,
+    --           { description="(un)maximize", group="client" }),
   })
 end)
 
@@ -964,5 +964,16 @@ client.connect_signal("manage", function (c)
       -- Prevent clients from being unreachable after screen count changes.
       awful.placement.no_offscreen(c)
   end
+end)
+
+screen.connect_signal("arrange", function (s)
+    local only_one = #s.tiled_clients == 1
+    for _, c in pairs(s.clients) do
+        if only_one and not c.floating or c.maximized then
+            c.border_width = 0
+        else
+            c.border_width = beautiful.border_width
+        end
+    end
 end)
 -- }}}
