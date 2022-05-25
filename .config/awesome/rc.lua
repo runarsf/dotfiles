@@ -787,6 +787,10 @@ ruled.client.connect_signal("request::rules", function()
     rule = { class="Nm-connection-editor" },
     properties = { floating=true, ontop=true, width=600, height=800 }
   }
+  ruled.client.append_rule {
+    rule = { class="TelegramDesktop" },
+    properties = { floating=true, ontop=true, width=1200, height=750 }
+  }
   -- TODO Cleaner rule-function rule("class" or {name="name"}, {floating=true})
 
   -- TODO Move to own file
@@ -806,7 +810,8 @@ ruled.client.connect_signal("request::rules", function()
 
   ws {2,{
     "Mattermost",
-    "discord"
+    "discord",
+    "TelegramDesktop",
   }}
   ws {5, "org.remmina.Remmina"}
   ws {9, "KeePassXC"}
