@@ -961,7 +961,19 @@ end)
 
 client.connect_signal("manage", function (c)
   -- TODO Spawn below current node, not the overall slave
-  if not awesome.startup then awful.client.setslave(c) end
+  -- if not awesome.startup then awful.client.setslave(c) end
+
+  if not awesome.startup then
+  awful.client.setslave(c)
+  local prev_focused = awful.client.focus.history.get(awful.screen.focused(), 1, nil)
+  local prev_c = awful.client.next(-1, c)
+  if prev_c and prev_focused then
+    while prev_c ~= prev_focused do
+      c:swap(prev_c)
+      prev_c = awful.client.next(-1, c)
+    end
+  end
+  end
 
   if awesome.startup
     and not c.size_hints.user_position
