@@ -375,6 +375,18 @@ awful.keyboard.append_global_keybindings({
             { description="go back", group="tag" }),
 })
 
+awful.keyboard.append_global_keybindings({
+  awful.key({ modkey, "Shift" }, "e",
+            function()
+              local command = 'printf "No\nYes" | rofi -theme-str "configuration { fixed-num-lines: true; } listview { columns: 1; lines: 2; }" -dmenu -p "Exit awesome?"'
+              awful.spawn.easy_async_with_shell(command, function(stdout, stderr, reason, exit_code)
+                if stdout:sub(1, 3) == "Yes" then
+                  awesome.quit()
+                end
+              end)
+            end)
+})
+
 -- Focus-related
 awful.keyboard.append_global_keybindings({
   -- awful.key({ modkey }, "j",
