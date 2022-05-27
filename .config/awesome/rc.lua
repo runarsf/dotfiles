@@ -161,8 +161,9 @@ screen.connect_signal("request::wallpaper", function(s)
 end)
 -- }}}
 
--- {{{ Wibar
--- https://awesomewm.org/apidoc/popups_and_bars/awful.wibar.html 
+--[[{{{ Wibar
+https://awesomewm.org/apidoc/popups_and_bars/awful.wibar.html 
+--]]
 
 -- [[+CHARITABLE
 local tags = charitable.create_tags(
@@ -811,7 +812,7 @@ ruled.client.connect_signal("request::rules", function()
     properties = { floating=true, ontop=true, width=400, height=320, titlebars_enabled=false, sticky=true, above=true, border_width=0, skip_taskbar=true, honor_padding=false, honor_workarea=true, minimized=false, request_no_titlebar=true }
   }
   ruled.client.append_rule {
-    rule = { name="Office 365 Mailbox.*" },
+    rule_any = { name={"Office 365 Mailbox.*", "Security Group.*"} },
     properties = { floating=true }
   }
   -- TODO Cleaner rule-function rule("class" or {name="name"}, {floating=true})
