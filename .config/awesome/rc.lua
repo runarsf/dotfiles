@@ -1,4 +1,4 @@
---[[{{{ Resources
+--[[ Resources {{{
  - https://awesomewm.org/apidoc/
  - https://github.com/atsepkov/awesome-awesome-wm
  - Convert unicode character to png icon:
@@ -16,7 +16,7 @@
  - https://www.reddit.com/r/awesomewm/comments/box4jk/my_functional_dynamic_border_gap_and_titlebar/
 --}}}]]
 
--- {{{ Packages
+-- Packages {{{
 pcall(require, "luarocks.loader")
 
 -- Dynamic tags
@@ -43,7 +43,7 @@ local xresources    = require("beautiful.xresources")
 local dpi           = xresources.apply_dpi
 -- }}}
 
--- {{{ Error handling
+-- Error handling {{{
 -- Check if awesome encountered an error during startup and fell back to
 -- another config (this code will only ever execute for the fallback config).
 naughty.connect_signal("request::display_error", function(message, startup)
@@ -55,7 +55,15 @@ naughty.connect_signal("request::display_error", function(message, startup)
 end)
 -- }}}
 
--- {{{ Variables
+-- Helpers {{{
+local tableLength = function(T)
+  local count = 0
+  for _ in pairs(T) do count = count + 1 end
+  return count
+end
+-- }}}
+
+-- Variables {{{
 beautiful.init(gears.filesystem.get_configuration_dir() .. "theme.lua")
 
 -- WARN: nice breaks with gtk4, temporary workaround is to uninstall it - https://github.com/mut-ex/awesome-wm-nice/issues/22
@@ -95,7 +103,7 @@ editor_cmd = terminal .. " -e " .. editor
 modkey = "Mod4"
 -- }}}
 
--- {{{ Menu
+-- Menu {{{
 -- Create a launcher widget and a main menu
 myawesomemenu = {
   { "hotkeys", function() hotkeys_popup.show_help(nil, awful.screen.focused()) end },
@@ -120,7 +128,7 @@ mylauncher = awful.widget.launcher({
 menubar.utils.terminal = terminal -- Set the terminal for applications that require it
 -- }}}
 
--- {{{ Layouts
+-- Layouts {{{
 tag.connect_signal("request::default_layouts", function()
   awful.layout.append_default_layouts({
     awful.layout.suit.tile,
@@ -141,33 +149,53 @@ tag.connect_signal("request::default_layouts", function()
 end)
 -- }}}
 
--- {{{ Wallpaper
+-- Wallpaper {{{
 screen.connect_signal("request::wallpaper", function(s)
-  awful.wallpaper {
-    screen = s,
-    widget = {
-      {
-        image     = beautiful.wallpaper,
-        upscale   = true,
-        downscale = true,
-        widget    = wibox.widget.imagebox,
-      },
-      valign = "center",
-      halign = "center",
-      tiled  = false,
-      widget = wibox.container.tile,
-    }
+  local wall_cmds = {
+    "nitrogen --restore",
+    (os.getenv("HOME") or "~") .. "/.fehbg",
+    "feh --bg-scale " .. gears.filesystem.get_xdg_config_home() .. "wall.jpg",
   }
+
+  setwall = function(cmds, i)
+    if i > #cmds then
+      awful.wallpaper {
+        screen = s,
+        bg = "#000000",
+        widget = {
+          image                 = beautiful.wallpaper,
+          upscale               = true,
+          downscale             = true,
+          resize                = false,
+          horizontal_fit_policy = "fit",
+          vertical_fit_policy   = "auto",
+          halign                = "center",
+          valign                = "center",
+          widget                = wibox.widget.imagebox
+        }
+      }
+      return
+    end
+
+    awful.spawn.easy_async_with_shell(cmds[i], function(_, _, _, retcode)
+      if retcode ~= 0 then
+        setwall(cmds, i+1)
+      end
+    end)
+  end
+
+  setwall(wall_cmds, 1)
 end)
 -- }}}
 
---[[{{{ Wibar
+--[[ Wibar {{{
 https://awesomewm.org/apidoc/popups_and_bars/awful.wibar.html 
 --]]
 
 -- [[+CHARITABLE
 local tags = charitable.create_tags(
    { "1", "2", "3", "4", "5", "6", "7", "8", "9" },
+   -- { "  ", "  ", "  ", " ﮑ ", " 龎 ", " ﮠ ", "  ", " 煉 ", "  " },
    {
       awful.layout.layouts[1],
       awful.layout.layouts[1],
@@ -183,13 +211,6 @@ local tags = charitable.create_tags(
 --]]
 
 screen.connect_signal("request::desktop_decoration", function(s)
-  -- Each screen has its own tag table.
-  --[[-CHARITABLE
-  -- awful.tag({ "1", "2", "3", "4", "5", "6", "7", "8", "9" }, s, awful.layout.layouts[1])
-  awful.tag({ "  ", "  ", "  ", " ﮑ ", " 龎 ", " ﮠ ", "  ", " 煉 ", "  " }, s, awful.layout.layouts[1])
-  --]]
-
-  -- [[+CHARITABLE
   -- Show an unselected tag when a screen is connected
   for i = 1, #tags do
     if not tags[i].selected then
@@ -202,40 +223,19 @@ screen.connect_signal("request::desktop_decoration", function(s)
   -- create a special scratch tag for double buffering
   s.scratch = awful.tag.add('~' .. s.index, {})
 
+  -- TODO view_only -> same function as super+#
   s.mytaglist = awful.widget.taglist({
     screen = s,
     filter = awful.widget.taglist.filter.all,
     buttons = gears.table.join(
       awful.button({ }, 1, function(t) charitable.select_tag(t, awful.screen.focused()) end),
-      awful.button({ }, 3, function(t) charitable.toggle_tag(t, awful.screen.focused()) end)
+      awful.button({ }, 3, function(t) charitable.toggle_tag(t, awful.screen.focused()) end),
+      -- TODO Improve view{next,prev}
+      awful.button({ }, 4, function(t) awful.tag.viewnext(t.screen) end),
+      awful.button({ }, 5, function(t) awful.tag.viewprev(t.screen) end)
     ),
     source = function(screen, args) return tags end,
   })
-  --]]
-
-  --[[-CHARITABLE
-  s.mytaglist = awful.widget.taglist {
-    screen  = s,
-    filter  = awful.widget.taglist.filter.all,
-    buttons = {
-      -- TODO view_only -> same function as super+#
-      awful.button({ }, 1, function(t) t:view_only() end),
-      awful.button({ modkey }, 3, function(t)
-                                    if client.focus then
-                                      client.focus:move_to_tag(t)
-                                    end
-                                  end),
-      awful.button({ }, 3, awful.tag.viewtoggle),
-      awful.button({ modkey }, 1, function(t)
-                                    if client.focus then
-                                      client.focus:toggle_tag(t)
-                                    end
-                                  end),
-      awful.button({ }, 4, function(t) awful.tag.viewprev(t.screen) end),
-      awful.button({ }, 5, function(t) awful.tag.viewnext(t.screen) end),
-    }
-  }
-  --]]
 
   -- Create a promptbox for each screen
   s.mypromptbox = awful.widget.prompt()
@@ -312,17 +312,14 @@ screen.connect_signal("request::desktop_decoration", function(s)
 end)
 -- }}}
 
--- {{{ Mouse bindings
+-- Mouse bindings {{{
 awful.mouse.append_global_mousebindings({
   awful.button({ }, 3, function() mymainmenu:toggle() end),
-  -- awful.button({ }, 4, awful.tag.viewprev),
-  -- awful.button({ }, 5, awful.tag.viewnext),
 })
 -- }}}
 
--- {{{ Key bindings
-
--- General
+-- Key bindings {{{
+-- Genergal
 awful.keyboard.append_global_keybindings({
   awful.key({ modkey }, "s",
             hotkeys_popup.show_help,
@@ -388,28 +385,7 @@ awful.keyboard.append_global_keybindings({
             end)
 })
 
--- Focus-related
 awful.keyboard.append_global_keybindings({
-  -- awful.key({ modkey }, "j",
-  --           function() awful.client.focus.byidx(1) end,
-  --           { description="focus next by index", group="client" }),
-  -- awful.key({ modkey }, "k",
-  --           function() awful.client.focus.byidx(-1) end,
-  --           {description="focus previous by index", group="client" }),
-  -- awful.key({ modkey }, "Tab",
-  --           function()
-  --             awful.client.focus.history.previous()
-  --             if client.focus then
-  --               client.focus:raise()
-  --             end
-  --           end,
-  --           { description="go back", group="client"}),
-  -- awful.key({ modkey }, "Tab",
-  --           function() awful.screen.focus_relative(1) end,
-  --           { description="focus the next screen", group="screen" }),
-  -- awful.key({ modkey, "Shift" }, "Tab",
-  --           function() awful.screen.focus_relative(-1) end,
-  --           { description="focus the previous screen", group="screen" }),
   awful.key({ modkey, "Shift" }, "-",
             function()
               local c = awful.client.restore()
@@ -423,21 +399,6 @@ awful.keyboard.append_global_keybindings({
 
 -- Layout
 awful.keyboard.append_global_keybindings({
-  -- awful.key({ modkey, "Shift" }, "j",
-  --           function() awful.client.swap.byidx(1) end,
-  --           { description="swap with next client by index", group="client" }),
-  -- awful.key({ modkey, "Shift" }, "k",
-  --           function() awful.client.swap.byidx(-1) end,
-  --           { description="swap with previous client by index", group="client" }),
-  -- awful.key({ modkey }, "u",
-  --           awful.client.urgent.jumpto,
-  --           { description="jump to urgent client", group="client" }),
-  -- awful.key({ modkey, "Control" }, "Right",
-  --           function() awful.tag.incmwfact(0.05) end,
-  --           { description="increase master width factor", group="layout" }),
-  -- awful.key({ modkey, "Control" }, "Left",
-  --           function() awful.tag.incmwfact(-0.05) end,
-  --           { description="decrease master width factor", group="layout" }),
   awful.key({ modkey }, "m",
             function() awful.tag.incnmaster(1, nil, true) end,
             { description="increase the number of master clients", group="layout" }),
@@ -475,14 +436,6 @@ awful.keyboard.append_global_keybindings({
   awful.key({}, "XF86AudioMute",
             function() awful.util.spawn("amixer -q -D pulse sset Master toggle") end),
 })
-
---[[-CHARITABLE
-local tableLength = function(T)
-  local count = 0
-  for _ in pairs(T) do count = count + 1 end
-  return count
-end
---]]
 
 awful.keyboard.append_global_keybindings({
   awful.key {
@@ -720,9 +673,6 @@ client.connect_signal("request::default_keybindings", function()
     awful.key({ modkey, "Shift" }, "Return",
               function(c) c:swap(awful.client.getmaster()) end,
               { description="move to master", group="client" }),
-    -- awful.key({ modkey }, "o",
-    --           function(c) c:move_to_screen() end,
-    --           { description="move to screen", group="client" }),
     awful.key({ modkey }, ".",
               function(c) c.ontop = not c.ontop end,
               { description="toggle keep on top", group="client" }),
@@ -731,18 +681,11 @@ client.connect_signal("request::default_keybindings", function()
                 -- minimized, since minimized clients can't have the focus.
               function(c) c.minimized = true end,
               { description="minimize", group="client" }),
-    -- awful.key({ modkey }, "f",
-    --           function(c)
-    --             c.maximized = not c.maximized
-    --             c:raise()
-    --           end,
-    --           { description="(un)maximize", group="client" }),
   })
 end)
-
 -- }}}
 
---[[{{{ Rules
+--[[ Rules {{{
 https://awesomewm.org/doc/api/libraries/awful.rules.html
 https://www.reddit.com/r/awesomewm/comments/mytkwa/awfulrules_regex_wildcards/
 xprop ->
@@ -867,7 +810,7 @@ end)
 
 -- }}}
 
--- {{{ Titlebars
+-- Titlebars {{{
 -- Add a titlebar if titlebars_enabled is set to true in the rules.
 client.connect_signal("request::titlebars", function(c)
   -- buttons for the titlebar
@@ -983,6 +926,7 @@ tag.connect_signal("property::layout", function(t)
 end)
 --]]
 
+--[[
 client.connect_signal("manage", function (c)
   -- TODO Spawn below current node, not the overall slave
   -- if not awesome.startup then awful.client.setslave(c) end
@@ -1006,6 +950,7 @@ client.connect_signal("manage", function (c)
       awful.placement.no_offscreen(c)
   end
 end)
+--]]
 
 --[[ Remove border when only one client
 screen.connect_signal("arrange", function (s)
@@ -1020,3 +965,27 @@ screen.connect_signal("arrange", function (s)
 end)
 --]]
 -- }}}
+
+spawn_once = function(program, arguments, process)
+  process = process or program
+  awful.spawn.easy_async("pgrep "..process, function(stdout, stderr, reason, exit_code)
+    naughty.notify { text=exit_code }
+    if exit_code ~= 0 then
+      awful.spawn(program .. " " .. arguments)
+    end
+  end)
+end
+
+local startup = {
+  always = {
+    {"primenote", "--core show", "pnote"}
+  },
+  once = {
+  }
+}
+for _, cmd in pairs(startup["always"]) do
+  spawn_once(cmd[1], cmd[2] or nil, cmd[3] or nil)
+end
+--for _, cmd in pairs(startup["once"]) do
+  -- raise_or_spawn, once, single_instance
+--end
