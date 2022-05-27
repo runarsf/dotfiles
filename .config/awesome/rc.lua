@@ -741,11 +741,13 @@ end)
 
 -- }}}
 
--- {{{ Rules
--- https://awesomewm.org/doc/api/libraries/awful.rules.html
--- xprop ->
- -- WM_CLASS[1] => instance
- -- WM_CLASS[2] => class
+--[[{{{ Rules
+https://awesomewm.org/doc/api/libraries/awful.rules.html
+https://www.reddit.com/r/awesomewm/comments/mytkwa/awfulrules_regex_wildcards/
+xprop ->
+  WM_CLASS[1] => instance
+  WM_CLASS[2] => class
+--]]
 
 ruled.client.connect_signal("request::rules", function()
   -- All clients will match this rule
@@ -807,6 +809,10 @@ ruled.client.connect_signal("request::rules", function()
     rule = { class="PrimeNote" },
     except = { name="PrimeNote Settings" },
     properties = { floating=true, ontop=true, width=400, height=320, titlebars_enabled=false, sticky=true, above=true, border_width=0, skip_taskbar=true, honor_padding=false, honor_workarea=true, minimized=false, request_no_titlebar=true }
+  }
+  ruled.client.append_rule {
+    rule = { name="Office 365 Mailbox.*" },
+    properties = { floating=true }
   }
   -- TODO Cleaner rule-function rule("class" or {name="name"}, {floating=true})
 
