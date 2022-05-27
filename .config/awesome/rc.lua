@@ -803,6 +803,11 @@ ruled.client.connect_signal("request::rules", function()
     rule = { class="TelegramDesktop" },
     properties = { floating=true, ontop=true, width=1200, height=750 }
   }
+  ruled.client.append_rule {
+    rule = { class="PrimeNote" },
+    except = { name="PrimeNote Settings" },
+    properties = { floating=true, ontop=true, width=400, height=320, titlebars_enabled=false, sticky=true, above=true, border_width=0, skip_taskbar=true, honor_padding=false, honor_workarea=true, minimized=false, request_no_titlebar=true }
+  }
   -- TODO Cleaner rule-function rule("class" or {name="name"}, {floating=true})
 
   -- TODO Move to own file
@@ -934,7 +939,7 @@ client.connect_signal("mouse::enter", function(c)
   c:activate { context="mouse_enter", raise=false }
 end)
 
--- [[+Floating node behaviors
+--[[ Floating node behaviors
 local floatnode = function(c)
   -- TODO c.first_tag equivalent with tags[]
     c.ontop = true
@@ -995,6 +1000,7 @@ client.connect_signal("manage", function (c)
   end
 end)
 
+--[[ Remove border when only one client
 screen.connect_signal("arrange", function (s)
     local only_one = #s.tiled_clients == 1
     for _, c in pairs(s.clients) do
@@ -1005,4 +1011,5 @@ screen.connect_signal("arrange", function (s)
         end
     end
 end)
+--]]
 -- }}}
