@@ -702,118 +702,124 @@ xprop ->
 --]]
 
 ruled.client.connect_signal("request::rules", function()
-    -- All clients will match this rule
-    ruled.client.append_rule {
-        id = "global",
-        rule = {},
-        properties = {
-            focus = awful.client.focus.filter,
-            raise = true,
-            screen = awful.screen.preferred,
-            placement = awful.placement.no_overlap + awful.placement.no_offscreen,
-        }
+  -- All clients will match this rule
+  ruled.client.append_rule {
+    id = "global",
+    rule = {},
+    properties = {
+      focus = awful.client.focus.filter,
+      raise = true,
+      screen = awful.screen.preferred,
+      placement = awful.placement.no_overlap + awful.placement.no_offscreen,
     }
+  }
 
-    -- Floating clients
-    ruled.client.append_rule {
-        id = "floating",
-        rule_any = {
-            instance = { "copyq", "pinentry" },
-            class = {
-                "Arandr", "Blueman-manager", "Gpick", "Kruler", "Sxiv",
-                "Tor Browser", "Wpa_gui", "veromix", "xtightvncviewer"
-            },
-            -- Note that the name property shown in xprop might be set slightly after creation of the client
-            -- and the name shown there might not match defined rules here.
-            name = {
-                "Event Tester", -- xev.
-            },
-            role = {
-                "AlarmWindow", -- Thunderbird's calendar.
-                "ConfigManager", -- Thunderbird's about:config.
-                "pop-up", -- e.g. Google Chrome's (detached) Developer Tools.
-            }
-        },
-        properties = { floating = true }
-    }
+  -- Floating clients
+  ruled.client.append_rule {
+    id = "floating",
+    rule_any = {
+      instance = { "copyq", "pinentry" },
+      class = {
+        "Arandr", "Blueman-manager", "Gpick", "Kruler", "Sxiv",
+        "Tor Browser", "Wpa_gui", "veromix", "xtightvncviewer"
+      },
+      -- Note that the name property shown in xprop might be set slightly after creation of the client
+      -- and the name shown there might not match defined rules here.
+      name = {
+        "Event Tester", -- xev.
+      },
+      role = {
+        "AlarmWindow", -- Thunderbird's calendar.
+        "ConfigManager", -- Thunderbird's about:config.
+        "pop-up", -- e.g. Google Chrome's (detached) Developer Tools.
+        "Popup" -- Firefox
+      }
+    },
+    properties = { floating=true, border_width=0, above=true }
+  }
 
-    -- Add titlebars to normal clients and dialogs
-    ruled.client.append_rule {
-        id         = "titlebars",
-        rule_any   = { type = { "normal", "dialog" } },
-        properties = { titlebars_enabled = true }
-    }
+  -- Add titlebars to normal clients and dialogs
+  ruled.client.append_rule {
+    id         = "titlebars",
+    rule_any   = { type = { "normal", "dialog" } },
+    properties = { titlebars_enabled=true }
+  }
 
-    ruled.client.append_rule {
-        rule = { name = "Remmina Remote Desktop Client" },
-        properties = { floating = true, ontop = true, width = 800, height = 600 }
-    }
+  ruled.client.append_rule {
+    rule = { name="Remmina Remote Desktop Client" },
+    properties = { floating=true, ontop=true, width=800, height=600 }
+  }
 
-    ruled.client.append_rule {
-        rule = { class = "Nm-connection-editor" },
-        properties = { floating = true, ontop = true, width = 600, height = 800 }
-    }
-    ruled.client.append_rule {
-        rule = { class = "TelegramDesktop" },
-        properties = { floating = true, ontop = true, width = 1200, height = 750 }
-    }
-    ruled.client.append_rule {
-        rule = { class = "PrimeNote" },
-        except = { name = "PrimeNote Settings" },
-        properties = { floating = true, ontop = true, width = 400, height = 320, titlebars_enabled = false, sticky = true, above = true, border_width = 0, skip_taskbar = true, honor_padding = false, honor_workarea = true, minimized = false, request_no_titlebar = true }
-    }
-    ruled.client.append_rule {
-        rule_any = { name = { "Office 365 Mailbox.*", "Security Group.*" } },
-        properties = { floating = true }
-    }
-    -- TODO Cleaner rule-function rule("class" or {name="name"}, {floating=true})
+  ruled.client.append_rule {
+    rule = { class="Nm-connection-editor" },
+    properties = { floating=true, ontop=true, width=600, height=800 }
+  }
+  ruled.client.append_rule {
+    rule = { class="TelegramDesktop" },
+    properties = { floating=true, ontop=true, width=1200, height=750 }
+  }
+  ruled.client.append_rule {
+   rule = { class="PrimeNote" },
+   except = { name="PrimeNote Settings" },
+   properties = { floating=true, ontop=true, width=400, height=320, titlebars_enabled=false, sticky=true, above=true, border_width=0, skip_taskbar=true, honor_padding=false, honor_workarea=true, minimized=false, request_no_titlebar=true }
+  }
+  ruled.client.append_rule {
+    rule_any = { name={ "Office 365 Mailbox.*", "Security Group.*" } },
+    properties = { floating=true }
+  }
 
-    -- TODO Move to own file
-    local ws = function(opts)
-        setmetatable(opts, { __index = { tag = 1, classes = { "" } } })
-        local tag, classes =
-        opts[1] or opts.tag,
-            opts[2] or opts.classes
+  -- TODO Cleaner rule-function rule("class" or {name="name"}, {floating=true})
+  -- TODO Move to own file
+  local rule = function(opts)
+    setmetatable(opts, { __index={ tag=1, classes={""} } })
+    local tag, classes =
+      opts[1] or opts.tag,
+      opts[2] or opts.classes
 
-        ruled.client.append_rule {
-            rule_any = {
-                class = classes
-            },
-            properties = { tag = tags[tag] }
-        }
+    if type(classes) == "string" then
+      classes = { classes }
     end
 
-    ws { 2, {
-        "Mattermost",
-        "discord",
-        "TelegramDesktop",
-    } }
-    ws { 5, "org.remmina.Remmina" }
-    ws { 9, "KeePassXC" }
-
-    local scratch_props = {
-        floating = true,
-        titlebars_enabled = true,
-        minimized = true,
-        -- width=1300,
-        -- height=900,
-        sticky = false,
-        above = true,
-        ontop = false,
-        border_width = 0,
-        skip_taskbar = true,
-        honor_padding = true,
-        honor_workarea = true
-    }
-
     ruled.client.append_rule {
-        rule       = { instance = "scratch" },
-        properties = scratch_props
+      rule_any = {
+        class = classes
+      },
+      properties = { tag=tags[tag] }
     }
-    ruled.client.append_rule {
-        rule       = { instance = "math" },
-        properties = scratch_props
-    }
+  end
+
+  rule {2, {
+    "Mattermost",
+    "discord",
+    "TelegramDesktop",
+  }}
+  rule {5, "org.remmina.Remmina"}
+  rule {9, "KeePassXC"}
+  rule {6, "Inkscape"}
+
+  local scratch_props = {
+    floating = true,
+    titlebars_enabled = true,
+    minimized = true,
+    -- width=1300,
+    -- height=900,
+    sticky = false,
+    above = true,
+    ontop = false,
+    border_width = 0,
+    skip_taskbar = true,
+    honor_padding = true,
+    honor_workarea = true
+  }
+
+  ruled.client.append_rule {
+    rule       = { instance="scratch" },
+    properties = scratch_props
+  }
+  ruled.client.append_rule {
+    rule       = { instance="math" },
+    properties = scratch_props
+  }
 end)
 
 -- }}}
