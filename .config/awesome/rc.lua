@@ -20,6 +20,8 @@
 -- Packages {{{
 pcall(require, "luarocks.loader")
 
+require("better-resize")
+
 -- Dynamic tags
 require("eminent.eminent")
 -- Scratchpad
@@ -43,6 +45,39 @@ require("awful.hotkeys_popup.keys")
 local xresources = require("beautiful.xresources")
 local dpi        = xresources.apply_dpi
 -- }}}
+
+local function is_floating (c)
+   return c.floating or awful.layout.get(c.screen) == awful.layout.suit.floating
+end
+
+local function resize_client(c)
+   if is_floating(c) or not(c.screen.selected_tag.layout.mouse_resize_handler) then
+      awful.mouse.client.resize(c, false, {include_sides = true})
+      return true
+   else
+      return c.screen.selected_tag.layout.mouse_resize_handler(c)
+   end
+end
+
+local function near_border(w, a, b)
+   local w2 = (1 - (2 * w))
+   return function (c, ...)
+      local coords = mouse.coords()
+      local geom = c:geometry()
+
+      if coords.x < geom.x + (w * geom.width) or
+         coords.x > geom.x + (geom.width * w2) or
+         coords.y < geom.y + (w * geom.width) or
+         coords.y > geom.y + (geom.height * w2)
+      then
+         local result = a(c, ...)
+         if result then
+            return result
+         end
+      end
+      return b(c, ...)
+   end
+end
 
 -- Error handling {{{
 -- Check if awesome encountered an error during startup and fell back to
@@ -657,10 +692,14 @@ client.connect_signal("request::default_mousebindings", function()
     awful.mouse.append_client_mousebindings({
         awful.button({}, 1,
             function(c) c:activate { context = "mouse_click" } end),
-        awful.button({ modkey }, 1,
-            function(c) c:activate { context = "mouse_click", action = "mouse_move" } end),
-        awful.button({ modkey }, 3,
-            function(c) c:activate { context = "mouse_click", action = "mouse_resize" } end),
+        -- awful.button({ modkey }, 1,
+        --     function(c) c:activate { context = "mouse_click", action = "mouse_move" } end),
+        -- awful.button({ modkey }, 3,
+        --     function(c) c:activate { context = "mouse_click", action = "mouse_resize" } end),
+            awful.button({ modkey }, 1, near_border(0.1,
+                                           resize_client,
+                                           awful.mouse.client.move)),
+            awful.button({ modkey }, 3, resize_client)
     })
 end)
 
@@ -767,6 +806,10 @@ ruled.client.connect_signal("request::rules", function()
     rule_any = { name={ "Office 365 Mailbox.*", "Security Group.*" } },
     properties = { floating=true }
   }
+  ruled.client.append_rule {
+    rule_any = { role={ "browser-window" } },
+    properties = { is_fixed=true, size_hints_honor=false }
+  }
 
   -- TODO Cleaner rule-function rule("class" or {name="name"}, {floating=true})
   -- TODO Move to own file
@@ -790,8 +833,10 @@ ruled.client.connect_signal("request::rules", function()
 
   rule {2, {
     "Mattermost",
-    "discord",
     "TelegramDesktop",
+    "discord",
+    "spotify",
+    "Spotify"
   }}
   rule {5, "org.remmina.Remmina"}
   rule {9, "KeePassXC"}
