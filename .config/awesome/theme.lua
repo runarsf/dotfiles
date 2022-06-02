@@ -239,6 +239,7 @@ theme.layout_fairv = icon("[][]")
 -- theme.layout_floating  = themes_path.."default/layouts/floatingw.png"
 theme.layout_magnifier = icon("[-]")
 theme.layout_max = icon("[M]")
+theme.layout_centerwork = icon("=[]=")
 -- theme.layout_fullscreen = themes_path.."default/layouts/fullscreenw.png"
 -- theme.layout_tilebottom = themes_path.."default/layouts/tilebottomw.png"
 -- theme.layout_tileleft   = themes_path.."default/layouts/tileleftw.png"

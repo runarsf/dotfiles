@@ -13,3 +13,9 @@
 [submodule ".config/awesome/scratch"]
 	path = .config/awesome/scratch
 	url = https://github.com/notnew/awesome-scratch
+[submodule ".config/awesome/dovetail"]
+	path = .config/awesome/dovetail
+	url = https://github.com/jcrd/awesome-dovetail.git
+[submodule ".config/awesome/ez"]
+	path = .config/awesome/ez
+	url = https://github.com/jcrd/awesome-ez.git
