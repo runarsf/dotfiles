@@ -681,11 +681,11 @@ awful.keyboard.append_client_keybindings({
         end,
         { description = "focus next window left", group = "client" }),
     awful.key({ modkey }, "n",
-        function() scratch.toggle("alacritty --class scratch --title scratchpad --command tmux new-session -A -s scratchpad", { instance = "scratch" }) end,
+        function() scratch.toggle("wezterm connect scratch --class scratch", { instance="scratch" }) end,
         { description = "toggle scratchpad", group = "client" }),
-    awful.key({ modkey, "Shift" }, "n",
-        function() scratch.toggle("alacritty --class math --title math --option font.size=18 --command tmux new-session -A -s math python3", { instance = "math" }) end,
-        { description = "toggle math scratchpad", group = "client" }),
+    -- awful.key({ modkey, "Shift" }, "n",
+    --     function() scratch.toggle("alacritty --class math --title math --option font.size=18 --command tmux new-session -A -s math python3", { instance = "math" }) end,
+    --     { description = "toggle math scratchpad", group = "client" }),
 })
 
 client.connect_signal("request::default_mousebindings", function()
