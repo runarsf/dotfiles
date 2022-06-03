@@ -185,23 +185,23 @@ menubar.utils.terminal = terminal -- Set the terminal for applications that requ
 
 -- Layouts {{{
 tag.connect_signal("request::default_layouts", function()
-    awful.layout.append_default_layouts({
-        awful.layout.suit.tile,
-        dovetail.layout.right,
-        lain.layout.centerwork,
-        awful.layout.suit.max,
-        -- awful.layout.suit.floating,
-        -- awful.layout.suit.tile.left,
-        -- awful.layout.suit.tile.bottom,
-        -- awful.layout.suit.tile.top,
-        -- awful.layout.suit.fair.horizontal,
-        awful.layout.suit.fair,
-        awful.layout.suit.spiral.dwindle,
-        -- awful.layout.suit.spiral,
-        -- awful.layout.suit.magnifier,
-        -- awful.layout.suit.max.fullscreen,
-        -- awful.layout.suit.corner.nw,
-    })
+  awful.layout.append_default_layouts({
+    awful.layout.suit.tile,
+    dovetail.layout.right,
+    lain.layout.centerwork,
+    awful.layout.suit.max,
+    -- awful.layout.suit.floating,
+    -- awful.layout.suit.tile.left,
+    -- awful.layout.suit.tile.bottom,
+    -- awful.layout.suit.tile.top,
+    -- awful.layout.suit.fair.horizontal,
+    -- awful.layout.suit.fair,
+    -- awful.layout.suit.spiral.dwindle,
+    -- awful.layout.suit.spiral,
+    -- awful.layout.suit.magnifier,
+    -- awful.layout.suit.max.fullscreen,
+    -- awful.layout.suit.corner.nw,
+  })
 end)
 -- }}}
 
@@ -679,7 +679,7 @@ awful.keyboard.append_client_keybindings({
     awful.key({ modkey }, "Down",
         function(c)
           -- https://www.reddit.com/r/awesomewm/comments/j73j99/comment/g82ik6f/?utm_source=share&utm_medium=web2x&context=3
-          if THas({"dovetail.layout.right"}, awful.screen.focused().selected_tag.layout.name) then
+          if THas({"dovetail.layout.right", "max"}, awful.screen.focused().selected_tag.layout.name) then
             awful.client.focus.byidx(1)
             if client.focus == awful.client.getmaster(awful.screen.focused()) then
               awful.client.focus.byidx(-1)
@@ -692,7 +692,7 @@ awful.keyboard.append_client_keybindings({
         { description="focus next window up", group="client" }),
     awful.key({ modkey }, "Up",
         function(c)
-          if THas({"dovetail.layout.right"}, awful.screen.focused().selected_tag.layout.name) then
+          if THas({"dovetail.layout.right", "max"}, awful.screen.focused().selected_tag.layout.name) then
             awful.client.focus.byidx(-1)
             if client.focus == awful.client.getmaster(awful.screen.focused()) then
               awful.client.focus.byidx(1)
