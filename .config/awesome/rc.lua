@@ -16,11 +16,10 @@
  - https://www.reddit.com/r/awesomewm/comments/bki1md/show_titlebar_only_when_window_is_floating/
  - https://www.reddit.com/r/awesomewm/comments/box4jk/my_functional_dynamic_border_gap_and_titlebar/
 --}}}]]
+-- TODO focus_relative to force focus to screen
 
 -- Packages {{{
 pcall(require, "luarocks.loader")
-
-require("better-resize")
 
 -- Dynamic tags
 require("eminent.eminent")
@@ -44,42 +43,16 @@ local hotkeys_popup = require("awful.hotkeys_popup")
 require("awful.hotkeys_popup.keys")
 local xresources = require("beautiful.xresources")
 local dpi        = xresources.apply_dpi
+
+local ez         = require("ez")
+unpack = table.unpack or unpack
 -- }}}
 
 local dovetail = require("dovetail")
 
-local function is_floating (c)
-   return c.floating or awful.layout.get(c.screen) == awful.layout.suit.floating
-end
-
-local function resize_client(c)
-   if is_floating(c) or not(c.screen.selected_tag.layout.mouse_resize_handler) then
-      awful.mouse.client.resize(c, false, {include_sides = true})
-      return true
-   else
-      return c.screen.selected_tag.layout.mouse_resize_handler(c)
-   end
-end
-
-local function near_border(w, a, b)
-   local w2 = (1 - (2 * w))
-   return function (c, ...)
-      local coords = mouse.coords()
-      local geom = c:geometry()
-
-      if coords.x < geom.x + (w * geom.width) or
-         coords.x > geom.x + (geom.width * w2) or
-         coords.y < geom.y + (w * geom.width) or
-         coords.y > geom.y + (geom.height * w2)
-      then
-         local result = a(c, ...)
-         if result then
-            return result
-         end
-      end
-      return b(c, ...)
-   end
-end
+-- local function is_floating (c)
+--    return c.floating or awful.layout.get(c.screen) == awful.layout.suit.floating
+-- end
 
 -- Error handling {{{
 -- Check if awesome encountered an error during startup and fell back to
@@ -378,392 +351,235 @@ screen.connect_signal("request::desktop_decoration", function(s)
 end)
 -- }}}
 
--- Mouse bindings {{{
-awful.mouse.append_global_mousebindings({
-    awful.button({}, 3, function() mymainmenu:toggle() end),
-})
--- }}}
+-- Key bindings (`xev`) {{{
+local globalkeys = ez.keytable {
+  ["M-S-r"] = awesome.restart,
+  ["M-C-q"] = awesome.quit,
+  ["M-Return"] = {awful.spawn, terminal},
+  ["M-x"] = {awful.spawn, "betterlockscreen --lock dimblur --blur 8"},
+  ["M-S-c"] = {awful.spawn, "toggleprogram picom"},
+  ["M-d"] = {awful.spawn, "rofi -show run"},
+  ["M-h"] = awful.tag.viewprev,
+  ["M-l"] = awful.tag.viewnext,
+  ["M-Tab"] = awful.tag.history.restore,
+  ["M-S-e"] = function()
+    local command = 'printf "No\nYes" | rofi -theme-str "configuration { fixed-num-lines: true; } listview { columns: 1; lines: 2; }" -dmenu -p "Exit awesome?"'
+    awful.spawn.easy_async_with_shell(command, function(stdout,_,_,_)
+      if stdout:sub(1, 3) == "Yes" then
+        awesome.quit()
+      end
+    end)
+  end,
+  ["M-minus"] = function(c) c.minimized = true end,
+  ["M-S-minus"] = function()
+    local c = awful.client.restore()
+    if c then
+      c:activate { raise=true, context="key.unminimize" }
+    end
+  end,
+  -- TODO Don't decrease masters to 0
+  ["M-m"] = {awful.tag.incnmaster, 1, nil, true},
+  ["M-S-m"] = {awful.tag.incnmaster, -1, nil, true},
+  ["M-v"] = {awful.tag.incncol, 1, nil, true},
+  ["M-S-v"] = {awful.tag.incncol, -1, nil, true},
+  ["M-space"] = {awful.layout.inc, 1},
+  ["M-S-space"] = {awful.layout.inc, -1},
+  ["XF86AudioPlay"] = {awful.util.spawn, "playerctl play-pause"},
+  ["XF86AudioPause"] = {awful.util.spawn, "playerctl play-pause"},
+  ["XF86AudioNext"] = {awful.util.spawn, "playerctl next"},
+  ["XF86AudioPrev"] = {awful.util.spawn, "playerctl previous"},
+  ["XF86AudioLowerVolume"] = {awful.util.spawn, "pactl set-sink-volume 2 -5%"},
+  ["XF86AudioRaiseVolume"] = {awful.util.spawn, "pactl set-sink-volume 2 +5%"},
+  ["XF86AudioMute"] = {awful.util.spawn, "amixer -q -D pulse sset Master toggle"},
+  -- scratch.toggle("alacritty --class math --title math --option font.size=18 --command tmux new-session -A -s math python3", { instance = "math" })
+  ["M-n"] = {scratch.toggle, "wezterm start --class scratch", {class="scratch"}},
+  ["M-f"] = function(c)
+    c.fullscreen = not c.fullscreen
+    c:raise()
+  end,
+  ["M-S-f"] = awful.client.floating.toggle,
+  ["M-q"] = function(c) c:kill() end,
+  ["M-S-Return"] = function(c) c:swap(awful.client.getmaster()) end,
+  ["M-period"] = function(c) c.ontop = not c.ontop end,
+  ["M-C-Up"] = function(c)
+    if c.floating then
+      c:relative_move(0, 0, 0, -10)
+    else
+      awful.client.incwfact(0.025)
+    end
+  end,
+  ["M-C-Down"] = function(c)
+    if c.floating then
+      c:relative_move(0, 0, 0, 10)
+    else
+      awful.client.incwfact(-0.025)
+    end
+  end,
+  ["M-C-Left"] = function(c)
+    if c.floating then
+      c:relative_move(0, 0, -10, 0)
+    else
+      awful.tag.incmwfact(-0.025)
+    end
+  end,
+  ["M-C-Right"] = function(c)
+    if c.floating then
+      c:relative_move(0, 0, 10, 0)
+    else
+      awful.tag.incmwfact(0.025)
+    end
+  end,
+  ["M-S-Down"] = function(c)
+    if c.floating then
+      c:relative_move(0, 20, 0, 0)
+    else
+      awful.client.swap.global_bydirection("down")
+      c:raise()
+    end
+  end,
+  ["M-S-Up"] = function(c)
+    if c.floating then
+      c:relative_move(0, -20, 0, 0)
+    else
+      awful.client.swap.global_bydirection("up")
+      c:raise()
+    end
+  end,
+  ["M-S-Left"] = function(c)
+    if c.floating then
+      c:relative_move(-20, 0, 0, 0)
+    else
+      awful.client.swap.global_bydirection("left")
+      c:raise()
+    end
+  end,
+  ["M-S-Right"] = function(c)
+    if c.floating then
+      c:relative_move(20, 0, 0, 0)
+    else
+      awful.client.swap.global_bydirection("right")
+      c:raise()
+    end
+  end,
+  ["M-Down"] = function(c)
+    -- https://www.reddit.com/r/awesomewm/comments/j73j99/comment/g82ik6f/?utm_source=share&utm_medium=web2x&context=3
+    if THas({"dovetail.layout.right", "max"}, awful.screen.focused().selected_tag.layout.name) then
+      awful.client.focus.byidx(1)
+      if client.focus == awful.client.getmaster(awful.screen.focused()) then
+        awful.client.focus.byidx(-1)
+      end
+    else
+      awful.client.focus.global_bydirection("down")
+      client.focus:raise()
+    end
+  end,
+  ["M-Up"] = function(c)
+    if THas({"dovetail.layout.right", "max"}, awful.screen.focused().selected_tag.layout.name) then
+      awful.client.focus.byidx(-1)
+      if client.focus == awful.client.getmaster(awful.screen.focused()) then
+        awful.client.focus.byidx(1)
+      end
+    else
+      awful.client.focus.global_bydirection("up")
+      client.focus:raise()
+    end
+  end,
+  ["M-Right"] = function(c)
+    awful.client.focus.global_bydirection("right")
+    client.focus:raise()
+  end,
+  ["M-Left"] = function(c)
+    awful.client.focus.global_bydirection("left")
+    client.focus:raise()
+  end,
+}
 
--- Key bindings {{{
--- Genergal
-awful.keyboard.append_global_keybindings({
-    awful.key({ modkey }, "s",
-        hotkeys_popup.show_help,
-        { description="show help", group="awesome" }),
-    awful.key({ modkey, "Shift" }, "r",
-        awesome.restart,
-        { description="reload awesome", group="awesome" }),
-    awful.key({ modkey, "Control" }, "q",
-        awesome.quit,
-        { description="quit awesome", group="awesome" }),
-    awful.key({ modkey, "Shift" }, "p",
-        function()
-            awful.prompt.run {
-                prompt       = "Run Lua code: ",
-                textbox      = awful.screen.focused().mypromptbox.widget,
-                exe_callback = awful.util.eval,
-                history_path = awful.util.get_cache_dir() .. "/history_eval"
-            }
-        end,
-        { description="lua execute prompt", group="awesome" }),
-    awful.key({ modkey }, "Return",
-        function() awful.spawn(terminal) end,
-        { description="open a terminal", group="launcher" }),
-    awful.key({ modkey }, "x",
-        function() awful.spawn("betterlockscreen --lock dimblur --blur 8") end,
-        { description="lock screen", group="awesome" }),
-    awful.key({ modkey, "Shift" }, "c",
-        function() awful.spawn("toggleprogram picom") end,
-        { description="toggle compositor", group="awesome" }),
-    awful.key({ modkey }, "d",
-        function() awful.screen.focused().mypromptbox:run() end,
-        { description="run prompt", group="launcher" }),
-    awful.key({ modkey }, "r",
-        function() menubar.show() end,
-        { description="show the menubar", group="launcher" }),
-})
-
--- Tag-related
-awful.keyboard.append_global_keybindings({
-    awful.key({ modkey }, "h",
-        awful.tag.viewprev,
-        { description="view previous", group="tag" }),
-    awful.key({ modkey }, "l",
-        awful.tag.viewnext,
-        { description="view next", group="tag" }),
-    awful.key({ modkey }, "Tab",
-        awful.tag.history.restore,
-        { description="go back", group="tag" }),
-})
-
-awful.keyboard.append_global_keybindings({
-    awful.key({ modkey, "Shift" }, "e",
-        function()
-            local command = 'printf "No\nYes" | rofi -theme-str "configuration { fixed-num-lines: true; } listview { columns: 1; lines: 2; }" -dmenu -p "Exit awesome?"'
-            awful.spawn.easy_async_with_shell(command, function(stdout, stderr, reason, exit_code)
-                if stdout:sub(1, 3) == "Yes" then
-                    awesome.quit()
-                end
-            end)
-        end)
-})
-
-awful.keyboard.append_global_keybindings({
-    awful.key({ modkey, "Shift" }, "-",
-        function()
-            local c = awful.client.restore()
-            -- Focus restored client
-            if c then
-                c:activate { raise = true, context = "key.unminimize" }
-            end
-        end,
-        { description="restore minimized", group="client" }),
-})
-
--- Layout
-awful.keyboard.append_global_keybindings({
-    awful.key({ modkey }, "m",
-        function() awful.tag.incnmaster(1, nil, true) end,
-        { description="increase the number of master clients", group="layout" }),
-    awful.key({ modkey, "Shift" }, "m",
-        -- TODO Don't decrease masters to 0
-        function() awful.tag.incnmaster(-1, nil, true) end,
-        { description="decrease the number of master clients", group="layout" }),
-    awful.key({ modkey }, "v",
-        function() awful.tag.incncol(1, nil, true) end,
-        { description="increase the number of columns", group="layout" }),
-    awful.key({ modkey, "Shift" }, "v",
-        function() awful.tag.incncol(-1, nil, true) end,
-        { description="decrease the number of columns", group="layout" }),
-    awful.key({ modkey }, "space",
-        function() awful.layout.inc(1) end,
-        { description="select next", group="layout" }),
-    awful.key({ modkey, "Shift" }, "space",
-        function() awful.layout.inc(-1) end,
-        { description="select previous", group="layout" }),
-})
-
-awful.keyboard.append_global_keybindings({
-    awful.key({}, "XF86AudioPlay",
-        function() awful.util.spawn("playerctl play-pause") end),
-    awful.key({}, "XF86AudioPause",
-        function() awful.util.spawn("playerctl play-pause") end),
-    awful.key({}, "XF86AudioNext",
-        function() awful.util.spawn("playerctl next") end),
-    awful.key({}, "XF86AudioPrev",
-        function() awful.util.spawn("playerctl previous") end),
-    awful.key({}, "XF86AudioLowerVolume",
-        function() awful.util.spawn("pactl set-sink-volume 2 -5%") end),
-    awful.key({}, "XF86AudioRaiseVolume",
-        function() awful.util.spawn("pactl set-sink-volume 2 +5%") end),
-    awful.key({}, "XF86AudioMute",
-        function() awful.util.spawn("amixer -q -D pulse sset Master toggle") end),
-})
-
-awful.keyboard.append_global_keybindings({
-    awful.key {
-        modifiers   = { modkey },
-        keygroup    = "numrow",
-        description="only view tag",
-        group       = "tag",
-        on_press    = function(i)
-            -- [[+CHARITABLE
-            -- TODO Raise tag after swapping
-            -- TODO Tag history toggle with charitable
-            local tag = tags[i]
-            if tag then
-                charitable.select_tag(tag, awful.screen.focused())
-            end
-            --]]
-            --[[-CHARITABLE
-      local screen = awful.screen.focused()
-      local tag = screen.tags[i]
-      local tags = awful.screen.focused().selected_tags
-      local tagslen = tableLength(tags)
+local numberkeys = {
+  awful.key {
+    modifiers   = { modkey },
+    keygroup    = "numrow",
+    description = "only view tag",
+    group       = "tag",
+    on_press    = function(i)
+      -- TODO Raise tag after swapping
+      -- TODO Tag history toggle with charitable
+      local tag = tags[i]
       if tag then
-        -- If attempting to focus current tag, focus previous from history
-        if tagslen == 1 and tag.name == tags[1].name then
-          awful.tag.history.restore()
-        else
-          tag:view_only()
+        charitable.select_tag(tag, awful.screen.focused())
+      end
+    end,
+  },
+  awful.key {
+    modifiers   = { modkey, "Control" },
+    keygroup    = "numrow",
+    description = "toggle tag",
+    group       = "tag",
+    on_press    = function(i)
+      local tag = tags[i]
+      if tag then
+        charitable.toggle_tag(tag, awful.screen.focused())
+      end
+    end,
+  },
+  awful.key {
+    modifiers   = { modkey, "Shift" },
+    keygroup    = "numrow",
+    description = "move focused client to tag",
+    group       = "tag",
+    on_press    = function(i)
+      if client.focus then
+        local tag = tags[i]
+        if tag then
+          client.focus:move_to_tag(tag)
         end
       end
-      --]]
-        end,
-    },
-    awful.key {
-        modifiers   = { modkey, "Control" },
-        keygroup    = "numrow",
-        description="toggle tag",
-        group       = "tag",
-        on_press    = function(i)
-            -- [[+CHARITABLE
-            local tag = tags[i]
-            if tag then
-                charitable.toggle_tag(tag, awful.screen.focused())
-            end
-            --]]
-            --[[-CHARITABLE
-      local screen = awful.screen.focused()
-      local tag = screen.tags[i]
-      if tag then
-        awful.tag.viewtoggle(tag)
+    end,
+  },
+  awful.key {
+    modifiers   = { modkey, "Control", "Shift" },
+    keygroup    = "numrow",
+    description = "toggle focused client on tag",
+    group       = "tag",
+    on_press    = function(i)
+      if client.focus then
+        local tag = tags[i]
+        if tag then
+          client.focus:toggle_tag(tag)
+        end
       end
-      --]]
-        end,
-    },
-    awful.key {
-        modifiers   = { modkey, "Shift" },
-        keygroup    = "numrow",
-        description="move focused client to tag",
-        group       = "tag",
-        on_press    = function(i)
-            if client.focus then
-                -- local tag = client.focus.screen.tags[i]
-                local tag = tags[i]
-                if tag then
-                    client.focus:move_to_tag(tag)
-                end
-            end
-        end,
-    },
-    awful.key {
-        modifiers   = { modkey, "Control", "Shift" },
-        keygroup    = "numrow",
-        description="toggle focused client on tag",
-        group       = "tag",
-        on_press    = function(i)
-            if client.focus then
-                -- local tag = client.focus.screen.tags[i]
-                local tag = tags[i]
-                if tag then
-                    client.focus:toggle_tag(tag)
-                end
-            end
-        end,
-    },
-    awful.key {
-        modifiers   = { modkey },
-        keygroup    = "numpad",
-        description="select layout directly",
-        group       = "layout",
-        on_press    = function(i)
-            local t = awful.screen.focused().selected_tag
-            if t then
-                t.layout = t.layouts[i] or t.layout
-            end
-        end,
-    }
-})
-
-awful.keyboard.append_client_keybindings({
-    -- Resize windows
-    awful.key({ modkey, "Control" }, "Up",
-        function(c)
-            if c.floating then
-                c:relative_move(0, 0, 0, -10)
-            else
-                awful.client.incwfact(0.025)
-            end
-        end,
-        { description="Resize Vertical -", group="client" }),
-    awful.key({ modkey, "Control" }, "Down",
-        function(c)
-            if c.floating then
-                c:relative_move(0, 0, 0, 10)
-            else
-                awful.client.incwfact(-0.025)
-            end
-        end,
-        { description="Resize Vertical +", group="client" }),
-    awful.key({ modkey, "Control" }, "Left",
-        function(c)
-            if c.floating then
-                c:relative_move(0, 0, -10, 0)
-            else
-                awful.tag.incmwfact(-0.025)
-            end
-        end,
-        { description="Resize Horizontal -", group="client" }),
-    awful.key({ modkey, "Control" }, "Right",
-        function(c)
-            if c.floating then
-                c:relative_move(0, 0, 10, 0)
-            else
-                awful.tag.incmwfact(0.025)
-            end
-        end,
-        { description="Resize Horizontal +", group="client" }),
-
-    -- Moving windows
-    awful.key({ modkey, "Shift" }, "Down",
-        function(c)
-            if c.floating then
-                c:relative_move(0, 20, 0, 0)
-            else
-                awful.client.swap.global_bydirection("down")
-                c:raise()
-            end
-        end,
-        { description="Move Down", group="client" }),
-    awful.key({ modkey, "Shift" }, "Up",
-        function(c)
-            if c.floating then
-                c:relative_move(0, -20, 0, 0)
-            else
-                awful.client.swap.global_bydirection("up")
-                c:raise()
-            end
-        end,
-        { description="Move Up", group="client" }),
-    awful.key({ modkey, "Shift" }, "Left",
-        function(c)
-            if c.floating then
-                c:relative_move(-20, 0, 0, 0)
-            else
-                awful.client.swap.global_bydirection("left")
-                c:raise()
-            end
-        end,
-        { description="Move Left", group="client" }),
-    awful.key({ modkey, "Shift" }, "Right",
-        function(c)
-            if c.floating then
-                c:relative_move(20, 0, 0, 0)
-            else
-                awful.client.swap.global_bydirection("right")
-                c:raise()
-            end
-        end,
-        { description="Move Right", group="client" }),
-    awful.key({ modkey }, "Down",
-        function(c)
-          -- https://www.reddit.com/r/awesomewm/comments/j73j99/comment/g82ik6f/?utm_source=share&utm_medium=web2x&context=3
-          if THas({"dovetail.layout.right", "max"}, awful.screen.focused().selected_tag.layout.name) then
-            awful.client.focus.byidx(1)
-            if client.focus == awful.client.getmaster(awful.screen.focused()) then
-              awful.client.focus.byidx(-1)
-            end
-          else
-            awful.client.focus.global_bydirection("down")
-            client.focus:raise()
-          end
-        end,
-        { description="focus next window up", group="client" }),
-    awful.key({ modkey }, "Up",
-        function(c)
-          if THas({"dovetail.layout.right", "max"}, awful.screen.focused().selected_tag.layout.name) then
-            awful.client.focus.byidx(-1)
-            if client.focus == awful.client.getmaster(awful.screen.focused()) then
-              awful.client.focus.byidx(1)
-            end
-          else
-            awful.client.focus.global_bydirection("up")
-            client.focus:raise()
-          end
-        end,
-        { description="focus next window down", group="client" }),
-    awful.key({ modkey }, "Right",
-        function(c)
-            awful.client.focus.global_bydirection("right")
-            client.focus:raise()
-        end,
-        { description="focus next window right", group="client" }),
-    awful.key({ modkey }, "Left",
-        function(c)
-            awful.client.focus.global_bydirection("left")
-            client.focus:raise()
-        end,
-        { description="focus next window left", group="client" }),
-    awful.key({ modkey }, "n",
-        function() scratch.toggle("wezterm start --class scratch", { class="scratch" }) end,
-        { description="toggle scratchpad", group="client" }),
-    -- awful.key({ modkey, "Shift" }, "n",
-    --     function() scratch.toggle("alacritty --class math --title math --option font.size=18 --command tmux new-session -A -s math python3", { instance = "math" }) end,
-    --     { description="toggle math scratchpad", group="client" }),
-})
-
-client.connect_signal("request::default_mousebindings", function()
-    awful.mouse.append_client_mousebindings({
-        awful.button({}, 1,
-            function(c) c:activate { context = "mouse_click" } end),
-        -- awful.button({ modkey }, 1,
-        --     function(c) c:activate { context = "mouse_click", action = "mouse_move" } end),
-        -- awful.button({ modkey }, 3,
-        --     function(c) c:activate { context = "mouse_click", action = "mouse_resize" } end),
-            awful.button({ modkey }, 1, near_border(0.1,
-                                           resize_client,
-                                           awful.mouse.client.move)),
-            awful.button({ modkey }, 3, resize_client)
-    })
-end)
+    end,
+  },
+  awful.key {
+    modifiers   = { modkey },
+    keygroup    = "numpad",
+    description = "select layout directly",
+    group       = "layout",
+    on_press    = function(i)
+      local t = awful.screen.focused().selected_tag
+      if t then
+        t.layout = t.layouts[i] or t.layout
+      end
+    end,
+  }
+}
 
 client.connect_signal("request::default_keybindings", function()
-    awful.keyboard.append_client_keybindings({
-        awful.key({ modkey }, "f",
-            function(c)
-                c.fullscreen = not c.fullscreen
-                c:raise()
-            end,
-            { description="toggle fullscreen", group="client" }),
-        awful.key({ modkey, "Shift" }, "f",
-            awful.client.floating.toggle,
-            { description="toggle floating", group="client" }),
-        awful.key({ modkey }, "q",
-            function(c) c:kill() end,
-            { description="close", group="client" }),
-        awful.key({ modkey, "Shift" }, "Return",
-            function(c) c:swap(awful.client.getmaster()) end,
-            { description="move to master", group="client" }),
-        awful.key({ modkey }, ".",
-            function(c) c.ontop = not c.ontop end,
-            { description="toggle keep on top", group="client" }),
-        awful.key({ modkey }, "-",
-            -- The client currently has the input focus, so it cannot be
-            -- minimized, since minimized clients can't have the focus.
-            function(c) c.minimized = true end,
-            { description="minimize", group="client" }),
-    })
+  awful.keyboard.append_global_keybindings(globalkeys)
+  awful.keyboard.append_global_keybindings(numberkeys)
+end)
+
+local clientbtns = ez.btntable {
+  ["1"] = function(c) client.focus = c end,
+  ["M-1"] = awful.mouse.client.move,
+  ["M-3"] = awful.mouse.client.resize,
+}
+local globalbtns = ez.btntable {
+  ["3"] = function() mymainmenu:toggle() end,
+}
+
+client.connect_signal("request::default_mousebindings", function()
+  awful.mouse.append_client_mousebindings(clientbtns)
+  awful.mouse.append_global_mousebindings(globalbtns)
 end)
 -- }}}
 
@@ -1040,7 +856,7 @@ end)
 --]]
 
 --[[ Remove border when only one client
-screen.connect_signal("arrange", function (s)
+screen.connect_signal("arrange", function(s)
     local only_one = #s.tiled_clients == 1
     for _, c in pairs(s.clients) do
         if only_one and not c.floating or c.maximized then
@@ -1081,7 +897,7 @@ end)
 
 -- https://awesomewm.org/apidoc/core_components/client.html#Signals
 -- https://stackoverflow.com/a/51687321
---screen.connect_signal("arrange", function (s)
+--screen.connect_signal("arrange", function(s)
 --    local max = s.selected_tag.layout.name == "max"
 --    local only_one = #s.tiled_clients == 1 -- use tiled_clients so that other floating windows don't affect the count
 --    -- but iterate over clients instead of tiled_clients as tiled_clients doesn't include maximized windows
