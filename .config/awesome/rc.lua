@@ -287,8 +287,8 @@ screen.connect_signal("request::desktop_decoration", function(s)
             awful.button({}, 1, function(t) charitable.select_tag(t, awful.screen.focused()) end),
             awful.button({}, 3, function(t) charitable.toggle_tag(t, awful.screen.focused()) end),
             -- TODO Improve view{next,prev}
-            awful.button({}, 4, function(t) awful.tag.viewnext(t.screen) end),
-            awful.button({}, 5, function(t) awful.tag.viewprev(t.screen) end)
+            awful.button({}, 4, function(t) awful.tag.viewprev(t.screen) end),
+            awful.button({}, 5, function(t) awful.tag.viewnext(t.screen) end)
         ),
         source = function(screen, args) return tags end,
     })
@@ -716,7 +716,7 @@ awful.keyboard.append_client_keybindings({
         end,
         { description="focus next window left", group="client" }),
     awful.key({ modkey }, "n",
-        function() scratch.toggle("wezterm connect scratch --class scratch", { instance="scratch" }) end,
+        function() scratch.toggle("wezterm start --class scratch", { class="scratch" }) end,
         { description="toggle scratchpad", group="client" }),
     -- awful.key({ modkey, "Shift" }, "n",
     --     function() scratch.toggle("alacritty --class math --title math --option font.size=18 --command tmux new-session -A -s math python3", { instance = "math" }) end,
@@ -893,11 +893,7 @@ ruled.client.connect_signal("request::rules", function()
   }
 
   ruled.client.append_rule {
-    rule       = { instance="scratch" },
-    properties = scratch_props
-  }
-  ruled.client.append_rule {
-    rule       = { instance="math" },
+    rule_any   = { instance={"scratch"}, class={"scratch"} },
     properties = scratch_props
   }
 end)
