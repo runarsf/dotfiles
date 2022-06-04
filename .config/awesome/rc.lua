@@ -370,7 +370,6 @@ local globalkeys = ez.keytable {
       end
     end)
   end,
-  ["M-minus"] = function(c) c.minimized = true end,
   ["M-S-minus"] = function()
     local c = awful.client.restore()
     if c then
@@ -393,11 +392,15 @@ local globalkeys = ez.keytable {
   ["XF86AudioMute"] = {awful.util.spawn, "amixer -q -D pulse sset Master toggle"},
   -- scratch.toggle("alacritty --class math --title math --option font.size=18 --command tmux new-session -A -s math python3", { instance = "math" })
   ["M-n"] = {scratch.toggle, "wezterm start --class scratch", {class="scratch"}},
+  ["M-S-f"] = awful.client.floating.toggle,
+}
+
+local clientkeys = ez.keytable {
+  ["M-minus"] = function(c) c.minimized = true end,
   ["M-f"] = function(c)
     c.fullscreen = not c.fullscreen
     c:raise()
   end,
-  ["M-S-f"] = awful.client.floating.toggle,
   ["M-q"] = function(c) c:kill() end,
   ["M-S-Return"] = function(c) c:swap(awful.client.getmaster()) end,
   ["M-period"] = function(c) c.ontop = not c.ontop end,
@@ -565,21 +568,23 @@ local numberkeys = {
 
 client.connect_signal("request::default_keybindings", function()
   awful.keyboard.append_global_keybindings(globalkeys)
+  awful.keyboard.append_client_keybindings(clientkeys)
   awful.keyboard.append_global_keybindings(numberkeys)
 end)
 
-local clientbtns = ez.btntable {
+local globalbuttons = ez.btntable {
+  ["3"] = function() mymainmenu:toggle() end,
+}
+
+local clientbuttons = ez.btntable {
   ["1"] = function(c) client.focus = c end,
   ["M-1"] = awful.mouse.client.move,
   ["M-3"] = awful.mouse.client.resize,
 }
-local globalbtns = ez.btntable {
-  ["3"] = function() mymainmenu:toggle() end,
-}
 
 client.connect_signal("request::default_mousebindings", function()
-  awful.mouse.append_client_mousebindings(clientbtns)
-  awful.mouse.append_global_mousebindings(globalbtns)
+  awful.mouse.append_global_mousebindings(globalbuttons)
+  awful.mouse.append_client_mousebindings(clientbuttons)
 end)
 -- }}}
 
@@ -686,8 +691,7 @@ ruled.client.connect_signal("request::rules", function()
     "Mattermost",
     "TelegramDesktop",
     "discord",
-    "spotify",
-    "Spotify"
+    "[Ss]potify",
   }}
   rule {5, "org.remmina.Remmina"}
   rule {9, "KeePassXC"}
