@@ -607,6 +607,7 @@ end)
 
 -- This is a pseudo-rule workaround for tag-rules causing a crash when using chariatable / sharedtags.
 local rule = function(rules, clients)
+  -- Rules act as rule_any
   -- (2 -> {["tag"]=tags[2]})
   if type(rules) ~= "table" then
     rules = { tag=tags[rules] }
@@ -636,6 +637,9 @@ local rule = function(rules, clients)
             c:move_to_tag(rule_v)
             -- charitable.select_tag(rule_v, awful.screen.focused())
           end
+          -- if rule_k == "width" then
+          --   c:relative_move(0, 0, rule_v, 0)
+          -- end
         end
       end
     end
@@ -648,7 +652,6 @@ ruled.client.connect_signal("request::rules", function()
     "TelegramDesktop",
     "discord",
     "[Ss]potify",
-    "[Ll]ibrewolf",
   })
   rule(5, "org.remmina.Remmina")
   rule(9, "KeePassXC")
@@ -724,45 +727,22 @@ ruled.client.connect_signal("request::rules", function()
     properties = { is_fixed=true, size_hints_honor=false }
   }
 
-  -- TODO Cleaner rule-function rule("class" or {name="name"}, {floating=true})
-  -- TODO Move to own file
-  --local rule = function(opts)
-  --  setmetatable(opts, { __index={ tag=1, classes={""} } })
-  --  local tag, classes =
-  --    opts[1] or opts.tag,
-  --    opts[2] or opts.classes
-
-  --  if type(classes) == "string" then
-  --    classes = { classes }
-  --  end
-
-  --  ruled.client.append_rule {
-  --    rule_any = {
-  --      class = classes
-  --    },
-  --    properties = { tag=tags[tag] }
-  --  }
-  --end
-
-  local scratch_props = {
-    floating = true,
-    titlebars_enabled = true,
-    minimized = true,
-    -- width=1300,
-    -- height=900,
-    sticky = false,
-    above = true,
-    ontop = false,
-    border_width = 0,
-    skip_taskbar = true,
-    honor_padding = true,
-    honor_workarea = true
-  }
 
   ruled.client.append_rule {
     rule_any   = { instance={"scratch"}, class={"scratch"} },
-    properties = scratch_props
+    properties = {
+      floating = true,
+      titlebars_enabled = true,
+      minimized = true,
+      sticky = false,
+      above = true,
+      ontop = false,
+      border_width = 0,
+      skip_taskbar = true,
+      honor_padding = true,
+      honor_workarea = true
   }
+}
 end)
 
 -- }}}
