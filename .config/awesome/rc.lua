@@ -41,18 +41,15 @@ local ruled         = require("ruled")
 local menubar       = require("menubar")
 local hotkeys_popup = require("awful.hotkeys_popup")
 require("awful.hotkeys_popup.keys")
-local xresources = require("beautiful.xresources")
-local dpi        = xresources.apply_dpi
+local xresources    = require("beautiful.xresources")
+local dpi           = xresources.apply_dpi
+local inspect       = require("inspect.inspect")
 
 local ez         = require("ez")
 unpack = table.unpack or unpack
 -- }}}
 
 local dovetail = require("dovetail")
-
--- local function is_floating (c)
---    return c.floating or awful.layout.get(c.screen) == awful.layout.suit.floating
--- end
 
 -- Error handling {{{
 -- Check if awesome encountered an error during startup and fell back to
@@ -67,6 +64,10 @@ end)
 -- }}}
 
 -- Helpers {{{
+-- local CFloating = function(c)
+--    return c.floating or awful.layout.get(c.screen) == awful.layout.suit.floating
+-- end
+
 local TLen = function(T)
   local count = 0
   for _ in pairs(T) do count = count + 1 end
@@ -88,6 +89,15 @@ local THas = function(T, K)
     if v == K and type(k) == "number" then return true end
   end
   return false
+end
+
+local debug = function(text)
+  if text then
+    if type(text) == "table" then
+      text = inspect(text)
+    end
+    naughty.notify({text=tostring(text)})
+  end
 end
 -- }}}
 
@@ -370,15 +380,13 @@ local globalkeys = ez.keytable {
       end
     end)
   end,
-  ["M-S-minus"] = function()
-    local c = awful.client.restore()
-    if c then
-      c:activate { raise=true, context="key.unminimize" }
+  ["M-m"] = {awful.tag.incnmaster, 1, nil, true},
+  ["M-S-m"] = function()
+    local masters = awful.tag.getnmaster() -- awful.screen.focused().selected_tag.master_count
+    if masters > 1 then
+      awful.tag.incnmaster(-1, nil, true)
     end
   end,
-  -- TODO Don't decrease masters to 0
-  ["M-m"] = {awful.tag.incnmaster, 1, nil, true},
-  ["M-S-m"] = {awful.tag.incnmaster, -1, nil, true},
   ["M-v"] = {awful.tag.incncol, 1, nil, true},
   ["M-S-v"] = {awful.tag.incncol, -1, nil, true},
   ["M-space"] = {awful.layout.inc, 1},
@@ -392,15 +400,21 @@ local globalkeys = ez.keytable {
   ["XF86AudioMute"] = {awful.util.spawn, "amixer -q -D pulse sset Master toggle"},
   -- scratch.toggle("alacritty --class math --title math --option font.size=18 --command tmux new-session -A -s math python3", { instance = "math" })
   ["M-n"] = {scratch.toggle, "wezterm start --class scratch", {class="scratch"}},
-  ["M-S-f"] = awful.client.floating.toggle,
 }
 
 local clientkeys = ez.keytable {
   ["M-minus"] = function(c) c.minimized = true end,
+  ["M-S-minus"] = function()
+    local c = awful.client.restore()
+    if c then
+      c:activate { raise=true, context="key.unminimize" }
+    end
+  end,
   ["M-f"] = function(c)
     c.fullscreen = not c.fullscreen
     c:raise()
   end,
+  ["M-S-f"] = awful.client.floating.toggle,
   ["M-q"] = function(c) c:kill() end,
   ["M-S-Return"] = function(c) c:swap(awful.client.getmaster()) end,
   ["M-period"] = function(c) c.ontop = not c.ontop end,
@@ -588,15 +602,58 @@ client.connect_signal("request::default_mousebindings", function()
 end)
 -- }}}
 
---[[ Rules {{{
-https://awesomewm.org/doc/api/libraries/awful.rules.html
-https://www.reddit.com/r/awesomewm/comments/mytkwa/awfulrules_regex_wildcards/
-xprop ->
-  WM_CLASS[1] => instance
-  WM_CLASS[2] => class
---]]
+-- Rules {{{
+-- https://awesomewm.org/doc/api/libraries/awful.rules.html
+
+-- This is a pseudo-rule workaround for tag-rules causing a crash when using chariatable / sharedtags.
+local rule = function(rules, clients)
+  -- (2 -> {["tag"]=tags[2]})
+  if type(rules) ~= "table" then
+    rules = { tag=tags[rules] }
+  end
+  -- ("firefox" -> {"firefox"})
+  if type(clients) ~= "table" then
+    clients = { clients }
+  end
+
+  -- When the client requests a class
+  client.connect_signal("property::class", function(c)
+    -- Loop through all clients the rule(s) should apply to
+    for client_k, client_v in pairs(clients) do
+      -- "number" in this sense means that the key is undefined, so we assume it should be a class
+      -- ([1]="firefox" -> ["class"]="firefox")
+      if type(client_k) == "number" then
+        client_k = "class"
+      end
+
+      -- Check if the rule matches the client
+      if (client_k == "class"    and string.match(c.class,    client_v)) or
+         (client_k == "instance" and string.match(c.instance, client_v)) then
+        -- Loop through all rules
+        for rule_k, rule_v in pairs(rules) do
+          -- Apply rules
+          if rule_k == "tag" then
+            c:move_to_tag(rule_v)
+            -- charitable.select_tag(rule_v, awful.screen.focused())
+          end
+        end
+      end
+    end
+  end)
+end
 
 ruled.client.connect_signal("request::rules", function()
+  rule(2, {
+    "Mattermost",
+    "TelegramDesktop",
+    "discord",
+    "[Ss]potify",
+    "[Ll]ibrewolf",
+  })
+  rule(5, "org.remmina.Remmina")
+  rule(9, "KeePassXC")
+  rule(6, "Inkscape")
+
   -- All clients will match this rule
   ruled.client.append_rule {
     id = "global",
@@ -669,33 +726,23 @@ ruled.client.connect_signal("request::rules", function()
 
   -- TODO Cleaner rule-function rule("class" or {name="name"}, {floating=true})
   -- TODO Move to own file
-  local rule = function(opts)
-    setmetatable(opts, { __index={ tag=1, classes={""} } })
-    local tag, classes =
-      opts[1] or opts.tag,
-      opts[2] or opts.classes
+  --local rule = function(opts)
+  --  setmetatable(opts, { __index={ tag=1, classes={""} } })
+  --  local tag, classes =
+  --    opts[1] or opts.tag,
+  --    opts[2] or opts.classes
 
-    if type(classes) == "string" then
-      classes = { classes }
-    end
+  --  if type(classes) == "string" then
+  --    classes = { classes }
+  --  end
 
-    ruled.client.append_rule {
-      rule_any = {
-        class = classes
-      },
-      properties = { tag=tags[tag] }
-    }
-  end
-
-  rule {2, {
-    "Mattermost",
-    "TelegramDesktop",
-    "discord",
-    "[Ss]potify",
-  }}
-  rule {5, "org.remmina.Remmina"}
-  rule {9, "KeePassXC"}
-  rule {6, "Inkscape"}
+  --  ruled.client.append_rule {
+  --    rule_any = {
+  --      class = classes
+  --    },
+  --    properties = { tag=tags[tag] }
+  --  }
+  --end
 
   local scratch_props = {
     floating = true,

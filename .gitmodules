@@ -19,3 +19,6 @@
 [submodule ".config/awesome/ez"]
 	path = .config/awesome/ez
 	url = https://github.com/jcrd/awesome-ez.git
+[submodule ".config/awesome/inspect"]
+	path = .config/awesome/inspect
+	url = https://github.com/kikito/inspect.lua
