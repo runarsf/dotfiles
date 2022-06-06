@@ -32,6 +32,13 @@ local rnotification                         = require("ruled.notification")
 
 local theme                                 = dofile(themes_path.."default/theme.lua")
 
+-- Bling
+theme.flash_focus_start_opacity = 0.8 -- the starting opacity
+theme.flash_focus_step = 0.05         -- the step of animation
+theme.parent_filter_list   = { "firefox", "Gimp", "[Dd]iscord" } -- class names list of parents that should not be swallowed
+theme.child_filter_list    = { "Dragon", "[Dd]iscord" }        -- class names list that should not swallow their parents
+theme.swallowing_filter = true                   -- whether the filters above should be active
+
 theme.wallpaper                             = "~/.config/wall.jpg"
 
 theme.menu_icon                             = config_path .. "icons/menu.png"
@@ -239,7 +246,7 @@ theme.layout_fairv = icon("[][]")
 -- theme.layout_floating  = themes_path.."default/layouts/floatingw.png"
 theme.layout_magnifier = icon("[-]")
 theme.layout_max = icon("[M]")
-theme.layout_centerwork = icon("=[]=")
+theme.layout_centered = icon("=[]=")
 -- theme.layout_fullscreen = themes_path.."default/layouts/fullscreenw.png"
 -- theme.layout_tilebottom = themes_path.."default/layouts/tilebottomw.png"
 -- theme.layout_tileleft   = themes_path.."default/layouts/tileleftw.png"

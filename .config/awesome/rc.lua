@@ -6,8 +6,6 @@
    $ convert -background transparent -fill '#E6E6E6' -font ~/.fonts/JetBrains/JetBrains\ Mono\ Bold\ Italic\ Nerd\ Font\ Complete\ Mono.ttf -pointsize 48 -size 64x64 -gravity center label:TEXT output.png
  - Debug lua:
    $ awesome-client 'return require("gears").filesystem.get_configuration_dir()'
- - https://github.com/frioux/charitable
- - https://github.com/Drauthius/awesome-sharedtags
  - https://stackoverflow.com/questions/69574689/how-to-limit-the-width-of-window-entries-on-the-wibar
  - https://github.com/mut-ex/awesome-wm-nice
  - https://www.reddit.com/r/awesomewm/comments/gehk1g/cursor_follows_focus_possible/
@@ -18,22 +16,21 @@
 --}}}]]
 -- TODO focus_relative to force focus to screen
 
+require("signals")
 -- Packages {{{
 pcall(require, "luarocks.loader")
 
 -- Dynamic tags
-require("eminent.eminent")
--- Scratchpad
-local scratch    = require("scratch.scratch")
+require("modules.eminent.eminent")
 -- XMonad-like workspaces
-local charitable = require("charitable")
+local charitable    = require("modules.charitable")
 -- OSX-like titlebars
-local nice       = require("nice")
-local lain       = require("lain")
+--local nice          = require("modules.nice")
+local machi = require("modules.machi")
 
-local gears = require("gears")
-local awful = require("awful")
-require("awful.autofocus")
+local gears         = require("gears")
+local awful         = require("awful")
+                      require("awful.autofocus")
 local wibox         = require("wibox")
 local beautiful     = require("beautiful")
 local naughty       = require("naughty")
@@ -43,13 +40,13 @@ local hotkeys_popup = require("awful.hotkeys_popup")
 require("awful.hotkeys_popup.keys")
 local xresources    = require("beautiful.xresources")
 local dpi           = xresources.apply_dpi
-local inspect       = require("inspect.inspect")
+local inspect       = require("modules.inspect.inspect")
 
-local ez         = require("ez")
 unpack = table.unpack or unpack
+local ez            = require("modules.ez")
 -- }}}
 
-local dovetail = require("dovetail")
+local dovetail = require("modules.dovetail")
 
 -- Error handling {{{
 -- Check if awesome encountered an error during startup and fell back to
@@ -103,9 +100,32 @@ end
 
 -- Variables {{{
 beautiful.init(gears.filesystem.get_configuration_dir() .. "theme.lua")
+local bling = require("modules.bling")
+local rubato = require("modules.rubato")
+bling.module.flash_focus.enable()
+bling.module.window_swallowing.start()
+
+local anim_y = rubato.timed {
+    pos = -1450,
+    rate = 144,
+    easing = rubato.quadratic,
+    intro = 0.1,
+    duration = 0.3,
+    awestore_compat = true
+}
+local term_scratch = bling.module.scratchpad {
+    command = "wezterm start --class scratch",
+    rule = { instance="scratch" },
+    sticky = true,
+    autoclose = true,
+    floating = true,
+    geometry = { x=360, y=90, height=800, width=1200 },
+    reapply = false,
+    dont_focus_before_close = true,
+    rubato = { y=anim_y }
+}
 
 -- WARN: nice breaks with gtk4, temporary workaround is to uninstall it - https://github.com/mut-ex/awesome-wm-nice/issues/22
-
 --[[+NICE
 nice {
   -- To disable titlebars, set titlebar_height and titlebar_radius to 3,
@@ -127,9 +147,6 @@ nice {
 --]]
 
 -- awesome.set_preferred_icon_size(32)
-
--- beautiful.useless_gap = 3
--- beautiful.gap_single_client = true
 
 awful.mouse.snap.edge_enabled = false
 
@@ -165,25 +182,20 @@ mylauncher = awful.widget.launcher({
 
 menubar.utils.terminal = terminal -- Set the terminal for applications that require it
 -- }}}
+-- machi.editor.nested_layouts = {
+--   ["1"] = awful.layout.suit.fair,
+--   ["2"] = bling.layout.deck,
+-- }
+-- machi.layout.default_cmd="11h0x1x"
 
 -- Layouts {{{
 tag.connect_signal("request::default_layouts", function()
   awful.layout.append_default_layouts({
+    -- machi.default_layout,
     awful.layout.suit.tile,
+    bling.layout.centered,
     dovetail.layout.right,
-    lain.layout.centerwork,
     awful.layout.suit.max,
-    -- awful.layout.suit.floating,
-    -- awful.layout.suit.tile.left,
-    -- awful.layout.suit.tile.bottom,
-    -- awful.layout.suit.tile.top,
-    -- awful.layout.suit.fair.horizontal,
-    -- awful.layout.suit.fair,
-    -- awful.layout.suit.spiral.dwindle,
-    -- awful.layout.suit.spiral,
-    -- awful.layout.suit.magnifier,
-    -- awful.layout.suit.max.fullscreen,
-    -- awful.layout.suit.corner.nw,
   })
 end)
 -- }}}
@@ -233,19 +245,19 @@ https://awesomewm.org/apidoc/popups_and_bars/awful.wibar.html
 
 -- [[+CHARITABLE
 local tags = charitable.create_tags(
-    { "1", "2", "3", "4", "5", "6", "7", "8", "9" },
-    -- { "  ", "  ", "  ", " ﮑ ", " 龎 ", " ﮠ ", "  ", " 煉 ", "  " },
-    {
-        awful.layout.layouts[1],
-        awful.layout.layouts[1],
-        awful.layout.layouts[1],
-        awful.layout.layouts[1],
-        awful.layout.layouts[1],
-        awful.layout.layouts[1],
-        awful.layout.layouts[1],
-        awful.layout.layouts[1],
-        awful.layout.layouts[1],
-    }
+  -- { "  ", "  ", "  ", " ﮑ ", " 龎 ", " ﮠ ", "  ", " 煉 ", "  " },
+  { "1", "2", "3", "4", "5", "6", "7", "8", "9" },
+  {
+    awful.layout.layouts[1],
+    awful.layout.layouts[1],
+    awful.layout.layouts[1],
+    awful.layout.layouts[1],
+    awful.layout.layouts[1],
+    awful.layout.layouts[1],
+    awful.layout.layouts[1],
+    awful.layout.layouts[1],
+    awful.layout.layouts[1],
+  }
 )
 --]]
 
@@ -399,7 +411,7 @@ local globalkeys = ez.keytable {
   ["XF86AudioRaiseVolume"] = {awful.util.spawn, "pactl set-sink-volume 2 +5%"},
   ["XF86AudioMute"] = {awful.util.spawn, "amixer -q -D pulse sset Master toggle"},
   -- scratch.toggle("alacritty --class math --title math --option font.size=18 --command tmux new-session -A -s math python3", { instance = "math" })
-  ["M-n"] = {scratch.toggle, "wezterm start --class scratch", {class="scratch"}},
+  ["M-n"] = function() term_scratch:toggle() end,
 }
 
 local clientkeys = ez.keytable {
@@ -417,7 +429,9 @@ local clientkeys = ez.keytable {
   ["M-S-f"] = awful.client.floating.toggle,
   ["M-q"] = function(c) c:kill() end,
   ["M-S-Return"] = function(c) c:swap(awful.client.getmaster()) end,
-  ["M-period"] = function(c) c.ontop = not c.ontop end,
+  --["M-period"] = function(c) c.ontop = not c.ontop end,
+  --["M-period"] = function() machi.default_editor.start_interactive() end,
+  --["M-comma"] = function() machi.switcher.start(client.focus) end,
   ["M-C-Up"] = function(c)
     if c.floating then
       c:relative_move(0, 0, 0, -10)
@@ -651,11 +665,11 @@ ruled.client.connect_signal("request::rules", function()
     "Mattermost",
     "TelegramDesktop",
     "discord",
-    "[Ss]potify",
   })
   rule(5, "org.remmina.Remmina")
-  rule(9, "KeePassXC")
   rule(6, "Inkscape")
+  rule(8, "[Ss]potify")
+  rule(9, "KeePassXC")
 
   -- All clients will match this rule
   ruled.client.append_rule {
@@ -722,25 +736,26 @@ ruled.client.connect_signal("request::rules", function()
     rule_any = { name={ "Office 365 Mailbox.*", "Security Group.*" } },
     properties = { floating=true }
   }
+
+  -- Fix unresizable electron windows like Discord
   ruled.client.append_rule {
     rule_any = { role={ "browser-window" } },
     properties = { is_fixed=true, size_hints_honor=false }
   }
 
-
   ruled.client.append_rule {
     rule_any   = { instance={"scratch"}, class={"scratch"} },
     properties = {
-      floating = true,
-      titlebars_enabled = true,
-      minimized = true,
-      sticky = false,
+      --floating = true,
+      --titlebars_enabled = true,
+      --minimized = true,
+      --sticky = false,
       above = true,
       ontop = false,
-      border_width = 0,
+      --border_width = 0,
       skip_taskbar = true,
-      honor_padding = true,
-      honor_workarea = true
+      --honor_padding = true,
+      --honor_workarea = true
   }
 }
 end)
@@ -821,85 +836,6 @@ end)
 awful.tag.history.restore = function() end
 --]]
 
--- Signal handling {{{
--- Enable sloppy focus, so that focus follows mouse.
-client.connect_signal("mouse::enter", function(c)
-  c:activate { context="mouse_enter", raise=false }
-end)
-
--- Spawn client under active client
-client.connect_signal("manage", function(c)
-  if not awesome.startup then
-    awful.client.setslave(c)
-    local prev_focused = awful.client.focus.history.get(awful.screen.focused(), 1, nil)
-    local prev_c = awful.client.next(-1, c)
-    if prev_c and prev_focused then
-      while prev_c ~= prev_focused do
-        c:swap(prev_c)
-        prev_c = awful.client.next(-1, c)
-      end
-    end
-  end
-
-  if awesome.startup and
-    not c.size_hints.user_position and
-    not c.size_hints.program_position then
-      -- Prevent clients from being unreachable after screen count changes.
-      awful.placement.no_offscreen(c)
-  end
-end)
-
---[[ Floating node behaviors
-local floatnode = function(c)
-  -- TODO c.first_tag equivalent with tags[]
-    c.ontop = true
-    awful.titlebar.show(c)
-end
-local unfloatnode = function(c)
-    c.ontop = false
-    awful.titlebar.hide(c)
-end
-
-client.connect_signal("property::floating", function(c)
-  if c.floating then
-    floatnode(c)
-  else
-    unfloatnode(c)
-  end
-end)
-client.connect_signal("manage", function(c)
-  if c.floating or c.first_tag.layout.name == "floating" then
-    floatnode(c)
-  else
-    unfloatnode(c)
-  end
-end)
-tag.connect_signal("property::layout", function(t)
-  local clients = t:clients()
-  for k,c in pairs(clients) do
-    if c.floating or c.first_tag.layout.name == "floating" then
-      floatnode(c)
-    else
-      unfloatnode(c)
-    end
-  end
-end)
---]]
-
---[[ Remove border when only one client
-screen.connect_signal("arrange", function(s)
-    local only_one = #s.tiled_clients == 1
-    for _, c in pairs(s.clients) do
-        if only_one and not c.floating or c.maximized then
-            c.border_width = 0
-        else
-            c.border_width = beautiful.border_width
-        end
-    end
-end)
---]]
--- }}}
-
 -- {{{ spawn
 -- spawn_once = function(program, arguments, process)
 --   process = process or program
@@ -925,19 +861,3 @@ end)
 -- raise_or_spawn, once, single_instance
 --end
 -- }}}
-
--- https://awesomewm.org/apidoc/core_components/client.html#Signals
--- https://stackoverflow.com/a/51687321
---screen.connect_signal("arrange", function(s)
---    local max = s.selected_tag.layout.name == "max"
---    local only_one = #s.tiled_clients == 1 -- use tiled_clients so that other floating windows don't affect the count
---    -- but iterate over clients instead of tiled_clients as tiled_clients doesn't include maximized windows
---    for _, c in pairs(s.clients) do
---        if (max or only_one) and not c.floating or c.maximized then
---            c.border_width = 0
---        else
---            c.border_width = beautiful.border_width
---        end
---    end
---end)
---}}}
