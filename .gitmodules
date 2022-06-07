@@ -13,9 +13,6 @@
 [submodule ".config/awesome/modules/dovetail"]
 	path = .config/awesome/modules/dovetail
 	url = https://github.com/jcrd/awesome-dovetail.git
-[submodule ".config/awesome/modules/nice"]
-	path = .config/awesome/modules/nice
-	url = https://github.com/mut-ex/awesome-wm-nice.git
 [submodule ".config/awesome/modules/inspect"]
 	path = .config/awesome/modules/inspect
 	url = https://github.com/kikito/inspect.lua
@@ -25,3 +22,6 @@
 [submodule ".config/awesome/modules/eminent"]
 	path = .config/awesome/modules/eminent
 	url = https://github.com/guotsuan/eminent.git
+[submodule ".config/awesome/nice"]
+	path = .config/awesome/nice
+	url = https://github.com/mut-ex/awesome-wm-nice.git

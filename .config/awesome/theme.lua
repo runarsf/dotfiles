@@ -87,22 +87,23 @@ theme.fg_urgent                             = theme.fg
 
 theme.gap_single_client                     = false
 theme.useless_gap                           = dpi(5)
--- [[NICE-OFF
+-- [[-NICE
 theme.border_width                          = dpi(2)
 theme.border_radius                         = dpi(5)
 --]]
---[[NICE-ON
+--[[+NICE
 theme.border_width                          = dpi(0)
 --]]
 theme.bar_height                            = dpi(20)
 
 theme.border_color_marked                   = theme.red -- .. theme.opacity
--- theme.border_color_floating                 = theme.blue .. theme.opacity
+theme.border_color_floating                 = "#25293E"
 -- theme.border_color_maximized                = theme.dark_gray .. theme.opacity
 -- theme.border_color_fullscreen               = theme.dark_gray .. theme.opacity
--- [[NICE-OFF
+-- [[-NICE
 theme.border_color_active                   = "#306998"
 theme.border_color_normal                   = "#0A0E1400"
+theme.border_color_floating_active = theme.border_color_active
 --]]
 -- theme.border_color_urgent                   = theme.cyan .. theme.opacity
 -- theme.border_color_new                      = theme.yellow .. theme.opacity

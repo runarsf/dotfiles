@@ -24,9 +24,9 @@ pcall(require, "luarocks.loader")
 require("modules.eminent.eminent")
 -- XMonad-like workspaces
 local charitable    = require("modules.charitable")
--- OSX-like titlebars
---local nice          = require("modules.nice")
-local machi = require("modules.machi")
+-- OSX-like titlebars, for some reason can't be required from a subdirectory (modules)
+-- local nice          = require("nice")
+local machi         = require("modules.machi")
 
 local gears         = require("gears")
 local awful         = require("awful")
@@ -114,7 +114,8 @@ local anim_y = rubato.timed {
     awestore_compat = true
 }
 local term_scratch = bling.module.scratchpad {
-    command = "wezterm start --class scratch",
+    -- command = "wezterm start --class scratch",
+    command = "alacritty --class scratch --option font.size=12 --command tmux new-session -A -s scratch",
     rule = { instance="scratch" },
     sticky = true,
     autoclose = true,
@@ -131,12 +132,16 @@ nice {
   -- To disable titlebars, set titlebar_height and titlebar_radius to 3,
   -- and remove the titlebar_items or set button_size to 0.
   -- titlebar_color = beautiful.bg
+  --titlebar_height = 3,
+  --titlebar_radius = 3,
+  --button_size = 0,
+  --titlebar_items = { left={}, middle={}, right={} },
   titlebar_height = 28,
   titlebar_radius = 9,
+  button_size = 12,
   titlebar_font = beautiful.font,
   win_shade_enabled = false,
   no_titlebar_maximized = false,
-  button_size = 12,
   titlebar_items = {
     -- {"sticky", "ontop", "floating"},
     left = {"close", "minimize", "maximize"},
@@ -410,11 +415,13 @@ local globalkeys = ez.keytable {
   ["XF86AudioLowerVolume"] = {awful.util.spawn, "pactl set-sink-volume 2 -5%"},
   ["XF86AudioRaiseVolume"] = {awful.util.spawn, "pactl set-sink-volume 2 +5%"},
   ["XF86AudioMute"] = {awful.util.spawn, "amixer -q -D pulse sset Master toggle"},
-  -- scratch.toggle("alacritty --class math --title math --option font.size=18 --command tmux new-session -A -s math python3", { instance = "math" })
   ["M-n"] = function() term_scratch:toggle() end,
 }
 
 local clientkeys = ez.keytable {
+  ["M-o"] = function(c)
+    c:move_to_tag(tags[7])
+  end,
   ["M-minus"] = function(c) c.minimized = true end,
   ["M-S-minus"] = function()
     local c = awful.client.restore()
@@ -426,7 +433,13 @@ local clientkeys = ez.keytable {
     c.fullscreen = not c.fullscreen
     c:raise()
   end,
-  ["M-S-f"] = awful.client.floating.toggle,
+  ["M-S-f"] = function(c)
+    if not c.fullscreen then
+      -- awful.client.floating.toggle,
+      c.floating = not c.floating
+      c:raise()
+    end
+  end,
   ["M-q"] = function(c) c:kill() end,
   ["M-S-Return"] = function(c) c:swap(awful.client.getmaster()) end,
   --["M-period"] = function(c) c.ontop = not c.ontop end,

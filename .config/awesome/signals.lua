@@ -1,4 +1,7 @@
+local shape = require("gears.shape")
 local awful     = require("awful")
+local naughty = require("naughty")
+local inspect = require("modules.inspect.inspect")
 local beautiful = require("beautiful")
 
 -- Enable sloppy focus, so that focus follows mouse {{{
@@ -30,7 +33,7 @@ client.connect_signal("manage", function(c)
 end)
 -- }}}
 
--- No borders when only one client {{{
+--[[ No borders when only one client {{{
 -- https://stackoverflow.com/a/51687321
 screen.connect_signal("arrange", function(s)
   local max = s.selected_tag.layout.name == "max"
@@ -44,27 +47,38 @@ screen.connect_signal("arrange", function(s)
     end
   end
 end)
+-- }}} ]]
+
+-- Fullscreen nodes on top {{{
+-- client.connect_signal("property::fullscreen", function(c)
+--   if c.fullscreen then
+--     c.above = true
+--   else
+--     c.above = false
+--   end
+-- end)
 -- }}}
 
 -- Center floating nodes and give them a titlebar {{{
 local floating_handler = function(c)
-  if c.floating or
-     c.screen.selected_tag.layout.name == "floating" then
-    awful.titlebar.show(c)
-    return true
-  else
-    awful.titlebar.hide(c)
-    return false
+  if not (c.maximized or c.fullscreen) then
+    if c.floating or c.screen.selected_tag.layout.name == "floating" then
+      awful.titlebar.show(c)
+      c.above = true
+      return true
+    else
+      awful.titlebar.hide(c)
+      c.above = false
+    end
   end
+  return false
 end
 
+client.connect_signal("manage", floating_handler)
 client.connect_signal("property::floating", function(c)
   if floating_handler(c) then
     awful.placement.centered(c)
   end
-end)
-client.connect_signal("manage", function(c)
-  floating_handler(c)
 end)
 tag.connect_signal("property::layout", function(t)
   local clients = t:clients()
@@ -72,4 +86,36 @@ tag.connect_signal("property::layout", function(t)
     floating_handler(c)
   end
 end)
+-- }}}
+
+-- Disable fullscreen on focus lost {{{
+client.connect_signal("mouse::leave", function(c)
+  if c.fullscreen then
+    c.fullscreen = false
+  end
+end)
+-- }}}
+
+-- Rounded borders without a compositor {{{
+local shape_handler = function(c)
+  if c.fullscreen then
+    c.shape = shape.rectangle
+  else
+    c.shape = function(cr,w,h)
+      shape.rounded_rect(cr,w,h,5)
+    end
+    -- c.shape = function(cr, w, h)
+    --   -- shape.transform(shape.rectangle) : translate(0,     0)(cr, w/2, h/2)
+    --   -- shape.transform(shape.rectangle) : translate(0,   w/2)(cr, w/2, h/2)
+    --   -- shape.transform(shape.rectangle) : translate(h/2,   0)(cr, w/2, h/2)
+    --   -- shape.transform(shape.rectangle) : translate(h/2, w/2)(cr, w/2, h/2)
+
+    --   -- shape.transform(shape.circle)    : translate(0,     0)(cr, w/2, h/2)
+    --   -- shape.transform(shape.circle)    : translate(0,   h/2)(cr, w/2, h/2)
+    --   -- shape.transform(shape.partially_rounded_rect) : translate(w/2, h/5)(cr, w/2, h/2, false, true, true, false, 100)
+    -- end
+  end
+end
+client.connect_signal("manage", shape_handler)
+client.connect_signal("property::fullscreen", shape_handler)
 -- }}}
