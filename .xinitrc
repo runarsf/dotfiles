@@ -2,7 +2,7 @@
 
 # Runs when you start X from outside of a Display Manager. Used to set up the X session.
 
-DESKTOP="awesome"
+DESKTOP="xmonad"
 
 userresources="${XDG_CONFIG_HOME:-${HOME:-~}/.config}/.xres/Xresources"
 usermodmap="${XDG_CONFIG_HOME:-${HOME:-~}/.config}/.xres/Xmodmap"
