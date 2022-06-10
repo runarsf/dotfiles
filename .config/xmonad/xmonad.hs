@@ -74,11 +74,40 @@ myConfig = def -- {{{
     }
 -- }}}
 
+centreRect = W.RationalRect 0.25 0.25 0.5 0.5
+
+-- If the window is floating then (f), if tiled then (n)
+floatOrNot f n = withFocused $ \windowId -> do
+    floats <- gets (W.floating . windowset)
+    if windowId `M.member` floats -- if the current window is floating...
+       then f
+       else n
+
+-- Centre and float a window (retain size)
+centreFloat win = do
+    (_, W.RationalRect x y w h) <- floatLocation win
+    windows $ W.float win (W.RationalRect ((1 - w) / 2) ((1 - h) / 2) w h)
+    return ()
+
+-- Float a window in the centre
+centreFloat' w = windows $ W.float w centreRect
+
+-- Make a window my 'standard size' (half of the screen) keeping the centre of the window fixed
+standardSize win = do
+    (_, W.RationalRect x y w h) <- floatLocation win
+    windows $ W.float win (W.RationalRect x y 0.5 0.5)
+    return ()
+
+
+-- Float and centre a tiled window, sink a floating window
+toggleFloat = floatOrNot (withFocused $ windows . W.sink) (withFocused centreFloat')
+
 myKeys conf@XConfig {XMonad.modMask = modm} = M.fromList $ -- {{{
   [ ((modm                  , xK_Return              ), spawn $ XMonad.terminal conf)
   , ((modm                  , xK_n                   ), namedScratchpadAction myScratchpads "terminal")
   , ((modm     .|. shiftMask, xK_r                   ), spawn "xmonad --recompile && xmonad --restart")
   , ((modm     .|. shiftMask, xK_Return              ), promote)
+  , ((modm     .|. shiftMask, xK_f                   ), toggleFloat)
   , ((modm                  , xK_q                   ), kill)
   , ((modm                  , xK_d                   ), spawn "rofi -show")
   , ((modm     .|. shiftMask, xK_d                   ), spawn "dmenu_run")
