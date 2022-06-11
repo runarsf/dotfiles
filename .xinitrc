@@ -2,8 +2,6 @@
 
 # Runs when you start X from outside of a Display Manager. Used to set up the X session.
 
-DESKTOP="xmonad"
-
 userresources="${XDG_CONFIG_HOME:-${HOME:-~}/.config}/.xres/Xresources"
 usermodmap="${XDG_CONFIG_HOME:-${HOME:-~}/.config}/.xres/Xmodmap"
 sysresources="/etc/X11/xinit/.Xresources"
@@ -64,7 +62,7 @@ dunst --config "${XDG_CONFIG_HOME:-${HOME:-~}/.config}/dunst/dunstrc" &
 # xfce4-power-manager &
 # https://forums.fedoraforum.org/showthread.php?326248-Just-upgraded-pipewire-and-want-to-reload-it-without-rebooting
 # pulseaudio --start &
-(~/.fehbg || (feh --bg-scale ~/.config/wall.jpg || nitrogen --restore)) &
+(nitrogen --restore || ("${HOME:-~}/.fehbg" || feh --bg-scale "${XDG_CONFIG_HOME:-${HOME:-~}/.config}/wall.jpg")) &
 if test -x /usr/bin/nm-applet; then
   nm-applet --sm-disable &
 fi
@@ -73,7 +71,7 @@ fi
 test -f "${XDG_CONFIG_HOME:-${HOME:-~}/.config}/dotfiles/autorun-once.sh" && "${XDG_CONFIG_HOME:-${HOME:-~}/.config}/dotfiles/autorun-once.sh"
 
 if test "${DESKTOP}" = "xmonad"; then
-  trayer --edge top --align right --SetDockType true --SetPartialStrut true --expand true --width 5 --transparent false --tint 0x13141D --height 20 --monitor "primary" &
+ trayer --edge top --align right --SetDockType true --SetPartialStrut true --expand true --width 5 --transparent false --tint 0x13141D --height 20 --monitor "primary" &
 elif test "${DESKTOP}" = "bspwm"; then
   trayer --edge top --align right --SetDockType true --SetPartialStrut true --expand false --width 5 --transparent false --tint 0x0D1117 --height 30 --monitor "primary" --margin 14 --distance 11 --padding 0 &
 fi
@@ -92,4 +90,4 @@ fi
 
 # test -f ~/.xsession && source ~/.xsession
 
-exec "${DESKTOP}"
+exec xmonad

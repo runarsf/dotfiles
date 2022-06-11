@@ -1,7 +1,7 @@
 Config { overrideRedirect = False
-       , font     = "xft:JetBrains Mono-9"
-       , bgColor  = "#13141D"
-       , fgColor  = "#9DA2AB"
+       , font     = "xft:JetBrains Mono:pixelsize=12"
+       , bgColor  = "#0D1117"
+       , fgColor  = "#9da2ab"
        , position = TopW L 95
        , commands = [ Run Weather "EGPF"
                         [ "--template", "<weather> <tempC>°C"

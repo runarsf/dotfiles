@@ -25,3 +25,9 @@
 [submodule ".config/awesome/nice"]
 	path = .config/awesome/nice
 	url = https://github.com/mut-ex/awesome-wm-nice.git
+[submodule ".config/xmonad/xmonad"]
+	path = .config/xmonad/xmonad
+	url = https://github.com/xmonad/xmonad.git
+[submodule ".config/xmonad/xmonad-contrib"]
+	path = .config/xmonad/xmonad-contrib
+	url = https://github.com/xmonad/xmonad-contrib.git

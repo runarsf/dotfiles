@@ -1,8 +1,10 @@
+-- https://github.com/xmonad/xmonad/blob/master/src/XMonad/Config.hs
 -- Imports {{{
 import XMonad
 import System.Exit
 import Graphics.X11.ExtraTypes.XF86
 import qualified XMonad.StackSet as W
+import Data.List as L
 
 -- Data {{{
 import qualified Data.Map as M
@@ -11,6 +13,7 @@ import qualified Data.Map as M
 -- Actions {{{
 import XMonad.Actions.Promote
 -- import XMonad.Actions.MouseResize
+import qualified XMonad.Actions.FlexibleResize as Flex
 --- }}}
 
 -- Hooks {{{
@@ -20,6 +23,7 @@ import XMonad.Hooks.ManageHelpers
 import XMonad.Hooks.StatusBar
 import XMonad.Hooks.StatusBar.PP
 import XMonad.Hooks.EwmhDesktops
+import XMonad.Hooks.SetWMName
 -- }}}
 
 -- Util {{{
@@ -52,8 +56,9 @@ main :: IO () -- {{{
 main = xmonad
      . ewmhFullscreen
      . ewmh
-     . withEasySB (statusBarProp "xmobar ${XDG_CONFIG_HOME:-${HOME:-~}/.config}/xmobar/xmobarrc" (pure myXmobarPP)) defToggleStrutsKey
+     $ docks
      $ myConfig
+     -- . withEasySB (statusBarProp "xmobar ${XDG_CONFIG_HOME:-${HOME:-~}/.config}/xmobar/xmobarrc" (pure myXmobarPP)) defToggleStrutsKey
 -- }}}
 
 myConfig = def -- {{{
@@ -64,16 +69,22 @@ myConfig = def -- {{{
     , focusFollowsMouse  = True
     , clickJustFocuses   = True
     , borderWidth        = 3
-    , workspaces         = ["1","2","3","4","5","6","7","8","9", "10"]
+    , workspaces         = ["1","2","3","4","5","6","7","8","9", "0"]
     , normalBorderColor  = "#383a4a"
     , focusedBorderColor = "#306998"
     , keys               = myKeys
-    -- , mouseBindings      = 
+    , mouseBindings      = myButtons
     -- , handleEventHook    = 
-    -- , startupHook        = 
+    , startupHook        = myStartupHook
     }
 -- }}}
 
+myStartupHook = do
+  spawn "(pgrep eww && eww reload) || (eww close bar || killall -q eww; eww open bar)"
+  spawn "killall -q trayer; trayer --edge top --align right --SetDockType true --SetPartialStrut false --expand false --width 100 --widthtype pixel --transparent true --alpha 0 --tint 0x0D1117 --height 30 --heighttype pixel --monitor 'primary' --margin 20 --distance 11 --padding 0 &"
+  setWMName "LG3D"
+
+-- float toggle {{{
 centreRect = W.RationalRect 0.25 0.25 0.5 0.5
 
 -- If the window is floating then (f), if tiled then (n)
@@ -101,6 +112,15 @@ standardSize win = do
 
 -- Float and centre a tiled window, sink a floating window
 toggleFloat = floatOrNot (withFocused $ windows . W.sink) (withFocused centreFloat')
+-- }}}
+
+myButtons conf@XConfig {XMonad.modMask = modm} = M.fromList $ -- {{{
+  [ ((modm, button1), \w -> focus w >> mouseMoveWindow w
+                                    >> windows W.shiftMaster)
+  , ((modm, button2), windows . (W.shiftMaster .) . W.focusWindow)
+  , ((modm, button3), \w -> focus w >> Flex.mouseResizeWindow w
+                                    >> windows W.shiftMaster)
+  ]
 
 myKeys conf@XConfig {XMonad.modMask = modm} = M.fromList $ -- {{{
   [ ((modm                  , xK_Return              ), spawn $ XMonad.terminal conf)
@@ -163,8 +183,8 @@ myKeys conf@XConfig {XMonad.modMask = modm} = M.fromList $ -- {{{
 myScratchpads :: [NamedScratchpad] -- {{{
 myScratchpads = [NS "terminal" spawnTerm findTerm manageTerm]
   where
-    spawnTerm  = "${TERMINAL:-alacritty}" ++ " --class scratchpad --title scratchpad --option font.size=14 --command tmux new-session -A -s scratchpad"
-    findTerm   = title =? "scratchpad"
+    spawnTerm  = "${TERMINAL:-alacritty}" ++ " --class scratchpad --title scratchpad --option font.size=12 --command tmux new-session -A -s scratchpad"
+    findTerm   = appName =? "scratchpad"
     manageTerm = customFloating $ W.RationalRect l t w h
       where
         h = 0.9
@@ -183,6 +203,7 @@ myManageHook = composeAll
     , className =? "Steam"          --> doShift "5"
     , className =? "Remmina"        --> doShift "5"
     , className =? "Spotify"        --> doShift "8"
+    , className ~? "eww-"           --> doLower
     , resource  =? "desktop_window" --> doIgnore
     , (className =? "firefox" <&&> resource =? "Dialog") --> doFloat
     , isDialog                      --> doFloat
@@ -209,31 +230,31 @@ myLayoutHook -- {{{
     delta     = 3/100  -- Percent of screen to increment by when resizing panes
 -- }}}
 
-myXmobarPP :: PP -- {{{
-myXmobarPP = def
-    { ppSep             = magenta " • "
-    , ppTitleSanitize   = xmobarStrip
-    , ppCurrent         = wrap " " "" . xmobarBorder "Top" "#8be9fd" 2
-    , ppHidden          = white . wrap " " ""
-    , ppHiddenNoWindows = lowWhite . wrap " " ""
-    , ppUrgent          = red . wrap (yellow "!") (yellow "!")
-    , ppOrder           = \[ws, l, _, wins] -> [ws, l, wins]
-    , ppExtras          = [logTitles formatFocused formatUnfocused]
-    }
-  where
-    formatFocused   = wrap (white    "[") (white    "]") . magenta . ppWindow
-    formatUnfocused = wrap (lowWhite "[") (lowWhite "]") . blue    . ppWindow
-
-    -- | Windows should have *some* title, which should not not exceed a
-    -- sane length.
-    ppWindow :: String -> String
-    ppWindow = xmobarRaw . (\w -> if null w then "untitled" else w) . shorten 30
-
-    blue, lowWhite, magenta, red, white, yellow :: String -> String
-    magenta  = xmobarColor "#ff79c6" ""
-    blue     = xmobarColor "#bd93f9" ""
-    white    = xmobarColor "#f8f8f2" ""
-    yellow   = xmobarColor "#f1fa8c" ""
-    red      = xmobarColor "#ff5555" ""
-    lowWhite = xmobarColor "#bbbbbb" ""
+--myXmobarPP :: PP -- {{{
+--myXmobarPP = def
+--    { ppSep             = magenta " • "
+--    , ppTitleSanitize   = xmobarStrip
+--    , ppCurrent         = wrap " " "" . xmobarBorder "Top" "#8be9fd" 2
+--    , ppHidden          = white . wrap " " ""
+--    , ppHiddenNoWindows = lowWhite . wrap " " ""
+--    , ppUrgent          = red . wrap (yellow "!") (yellow "!")
+--    , ppOrder           = \[ws, l, _, wins] -> [ws, l, wins]
+--    , ppExtras          = [logTitles formatFocused formatUnfocused]
+--    }
+--  where
+--    formatFocused   = wrap (white    "[") (white    "]") . magenta . ppWindow
+--    formatUnfocused = wrap (lowWhite "[") (lowWhite "]") . blue    . ppWindow
+--
+--    -- | Windows should have *some* title, which should not not exceed a
+--    -- sane length.
+--    ppWindow :: String -> String
+--    ppWindow = xmobarRaw . (\w -> if null w then "untitled" else w) . shorten 30
+--
+--    blue, lowWhite, magenta, red, white, yellow :: String -> String
+--    magenta  = xmobarColor "#ff79c6" ""
+--    blue     = xmobarColor "#bd93f9" ""
+--    white    = xmobarColor "#f8f8f2" ""
+--    yellow   = xmobarColor "#f1fa8c" ""
+--    red      = xmobarColor "#ff5555" ""
+--    lowWhite = xmobarColor "#bbbbbb" ""
 -- }}}
