@@ -7,7 +7,7 @@ if not ok then return end
 local ok, autopairs = pcall(require, "nvim-autopairs.completion.cmp")
 if not ok then return end
 
--- require("luasnip/loaders/from_vscode").lazy_load()
+require("luasnip/loaders/from_vscode").lazy_load()
 
 local check_backspace = function()
   local col = vim.fn.col "." - 1
@@ -69,34 +69,34 @@ cmp.setup {
     -- Accept currently selected item. If none selected, `select` first item.
     -- Set `select` to `false` to only confirm explicitly selected items.
     ["<CR>"] = cmp.mapping.confirm { select = true },
-    -- ["<Tab>"] = cmp.mapping(function(fallback)
-    --   if cmp.visible() then
-    --     cmp.select_next_item()
-    --   elseif luasnip.expandable() then
-    --     luasnip.expand()
-    --   elseif luasnip.expand_or_jumpable() then
-    --     luasnip.expand_or_jump()
-    --   elseif check_backspace() then
-    --     fallback()
-    --   else
-    --     fallback()
-    --   end
-    -- end, {
-    --   "i",
-    --   "s",
-    -- }),
-    -- ["<S-Tab>"] = cmp.mapping(function(fallback)
-    --   if cmp.visible() then
-    --     cmp.select_prev_item()
-    --   elseif luasnip.jumpable(-1) then
-    --     luasnip.jump(-1)
-    --   else
-    --     fallback()
-    --   end
-    -- end, {
-    --   "i",
-    --   "s",
-    -- }),
+    ["<Tab>"] = cmp.mapping(function(fallback)
+      if cmp.visible() then
+        cmp.select_next_item()
+      elseif luasnip.expandable() then
+        luasnip.expand()
+      elseif luasnip.expand_or_jumpable() then
+        luasnip.expand_or_jump()
+      elseif check_backspace() then
+        fallback()
+      else
+        fallback()
+      end
+    end, {
+      "i",
+      "s",
+    }),
+    ["<S-Tab>"] = cmp.mapping(function(fallback)
+      if cmp.visible() then
+        cmp.select_prev_item()
+      elseif luasnip.jumpable(-1) then
+        luasnip.jump(-1)
+      else
+        fallback()
+      end
+    end, {
+      "i",
+      "s",
+    }),
   },
   --     format = require("config.lsp.kind").cmp_format(),
   formatting = {
@@ -126,27 +126,29 @@ cmp.setup {
     select = false,
   },
   window = {
-    documentation = cmp.config.window.bordered(),
-    -- documentation = {
-    --   border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
-    -- },
+    -- documentation = cmp.config.window.bordered(),
+    documentation = {
+      border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
+    },
   },
   experimental = {
-    ghost_text = {
-      hl_group = "LspCodeLens",
-    },
+    ghost_text = false,
+    native_menu = false,
+    -- ghost_text = {
+    --   hl_group = "LspCodeLens",
+    -- },
   },
-  sorting = {
-    comparators = {
-      cmp.config.compare.sort_text,
-      cmp.config.compare.offset,
-      -- cmp.config.compare.exact,
-      cmp.config.compare.score,
-      -- cmp.config.compare.kind,
-      -- cmp.config.compare.length,
-      cmp.config.compare.order,
-    },
-  },
+  -- sorting = {
+  --   comparators = {
+  --     cmp.config.compare.sort_text,
+  --     cmp.config.compare.offset,
+  --     -- cmp.config.compare.exact,
+  --     cmp.config.compare.score,
+  --     -- cmp.config.compare.kind,
+  --     -- cmp.config.compare.length,
+  --     cmp.config.compare.order,
+  --   },
+  -- },
 }
 
-cmp.event:on("confirm_done", autopairs.on_confirm_done({ map_char = { tex = "" } }))
+-- cmp.event:on("confirm_done", autopairs.on_confirm_done({ map_char = { tex = "" } }))

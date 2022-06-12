@@ -105,14 +105,14 @@ local rubato = require("modules.rubato")
 bling.module.flash_focus.enable()
 bling.module.window_swallowing.start()
 
-local anim_y = rubato.timed {
-    pos = -1450,
-    rate = 144,
-    easing = rubato.quadratic,
-    intro = 0.1,
-    duration = 0.3,
-    awestore_compat = true
-}
+-- local anim_y = rubato.timed {
+--     pos = -1450,
+--     rate = 144,
+--     easing = rubato.quadratic,
+--     intro = 0.1,
+--     duration = 0.3,
+--     awestore_compat = true
+-- }
 local term_scratch = bling.module.scratchpad {
     -- command = "wezterm start --class scratch",
     command = "alacritty --class scratch --option font.size=12 --command tmux new-session -A -s scratch",
@@ -123,7 +123,7 @@ local term_scratch = bling.module.scratchpad {
     geometry = { x=360, y=90, height=800, width=1200 },
     reapply = false,
     dont_focus_before_close = true,
-    rubato = { y=anim_y }
+    -- rubato = { y=anim_y }
 }
 
 -- WARN: nice breaks with gtk4, temporary workaround is to uninstall it - https://github.com/mut-ex/awesome-wm-nice/issues/22

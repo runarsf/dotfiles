@@ -11,26 +11,26 @@ end)
 -- }}}
 
 -- Spawn client under active client {{{
-client.connect_signal("manage", function(c)
-  if not awesome.startup then
-    awful.client.setslave(c)
-    local prev_focused = awful.client.focus.history.get(awful.screen.focused(), 1, nil)
-    local prev_c = awful.client.next(-1, c)
-    if prev_c and prev_focused then
-      while prev_c ~= prev_focused do
-        c:swap(prev_c)
-        prev_c = awful.client.next(-1, c)
-      end
-    end
-  end
-
-  if awesome.startup and
-    not c.size_hints.user_position and
-    not c.size_hints.program_position then
-      -- Prevent clients from being unreachable after screen count changes.
-      awful.placement.no_offscreen(c)
-  end
-end)
+-- client.connect_signal("manage", function(c)
+--   if not awesome.startup then
+--     awful.client.setslave(c)
+--     local prev_focused = awful.client.focus.history.get(awful.screen.focused(), 1, nil)
+--     local prev_c = awful.client.next(-1, c)
+--     if prev_c and prev_focused then
+--       while prev_c ~= prev_focused do
+--         c:swap(prev_c)
+--         prev_c = awful.client.next(-1, c)
+--       end
+--     end
+--   end
+-- 
+--   if awesome.startup and
+--     not c.size_hints.user_position and
+--     not c.size_hints.program_position then
+--       -- Prevent clients from being unreachable after screen count changes.
+--       awful.placement.no_offscreen(c)
+--   end
+-- end)
 -- }}}
 
 --[[ No borders when only one client {{{
@@ -74,7 +74,7 @@ local floating_handler = function(c)
   return false
 end
 
-client.connect_signal("manage", floating_handler)
+-- client.connect_signal("manage", floating_handler)
 client.connect_signal("property::floating", function(c)
   if floating_handler(c) then
     awful.placement.centered(c)
@@ -116,6 +116,6 @@ local shape_handler = function(c)
     -- end
   end
 end
-client.connect_signal("manage", shape_handler)
+-- client.connect_signal("manage", shape_handler)
 client.connect_signal("property::fullscreen", shape_handler)
 -- }}}

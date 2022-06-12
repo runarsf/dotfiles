@@ -1,3 +1,4 @@
+local cfg = require("util")
 local pkg = require("util.pkg")
 
 local plugins = function(use)
@@ -100,10 +101,20 @@ local plugins = function(use)
 
   use({ "rcarriga/nvim-notify",
     event = "VimEnter",
+    -- Also has keybind and telescope integration
     -- after = { "dressing" }
     -- requires = { "dressing" },
     config = function()
-      vim.notify = require("notify")
+      Notify = require("notify")
+      vim.notify = Notify
+      Notify.setup({
+        on_open = function(win)
+          vim.api.nvim_win_set_option(win, "wrap", true)
+        end,
+        render = "minimal",
+        states = "fade_in_slide_out",
+        max_width = vim.o.columns * 0.6, -- Only allow notify to occupy 60% of terminal real-estate
+      })
     end,
   })
 
@@ -125,11 +136,11 @@ local plugins = function(use)
     end,
   })
 
-  use({ "karb94/neoscroll.nvim",
-    config = function()
-      require("neoscroll").setup({})
-    end,
-  })
+  -- use({ "karb94/neoscroll.nvim",
+  --   config = function()
+  --     require("neoscroll").setup({})
+  --   end,
+  -- })
 
   use({ "norcalli/nvim-colorizer.lua",
     config = function()
@@ -138,13 +149,13 @@ local plugins = function(use)
   })
 
   use({ "nvim-telescope/telescope.nvim",
-    opt = true,
+    -- opt = true,
     config = function()
       require("config.telescope")
     end,
-    cmd = "Telescope",
-    module = "telescope",
-    keys = { "<leader>ff", "<leader>pp" },
+    -- cmd = "Telescope",
+    -- module = "telescope",
+    -- keys = { "<leader>ff", "<leader>pp" },
     requires = {
       "nvim-telescope/telescope-z.nvim",
       "nvim-lua/popup.nvim",
@@ -161,29 +172,29 @@ local plugins = function(use)
   })
 
   use({ "hrsh7th/nvim-cmp",
-    event = "InsertEnter",
-    opt = true,
+    --event = "InsertEnter",
+    --opt = true,
     config = function()
       require("config.nvim-cmp")
     end,
     requires = {
-      "hrsh7th/cmp-cmdline",
+      "hrsh7th/cmp-nvim-lsp",
       "hrsh7th/cmp-buffer",
       "hrsh7th/cmp-path",
-      "hrsh7th/cmp-nvim-lsp",
-      -- "saadparwaiz1/cmp_luasnip",
-      "rafamadriz/friendly-snippets",
+      "hrsh7th/cmp-cmdline",
+      { "windwp/nvim-autopairs",
+        config = function()
+          require("nvim-autopairs").setup {}
+        end,
+      },
+      "saadparwaiz1/cmp_luasnip",
+      "L3MON4D3/LuaSnip",
       -- { "L3MON4D3/LuaSnip",
       --   config = function()
       --     require("config.luasnip")
       --   end,
       -- },
-      { "windwp/nvim-autopairs",
-        module = "nvim-autopairs",
-        config = function()
-          require('nvim-autopairs').setup({})
-        end,
-      },
+      -- "rafamadriz/friendly-snippets",
       -- { "tzachar/cmp-tabnine",
       --   run = "./install.sh",
       --   config = function()
@@ -194,10 +205,10 @@ local plugins = function(use)
   })
 
   use({ "neovim/nvim-lspconfig",
+    -- after = "cmp-nvim-lsp",
     config = function()
       require("config.lsp")
     end,
-    after = "cmp-nvim-lsp",
     requires = {
       "williamboman/nvim-lsp-installer",
       "tamago324/nlsp-settings.nvim",
