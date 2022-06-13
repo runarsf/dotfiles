@@ -4,7 +4,7 @@ if not status_ok then
 end
 
 lspconfig.pyright.setup {}
--- lspconfig.rust_analyzer.setup {}
+lspconfig.rust_analyzer.setup {}
 -- lspconfig.gopls.setup {}
 -- lspconfig.vls.setup {}
 
