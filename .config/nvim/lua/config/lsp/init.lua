@@ -4,7 +4,9 @@ if not status_ok then
 end
 
 lspconfig.pyright.setup {}
-lspconfig.gopls.setup {}
+-- lspconfig.rust_analyzer.setup {}
+-- lspconfig.gopls.setup {}
+-- lspconfig.vls.setup {}
 
 require "config.lsp.configs"
 require("config.lsp.handlers").setup()

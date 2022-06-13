@@ -113,7 +113,7 @@ local plugins = function(use)
         end,
         render = "minimal",
         states = "fade_in_slide_out",
-        max_width = vim.o.columns * 0.6, -- Only allow notify to occupy 60% of terminal real-estate
+        max_width = math.floor(vim.o.columns * 0.6), -- Only allow notify to occupy 60% of terminal real-estate
       })
     end,
   })
@@ -184,7 +184,7 @@ local plugins = function(use)
       "hrsh7th/cmp-cmdline",
       { "windwp/nvim-autopairs",
         config = function()
-          require("nvim-autopairs").setup {}
+          require("config.autopairs")
         end,
       },
       "saadparwaiz1/cmp_luasnip",
@@ -283,6 +283,10 @@ local plugins = function(use)
     config = function()
       require("config.easy-align")
     end,
+  })
+
+  use({ "ollykel/v-vim",
+    ft = {"verilog", "vlang"},
   })
 
   -- use({ "phaazon/hop.nvim",
