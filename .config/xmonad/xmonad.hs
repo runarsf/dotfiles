@@ -232,12 +232,13 @@ myManageHook = insertPosition Below Newer <>
     [ className =? "Gimp"           --> doFloat
     , className =? "Sxiv"           --> doFloat
     , className =? "Pavucontrol"    --> doCenterFloat
-    , title     =? "scratchpad"     --> doCenterFloat
+    , appName   =? "scratchpad"     --> doCenterFloat
     , className =? "discord"        --> doShift (w !! 1)
     , className =? "Steam"          --> doShift (w !! 4)
     , className =? "Remmina"        --> doShift (w !! 5)
     , className =? "Spotify"        --> doShift (w !! 7)
     , className ~? "eww-"           --> doLower
+    , appName   =? "panel"          --> doLower
     , resource  =? "desktop_window" --> doIgnore
     ,(className =? "firefox"        <&&>
       resource  =? "Dialog")        --> doFloat
