@@ -2,11 +2,13 @@
 
 -- Imports {{{
 import XMonad
+import XMonad.Util.Dmenu
+import Control.Monad
 import Graphics.X11.ExtraTypes.XF86
 import qualified XMonad.StackSet as W
 
 -- System
-import System.Exit (exitSuccess)
+import System.Exit
 
 -- Data
 import Data.List as L
@@ -14,6 +16,7 @@ import qualified Data.Map as M
 
 -- Actions
 import XMonad.Actions.Promote
+import XMonad.Actions.FloatKeys
 -- import XMonad.Actions.MouseResize
 import qualified XMonad.Actions.FlexibleResize as Flex
 
@@ -77,6 +80,12 @@ myConfig = def -- {{{
     } `additionalKeysP` myKeys
 -- }}}
 
+confirm :: String -> X () -> X () -- {{{
+confirm msg cb = do
+    res <- dmenu ["", msg]
+    when (res == msg) cb
+-- }}}
+
 myStartupHook :: X () -- {{{
 myStartupHook = do
   spawn "(pgrep eww && eww reload) || (eww close bar || killall -q eww; eww open bar)"
@@ -108,11 +117,13 @@ standardSize win = do
     (_, W.RationalRect x y w h) <- floatLocation win
     windows $ W.float win (W.RationalRect x y 0.5 0.5)
     return ()
-
-
--- Float and centre a tiled window, sink a floating window
-toggleFloat = floatOrNot (withFocused $ windows . W.sink) (withFocused centreFloat')
 -- }}}
+
+-- Get the name of the active layout.
+getActiveLayoutDescription :: X String
+getActiveLayoutDescription = do
+    workspaces <- gets windowset
+    return $ description . W.layout . W.workspace . W.current $ workspaces
 
 myButtons conf@XConfig {XMonad.modMask = modm} = M.fromList $ -- {{{
   [ ((modm, button1), \w -> focus w >> mouseMoveWindow w
@@ -129,7 +140,7 @@ myKeys =
   , ("M-n", namedScratchpadAction myScratchpads "terminal")
   , ("M-S-r", spawn "xmonad --recompile && xmonad --restart")
   , ("M-S-<Return>", promote)
-  , ("M-S-f", toggleFloat)
+  , ("M-S-f", floatOrNot (withFocused $ windows . W.sink) (withFocused centreFloat'))
   , ("M-q", kill)
   , ("M-d", spawn "rofi -show")
   , ("M-S-d", spawn "dmenu_run")
@@ -142,28 +153,31 @@ myKeys =
   , ("<XF86AudioPlay>", spawn "playerctl play-pause")
   , ("M-f", sequence_ [sendMessage $ Toggle FULL, sendMessage ToggleStruts])
   , ("M-b", sendMessage ToggleStruts)
-  -- , ("M-j", windows W.focusDown)
-  -- , ("M-k", windows W.focusUp)
-  -- , ("M-S-j", windows W.swapDown)
-  -- , ("M-S-k", windows W.swapUp)
-  -- , ("M-h", sendMessage Shrink)
-  -- , ("M-l", sendMessage Expand)
   , ("M-m", sendMessage $ IncMasterN $ 1)
   , ("M-S-m", sendMessage $ IncMasterN $ -1)
   , ("M-t", withFocused $ windows . W.sink)
+  -- https://stackoverflow.com/questions/7603509/haskell-syntax-for-or-in-case-expressions
   , ("M-<Right>", sendMessage $ WN.Go R)
-  , ("M-<Left>",  sendMessage $ WN.Go L)
-  , ("M-<Up>",    sendMessage $ WN.Go U)
-  , ("M-<Down>",  sendMessage $ WN.Go D)
-  , ("M-S-<Right>", sendMessage $ WN.Swap R)
-  , ("M-S-<Left>",  sendMessage $ WN.Swap L)
-  , ("M-S-<Up>",    sendMessage $ WN.Swap U)
-  , ("M-S-<Down>",  sendMessage $ WN.Swap D)
-  , ("M-C-<Right>", sendMessage Expand)
-  , ("M-C-<Left>",  sendMessage Shrink)
-  , ("M-C-<Up>",    sendMessage Expand)
-  , ("M-C-<Down>",  sendMessage Shrink)
-  , ("M-S-e", io exitSuccess)
+  , ("M-<Left>", sendMessage $ WN.Go L)
+  , ("M-<Up>", do
+    layout <- getActiveLayoutDescription
+    case layout of
+      x | elem x ["Spacing Full","Full"] -> windows W.focusUp
+      _                                  -> sendMessage $ WN.Go U)
+  , ("M-<Down>", do
+    layout <- getActiveLayoutDescription
+    case layout of
+      x | elem x ["Spacing Full","Full"] -> windows W.focusDown
+      _                                  -> sendMessage $ WN.Go D)
+  , ("M-S-<Right>", floatOrNot (withFocused (keysMoveWindow ( 20,  0))) (sendMessage $ WN.Swap R))
+  , ("M-S-<Left>",  floatOrNot (withFocused (keysMoveWindow (-20,  0))) (sendMessage $ WN.Swap L))
+  , ("M-S-<Up>",    floatOrNot (withFocused (keysMoveWindow (  0,-20))) (sendMessage $ WN.Swap U))
+  , ("M-S-<Down>",  floatOrNot (withFocused (keysMoveWindow (  0, 20))) (sendMessage $ WN.Swap D))
+  , ("M-C-<Right>", floatOrNot (withFocused (keysResizeWindow ( 20,   0) (0, 0))) (sendMessage Expand))
+  , ("M-C-<Left>",  floatOrNot (withFocused (keysResizeWindow (-20,   0) (0, 0))) (sendMessage Shrink))
+  , ("M-C-<Up>",    floatOrNot (withFocused (keysResizeWindow (  0, -20) (0, 0))) (sendMessage Expand))
+  , ("M-C-<Down>",  floatOrNot (withFocused (keysResizeWindow (  0,  20) (0, 0))) (sendMessage Shrink))
+  , ("M-S-e", confirm "Exit" $ io (exitWith ExitSuccess))
   , ("<XF86AudioNext>", spawn "playerctl next")
   , ("<XF86AudioPrev>", spawn "playerctl previous")
   , ("<XF86AudioLowerVolume>", spawn "pactl set-sink-volume 2 -5%")
@@ -231,4 +245,33 @@ myLayoutHook -- {{{
     nmaster   = 1      -- Default number of windows in the master pane
     ratio     = 1/2    -- Default proportion of screen occupied by master pane
     delta     = 3/100  -- Percent of screen to increment by when resizing panes
+-- }}}
+
+myXmobarPP :: PP -- {{{
+myXmobarPP = def
+    { ppSep             = magenta " • "
+    , ppTitleSanitize   = xmobarStrip
+    , ppCurrent         = wrap " " "" . xmobarBorder "Top" "#8be9fd" 2
+    , ppHidden          = white . wrap " " ""
+    , ppHiddenNoWindows = lowWhite . wrap " " ""
+    , ppUrgent          = red . wrap (yellow "!") (yellow "!")
+    , ppOrder           = \[ws, l, _, wins] -> [ws, l, wins]
+    , ppExtras          = [logTitles formatFocused formatUnfocused]
+    }
+  where
+    formatFocused   = wrap (white    "[") (white    "]") . magenta . ppWindow
+    formatUnfocused = wrap (lowWhite "[") (lowWhite "]") . blue    . ppWindow
+
+    -- | Windows should have *some* title, which should not not exceed a
+    -- sane length.
+    ppWindow :: String -> String
+    ppWindow = xmobarRaw . (\w -> if null w then "untitled" else w) . shorten 30
+
+    blue, lowWhite, magenta, red, white, yellow :: String -> String
+    magenta  = xmobarColor "#ff79c6" ""
+    blue     = xmobarColor "#bd93f9" ""
+    white    = xmobarColor "#f8f8f2" ""
+    yellow   = xmobarColor "#f1fa8c" ""
+    red      = xmobarColor "#ff5555" ""
+    lowWhite = xmobarColor "#bbbbbb" ""
 -- }}}

@@ -17,7 +17,7 @@ DEBUG="${1:+1}"
 
 # NB! Decimals are delimited by a comma, *not* a period, and they're a bit funky
 # TODO Don't pass global variables to functions? Or do? More maintainable
-: "${DIM_AFTER:=5}"
+: "${DIM_AFTER:=1}"
 : "${DIM_LEVEL:=40}"
 # : "${DIM_LEVEL:=$(($(brightnessctl max) / 2))}"
 : "${LOCK_AFTER:=10}"
@@ -254,6 +254,7 @@ pm::screensaver () { # <dim_after:Number> <dim_level:Number> <lock_after:Number>
     for _angle in 0 90 180 270; do
       xdotool mousemove_relative --polar "${_angle}" 0.1
     done
+    # xdotool keydown Control; xdotool keyup Control
     systemctl "${_suspend_method}"
   fi # }}}
 } # }}}
