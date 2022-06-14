@@ -31,3 +31,6 @@
 [submodule ".config/xmonad/xmonad-contrib"]
 	path = .config/xmonad/xmonad-contrib
 	url = https://github.com/xmonad/xmonad-contrib.git
+[submodule ".themes/Mayu"]
+	path = .themes/Mayu
+	url = https://github.com/mrbrownstone07/Mayu_dark_gtk_theme

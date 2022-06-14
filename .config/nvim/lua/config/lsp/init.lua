@@ -5,6 +5,7 @@ end
 
 lspconfig.pyright.setup {}
 lspconfig.rust_analyzer.setup {}
+-- lspconfig.hls.setup {}
 -- lspconfig.gopls.setup {}
 -- lspconfig.vls.setup {}
 

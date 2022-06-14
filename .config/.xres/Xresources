@@ -1,4 +1,4 @@
-#include "./themes/iterm-SpaceGray.Xresources"
+#include "./themes/ayu.Xresources"
 #include "./urxvt"
 
 Xft.dpi: 96

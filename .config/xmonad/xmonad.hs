@@ -17,16 +17,18 @@ import qualified Data.Map as M
 -- Actions
 import XMonad.Actions.Promote
 import XMonad.Actions.FloatKeys
--- import XMonad.Actions.MouseResize
+import XMonad.Actions.MouseResize
 import qualified XMonad.Actions.FlexibleResize as Flex
 
 -- Hooks
+import XMonad.Hooks.InsertPosition
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
 import XMonad.Hooks.StatusBar
 import XMonad.Hooks.StatusBar.PP
 import XMonad.Hooks.EwmhDesktops
+import XMonad.Hooks.WindowSwallowing
 import XMonad.Hooks.SetWMName (setWMName)
 
 -- Util
@@ -46,9 +48,11 @@ import XMonad.Layout.Fullscreen
 import XMonad.Layout.ResizableTile
 import XMonad.Layout.MouseResizableTile
 import XMonad.Layout.Grid
+import XMonad.Layout.Renamed
 import XMonad.Layout.NoBorders
 import qualified XMonad.Layout.WindowNavigation as WN
 import qualified XMonad.Layout.Magnifier as Magn
+import XMonad.Layout.WindowArranger (windowArrange, WindowArrangerMsg(..))
 -- import XMonad.Layout.WindowArranger
 -- import XMonad.Layout.BorderResize
 -- }}}
@@ -62,6 +66,8 @@ main = xmonad
      -- . withEasySB (statusBarProp "xmobar ${XDG_CONFIG_HOME:-${HOME:-~}/.config}/xmobar/xmobarrc" (pure myXmobarPP)) defToggleStrutsKey
 -- }}}
 
+myEventHook = swallowEventHook (className =? "Alacritty") (return True)
+
 myConfig = def -- {{{
     { modMask            = mod4Mask::KeyMask
     , layoutHook         = myLayoutHook
@@ -69,14 +75,14 @@ myConfig = def -- {{{
     , terminal           = "${TERMINAL:-alacritty}"::String -- TODO System.Environment
     , focusFollowsMouse  = True::Bool
     , clickJustFocuses   = True::Bool
-    , borderWidth        = 1::Dimension
+    , borderWidth        = 2::Dimension
     , workspaces         = map show $ [1..9::Int]++[0::Int]::[WorkspaceId]
     , normalBorderColor  = "#383a4a"::String
     , focusedBorderColor = "#306998"::String
     , keys               = myKeyMaps
     , mouseBindings      = myButtons
     , startupHook        = myStartupHook
-    -- , handleEventHook    = 
+    , handleEventHook    = myEventHook
     } `additionalKeysP` myKeys
 -- }}}
 
@@ -138,6 +144,7 @@ myKeys :: [([Char], X ())] -- {{{
 myKeys =
   [ ("M-<Return>", spawn $ terminal myConfig) -- XMonad.terminal conf
   , ("M-n", namedScratchpadAction myScratchpads "terminal")
+  , ("M-p", namedScratchpadAction myScratchpads "calculator")
   , ("M-S-r", spawn "xmonad --recompile && xmonad --restart")
   , ("M-S-<Return>", promote)
   , ("M-S-f", floatOrNot (withFocused $ windows . W.sink) (withFocused centreFloat'))
@@ -152,7 +159,7 @@ myKeys =
   , ("M-S-<Space>", sendMessage FirstLayout)
   , ("<XF86AudioPlay>", spawn "playerctl play-pause")
   , ("M-f", sequence_ [sendMessage $ Toggle FULL, sendMessage ToggleStruts])
-  , ("M-b", sendMessage ToggleStruts)
+  , ("M-S-b", sendMessage ToggleStruts)
   , ("M-m", sendMessage $ IncMasterN $ 1)
   , ("M-S-m", sendMessage $ IncMasterN $ -1)
   , ("M-t", withFocused $ windows . W.sink)
@@ -197,20 +204,31 @@ myKeyMaps conf@XConfig {XMonad.modMask = modm} = M.fromList $ -- {{{
 -- }}}
 
 myScratchpads :: [NamedScratchpad] -- {{{
-myScratchpads = [NS "terminal" spawnTerm findTerm manageTerm]
+myScratchpads = [ NS "terminal" spawnTerm findTerm manageTerm
+                , NS "calculator" spawnCalc findCalc manageCalc
+                ]
   where
     spawnTerm  = "${TERMINAL:-alacritty}" ++ " --class scratchpad --title scratchpad --option font.size=12 --command tmux new-session -A -s scratchpad"
     findTerm   = appName =? "scratchpad"
     manageTerm = customFloating $ W.RationalRect l t w h
-      where
-        h = 0.9
-        w = 0.9
-        t = 0.95 -h
-        l = 0.95 -w
+           where
+             h = 0.9
+             w = 0.9
+             t = 0.95 -h
+             l = 0.95 -w
+    spawnCalc  = "qalculate-gtk"
+    findCalc   = className =? "Qalculate-gtk"
+    manageCalc = customFloating $ W.RationalRect l t w h
+           where
+             h = 0.5
+             w = 0.4
+             t = 0.75 -h
+             l = 0.70 -w
 -- }}}
 
 myManageHook :: ManageHook -- {{{
-myManageHook = let w = workspaces myConfig in composeAll
+myManageHook = insertPosition Below Newer <>
+    let w = workspaces myConfig in composeAll
     [ className =? "Gimp"           --> doFloat
     , className =? "Sxiv"           --> doFloat
     , className =? "Pavucontrol"    --> doCenterFloat
@@ -227,25 +245,28 @@ myManageHook = let w = workspaces myConfig in composeAll
     ] <+> namedScratchpadManageHook myScratchpads
 -- }}}
 
-myLayoutHook -- {{{
-  = smartBorders
-  . spacing
-  . avoidStruts
+-- . mkToggle (NBFULL ?? NOBORDERS ?? EOT)
+
+masterStack = renamed [Replace "Tiled"]
+            $ ResizableTall 1 (3/100) (1/2) []
+bsp         = renamed [Replace "BSP"]
+            $ emptyBSP
+threeCol    = renamed [Replace "ThreeCol"]
+            $ Magn.magnifiercz' 1.35
+            $ ThreeColMid 1 (3/100) (1/2)
+
+myLayoutHook
+  = avoidStruts
+  . mouseResize
+  . windowArrange
+  . smartBorders
+  . spacingRaw True (Border 0 10 10 10) True (Border 5 5 5 5) True
   . WN.windowNavigation
-  . mkToggle (NOBORDERS ?? FULL ?? EOT)
-  $ reflectHoriz (reflectVert emptyBSP)
-  ||| tiled
-  ||| threeCol
-  ||| Full
+  $ myLayouts
   where
-    spacing   = spacingRaw True (Border 0 10 10 10) True (Border 5 5 5 5) True -- spacingWithEdge 5
-    threeCol  = Magn.magnifiercz' magnifier $ ThreeColMid nmaster delta ratio
-    magnifier = 1.35   -- Amount to zoom the windows by
-    tiled     = Tall nmaster delta ratio
-    nmaster   = 1      -- Default number of windows in the master pane
-    ratio     = 1/2    -- Default proportion of screen occupied by master pane
-    delta     = 3/100  -- Percent of screen to increment by when resizing panes
--- }}}
+    myLayouts = masterStack
+            ||| threeCol
+            ||| bsp
 
 myXmobarPP :: PP -- {{{
 myXmobarPP = def
