@@ -86,6 +86,13 @@ zinit light kazhala/dotbare
 zinit ice wait'1' as'completion' lucid
 zinit snippet https://github.com/docker/cli/blob/master/contrib/completion/zsh/_docker
 
+zinit ice wait'1' lucid
+zinit light marzocchi/zsh-notify
+  zstyle ':notify:*' error-title "Command failed after #{time_elapsed} seconds"
+  zstyle ':notify:*' success-title "Command finished after #{time_elapsed} seconds"
+  zstyle ':notify:*' command-complete-timeout 15
+  zstyle ':notify:*' always-notify-on-failure no
+
 # TODO Setting abbreviations doesn't work
 zinit light olets/zsh-abbr
   abbr -S -qq yay='paru'
