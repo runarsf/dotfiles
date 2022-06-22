@@ -59,14 +59,12 @@ import XMonad.Layout.WindowArranger (windowArrange, WindowArrangerMsg(..))
 
 main :: IO () -- {{{
 main = xmonad
+     $ docks
      . ewmhFullscreen
      . ewmh
-     . docks
      $ myConfig
      -- . withEasySB (statusBarProp "xmobar ${XDG_CONFIG_HOME:-${HOME:-~}/.config}/xmobar/xmobarrc" (pure myXmobarPP)) defToggleStrutsKey
 -- }}}
-
-myEventHook = swallowEventHook (className =? "Alacritty") (return True)
 
 myConfig = def -- {{{
     { modMask            = mod4Mask::KeyMask
@@ -158,7 +156,8 @@ myKeys =
   , ("M-<Space>", sendMessage NextLayout)
   , ("M-S-<Space>", sendMessage FirstLayout)
   , ("<XF86AudioPlay>", spawn "playerctl play-pause")
-  , ("M-f", sequence_ [sendMessage $ Toggle FULL, sendMessage ToggleStruts])
+  -- , ("M-f", sequence_ [sendMessage $ Toggle FULL, sendMessage ToggleStruts])
+  , ("M-f", toggleFull)
   , ("M-S-b", sendMessage ToggleStruts)
   , ("M-m", sendMessage $ IncMasterN $ 1)
   , ("M-S-m", sendMessage $ IncMasterN $ -1)
@@ -226,27 +225,42 @@ myScratchpads = [ NS "terminal" spawnTerm findTerm manageTerm
              l = 0.70 -w
 -- }}}
 
-myManageHook :: ManageHook -- {{{
-myManageHook = insertPosition Below Newer <>
-    let w = workspaces myConfig in composeAll
-    [ className =? "Gimp"           --> doFloat
-    , className =? "Sxiv"           --> doFloat
-    , className =? "Pavucontrol"    --> doCenterFloat
-    , appName   =? "scratchpad"     --> doCenterFloat
-    , className =? "discord"        --> doShift (w !! 1)
-    , className =? "Steam"          --> doShift (w !! 4)
-    , className =? "Remmina"        --> doShift (w !! 5)
-    , className =? "Spotify"        --> doShift (w !! 7)
-    , className ~? "eww-"           --> doLower
-    , appName   =? "panel"          --> doLower
-    , resource  =? "desktop_window" --> doIgnore
-    ,(className =? "firefox"        <&&>
-      resource  =? "Dialog")        --> doFloat
-    , isDialog                      --> doFloat
-    ] <+> namedScratchpadManageHook myScratchpads
--- }}}
+                           -- <&&> resource /=? "Dialog"
+                           -- <&&> fmap not isDialog -- FIXME Doesn't work, don't swallow dialogs
+myEventHook = swallowEventHook (className =? "Alacritty"
+                           <||> className =? "org.remmina.Remmina"
+                           -- <||> className ~? "VirtualBox "
+                               ) (return True)
 
--- . mkToggle (NBFULL ?? NOBORDERS ?? EOT)
+-- https://wiki.haskell.org/Xmonad/Frequently_asked_questions
+avoidMaster :: W.StackSet i l a s sd -> W.StackSet i l a s sd
+avoidMaster = W.modify' $ \c -> case c of
+     W.Stack t [] (r:rs) ->  W.Stack t [r] rs
+     otherwise           -> c
+
+myManageHook :: ManageHook -- {{{
+myManageHook = (isDialog --> doF W.shiftMaster <+> doF W.swapDown)
+    <+> (fmap not isDialog --> doF avoidMaster)
+    <+> insertPosition Below Newer
+    <+> namedScratchpadManageHook myScratchpads
+    <>  let w = workspaces myConfig in composeAll
+    [ className =? "Gimp"                --> doFloat
+    , className =? "Sxiv"                --> doFloat
+    , className =? "Pavucontrol"         --> doCenterFloat
+    , appName   =? "scratchpad"          --> doCenterFloat
+    , className =? "discord"             --> doShift (w !! 1)
+    , className =? "VirtualBox Manager"  --> doShift (w !! 3)
+    , className =? "org.remmina.Remmina" --> doShift (w !! 4)
+    , className =? "Steam"               --> doShift (w !! 4)
+    , className =? "Spotify"             --> doShift (w !! 7)
+    , className ~? "eww-"                --> doLower
+    , appName   =? "panel"               --> doLower
+    , resource  =? "desktop_window"      --> doIgnore
+    ,(className =? "firefox"             <&&>
+      resource  =? "Dialog")             --> doFloat
+    , isDialog                           --> doFloat
+    ]
+-- }}}
 
 masterStack = renamed [Replace "Tiled"]
             $ ResizableTall 1 (3/100) (1/2) []
@@ -256,6 +270,12 @@ threeCol    = renamed [Replace "ThreeCol"]
             $ Magn.magnifiercz' 1.35
             $ ThreeColMid 1 (3/100) (1/2)
 
+toggleFull = withFocused (\windowId -> do
+    { floats <- gets (W.floating . windowset);
+        if windowId `M.member` floats
+        then withFocused $ windows . W.sink
+        else withFocused $ windows . (flip W.float $ W.RationalRect 0 0 1 1) })  
+
 myLayoutHook
   = avoidStruts
   . mouseResize
@@ -263,11 +283,13 @@ myLayoutHook
   . smartBorders
   . spacingRaw True (Border 0 10 10 10) True (Border 5 5 5 5) True
   . WN.windowNavigation
+  . mkToggle (NOBORDERS ?? FULL ?? EOT) -- (NBFULL ?? NOBORDERS ?? EOT)
   $ myLayouts
   where
     myLayouts = masterStack
             ||| threeCol
             ||| bsp
+            -- ||| Full
 
 myXmobarPP :: PP -- {{{
 myXmobarPP = def
