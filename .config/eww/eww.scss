@@ -25,7 +25,7 @@ $purple: #a07acf;
 // $font-alt: 'rissole';
 $font: 'JetBrainsMono NF';
 $font-alt: $font;
-$tray-size: 135px;
+$tray-size: 125px;
 // }}}
 
 * {
@@ -44,12 +44,13 @@ window {
   border: 1px solid $background-alt;
 
   // For trayer-srg
-  padding-right: $tray-size;
+  // padding-right: $tray-size;
 
-  // & > * {
+  & > * {
   //   margin-top: 9px;
   //   margin-bottom: 9px;
-  // }
+    padding-right: $tray-size + 15px;
+  }
   & > * > * {
     padding: 0 5px;
   }
@@ -58,7 +59,7 @@ window {
 .hover label,
 button label {
   padding: 0 9px;
-  margin: 4px 0;
+  margin: 4px 3px;
   border-radius: 3px;
   background-color: $background-alt;
 }
