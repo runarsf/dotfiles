@@ -4,6 +4,8 @@ import System.Environment
 import System.IO
 import Data.Char
 
+-- compile with `ghc -dynamic xmonadctl.hs`
+
 main :: IO ()
 main = parse True "XMONAD_COMMAND" =<< getArgs
 
@@ -16,7 +18,7 @@ parse input addr args = case args of
         ("-h":_) -> showHelp
         ("--help":_) -> showHelp
         ("-?":_) -> showHelp
-        (a@('-':_):_) -> hPutStrLn stderr ("Unknown option " ++ a)
+        (a@('-':_):_) -> hPutStrLn stdout ("Unknown option " ++ a)
 
         (x:xs) -> sendCommand addr x >> parse False addr xs
         [] | input -> repl addr

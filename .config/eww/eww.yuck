@@ -46,11 +46,11 @@
     (bbox ; TODO Return only a set of boxes without a container box?
       (eventbox
         (literal :class "container"
-                 :content workspaces))) ; :onscroll "modules/workspaces {}"
-    (delim)
-    (bbox
-      (bbutton :onclick "bspwm_rofi_layouts"
-        (label :text bsplayout)))))
+                 :content workspaces))))) ; :onscroll "modules/workspaces {}"
+    ;(delim)))
+    ;(bbox)))
+    ;  (bbutton :onclick "bspwm_rofi_layouts"))))
+    ;    (label :text bsplayout)))))
 (deflisten workspaces
   "modules/workspaces")
 (defpoll bsplayout :interval "5s"

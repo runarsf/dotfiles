@@ -90,4 +90,4 @@ fi
 
 # test -f ~/.xsession && source ~/.xsession
 
-exec xmonad
+exec awesome

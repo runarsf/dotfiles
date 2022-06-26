@@ -114,16 +114,26 @@ bling.module.window_swallowing.start()
 --     awestore_compat = true
 -- }
 local term_scratch = bling.module.scratchpad {
-    -- command = "wezterm start --class scratch",
-    command = "alacritty --class scratch --option font.size=12 --command tmux new-session -A -s scratch",
-    rule = { instance="scratch" },
-    sticky = true,
-    autoclose = true,
-    floating = true,
-    geometry = { x=360, y=90, height=800, width=1200 },
-    reapply = false,
-    dont_focus_before_close = true,
-    -- rubato = { y=anim_y }
+  -- command = "wezterm start --class scratch",
+  command = "alacritty --class scratch --option font.size=12 --command tmux new-session -A -s scratch",
+  rule = { instance="scratch" },
+  sticky = true,
+  autoclose = true,
+  floating = true,
+  geometry = { x=360, y=90, height=800, width=1200 },
+  reapply = false,
+  dont_focus_before_close = true,
+  -- rubato = { y=anim_y }
+}
+local qalc_scratch = bling.module.scratchpad {
+  command = "qalculate-gtk",
+  rule = { class="Qalculate-gtk" },
+  sticky = true,
+  autoclose = true,
+  floating = true,
+  geometry = { x=360, y=90, height=800, width=1200 },
+  reapply = false,
+  dont_focus_before_close = true,
 }
 
 -- WARN: nice breaks with gtk4, temporary workaround is to uninstall it - https://github.com/mut-ex/awesome-wm-nice/issues/22
@@ -166,23 +176,23 @@ modkey = "Mod4"
 -- Menu {{{
 -- Create a launcher widget and a main menu
 myawesomemenu = {
-    { "hotkeys", function() hotkeys_popup.show_help(nil, awful.screen.focused()) end },
-    { "manual", terminal .. " -e man awesome" },
-    { "edit config", editor_cmd .. " " .. awesome.conffile },
-    { "restart", awesome.restart },
-    { "quit", function() awesome.quit() end },
+  { "hotkeys", function() hotkeys_popup.show_help(nil, awful.screen.focused()) end },
+  { "manual", terminal .. " -e man awesome" },
+  { "edit config", editor_cmd .. " " .. awesome.conffile },
+  { "restart", awesome.restart },
+  { "quit", function() awesome.quit() end },
 }
 
 mymainmenu = awful.menu({
-    items = {
-        { "awesome", myawesomemenu, beautiful.awesome_icon },
-        { "open terminal", terminal }
-    }
+  items = {
+    { "awesome", myawesomemenu, beautiful.awesome_icon },
+    { "open terminal", terminal }
+  }
 })
 
 mylauncher = awful.widget.launcher({
-    image = beautiful.awesome_icon,
-    menu = mymainmenu
+  image = beautiful.awesome_icon,
+  menu = mymainmenu
 })
 
 menubar.utils.terminal = terminal -- Set the terminal for applications that require it
@@ -207,40 +217,40 @@ end)
 
 -- Wallpaper {{{
 screen.connect_signal("request::wallpaper", function(s)
-    local wall_cmds = {
-        "nitrogen --restore",
-        (os.getenv("HOME") or "~") .. "/.fehbg",
-        "feh --bg-scale " .. gears.filesystem.get_xdg_config_home() .. "wall.jpg",
-    }
+  local wall_cmds = {
+    "nitrogen --restore",
+    (os.getenv("HOME") or "~") .. "/.fehbg",
+    "feh --bg-scale " .. gears.filesystem.get_xdg_config_home() .. "wall.jpg",
+  }
 
-    setwall = function(cmds, i)
-        if i > #cmds then
-            awful.wallpaper {
-                screen = s,
-                bg = "#000000",
-                widget = {
-                    image                 = beautiful.wallpaper,
-                    upscale               = true,
-                    downscale             = true,
-                    resize                = false,
-                    horizontal_fit_policy = "fit",
-                    vertical_fit_policy   = "auto",
-                    halign                = "center",
-                    valign                = "center",
-                    widget                = wibox.widget.imagebox
-                }
-            }
-            return
-        end
-
-        awful.spawn.easy_async_with_shell(cmds[i], function(_, _, _, retcode)
-            if retcode ~= 0 then
-                setwall(cmds, i + 1)
-            end
-        end)
+  setwall = function(cmds, i)
+    if i > #cmds then
+      awful.wallpaper {
+        screen = s,
+        bg = "#000000",
+        widget = {
+          image                 = beautiful.wallpaper,
+          upscale               = true,
+          downscale             = true,
+          resize                = false,
+          horizontal_fit_policy = "fit",
+          vertical_fit_policy   = "auto",
+          halign                = "center",
+          valign                = "center",
+          widget                = wibox.widget.imagebox
+        }
+      }
+      return
     end
 
-    setwall(wall_cmds, 1)
+    awful.spawn.easy_async_with_shell(cmds[i], function(_, _, _, retcode)
+      if retcode ~= 0 then
+        setwall(cmds, i + 1)
+      end
+    end)
+  end
+
+  setwall(wall_cmds, 1)
 end)
 -- }}}
 
@@ -267,114 +277,114 @@ local tags = charitable.create_tags(
 --]]
 
 screen.connect_signal("request::desktop_decoration", function(s)
-    -- Show an unselected tag when a screen is connected
-    for i = 1, #tags do
-        if not tags[i].selected then
-            tags[i].screen = s
-            tags[i]:view_only()
-            break
-        end
+  -- Show an unselected tag when a screen is connected
+  for i = 1, #tags do
+    if not tags[i].selected then
+      tags[i].screen = s
+      tags[i]:view_only()
+      break
     end
+  end
 
-    -- create a special scratch tag for double buffering
-    s.scratch = awful.tag.add('~' .. s.index, {})
+  -- create a special scratch tag for double buffering
+  s.scratch = awful.tag.add('~' .. s.index, {})
 
-    -- TODO view_only -> same function as super+#
-    s.mytaglist = awful.widget.taglist({
-        screen = s,
-        filter = awful.widget.taglist.filter.all,
-        buttons = gears.table.join(
-            awful.button({}, 1, function(t) charitable.select_tag(t, awful.screen.focused()) end),
-            awful.button({}, 3, function(t) charitable.toggle_tag(t, awful.screen.focused()) end),
-            -- TODO Improve view{next,prev}
-            awful.button({}, 4, function(t) awful.tag.viewprev(t.screen) end),
-            awful.button({}, 5, function(t) awful.tag.viewnext(t.screen) end)
-        ),
-        source = function(screen, args) return tags end,
-    })
+  -- TODO view_only -> same function as super+#
+  s.mytaglist = awful.widget.taglist({
+    screen = s,
+    filter = awful.widget.taglist.filter.all,
+    buttons = gears.table.join(
+      awful.button({}, 1, function(t) charitable.select_tag(t, awful.screen.focused()) end),
+      awful.button({}, 3, function(t) charitable.toggle_tag(t, awful.screen.focused()) end),
+      -- TODO Improve view{next,prev}
+      awful.button({}, 4, function(t) awful.tag.viewprev(t.screen) end),
+      awful.button({}, 5, function(t) awful.tag.viewnext(t.screen) end)
+    ),
+    source = function(screen, args) return tags end,
+  })
 
-    -- Create a promptbox for each screen
-    s.mypromptbox = awful.widget.prompt()
+  -- Create a promptbox for each screen
+  s.mypromptbox = awful.widget.prompt()
 
-    -- Create an imagebox widget which will contain an icon indicating which layout we're using.
-    -- We need one layoutbox per screen.
-    s.mylayoutbox = awful.widget.layoutbox {
-        screen  = s,
-        buttons = {
-            awful.button({}, 1, function() awful.layout.inc(1) end),
-            awful.button({}, 3, function() awful.layout.inc(-1) end),
-            awful.button({}, 4, function() awful.layout.inc(-1) end),
-            awful.button({}, 5, function() awful.layout.inc(1) end),
-        }
+  -- Create an imagebox widget which will contain an icon indicating which layout we're using.
+  -- We need one layoutbox per screen.
+  s.mylayoutbox = awful.widget.layoutbox {
+    screen  = s,
+    buttons = {
+      awful.button({}, 1, function() awful.layout.inc(1) end),
+      awful.button({}, 3, function() awful.layout.inc(-1) end),
+      awful.button({}, 4, function() awful.layout.inc(-1) end),
+      awful.button({}, 5, function() awful.layout.inc(1) end),
     }
+  }
 
-    -- Create a tasklist widget
-    s.mytasklist = awful.widget.tasklist {
-        screen  = s,
-        filter  = awful.widget.tasklist.filter.currenttags,
-        buttons = {
-            awful.button({}, 1, function(c) c:activate { context = "tasklist", action = "toggle_minimization" } end),
-            awful.button({}, 3, function() awful.menu.client_list { theme = { width = 250 } } end),
-            awful.button({}, 4, function() awful.client.focus.byidx(-1) end),
-            awful.button({}, 5, function() awful.client.focus.byidx(1) end),
-        }
+  -- Create a tasklist widget
+  s.mytasklist = awful.widget.tasklist {
+    screen  = s,
+    filter  = awful.widget.tasklist.filter.currenttags,
+    buttons = {
+      awful.button({}, 1, function(c) c:activate { context = "tasklist", action = "toggle_minimization" } end),
+      awful.button({}, 3, function() awful.menu.client_list { theme = { width = 250 } } end),
+      awful.button({}, 4, function() awful.client.focus.byidx(-1) end),
+      awful.button({}, 5, function() awful.client.focus.byidx(1) end),
     }
+  }
 
-    -- Create the wibox
-    s.mywibox = awful.wibar {
-        position     = "top",
-        screen       = s,
-        ontop        = false,
-        margins      = beautiful.useless_gap + beautiful.border_width,
-        border_width = 4,
-        border_color = beautiful.bg_normal,
-        widget       = {
-            layout = wibox.layout.align.horizontal,
-            expand = "none",
-            { -- Left widgets
-                layout = wibox.layout.fixed.horizontal,
-                mylauncher,
-                wibox.widget.textbox(' '),
-                -- {
-                --   {
-                --     widget = s.mytaglist,
-                --   },
-                --   margins = 4,
-                --   color = beautiful.secondary,
-                --   widget = wibox.container.margin,
-                -- },
-                s.mytaglist,
-                s.mypromptbox,
-            },
-            -- Middle widget
-            wibox.container.margin(s.mytasklist, 5, 5, 5, 5),
-            { -- Right widgets
-                layout = wibox.layout.fixed.horizontal,
-                -- awful.widget.keyboardlayout(),
-                wibox.widget.systray(),
-                wibox.widget.textclock(),
-                wibox.widget.textbox('| '),
-                {
-                    layout = wibox.layout.flex.horizontal,
-                    {
-                        align = "center",
-                        widget = awful.widget.watch('power-man', 150, function(widget, stdout)
-                            for line in stdout:gmatch("[^\r\n]+") do
-                                widget:set_text(line .. '%')
-                                return
-                            end
-                        end),
-                    },
-                    buttons = {
-                        awful.button({}, 4, function() awful.spawn("xbacklight -inc 5") end),
-                        awful.button({}, 5, function() awful.spawn("xbacklight -dec 5") end),
-                    }
-                },
-                wibox.widget.textbox('  '),
-                s.mylayoutbox,
-            },
-        }
+  -- Create the wibox
+  s.mywibox = awful.wibar {
+    position     = "top",
+    screen       = s,
+    ontop        = false,
+    margins      = beautiful.useless_gap + beautiful.border_width,
+    border_width = 4,
+    border_color = beautiful.bg_normal,
+    widget       = {
+      layout = wibox.layout.align.horizontal,
+      expand = "none",
+      { -- Left widgets
+        layout = wibox.layout.fixed.horizontal,
+        mylauncher,
+        wibox.widget.textbox(' '),
+        -- {
+        --   {
+        --     widget = s.mytaglist,
+        --   },
+        --   margins = 4,
+        --   color = beautiful.secondary,
+        --   widget = wibox.container.margin,
+        -- },
+        s.mytaglist,
+        s.mypromptbox,
+      },
+      -- Middle widget
+      wibox.container.margin(s.mytasklist, 5, 5, 5, 5),
+      { -- Right widgets
+        layout = wibox.layout.fixed.horizontal,
+        -- awful.widget.keyboardlayout(),
+        wibox.widget.systray(),
+        wibox.widget.textclock(),
+        wibox.widget.textbox('| '),
+        {
+          layout = wibox.layout.flex.horizontal,
+          {
+            align = "center",
+            widget = awful.widget.watch('power-man', 150, function(widget, stdout)
+              for line in stdout:gmatch("[^\r\n]+") do
+                widget:set_text(line .. '%')
+                return
+              end
+            end),
+          },
+          buttons = {
+            awful.button({}, 4, function() awful.spawn("xbacklight -inc 5") end),
+            awful.button({}, 5, function() awful.spawn("xbacklight -dec 5") end),
+          }
+        },
+        wibox.widget.textbox('  '),
+        s.mylayoutbox,
+      },
     }
+  }
 end)
 -- }}}
 
@@ -416,6 +426,7 @@ local globalkeys = ez.keytable {
   ["XF86AudioRaiseVolume"] = {awful.util.spawn, "pactl set-sink-volume 2 +5%"},
   ["XF86AudioMute"] = {awful.util.spawn, "amixer -q -D pulse sset Master toggle"},
   ["M-n"] = function() term_scratch:toggle() end,
+  ["M-p"] = function() qalc_scratch:toggle() end,
 }
 
 local clientkeys = ez.keytable {
@@ -778,56 +789,56 @@ end)
 -- Titlebars {{{
 -- Add a titlebar if titlebars_enabled is set to true in the rules.
 client.connect_signal("request::titlebars", function(c)
-    -- buttons for the titlebar
-    local buttons = {
-        awful.button({}, 1,
-            function() c:activate { context = "titlebar", action = "mouse_move" } end),
-        awful.button({}, 3,
-            function() c:activate { context = "titlebar", action = "mouse_resize" } end),
-    }
+  -- buttons for the titlebar
+  local buttons = {
+    awful.button({}, 1,
+      function() c:activate { context = "titlebar", action = "mouse_move" } end),
+    awful.button({}, 3,
+      function() c:activate { context = "titlebar", action = "mouse_resize" } end),
+  }
 
-    awful.titlebar(c).widget = {
-        {
-            awful.titlebar.widget.iconwidget(c),
-            buttons = buttons,
-            layout  = wibox.layout.fixed.horizontal
-        },
-        {
-            {
-                align  = "center",
-                widget = awful.titlebar.widget.titlewidget(c)
-            },
-            buttons = buttons,
-            layout  = wibox.layout.flex.horizontal
-        },
-        {
-            -- awful.titlebar.widget.floatingbutton (c),
-            awful.titlebar.widget.minimizebutton(c),
-            awful.titlebar.widget.maximizedbutton(c),
-            -- awful.titlebar.widget.stickybutton   (c),
-            -- awful.titlebar.widget.ontopbutton    (c),
-            awful.titlebar.widget.closebutton(c),
-            layout = wibox.layout.fixed.horizontal()
-        },
-        layout = wibox.layout.align.horizontal
-    }
+  awful.titlebar(c).widget = {
+    {
+      awful.titlebar.widget.iconwidget(c),
+      buttons = buttons,
+      layout  = wibox.layout.fixed.horizontal
+    },
+    {
+      {
+        align  = "center",
+        widget = awful.titlebar.widget.titlewidget(c)
+      },
+      buttons = buttons,
+      layout  = wibox.layout.flex.horizontal
+    },
+    {
+      -- awful.titlebar.widget.floatingbutton (c),
+      awful.titlebar.widget.minimizebutton(c),
+      awful.titlebar.widget.maximizedbutton(c),
+      -- awful.titlebar.widget.stickybutton   (c),
+      -- awful.titlebar.widget.ontopbutton    (c),
+      awful.titlebar.widget.closebutton(c),
+      layout = wibox.layout.fixed.horizontal()
+    },
+    layout = wibox.layout.align.horizontal
+  }
 end)
 
 -- {{{ Notifications
 
 ruled.notification.connect_signal('request::rules', function()
-    -- All notifications will match this rule.
-    ruled.notification.append_rule {
-        rule       = {},
-        properties = {
-            screen           = awful.screen.preferred,
-            implicit_timeout = 5,
-        }
+  -- All notifications will match this rule.
+  ruled.notification.append_rule {
+    rule       = {},
+    properties = {
+      screen           = awful.screen.preferred,
+      implicit_timeout = 5,
     }
+  }
 end)
 
 naughty.connect_signal("request::display", function(n)
-    naughty.layout.box { notification = n }
+  naughty.layout.box { notification = n }
 end)
 
 -- }}}
@@ -835,13 +846,13 @@ end)
 -- [[+CHARITABLE
 -- Ensure that removing screens doesn't kill tags
 tag.connect_signal("request::screen", function(t)
-    t.selected = false
-    for s in capi.screen do
-        if s ~= t.screen then
-            t.screen = s
-            return
-        end
+  t.selected = false
+  for s in capi.screen do
+    if s ~= t.screen then
+      t.screen = s
+      return
     end
+  end
 end)
 
 -- work around bugs in awesome 4.0 through 4.3+

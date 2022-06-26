@@ -22,6 +22,7 @@ import XMonad.Actions.MouseResize
 import qualified XMonad.Actions.FlexibleResize as Flex
 
 -- Hooks
+import XMonad.Hooks.ServerMode
 import XMonad.Hooks.InsertPosition
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.ManageDocks
@@ -68,6 +69,45 @@ main = xmonad
      -- . withEasySB (statusBarProp "xmobar ${XDG_CONFIG_HOME:-${HOME:-~}/.config}/xmobar/xmobarrc" (pure myXmobarPP)) defToggleStrutsKey
 -- }}}
 
+-- Server mode commands{{{
+myCommands :: [(String, X ())]
+myCommands =
+    [ ("decrease-master-size"   , sendMessage Shrink                                                )
+    , ("increase-master-size"   , sendMessage Expand                                                )
+    , ("decrease-master-count"  , sendMessage $ IncMasterN (-1)                                     )
+    , ("increase-master-count"  , sendMessage $ IncMasterN (1)                                      )
+    , ("focus-prev"             , windows W.focusUp                                                 )
+    , ("focus-next"             , windows W.focusDown                                               )
+    , ("focus-master"           , windows W.focusMaster                                             )
+    , ("swap-with-prev"         , windows W.swapUp                                                  )
+    , ("swap-with-next"         , windows W.swapDown                                                )
+    , ("swap-with-master"       , windows W.swapMaster                                              )
+    , ("kill-window"            , kill                                                              )
+    , ("quit"                   , io $ exitWith ExitSuccess                                         )
+    , ("restart"                , spawn "xmonad --recompile; xmonad --restart"                      )
+    , ("change-layout"          , sendMessage NextLayout                                            )
+    -- , ("reset-layout"           , setLayout $ XMonad.layoutHook conf                                )
+    , ("fullscreen"             , sequence_ [sendMessage $ Toggle FULL, sendMessage ToggleStruts]   )
+    ]
+-- }}}
+-- Server mode event hook {{{
+myServerModeEventHook = serverModeEventHookCmd' $ return myCommands'
+myCommands' = ("list-commands", listMyServerCmds) : myCommands ++ wscs ++ sccs -- ++ spcs
+    where
+        wscs = [((m ++ s), windows $f s) | s <- (workspaces myConfig)
+               , (f, m) <- [(W.view, "focus-workspace-"), (W.shift, "send-to-workspace-")] ]
+
+        sccs = [((m ++ show sc), screenWorkspace (fromIntegral sc) >>= flip whenJust (windows . f))
+               | sc <- [0..3], (f, m) <- [(W.view, "focus-screen-"), (W.shift, "send-to-screen-")]]
+
+--        spcs = [("toggle-" ++ sp, namedScratchpadAction myScratchpads sp)
+--               | sp <- (flip map) (myScratchpads) (\(NS x _ _ _) -> x) ]
+
+listMyServerCmds :: X ()
+listMyServerCmds = spawn ("echo '" ++ asmc ++ "' | xmessage -file -")
+    where asmc = concat $ "Available commands:" : map (\(x, _)-> "    " ++ x) myCommands'
+-- }}}
+
 myConfig = def -- {{{
     { modMask            = mod4Mask::KeyMask
     , layoutHook         = myLayoutHook
@@ -82,7 +122,10 @@ myConfig = def -- {{{
     , keys               = myKeyMaps
     , mouseBindings      = myButtons
     , startupHook        = myStartupHook
-    -- , handleEventHook    = myEventHook
+    , handleEventHook    = myServerModeEventHook
+    -- , handleEventHook    = serverModeEventHookCmd
+    --                          <+> serverModeEventHook
+    --                          <+> serverModeEventHookF "XMONAD_PRINT" (io . putStrLn)
     } `additionalKeysP` myKeys
 -- }}}
 
