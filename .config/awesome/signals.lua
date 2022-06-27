@@ -10,17 +10,30 @@ client.connect_signal("mouse::enter", function(c)
 end)
 -- }}}
 
+-- Spawn new clients as slave and make sure they don't leave the boundaries {{{
+client.connect_signal("manage", function (c)
+    -- Set the windows at the slave,
+    -- i.e. put it at the end of others instead of setting it master.
+    if not awesome.startup then awful.client.setslave(c) end
+
+    if awesome.startup
+      and not c.size_hints.user_position
+      and not c.size_hints.program_position then
+        -- Prevent clients from being unreachable after screen count changes.
+        awful.placement.no_offscreen(c)
+    end
+end)
+-- }}}
+
 -- Spawn client under active client {{{
 -- client.connect_signal("manage", function(c)
---   if not awesome.startup then
---     awful.client.setslave(c)
---     local prev_focused = awful.client.focus.history.get(awful.screen.focused(), 1, nil)
---     local prev_c = awful.client.next(-1, c)
---     if prev_c and prev_focused then
---       while prev_c ~= prev_focused do
---         c:swap(prev_c)
---         prev_c = awful.client.next(-1, c)
---       end
+--   awful.client.setslave(c)
+--   local prev_focused = awful.client.focus.history.get(awful.screen.focused(), 1, nil)
+--   local prev_c = awful.client.next(-1, c)
+--   if prev_c and prev_focused then
+--     while prev_c ~= prev_focused do
+--       c:swap(prev_c)
+--       prev_c = awful.client.next(-1, c)
 --     end
 --   end
 -- 
@@ -52,9 +65,9 @@ end)
 -- Fullscreen nodes on top {{{
 -- client.connect_signal("property::fullscreen", function(c)
 --   if c.fullscreen then
---     c.above = true
---   else
 --     c.above = false
+--   else
+--     c.above = true
 --   end
 -- end)
 -- }}}
@@ -62,19 +75,30 @@ end)
 -- Center floating nodes and give them a titlebar {{{
 local floating_handler = function(c)
   if not (c.maximized or c.fullscreen) then
-    if c.floating or c.screen.selected_tag.layout.name == "floating" then
+    -- FIXME `attempt to index a nil value (field 'selected_tag')` when attempt to focus tag when scratchpad closed
+    -- TODO rule = pop-up Popup
+    if c.floating then -- or c.screen.selected_tag.layout.name == "floating" then
       awful.titlebar.show(c)
       c.above = true
+      -- c.shape = function(cr,w,h)
+      --   shape.rounded_rect(cr,w,h,5)
+      -- end
       return true
     else
       awful.titlebar.hide(c)
       c.above = false
+      -- c.shape = shape.rectangle
     end
   end
   return false
 end
 
--- client.connect_signal("manage", floating_handler)
+-- client.connect_signal("request::border", function(c)
+--   if floating_handler(c) then
+--     awful.placement.centered(c)
+--   end
+-- end)
+client.connect_signal("manage", floating_handler)
 client.connect_signal("property::floating", function(c)
   if floating_handler(c) then
     awful.placement.centered(c)
@@ -116,6 +140,7 @@ local shape_handler = function(c)
     -- end
   end
 end
+-- client.connect_signal("request::border", shape_handler)
 -- client.connect_signal("manage", shape_handler)
-client.connect_signal("property::fullscreen", shape_handler)
+-- client.connect_signal("property::fullscreen", shape_handler)
 -- }}}

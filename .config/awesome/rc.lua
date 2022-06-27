@@ -26,7 +26,7 @@ require("modules.eminent.eminent")
 local charitable    = require("modules.charitable")
 -- OSX-like titlebars, for some reason can't be required from a subdirectory (modules)
 -- local nice          = require("nice")
-local machi         = require("modules.machi")
+-- local machi         = require("modules.machi")
 
 local gears         = require("gears")
 local awful         = require("awful")
@@ -47,18 +47,6 @@ local ez            = require("modules.ez")
 -- }}}
 
 local dovetail = require("modules.dovetail")
-
--- Error handling {{{
--- Check if awesome encountered an error during startup and fell back to
--- another config (this code will only ever execute for the fallback config).
-naughty.connect_signal("request::display_error", function(message, startup)
-  naughty.notification {
-    urgency = "critical",
-    title   = "Oops, an error happened" .. (startup and " during startup!" or "!"),
-    message = message
-  }
-end)
--- }}}
 
 -- Helpers {{{
 -- local CFloating = function(c)
@@ -103,7 +91,7 @@ beautiful.init(gears.filesystem.get_configuration_dir() .. "theme.lua")
 local bling = require("modules.bling")
 local rubato = require("modules.rubato")
 bling.module.flash_focus.enable()
-bling.module.window_swallowing.start()
+-- bling.module.window_swallowing.start()
 
 -- local anim_y = rubato.timed {
 --     pos = -1450,
@@ -206,11 +194,11 @@ menubar.utils.terminal = terminal -- Set the terminal for applications that requ
 -- Layouts {{{
 tag.connect_signal("request::default_layouts", function()
   awful.layout.append_default_layouts({
-    -- machi.default_layout,
-    awful.layout.suit.tile,
     bling.layout.centered,
+    awful.layout.suit.tile,
+    -- machi.default_layout,
     dovetail.layout.right,
-    awful.layout.suit.max,
+    -- awful.layout.suit.max,
   })
 end)
 -- }}}
@@ -261,8 +249,9 @@ https://awesomewm.org/apidoc/popups_and_bars/awful.wibar.html
 -- [[+CHARITABLE
 local tags = charitable.create_tags(
   -- { "  ", "  ", "  ", " ﮑ ", " 龎 ", " ﮠ ", "  ", " 煉 ", "  " },
-  { "1", "2", "3", "4", "5", "6", "7", "8", "9" },
+  { "1", "2", "3", "4", "5", "6", "7", "8", "9", "0" },
   {
+    awful.layout.layouts[1],
     awful.layout.layouts[1],
     awful.layout.layouts[1],
     awful.layout.layouts[1],
@@ -430,9 +419,8 @@ local globalkeys = ez.keytable {
 }
 
 local clientkeys = ez.keytable {
-  ["M-o"] = function(c)
-    c:move_to_tag(tags[7])
-  end,
+  -- ["M-o"] = function(c)
+  -- end,
   ["M-minus"] = function(c) c.minimized = true end,
   ["M-S-minus"] = function()
     local c = awful.client.restore()
@@ -454,8 +442,8 @@ local clientkeys = ez.keytable {
   ["M-q"] = function(c) c:kill() end,
   ["M-S-Return"] = function(c) c:swap(awful.client.getmaster()) end,
   --["M-period"] = function(c) c.ontop = not c.ontop end,
-  --["M-period"] = function() machi.default_editor.start_interactive() end,
-  --["M-comma"] = function() machi.switcher.start(client.focus) end,
+  -- ["M-period"] = function() machi.default_editor.start_interactive() end,
+  -- ["M-comma"] = function() machi.switcher.start(client.focus) end,
   ["M-C-Up"] = function(c)
     if c.floating then
       c:relative_move(0, 0, 0, -10)
@@ -558,6 +546,7 @@ local numberkeys = {
     on_press    = function(i)
       -- TODO Raise tag after swapping
       -- TODO Tag history toggle with charitable
+      if i==0 then i=10 end
       local tag = tags[i]
       if tag then
         charitable.select_tag(tag, awful.screen.focused())
@@ -570,6 +559,7 @@ local numberkeys = {
     description = "toggle tag",
     group       = "tag",
     on_press    = function(i)
+      if i==0 then i=10 end
       local tag = tags[i]
       if tag then
         charitable.toggle_tag(tag, awful.screen.focused())
@@ -583,6 +573,7 @@ local numberkeys = {
     group       = "tag",
     on_press    = function(i)
       if client.focus then
+        if i==0 then i=10 end
         local tag = tags[i]
         if tag then
           client.focus:move_to_tag(tag)
@@ -597,6 +588,7 @@ local numberkeys = {
     group       = "tag",
     on_press    = function(i)
       if client.focus then
+        if i==0 then i=10 end
         local tag = tags[i]
         if tag then
           client.focus:toggle_tag(tag)
@@ -693,7 +685,7 @@ ruled.client.connect_signal("request::rules", function()
   rule(5, "org.remmina.Remmina")
   rule(6, "Inkscape")
   rule(8, "[Ss]potify")
-  rule(9, "KeePassXC")
+  rule(10, "KeePassXC")
 
   -- All clients will match this rule
   ruled.client.append_rule {
