@@ -283,14 +283,14 @@ avoidMaster = W.modify' $ \c -> case c of
      W.Stack t [] (r:rs) ->  W.Stack t [r] rs
      otherwise           -> c
 
-myPlaceHook :: Placement
-myPlaceHook = inBounds $ smart(1, 1)
+-- myPlaceHook :: Placement
+-- myPlaceHook = inBounds $ smart(1, 1)
 
 myManageHook :: ManageHook -- {{{
 myManageHook = (isDialog --> doF W.shiftMaster <+> doF W.swapDown)
     <+> (fmap not isDialog --> doF avoidMaster)
     <+> insertPosition Below Newer
-    <+> placeHook myPlaceHook
+    -- <+> placeHook myPlaceHook
     <+> namedScratchpadManageHook myScratchpads
     <>  let w = workspaces myConfig in composeAll
     [ className =? "Gimp"                --> doFloat
