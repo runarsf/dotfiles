@@ -34,3 +34,6 @@
 [submodule ".themes/Mayu"]
 	path = .themes/Mayu
 	url = https://github.com/mrbrownstone07/Mayu_dark_gtk_theme
+[submodule ".config/awesome/collision"]
+	path = .config/awesome/collision
+	url = https://github.com/Elv13/collision

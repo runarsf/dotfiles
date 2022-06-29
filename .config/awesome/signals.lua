@@ -72,12 +72,20 @@ end)
 -- end)
 -- }}}
 
+-- TODO helpers.lua
+local THas = function(T, K)
+  if T[K] ~= nil then return true end
+  for k, v in pairs(T) do
+    if v == K and type(k) == "number" then return true end
+  end
+  return false
+end
+
 -- Center floating nodes and give them a titlebar {{{
 local floating_handler = function(c)
   if not (c.maximized or c.fullscreen) then
     -- FIXME `attempt to index a nil value (field 'selected_tag')` when attempt to focus tag when scratchpad closed
-    -- TODO rule = pop-up Popup
-    if c.floating then -- or c.screen.selected_tag.layout.name == "floating" then
+    if (c.floating or c.screen.selected_tag.layout.name == "floating") and THas({"normal", "dialog"}, c.type) then
       awful.titlebar.show(c)
       c.above = true
       -- c.shape = function(cr,w,h)
