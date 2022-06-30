@@ -94,7 +94,7 @@ beautiful.init(gears.filesystem.get_configuration_dir() .. "theme.lua")
 local bling = require("modules.bling")
 local rubato = require("modules.rubato")
 bling.module.flash_focus.enable()
--- bling.module.window_swallowing.start()
+bling.module.window_swallowing.start()
 
 -- local anim_y = rubato.timed {
 --     pos = -1450,
@@ -109,9 +109,9 @@ local term_scratch = bling.module.scratchpad {
   command = "alacritty --class scratch --option font.size=12 --command tmux new-session -A -s scratch",
   rule = { instance="scratch" },
   sticky = true,
-  autoclose = true,
+  autoclose = false,
   floating = true,
-  geometry = { x=360, y=90, height=800, width=1200 },
+  geometry = { x=0, y=0, height=800, width=1200 },
   reapply = false,
   dont_focus_before_close = true,
   -- rubato = { y=anim_y }
@@ -120,9 +120,9 @@ local qalc_scratch = bling.module.scratchpad {
   command = "qalculate-gtk",
   rule = { class="Qalculate-gtk" },
   sticky = true,
-  autoclose = true,
+  autoclose = false,
   floating = true,
-  geometry = { x=360, y=90, height=800, width=1200 },
+  geometry = { x=0, y=0, height=730, width=730 },
   reapply = false,
   dont_focus_before_close = true,
 }
@@ -423,7 +423,7 @@ local globalkeys = ez.keytable {
 
 local clientkeys = ez.keytable {
   -- ["M-o"] = function(c)
-  --   debug(c.type)
+  --   debug(c.height)
   -- end,
   ["M-minus"] = function(c) c.minimized = true end,
   ["M-S-minus"] = function()

@@ -32,10 +32,13 @@ local rnotification                         = require("ruled.notification")
 
 local theme                                 = dofile(themes_path.."default/theme.lua")
 
+
 -- Bling
+theme.parent_filter_whitelist = true
 theme.flash_focus_start_opacity = 0.8 -- the starting opacity
 theme.flash_focus_step = 0.05         -- the step of animation
-theme.parent_filter_list   = { "firefox", "Gimp", "[Dd]iscord" } -- class names list of parents that should not be swallowed
+theme.parent_filter_list   = { "[Aa]lacritty" } -- class names list of parents that should not be swallowed
+-- theme.parent_filter_list   = { "firefox", "Gimp", "[Dd]iscord" } -- class names list of parents that should not be swallowed
 theme.child_filter_list    = { "Dragon", "[Dd]iscord" }        -- class names list that should not swallow their parents
 theme.swallowing_filter = true                   -- whether the filters above should be active
 
@@ -172,6 +175,16 @@ theme.tasklist_spacing                      = dpi(5)
 -- theme.tasklist_shape_border_color_urgent    = theme.cyan
 theme.tasklist_disable_task_name = true
 
+-- local titlebar_icon = function(text)
+--   return wibox.widget.draw_to_image_surface(
+--     wibox.widget.textbox(
+--       "<span color='"..theme.fg.."' font='"..theme.font_base.." 25".."'>"..text.."</span>"
+--     ), 65, 50)
+-- end
+-- theme.titlebar_close_button_focus = titlebar_icon("x")
+-- theme.titlebar_close_button_normal = titlebar_icon("x")
+-- theme.titlebar_minimize_button_focus = titlebar_icon("-")
+-- theme.titlebar_minimize_button_normal = titlebar_icon("-")
 -- theme.titlebar_font_normal                  = theme.font
 -- theme.titlebar_fg_normal                    = theme.dark_gray
 -- theme.titlebar_bg_normal                    = theme.black
@@ -226,6 +239,13 @@ theme = theme_assets.recolor_titlebar(theme, theme.tertiary, "focus", "press")
 --     }
 -- end)
 
+local layout_icon = function(text)
+  return wibox.widget.draw_to_image_surface(
+    wibox.widget.textbox(
+      "<span color='"..theme.fg.."' font='"..theme.font_base.." 16".."'>"..text.."</span>"
+    ), 65, 50)
+end
+
 local mylayouttileicon = function(cr, w, h)
   i = 1
   gears_shape.transform(gears_shape.rounded_rect) : translate(0, 0)(cr, w/2-i/2, h, 1)
@@ -235,27 +255,20 @@ local mylayouttileicon = function(cr, w, h)
   gears_shape.transform(gears_shape.rectangle) : translate(w/2+i/2, (h/4+i/2)*3)(cr, w/2-i/2, h/4-i/2)
 end
 
-local icon = function(text)
-  return wibox.widget.draw_to_image_surface(
-    wibox.widget.textbox(
-      "<span color='"..theme.fg.."' font='"..theme.font_base.." 16".."'>"..text.."</span>"
-    ), 65, 50)
-end
-
 -- theme.layout_fairh = themes_path.."default/layouts/fairhw.png"
-theme.layout_fairv = icon("[][]")
+theme.layout_fairv = layout_icon("[][]")
 -- theme.layout_floating  = themes_path.."default/layouts/floatingw.png"
-theme.layout_magnifier = icon("[-]")
-theme.layout_max = icon("[M]")
-theme.layout_centered = icon("=[]=")
+theme.layout_magnifier = layout_icon("[-]")
+theme.layout_max = layout_icon("[M]")
+theme.layout_centered = layout_icon("=[]=")
 -- theme.layout_fullscreen = themes_path.."default/layouts/fullscreenw.png"
 -- theme.layout_tilebottom = themes_path.."default/layouts/tilebottomw.png"
 -- theme.layout_tileleft   = themes_path.."default/layouts/tileleftw.png"
 -- theme.layout_tile = gears_surface.load_from_shape(20, 20, mylayouttileicon, theme.tertiary)
 -- theme.layout_tiletop = themes_path.."default/layouts/tiletopw.png"
-theme.layout_tile = icon("[]=")
+theme.layout_tile = layout_icon("[]=")
 -- theme.layout_spiral  = themes_path.."default/layouts/spiralw.png"
-theme.layout_dwindle = icon("[];")
+theme.layout_dwindle = layout_icon("[];")
 -- theme.layout_cornernw = themes_path.."default/layouts/cornernww.png"
 -- theme.layout_cornerne = themes_path.."default/layouts/cornernew.png"
 -- theme.layout_cornersw = themes_path.."default/layouts/cornersww.png"
