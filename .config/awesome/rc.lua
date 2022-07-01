@@ -422,9 +422,9 @@ local globalkeys = ez.keytable {
 }
 
 local clientkeys = ez.keytable {
-  -- ["M-o"] = function(c)
-  --   debug(c.height)
-  -- end,
+  ["M-o"] = function(c)
+    debug(tostring(c.requests_no_titlebar))
+  end,
   ["M-minus"] = function(c) c.minimized = true end,
   ["M-S-minus"] = function()
     local c = awful.client.restore()

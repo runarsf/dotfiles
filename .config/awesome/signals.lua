@@ -86,7 +86,11 @@ local floating_handler = function(c)
   if not (c.maximized or c.fullscreen) then
     -- FIXME `attempt to index a nil value (field 'selected_tag')` when attempt to focus tag when scratchpad closed
     if (c.floating or c.screen.selected_tag.layout.name == "floating") and THas({"normal", "dialog"}, c.type) then
-      awful.titlebar.show(c)
+      if not c.requests_no_titlebar then
+        awful.titlebar.show(c)
+      else
+        awful.titlebar.hide(c)
+      end
       c.above = true
       -- c.shape = function(cr,w,h)
       --   shape.rounded_rect(cr,w,h,5)
