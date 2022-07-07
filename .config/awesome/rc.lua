@@ -126,6 +126,11 @@ local qalc_scratch = bling.module.scratchpad {
   reapply = false,
   dont_focus_before_close = true,
 }
+-- term_scratch:connect_signal("inital_apply", function(c)
+--   awful.placement.centered(c)
+--   awful.placement.no_overlap(c)
+--   awful.placement.no_offscreen(c)
+-- end)
 
 -- WARN: nice breaks with gtk4, temporary workaround is to uninstall it - https://github.com/mut-ex/awesome-wm-nice/issues/22
 --[[+NICE

@@ -1,8 +1,6 @@
 local shape = require("gears.shape")
-local awful     = require("awful")
-local naughty = require("naughty")
-local inspect = require("modules.inspect.inspect")
-local beautiful = require("beautiful")
+local awful = require("awful")
+-- local beautiful = require("beautiful")
 
 -- Enable sloppy focus, so that focus follows mouse {{{
 client.connect_signal("mouse::enter", function(c)
@@ -81,7 +79,7 @@ local THas = function(T, K)
   return false
 end
 
--- Center floating nodes and give them a titlebar {{{
+-- Give floating clients a titlebar {{{
 local floating_handler = function(c)
   if not (c.maximized or c.fullscreen) then
     -- FIXME `attempt to index a nil value (field 'selected_tag')` when attempt to focus tag when scratchpad closed
@@ -105,17 +103,8 @@ local floating_handler = function(c)
   return false
 end
 
--- client.connect_signal("request::border", function(c)
---   if floating_handler(c) then
---     awful.placement.centered(c)
---   end
--- end)
 client.connect_signal("manage", floating_handler)
-client.connect_signal("property::floating", function(c)
-  if floating_handler(c) then
-    awful.placement.centered(c)
-  end
-end)
+client.connect_signal("property::floating", floating_handler)
 tag.connect_signal("property::layout", function(t)
   local clients = t:clients()
   for k,c in pairs(clients) do
@@ -155,4 +144,22 @@ end
 -- client.connect_signal("request::border", shape_handler)
 -- client.connect_signal("manage", shape_handler)
 -- client.connect_signal("property::fullscreen", shape_handler)
+-- }}}
+
+-- Center floating clients {{{
+client.connect_signal("property::floating", function(c)
+  if c.floating and THas({"normal", "dialog"}, c.type) then
+    debug(c.floating)
+    awful.placement.centered(c)
+    awful.placement.no_overlap(c)
+    awful.placement.no_offscreen(c)
+  end
+end)
+client.connect_signal("request::manage", function(c, ctx)
+  if c.floating and ctx == "new" and THas({"normal", "dialog"}, c.type) then
+    awful.placement.centered(c)
+    awful.placement.no_overlap(c)
+    awful.placement.no_offscreen(c)
+  end
+end)
 -- }}}
