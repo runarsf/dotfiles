@@ -79,6 +79,15 @@ local THas = function(T, K)
   return false
 end
 
+local IndexOf = function(array, value)
+  for i, v in ipairs(array) do
+    if v == value then
+      return i
+    end
+  end
+  return nil
+end
+
 local debug = function(text)
   if text then
     if type(text) == "table" then
@@ -286,12 +295,18 @@ screen.connect_signal("request::desktop_decoration", function(s)
   -- create a special scratch tag for double buffering
   s.scratch = awful.tag.add('~' .. s.index, {})
 
-  -- TODO view_only -> same function as super+#
   s.mytaglist = awful.widget.taglist({
     screen = s,
     filter = awful.widget.taglist.filter.all,
     buttons = gears.table.join(
-      awful.button({}, 1, function(t) charitable.select_tag(t, awful.screen.focused()) end),
+      -- awful.button({}, 1, function(t) charitable.select_tag(t, awful.screen.focused()) end),
+      awful.button({}, 1, function(t)
+        if awful.screen.focused().selected_tag == t then
+          awful.tag.history.restore()
+        else
+          charitable.select_tag(t, awful.screen.focused())
+        end
+      end),
       awful.button({}, 3, function(t) charitable.toggle_tag(t, awful.screen.focused()) end),
       -- TODO Improve view{next,prev}
       awful.button({}, 4, function(t) awful.tag.viewprev(t.screen) end),
@@ -427,9 +442,8 @@ local globalkeys = ez.keytable {
 }
 
 local clientkeys = ez.keytable {
-  ["M-o"] = function(c)
-    debug(tostring(c.requests_no_titlebar))
-  end,
+  -- ["M-o"] = function(c)
+  -- end,
   ["M-minus"] = function(c) c.minimized = true end,
   ["M-S-minus"] = function()
     local c = awful.client.restore()
@@ -558,7 +572,11 @@ local numberkeys = {
       if i==0 then i=10 end
       local tag = tags[i]
       if tag then
-        charitable.select_tag(tag, awful.screen.focused())
+        if IndexOf(tags, awful.screen.focused().selected_tag) == i then
+          awful.tag.history.restore()
+        else
+          charitable.select_tag(tag, awful.screen.focused())
+        end
       end
     end,
   },
@@ -690,6 +708,7 @@ ruled.client.connect_signal("request::rules", function()
     "Mattermost",
     "TelegramDesktop",
     "discord",
+    "Microsoft Teams - Preview",
   })
   rule(5, "org.remmina.Remmina")
   rule(6, "Inkscape")
@@ -858,7 +877,7 @@ end)
 
 -- work around bugs in awesome 4.0 through 4.3+
 -- see https://github.com/awesomeWM/awesome/issues/2780
-awful.tag.history.restore = function() end
+-- awful.tag.history.restore = function() end
 --]]
 
 -- {{{ spawn
