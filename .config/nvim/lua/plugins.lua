@@ -93,6 +93,12 @@ local plugins = function(use)
       "anuvyklack/nvim-keymap-amend",
     },
   })
+  use { 'anuvyklack/fold-preview.nvim',
+    requires = 'anuvyklack/keymap-amend.nvim',
+    config = function()
+      require('fold-preview').setup()
+    end
+  }
 
   use({ "stevearc/dressing.nvim",
     -- module = "dressing",
