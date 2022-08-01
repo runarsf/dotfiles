@@ -54,6 +54,8 @@ zinit snippet PZT::modules/completion/init.zsh
 
 zstyle ':prezto:*:*' case-sensitive 'no'
 zstyle ':prezto:*:*' color 'yes'
+
+zstyle ':completion:*' special-dirs true
 # }}}
 
 # Profile plugins - https://zdharma-continuum.github.io/zinit/wiki/Profiling-plugins/
@@ -93,7 +95,6 @@ zinit snippet https://github.com/docker/cli/blob/master/contrib/completion/zsh/_
 #   zstyle ':notify:*' command-complete-timeout 15
 #   zstyle ':notify:*' always-notify-on-failure no
 
-# TODO Setting abbreviations doesn't work
 zinit light olets/zsh-abbr
   abbr -S -qq yay='paru'
 
@@ -156,7 +157,8 @@ setopt globdots \
        histignorealldups \
        sharehistory \
        menucomplete \
-       extendedglob
+       extendedglob \
+       autoparamslash
 
 autoload -Uz compinit
 
