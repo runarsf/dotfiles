@@ -29,7 +29,7 @@ local charitable    = require("modules.charitable")
 -- local machi         = require("modules.machi")
 
 -- Client movement handling
-require("collision")()
+-- require("collision")()
 
 local gears         = require("gears")
 local awful         = require("awful")
@@ -443,8 +443,60 @@ local globalkeys = ez.keytable {
   ["M-p"] = function() qalc_scratch:toggle() end,
 }
 
+--local adhoc_bind = awful.key {
+--  modifiers = { modkey },
+--  key = 'o',
+--  on_press = function ()
+--    debug("asd")
+--  end,
+--}
+
 local clientkeys = ez.keytable {
   -- ["M-o"] = function(c)
+  -- end,
+  -- ["M-period"] = function(c)
+  --   if c then
+      -- ruled.client.remove_rule("adhoc") {{{
+      -- ruled.client.append_rule {
+      --   -- id = "adhoc",
+      --   rule = { pid=c.pid },
+      --   properties = {
+      --     floating = true,
+      --     --titlebars_enabled = true,
+      --     --minimized = true,
+      --     --sticky = false,
+      --     --above = true,
+      --     --ontop = false,
+      --     --border_width = 10,
+      --     --honor_padding = true,
+      --     --honor_workarea = true
+      --   }
+      -- }
+      -- c.floating = true
+      -- local adhoc_scratch = bling.module.scratchpad {
+      --   command = "notify-send -t 1000 'AwesomeWM ad-hoc scratchpads' 'Cannot restart scratchpad for "..c.name.." ("..c.class..")'",
+      --   rule = { pid=c.pid },
+      --   sticky = true,
+      --   autoclose = false,
+      --   floating = true,
+      --   -- geometry = { x=0, y=0, height=800, width=1200 },
+      --   reapply = false,
+      --   dont_focus_before_close = true,
+      --   -- rubato = { y=anim_y }
+      -- }
+      -- local key = awful.key({modkey}, "o")
+      -- awful.keyboard.append_global_keybindings(ez.keytable {
+      --   ["M-o"] = function() adhoc_scratch:toggle() end
+      -- })
+      -- awful.keyboard.remove_global_keybinding({key})
+      -- awful.keyboard.append_global_keybindings(ez.keytable {
+      --   ["M-o"] = function() debug("a") end,
+      --   ["M-comma"] = function() debug("removing mo bind"); awful.keyboard.remove_global_keybinding(ez.key("M-o")) end
+      -- }) }}}
+  --     awful.keyboard.remove_client_keybinding(adhoc_bind)
+  --     awful.keyboard.remove_client_keybinding(adhoc_bind)
+  --     awful.keyboard.append_client_keybinding(adhoc_bind)
+  --   end
   -- end,
   ["M-minus"] = function(c) c.minimized = true end,
   ["M-S-minus"] = function()
@@ -469,97 +521,97 @@ local clientkeys = ez.keytable {
   -- ["M-period"] = function(c) c.ontop = not c.ontop end,
   -- ["M-period"] = function() machi.default_editor.start_interactive() end,
   -- ["M-comma"] = function() machi.switcher.start(client.focus) end,
-  -- ["M-C-Up"] = function(c)
-  --   if c.floating then
-  --     c:relative_move(0, 0, 0, -10)
-  --   else
-  --     awful.client.incwfact(0.025)
-  --   end
-  -- end,
-  -- ["M-C-Down"] = function(c)
-  --   if c.floating then
-  --     c:relative_move(0, 0, 0, 10)
-  --   else
-  --     awful.client.incwfact(-0.025)
-  --   end
-  -- end,
-  -- ["M-C-Left"] = function(c)
-  --   if c.floating then
-  --     c:relative_move(0, 0, -10, 0)
-  --   else
-  --     awful.tag.incmwfact(-0.025)
-  --   end
-  -- end,
-  -- ["M-C-Right"] = function(c)
-  --   if c.floating then
-  --     c:relative_move(0, 0, 10, 0)
-  --   else
-  --     awful.tag.incmwfact(0.025)
-  --   end
-  -- end,
-  -- ["M-S-Down"] = function(c)
-  --   if c.floating then
-  --     c:relative_move(0, 20, 0, 0)
-  --   else
-  --     awful.client.swap.global_bydirection("down")
-  --     c:raise()
-  --   end
-  -- end,
-  -- ["M-S-Up"] = function(c)
-  --   if c.floating then
-  --     c:relative_move(0, -20, 0, 0)
-  --   else
-  --     awful.client.swap.global_bydirection("up")
-  --     c:raise()
-  --   end
-  -- end,
-  -- ["M-S-Left"] = function(c)
-  --   if c.floating then
-  --     c:relative_move(-20, 0, 0, 0)
-  --   else
-  --     awful.client.swap.global_bydirection("left")
-  --     c:raise()
-  --   end
-  -- end,
-  -- ["M-S-Right"] = function(c)
-  --   if c.floating then
-  --     c:relative_move(20, 0, 0, 0)
-  --   else
-  --     awful.client.swap.global_bydirection("right")
-  --     c:raise()
-  --   end
-  -- end,
-  -- ["M-Down"] = function(c)
-  --   -- https://www.reddit.com/r/awesomewm/comments/j73j99/comment/g82ik6f/?utm_source=share&utm_medium=web2x&context=3
-  --   if THas({"dovetail.layout.right", "max"}, awful.screen.focused().selected_tag.layout.name) then
-  --     awful.client.focus.byidx(1)
-  --     if client.focus == awful.client.getmaster(awful.screen.focused()) then
-  --       awful.client.focus.byidx(-1)
-  --     end
-  --   else
-  --     awful.client.focus.global_bydirection("down")
-  --     client.focus:raise()
-  --   end
-  -- end,
-  -- ["M-Up"] = function(c)
-  --   if THas({"dovetail.layout.right", "max"}, awful.screen.focused().selected_tag.layout.name) then
-  --     awful.client.focus.byidx(-1)
-  --     if client.focus == awful.client.getmaster(awful.screen.focused()) then
-  --       awful.client.focus.byidx(1)
-  --     end
-  --   else
-  --     awful.client.focus.global_bydirection("up")
-  --     client.focus:raise()
-  --   end
-  -- end,
-  -- ["M-Right"] = function(c)
-  --   awful.client.focus.global_bydirection("right")
-  --   client.focus:raise()
-  -- end,
-  -- ["M-Left"] = function(c)
-  --   awful.client.focus.global_bydirection("left")
-  --   client.focus:raise()
-  -- end,
+  ["M-C-Up"] = function(c)
+    if c.floating then
+      c:relative_move(0, 0, 0, -10)
+    else
+      awful.client.incwfact(0.025)
+    end
+  end,
+  ["M-C-Down"] = function(c)
+    if c.floating then
+      c:relative_move(0, 0, 0, 10)
+    else
+      awful.client.incwfact(-0.025)
+    end
+  end,
+  ["M-C-Left"] = function(c)
+    if c.floating then
+      c:relative_move(0, 0, -10, 0)
+    else
+      awful.tag.incmwfact(-0.025)
+    end
+  end,
+  ["M-C-Right"] = function(c)
+    if c.floating then
+      c:relative_move(0, 0, 10, 0)
+    else
+      awful.tag.incmwfact(0.025)
+    end
+  end,
+  ["M-S-Down"] = function(c)
+    if c.floating then
+      c:relative_move(0, 50, 0, 0)
+    else
+      awful.client.swap.global_bydirection("down")
+      c:raise()
+    end
+  end,
+  ["M-S-Up"] = function(c)
+    if c.floating then
+      c:relative_move(0, -50, 0, 0)
+    else
+      awful.client.swap.global_bydirection("up")
+      c:raise()
+    end
+  end,
+  ["M-S-Left"] = function(c)
+    if c.floating then
+      c:relative_move(-50, 0, 0, 0)
+    else
+      awful.client.swap.global_bydirection("left")
+      c:raise()
+    end
+  end,
+  ["M-S-Right"] = function(c)
+    if c.floating then
+      c:relative_move(50, 0, 0, 0)
+    else
+      awful.client.swap.global_bydirection("right")
+      c:raise()
+    end
+  end,
+  ["M-Down"] = function(c)
+    -- https://www.reddit.com/r/awesomewm/comments/j73j99/comment/g82ik6f/?utm_source=share&utm_medium=web2x&context=3
+    if THas({"dovetail.layout.right", "max"}, awful.screen.focused().selected_tag.layout.name) then
+      awful.client.focus.byidx(1)
+      if client.focus == awful.client.getmaster(awful.screen.focused()) then
+        awful.client.focus.byidx(-1)
+      end
+    else
+      awful.client.focus.global_bydirection("down")
+      client.focus:raise()
+    end
+  end,
+  ["M-Up"] = function(c)
+    if THas({"dovetail.layout.right", "max"}, awful.screen.focused().selected_tag.layout.name) then
+      awful.client.focus.byidx(-1)
+      if client.focus == awful.client.getmaster(awful.screen.focused()) then
+        awful.client.focus.byidx(1)
+      end
+    else
+      awful.client.focus.global_bydirection("up")
+      client.focus:raise()
+    end
+  end,
+  ["M-Right"] = function(c)
+    awful.client.focus.global_bydirection("right")
+    client.focus:raise()
+  end,
+  ["M-Left"] = function(c)
+    awful.client.focus.global_bydirection("left")
+    client.focus:raise()
+  end,
 }
 
 local numberkeys = {
@@ -799,7 +851,7 @@ ruled.client.connect_signal("request::rules", function()
       above = true,
       ontop = false,
       --border_width = 0,
-      skip_taskbar = true,
+      --skip_taskbar = true,
       --honor_padding = true,
       --honor_workarea = true
   }
@@ -837,8 +889,8 @@ client.connect_signal("request::titlebars", function(c)
       -- awful.titlebar.widget.floatingbutton(c),
       awful.titlebar.widget.minimizebutton(c),
       -- awful.titlebar.widget.maximizedbutton(c),
-      -- awful.titlebar.widget.stickybutton(c),
-      -- awful.titlebar.widget.ontopbutton(c),
+      awful.titlebar.widget.stickybutton(c),
+      awful.titlebar.widget.ontopbutton(c),
       awful.titlebar.widget.closebutton(c),
       layout = wibox.layout.fixed.horizontal
     },
