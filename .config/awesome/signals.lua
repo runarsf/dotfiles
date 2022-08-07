@@ -1,6 +1,7 @@
 local shape = require("gears.shape")
 local awful = require("awful")
 -- local beautiful = require("beautiful")
+local H = require("helpers")
 
 -- Enable sloppy focus, so that focus follows mouse {{{
 client.connect_signal("mouse::enter", function(c)
@@ -149,7 +150,6 @@ end
 -- Center floating clients {{{
 client.connect_signal("property::floating", function(c)
   if c.floating and THas({"normal", "dialog"}, c.type) then
-    debug(c.floating)
     awful.placement.centered(c)
     awful.placement.no_offscreen(c)
     -- Allow dialogs to overlap

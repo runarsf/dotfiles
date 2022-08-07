@@ -47,56 +47,14 @@ local inspect       = require("modules.inspect.inspect")
 
 unpack = table.unpack or unpack
 local ez            = require("modules.ez")
+local H = require("helpers")
 -- }}}
 
 local dovetail = require("modules.dovetail")
 
--- Helpers {{{
 -- local CFloating = function(c)
 --    return c.floating or awful.layout.get(c.screen) == awful.layout.suit.floating
 -- end
-
-local TLen = function(T)
-  local count = 0
-  for _ in pairs(T) do count = count + 1 end
-  return count
-end
-
-local TAdd = function(T, K)
-  T[K] = true
-end
-
-local TPop = function(T, K)
-  T[K] = nil
-end
-
--- Check if table has key; either key, or value if key is a number
-local THas = function(T, K)
-  if T[K] ~= nil then return true end
-  for k, v in pairs(T) do
-    if v == K and type(k) == "number" then return true end
-  end
-  return false
-end
-
-local IndexOf = function(array, value)
-  for i, v in ipairs(array) do
-    if v == value then
-      return i
-    end
-  end
-  return nil
-end
-
-local debug = function(text)
-  if text then
-    if type(text) == "table" then
-      text = inspect(text)
-    end
-    naughty.notify({text=tostring(text)})
-  end
-end
--- }}}
 
 -- Variables {{{
 beautiful.init(gears.filesystem.get_configuration_dir() .. "theme.lua")
@@ -212,6 +170,7 @@ menubar.utils.terminal = terminal -- Set the terminal for applications that requ
 tag.connect_signal("request::default_layouts", function()
   awful.layout.append_default_layouts({
     awful.layout.suit.tile,
+    awful.layout.suit.max,
     bling.layout.centered,
     -- machi.default_layout,
     dovetail.layout.right,
@@ -400,6 +359,8 @@ screen.connect_signal("request::desktop_decoration", function(s)
 end)
 -- }}}
 
+l_lay = {}
+
 -- Key bindings (`xev`) {{{
 local globalkeys = ez.keytable {
   ["M-S-r"] = awesome.restart,
@@ -420,6 +381,20 @@ local globalkeys = ez.keytable {
         awesome.quit()
       end
     end)
+  end,
+  ["M-t"] = function()
+    -- Also requires a global variable "l_lay = {}"
+    local t = awful.screen.focused().selected_tag
+    local de = awful.layout.layouts[awful.layout.get_tag_layout_index(t)]
+    local ds = awful.screen.focused().selected_tag.index
+    local dx = awful.screen.focused().index
+    dk = ds .."-".. dx
+    if not string.match(awful.layout.getname(), 'max') then
+      l_lay[dk] = de
+      awful.layout.set(awful.layout.suit.max)
+    else
+      awful.layout.set(l_lay[dk])
+    end
   end,
   ["M-m"] = {awful.tag.incnmaster, 1, nil, true},
   ["M-S-m"] = function()
@@ -451,11 +426,14 @@ local globalkeys = ez.keytable {
 --  end,
 --}
 
+adhoc_scratch = {}
+
 local clientkeys = ez.keytable {
   -- ["M-o"] = function(c)
   -- end,
-  -- ["M-period"] = function(c)
-  --   if c then
+  ["M-period"] = function(c)
+    if not c then return end
+    -- TODO Make scratchpad float, then restore after re-assign
       -- ruled.client.remove_rule("adhoc") {{{
       -- ruled.client.append_rule {
       --   -- id = "adhoc",
@@ -473,31 +451,16 @@ local clientkeys = ez.keytable {
       --   }
       -- }
       -- c.floating = true
-      -- local adhoc_scratch = bling.module.scratchpad {
-      --   command = "notify-send -t 1000 'AwesomeWM ad-hoc scratchpads' 'Cannot restart scratchpad for "..c.name.." ("..c.class..")'",
-      --   rule = { pid=c.pid },
-      --   sticky = true,
-      --   autoclose = false,
-      --   floating = true,
-      --   -- geometry = { x=0, y=0, height=800, width=1200 },
-      --   reapply = false,
-      --   dont_focus_before_close = true,
-      --   -- rubato = { y=anim_y }
-      -- }
-      -- local key = awful.key({modkey}, "o")
-      -- awful.keyboard.append_global_keybindings(ez.keytable {
-      --   ["M-o"] = function() adhoc_scratch:toggle() end
-      -- })
-      -- awful.keyboard.remove_global_keybinding({key})
-      -- awful.keyboard.append_global_keybindings(ez.keytable {
-      --   ["M-o"] = function() debug("a") end,
-      --   ["M-comma"] = function() debug("removing mo bind"); awful.keyboard.remove_global_keybinding(ez.key("M-o")) end
-      -- }) }}}
-  --     awful.keyboard.remove_client_keybinding(adhoc_bind)
-  --     awful.keyboard.remove_client_keybinding(adhoc_bind)
-  --     awful.keyboard.append_client_keybinding(adhoc_bind)
-  --   end
-  -- end,
+    adhoc_scratch = bling.module.scratchpad {
+      command = "notify-send -t 1000 'AwesomeWM ad-hoc scratchpads' 'Cannot restart scratchpad for "..c.name.." ("..c.class..")'",
+      rule = { pid=c.pid },
+      sticky = false,
+      autoclose = false,
+      reapply = false,
+      dont_focus_before_close = true,
+    }
+  end,
+  ["M-comma"] = function() adhoc_scratch:toggle() end,
   ["M-minus"] = function(c) c.minimized = true end,
   ["M-S-minus"] = function()
     local c = awful.client.restore()
@@ -517,6 +480,7 @@ local clientkeys = ez.keytable {
     end
   end,
   ["M-q"] = function(c) c:kill() end,
+  ["M-S-q"] = {awful.spawn, "xkill"},
   ["M-S-Return"] = function(c) c:swap(awful.client.getmaster()) end,
   -- ["M-period"] = function(c) c.ontop = not c.ontop end,
   -- ["M-period"] = function() machi.default_editor.start_interactive() end,
@@ -583,7 +547,7 @@ local clientkeys = ez.keytable {
   end,
   ["M-Down"] = function(c)
     -- https://www.reddit.com/r/awesomewm/comments/j73j99/comment/g82ik6f/?utm_source=share&utm_medium=web2x&context=3
-    if THas({"dovetail.layout.right", "max"}, awful.screen.focused().selected_tag.layout.name) then
+    if H.THas({"dovetail.layout.right", "max"}, awful.screen.focused().selected_tag.layout.name) then
       awful.client.focus.byidx(1)
       if client.focus == awful.client.getmaster(awful.screen.focused()) then
         awful.client.focus.byidx(-1)
@@ -594,7 +558,7 @@ local clientkeys = ez.keytable {
     end
   end,
   ["M-Up"] = function(c)
-    if THas({"dovetail.layout.right", "max"}, awful.screen.focused().selected_tag.layout.name) then
+    if H.THas({"dovetail.layout.right", "max"}, awful.screen.focused().selected_tag.layout.name) then
       awful.client.focus.byidx(-1)
       if client.focus == awful.client.getmaster(awful.screen.focused()) then
         awful.client.focus.byidx(1)
@@ -626,7 +590,7 @@ local numberkeys = {
       if i==0 then i=10 end
       local tag = tags[i]
       if tag then
-        if IndexOf(tags, awful.screen.focused().selected_tag) == i then
+        if H.IndexOf(tags, awful.screen.focused().selected_tag) == i then
           awful.tag.history.restore()
         else
           charitable.select_tag(tag, awful.screen.focused())
