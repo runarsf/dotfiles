@@ -4,6 +4,7 @@ local inspect       = require("modules.inspect.inspect")
 local M = {}
 
 -- gears.debug.dump()
+-- awesome-client 'return require("gears.debug").dump_return(mouse.screen.selected_tag:clients())'
 M.debug = function(text)
   if text then
     if type(text) == "table" then

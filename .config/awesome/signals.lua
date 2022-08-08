@@ -169,3 +169,23 @@ client.connect_signal("request::manage", function(c, ctx)
   end
 end)
 -- }}}
+
+-- https://www.reddit.com/r/awesomewm/comments/gkvaal/comment/fqw0677
+--[[
+screen.connect_signal('arrange', function(s)
+  for _, c in pairs(s.clients) do
+    if beautiful.border_radius ~= 0 and
+      (s.selected_tag.layout.name == 'max') or c.fullscreen then
+      --and (#s.tiled_clients == 1)
+      c.shape = shape.rectangle
+    else
+      if (c.floating == true) or (c.modal == true) or (c.skip_taskbar == true) or
+        s.selected_tag.layout.name == 'floating' then
+        c.shape = function(cr,w,h) -- helpers.rrect(beautiful.border_radius)
+          shape.rounded_rect(cr,w,h,beautiful.border_radius)
+        end
+      end
+    end
+  end
+end)
+--]]

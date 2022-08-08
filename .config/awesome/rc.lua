@@ -20,6 +20,7 @@ require("signals")
 -- Packages {{{
 pcall(require, "luarocks.loader")
 
+local shape = require("gears.shape")
 -- Dynamic tags
 require("modules.eminent.eminent")
 -- XMonad-like workspaces
@@ -359,7 +360,7 @@ screen.connect_signal("request::desktop_decoration", function(s)
 end)
 -- }}}
 
-l_lay = {}
+cache = {} --[[cache]]
 
 -- Key bindings (`xev`) {{{
 local globalkeys = ez.keytable {
@@ -382,18 +383,18 @@ local globalkeys = ez.keytable {
       end
     end)
   end,
-  ["M-t"] = function()
-    -- Also requires a global variable "l_lay = {}"
+  ["M-t"] = function(--[[cache]])
+    if not cache.l_lay then cache.l_lay = {} end
     local t = awful.screen.focused().selected_tag
     local de = awful.layout.layouts[awful.layout.get_tag_layout_index(t)]
     local ds = awful.screen.focused().selected_tag.index
     local dx = awful.screen.focused().index
     dk = ds .."-".. dx
     if not string.match(awful.layout.getname(), 'max') then
-      l_lay[dk] = de
+      cache.l_lay[dk] = de
       awful.layout.set(awful.layout.suit.max)
     else
-      awful.layout.set(l_lay[dk])
+      awful.layout.set(cache.l_lay[dk])
     end
   end,
   ["M-m"] = {awful.tag.incnmaster, 1, nil, true},
@@ -426,12 +427,10 @@ local globalkeys = ez.keytable {
 --  end,
 --}
 
-adhoc_scratch = {}
-
 local clientkeys = ez.keytable {
   -- ["M-o"] = function(c)
   -- end,
-  ["M-period"] = function(c)
+  ["M-period"] = function(c --[[cache]])
     if not c then return end
     -- TODO Make scratchpad float, then restore after re-assign
       -- ruled.client.remove_rule("adhoc") {{{
@@ -451,7 +450,7 @@ local clientkeys = ez.keytable {
       --   }
       -- }
       -- c.floating = true
-    adhoc_scratch = bling.module.scratchpad {
+    cache.adhoc_scratch = bling.module.scratchpad {
       command = "notify-send -t 1000 'AwesomeWM ad-hoc scratchpads' 'Cannot restart scratchpad for "..c.name.." ("..c.class..")'",
       rule = { pid=c.pid },
       sticky = false,
@@ -460,7 +459,7 @@ local clientkeys = ez.keytable {
       dont_focus_before_close = true,
     }
   end,
-  ["M-comma"] = function() adhoc_scratch:toggle() end,
+  ["M-comma"] = function() cache.adhoc_scratch:toggle() end,
   ["M-minus"] = function(c) c.minimized = true end,
   ["M-S-minus"] = function()
     local c = awful.client.restore()
@@ -487,28 +486,28 @@ local clientkeys = ez.keytable {
   -- ["M-comma"] = function() machi.switcher.start(client.focus) end,
   ["M-C-Up"] = function(c)
     if c.floating then
-      c:relative_move(0, 0, 0, -10)
+      c:relative_move(0, 0, 0, -50)
     else
       awful.client.incwfact(0.025)
     end
   end,
   ["M-C-Down"] = function(c)
     if c.floating then
-      c:relative_move(0, 0, 0, 10)
+      c:relative_move(0, 0, 0, 50)
     else
       awful.client.incwfact(-0.025)
     end
   end,
   ["M-C-Left"] = function(c)
     if c.floating then
-      c:relative_move(0, 0, -10, 0)
+      c:relative_move(0, 0, -50, 0)
     else
       awful.tag.incmwfact(-0.025)
     end
   end,
   ["M-C-Right"] = function(c)
     if c.floating then
-      c:relative_move(0, 0, 10, 0)
+      c:relative_move(0, 0, 50, 0)
     else
       awful.tag.incmwfact(0.025)
     end
@@ -546,7 +545,8 @@ local clientkeys = ez.keytable {
     end
   end,
   ["M-Down"] = function(c)
-    -- https://www.reddit.com/r/awesomewm/comments/j73j99/comment/g82ik6f/?utm_source=share&utm_medium=web2x&context=3
+    -- https://www.reddit.com/r/awesomewm/comments/j73j99/comment/g82ik6f
+    -- awful.screen.focused().select_tag vs mouse.screen.selected_tag
     if H.THas({"dovetail.layout.right", "max"}, awful.screen.focused().selected_tag.layout.name) then
       awful.client.focus.byidx(1)
       if client.focus == awful.client.getmaster(awful.screen.focused()) then
@@ -554,27 +554,22 @@ local clientkeys = ez.keytable {
       end
     else
       awful.client.focus.global_bydirection("down")
-      client.focus:raise()
     end
   end,
   ["M-Up"] = function(c)
     if H.THas({"dovetail.layout.right", "max"}, awful.screen.focused().selected_tag.layout.name) then
-      awful.client.focus.byidx(-1)
-      if client.focus == awful.client.getmaster(awful.screen.focused()) then
-        awful.client.focus.byidx(1)
+      if client.focus ~= awful.client.getmaster(awful.screen.focused()) then
+        awful.client.focus.byidx(-1)
       end
     else
       awful.client.focus.global_bydirection("up")
-      client.focus:raise()
     end
   end,
   ["M-Right"] = function(c)
     awful.client.focus.global_bydirection("right")
-    client.focus:raise()
   end,
   ["M-Left"] = function(c)
     awful.client.focus.global_bydirection("left")
-    client.focus:raise()
   end,
 }
 
