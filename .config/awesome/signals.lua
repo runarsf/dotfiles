@@ -71,20 +71,12 @@ end)
 -- end)
 -- }}}
 
--- TODO helpers.lua
-local THas = function(T, K)
-  if T[K] ~= nil then return true end
-  for k, v in pairs(T) do
-    if v == K and type(k) == "number" then return true end
-  end
-  return false
-end
 
 -- Give floating clients a titlebar {{{
 local floating_handler = function(c)
   if not (c.maximized or c.fullscreen) then
     -- FIXME `attempt to index a nil value (field 'selected_tag')` when attempt to focus tag when scratchpad closed
-    if (c.floating or c.screen.selected_tag.layout.name == "floating") and THas({"normal", "dialog"}, c.type) then
+    if (c.floating or c.screen.selected_tag.layout.name == "floating") and H.THas({"normal", "dialog"}, c.type) then
       if not c.requests_no_titlebar then
         awful.titlebar.show(c)
       else
@@ -148,8 +140,9 @@ end
 -- }}}
 
 -- Center floating clients {{{
+-- TODO Don't center clients that don't want it, like primenote (rules?)
 client.connect_signal("property::floating", function(c)
-  if c.floating and THas({"normal", "dialog"}, c.type) then
+  if c.floating and H.THas({"normal", "dialog"}, c.type) then
     awful.placement.centered(c)
     awful.placement.no_offscreen(c)
     -- Allow dialogs to overlap
@@ -159,7 +152,7 @@ client.connect_signal("property::floating", function(c)
   end
 end)
 client.connect_signal("request::manage", function(c, ctx)
-  if c.floating and ctx == "new" and THas({"normal", "dialog"}, c.type) then
+  if c.floating and ctx == "new" and H.THas({"normal", "dialog"}, c.type) then
     awful.placement.centered(c)
     awful.placement.no_offscreen(c)
     -- Allow dialogs to overlap
@@ -169,6 +162,17 @@ client.connect_signal("request::manage", function(c, ctx)
   end
 end)
 -- }}}
+
+-- client.connect_signal("unmanage", function(c)
+--   -- -- awful.screen.focused().select_tag vs mouse.screen.selected_tag
+--   -- if H.THas({"dovetail.layout.right", "max"}, awful.screen.focused().selected_tag.layout.name) then
+--   -- for _, mc in pairs(c.clients) do
+--   --   debug(mc.class)
+--   -- end
+--   --for _, mc in pairs(c.first_tag:clients()) do
+--   --  debug(mc.class)
+--   --end
+-- end)
 
 -- https://www.reddit.com/r/awesomewm/comments/gkvaal/comment/fqw0677
 --[[

@@ -549,6 +549,7 @@ local clientkeys = ez.keytable {
     -- awful.screen.focused().select_tag vs mouse.screen.selected_tag
     if H.THas({"dovetail.layout.right", "max"}, awful.screen.focused().selected_tag.layout.name) then
       awful.client.focus.byidx(1)
+      -- Buggy when a floating client exists
       if client.focus == awful.client.getmaster(awful.screen.focused()) then
         awful.client.focus.byidx(-1)
       end
