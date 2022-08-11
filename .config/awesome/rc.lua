@@ -443,15 +443,15 @@ local clientkeys = ez.keytable {
     cache.adhoc[c.pid]:turn_on()
     cache.adhoc[c.pid] = nil
   end,
-  ["M-comma"] = function(--[[cache]]) -- Toggle adhoc-scratchpads
+  ["M-minus"] = function(--[[cache]]) -- Toggle adhoc-scratchpads
     if not cache.adhoc then return end
 
     for _,scratch in pairs(cache.adhoc) do
       scratch:toggle()
     end
   end,
-  ["M-minus"] = function(c) c.minimized = true end,
-  ["M-S-minus"] = function()
+  ["M-comma"] = function(c) c.minimized = true end,
+  ["M-S-comma"] = function()
     local c = awful.client.restore()
     if c then
       c:activate { raise=true, context="key.unminimize" }
