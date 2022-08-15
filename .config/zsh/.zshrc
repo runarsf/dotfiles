@@ -81,6 +81,8 @@ zinit wait'1' lucid for \
 
 zinit ice wait'1' lucid
 zinit snippet OMZP::colored-man-pages
+# zinit snippet OMZP::per-directory-history
+zinit light jimhester/per-directory-history
 
 zinit ice wait'5' lucid
 zinit light kazhala/dotbare

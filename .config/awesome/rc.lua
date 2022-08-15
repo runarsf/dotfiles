@@ -419,38 +419,15 @@ local globalkeys = ez.keytable {
   ["M-p"] = function() qalc_scratch:toggle() end,
 }
 
---local adhoc_bind = awful.key {
---  modifiers = { modkey },
---  key = 'o',
---  on_press = function ()
---    debug("asd")
---  end,
---}
-
 local clientkeys = ez.keytable {
-  -- ["M-o"] = function(c)
-  -- end,
-  ["M-period"] = function(c --[[cache]])
-    if not c then return end
+  -- ["M-o"] = function(c) end,
+  ["M-period"] = function(c --[[cache]]) -- Tag a client as an adhoc-scratchpad
     -- TODO Make scratchpad float, then restore after re-assign
-      -- ruled.client.remove_rule("adhoc") {{{
-      -- ruled.client.append_rule {
-      --   -- id = "adhoc",
-      --   rule = { pid=c.pid },
-      --   properties = {
-      --     floating = true,
-      --     --titlebars_enabled = true,
-      --     --minimized = true,
-      --     --sticky = false,
-      --     --above = true,
-      --     --ontop = false,
-      --     --border_width = 10,
-      --     --honor_padding = true,
-      --     --honor_workarea = true
-      --   }
-      -- }
-      -- c.floating = true
-    cache.adhoc_scratch = bling.module.scratchpad {
+    if not c then return end
+    if not cache.adhoc then cache.adhoc = {} end
+    if H.THas(cache.adhoc, c.pid) then return end
+
+    cache.adhoc[c.pid] = bling.module.scratchpad {
       command = "notify-send -t 1000 'AwesomeWM ad-hoc scratchpads' 'Cannot restart scratchpad for "..c.name.." ("..c.class..")'",
       rule = { pid=c.pid },
       sticky = false,
@@ -458,10 +435,23 @@ local clientkeys = ez.keytable {
       reapply = false,
       dont_focus_before_close = true,
     }
+    -- cache.adhoc[c.pid]:connect_signal("turn_off", function(c) H.debug("Turned off!") end)
   end,
-  ["M-comma"] = function() cache.adhoc_scratch:toggle() end,
-  ["M-minus"] = function(c) c.minimized = true end,
-  ["M-S-minus"] = function()
+  ["M-S-period"] = function(c --[[cache]]) -- Untag a client as an adhoc-scratchpad
+    if not cache.adhoc then return end
+
+    cache.adhoc[c.pid]:turn_on()
+    cache.adhoc[c.pid] = nil
+  end,
+  ["M-minus"] = function(--[[cache]]) -- Toggle adhoc-scratchpads
+    if not cache.adhoc then return end
+
+    for _,scratch in pairs(cache.adhoc) do
+      scratch:toggle()
+    end
+  end,
+  ["M-comma"] = function(c) c.minimized = true end,
+  ["M-S-comma"] = function()
     local c = awful.client.restore()
     if c then
       c:activate { raise=true, context="key.unminimize" }
@@ -549,6 +539,7 @@ local clientkeys = ez.keytable {
     -- awful.screen.focused().select_tag vs mouse.screen.selected_tag
     if H.THas({"dovetail.layout.right", "max"}, awful.screen.focused().selected_tag.layout.name) then
       awful.client.focus.byidx(1)
+      -- Buggy when a floating client exists
       if client.focus == awful.client.getmaster(awful.screen.focused()) then
         awful.client.focus.byidx(-1)
       end
