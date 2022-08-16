@@ -144,21 +144,21 @@ end
 client.connect_signal("property::floating", function(c)
   if c.floating and H.THas({"normal", "dialog"}, c.type) then
     awful.placement.centered(c)
-    awful.placement.no_offscreen(c)
     -- Allow dialogs to overlap
     if c.type ~= "dialog" then
       awful.placement.no_overlap(c)
     end
+    awful.placement.no_offscreen(c)
   end
 end)
 client.connect_signal("request::manage", function(c, ctx)
   if c.floating and ctx == "new" and H.THas({"normal", "dialog"}, c.type) then
     awful.placement.centered(c)
-    awful.placement.no_offscreen(c)
     -- Allow dialogs to overlap
     if c.type ~= "dialog" then
       awful.placement.no_overlap(c)
     end
+    awful.placement.no_offscreen(c)
   end
 end)
 -- }}}

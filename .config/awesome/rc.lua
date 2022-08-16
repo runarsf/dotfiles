@@ -417,14 +417,28 @@ local globalkeys = ez.keytable {
   ["XF86AudioMute"] = {awful.util.spawn, "amixer -q -D pulse sset Master toggle"},
   ["M-n"] = function() term_scratch:toggle() end,
   ["M-p"] = function() qalc_scratch:toggle() end,
+  ["M-period"] = function(--[[cache]]) -- Toggle adhoc-scratchpads
+    if not cache.adhoc then return end
+
+    for _,scratch in pairs(cache.adhoc) do
+      scratch:toggle()
+    end
+  end,
+  ["M-S-period"] = function()
+    local c = awful.client.restore()
+    if c then
+      c:activate { raise=true, context="key.unminimize" }
+    end
+  end,
 }
 
 local clientkeys = ez.keytable {
   -- ["M-o"] = function(c) end,
-  ["M-period"] = function(c --[[cache]]) -- Tag a client as an adhoc-scratchpad
+  ["M-comma"] = function(c --[[cache]]) -- Tag a client as an adhoc-scratchpad
     -- TODO Make scratchpad float, then restore after re-assign
     if not c then return end
-    if not cache.adhoc then cache.adhoc = {} end
+    -- if not cache.adhoc then cache.adhoc = {} end -- Support tagging multiple clients
+    cache.adhoc = {} -- Only support tagging one client
     if H.THas(cache.adhoc, c.pid) then return end
 
     cache.adhoc[c.pid] = bling.module.scratchpad {
@@ -437,26 +451,12 @@ local clientkeys = ez.keytable {
     }
     -- cache.adhoc[c.pid]:connect_signal("turn_off", function(c) H.debug("Turned off!") end)
   end,
-  ["M-S-period"] = function(c --[[cache]]) -- Untag a client as an adhoc-scratchpad
-    if not cache.adhoc then return end
-
-    cache.adhoc[c.pid]:turn_on()
-    cache.adhoc[c.pid] = nil
-  end,
-  ["M-minus"] = function(--[[cache]]) -- Toggle adhoc-scratchpads
-    if not cache.adhoc then return end
-
-    for _,scratch in pairs(cache.adhoc) do
-      scratch:toggle()
-    end
-  end,
-  ["M-comma"] = function(c) c.minimized = true end,
-  ["M-S-comma"] = function()
-    local c = awful.client.restore()
-    if c then
-      c:activate { raise=true, context="key.unminimize" }
-    end
-  end,
+  -- ["M-S-comma"] = function(c --[[cache]]) -- Untag a client as an adhoc-scratchpad
+  --   if not cache.adhoc then return end
+  --   cache.adhoc[c.pid]:turn_on()
+  --   cache.adhoc[c.pid] = nil
+  -- end,
+  ["M-minus"] = function(c) c.minimized = true end,
   ["M-f"] = function(c)
     c.fullscreen = not c.fullscreen
     c:raise()
@@ -823,24 +823,24 @@ client.connect_signal("request::titlebars", function(c)
 
   awful.titlebar(c).widget = {
     {
-      -- awful.titlebar.widget.iconwidget(c),
-      buttons = buttons,
+      awful.titlebar.widget.floatingbutton(c),
+      awful.titlebar.widget.stickybutton(c),
+      awful.titlebar.widget.ontopbutton(c),
       layout  = wibox.layout.fixed.horizontal
     },
     {
       {
         align  = "center",
-        widget = awful.titlebar.widget.titlewidget(c)
+        awful.titlebar.widget.iconwidget(c),
+        awful.titlebar.widget.titlewidget(c),
+        layout  = wibox.layout.flex.horizontal
       },
       buttons = buttons,
       layout  = wibox.layout.flex.horizontal
     },
     {
-      -- awful.titlebar.widget.floatingbutton(c),
       awful.titlebar.widget.minimizebutton(c),
-      -- awful.titlebar.widget.maximizedbutton(c),
-      awful.titlebar.widget.stickybutton(c),
-      awful.titlebar.widget.ontopbutton(c),
+      awful.titlebar.widget.maximizedbutton(c),
       awful.titlebar.widget.closebutton(c),
       layout = wibox.layout.fixed.horizontal
     },
