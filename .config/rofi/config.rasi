@@ -11,7 +11,12 @@ configuration {
   matching: "fuzzy";
   tokenize: true;
   click-to-exit: true;
-  kb-mode-next: "Shift+Right,Control+Tab,Tab";
+	kb-mode-previous: "Control+ISO_Left_Tab";
+  kb-mode-next: "Control+Tab,Tab";
+	kb-element-prev: "Left";
+	kb-element-next: "Right";
+	kb-move-char-back: "Shift+Left,Control+b";
+	kb-move-char-forward: "Shift+Right,Control+f";
   kb-row-tab: "";
 
   /* combi-hide-mode-prefix: true;
