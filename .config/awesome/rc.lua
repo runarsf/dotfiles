@@ -714,6 +714,7 @@ ruled.client.connect_signal("request::rules", function()
     "discord",
     "Microsoft Teams - Preview",
   })
+  rule(3, "Code")
   rule(5, "org.remmina.Remmina")
   rule(6, "Inkscape")
   rule(8, "[Ss]potify")
