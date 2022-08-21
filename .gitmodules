@@ -34,3 +34,6 @@
 [submodule ".config/awesome/collision"]
 	path = .config/awesome/collision
 	url = https://github.com/Elv13/collision
+[submodule ".config/awesome/modules/bling"]
+	path = .config/awesome/modules/bling
+	url = git@github.com:runarsf/bling.git
