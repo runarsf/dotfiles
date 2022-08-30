@@ -1,3 +1,7 @@
+# Fig pre block. Keep at the top of this file.
+[[ -f "$HOME/.fig/shell/zprofile.pre.zsh" ]] && . "$HOME/.fig/shell/zprofile.pre.zsh"
+# Fig pre block. Keep at the top of this file.
+[[ -f "$HOME/.fig/shell/profile.pre.bash" ]] && . "$HOME/.fig/shell/profile.pre.bash"
 # Runs when logging in. Used for setting up the environment.
 # .xprofile is run when logging in through a Display Manager.
 
@@ -52,3 +56,6 @@ if [[ $- == *i* ]]; then
   # Start graphical server on tty1 if not already running.
   test "$(tty)" = "/dev/tty1" >/dev/null 2>&1 && ! pgrep -x Xorg >/dev/null 2>&1 && startx
 fi
+
+test -f "${HOME}/.fig/shell/profile.post.bash" && source "${HOME}/.fig/shell/profile.post.bash"
+test -f "${HOME}/.fig/shell/zprofile.post.zsh" && source "${HOME}/.fig/shell/zprofile.post.zsh"

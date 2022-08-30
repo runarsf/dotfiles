@@ -1,3 +1,5 @@
+test -f "${HOME}/.fig/shell/zshrc.pre.zsh" && source "${HOME}/.fig/shell/zshrc.pre.zsh"
+
 # Zinit {{{
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME:-~}/.local/share}/zinit"
 
@@ -199,3 +201,6 @@ dotfiles () {
   git --git-dir="${DOTBARE_DIR}" --work-tree="${DOTBARE_TREE}" "${@}"
 }
 # }}}
+# }}}
+
+test -f "${HOME}/.fig/shell/zshrc.post.zsh" && source "${HOME}/.fig/shell/zshrc.post.zsh"

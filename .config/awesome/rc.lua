@@ -758,6 +758,10 @@ ruled.client.connect_signal("request::rules", function()
     properties = { floating=true, border_width=0, above=true }
   }
 
+  ruled.client.append_rule {
+    rule_any   = { class={"Fig"}, instance={"fig"}, role={"autocomplete"} },
+    properties = { titlebars_enabled=false, border_width=0, focus=false, above=true }
+  }
   -- Add titlebars to normal clients and dialogs
   ruled.client.append_rule {
     id         = "titlebars",
