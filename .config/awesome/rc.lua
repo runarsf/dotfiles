@@ -719,6 +719,8 @@ ruled.client.connect_signal("request::rules", function()
   rule(6, "Inkscape")
   rule(8, "[Ss]potify")
   rule(10, "KeePassXC")
+  -- TODO eww
+  -- rule({border_width=0}, "eww-bar")
 
   -- All clients will match this rule
   ruled.client.append_rule {
