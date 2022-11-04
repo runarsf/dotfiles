@@ -73,7 +73,7 @@ bling.module.window_swallowing.start()
 --     awestore_compat = true
 -- }
 local term_scratch = bling.module.scratchpad {
-  -- command = "wezterm start --class scratch",
+  -- command = "wezterm connect scratch --class scratch",
   command = "alacritty --class scratch --option font.size=12 --command tmux new-session -A -s scratch",
   rule = { instance="scratch" },
   sticky = true,
@@ -789,6 +789,10 @@ ruled.client.connect_signal("request::rules", function()
   }
   ruled.client.append_rule {
     rule_any = { name={ "Office 365 Mailbox.*", "Security Group.*" } },
+    properties = { floating=true }
+  }
+  ruled.client.append_rule {
+    rule = { class="Pavucontrol" },
     properties = { floating=true }
   }
 
