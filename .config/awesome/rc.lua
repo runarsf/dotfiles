@@ -882,7 +882,7 @@ end)
 -- Ensure that removing screens doesn't kill tags
 tag.connect_signal("request::screen", function(t)
   t.selected = false
-  for s in capi.screen do
+  for s in screen do
     if s ~= t.screen then
       t.screen = s
       return
