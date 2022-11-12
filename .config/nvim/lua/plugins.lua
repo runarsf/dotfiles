@@ -11,6 +11,13 @@ local plugins = function(use)
   use({ "lewis6991/impatient.nvim" })         -- Speed up Lua module loading
   use({ "nathom/filetype.nvim" })             -- Speed up startup time
 
+  use({ "folke/which-key.nvim",
+    event = "VimEnter",
+    config = function()
+      require("config.which-key")
+    end,
+  })
+
   use({ -- Themes
     "Shatur/neovim-ayu",
     -- "folke/tokyonight.nvim",
@@ -63,21 +70,21 @@ local plugins = function(use)
     end,
   })
 
-  use({ "akinsho/bufferline.nvim",
-    config = function()
-      require("config.bufferline")
-    end,
-    requires = {
-      "kyazdani42/nvim-web-devicons",
-      "moll/vim-bbye",
-    },
-  })
-
-  -- use({ "lewis6991/gitsigns.nvim",
+  -- use({ "akinsho/bufferline.nvim",
   --   config = function()
-  --     require("gitsigns").setup({})
+  --     require("config.bufferline")
   --   end,
+  --   requires = {
+  --     "kyazdani42/nvim-web-devicons",
+  --     "moll/vim-bbye",
+  --   },
   -- })
+
+  use({ "lewis6991/gitsigns.nvim",
+    config = function()
+      require("gitsigns").setup({})
+    end,
+  })
 
   use({ "nvim-lualine/lualine.nvim",
     config = function()
@@ -100,29 +107,29 @@ local plugins = function(use)
     end
   }
 
-  use({ "stevearc/dressing.nvim",
-    -- module = "dressing",
-    event = "BufReadPre",
-  })
+  -- use({ "stevearc/dressing.nvim",
+  --   -- module = "dressing",
+  --   event = "BufReadPre",
+  -- })
 
-  use({ "rcarriga/nvim-notify",
-    event = "VimEnter",
-    -- Also has keybind and telescope integration
-    -- after = { "dressing" }
-    -- requires = { "dressing" },
-    config = function()
-      Notify = require("notify")
-      vim.notify = Notify
-      Notify.setup({
-        on_open = function(win)
-          vim.api.nvim_win_set_option(win, "wrap", true)
-        end,
-        render = "minimal",
-        states = "fade_in_slide_out",
-        max_width = math.floor(vim.o.columns * 0.6), -- Only allow notify to occupy 60% of terminal real-estate
-      })
-    end,
-  })
+  -- use({ "rcarriga/nvim-notify",
+  --   event = "VimEnter",
+  --   -- Also has keybind and telescope integration
+  --   -- after = { "dressing" }
+  --   -- requires = { "dressing" },
+  --   config = function()
+  --     Notify = require("notify")
+  --     vim.notify = Notify
+  --     Notify.setup({
+  --       on_open = function(win)
+  --         vim.api.nvim_win_set_option(win, "wrap", true)
+  --       end,
+  --       render = "minimal",
+  --       states = "fade_in_slide_out",
+  --       max_width = math.floor(vim.o.columns * 0.6), -- Only allow notify to occupy 60% of terminal real-estate
+  --     })
+  --   end,
+  -- })
 
   use({ "norcalli/nvim-terminal.lua",
     ft = {
@@ -141,14 +148,6 @@ local plugins = function(use)
       require("config.toggleterm")
     end,
   })
-
-  use({ "gpanders/editorconfig.nvim" })
-
-  -- use({ "karb94/neoscroll.nvim",
-  --   config = function()
-  --     require("neoscroll").setup({})
-  --   end,
-  -- })
 
   use({ "norcalli/nvim-colorizer.lua",
     config = function()
@@ -170,13 +169,6 @@ local plugins = function(use)
       "nvim-lua/plenary.nvim",
       "nvim-telescope/telescope-symbols.nvim",
     },
-  })
-
-  use({ "folke/which-key.nvim",
-    event = "VimEnter",
-    config = function()
-      require("config.which-key")
-    end,
   })
 
   use({ "hrsh7th/nvim-cmp",
@@ -220,7 +212,7 @@ local plugins = function(use)
     requires = {
       "williamboman/nvim-lsp-installer",
       "tamago324/nlsp-settings.nvim",
-      "jose-elias-alvarez/null-ls.nvim",
+      ----  "jose-elias-alvarez/null-ls.nvim",
     },
   })
 
@@ -239,44 +231,20 @@ local plugins = function(use)
     },
   })
 
-  use({ "ggandor/lightspeed.nvim",
-    config = function()
-     require("lightspeed").setup({})
-    end,
-  })
-
-  use({ "mbbill/undotree",
-    cmd = {
-      "UndotreeToggle",
-      "UndotreeShow",
-    },
-  })
-
-  use({ "preservim/tagbar",
-    cmd = {
-      "TagbarToggle",
-      "TagbarOpen",
-      "TagbarOpenAutoClose"
-    },
-  })
-
-  use({ "eraserhd/parinfer-rust",
-    run = "cargo build --release",
-    ft = "yuck",
-  })
-
-  -- use({ "tmhedberg/SimpylFold",
-  --   ft = "python",
-  --   config = function()
-  --     require("config.simpylfold")
-  --   end,
+  -- use({ "mbbill/undotree",
+  --   cmd = {
+  --     "UndotreeToggle",
+  --     "UndotreeShow",
+  --   },
   -- })
 
-  use({ "andweeb/presence.nvim",
-    config = function()
-      require("config.presence")
-    end,
-  })
+  -- use({ "preservim/tagbar",
+  --   cmd = {
+  --     "TagbarToggle",
+  --     "TagbarOpen",
+  --     "TagbarOpenAutoClose"
+  --   },
+  -- })
 
   use({ "chentoast/marks.nvim",
     config = function()
@@ -284,36 +252,9 @@ local plugins = function(use)
     end,
   })
 
-  use({ "godlygeek/tabular",
-    cmd = "Tabularize"
-  })
-  use({ "junegunn/vim-easy-align",
-    config = function()
-      require("config.easy-align")
-    end,
-  })
-
-  use({ "ollykel/v-vim",
-    ft = {"verilog", "vlang"},
-  })
-
-  -- use({ "phaazon/hop.nvim",
-  --   config = function()
-  --     require("hop").setup()
-  --   end,
-  -- })
-
   if pkg.Bootstrap then
     pkg.update()
   end
 end
-
--- use({ "kazhala/close-buffers.nvim", cmd = "BDelete" })
--- SmiteshP/nvim-gps
--- plasticboy/vim-markdown
--- godlygeek/tabular
-
--- "nvim-telescope/telescope-project.nvim",
--- "nvim-telescope/telescope-fzy-native.nvim",
 
 return pkg.setup(plugins)
