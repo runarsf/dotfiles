@@ -53,7 +53,6 @@ local mappings = {
       "Find files",
     },
     F = { "<CMD>Telescope live_grep theme=ivy<CR>", "Find Text" },
-    g = { "<CMD>w<CR><CMD>lua require'config.toggleterm'.Glow()<CR>", "Preview Markdown" },
     l = {
       { "<CMD>set cursorline!<CR>", "Toggle Cursorline" },
       name = "LSP",
@@ -87,7 +86,11 @@ local mappings = {
         "Workspace Diagnostics",
       },
     },
-    m = { "<CMD>lua require'util'.ToggleMouse()<CR>", "Toggle Mouse" },
+    m = {
+      { "<CMD>lua require'util'.ToggleMouse()<CR>", "Toggle Mouse" },
+      d = { "<CMD>w<CR><CMD>MarkdownPreviewToggle<CR>", "Preview Markdown (web)" },
+      g = { "<CMD>w<CR><CMD>lua require'config.toggleterm'.Glow()<CR>", "Preview Markdown (glow)" },
+    },
     n = { "<CMD>lua require'util'.CopyMode()<CR>", "Toggle Numbers" },
     p = {
       name = "Packer",

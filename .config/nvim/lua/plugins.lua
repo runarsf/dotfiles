@@ -70,6 +70,13 @@ local plugins = function(use)
     end,
   })
 
+  use({
+    "iamcco/markdown-preview.nvim",
+    run = function()
+      vim.fn["mkdp#util#install"]()
+    end,
+  })
+
   -- use({ "akinsho/bufferline.nvim",
   --   config = function()
   --     require("config.bufferline")
