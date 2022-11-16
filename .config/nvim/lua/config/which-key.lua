@@ -37,17 +37,18 @@ local mappings = {
   [".."] = { "<CMD>lua require'telescope'.extensions.notify.notify()<CR>", "Show Notifications" },
   [" "] = { "<CMD>nohlsearch<CR>", "Unhighlight Search" },
   b = {
-    { "<CMD>lua require('telescope.builtin').buffers(require('telescope.themes').get_dropdown{previewer = false})<CR>",
+    { "<CMD>lua require'telescope.builtin'.buffers(require'telescope.themes'.get_dropdown{previewer = false})<CR>",
     "Buffers" },
     d = { "<CMD>Bdelete!<CR>", "Close Buffer" },
   },
   cfg = { "<CMD>e $MYVIMRC<CR>", "Edit Config" },
   e = { "<CMD>NvimTreeToggle<CR>", "Explorer" },
   f = {
-    "<CMD>lua require('telescope.builtin').find_files(require('telescope.themes').get_dropdown{previewer = false})<CR>",
+    "<CMD>lua require'telescope.builtin'.find_files(require'telescope.themes'.get_dropdown{previewer = false})<CR>",
     "Find files",
   },
   F = { "<CMD>Telescope live_grep theme=ivy<CR>", "Find Text" },
+  g = { "<CMD>w<CR><CMD>lua require'config.toggleterm'.Glow()<CR>", "Preview Markdown" },
   l = {
     { "<CMD>set cursorline!<CR>", "Toggle Cursorline" },
     name = "LSP",
@@ -91,7 +92,7 @@ local mappings = {
     S = { "<CMD>PackerStatus<CR>", "Status" },
     u = { "<CMD>PackerUpdate<CR>", "Update" },
   },
-  P = { "<CMD>lua require('telescope').extensions.projects.projects()<CR>", "Projects" },
+  P = { "<CMD>lua require'telescope'.extensions.projects.projects()<CR>", "Projects" },
   -- ["<space>"] = { "<CMD>nohlsearch<CR>", "No Highlight" },
   q = { "<CMD>q!<CR>", "Quit" },
   s = {

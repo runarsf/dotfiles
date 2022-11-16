@@ -22,7 +22,9 @@ cfg.map("t", "<ESC><ESC>", "<C-\\><C-N>")
 
 local Terminal = require('toggleterm.terminal').Terminal
 
-Glow = function()
+local M = {}
+
+M.Glow = function()
   local file = vim.fn.expand("%:p") -- current file
   if file:sub(-#'.md') ~= '.md' then
     file = vim.fn.expand("%:p:h") -- current directory
@@ -32,4 +34,6 @@ Glow = function()
 end
 
 -- vim.api.nvim_set_keymap("n", "<leader>g", "<cmd>lua Glow()<CR>", {noremap = true, silent = true})
-cfg.map("n", "<leader>g", "<CMD>lua Glow()<CR>")
+-- cfg.map("n", "<leader>g", "<CMD>lua Glow()<CR>")
+
+return M
