@@ -3,6 +3,7 @@ local cfg = require("util")
 vim.opt.timeoutlen = 300 -- time to wait for a mapped sequence to complete (in milliseconds)
 vim.opt.ttimeoutlen = 50 -- affects escape from insert mode
 
+-- NOTE All leader maps go in ./config/which-key.lua
 vim.g.mapleader = ","
 vim.g.maplocalleader = " "
 
@@ -70,11 +71,5 @@ cfg.map("t", "<C-l>", "<C-\\><C-N><C-w>l")
 cfg.map("n", "<C-n>", ":NvimTreeToggle<CR>")
 cfg.map("v", "<C-n>", "<ESC>:NvimTreeToggle<CR>")
 cfg.map("i", "<C-n>", "<ESC>:NvimTreeToggle<CR>")
-
-cfg.map("n", "<leader>n", "<CMD>lua require'util'.CopyMode()<CR>")
-cfg.map("n", "<leader>m", "<CMD>lua require'util'.ToggleMouse()<CR>")
-
-cfg.map("n", "<leader>t", ":TroubleToggle<CR>")
-cfg.map("n", "<leader>..", "<CMD>lua require'telescope'.extensions.notify.notify()<CR>")
 
 vim.cmd("cnoreabbrev q1 q!")

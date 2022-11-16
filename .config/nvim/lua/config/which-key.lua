@@ -34,44 +34,27 @@ local opts = {
 }
 
 local mappings = {
+  [".."] = { "<CMD>lua require'telescope'.extensions.notify.notify()<CR>", "Show Notifications" },
+  [" "] = { "<CMD>nohlsearch<CR>", "Unhighlight Search" },
   b = {
-    "<CMD>lua require('telescope.builtin').buffers(require('telescope.themes').get_dropdown{previewer = false})<CR>",
-    "Buffers",
+    { "<CMD>lua require('telescope.builtin').buffers(require('telescope.themes').get_dropdown{previewer = false})<CR>",
+    "Buffers" },
+    d = { "<CMD>Bdelete!<CR>", "Close Buffer" },
   },
+  cfg = { "<CMD>e $MYVIMRC<CR>", "Edit Config" },
   e = { "<CMD>NvimTreeToggle<CR>", "Explorer" },
-  w = { "<CMD>w!<CR>", "Save" },
-  q = { "<CMD>q!<CR>", "Quit" },
-  c = { "<CMD>Bdelete!<CR>", "Close Buffer" },
   f = {
     "<CMD>lua require('telescope.builtin').find_files(require('telescope.themes').get_dropdown{previewer = false})<CR>",
     "Find files",
   },
   F = { "<CMD>Telescope live_grep theme=ivy<CR>", "Find Text" },
-  P = { "<CMD>lua require('telescope').extensions.projects.projects()<CR>", "Projects" },
-  -- ["<space>"] = { "<CMD>nohlsearch<CR>", "No Highlight" },
-  wq = { "<CMD>wq!<CR>", "Write and Quit" },
-  cfg = { "<CMD>e $MYVIMRC<CR>", "Edit Config" },
-
-  p = {
-    name = "Packer",
-    c = { "<CMD>PackerCompile<CR>", "Compile" },
-    i = { "<CMD>PackerInstall<CR>", "Install" },
-    s = { "<CMD>PackerSync<CR>", "Sync" },
-    S = { "<CMD>PackerStatus<CR>", "Status" },
-    u = { "<CMD>PackerUpdate<CR>", "Update" },
-  },
-
   l = {
-    "<CMD>set cursorline!<CR>", "Toggle Cursorline",
+    { "<CMD>set cursorline!<CR>", "Toggle Cursorline" },
     name = "LSP",
     a = { "<CMD>lua vim.lsp.buf.code_action()<CR>", "Code Action" },
     d = {
       "<CMD>Telescope lsp_document_diagnostics<CR>",
       "Document Diagnostics",
-    },
-    w = {
-      "<CMD>Telescope lsp_workspace_diagnostics<CR>",
-      "Workspace Diagnostics",
     },
     f = { "<CMD>lua vim.lsp.buf.formatting()<CR>", "Format" },
     i = { "<CMD>LspInfo<CR>", "Info" },
@@ -84,7 +67,8 @@ local mappings = {
       "<CMD>lua vim.lsp.diagnostic.goto_prev()<CR>",
       "Prev Diagnostic",
     },
-    l = { "<CMD>lua vim.lsp.codelens.run()<CR>", "CodeLens Action" },
+    -- l = { "<CMD>lua vim.lsp.codelens.run()<CR>", "CodeLens Action" },
+    l = { "<CMD>set cursorcolumn!<CR>", "Toggle Cusorcolumn" },
     q = { "<CMD>lua vim.lsp.diagnostic.set_loclist()<CR>", "Quickfix" },
     r = { "<CMD>lua vim.lsp.buf.rename()<CR>", "Rename" },
     s = { "<CMD>Telescope lsp_document_symbols<CR>", "Document Symbols" },
@@ -92,7 +76,24 @@ local mappings = {
       "<CMD>Telescope lsp_dynamic_workspace_symbols<CR>",
       "Workspace Symbols",
     },
+    w = {
+      "<CMD>Telescope lsp_workspace_diagnostics<CR>",
+      "Workspace Diagnostics",
+    },
   },
+  m = { "<CMD>lua require'util'.ToggleMouse()<CR>", "Toggle Mouse" },
+  n = { "<CMD>lua require'util'.CopyMode()<CR>", "Toggle Numbers" },
+  p = {
+    name = "Packer",
+    c = { "<CMD>PackerCompile<CR>", "Compile" },
+    i = { "<CMD>PackerInstall<CR>", "Install" },
+    s = { "<CMD>PackerSync<CR>", "Sync" },
+    S = { "<CMD>PackerStatus<CR>", "Status" },
+    u = { "<CMD>PackerUpdate<CR>", "Update" },
+  },
+  P = { "<CMD>lua require('telescope').extensions.projects.projects()<CR>", "Projects" },
+  -- ["<space>"] = { "<CMD>nohlsearch<CR>", "No Highlight" },
+  q = { "<CMD>q!<CR>", "Quit" },
   s = {
     name = "Search",
     c = { "<CMD>Telescope colorscheme<CR>", "Colorscheme" },
@@ -103,12 +104,17 @@ local mappings = {
     k = { "<CMD>Telescope keymaps<CR>", "Keymaps" },
     C = { "<CMD>Telescope commands<CR>", "Commands" },
   },
-
   t = {
+    { "<CMD>TroubleToggle<CR>", "Toggle Trouble" },
     name = "Terminal",
     f = { "<CMD>ToggleTerm direction=float<CR>", "Float" },
     h = { "<CMD>ToggleTerm size=10 direction=horizontal<CR>", "Horizontal" },
     v = { "<CMD>ToggleTerm size=80 direction=vertical<CR>", "Vertical" },
+  },
+  u = { "<CMD>UndotreeToggle<CR><CMD>UndotreeFocus<CR>", "Toggle Undo Tree" },
+  w = {
+    { "<CMD>w!<CR>", "Write" },
+    q = { "<CMD>wq!<CR>", "Write and Quit" },
   },
 }
 

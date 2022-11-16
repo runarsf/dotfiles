@@ -107,29 +107,29 @@ local plugins = function(use)
     end
   }
 
-  -- use({ "stevearc/dressing.nvim",
-  --   -- module = "dressing",
-  --   event = "BufReadPre",
-  -- })
+  use({ "stevearc/dressing.nvim",
+    -- module = "dressing",
+    event = "BufReadPre",
+  })
 
-  -- use({ "rcarriga/nvim-notify",
-  --   event = "VimEnter",
-  --   -- Also has keybind and telescope integration
-  --   -- after = { "dressing" }
-  --   -- requires = { "dressing" },
-  --   config = function()
-  --     Notify = require("notify")
-  --     vim.notify = Notify
-  --     Notify.setup({
-  --       on_open = function(win)
-  --         vim.api.nvim_win_set_option(win, "wrap", true)
-  --       end,
-  --       render = "minimal",
-  --       states = "fade_in_slide_out",
-  --       max_width = math.floor(vim.o.columns * 0.6), -- Only allow notify to occupy 60% of terminal real-estate
-  --     })
-  --   end,
-  -- })
+  use({ "rcarriga/nvim-notify",
+    event = "VimEnter",
+    -- Also has keybind and telescope integration
+    requires = { "dressing.nvim" },
+    after = { "dressing.nvim" },
+    config = function()
+      Notify = require("notify")
+      vim.notify = Notify
+      Notify.setup({
+        on_open = function(win)
+          vim.api.nvim_win_set_option(win, "wrap", true)
+        end,
+        render = "minimal",
+        states = "fade_in_slide_out",
+        max_width = math.floor(vim.o.columns * 0.6), -- Only allow notify to occupy 60% of terminal real-estate
+      })
+    end,
+  })
 
   use({ "norcalli/nvim-terminal.lua",
     ft = {
@@ -212,7 +212,7 @@ local plugins = function(use)
     requires = {
       "williamboman/nvim-lsp-installer",
       "tamago324/nlsp-settings.nvim",
-      ----  "jose-elias-alvarez/null-ls.nvim",
+      --  "jose-elias-alvarez/null-ls.nvim",
     },
   })
 
@@ -231,12 +231,12 @@ local plugins = function(use)
     },
   })
 
-  -- use({ "mbbill/undotree",
-  --   cmd = {
-  --     "UndotreeToggle",
-  --     "UndotreeShow",
-  --   },
-  -- })
+  use({ "mbbill/undotree",
+    cmd = {
+      "UndotreeToggle",
+      "UndotreeShow",
+    },
+  })
 
   -- use({ "preservim/tagbar",
   --   cmd = {
