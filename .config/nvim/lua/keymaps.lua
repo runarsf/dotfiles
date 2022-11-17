@@ -57,7 +57,7 @@ cfg.map("", "<ESC>", "<CMD>nohlsearch<CR>")
 --cfg.map("n", "<leader>cfg", ":e $MYVIMRC<CR>")
 -- util.nnoremap("<leader>ll", ":set cursorcolumn!<CR>")
 
---cfg.map("i", "jk", "<ESC>")
+cfg.map("i", "jk", "<ESC>")
 cfg.map("i", "#dn", ">/dev/null<space>2>&1")
 -- vim.cmd("cnoreabbrev <expr> #!!", '"#!/usr/bin/env" . (empty(&filetype) ? "" : " ".&filetype)', opts)
 

@@ -40,10 +40,12 @@ local mappings = {
   },
   ["<leader>"] = {
     [".."] = { "<CMD>lua require'telescope'.extensions.notify.notify()<CR>", "Show Notifications" },
-    [" "] = { "<CMD>nohlsearch<CR>", "Unhighlight Search" },
+    ["<SPACE>"] = { "<CMD>nohlsearch<CR>", "Unhighlight Search" },
     b = {
-      { "<CMD>lua require'telescope.builtin'.buffers(require'telescope.themes'.get_dropdown{previewer = false})<CR>",
-      "Buffers" },
+      {
+        "<CMD>lua require'telescope.builtin'.buffers(require'telescope.themes'.get_dropdown{previewer = false})<CR>",
+        "Buffers"
+      },
       d = { "<CMD>Bdelete!<CR>", "Close Buffer" },
     },
     cfg = { "<CMD>e $MYVIMRC<CR>", "Edit Config" },
@@ -88,8 +90,8 @@ local mappings = {
     },
     m = {
       { "<CMD>lua require'util'.ToggleMouse()<CR>", "Toggle Mouse" },
-      d = { "<CMD>w<CR><CMD>MarkdownPreviewToggle<CR>", "Preview Markdown (web)" },
-      g = { "<CMD>w<CR><CMD>lua require'config.toggleterm'.Glow()<CR>", "Preview Markdown (glow)" },
+      d = { "<CMD>w<CR><CMD>MarkdownPreview<CR>", "Markdown Preview (web)" },
+      g = { "<CMD>w<CR><CMD>lua require'config.toggleterm'.Glow()<CR>", "Markdown Preview (glow)" },
     },
     n = { "<CMD>lua require'util'.CopyMode()<CR>", "Toggle Numbers" },
     p = {
@@ -100,9 +102,13 @@ local mappings = {
       S = { "<CMD>PackerStatus<CR>", "Status" },
       u = { "<CMD>PackerUpdate<CR>", "Update" },
     },
-    P = { "<CMD>lua require'telescope'.extensions.projects.projects()<CR>", "Projects" },
-    -- ["<space>"] = { "<CMD>nohlsearch<CR>", "No Highlight" },
-    q = { "<CMD>q!<CR>", "Quit" },
+    q = { "<CMD>q<CR>", "Quit" },
+    r = {
+      name = "REST Client",
+      r = { "<Plug>RestNvim", "Run Under Cursor" },
+      c = { "<Plug>RestNvimPreview", "Preview CURL Command" },
+      a = { "<Plug>RestNvimLast", "Re-Run Last Request" },
+    },
     s = {
       name = "Search",
       c = { "<CMD>Telescope colorscheme<CR>", "Colorscheme" },

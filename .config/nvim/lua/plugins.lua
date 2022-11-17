@@ -38,8 +38,8 @@ local plugins = function(use)
 
   use({ "kyazdani42/nvim-tree.lua",
     cmd = { "NvimTreeToggle", "NvimTreeOpen", "NvimTreeClose" },
-    requires = { "nvim-web-devicons" },
-    after = { "nvim-web-devicons" },
+    requires = "kyazdani42/nvim-web-devicons",
+    after = "nvim-web-devicons",
     config = function()
       require("config.nvim-tree")
     end,
@@ -122,8 +122,7 @@ local plugins = function(use)
   use({ "rcarriga/nvim-notify",
     event = "VimEnter",
     -- Also has keybind and telescope integration
-    requires = { "dressing.nvim" },
-    after = { "dressing.nvim" },
+    requires = "stevearc/dressing.nvim",
     config = function()
       Notify = require("notify")
       vim.notify = Notify
@@ -175,6 +174,7 @@ local plugins = function(use)
       "nvim-lua/popup.nvim",
       "nvim-lua/plenary.nvim",
       "nvim-telescope/telescope-symbols.nvim",
+      "crispgm/telescope-heading.nvim"
     },
   })
 
@@ -243,6 +243,15 @@ local plugins = function(use)
       "UndotreeToggle",
       "UndotreeShow",
     },
+  })
+
+  use({ "rest-nvim/rest.nvim",
+    requires = "nvim-lua/plenary.nvim",
+    config = function ()
+      require("rest-nvim").setup({
+        skip_ssl_verification = true
+      })
+     end,
   })
 
   -- use({ "preservim/tagbar",

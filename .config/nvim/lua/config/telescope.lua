@@ -85,9 +85,10 @@ telescope.setup {
     -- builtin picker
   },
   extensions = {
-    "notify"
+    "notify",
     -- extension_name = {
     --   extension_config_key = value,
     -- }
   },
 }
+telescope.load_extension("heading")
