@@ -130,6 +130,7 @@ local mappings = {
     w = {
       { "<CMD>w!<CR>", "Write" },
       q = { "<CMD>wq!<CR>", "Write and Quit" },
+      w = { "<CMD>set wrap!<CR>", "Toggle Word Wrap" },
     },
   }
 }
