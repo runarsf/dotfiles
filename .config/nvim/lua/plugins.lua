@@ -37,9 +37,7 @@ local plugins = function(use)
   })
 
   use({ "kyazdani42/nvim-tree.lua",
-    cmd = { "NvimTreeToggle", "NvimTreeOpen", "NvimTreeClose" },
     requires = "kyazdani42/nvim-web-devicons",
-    after = "nvim-web-devicons",
     config = function()
       require("config.nvim-tree")
     end,
