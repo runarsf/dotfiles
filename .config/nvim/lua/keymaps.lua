@@ -26,8 +26,8 @@ cfg.map("v", ">", ">gv")
 
 -- Better tab movement
 cfg.map("n", "<C-t>", "<CMD>tabnew<CR>")
-cfg.map("n", "<S-l>", "<CMD>bnext<CR>")
-cfg.map("n", "<S-h>", "<CMD>bprevious<CR>")
+cfg.map("n", "<S-l>", "<CMD>tabnext<CR>")
+cfg.map("n", "<S-h>", "<CMD>tabprevious<CR>")
 -- cfg.map("n", "H", "gT")
 -- cfg.map("n", "L", "gt")
 
