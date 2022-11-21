@@ -51,8 +51,23 @@ local mappings = {
     cfg = { "<CMD>e $MYVIMRC<CR>", "Edit Config" },
     e = { "<CMD>NvimTreeToggle<CR>", "Explorer" },
     f = {
-      "<CMD>lua require'telescope.builtin'.find_files(require'telescope.themes'.get_dropdown{previewer = false})<CR>",
-      "Find files",
+      {
+        "<CMD>lua require'telescope.builtin'.find_files(require'telescope.themes'.get_dropdown{previewer = false})<CR>",
+        "Find files"
+      },
+      name = "Files & Format",
+      j = {
+        "<CMD>%!jq .<CR>",
+        "Format JSON"
+      },
+      r = {
+        "<CMD>lua require'telescope.builtin'.oldfiles(require'telescope.themes'.get_dropdown{previewer = false})<CR>",
+        "Recent"
+      },
+      g = {
+        "<CMD>lua require'telescope.builtin'.git_files(require'telescope.themes'.get_dropdown{previewer = false})<CR>",
+        "GIT"
+      },
     },
     F = { "<CMD>Telescope live_grep theme=ivy<CR>", "Find Text" },
     l = {
@@ -120,11 +135,15 @@ local mappings = {
       C = { "<CMD>Telescope commands<CR>", "Commands" },
     },
     t = {
-      { "<CMD>TroubleToggle<CR>", "Toggle Trouble" },
+      { "<CMD>TroubleToggle<CR><CMD>wincmd p<CR>", "Toggle Trouble" },
       name = "Terminal",
       f = { "<CMD>ToggleTerm direction=float<CR>", "Float" },
       h = { "<CMD>ToggleTerm size=10 direction=horizontal<CR>", "Horizontal" },
       v = { "<CMD>ToggleTerm size=80 direction=vertical<CR>", "Vertical" },
+    },
+    T = {
+      "<CMD>TodoTelescope<CR>",
+      "TODO"
     },
     u = { "<CMD>UndotreeToggle<CR><CMD>UndotreeFocus<CR>", "Toggle Undo Tree" },
     w = {

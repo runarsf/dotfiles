@@ -478,28 +478,28 @@ local clientkeys = ez.keytable {
     if c.floating then
       c:relative_move(0, 0, 0, -50)
     else
-      awful.client.incwfact(0.025)
+      awful.client.incwfact(0.1)
     end
   end,
   ["M-C-Down"] = function(c)
     if c.floating then
       c:relative_move(0, 0, 0, 50)
     else
-      awful.client.incwfact(-0.025)
+      awful.client.incwfact(-0.1)
     end
   end,
   ["M-C-Left"] = function(c)
     if c.floating then
       c:relative_move(0, 0, -50, 0)
     else
-      awful.tag.incmwfact(-0.025)
+      awful.tag.incmwfact(-0.05)
     end
   end,
   ["M-C-Right"] = function(c)
     if c.floating then
       c:relative_move(0, 0, 50, 0)
     else
-      awful.tag.incmwfact(0.025)
+      awful.tag.incmwfact(0.05)
     end
   end,
   ["M-S-Down"] = function(c)
