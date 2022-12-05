@@ -92,3 +92,4 @@ telescope.setup {
   },
 }
 telescope.load_extension("heading")
+telescope.load_extension("noice")

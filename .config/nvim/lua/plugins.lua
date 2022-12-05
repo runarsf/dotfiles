@@ -43,12 +43,12 @@ local plugins = function(use)
     end,
   })
 
-  -- use({'lukas-reineke/virt-column.nvim',
+  -- use({"lukas-reineke/virt-column.nvim",
   --   config = function()
   --     require("virt-column").setup()
   --   end
   -- })
-  use({"xiyaowong/virtcolumn.nvim"})
+  use({ "xiyaowong/virtcolumn.nvim" })
 
   use({ "nvim-treesitter/nvim-treesitter",
     run = ":TSUpdate",
@@ -69,14 +69,13 @@ local plugins = function(use)
   use({ "lukas-reineke/indent-blankline.nvim",
     -- requires = { "treesitter" },
     -- after = { "treesitter" },
-    -- TODO Doesn't work if I include config, but does if I don't and run :IndentBlanklineEnable
+    -- TODO Doesn"t work if I include config, but does if I don"t and run :IndentBlanklineEnable
     config = function()
       require("config.indent-blankline")
     end,
   })
 
-  use({
-    "iamcco/markdown-preview.nvim",
+  use({ "iamcco/markdown-preview.nvim",
     run = function()
       vim.fn["mkdp#util#install"]()
     end,
@@ -112,16 +111,41 @@ local plugins = function(use)
       "anuvyklack/nvim-keymap-amend",
     },
   })
-  use { 'anuvyklack/fold-preview.nvim',
-    requires = 'anuvyklack/keymap-amend.nvim',
+  use { "anuvyklack/fold-preview.nvim",
+    requires = "anuvyklack/keymap-amend.nvim",
     config = function()
-      require('fold-preview').setup()
+      require("fold-preview").setup()
     end
   }
 
   use({ "stevearc/dressing.nvim",
     -- module = "dressing",
     event = "BufReadPre",
+  })
+
+  use({ "folke/noice.nvim",
+    config = function()
+      require("noice").setup({
+        lsp = {
+          override = {
+            ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+            ["vim.lsp.util.stylize_markdown"] = true,
+            ["cmp.entry.get_documentation"] = true,
+          },
+        },
+        presets = {
+          bottom_search = true, -- use a classic bottom cmdline for search
+          command_palette = true, -- position the cmdline and popupmenu together
+          long_message_to_split = true, -- long messages will be sent to a split
+          inc_rename = false, -- enables an input dialog for inc-rename.nvim
+          lsp_doc_border = false, -- add a border to hover docs and signature help
+        },
+      })
+    end,
+    requires = {
+      "MunifTanjim/nui.nvim",
+      "rcarriga/nvim-notify",
+    }
   })
 
   use({ "rcarriga/nvim-notify",
@@ -228,6 +252,10 @@ local plugins = function(use)
     },
   })
 
+  use({ "folke/neodev.nvim",
+    require("neodev").setup({})
+  })
+
   use({ "folke/todo-comments.nvim",
     config = function()
       require("config.todo-comments")
@@ -269,26 +297,26 @@ local plugins = function(use)
   })
 
   use ({ "phaazon/hop.nvim",
-    branch = 'v2', -- optional but strongly recommended
+    branch = "v2", -- optional but strongly recommended
     config = function()
       -- you can configure Hop the way you like here; see :h hop-config
-      require'hop'.setup { keys = 'etovxqpdygfblzhckisuran' }
-      local hop = require('hop')
-      local directions = require('hop.hint').HintDirection
-      vim.keymap.set('', 'f', function()
+      require"hop".setup { keys = "etovxqpdygfblzhckisuran" }
+      local hop = require("hop")
+      local directions = require("hop.hint").HintDirection
+      vim.keymap.set("", "f", function()
         hop.hint_char1({ direction = directions.AFTER_CURSOR, current_line_only = true })
       end, {remap=true})
-      vim.keymap.set('', 'F', function()
+      vim.keymap.set("", "F", function()
         hop.hint_char1({ direction = directions.BEFORE_CURSOR, current_line_only = true })
       end, {remap=true})
-      vim.keymap.set('', 't', function()
+      vim.keymap.set("", "t", function()
         hop.hint_char1({ direction = directions.AFTER_CURSOR, current_line_only = true, hint_offset = -1 })
       end, {remap=true})
-      vim.keymap.set('', 'T', function()
+      vim.keymap.set("", "T", function()
         hop.hint_char1({ direction = directions.BEFORE_CURSOR, current_line_only = true, hint_offset = 1 })
       end, {remap=true})
-      vim.keymap.set('', 's', '<CMD>HopPattern<CR>')
-      vim.keymap.set('', 'S', '<CMD>HopAnywhere<CR>')
+      vim.keymap.set("", "s", "<CMD>HopPattern<CR>")
+      vim.keymap.set("", "S", "<CMD>HopAnywhere<CR>")
     end
   })
 
