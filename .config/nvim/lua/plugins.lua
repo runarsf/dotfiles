@@ -190,6 +190,12 @@ local plugins = function(use)
     end,
   })
 
+  use({ "echasnovski/mini.nvim",
+    config = function()
+      require("mini.starter").setup()
+    end,
+  })
+
   use({ "nvim-telescope/telescope.nvim",
     -- opt = true,
     config = function()
