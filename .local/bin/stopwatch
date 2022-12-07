@@ -3,7 +3,7 @@
 START=$(date +%s)
 
 printf "%s\n" "Starting Stopwatch..."
-printf "%s\n\n" "[q]uit, [s]plit"
+printf "%s\n\n" "[q]uit, [s]plit, [u]ndo"
 
 SPLIT=""
 while true; do
@@ -35,5 +35,7 @@ while true; do
     printf "\r  Split: \033[K"
     read SPLIT
     printf "\033[1A\033[2K"
+  elif test "${INPUT,,}" = "u"; then
+    printf "\r\033[2K\033[1A\033[2K"
   fi
 done
