@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+START=$(date +%s)
+STTY_ORIG="$(stty -g)"
+
+printf "%s\n" "Starting Stopwatch, press Q to exit."
+
+SPLIT=""
+while true; do
+  NOW="$(date +%s)"
+  let DIFF="$((${NOW} - ${START}))"
+  let MINS="$((${DIFF} / 60))"
+  let SECS="$((${DIFF} % 60))"
+  let HOURS="$((${DIFF} / 3600))"
+  let DAYS="$((${DIFF} / 86400))"
+
+  printf "\r%3d Days, %02d:%02d:%02d%s" ${DAYS} ${HOURS} ${MINS} ${SECS} "${SPLIT:+ }${SPLIT:-}"
+
+  # Hide input
+  stty -echo
+  read -t 0.25 -N 1 INPUT
+  stty "${STTY_ORIG}"
+  if test "${INPUT,,}" = "q"; then
+    printf "\n"
+    break
+  elif test "${INPUT,,}" = "s"; then
+    printf "\rSplit: \033[K"
+    read SPLIT
+    # \033 is an Esc; \033[1A moves the cursor to the previous line, \033[2K erases whatever was on it.
+    printf "\033[1A\033[2K"
+  fi
+done
