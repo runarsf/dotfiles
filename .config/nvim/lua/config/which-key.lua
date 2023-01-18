@@ -117,6 +117,10 @@ local mappings = {
       S = { "<CMD>PackerStatus<CR>", "Status" },
       u = { "<CMD>PackerUpdate<CR>", "Update" },
     },
+    P = {
+      "<CMD>Legendary<CR>",
+      "Command Palette",
+    },
     q = { "<CMD>q<CR>", "Quit" },
     r = {
       name = "REST Client",

@@ -12,7 +12,7 @@ local plugins = function(use)
   use({ "nathom/filetype.nvim" })             -- Speed up startup time
 
   use({ "folke/which-key.nvim",
-    event = "VimEnter",
+    --event = "VimEnter",
     config = function()
       require("config.which-key")
     end,
@@ -61,7 +61,8 @@ local plugins = function(use)
     end,
   })
 
-  use({ "p00f/nvim-ts-rainbow",
+  -- use({ "p00f/nvim-ts-rainbow",
+  use({ "mrjones2014/nvim-ts-rainbow",
     requires = "nvim-treesitter/nvim-treesitter",
     after = "nvim-treesitter",
   })
@@ -69,7 +70,7 @@ local plugins = function(use)
   use({ "lukas-reineke/indent-blankline.nvim",
     -- requires = { "treesitter" },
     -- after = { "treesitter" },
-    -- TODO Doesn"t work if I include config, but does if I don"t and run :IndentBlanklineEnable
+    -- TODO Doesn't work if I include config, but does if I don"t and run :IndentBlanklineEnable
     config = function()
       require("config.indent-blankline")
     end,
@@ -111,18 +112,19 @@ local plugins = function(use)
       "anuvyklack/nvim-keymap-amend",
     },
   })
-  use { "anuvyklack/fold-preview.nvim",
+  use({ "anuvyklack/fold-preview.nvim",
     requires = "anuvyklack/keymap-amend.nvim",
     config = function()
       require("fold-preview").setup()
     end
-  }
+  })
 
   use({ "stevearc/dressing.nvim",
     -- module = "dressing",
     event = "BufReadPre",
   })
 
+  -- NOTE https://github.com/folke/noice.nvim/issues/321
   use({ "folke/noice.nvim",
     config = function()
       require("noice").setup({
@@ -340,6 +342,18 @@ local plugins = function(use)
     config = function()
      require("marks").setup({})
     end,
+  })
+
+  use({ "mrjones2014/legendary.nvim",
+    config = function()
+      require("legendary").setup({
+        which_key = {
+          auto_register = true,
+          select_prompt = "Command Palette",
+        }
+      })
+    end,
+    requires = "kkharji/sqlite.lua",
   })
 
   if pkg.Bootstrap then
