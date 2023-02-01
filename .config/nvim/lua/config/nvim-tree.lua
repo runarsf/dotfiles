@@ -13,7 +13,7 @@ nvimtree.setup({
     "dashboard",
     "alpha",
   },
-  hijack_unnamed_buffer_when_opening = true,
+  hijack_unnamed_buffer_when_opening = false,
   open_on_setup = true,
   update_focused_file = {
     enable = true,
