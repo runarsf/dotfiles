@@ -260,12 +260,6 @@ local plugins = function(use)
     },
   })
 
-  use({ "folke/neodev.nvim",
-    config = function()
-      require("neodev").setup({})
-    end,
-  })
-
   use({ "folke/todo-comments.nvim",
     config = function()
       require("config.todo-comments")
