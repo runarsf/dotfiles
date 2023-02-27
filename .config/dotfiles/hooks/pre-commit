@@ -2,8 +2,6 @@
 
 printf '%s\n' "Running pre-commit hook."
 
-export GPG_TTY="$(tty)"
-
 source "$(git --exec-path)/git-sh-setup"
 
 set -o errexit
