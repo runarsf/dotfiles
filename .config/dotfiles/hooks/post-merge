@@ -1,13 +1,14 @@
 #!/bin/sh
 
-# Run this script after pulling, it unencrypts files with the extension '.enc'.
+printf '%s\n' "Running post-merge hook."
 
 source "$(git --exec-path)/git-sh-setup"
 
+set -o errexit
+set -o nounset
+
 GIT_DIR="$(git rev-parse --git-dir)"
 GIT_WORKING_TREE="$(git rev-parse --show-toplevel)"
-
-printf '%s\n' "Running post-merge hook."
 
 while IFS= read -r dotfile; do
   encfile="$(realpath --no-symlinks "${GIT_WORKING_TREE}/${dotfile}")"

@@ -1,10 +1,11 @@
 #!/bin/sh
 
-# Run this script before committing, it encrypts files with the extension '.enc'.
-
 printf '%s\n' "Running pre-commit hook."
 
 source "$(git --exec-path)/git-sh-setup"
+
+set -o errexit
+set -o nounset
 
 GIT_DIR="$(git rev-parse --git-dir)"
 GIT_WORKING_TREE="$(git rev-parse --show-toplevel)"
