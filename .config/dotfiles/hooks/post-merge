@@ -7,6 +7,8 @@ source "$(git --exec-path)/git-sh-setup"
 GIT_DIR="$(git rev-parse --git-dir)"
 GIT_WORKING_TREE="$(git rev-parse --show-toplevel)"
 
+printf '%s\n' "Running post-merge hook."
+
 while IFS= read -r dotfile; do
   encfile="$(realpath --no-symlinks "${GIT_WORKING_TREE}/${dotfile}")"
   decfile="$(printf '%s\n' "${encfile}" | sed -e 's/.enc$//')"

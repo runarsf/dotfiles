@@ -9,6 +9,8 @@ GIT_WORKING_TREE="$(git rev-parse --show-toplevel)"
 
 GPG_USER="root@runarsf.dev"
 
+printf '%s\n' "Running pre-commit hook."
+
 while IFS= read -r dotfile; do
   encfile="$(realpath --no-symlinks "${GIT_WORKING_TREE}/${dotfile}")"
   decfile="$(printf '%s\n' "${encfile}" | sed -e 's/.enc$//')"
