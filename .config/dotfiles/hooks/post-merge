@@ -2,6 +2,8 @@
 
 printf '%s\n' "Running post-merge hook."
 
+export GPG_TTY="$(tty)"
+
 source "$(git --exec-path)/git-sh-setup"
 
 set -o errexit
