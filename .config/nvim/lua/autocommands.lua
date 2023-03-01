@@ -3,12 +3,12 @@ vim.cmd [[
   autocmd CmdwinEnter * q
 
   " https://stackoverflow.com/q/235439
-  if exists('+colorcolumn')
-    set colorcolumn=80
-  else
-    autocmd BufWinEnter * let w:m2=matchadd('ErrorMsg', '\%>80v.\+', -1)
-  endif
-  highlight ErrorMsg ctermbg=red ctermfg=white guibg=#592929
+  " if exists('+colorcolumn')
+  "   set colorcolumn=80
+  " else
+  "   autocmd BufWinEnter * let w:m2=matchadd('ErrorMsg', '\%>80v.\+', -1)
+  " endif
+  " highlight ErrorMsg ctermbg=red ctermfg=white guibg=#592929
 
   " Only show the colorcolumn in the current window.
   " autocmd WinLeave * set colorcolumn=0

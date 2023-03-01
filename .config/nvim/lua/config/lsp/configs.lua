@@ -6,7 +6,7 @@ end
 local lspconfig = require("lspconfig")
 
 -- TODO: Provide this as argument when initializing plugin?
-local servers = { "jsonls", "sumneko_lua" }
+local servers = { "jsonls" }
 
 lsp_installer.setup {
   ensure_installed = servers

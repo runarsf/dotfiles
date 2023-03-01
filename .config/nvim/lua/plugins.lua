@@ -43,12 +43,7 @@ local plugins = function(use)
     end,
   })
 
-  -- use({"lukas-reineke/virt-column.nvim",
-  --   config = function()
-  --     require("virt-column").setup()
-  --   end
-  -- })
-  use({ "xiyaowong/virtcolumn.nvim" })
+  -- use({ "xiyaowong/virtcolumn.nvim" })
 
   use({ "nvim-treesitter/nvim-treesitter",
     run = ":TSUpdate",
