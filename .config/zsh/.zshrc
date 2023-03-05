@@ -1,7 +1,7 @@
 # Zinit {{{
 ZINIT_HOME="${XDG_DATA_HOME:-${HOME:-~}/.local/share}/zinit"
 
-# rm -rf .local/share/zinit/plugins/* .local/share/zinit/snippets/*
+# rm -rf ${ZINIT_HOME}/plugins/* ${ZINIT_HOME}/snippets/*
 
 # Install and load zinit {{{
 if test ! -f "${ZINIT_HOME}/zinit.git/zinit.zsh"; then
@@ -13,7 +13,7 @@ if test ! -f "${ZINIT_HOME}/zinit.git/zinit.zsh"; then
     || print -P '%F{160} Cloning failed...%f%b'
 fi
 
-source "${HOME:-~}/.local/share/zinit/zinit.git/zinit.zsh"
+source "${ZINIT_HOME}/zinit.git/zinit.zsh"
 
 autoload -Uz _zinit
 (( ${+_comps} )) && _comps[zinit]=_zinit
@@ -55,10 +55,10 @@ zinit snippet PZT::modules/completion/init.zsh
 zstyle ':prezto:*:*' case-sensitive 'no'
 zstyle ':prezto:*:*' color 'yes'
 
-zstyle ':completion:*' special-dirs true
+zstyle ':completion:*' special-dirs false
 # }}}
 
-# Profile plugins - https://zdharma-continuum.github.io/zinit/wiki/Profiling-plugins/
+# Profiling - https://zdharma-continuum.github.io/zinit/wiki/Profiling-plugins/
 if test ! -z "${ZPROF+x}"; then
   zinit ice atinit'zmodload zsh/zprof' \
             atload'zprof | head -n 20; zmodload -u zsh/zprof'
@@ -83,9 +83,12 @@ zinit ice wait'1' lucid
 zinit snippet OMZP::colored-man-pages
 # zinit snippet OMZP::per-directory-history
 zinit light jimhester/per-directory-history
+# FIXME https://github.com/jimhester/per-directory-history/issues/3
+#  https://github.com/jimhester/per-directory-history/issues/20
+_per-directory-history-set-global-history && _per_directory_history_is_global=true
 
-zinit ice wait'5' lucid
-zinit light kazhala/dotbare
+zinit ice as'null' sbin'bin/*' wait'1' lucid
+zinit light z-shell/zsh-diff-so-fancy
 
 zinit ice wait'1' as'completion' lucid
 zinit snippet https://github.com/docker/cli/blob/master/contrib/completion/zsh/_docker
@@ -105,11 +108,6 @@ zinit light olets/zsh-abbr
 zinit light zsh-users/zsh-autosuggestions
   #bindkey '\t' autosuggest-accept
   #bindkey '^I' autosuggest-accept
-
-# zinit snippet OMZP::tmux
-
-# zinit ice pick'init.zsh'
-# zinit light laggardkernel/zsh-tmux
 
 # zinit ice lucid atload"unalias gcd"
 # zinit snippet OMZP::git
@@ -175,28 +173,26 @@ fi
 
 # Aliases {{{
 alias vim='nvim'
-alias yay='paru'
 alias ls='ls -lAFh --color=always'
 alias grep='grep --color=always'
 alias c='xclip -selection clipboard'
 alias gitted='git ls-files --error-unmatch'
-alias p="test -z \"\${HISTFILE}\" && {export HISTFILE=${HISTFILE}; printf \"o.o\\n\"} || {sed -i '\$ d' ${HISTFILE}; export HISTFILE=''; printf \"-.-\\n\"}"
 alias t='clear; todo.sh -a -c -d ${XDG_CONFIG_HOME:-${HOME:-~}/.config}/.todo.actions.d/config'
 alias \$=':;'
 wim () { ${EDITOR} "$(which ${1:?No file selected...})" "${@:2}" }
 
 # Dotfiles {{{
-export DOTBARE_DIR="${HOME}/.config/dotfiles/.git"
-export DOTBARE_TREE="${HOME}"
+export DOTFILES_DIR="${XDG_CONFIG_HOME:-${HOME:-~}/.config}/dotfiles/.git"
+export DOTFILES_TREE="${HOME:-~}"
 
 alias dotted='dotfiles ls-files --error-unmatch'
-alias dirtydots='dirtygit --git-dir "${DOTBARE_DIR}" --work-tree "${DOTBARE_TREE}" --git-add "-u"'
+alias dirtydots='dirtygit --git-dir "${DOTFILES_DIR}" --work-tree "${DOTFILES_TREE}" --git-add "-u"'
 alias dots='dotfiles'
 dotfiles () {
   if test "${#}" -eq "0"; then
     set - status
   fi
-  git --git-dir="${DOTBARE_DIR}" --work-tree="${DOTBARE_TREE}" "${@}"
+  git --git-dir="${DOTFILES_DIR}" --work-tree="${DOTFILES_TREE}" "${@}"
 }
 # }}}
 # }}}

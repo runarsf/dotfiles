@@ -267,12 +267,12 @@ if ON_LINUX:
             args = ('status')
         git --git-dir=@(git_dir) --work-tree=@(work_tree) @(args)
 
-    $DOTBARE_DIR = path(${'HOME'}, '.config/dotfiles/.git')
-    $DOTBARE_TREE = path(${'HOME'})
+    $DOTFILES_DIR = path(${'HOME'}, '.config/dotfiles/.git')
+    $DOTFILES_TREE = path(${'HOME'})
 
-    aliases['dotfiles']  = lambda args: _git_bare(${'DOTBARE_DIR'}, ${'DOTBARE_TREE'}, *args)
+    aliases['dotfiles']  = lambda args: _git_bare(${'DOTFILES_DIR'}, ${'DOTFILES_TREE'}, *args)
     aliases['dots']      = ['dotfiles']
-    aliases['dirtydots'] = ['dirtygit', '--git-dir', ${'DOTBARE_DIR'}, '--work-tree', ${'DOTBARE_TREE'}, '--git-add', '-u']
+    aliases['dirtydots'] = ['dirtygit', '--git-dir', ${'DOTFILES_DIR'}, '--work-tree', ${'DOTFILES_TREE'}, '--git-add', '-u']
     aliases['dotted']    = ['dotfiles', 'ls-files', '--error-unmatch']
     aliases['dkx']       = lambda args: $[docker exec -it @(args) sh]
     aliases['gitted']    = ['git', 'ls-files', '--error-unmatch']
