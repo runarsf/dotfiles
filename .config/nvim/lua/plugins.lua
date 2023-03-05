@@ -43,6 +43,24 @@ local plugins = function(use)
     end,
   })
 
+  use({ "lmburns/lf.nvim",
+    config = function()
+      vim.g.lf_netrw = 0
+
+      require("lf").setup({
+        escape_quit = false,
+        border = "rounded",
+        highlights = {FloatBorder = {guifg = require("kimbox.palette").colors.magenta}}
+      })
+    end,
+    requires = {"plenary.nvim", "toggleterm.nvim", "kimbox"}
+  })
+  use({ "lmburns/kimbox",
+    config = function()
+      require("kimbox").setup({})
+    end,
+  })
+
   -- use({ "xiyaowong/virtcolumn.nvim" })
 
   use({ "nvim-treesitter/nvim-treesitter",
@@ -343,6 +361,12 @@ local plugins = function(use)
       })
     end,
     requires = "kkharji/sqlite.lua",
+  })
+
+  use({ "NMAC427/guess-indent.nvim",
+    config = function()
+      require("guess-indent").setup({})
+    end,
   })
 
   if pkg.Bootstrap then
