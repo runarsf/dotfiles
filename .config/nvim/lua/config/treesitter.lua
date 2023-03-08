@@ -24,6 +24,7 @@ treesitter.setup({
     "java",
     "javascript",
     "jsdoc",
+    "json",
     "jsonc",
     "latex",
     "lua",

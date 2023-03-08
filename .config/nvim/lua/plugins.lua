@@ -299,7 +299,7 @@ local plugins = function(use)
     requires = "nvim-lua/plenary.nvim",
     config = function ()
       require("rest-nvim").setup({
-        skip_ssl_verification = true
+        skip_ssl_verification = true,
       })
      end,
   })
