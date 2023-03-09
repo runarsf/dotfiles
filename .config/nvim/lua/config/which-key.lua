@@ -103,6 +103,10 @@ local mappings = {
         "Workspace Diagnostics",
       },
     },
+    L = {
+      "<CMD>Lf<CR>",
+      "Lf File Manager"
+    },
     m = {
       { "<CMD>lua require'util'.ToggleMouse()<CR>", "Toggle Mouse" },
       d = { "<CMD>w<CR><CMD>MarkdownPreview<CR>", "Markdown Preview (web)" },

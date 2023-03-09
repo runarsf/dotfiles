@@ -43,12 +43,25 @@ local plugins = function(use)
     end,
   })
 
-  -- use({"lukas-reineke/virt-column.nvim",
-  --   config = function()
-  --     require("virt-column").setup()
-  --   end
-  -- })
-  use({ "xiyaowong/virtcolumn.nvim" })
+  use({ "lmburns/lf.nvim",
+    config = function()
+      vim.g.lf_netrw = 0
+
+      require("lf").setup({
+        escape_quit = false,
+        border = "rounded",
+        highlights = {FloatBorder = {guifg = require("kimbox.palette").colors.magenta}}
+      })
+    end,
+    requires = {"plenary.nvim", "toggleterm.nvim", "kimbox"}
+  })
+  use({ "lmburns/kimbox",
+    config = function()
+      require("kimbox").setup({})
+    end,
+  })
+
+  -- use({ "xiyaowong/virtcolumn.nvim" })
 
   use({ "nvim-treesitter/nvim-treesitter",
     run = ":TSUpdate",
@@ -260,12 +273,6 @@ local plugins = function(use)
     },
   })
 
-  use({ "folke/neodev.nvim",
-    config = function()
-      require("neodev").setup({})
-    end,
-  })
-
   use({ "folke/todo-comments.nvim",
     config = function()
       require("config.todo-comments")
@@ -292,7 +299,7 @@ local plugins = function(use)
     requires = "nvim-lua/plenary.nvim",
     config = function ()
       require("rest-nvim").setup({
-        skip_ssl_verification = true
+        skip_ssl_verification = true,
       })
      end,
   })
@@ -354,6 +361,12 @@ local plugins = function(use)
       })
     end,
     requires = "kkharji/sqlite.lua",
+  })
+
+  use({ "NMAC427/guess-indent.nvim",
+    config = function()
+      require("guess-indent").setup({})
+    end,
   })
 
   if pkg.Bootstrap then

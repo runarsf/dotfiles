@@ -52,6 +52,3 @@ if [[ $- == *i* ]]; then
   # Start graphical server on tty1 if not already running.
   test "$(tty)" = "/dev/tty1" >/dev/null 2>&1 && ! pgrep -x Xorg >/dev/null 2>&1 && startx
 fi
-
-test -f "${HOME}/.fig/shell/profile.post.bash" && source "${HOME}/.fig/shell/profile.post.bash"
-test -f "${HOME}/.fig/shell/zprofile.post.zsh" && source "${HOME}/.fig/shell/zprofile.post.zsh"

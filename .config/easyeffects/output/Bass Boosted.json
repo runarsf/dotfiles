@@ -1,8 +1,9 @@
 {
     "output": {
-        "bass_enhancer": {
+        "bass_enhancer#0": {
             "amount": 5.0,
             "blend": 0.0,
+            "bypass": false,
             "floor": 20.0,
             "floor-active": false,
             "harmonics": 8.5,
@@ -11,19 +12,24 @@
             "scope": 80.0
         },
         "blocklist": [],
-        "convolver": {
+        "convolver#0": {
+            "autogain": true,
+            "bypass": false,
             "input-gain": -2.0,
             "ir-width": 100,
-            "kernel-path": "<PRESETS_DIRECTORY>/irs/Razor Surround ((48k Z-Edition)) 2.Stereo +20 bass.irs",
+            "kernel-path": "/home/runar/.config/easyeffects/irs/Beyerdynamic DT 770 80 Ohm minimum phase 48000Hz.irs",
             "output-gain": 0.0
         },
-        "crossfeed": {
+        "crossfeed#0": {
+            "bypass": false,
             "fcut": 700,
             "feed": 4.5,
             "input-gain": 0.0,
             "output-gain": 0.0
         },
-        "equalizer": {
+        "equalizer#0": {
+            "balance": 0.0,
+            "bypass": false,
             "input-gain": -2.0,
             "left": {
                 "band0": {
@@ -130,6 +136,8 @@
             "mode": "IIR",
             "num-bands": 10,
             "output-gain": 0.0,
+            "pitch-left": 0.0,
+            "pitch-right": 0.0,
             "right": {
                 "band0": {
                     "frequency": 32.0,
@@ -234,18 +242,20 @@
             },
             "split-channels": false
         },
-        "maximizer": {
+        "maximizer#0": {
+            "bypass": false,
             "ceiling": 0.0,
+            "input-gain": 0.0,
+            "output-gain": 0.0,
             "release": 3.149999999999997,
             "threshold": -3.0000000000000013
         },
         "plugins_order": [
-            "equalizer",
-            "convolver",
-            "bass_enhancer",
-            "crossfeed",
-            "maximizer"
+            "equalizer#0",
+            "convolver#0",
+            "bass_enhancer#0",
+            "crossfeed#0",
+            "maximizer#0"
         ]
     }
 }
-
