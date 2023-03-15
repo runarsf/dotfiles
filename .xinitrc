@@ -92,4 +92,4 @@ fi
 
 # test -f ~/.xsession && source ~/.xsession
 
-exec bspwm
+exec awesome
