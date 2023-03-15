@@ -1,0 +1,118 @@
+#!/usr/bin/env dash
+
+set -o nounset
+set -o errexit
+
+# This is a complete example of how to parse shell arguments in a posix-compliant shell.
+# A marginally shorter non-posix-compliant version can be found here:
+#  https://github.com/runarsf/dotfiles/blob/master/.local/bin/example.argparse
+# It supports short (-h), long (--help), and repeating short (-vv) options,
+# options with an argument provided (-f ./file), which also work with repeating
+# options (-hf ./file), positional arguments, subcommands, and options passthrough.
+
+# Save: myarray="$(arrstash ${@})"
+# Restore: eval "set -- ${myarray}"
+arrstash () {
+  for i; do
+    printf '%s\n' "${i}" | sed "s/'/'\\\\''/g;1s/^/'/;\$s/\$/' \\\\/"
+  done
+  printf ' \n'
+}
+
+HELP_FLAG="0" VERBOSITY="0"
+POSITIONALS="" OVERFLOW=""
+while test "${#}" -gt "0"; do
+  case "$(printf '%s' "${1}" | tr '[:upper:]' '[:lower:]')" in
+    -v|--verbose)
+      VERBOSITY="$((VERBOSITY+1))"
+      shift;;
+    -f|--file)
+      shift 2;;
+    -h|--help)
+      HELP_FLAG="1"
+      shift;;
+    --)
+      shift
+      OVERFLOW="$(arrstash ${@})"
+      shift "${#}";;
+    --*)
+      exit 1
+      shift;;
+    -*)
+      shortOptions="${1}"
+      if test "${#shortOptions}" -le "2"; then
+        printf '%s\n' "Unknown option: ${1}"
+        exit 1
+      fi
+      shift
+      # "-hvf ./file" -> "-h -vf ./file" -> "-h -v -f ./file"
+      set -- \
+        "$(printf '%s' "${shortOptions}" | cut -c-2)" \
+        "-$(printf '%s' "${shortOptions}" | cut -c3-)" \
+        "${@}"
+      ;;
+    *)
+      _shopts="$(arrstash ${@})"
+      eval "set -- ${POSITIONALS} ${1}"
+      POSITIONALS="$(arrstash ${@})"
+      eval "set -- ${_shopts}"
+      shift;;
+  esac
+done
+
+usage () { # {{{
+  _scriptname="$(basename "$(realpath "${0}")")"
+  _command="${1:-[command [subcommand]]}"
+
+  printf '%s\n\n' "Usage: ${_scriptname}  ${_command} ${1:+[subcommand] } <options [arguments]>"
+
+  if test "${_command}" = "ls"; then
+		cat <<-EOMAN
+		Options:
+		  -a, --archived         Include archived.
+		
+		Parameters:
+		  query                  Query string to search for.
+		EOMAN
+  elif test "${_command}" = "assign"; then
+		cat <<-EOMAN
+		Parameters:
+		  serial                 Query string to search for.
+		  user                   Query string to search for.
+		EOMAN
+  else
+		cat <<-EOMAN
+		Options:
+		  -h, --help             Display usage menu.
+		  -v, --verbose          Increase the verbosity-level.
+		
+		Commands:
+		  ls, list               List.
+		  rm, remove             Remove.
+		  assign                 Move.
+		  add                    Add.
+		  archive                Archive.
+		  sync                   Synchronize.
+		
+		Examples:
+		  ${_scriptname} --help
+		EOMAN
+  fi
+  exit 0
+} # }}}
+
+# eval "set -- ${POSITIONALS}"
+# eval "set -- ${OVERFLOW}"
+
+if test "${HELP_FLAG}" -ne "0"; then
+  eval "set -- ${POSITIONALS}"
+  usage "${1:-}"
+fi
+
+# while test "${#}" -gt "0"; do
+#   case "$(printf '%s' "${1}" | tr '[:upper:]' '[:lower:]')" in
+#     rm|remove)
+#   esac
+# done
+
+
