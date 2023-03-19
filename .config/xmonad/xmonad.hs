@@ -19,6 +19,7 @@ import qualified Data.Map as M
 import XMonad.Actions.Promote
 import XMonad.Actions.FloatKeys
 import XMonad.Actions.MouseResize
+import XMonad.Actions.CopyWindow
 import qualified XMonad.Actions.FlexibleResize as Flex
 
 -- Hooks
@@ -183,6 +184,9 @@ myButtons conf@XConfig {XMonad.modMask = modm} = M.fromList $ -- {{{
   ]
 -- }}}
 
+kill8 ss | Just w <- W.peek ss = (W.insertUp w) $ W.delete w ss
+         | otherwise = ss
+
 myKeys :: [([Char], X ())] -- {{{
 myKeys =
   [ ("M-<Return>", spawn $ terminal myConfig) -- XMonad.terminal conf
@@ -192,6 +196,8 @@ myKeys =
   , ("M-S-<Return>", promote)
   , ("M-S-f", floatOrNot (withFocused $ windows . W.sink) (withFocused centreFloat'))
   , ("M-q", kill)
+  , ("M-a", sequence_ $ [windows $ copy i | i <- XMonad.workspaces myConfig])
+  , ("M-S-a", windows $ kill8)
   , ("M-d", spawn "rofi -show")
   , ("M-S-d", spawn "dmenu_run")
   , ("M-S-c", spawn "toggleprogram picom -fcCGb --xrender-sync-fence")
@@ -336,10 +342,10 @@ myLayoutHook
   . mkToggle (NOBORDERS ?? FULL ?? EOT) -- (NBFULL ?? NOBORDERS ?? EOT)
   $ myLayouts
   where
-    myLayouts = threeCol
-            ||| masterStack
+    myLayouts = masterStack
+            ||| threeCol
             ||| bsp
-            -- ||| Full
+            ||| Full
 
 myXmobarPP :: PP -- {{{
 myXmobarPP = def

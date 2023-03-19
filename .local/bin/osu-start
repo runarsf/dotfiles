@@ -1,14 +1,26 @@
 #!/bin/sh
-export WINEPREFIX="$HOME/.wine_osu"
-[ "$1" = "kill" ] && wineserver -k && echo 'wineserver killed' && exit 0
-export STAGING_AUDIO_DURATION=5000 # As low as you can get osu! stable with
+export WINEPREFIX="${HOME}/.wineosu"
+export WINEARCH=win64
 
-# Arch Linux/wine-osu users should uncomment next line
-# for the patch to be effective
-#export PATH=/opt/wine-osu/bin:$PATH
+# As low as you can get osu! stable with
+# export STAGING_AUDIO_DURATION=5000
 
-wineserver -k
+if test -z "${1}"; then
+  wine64 "C:/osu!/osu!.exe"
+fi
 
-cd ~/data/osu-wine # Or wherever you installed osu! in
-wine osu!.exe "$@"
+if test "${1}" = "config"; then
+  winecfg
+fi
 
+if test "${1}" = "tricks"; then
+  winetricks
+fi
+
+if test "${1}" = "kill"; then
+  wineserver -k
+fi
+
+# wineserver -k
+# cd ~/data/osu-wine # Or wherever you installed osu! in
+# wine osu!.exe "$@"
