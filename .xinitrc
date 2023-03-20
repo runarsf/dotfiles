@@ -31,7 +31,6 @@ if test -d /etc/X11/xinit/xinitrc.d; then
   unset f
 fi
 
-# TODO: Move fonts to first fontpath
 xset +fp "${HOME:-~}/.local/share/fonts/"
 xset +fp "${HOME:-~}/.fonts/"
 xset fp rehash
@@ -54,28 +53,25 @@ if test command -v "numlockx" &>/dev/null; then
 fi
 
 /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
+/usr/lib/polkit-kde-authentication-agent-1 &
 
 # Start common apps
 autorandr --change &
 dunst --config "${XDG_CONFIG_HOME:-${HOME:-~}/.config}/dunst/dunstrc" &
 # xscreensaver -no-splash &
 # xfce4-power-manager &
-# https://forums.fedoraforum.org/showthread.php?326248-Just-upgraded-pipewire-and-want-to-reload-it-without-rebooting
-# pulseaudio --start &
 (nitrogen --restore || ("${HOME:-~}/.fehbg" || feh --bg-scale "${XDG_CONFIG_HOME:-${HOME:-~}/.config}/wall.jpg")) &
 if test -x /usr/bin/nm-applet; then
   nm-applet --sm-disable &
 fi
-# picom --config "${XDG_CONFIG_HOME:-${HOME:-~}/.config}/picom/picom.conf" -fcCGb --xrender-sync-fence &
-# picom &
 
-xdg-mime default ${BROWSER}.desktop x-scheme-handler/http
-xdg-mime default ${BROWSER}.desktop x-scheme-handler/https
+picom &
 
-if test "${DESKTOP}" = "xmonad"; then
+xdg-mime default "${BROWSER}.desktop" x-scheme-handler/http
+xdg-mime default "${BROWSER}.desktop" x-scheme-handler/https
+
+if test "${DESKTOP}" = "xmonad" -o "${DESKTOP}" = "bspwm"; then
   trayer --edge top --align right --SetDockType true --SetPartialStrut true --expand true --width 5 --transparent false --tint 0x13141D --height 20 --monitor "primary" &
-elif test "${DESKTOP}" = "bspwm"; then
-  trayer --edge top --align right --SetDockType true --SetPartialStrut true --expand false --width 5 --transparent false --tint 0x0D1117 --height 30 --monitor "primary" --margin 14 --distance 11 --padding 0 &
 fi
 
 #xsetwacom --set "Wacom Intuos S Pen stylus" Suppress 2
@@ -85,11 +81,5 @@ fi
 #xsetwacom --set "Wacom Intuos S Pen stylus" Button 2 '0'
 #xsetwacom --set "Wacom Intuos S Pen stylus" Button 3 '0'
 #xsetwacom --set "Wacom Intuos S Pen stylus" MapToOutput HEAD-0
-
-if test systemd-detect-virt = "oracle"; then
-  /usr/bin/VBoxClient-all
-fi
-
-# test -f ~/.xsession && source ~/.xsession
 
 exec xmonad

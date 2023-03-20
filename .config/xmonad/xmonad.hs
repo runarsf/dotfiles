@@ -1,4 +1,5 @@
 -- https://github.com/xmonad/xmonad/blob/master/src/XMonad/Config.hs
+-- https://www.reddit.com/r/xmonad/comments/11qrizh/how_to_show_my_current_layout_in_tint2
 
 -- Imports {{{
 import XMonad
@@ -20,7 +21,9 @@ import XMonad.Actions.Promote
 import XMonad.Actions.FloatKeys
 import XMonad.Actions.MouseResize
 import XMonad.Actions.CopyWindow
+import XMonad.Actions.CycleRecentWS
 import qualified XMonad.Actions.FlexibleResize as Flex
+-- import XMonad.Actions.TopicSpace
 
 -- Hooks
 import XMonad.Hooks.ServerMode
@@ -42,22 +45,22 @@ import XMonad.Util.Ungrab
 import XMonad.Util.NamedScratchpad
 
 -- Layout
-import XMonad.Layout.ThreeColumns
 import XMonad.Layout.Spacing
+import XMonad.Layout.Gaps
 import XMonad.Layout.BinarySpacePartition
 import XMonad.Layout.MultiToggle
 import XMonad.Layout.MultiToggle.Instances
 import XMonad.Layout.Reflect
 import XMonad.Layout.Fullscreen
+import XMonad.Layout.ResizableThreeColumns
 import XMonad.Layout.ResizableTile
 import XMonad.Layout.MouseResizableTile
 import XMonad.Layout.Grid
 import XMonad.Layout.Renamed
 import XMonad.Layout.NoBorders
+import XMonad.Layout.WindowArranger (windowArrange, WindowArrangerMsg(..))
 import qualified XMonad.Layout.WindowNavigation as WN
 import qualified XMonad.Layout.Magnifier as Magn
-import XMonad.Layout.WindowArranger (windowArrange, WindowArrangerMsg(..))
--- import XMonad.Layout.WindowArranger
 -- import XMonad.Layout.BorderResize
 -- }}}
 
@@ -70,6 +73,7 @@ main = xmonad
      -- . withEasySB (statusBarProp "xmobar ${XDG_CONFIG_HOME:-${HOME:-~}/.config}/xmobar/xmobarrc" (pure myXmobarPP)) defToggleStrutsKey
 -- }}}
 
+-- FIXME xmonadctl
 -- Server mode commands{{{
 myCommands :: [(String, X ())]
 myCommands =
@@ -113,9 +117,9 @@ myConfig = def -- {{{
     { modMask            = mod4Mask::KeyMask
     , layoutHook         = myLayoutHook
     , manageHook         = myManageHook
-    , terminal           = "${TERMINAL:-alacritty}"::String -- TODO System.Environment
+    , terminal           = "${TERMINAL:-alacritty}"::String -- TODO System.Environment https://stackoverflow.com/a/60715978
     , focusFollowsMouse  = True::Bool
-    , clickJustFocuses   = True::Bool
+    , clickJustFocuses   = False::Bool
     , borderWidth        = 2::Dimension
     , workspaces         = map show $ [1..9::Int]++[0::Int]::[WorkspaceId]
     , normalBorderColor  = "#383a4a"::String
@@ -141,6 +145,7 @@ myStartupHook = do
   spawn "(pgrep eww && eww reload) || (eww close bar || killall -q eww; eww open bar)"
   spawn "killall -q trayer; trayer --edge top --align right --SetDockType true --SetPartialStrut false --expand true --widthtype pixel --width 125 --transparent true --alpha 0 --tint 0x0D1117 --height 30 --heighttype pixel --monitor 'primary' --margin 20 --distance 11 --padding 0 &"
   setWMName "LG3D"
+  -- spawn "killall -q picom; picom -fcCGb --xrender-sync-fence &"
 -- }}}
 
 -- float toggle {{{
@@ -189,7 +194,7 @@ kill8 ss | Just w <- W.peek ss = (W.insertUp w) $ W.delete w ss
 
 myKeys :: [([Char], X ())] -- {{{
 myKeys =
-  [ ("M-<Return>", spawn $ terminal myConfig) -- XMonad.terminal conf
+  [ ("M-<Return>", spawn $ terminal myConfig)
   , ("M-n", namedScratchpadAction myScratchpads "terminal")
   , ("M-p", namedScratchpadAction myScratchpads "calculator")
   , ("M-S-r", spawn "xmonad --recompile && xmonad --restart")
@@ -197,13 +202,14 @@ myKeys =
   , ("M-S-f", floatOrNot (withFocused $ windows . W.sink) (withFocused centreFloat'))
   , ("M-q", kill)
   , ("M-a", sequence_ $ [windows $ copy i | i <- XMonad.workspaces myConfig])
-  , ("M-S-a", windows $ kill8)
+  , ("M-S-a", windows $ kill8) -- FIXME don't un-float when un-pinning
   , ("M-d", spawn "rofi -show")
   , ("M-S-d", spawn "dmenu_run")
   , ("M-S-c", spawn "toggleprogram picom -fcCGb --xrender-sync-fence")
   , ("M-x", spawn "betterlockscreen --lock dimblur --blur 8")
   , ("M1-p", spawn "screenshot -m region -t -c -o 'screenshot-xbackbone'")
   , ("M1-S-p", spawn "screenshot -m region -c")
+  , ("M-<Tab>", toggleRecentWS)
   , ("M-<Space>", sendMessage NextLayout)
   , ("M-S-<Space>", sendMessage FirstLayout)
   , ("<XF86AudioPlay>", spawn "playerctl play-pause")
@@ -232,8 +238,8 @@ myKeys =
   , ("M-S-<Down>",  floatOrNot (withFocused (keysMoveWindow (  0, 20))) (sendMessage $ WN.Swap D))
   , ("M-C-<Right>", floatOrNot (withFocused (keysResizeWindow ( 20,   0) (0, 0))) (sendMessage Expand))
   , ("M-C-<Left>",  floatOrNot (withFocused (keysResizeWindow (-20,   0) (0, 0))) (sendMessage Shrink))
-  , ("M-C-<Up>",    floatOrNot (withFocused (keysResizeWindow (  0, -20) (0, 0))) (sendMessage Expand))
-  , ("M-C-<Down>",  floatOrNot (withFocused (keysResizeWindow (  0,  20) (0, 0))) (sendMessage Shrink))
+  , ("M-C-<Up>",    floatOrNot (withFocused (keysResizeWindow (  0, -20) (0, 0))) (sendMessage MirrorExpand))
+  , ("M-C-<Down>",  floatOrNot (withFocused (keysResizeWindow (  0,  20) (0, 0))) (sendMessage MirrorShrink))
   , ("M-S-e", confirm "Exit" $ io (exitWith ExitSuccess))
   , ("<XF86AudioNext>", spawn "playerctl next")
   , ("<XF86AudioPrev>", spawn "playerctl previous")
@@ -301,7 +307,8 @@ myManageHook = (isDialog --> doF W.shiftMaster <+> doF W.swapDown)
     <>  let w = workspaces myConfig in composeAll
     [ className =? "Gimp"                --> doFloat
     , className =? "Sxiv"                --> doFloat
-    , className =? "Pavucontrol"         --> doCenterFloat
+    -- , className =? "Pavucontrol"         --> doCenterFloat
+    -- , className =? "easyeffects"         --> doCenterFloat
     , appName   =? "scratchpad"          --> doCenterFloat
     , className =? "discord"             --> doShift (w !! 1)
     , className =? "VirtualBox Manager"  --> doShift (w !! 3)
@@ -322,30 +329,38 @@ toggleFull = withFocused (\windowId -> do
     { floats <- gets (W.floating . windowset);
         if windowId `M.member` floats
         then withFocused $ windows . W.sink
-        else withFocused $ windows . (flip W.float $ W.RationalRect 0 0 1 1) })  
+        else withFocused $ windows . (flip W.float $ W.RationalRect 0 0 1 1) })
 
+-- Layouts {{{
 masterStack = renamed [Replace "Tiled"]
             $ ResizableTall 1 (3/100) (1/2) []
 bsp         = renamed [Replace "BSP"]
             $ emptyBSP
 threeCol    = renamed [Replace "ThreeCol"]
             $ Magn.magnifiercz' 1.35
-            $ ThreeColMid 1 (3/100) (1/2)
+            $ ResizableThreeColMid 1 (3/100) (1/2) []
+monocle     = renamed [Replace "monocle"]
+            $ avoidStruts
+            $ noBorders
+            $ Full
+-- }}}
 
-myLayoutHook
+myLayoutHook -- {{{
   = avoidStruts
   . mouseResize
   . windowArrange
   . smartBorders
-  . spacingRaw True (Border 0 10 10 10) True (Border 5 5 5 5) True
   . WN.windowNavigation
-  . mkToggle (NOBORDERS ?? FULL ?? EOT) -- (NBFULL ?? NOBORDERS ?? EOT)
+  . mkToggle (NBFULL ?? NOBORDERS ?? EOT) -- (NBFULL ?? NOBORDERS ?? EOT
+  . spacingRaw True (Border 0 10 10 10) True (Border 5 5 5 5) True -- Spacing between windows
+  -- . gaps [(U,30), (R,30), (D,30), (L,30)] -- Gaps between screen and windows
   $ myLayouts
   where
     myLayouts = masterStack
             ||| threeCol
             ||| bsp
-            ||| Full
+            ||| monocle
+-- }}}
 
 myXmobarPP :: PP -- {{{
 myXmobarPP = def

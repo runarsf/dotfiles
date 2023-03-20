@@ -76,6 +76,8 @@ bspc rule -a eww-bar                         layer=below manage=off
 #done < <(bspc subscribe node_state)
 # }}}
 
+# pgrep bspwm_swallow || ./scripts/bspwm_swallow &
+
 #exec_once () { # {{{
 #  # Note: Most programs are started in .xprofile
 #  cmd="${1}" # $1: command to run

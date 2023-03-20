@@ -15,9 +15,11 @@ monitors = monitors_output.stdout.decode('utf-8').strip().split('\n')
 # Move the primary monitor to the front
 primary_output = subprocess.run('xrandr | grep " connected primary" | cut -d" " -f1', stdout=subprocess.PIPE, shell=True)
 primary = primary_output.stdout.decode('utf-8').strip()
+
 if primary in monitors:
     monitors.remove(primary)
-monitors.insert(0, primary)
+if primary:
+    monitors.insert(0, primary)
 
 method = 1
 
