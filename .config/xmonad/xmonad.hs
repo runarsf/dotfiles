@@ -22,6 +22,7 @@ import XMonad.Actions.FloatKeys
 import XMonad.Actions.MouseResize
 import XMonad.Actions.CopyWindow
 import XMonad.Actions.CycleRecentWS
+import XMonad.Actions.ShowText
 import qualified XMonad.Actions.FlexibleResize as Flex
 -- import XMonad.Actions.TopicSpace
 
@@ -56,11 +57,14 @@ import XMonad.Layout.ResizableThreeColumns
 import XMonad.Layout.ResizableTile
 import XMonad.Layout.MouseResizableTile
 import XMonad.Layout.Grid
+import XMonad.Layout.TwoPanePersistent
 import XMonad.Layout.Renamed
 import XMonad.Layout.NoBorders
 import XMonad.Layout.WindowArranger (windowArrange, WindowArrangerMsg(..))
 import qualified XMonad.Layout.WindowNavigation as WN
 import qualified XMonad.Layout.Magnifier as Magn
+-- import XMonad.Layout.Tabbed
+-- import XMonad.Layout.Combo
 -- import XMonad.Layout.BorderResize
 -- }}}
 
@@ -71,46 +75,6 @@ main = xmonad
      . ewmh
      $ myConfig
      -- . withEasySB (statusBarProp "xmobar ${XDG_CONFIG_HOME:-${HOME:-~}/.config}/xmobar/xmobarrc" (pure myXmobarPP)) defToggleStrutsKey
--- }}}
-
--- FIXME xmonadctl
--- Server mode commands{{{
-myCommands :: [(String, X ())]
-myCommands =
-    [ ("decrease-master-size"   , sendMessage Shrink                                                )
-    , ("increase-master-size"   , sendMessage Expand                                                )
-    , ("decrease-master-count"  , sendMessage $ IncMasterN (-1)                                     )
-    , ("increase-master-count"  , sendMessage $ IncMasterN (1)                                      )
-    , ("focus-prev"             , windows W.focusUp                                                 )
-    , ("focus-next"             , windows W.focusDown                                               )
-    , ("focus-master"           , windows W.focusMaster                                             )
-    , ("swap-with-prev"         , windows W.swapUp                                                  )
-    , ("swap-with-next"         , windows W.swapDown                                                )
-    , ("swap-with-master"       , windows W.swapMaster                                              )
-    , ("kill-window"            , kill                                                              )
-    , ("quit"                   , io $ exitWith ExitSuccess                                         )
-    , ("restart"                , spawn "xmonad --recompile; xmonad --restart"                      )
-    , ("change-layout"          , sendMessage NextLayout                                            )
-    -- , ("reset-layout"           , setLayout $ XMonad.layoutHook conf                                )
-    , ("fullscreen"             , sequence_ [sendMessage $ Toggle FULL, sendMessage ToggleStruts]   )
-    ]
--- }}}
--- Server mode event hook {{{
-myServerModeEventHook = serverModeEventHookCmd' $ return myCommands'
-myCommands' = ("list-commands", listMyServerCmds) : myCommands ++ wscs ++ sccs -- ++ spcs
-    where
-        wscs = [((m ++ s), windows $f s) | s <- (workspaces myConfig)
-               , (f, m) <- [(W.view, "focus-workspace-"), (W.shift, "send-to-workspace-")] ]
-
-        sccs = [((m ++ show sc), screenWorkspace (fromIntegral sc) >>= flip whenJust (windows . f))
-               | sc <- [0..3], (f, m) <- [(W.view, "focus-screen-"), (W.shift, "send-to-screen-")]]
-
---        spcs = [("toggle-" ++ sp, namedScratchpadAction myScratchpads sp)
---               | sp <- (flip map) (myScratchpads) (\(NS x _ _ _) -> x) ]
-
-listMyServerCmds :: X ()
-listMyServerCmds = spawn ("echo '" ++ asmc ++ "' | xmessage -file -")
-    where asmc = concat $ "Available commands:" : map (\(x, _)-> "    " ++ x) myCommands'
 -- }}}
 
 myConfig = def -- {{{
@@ -127,7 +91,8 @@ myConfig = def -- {{{
     , keys               = myKeyMaps
     , mouseBindings      = myButtons
     , startupHook        = myStartupHook
-    , handleEventHook    = myServerModeEventHook
+    , handleEventHook    = handleTimerEvent
+    -- , handleEventHook    = myServerModeEventHook
     -- , handleEventHook    = serverModeEventHookCmd
     --                          <+> serverModeEventHook
     --                          <+> serverModeEventHookF "XMONAD_PRINT" (io . putStrLn)
@@ -215,22 +180,27 @@ myKeys =
   , ("<XF86AudioPlay>", spawn "playerctl play-pause")
   -- , ("M-f", sequence_ [sendMessage $ Toggle FULL, sendMessage ToggleStruts])
   , ("M-f", toggleFull)
-  , ("M-S-b", sendMessage ToggleStruts)
+  , ("M-M1-b", sendMessage ToggleStruts)
+  , ("M-M1-<Down>", sendMessage $ weakModifyGaps decGaps)
+  , ("M-M1-<Up>", sendMessage $ weakModifyGaps incGaps)
   , ("M-m", sendMessage $ IncMasterN $ 1)
   , ("M-S-m", sendMessage $ IncMasterN $ -1)
   , ("M-t", withFocused $ windows . W.sink)
   -- https://stackoverflow.com/questions/7603509/haskell-syntax-for-or-in-case-expressions
   , ("M-<Right>", sendMessage $ WN.Go R)
   , ("M-<Left>", sendMessage $ WN.Go L)
+  , ("M-o", do
+    layout <- getActiveLayoutDescription
+    flashText def 1 layout)
   , ("M-<Up>", do
     layout <- getActiveLayoutDescription
     case layout of
-      x | elem x ["Spacing Full","Full"] -> windows W.focusUp
+      x | elem x ["Spacing Monocle","Spacing Dual"] -> windows W.focusUp
       _                                  -> sendMessage $ WN.Go U)
   , ("M-<Down>", do
     layout <- getActiveLayoutDescription
     case layout of
-      x | elem x ["Spacing Full","Full"] -> windows W.focusDown
+      x | elem x ["Spacing Monocle","Spacing Dual"] -> windows W.focusDown
       _                                  -> sendMessage $ WN.Go D)
   , ("M-S-<Right>", floatOrNot (withFocused (keysMoveWindow ( 20,  0))) (sendMessage $ WN.Swap R))
   , ("M-S-<Left>",  floatOrNot (withFocused (keysMoveWindow (-20,  0))) (sendMessage $ WN.Swap L))
@@ -246,6 +216,9 @@ myKeys =
   , ("<XF86AudioLowerVolume>", spawn "pactl set-sink-volume 2 -5%")
   , ("<XF86AudioRaiseVolume>", spawn "pactl set-sink-volume 2 +5%")
   , ("<XF86AudioPause>", spawn "playerctl play-pause") ]
+  where
+      decGaps d i | d `elem` [L, R, U, D] = i - 10
+      incGaps d i | d `elem` [L, R, U, D] = i + 10
 -- }}}
 
 myKeyMaps conf@XConfig {XMonad.modMask = modm} = M.fromList $ -- {{{
@@ -282,13 +255,6 @@ myScratchpads = [ NS "terminal" spawnTerm findTerm manageTerm
              l = 0.70 -w
 -- }}}
 
-                           -- <&&> resource /=? "Dialog"
-                           -- <&&> fmap not isDialog -- FIXME Doesn't work, don't swallow dialogs
--- myEventHook = swallowEventHook (className =? "Alacritty"
---                            <||> className =? "org.remmina.Remmina"
---                            -- <||> className ~? "VirtualBox "
---                                ) (return True)
-
 -- https://wiki.haskell.org/Xmonad/Frequently_asked_questions
 avoidMaster :: W.StackSet i l a s sd -> W.StackSet i l a s sd
 avoidMaster = W.modify' $ \c -> case c of
@@ -305,23 +271,24 @@ myManageHook = (isDialog --> doF W.shiftMaster <+> doF W.swapDown)
     -- <+> placeHook myPlaceHook
     <+> namedScratchpadManageHook myScratchpads
     <>  let w = workspaces myConfig in composeAll
-    [ className =? "Gimp"                --> doFloat
-    , className =? "Sxiv"                --> doFloat
-    -- , className =? "Pavucontrol"         --> doCenterFloat
-    -- , className =? "easyeffects"         --> doCenterFloat
-    , appName   =? "scratchpad"          --> doCenterFloat
-    , className =? "discord"             --> doShift (w !! 1)
-    , className =? "VirtualBox Manager"  --> doShift (w !! 3)
-    , className =? "org.remmina.Remmina" --> doShift (w !! 4)
-    , className =? "Steam"               --> doShift (w !! 4)
-    , className =? "Spotify"             --> doShift (w !! 7)
-    , className ~? "eww-"                --> doLower
-    , className =? "PrimeNote"           --> doFloat
-    , appName   =? "panel"               --> doLower
-    , resource  =? "desktop_window"      --> doIgnore
-    ,(className =? "firefox"             <&&>
-      resource  =? "Dialog")             --> doFloat
-    , isDialog                           --> doFloat
+    [ className =? "Gimp"                     --> doFloat
+    , className =? "Sxiv"                     --> doFloat
+    , className =? "Pavucontrol"              --> doShift (w !! 8)
+    , className =? "easyeffects"              --> doShift (w !! 8)
+    , appName   =? "scratchpad"               --> doCenterFloat
+    , className =? "discord"                  --> doShift (w !! 1)
+    , className =? "VirtualBox Manager"       --> doShift (w !! 5)
+    , className =? "org.remmina.Remmina"      --> doShift (w !! 5)
+    , className =? "Steam"                    --> doShift (w !! 4)
+    , className =? "spotify"                  --> doShift (w !! 4)
+    , className ~? "eww-"                     --> doLower
+    , className =? "PrimeNote"                --> doFloat
+    , appName   =? "panel"                    --> doLower
+    , resource  =? "desktop_window"           --> doIgnore
+    ,(className ~? "firefox"                  <&&>
+      resource  =? "Dialog")                  --> doFloat
+    , isDialog                                --> doFloat
+    , fmap not willFloat                      --> insertPosition Below Newer
     ]
 -- }}}
 
@@ -339,8 +306,9 @@ bsp         = renamed [Replace "BSP"]
 threeCol    = renamed [Replace "ThreeCol"]
             $ Magn.magnifiercz' 1.35
             $ ResizableThreeColMid 1 (3/100) (1/2) []
-monocle     = renamed [Replace "monocle"]
-            $ avoidStruts
+dual        = renamed [Replace "Dual"]
+            $ TwoPanePersistent Nothing (3/100) (1/2)
+monocle     = renamed [Replace "Monocle"]
             $ noBorders
             $ Full
 -- }}}
@@ -352,41 +320,13 @@ myLayoutHook -- {{{
   . smartBorders
   . WN.windowNavigation
   . mkToggle (NBFULL ?? NOBORDERS ?? EOT) -- (NBFULL ?? NOBORDERS ?? EOT
-  . spacingRaw True (Border 0 10 10 10) True (Border 5 5 5 5) True -- Spacing between windows
-  -- . gaps [(U,30), (R,30), (D,30), (L,30)] -- Gaps between screen and windows
+  . spacingRaw True (Border 0 10 10 10) False (Border 10 10 10 10) True -- Spacing between windows
+  . gaps [(U,10), (R,75), (D,75), (L,75)] -- Gaps between screen and windows
   $ myLayouts
   where
     myLayouts = masterStack
+            ||| dual
             ||| threeCol
             ||| bsp
             ||| monocle
--- }}}
-
-myXmobarPP :: PP -- {{{
-myXmobarPP = def
-    { ppSep             = magenta " • "
-    , ppTitleSanitize   = xmobarStrip
-    , ppCurrent         = wrap " " "" . xmobarBorder "Top" "#8be9fd" 2
-    , ppHidden          = white . wrap " " ""
-    , ppHiddenNoWindows = lowWhite . wrap " " ""
-    , ppUrgent          = red . wrap (yellow "!") (yellow "!")
-    , ppOrder           = \[ws, l, _, wins] -> [ws, l, wins]
-    , ppExtras          = [logTitles formatFocused formatUnfocused]
-    }
-  where
-    formatFocused   = wrap (white    "[") (white    "]") . magenta . ppWindow
-    formatUnfocused = wrap (lowWhite "[") (lowWhite "]") . blue    . ppWindow
-
-    -- | Windows should have *some* title, which should not not exceed a
-    -- sane length.
-    ppWindow :: String -> String
-    ppWindow = xmobarRaw . (\w -> if null w then "untitled" else w) . shorten 30
-
-    blue, lowWhite, magenta, red, white, yellow :: String -> String
-    magenta  = xmobarColor "#ff79c6" ""
-    blue     = xmobarColor "#bd93f9" ""
-    white    = xmobarColor "#f8f8f2" ""
-    yellow   = xmobarColor "#f1fa8c" ""
-    red      = xmobarColor "#ff5555" ""
-    lowWhite = xmobarColor "#bbbbbb" ""
 -- }}}
