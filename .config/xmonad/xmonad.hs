@@ -1,5 +1,5 @@
--- https://github.com/xmonad/xmonad/blob/master/src/XMonad/Config.hs
--- https://www.reddit.com/r/xmonad/comments/11qrizh/how_to_show_my_current_layout_in_tint2
+-- TODO https://www.reddit.com/r/xmonad/comments/11qrizh/how_to_show_my_current_layout_in_tint2
+-- TODO https://github.com/dylanaraps/pywal/issues/172
 
 -- Imports {{{
 import XMonad
@@ -37,6 +37,7 @@ import XMonad.Hooks.StatusBar.PP
 import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.WindowSwallowing
 import XMonad.Hooks.Place
+import XMonad.Hooks.BorderPerWindow (defineBorderWidth, actionQueue)
 import XMonad.Hooks.SetWMName (setWMName)
 
 -- Util
@@ -60,6 +61,7 @@ import XMonad.Layout.Grid
 import XMonad.Layout.TwoPanePersistent
 import XMonad.Layout.Renamed
 import XMonad.Layout.NoBorders
+import XMonad.Layout.PerWorkspace
 import XMonad.Layout.WindowArranger (windowArrange, WindowArrangerMsg(..))
 import qualified XMonad.Layout.WindowNavigation as WN
 import qualified XMonad.Layout.Magnifier as Magn
@@ -109,6 +111,7 @@ myStartupHook :: X () -- {{{
 myStartupHook = do
   spawn "(pgrep eww && eww reload) || (eww close bar || killall -q eww; eww open bar)"
   spawn "killall -q trayer; trayer --edge top --align right --SetDockType true --SetPartialStrut false --expand true --widthtype pixel --width 125 --transparent true --alpha 0 --tint 0x0D1117 --height 30 --heighttype pixel --monitor 'primary' --margin 20 --distance 11 --padding 0 &"
+  spawn "(nitrogen --restore || (~/.fehbg || feh --bg-scale ~/.config/wall.jpg)) &"
   setWMName "LG3D"
   -- spawn "killall -q picom; picom -fcCGb --xrender-sync-fence &"
 -- }}}
@@ -170,6 +173,7 @@ myKeys =
   , ("M-S-a", windows $ kill8) -- FIXME don't un-float when un-pinning
   , ("M-d", spawn "rofi -show")
   , ("M-S-d", spawn "dmenu_run")
+  , ("M-e", spawn "xdg-open ~")
   , ("M-S-c", spawn "toggleprogram picom -fcCGb --xrender-sync-fence")
   , ("M-x", spawn "betterlockscreen --lock dimblur --blur 8")
   , ("M1-p", spawn "screenshot -m region -t -c -o 'screenshot-xbackbone'")
@@ -192,6 +196,7 @@ myKeys =
   , ("M-o", do
     layout <- getActiveLayoutDescription
     flashText def 1 layout)
+  , ("M-S-o", swapGaps)
   , ("M-<Up>", do
     layout <- getActiveLayoutDescription
     case layout of
@@ -239,20 +244,20 @@ myScratchpads = [ NS "terminal" spawnTerm findTerm manageTerm
   where
     spawnTerm  = "${TERMINAL:-alacritty}" ++ " --class scratchpad --title scratchpad --option font.size=12 --command tmux new-session -A -s scratchpad"
     findTerm   = appName =? "scratchpad"
-    manageTerm = customFloating $ W.RationalRect l t w h
+    manageTerm = customFloating $ W.RationalRect x y w h
            where
-             h = 0.9
-             w = 0.9
-             t = 0.95 -h
-             l = 0.95 -w
+             x = 0.2
+             y = (1/6)
+             w = 0.6
+             h = (2/3)
     spawnCalc  = "qalculate-gtk"
     findCalc   = className =? "Qalculate-gtk"
-    manageCalc = customFloating $ W.RationalRect l t w h
+    manageCalc = customFloating $ W.RationalRect x y w h
            where
-             h = 0.5
+             x = 0.3
+             y = (1/6)
              w = 0.4
-             t = 0.75 -h
-             l = 0.70 -w
+             h = (2/3)
 -- }}}
 
 -- https://wiki.haskell.org/Xmonad/Frequently_asked_questions
@@ -289,6 +294,7 @@ myManageHook = (isDialog --> doF W.shiftMaster <+> doF W.swapDown)
       resource  =? "Dialog")                  --> doFloat
     , isDialog                                --> doFloat
     , fmap not willFloat                      --> insertPosition Below Newer
+    , isInProperty "_NET_WM_WINDOW_TYPE" "_NET_WM_WINDOW_TYPE_UTILITY" --> defineBorderWidth 0
     ]
 -- }}}
 
@@ -313,6 +319,25 @@ monocle     = renamed [Replace "Monocle"]
             $ Full
 -- }}}
 
+-- https://www.reddit.com/r/xmonad/comments/ygp2ab/toggle_between_two_sets_of_gaps/
+defaultGaps = [(U,0), (R,10), (D,10), (L,10)]
+swapGaps = sendMessage . ModifyGaps $ \gs ->
+       if gs == a then b
+  else if gs == b then c
+                  else a
+  where
+    a = defaultGaps
+    b = [(U,10),(R,75),(D,75),(L,75)]
+    c = [(U,0),(R,0),(D,0),(L,0)]
+
+-- FIXME
+-- defaultSpacing = 10
+-- swapSpacing = sendMessage . ModifyWindowBorder $ \sp ->
+--   if sp == a then b else a
+--   where
+--     a = (Border defaultSpacing defaultSpacing defaultSpacing defaultSpacing)
+--     b = (Border 50 50 50 50)
+
 myLayoutHook -- {{{
   = avoidStruts
   . mouseResize
@@ -320,13 +345,13 @@ myLayoutHook -- {{{
   . smartBorders
   . WN.windowNavigation
   . mkToggle (NBFULL ?? NOBORDERS ?? EOT) -- (NBFULL ?? NOBORDERS ?? EOT
-  . spacingRaw True (Border 0 10 10 10) False (Border 10 10 10 10) True -- Spacing between windows
-  . gaps [(U,10), (R,75), (D,75), (L,75)] -- Gaps between screen and windows
+  . spacingRaw True (Border 0 0 0 0) False (Border 10 10 10 10) True -- Spacing between windows
+  . gaps defaultGaps -- Gaps between screen and windows
   $ myLayouts
   where
-    myLayouts = masterStack
+    myLayouts = onWorkspaces ["5"] monocle masterStack
             ||| dual
             ||| threeCol
             ||| bsp
-            ||| monocle
+            ||| onWorkspaces ["5"] masterStack monocle
 -- }}}

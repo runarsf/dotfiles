@@ -71,6 +71,8 @@ local plugins = function(use)
     },
   })
 
+  -- use({ "SeniorMars/typst.nvim" })
+
   -- use({ "xiyaowong/virtcolumn.nvim" })
 
   use({ "nvim-treesitter/nvim-treesitter",
