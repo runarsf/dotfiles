@@ -1,5 +1,4 @@
 ; -*- mode: lisp -*-
-; TODO wlan calendar
 
 ; Variables {{{
 (defvar eww "eww -c ~/.config/eww")
@@ -53,8 +52,8 @@
     ;    (label :text bsplayout)))))
 (deflisten workspaces
   "modules/workspaces")
-(defpoll bsplayout :interval "5s"
-  "bspwm_rofi_layouts query")
+; (defpoll bsplayout :interval "5s"
+;   "bspwm_rofi_layouts query")
 ; }}}
 
 (defwidget info [] ; {{{
@@ -66,6 +65,7 @@
 (defwidget modules [] ; {{{
   (bbox :class "modules"
         :halign "end"
+        :style "padding-right: ${traysize}px;"
     (bbox :tooltip "Autorandr" ; {{{
       (bbutton :onclick "rofi-autorandr" ; TODO Symlink rofi-autorandr into modules
         ; TODO Middle-click autorandr --change
@@ -273,6 +273,9 @@
 ; Listeners / pollers {{{
 (deflisten music :initial ""
   "playerctl --follow metadata --format '{{ artist }} - {{ title }}' || true")
+
+(deflisten traysize
+  "modules/traysize")
 
   ; https://askubuntu.com/a/523899
 (defpoll title :initial ""

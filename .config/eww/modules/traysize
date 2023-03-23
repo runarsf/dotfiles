@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# Listen for tray size changes and report new size.
+
+# Spawn tray icons for testing:
+#   for i in {1..5}; do yad --notification --command="notify-send -t 500 'click'" &; done
+
+xprop -name panel -spy WM_NORMAL_HINTS | while read -r; do
+  sleep .02
+
+  tray_size="$(xprop -name panel \
+    | grep 'program specified minimum size' \
+    | cut -d ' ' -f 5)"
+
+  if test "${tray_size:-}" != "${previous_tray_size:-}"; then
+    printf '%s\n' "${tray_size}"
+  fi
+
+  previous_tray_size="${tray_size}"
+done

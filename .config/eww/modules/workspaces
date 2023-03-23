@@ -32,12 +32,19 @@ get_yuck () {
   done
 }
 
-# bspwm: _NET_CURRENT_DESKTOP / _NET_ACTIVE_WINDOW
-# xmonad: _NET_ACTIVE_WINDOW
-xprop -spy -root _NET_CURRENT_DESKTOP | while read -r; do
+# wm="$(wmctrl -m | head -1 | awk '{print $2}')"
+# case "${wm}" in
+#   xmonad|LG3D)
+#     prop=_NET_ACTIVE_WINDOW;;
+#   *)
+#     prop="_NET_CURRENT_DESKTOP";;
+# esac
+prop="_NET_CURRENT_DESKTOP"
+
+xprop -spy -root "${prop}" | while read -r; do
   # If wses get left behind or updated weirdly, add a small delay to allow
   # the wm some wiggle room to manage desktops.
-  # Often required when using _NET_CURRENT_DESKTOP.
+  # Might be required when using _NET_CURRENT_DESKTOP.
   sleep .02
 
   # When listening for changed on _NET_ACTIVE_WINDOW, this prevents the CPU from

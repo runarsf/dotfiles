@@ -102,16 +102,18 @@ myConfig = def -- {{{
     } `additionalKeysP` myKeys
 -- }}}
 
+-- TODO Use rofi for prompts
 confirm :: String -> X () -> X () -- {{{
 confirm msg cb = do
     res <- dmenu ["", msg]
     when (res == msg) cb
 -- }}}
 
+-- Resizing tray automatically: https://www.reddit.com/r/xmonad/comments/10qcqcr/comment/j6q6m31/
 myStartupHook :: X () -- {{{
 myStartupHook = do
   spawn "(pgrep eww && eww reload) || (eww close bar || killall -q eww; eww open bar)"
-  spawn "killall -q trayer; trayer --edge top --align right --SetDockType true --SetPartialStrut false --expand true --widthtype pixel --width 125 --transparent true --alpha 0 --tint 0x0D1117 --height 30 --heighttype pixel --monitor 'primary' --margin 20 --distance 11 --padding 0 &"
+  spawn "killall -q trayer; trayer --edge top --align right --SetDockType true --SetPartialStrut false --expand true --widthtype request --transparent true --alpha 255 --tint 0x0D1117 --height 30 --heighttype pixel --monitor 'primary' --margin 20 --distance 11 --padding 0 &"
   spawn "(nitrogen --restore || (~/.fehbg || feh --bg-scale ~/.config/wall.jpg)) &"
   setWMName "LG3D"
   -- spawn "killall -q picom; picom -fcCGb --xrender-sync-fence &"
@@ -321,7 +323,7 @@ monocle     = renamed [Replace "Monocle"]
 -- }}}
 
 -- https://www.reddit.com/r/xmonad/comments/ygp2ab/toggle_between_two_sets_of_gaps/
-defaultGaps = [(U,0), (R,10), (D,10), (L,10)]
+defaultGaps = [(U,10), (R,10), (D,10), (L,10)]
 swapGaps = sendMessage . ModifyGaps $ \gs ->
        if gs == a then b
   else if gs == b then c
