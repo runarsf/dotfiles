@@ -70,9 +70,7 @@ picom &
 xdg-mime default "${BROWSER}.desktop" x-scheme-handler/http
 xdg-mime default "${BROWSER}.desktop" x-scheme-handler/https
 
-if test "${DESKTOP}" = "xmonad" -o "${DESKTOP}" = "bspwm"; then
-  trayer --edge top --align right --SetDockType true --SetPartialStrut true --expand true --width 5 --transparent false --tint 0x13141D --height 20 --monitor "primary" &
-fi
+# trayer --edge top --align right --SetDockType true --SetPartialStrut true --expand true --width 5 --transparent false --tint 0x13141D --height 20 --monitor "primary" &
 
 #xsetwacom --set "Wacom Intuos S Pen stylus" Suppress 2
 #xsetwacom --set "Wacom Intuos S Pen stylus" Rawsample 4

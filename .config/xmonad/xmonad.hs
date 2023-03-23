@@ -333,14 +333,6 @@ swapGaps = sendMessage . ModifyGaps $ \gs ->
     b = [(U,10),(R,75),(D,75),(L,75)]
     c = [(U,0),(R,0),(D,0),(L,0)]
 
--- FIXME
--- defaultSpacing = 10
--- swapSpacing = sendMessage . ModifyWindowBorder $ \sp ->
---   if sp == a then b else a
---   where
---     a = (Border defaultSpacing defaultSpacing defaultSpacing defaultSpacing)
---     b = (Border 50 50 50 50)
-
 myLayoutHook -- {{{
   = avoidStruts
   . mouseResize

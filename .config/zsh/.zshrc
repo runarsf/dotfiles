@@ -82,7 +82,7 @@ zinit wait'1' lucid for \
 zinit ice wait'1' lucid
 zinit snippet OMZP::colored-man-pages
 # zinit snippet OMZP::per-directory-history
-# zinit light jimhester/per-directory-history
+zinit load jimhester/per-directory-history
 # _per-directory-history-set-global-history && _per_directory_history_is_global=true
 
 zinit ice as'null' sbin'bin/*' wait'1' lucid

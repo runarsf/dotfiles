@@ -1,0 +1,10 @@
+#!/bin/bash
+
+while IFS= read -r popup; do
+  window_name="$(printf '%s' "${popup}" | cut -c 2-)"
+  eww close "${window_name}"
+done < <(eww windows | grep '^\*pp-' 2>/dev/null)
+
+if test ! -z "${1}"; then
+  eww open "pp-${1}"
+fi
