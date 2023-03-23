@@ -175,3 +175,47 @@ scale.modifiable trough highlight {
     }
   }
 }
+
+
+.cal {
+  background-color: $background;
+  font-family: $font;
+  font-size: 18px;
+  font-weight: normal;
+
+  .cal-in {
+    padding: 0px 10px 0px 10px;
+    color: #bfc9db;
+
+    .cal {
+      &.highlight {
+        padding: 20px;
+      }
+
+      padding: 5px 5px 5px 5px;
+      margin-left: 10px;
+    }
+  }
+}
+
+calender {
+  color: $foreground;
+}
+calendar:selected {
+  background-color: $background-alt;
+  border-radius: 5px;
+}
+
+calendar.header {
+color: $blue-alt;
+font-weight: bold;
+}
+
+calendar.button {
+color: $foreground-alt;
+}
+
+calendar.highlight {
+color: $blue;
+font-weight: bold;
+}
