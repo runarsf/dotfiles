@@ -1,7 +1,9 @@
 #!/bin/bash
 
 # Optional, only som wms provide monitor with wmctrl
-monitor="${1:-}${1:+_}"
+# monitor="${1:-}${1:+_}"
+
+action="${1:-}"
 
 get_workspaces () {
   # Get id, active status (*=active), and name
@@ -32,33 +34,47 @@ get_yuck () {
   done
 }
 
-# wm="$(wmctrl -m | head -1 | awk '{print $2}')"
-# case "${wm}" in
-#   xmonad|LG3D)
-#     prop=_NET_ACTIVE_WINDOW;;
-#   *)
-#     prop="_NET_CURRENT_DESKTOP";;
-# esac
-prop="_NET_CURRENT_DESKTOP"
+listen () {
+  xprop -spy -root _NET_CURRENT_DESKTOP | while read -r; do
+    # If wses get left behind or updated weirdly, add a small delay to allow
+    # the wm some wiggle room to manage desktops.
+    # Might be required when using _NET_CURRENT_DESKTOP.
+    sleep .02
 
-xprop -spy -root "${prop}" | while read -r; do
-  # If wses get left behind or updated weirdly, add a small delay to allow
-  # the wm some wiggle room to manage desktops.
-  # Might be required when using _NET_CURRENT_DESKTOP.
-  sleep .02
+    # When listening for changed on _NET_ACTIVE_WINDOW, this prevents the CPU from
+    # going ham when switching between windows frquently by only updating eww when
+    # the desktop changes. We use both ID ($1) and name ($NF) because neither are
+    # technically unique, and will break the check if there are multiple desktops
+    # with the same name or ID.
+    # aws="$(wmctrl -d | awk '$2 == "*" { print $1 "-" $NF }')"
 
-  # When listening for changed on _NET_ACTIVE_WINDOW, this prevents the CPU from
-  # going ham when switching between windows frquently by only updating eww when
-  # the desktop changes. We use both ID ($1) and name ($NF) because neither are
-  # technically unique, and will break the check if there are multiple desktops
-  # with the same name or ID.
-  # aws="$(wmctrl -d | awk '$2 == "*" { print $1 "-" $NF }')"
+    # Only update eww when the currently active workspace is different from the
+    # previously active workspace.
+    # if test "${aws:-}" != "${paws:-}"; then
+    printf '%s\n' '(box :orientation "h" :class "workspaces" :space-evenly true :halign "start" :valign "center" :vexpand true '"$(get_yuck)"')'
+    # fi
 
-  # Only update eww when the currently active workspace is different from the
-  # previously active workspace.
-  # if test "${aws:-}" != "${paws:-}"; then
-  printf '%s\n' '(box :orientation "h" :class "workspaces" :space-evenly true :halign "start" :valign "center" :vexpand true '"$(get_yuck)"')'
-  # fi
+    # paws="${aws}"
+  done
+}
 
-  # paws="${aws}"
-done
+# This is probably very inefficient... but it works :⁾
+if test "${action}" = "up" -o "${action}" = "down"; then
+  get_workspaces | while read -r id active name; do
+    test "${active}" != "*" && continue
+
+    ws_tot="$(get_workspaces | wc -l)"
+    ws_tot="$((ws_tot - 1))"
+
+    test "${action}" = "up"   && new_id="$((id - 1))"
+    test "${action}" = "down" && new_id="$((id + 1))"
+    test "${new_id}" -lt "0" && new_id="0"
+    test "${new_id}" -ge "${ws_tot}" && new_id="${ws_tot}"
+
+    wmctrl -s "${new_id}"
+    break
+  done
+else
+  listen
+fi
+

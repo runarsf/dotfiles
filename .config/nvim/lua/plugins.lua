@@ -375,6 +375,17 @@ local plugins = function(use)
     requires = "kkharji/sqlite.lua",
   })
 
+  use({ "elkowar/yuck.vim",
+    ft = {"yuck", "lisp"},
+  })
+  use({ "vim-scripts/paredit.vim",
+    ft = {"yuck", "lisp"},
+  })
+  use({ "eraserhd/parinfer-rust",
+    run = "cargo build --release",
+    ft = {"yuck", "lisp"},
+  })
+
   use({ "NMAC427/guess-indent.nvim",
     config = function()
       require("guess-indent").setup({})

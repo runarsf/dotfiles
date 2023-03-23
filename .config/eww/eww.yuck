@@ -39,21 +39,16 @@
     (modules)))
 ; }}}
 
-; TODO Scroll to change ws
 (defwidget workspaces [] ; {{{
   (bbox :halign "start"
-    (bbox ; TODO Return only a set of boxes without a container box?
+    (bbox
       (eventbox
+        :onscroll "modules/workspaces {}"
         (literal :class "container"
-                 :content workspaces))))) ; :onscroll "modules/workspaces {}"
+                 :content workspaces)))))
     ;(delim)))
-    ;(bbox)))
-    ;  (bbutton :onclick "bspwm_rofi_layouts"))))
-    ;    (label :text bsplayout)))))
 (deflisten workspaces
   "modules/workspaces")
-; (defpoll bsplayout :interval "5s"
-;   "bspwm_rofi_layouts query")
 ; }}}
 
 (defwidget info [] ; {{{
@@ -67,8 +62,8 @@
         :halign "end"
         :style "padding-right: ${traysize}px;"
     (bbox :tooltip "Autorandr" ; {{{
-      (bbutton :onclick "rofi-autorandr" ; TODO Symlink rofi-autorandr into modules
-        ; TODO Middle-click autorandr --change
+      (bbutton :onclick "rofi-autorandr"
+               :onmiddleclick "autorandr --change"
         (label :text ""))) ; }}}
     (delim)
     (bbox :tooltip "Memory" ; {{{
@@ -144,6 +139,7 @@
       (hover-double :var revealtime
                     :varname "revealtime"
                     :class "condensed"
+                    :onclick "modules/popup calendar"
         (label :text "${date}-")
         (label :text ":${seconds}")
         (label :text time))))) ; }}}
@@ -220,10 +216,11 @@
         (children :nth 1)))))
 ; }}}
 
-(defwidget hover-double [var varname ?class ?duration] ; {{{
+(defwidget hover-double [var varname ?class ?duration ?onclick] ; {{{
   (eventbox :onhover "${eww} update ${varname}=true"
             :onhoverlost "${eww} update ${varname}=false"
             :class "${class} hover hover-double"
+            :onclick "${onclick ?: ':'}"
     (box :orientation "h"
          :space-evenly false
       (box :class "child"
@@ -304,3 +301,30 @@
 ;(defpoll ram :interval "25s"
 ;  "printf "%.0f\n" $(free -m | grep Mem | awk '{print ($3/$2)*100}')")
 ; }}}
+
+(defpoll day :interval "20h" "date '+%d'")
+(defpoll month :interval "20h" "date '+%m'")
+(defpoll year :interval "20h" "date '+%Y'")
+
+(defwidget cal []
+  (eventbox
+    :onhoverlost "modules/popup"
+    (box :class "cal"
+         :orientation "v"
+      (box :class "cal-in"
+        (calendar :class "cal"
+                  :day day
+                  :month month
+                  :show-day-names true
+                  :show-heading true
+                  :show-details true
+                  :show-week-numbers true
+                  :year year)))))
+
+(defwindow pop-calendar
+  :geometry (geometry :x "-20px"
+                      :y "7%"
+                      :anchor "top right"
+                      :width "270px"
+                      :height "60px")
+  (cal))
