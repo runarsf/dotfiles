@@ -39,6 +39,7 @@ import XMonad.Hooks.WindowSwallowing
 import XMonad.Hooks.Place
 import XMonad.Hooks.BorderPerWindow (defineBorderWidth, actionQueue)
 import XMonad.Hooks.SetWMName (setWMName)
+-- import XMonad.Hooks.UrgencyHook
 
 -- Util
 import XMonad.Util.EZConfig
@@ -345,7 +346,7 @@ myLayoutHook -- {{{
   . smartBorders
   . WN.windowNavigation
   . mkToggle (NBFULL ?? NOBORDERS ?? EOT) -- (NBFULL ?? NOBORDERS ?? EOT
-  . spacingRaw True (Border 0 0 0 0) False (Border 10 10 10 10) True -- Spacing between windows
+  . spacingRaw True (Border 0 0 0 0) True (Border 10 10 10 10) True -- Spacing between windows
   . gaps defaultGaps -- Gaps between screen and windows
   $ myLayouts
   where

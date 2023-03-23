@@ -100,7 +100,7 @@
         (metric :value backlight
                 :onchange "xbacklight -set {}")
         (label :text "盛"))) ; }}}
-    (bbox :tooltip "Battery" ; {{{
+    (bbox :tooltip "Battery ${battery}%" ; {{{
       (hover-left :var revealbat
                   :varname "revealbat"
         (bbox
@@ -108,7 +108,7 @@
           (dlabel :text {battery <= 15 ? "${battery}%" : ""}))
         (bbutton :onclick "power-man"
           (label :text "")))) ; }}}
-    (bbox :tooltip "Volume" ; {{{
+    (bbox :tooltip "Volume ${volume}%" ; {{{
       (hover-left :var revealvol
                   :varname "revealvol"
         (metric :value volume
