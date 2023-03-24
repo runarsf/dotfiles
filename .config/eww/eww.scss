@@ -21,14 +21,12 @@ $magenta: #e278db;
 $cyan: #89B8C2;
 $purple: #a07acf;
 
-// $font: 'cozette';
-// $font-alt: 'rissole';
 $font: 'JetBrainsMono NF';
-$font-alt: $font;
 // }}}
 
 * {
   all: unset;
+  font-family: $font;
 }
 
 window {
@@ -37,7 +35,6 @@ window {
 }
 
 .bar {
-  font-family: $font;
   font-size: 1rem;
   border-radius: 5px;
   border: 1px solid $background-alt;
@@ -83,7 +80,6 @@ button:hover label {
 // }
 
 .info {
-  font-family: $font-alt;
   font-size: 0.9rem;
 }
 
@@ -179,7 +175,6 @@ scale.modifiable trough highlight {
 
 .cal {
   background-color: $background;
-  font-family: $font;
   font-size: 18px;
   font-weight: normal;
 

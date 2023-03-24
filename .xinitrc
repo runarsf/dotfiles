@@ -34,6 +34,7 @@ fi
 xset +fp "${HOME:-~}/.local/share/fonts/"
 xset +fp "${HOME:-~}/.fonts/"
 xset fp rehash
+# fc-cache -f &
 
 # Increase key repeat rate
 xset r rate 300 50 &

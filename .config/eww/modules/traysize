@@ -6,9 +6,10 @@
 #   for i in {1..5}; do yad --notification --command="notify-send -t 500 'click'" &; done
 
 get_tray_size() {
-  xprop -name panel \
+  size="$(xprop -name panel \
     | grep 'program specified minimum size' \
-    | cut -d ' ' -f 5
+    | cut -d ' ' -f 5)"
+  printf '%s\n' "${size:-0}"
 }
 
 # Initial tray size

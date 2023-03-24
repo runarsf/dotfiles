@@ -113,7 +113,7 @@ confirm msg cb = do
 myStartupHook :: X () -- {{{
 myStartupHook = do
   spawn "(pgrep eww && eww reload) || (eww close bar || killall -q eww; eww open bar)"
-  spawn "killall -q trayer; trayer --edge top --align right --SetDockType true --SetPartialStrut false --expand true --widthtype request --transparent true --alpha 255 --tint 0x0D1117 --height 30 --heighttype pixel --monitor 'primary' --margin 20 --distance 11 --padding 0 &"
+  spawn "killall -q trayer; trayer --edge top --align right --SetDockType true --SetPartialStrut false --expand true --widthtype request --transparent true --alpha 0 --tint 0x0D1117 --height 30 --heighttype pixel --monitor 'primary' --margin 20 --distance 11 --padding 0 &"
   spawn "(nitrogen --restore || (~/.fehbg || feh --bg-scale ~/.config/wall.jpg)) &"
   setWMName "LG3D"
   -- spawn "killall -q picom; picom -fcCGb --xrender-sync-fence &"
@@ -190,7 +190,7 @@ myKeys =
   , ("M-M1-b", sendMessage ToggleStruts)
   , ("M-M1-<Down>", sendMessage $ weakModifyGaps decGaps)
   , ("M-M1-<Up>", sendMessage $ weakModifyGaps incGaps)
-  , ("M-m", sendMessage $ IncMasterN $ 1)
+  , ("M-m", sendMessage $ IncMasterN $ 1)
   , ("M-S-m", sendMessage $ IncMasterN $ -1)
   , ("M-t", withFocused $ windows . W.sink)
   -- https://stackoverflow.com/questions/7603509/haskell-syntax-for-or-in-case-expressions
@@ -279,9 +279,10 @@ myManageHook = (isDialog --> doF W.shiftMaster <+> doF W.swapDown)
     -- <+> placeHook myPlaceHook
     <+> namedScratchpadManageHook myScratchpads
     <>  let w = workspaces myConfig in composeAll
-    [ className =? "Gimp"                     --> doFloat
-    , className =? "Sxiv"                     --> doFloat
+    [ className =? "Gimp"                     --> doCenterFloat
+    , className =? "Sxiv"                     --> doCenterFloat
     , appName   =? "scratchpad"               --> doCenterFloat
+    , className =? "Dragon-drop"              --> doCenterFloat
     , className =? "Pavucontrol"              --> doShift (w !! 6)
     , className =? "easyeffects"              --> doShift (w !! 6)
     , className =? "discord"                  --> doShift (w !! 1)
@@ -294,8 +295,8 @@ myManageHook = (isDialog --> doF W.shiftMaster <+> doF W.swapDown)
     , appName   =? "panel"                    --> doLower
     , resource  =? "desktop_window"           --> doIgnore
     ,(className ~? "firefox"                  <&&>
-      resource  =? "Dialog")                  --> doFloat
-    , isDialog                                --> doFloat
+      resource  =? "Dialog")                  --> doCenterFloat
+    , isDialog                                --> doCenterFloat
     , fmap not willFloat                      --> insertPosition Below Newer
     , isInProperty "_NET_WM_WINDOW_TYPE" "_NET_WM_WINDOW_TYPE_UTILITY" --> defineBorderWidth 0
     ]

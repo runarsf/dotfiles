@@ -9,7 +9,7 @@ set -euo pipefail
 # ??? Use xset dpms force standby for turning off screen?
 # TODO Make more modular: custom_timings=("15" "systemctl suspend")
 
-# This script is intended to be scheduled by cron or polybar.
+# This script is intended to be scheduled by cron or a system bar (eww, polybar, ...).
 
 # */5 * * * * /bin/bash /path/to/power-man
 
@@ -42,22 +42,23 @@ pm::utils::check_deps () { # <dependencies:@String> -> Void {{{
   done
   if test -n "${_missing}"; then
     notify-send "power-man" "Missing required dependencies:${_missing}\n"
-    printf "Missing required dependencies:${_missing}\n"
+    printf '%s\n' "Missing required dependencies:${_missing}"
     exit 1
   fi
 } # }}}
 
-pm::utils::procgrep () { # <process_name:String> -> Void {{{
+pm::utils::procgrep () { # <process_name:String> <host_process:String> -> Void {{{
   local -r _process="${1}"
+  local -r _host_process="${2:-}"
   # This is, AFAIK, the only clean way of actually detect a running process from a program name.
   #   `pgrep -fl`: pgrep for -full process names (not just first 15 chars) and -list the process names as well
   #   `printf "${1}" | awk '{print $1}'`: using the first argument passed to the script
   #   `awk '{print $2}'`: remove the PIDs so you're left with the process names
   #   `grep "$(printf "${1}" | awk '{print $1}' | head -c 15)"`: grep for the process name passed to the script (first 15 chars) in case the script is open in vim or other program has similar name
-  if test -z "$(pgrep -fl "$(printf "${_process}" \
+  if test -z "$(pgrep -fl "$(printf '%s' "${_process}" \
               | awk '{print $1}')" \
               | awk '{print $2}' \
-              | grep "$(printf "${_process}" \
+              | grep "$(printf '%s' "${_host_process:-${_process}}" \
               | awk '{print $1}' \
               | head -c 15)")"; then
     return 1
@@ -84,10 +85,10 @@ pm::utils::uq () { # <data|String> <key:String> -> String {{{
 
 pm::polybarpp () { # <percentage:Int> -> Void {{{
   # https://github.com/polybar/polybar/wiki/Formatting#foreground-color-f
-  local -r _battery_level="$(pm::utils::float2int "${1:?}")"
-  local -r _low_threshold="$(pm::utils::float2int "${2:?}")"
-  local -r _full_threshold="$(pm::utils::float2int "${3:?}")"
-  local -r _battery_state="${4:?}"
+  local -r _battery_level="$(pm::utils::float2int "${1:-}")"
+  local -r _low_threshold="$(pm::utils::float2int "${2:-}")"
+  local -r _full_threshold="$(pm::utils::float2int "${3:-}")"
+  local -r _battery_state="${4:-}"
 
   local -r _icon_urgent=' '
   local -r _icon_charging=' '
@@ -146,7 +147,7 @@ pm::battery () { # <warn_percentage:Int> -> String {{{
   if test "${FORMAT}" = "true"; then
     pm::polybarpp "${_battery_level}" "${_warn_percentage}" "${_full_threshold}" "${_battery_state}"
   else
-    printf '%s\n' "${_battery_level}"
+    printf '%s\n' "${_battery_level:-100}"
   fi
 
   # TODO Only send one notif
@@ -156,13 +157,13 @@ pm::battery () { # <warn_percentage:Int> -> String {{{
   if test "${_battery_state}" = "discharging" \
      && ( test "${_battery_level}" -le "${_warn_percentage}" \
        || ( test "${_battery_time_int}" -le "${_warn_minutes}" -a "${_battery_time_unit}" = "minutes" ) ); then
-    DISPLAY=:0 notify-send -u critical --hint int:transient:1 "Battery low!" "Battery level is ${_battery_level}%, you have ${_battery_time} left"
+    DISPLAY=:0 notify-send -u critical --hint int:transient:1 --replace-id "1337" "Battery low!" "Battery level is ${_battery_level}%, you have ${_battery_time} left"
   fi
 } # }}}
 
 pm::utils::cleanup () { # {{{
   if ! rmdir "${LOCKDIR:?}" >/dev/null 2>&1; then
-    test "${DEBUG}" = "1" && printf "[PM] Failed to remove lock directory\n"
+    test "${DEBUG}" = "1" && printf '%s\n' "[PM] Failed to remove lock directory"
     # Failed to remove lock directory
     exit 1
   fi
@@ -175,7 +176,7 @@ pm::utils::daemonize () { # {{{
   # [[ $running > 1 ]] && exit;
   if ! mkdir "${LOCKDIR}" >/dev/null 2>&1; then
     # Couldn't acquire lock
-    test "${DEBUG}" = "1" && printf "[PM] Couldn't acquire lock\n"
+    test "${DEBUG}" = "1" && printf '%s\n' "[PM] Couldn't acquire lock"
     exit 1
   fi
   # Acquired lock
@@ -191,6 +192,33 @@ pm::utils::daemonize () { # {{{
     power-man
   done
 } # }}}
+
+pm::utils::caffeine () { # <amount:Int|Str> -> Void {{{
+  local -r _amount="${1:-1}"
+
+  pm::utils::caffeine::caffeinate () { # {{{
+    for _angle in 0 90 180 270; do
+      # xdotool keydown Control; xdotool keyup Control
+      xdotool mousemove_relative --polar "${_angle}" 0.1
+    done
+  } # }}}
+
+  # while true; do sleep 5; done
+  # case "${_amount}" in
+  #   start)
+  #     while true; do
+  #       pm::utils::caffeine::caffeinate
+  #     done;;
+  #   stop)
+  # esac
+  # FIXME Why the actual #### doesn't this work. It should. It is correct.
+  # if pm::utils::procgrep "power-man" "bash"; then
+  #   echo running
+  # else
+  #   echo not running
+  # fi
+} # }}}
+pm::utils::caffeine
 
 pm::screensaver () { # <dim_after:Number> <dim_level:Number> <lock_after:Number> <lock_command:String> <lock_process:String> <suspend_after:Number> <suspend_method:String[sleep|hibernate]> -> Void {{{
   local -r _dim_after="$(pm::utils::float2int "$((${1:-5} * 60000))")"
@@ -210,7 +238,7 @@ pm::screensaver () { # <dim_after:Number> <dim_level:Number> <lock_after:Number>
   # Restore {{{
   if test -f /tmp/power-man-backlight.dat \
        -a "${_idle_time}" -le "${_dim_after}"; then
-    test "${DEBUG}" = "1" && printf '[PM] Restoring monitor brightness\n'
+    test "${DEBUG}" = "1" && printf '%s\n' '[PM] Restoring monitor brightness'
     # FIXME xbacklight > xrandr
     xbacklight -set "$(cat /tmp/power-man-backlight.dat)"
     #while IFS= read -r _monitor; do
@@ -226,7 +254,7 @@ pm::screensaver () { # <dim_after:Number> <dim_level:Number> <lock_after:Number>
        -a "${_idle_time}" -gt "${_dim_after}" \
        -a "${_dim_after}" -ne "0" \
        -a "${_media}" != "Playing"; then
-    test "${DEBUG}" = "1" && printf '[PM] Dimming monitor\n'
+    test "${DEBUG}" = "1" && printf '%s\n' '[PM] Dimming monitor'
     printf '%s\n' "$(pm::utils::float2int "$(xbacklight -get)")" > /tmp/power-man-backlight.dat
     xbacklight -set "${_dim_level}"
     #printf '%s\n' "$(pm::utils::float2int "$(brightnessctl get)")" > /tmp/power-man-backlight.dat
@@ -241,7 +269,7 @@ pm::screensaver () { # <dim_after:Number> <dim_level:Number> <lock_after:Number>
      && test "${_idle_time}" -gt "${_lock_after}" \
           -a "${_lock_after}" -ne "0" \
           -a "${_media}" != "Playing"; then
-    test "${DEBUG}" = "1" && printf '[PM] Locking screen\n'
+    test "${DEBUG}" = "1" && printf '%s\n' '[PM] Locking screen'
     command "${_lock_base}" ${_lock_args} &
   fi # }}}
 
@@ -249,12 +277,9 @@ pm::screensaver () { # <dim_after:Number> <dim_level:Number> <lock_after:Number>
   if test "${_idle_time}" -gt "${_suspend_after}" \
        -a "${_suspend_after}" -ne "0" \
        -a "${_media}" != "Playing"; then
-    test "${DEBUG}" = "1" && printf '[PM] Suspending system\n'
+    test "${DEBUG}" = "1" && printf '%s\n' '[PM] Suspending system'
     # Reset idle time before sleeping to prevent auto-sleep when waking - https://askubuntu.com/a/1257610
-    for _angle in 0 90 180 270; do
-      xdotool mousemove_relative --polar "${_angle}" 0.1
-    done
-    # xdotool keydown Control; xdotool keyup Control
+    pm::utils::caffeine 1
     systemctl "${_suspend_method}"
   fi # }}}
 } # }}}
