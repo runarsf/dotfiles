@@ -161,12 +161,17 @@ myButtons conf@XConfig {XMonad.modMask = modm} = M.fromList $ -- {{{
 myKeys :: [([Char], X ())] -- {{{
 myKeys =
   [ ("M-<Return>", spawn $ terminal myConfig)
-  , ("M-n", namedScratchpadAction myScratchpads "terminal")
-  , ("M-p", namedScratchpadAction myScratchpads "calculator")
+  , ("M-n", do
+    namedScratchpadAction myScratchpads "terminal"
+    mouseFollowFocus)
+  , ("M-p", do
+    namedScratchpadAction myScratchpads "calculator"
+    mouseFollowFocus)
   , ("M-S-r", spawn "xmonad --recompile && xmonad --restart")
   , ("M-S-<Return>", promote)
   , ("M-S-f", floatOrNot (withFocused $ windows . W.sink) (withFocused centreFloat'))
   , ("M-q", kill)
+  , ("M-S-q", spawn "xkill")
   , ("M-a", windows copyToAll)
   , ("M-S-a",  killAllOtherCopies)
   , ("M-d", spawn "rofi -show")
