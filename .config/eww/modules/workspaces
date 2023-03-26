@@ -9,6 +9,7 @@ get_workspaces () {
   # Get id, active status (*=active), and name
   # Remove NSP-workpace
   # Only get active monitor if defined
+  # _NET_DESKTOP_NAMES
   wmctrl -d \
     | awk '{ print $1 " " $2 " " $NF }' \
     | grep -v "NSP" \
@@ -20,6 +21,8 @@ get_yuck () {
     # Get content after '_' (if monitor is defined)
     name="$(printf '%s\n' "${name}" | cut -d '_' -f2)"
     class=""
+
+    # TODO Use _XMONAD_VISIBLE_WORKSPACES to highlight visible workspaces (on different monitors)
 
     # Add class if workspace is active
     test "${active}" = "*" && class="${class:-}${class:+ }active"
@@ -35,7 +38,7 @@ get_yuck () {
 }
 
 listen () {
-  xprop -spy -root _NET_CURRENT_DESKTOP | while read -r; do
+  xprop -spy -root _NET_CURRENT_DESKTOP _NET_CLIENT_LIST | while read -r; do
     # If wses get left behind or updated weirdly, add a small delay to allow
     # the wm some wiggle room to manage desktops.
     # Might be required when using _NET_CURRENT_DESKTOP.
@@ -46,15 +49,19 @@ listen () {
     # the desktop changes. We use both ID ($1) and name ($NF) because neither are
     # technically unique, and will break the check if there are multiple desktops
     # with the same name or ID.
-    # aws="$(wmctrl -d | awk '$2 == "*" { print $1 "-" $NF }')"
+    ws_id="$(wmctrl -d | awk '$2 == "*" { print $1 }')"
+    ws_name="$(wmctrl -d | awk '$2 == "*" { print $NF }')"
+    ws="${ws_id}-${ws_name}"
+    nodes="$(wmctrl -l | awk '{print "(" $2}' | tr '\n' ')' | grep -o "(${ws_id})" | wc -l)"
 
     # Only update eww when the currently active workspace is different from the
     # previously active workspace.
-    # if test "${aws:-}" != "${paws:-}"; then
-    printf '%s\n' '(box :orientation "h" :class "workspaces" :space-evenly true :halign "start" :valign "center" :vexpand true '"$(get_yuck)"')'
-    # fi
+    if test "${ws:-}" != "${previous_ws}" -o "${nodes:-0}" -lt "${previous_nodes:-0}"; then
+      printf '%s\n' '(box :orientation "h" :class "workspaces" :space-evenly true :halign "start" :valign "center" :vexpand true '"$(get_yuck)"')'
+    fi
 
-    # paws="${aws}"
+    previous_ws="${ws}"
+    previous_nodes="${nodes}"
   done
 }
 
@@ -68,7 +75,7 @@ if test "${action}" = "up" -o "${action}" = "down"; then
 
     test "${action}" = "up"   && new_id="$((id - 1))"
     test "${action}" = "down" && new_id="$((id + 1))"
-    test "${new_id}" -lt "0" && new_id="0"
+    test "${new_id}" -lt "0"         && new_id="0"
     test "${new_id}" -ge "${ws_tot}" && new_id="${ws_tot}"
 
     wmctrl -s "${new_id}"

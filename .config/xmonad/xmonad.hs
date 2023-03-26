@@ -84,7 +84,6 @@ main = xmonad
      . ewmh
      . pagerHints
      $ myConfig
-     -- . withEasySB (statusBarProp "xmobar ${XDG_CONFIG_HOME:-${HOME:-~}/.config}/xmobar/xmobarrc" (pure myXmobarPP)) defToggleStrutsKey
 -- }}}
 
 myConfig = def -- {{{
@@ -101,9 +100,6 @@ myConfig = def -- {{{
     , mouseBindings      = myButtons
     , startupHook        = myStartupHook
     , handleEventHook    = myEventHook
-    -- , handleEventHook    = serverModeEventHookCmd
-    --                          <+> serverModeEventHook
-    --                          <+> serverModeEventHookF "XMONAD_PRINT" (io . putStrLn)
     } `additionalKeysP` myKeys
 -- }}}
 
@@ -120,8 +116,8 @@ myStartupHook = do
   spawn "(pgrep eww && eww reload) || (eww close bar || killall -q eww; eww open bar)"
   spawn "killall -q trayer; trayer --edge top --align right --SetDockType true --SetPartialStrut false --expand true --widthtype request --transparent true --alpha 0 --tint 0x0D1117 --height 30 --heighttype pixel --monitor 'primary' --margin 20 --distance 11 --padding 0 &"
   spawn "(nitrogen --restore || (~/.fehbg || feh --bg-scale ~/.config/wall.jpg)) &"
-  setWMName "LG3D"
   -- spawn "killall -q picom; picom -fcCGb --xrender-sync-fence &"
+  setWMName "LG3D"
 -- }}}
 
 -- float toggle {{{
