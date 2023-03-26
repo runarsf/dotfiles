@@ -21,8 +21,10 @@ import XMonad.Actions.Promote
 import XMonad.Actions.FloatKeys
 import XMonad.Actions.MouseResize
 import XMonad.Actions.CopyWindow
+import XMonad.Actions.CycleWS
 import XMonad.Actions.CycleRecentWS
 import XMonad.Actions.ShowText
+import XMonad.Actions.EasyMotion (selectWindow)
 import qualified XMonad.Actions.FlexibleResize as Flex
 -- import XMonad.Actions.TopicSpace
 
@@ -51,8 +53,8 @@ import XMonad.Util.NamedScratchpad
 import XMonad.Layout.Spacing
 import XMonad.Layout.Gaps
 import XMonad.Layout.BinarySpacePartition
-import XMonad.Layout.MultiToggle
-import XMonad.Layout.MultiToggle.Instances
+-- import XMonad.Layout.MultiToggle
+-- import XMonad.Layout.MultiToggle.Instances
 import XMonad.Layout.Reflect
 import XMonad.Layout.Fullscreen
 import XMonad.Layout.ResizableThreeColumns
@@ -160,9 +162,6 @@ myButtons conf@XConfig {XMonad.modMask = modm} = M.fromList $ -- {{{
   ]
 -- }}}
 
-kill8 ss | Just w <- W.peek ss = (W.insertUp w) $ W.delete w ss
-         | otherwise = ss
-
 myKeys :: [([Char], X ())] -- {{{
 myKeys =
   [ ("M-<Return>", spawn $ terminal myConfig)
@@ -172,13 +171,14 @@ myKeys =
   , ("M-S-<Return>", promote)
   , ("M-S-f", floatOrNot (withFocused $ windows . W.sink) (withFocused centreFloat'))
   , ("M-q", kill)
-  , ("M-a", sequence_ $ [windows $ copy i | i <- XMonad.workspaces myConfig])
-  , ("M-S-a", windows $ kill8) -- FIXME don't un-float when un-pinning
+  , ("M-a", windows copyToAll)
+  , ("M-S-a",  killAllOtherCopies)
   , ("M-d", spawn "rofi -show")
   , ("M-S-d", spawn "dmenu_run")
   , ("M-e", spawn "xdg-open ~")
   , ("M-S-c", spawn "toggleprogram picom -fcCGb --xrender-sync-fence")
   , ("M-x", spawn "betterlockscreen --lock dimblur --blur 8")
+  , ("M-s", selectWindow def >>= (`whenJust` windows . W.focusWindow))
   , ("M1-p", spawn "screenshot -m region -t -c -o 'screenshot-xbackbone'")
   , ("M1-S-p", spawn "screenshot -m region -c")
   , ("M-<Tab>", toggleRecentWS)
@@ -230,14 +230,16 @@ myKeys =
 -- }}}
 
 myKeyMaps conf@XConfig {XMonad.modMask = modm} = M.fromList $ -- {{{
+  -- Move node to / focus different workspace (M-S-[0-9])
   [ ((m        .|. modm     , k                      ), windows $ f i)
     | (i, k) <- zip (XMonad.workspaces conf) ([xK_1 .. xK_9] ++ [xK_0])
     , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]
-  ] ++
-  [ ((m        .|. modm     , key                    ), screenWorkspace sc >>= flip whenJust (windows . f))
-    | (key, sc) <- zip [xK_w, xK_e, xK_r] [0..]
-    , (f, m)    <- [(W.view, 0), (W.shift, shiftMask)]
   ]
+  -- Move node to different screen (M-S-[wer])
+  -- [ ((m        .|. modm     , key                    ), screenWorkspace sc >>= flip whenJust (windows . f))
+  --   | (key, sc) <- zip [xK_w, xK_e, xK_r] [0..]
+  --   , (f, m)    <- [(W.view, 0), (W.shift, shiftMask)]
+  -- ]
 -- }}}
 
 myScratchpads :: [NamedScratchpad] -- {{{
@@ -272,35 +274,60 @@ avoidMaster = W.modify' $ \c -> case c of
 -- myPlaceHook :: Placement
 -- myPlaceHook = inBounds $ smart(1, 1)
 
+-- TODO Copy all PiP windows to all screens
+-- TODO https://stackoverflow.com/a/74252752
+-- NOTE https://gist.github.com/tylevad/3146111
+role = stringProperty "WM_WINDOW_ROLE"
+-- wtype = stringProperty "_NET_WM_WINDOW_TYPE"
+-- wtype =? "_NET_WM_WINDOW_TYPE_UTILITY" --> dothisthing
+-- , isInProperty "_NET_WM_WINDOW_TYPE" "_NET_WM_WINDOW_TYPE_UTILITY" --> defineBorderWidth 0
+
 myManageHook :: ManageHook -- {{{
-myManageHook = (isDialog --> doF W.shiftMaster <+> doF W.swapDown)
-    <+> (fmap not isDialog --> doF avoidMaster)
-    <+> insertPosition Below Newer
+myManageHook =
+    -- insertPosition Below Newer
     -- <+> placeHook myPlaceHook
-    <+> namedScratchpadManageHook myScratchpads
+    namedScratchpadManageHook myScratchpads
     <>  let w = workspaces myConfig in composeAll
-    [ className =? "Gimp"                     --> doCenterFloat
+    [ fmap not willFloat                      --> insertPosition Below Newer
+    , fmap not isDialog                       --> doF avoidMaster
+    , isFullscreen                            --> doFullFloat
+    , isDialog                                --> doCenterFloat
+    , isDialog                                --> doF W.shiftMaster <+> doF W.swapDown
+    , appName   =? "panel"                    --> doLower
+    , resource  =? "desktop_window"           --> doIgnore
+    , role      ~? "PictureInPicture"         --> doPipFloat
+    , className ~? "eww-"                     --> doLower
+    , className =? "PrimeNote"                --> doFloat
+    , className =? "Gimp"                     --> doCenterFloat
     , className =? "Sxiv"                     --> doCenterFloat
     , appName   =? "scratchpad"               --> doCenterFloat
     , className =? "Dragon-drop"              --> doCenterFloat
-    , className =? "Pavucontrol"              --> doShift (w !! 6)
-    , className =? "easyeffects"              --> doShift (w !! 6)
-    , className =? "discord"                  --> doShift (w !! 1)
-    , className =? "VirtualBox Manager"       --> doShift (w !! 4)
-    , className =? "org.remmina.Remmina"      --> doShift (w !! 4)
-    , className =? "Steam"                    --> doShift (w !! 3)
-    , className =? "spotify"                  --> doShift (w !! 3)
-    , className ~? "eww-"                     --> doLower
-    , className =? "PrimeNote"                --> doFloat
-    , appName   =? "panel"                    --> doLower
-    , resource  =? "desktop_window"           --> doIgnore
+    , className =? "Blueman-manager"          --> doCenterFloat
+    , className =? "ColorGrab"                --> doCenterFloat
+    ,(className =? "discord"                  <&&>
+      fmap (not . (" - Discord" `isSuffixOf`)) title ) --> doPipFloat
     ,(className ~? "firefox"                  <&&>
       resource  =? "Dialog")                  --> doCenterFloat
-    , isDialog                                --> doCenterFloat
-    , fmap not willFloat                      --> insertPosition Below Newer
-    , isInProperty "_NET_WM_WINDOW_TYPE" "_NET_WM_WINDOW_TYPE_UTILITY" --> defineBorderWidth 0
+    , className =? "discord"                  --> doShift (w !! 1)
+    , className =? "Steam"                    --> doShift (w !! 3)
+    , className =? "spotify"                  --> doShift (w !! 3)
+    , className =? "VirtualBox Manager"       --> doShift (w !! 4)
+    , className =? "org.remmina.Remmina"      --> doShift (w !! 4)
+    , title     =? "AudioRelay"               --> doShift (w !! 6)
+    , className =? "Pavucontrol"              --> doShift (w !! 6)
+    , className =? "easyeffects"              --> doShift (w !! 6)
+    , className =? "Blueman-manager"          --> doShift (w !! 6)
+    , className =? "Carla2"                   --> doShift (w !! 6)
+    , className =? "helvum"                   --> doShift (w !! 6)
     ]
 -- }}}
+
+doPipFloat = (customFloating $ W.RationalRect x y w h)
+  where
+    w = (1/4)
+    h = (1/4)
+    x = 1 - w - 0.005
+    y = 1 - h - 0.005
 
 toggleFull = withFocused (\windowId -> do
     { floats <- gets (W.floating . windowset);
@@ -340,7 +367,7 @@ myLayoutHook -- {{{
   . windowArrange
   . smartBorders
   . WN.windowNavigation
-  . mkToggle (NBFULL ?? NOBORDERS ?? EOT) -- (NBFULL ?? NOBORDERS ?? EOT
+  -- . mkToggle (NBFULL ?? NOBORDERS ?? EOT) -- (NBFULL ?? NOBORDERS ?? EOT
   . spacingRaw True (Border 0 0 0 0) True (Border 10 10 10 10) True -- Spacing between windows
   . gaps defaultGaps -- Gaps between screen and windows
   $ myLayouts

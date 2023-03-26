@@ -8,6 +8,7 @@
 (defvar revealcpu false)
 (defvar revealdisk false)
 (defvar revealtime false)
+(defvar revealnightlight false)
 (defvar reveallight false)
 (defvar revealpower false)
 (defvar revealpowera false)
@@ -89,6 +90,12 @@
                   :varname "revealdisk"
         (metric :value {round((1 - (EWW_DISK["/"].free / EWW_DISK["/"].total)) * 100, 0)})
         (label :text "💾"))) ; }}}
+    (bbox :tooltip "Night Light" ; {{{
+      (hover-left :var revealnightlight
+                  :varname "revealnightlight"
+        (metric :value backlight
+                :onchange "xbacklight -set {}")
+        (label :text "💡"))) ; }}}
     (bbox :tooltip "Backlight" ; {{{
       (hover-left :var reveallight
                   :varname "reveallight"
@@ -274,7 +281,7 @@
 (deflisten traysize
   "modules/traysize")
 
-  ; https://askubuntu.com/a/523899
+; https://askubuntu.com/a/523899
 (defpoll title :initial ""
                :interval "250ms"
   "xdotool getactivewindow getwindowname | awk -v len=60 '{ if (length($0) > len) print substr($0, 1, len-1) \"…\"; else print; }'")

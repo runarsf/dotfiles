@@ -1,0 +1,10 @@
+#!/bin/sh
+
+# Kill
+redshift -x
+
+# Print
+redshift -p
+
+# Set
+redshift -r -O 1000-25000
