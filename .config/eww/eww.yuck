@@ -46,8 +46,9 @@
       (eventbox
         :onscroll "modules/workspaces {}"
         (literal :class "container"
-                 :content workspaces)))))
-    ;(delim)))
+                 :content workspaces)))
+    (bbox :tooltip "Layout" :class "hover"
+      (label :text layout))))
 (deflisten workspaces
   "modules/workspaces")
 ; }}}
@@ -280,6 +281,9 @@
 
 (deflisten traysize
   "modules/traysize")
+
+(deflisten layout
+  "modules/layout")
 
 ; https://askubuntu.com/a/523899
 (defpoll title :initial ""

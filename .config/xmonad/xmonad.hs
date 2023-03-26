@@ -14,16 +14,19 @@ import System.Exit
 -- Data
 import Data.List as L
 import Data.Ratio
+import Data.Word (Word32)
 import qualified Data.Map as M
 
 -- Actions
+import XMonad.Actions.Warp
 import XMonad.Actions.Promote
 import XMonad.Actions.FloatKeys
 import XMonad.Actions.MouseResize
 import XMonad.Actions.CopyWindow
-import XMonad.Actions.CycleWS
+import XMonad.Actions.CycleWS as CycleWS
 import XMonad.Actions.CycleRecentWS
 import XMonad.Actions.ShowText
+import XMonad.Actions.FloatSnap
 import XMonad.Actions.EasyMotion (selectWindow)
 import qualified XMonad.Actions.FlexibleResize as Flex
 -- import XMonad.Actions.TopicSpace
@@ -39,6 +42,7 @@ import XMonad.Hooks.StatusBar.PP
 import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.WindowSwallowing
 import XMonad.Hooks.Place
+import XMonad.Hooks.TaffybarPagerHints (pagerHints)
 import XMonad.Hooks.BorderPerWindow (defineBorderWidth, actionQueue)
 import XMonad.Hooks.SetWMName (setWMName)
 -- import XMonad.Hooks.UrgencyHook
@@ -53,8 +57,8 @@ import XMonad.Util.NamedScratchpad
 import XMonad.Layout.Spacing
 import XMonad.Layout.Gaps
 import XMonad.Layout.BinarySpacePartition
--- import XMonad.Layout.MultiToggle
--- import XMonad.Layout.MultiToggle.Instances
+import XMonad.Layout.MultiToggle
+import XMonad.Layout.MultiToggle.Instances
 import XMonad.Layout.Reflect
 import XMonad.Layout.Fullscreen
 import XMonad.Layout.ResizableThreeColumns
@@ -78,6 +82,7 @@ main = xmonad
      $ docks
      . ewmhFullscreen
      . ewmh
+     . pagerHints
      $ myConfig
      -- . withEasySB (statusBarProp "xmobar ${XDG_CONFIG_HOME:-${HOME:-~}/.config}/xmobar/xmobarrc" (pure myXmobarPP)) defToggleStrutsKey
 -- }}}
@@ -93,11 +98,9 @@ myConfig = def -- {{{
     , workspaces         = map show $ [1..9::Int]++[0::Int]::[WorkspaceId]
     , normalBorderColor  = "#383a4a"::String
     , focusedBorderColor = "#306998"::String
-    , keys               = myKeyMaps
     , mouseBindings      = myButtons
     , startupHook        = myStartupHook
-    , handleEventHook    = handleTimerEvent
-    -- , handleEventHook    = myServerModeEventHook
+    , handleEventHook    = myEventHook
     -- , handleEventHook    = serverModeEventHookCmd
     --                          <+> serverModeEventHook
     --                          <+> serverModeEventHookF "XMONAD_PRINT" (io . putStrLn)
@@ -122,7 +125,6 @@ myStartupHook = do
 -- }}}
 
 -- float toggle {{{
-centreRect = W.RationalRect 0.25 0.25 0.5 0.5
 
 -- If the window is floating then (f), if tiled then (n)
 floatOrNot f n = withFocused $ \windowId -> do
@@ -138,7 +140,7 @@ centreFloat win = do
     return ()
 
 -- Float a window in the centre
-centreFloat' w = windows $ W.float w centreRect
+centreFloat' w = windows $ W.float w (W.RationalRect 0.25 0.25 0.5 0.5)
 
 -- Make a window my 'standard size' (half of the screen) keeping the centre of the window fixed
 standardSize win = do
@@ -154,11 +156,9 @@ getActiveLayoutDescription = do
     return $ description . W.layout . W.workspace . W.current $ workspaces
 
 myButtons conf@XConfig {XMonad.modMask = modm} = M.fromList $ -- {{{
-  [ ((modm, button1), \w -> focus w >> mouseMoveWindow w
-                                    >> windows W.shiftMaster)
-  , ((modm, button2), windows . (W.shiftMaster .) . W.focusWindow)
-  , ((modm, button3), \w -> focus w >> Flex.mouseResizeWindow w
-                                    >> windows W.shiftMaster)
+  [ ((modm,               button1), (\w -> focus w >> mouseMoveWindow w >> afterDrag (snapMagicMove (Just 25) (Just 25) w)))
+  , ((modm .|. shiftMask, button1), (\w -> focus w >> mouseMoveWindow w >> afterDrag (snapMagicResize [L,R,U,D] (Just 500) (Just 500) w)))
+  , ((modm,               button3), (\w -> focus w >> mouseResizeWindow w >> afterDrag (snapMagicResize [R,D] (Just 25) (Just 25) w)))
   ]
 -- }}}
 
@@ -192,24 +192,28 @@ myKeys =
   , ("M-M1-<Up>", sendMessage $ weakModifyGaps incGaps)
   , ("M-m", sendMessage $ IncMasterN $ 1)
   , ("M-S-m", sendMessage $ IncMasterN $ -1)
-  , ("M-t", withFocused $ windows . W.sink)
-  -- https://stackoverflow.com/questions/7603509/haskell-syntax-for-or-in-case-expressions
-  , ("M-<Right>", sendMessage $ WN.Go R)
-  , ("M-<Left>", sendMessage $ WN.Go L)
-  , ("M-o", do
+  , ("M-S-o", do
     layout <- getActiveLayoutDescription
     flashText def 1 layout)
-  , ("M-S-o", swapGaps)
+  , ("M-o", swapGaps)
+  , ("M-<Left>", do
+    sendMessage $ WN.Go L
+    mouseFollowFocus)
+  , ("M-<Right>", do
+    sendMessage $ WN.Go R
+    mouseFollowFocus)
   , ("M-<Up>", do
     layout <- getActiveLayoutDescription
     case layout of
       x | elem x ["Spacing Monocle","Spacing Dual"] -> windows W.focusUp
-      _                                  -> sendMessage $ WN.Go U)
+      _                                             -> sendMessage $ WN.Go U
+    mouseFollowFocus)
   , ("M-<Down>", do
     layout <- getActiveLayoutDescription
     case layout of
       x | elem x ["Spacing Monocle","Spacing Dual"] -> windows W.focusDown
-      _                                  -> sendMessage $ WN.Go D)
+      _                                  -> sendMessage $ WN.Go D
+    mouseFollowFocus)
   , ("M-S-<Right>", floatOrNot (withFocused (keysMoveWindow ( 20,  0))) (sendMessage $ WN.Swap R))
   , ("M-S-<Left>",  floatOrNot (withFocused (keysMoveWindow (-20,  0))) (sendMessage $ WN.Swap L))
   , ("M-S-<Up>",    floatOrNot (withFocused (keysMoveWindow (  0,-20))) (sendMessage $ WN.Swap U))
@@ -219,27 +223,26 @@ myKeys =
   , ("M-C-<Up>",    floatOrNot (withFocused (keysResizeWindow (  0, -20) (0, 0))) (sendMessage MirrorExpand))
   , ("M-C-<Down>",  floatOrNot (withFocused (keysResizeWindow (  0,  20) (0, 0))) (sendMessage MirrorShrink))
   , ("M-S-e", confirm "Exit" $ io (exitWith ExitSuccess))
-  , ("<XF86AudioNext>", spawn "playerctl next")
-  , ("<XF86AudioPrev>", spawn "playerctl previous")
-  , ("<XF86AudioLowerVolume>", spawn "pactl set-sink-volume 2 -5%")
-  , ("<XF86AudioRaiseVolume>", spawn "pactl set-sink-volume 2 +5%")
-  , ("<XF86AudioPause>", spawn "playerctl play-pause") ]
+  , ("<XF86AudioPause>",       spawn "playerctl play-pause")
+  , ("<XF86AudioPlay>",        spawn "playerctl play-pause")
+  , ("<XF86AudioNext>",        spawn "playerctl next")
+  , ("<XF86AudioPrev>",        spawn "playerctl previous")
+  , ("<XF86AudioLowerVolume>", spawn "pactl set-sink-volume @DEFAULT_SINK@ -5%")
+  , ("<XF86AudioRaiseVolume>", spawn "pactl set-sink-volume @DEFAULT_SINK@ +5%")
+  ] ++
+  [(mask ++ "M-" ++ key, action tag)
+        | (tag, key) <- zip (workspaces myConfig) (map show $ [1..9::Int]++[0::Int])
+        , (mask, action) <- [ ("", windows . W.greedyView), ("S-", windows . W.shift) ]
+  ] ++
+  [(mask ++ "M-" ++ [key], screenWorkspace scr >>= flip whenJust (windows . action))
+        | (key, scr) <- zip "tyu" [2,0,1]
+        , (action, mask) <- [(W.view, ""), (W.shift, "S-")]]
   where
       decGaps d i | d `elem` [L, R, U, D] = i - 10
       incGaps d i | d `elem` [L, R, U, D] = i + 10
--- }}}
-
-myKeyMaps conf@XConfig {XMonad.modMask = modm} = M.fromList $ -- {{{
-  -- Move node to / focus different workspace (M-S-[0-9])
-  [ ((m        .|. modm     , k                      ), windows $ f i)
-    | (i, k) <- zip (XMonad.workspaces conf) ([xK_1 .. xK_9] ++ [xK_0])
-    , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]
-  ]
-  -- Move node to different screen (M-S-[wer])
-  -- [ ((m        .|. modm     , key                    ), screenWorkspace sc >>= flip whenJust (windows . f))
-  --   | (key, sc) <- zip [xK_w, xK_e, xK_r] [0..]
-  --   , (f, m)    <- [(W.view, 0), (W.shift, shiftMask)]
-  -- ]
+      mouseFollowFocus = do
+        warpToWindow (1%2) (1%2)
+        banish UpperRight
 -- }}}
 
 myScratchpads :: [NamedScratchpad] -- {{{
@@ -265,17 +268,19 @@ myScratchpads = [ NS "terminal" spawnTerm findTerm manageTerm
              h = (2/3)
 -- }}}
 
--- https://wiki.haskell.org/Xmonad/Frequently_asked_questions
 avoidMaster :: W.StackSet i l a s sd -> W.StackSet i l a s sd
 avoidMaster = W.modify' $ \c -> case c of
      W.Stack t [] (r:rs) ->  W.Stack t [r] rs
      otherwise           -> c
 
--- myPlaceHook :: Placement
--- myPlaceHook = inBounds $ smart(1, 1)
+myPlaceHook :: Placement
+myPlaceHook =
+  inBounds
+  $ withGaps (defaultGapW, defaultGapW, defaultGapW, defaultGapW) (smart (1%2, 1%2))
 
 -- TODO Copy all PiP windows to all screens
 -- TODO https://stackoverflow.com/a/74252752
+-- TODO https://github.com/xmonad/xmonad/issues/152
 -- NOTE https://gist.github.com/tylevad/3146111
 role = stringProperty "WM_WINDOW_ROLE"
 -- wtype = stringProperty "_NET_WM_WINDOW_TYPE"
@@ -284,10 +289,10 @@ role = stringProperty "WM_WINDOW_ROLE"
 
 myManageHook :: ManageHook -- {{{
 myManageHook =
-    -- insertPosition Below Newer
-    -- <+> placeHook myPlaceHook
-    namedScratchpadManageHook myScratchpads
-    <>  let w = workspaces myConfig in composeAll
+    insertPosition Below Newer
+    <+> namedScratchpadManageHook myScratchpads
+    <+> placeHook myPlaceHook
+    <> let w = workspaces myConfig in composeAll
     [ fmap not willFloat                      --> insertPosition Below Newer
     , fmap not isDialog                       --> doF avoidMaster
     , isFullscreen                            --> doFullFloat
@@ -335,6 +340,10 @@ toggleFull = withFocused (\windowId -> do
         then withFocused $ windows . W.sink
         else withFocused $ windows . (flip W.float $ W.RationalRect 0 0 1 1) })
 
+myEventHook =
+  handleTimerEvent
+  <+> swallowEventHook (className =? "Alacritty") (return True)
+
 -- Layouts {{{
 masterStack = renamed [Replace "Tiled"]
             $ ResizableTall 1 (3/100) (1/2) []
@@ -351,7 +360,11 @@ monocle     = renamed [Replace "Monocle"]
 -- }}}
 
 -- https://www.reddit.com/r/xmonad/comments/ygp2ab/toggle_between_two_sets_of_gaps/
-defaultGaps = [(U,10), (R,10), (D,10), (L,10)]
+defaultGap :: Int
+defaultGap = 10
+defaultGapW :: Word32
+defaultGapW = fromIntegral defaultGap
+defaultGaps = [(U,defaultGap), (R,defaultGap), (D,defaultGap), (L,defaultGap)]
 swapGaps = sendMessage . ModifyGaps $ \gs ->
        if gs == a then b
   else if gs == b then c
@@ -367,7 +380,7 @@ myLayoutHook -- {{{
   . windowArrange
   . smartBorders
   . WN.windowNavigation
-  -- . mkToggle (NBFULL ?? NOBORDERS ?? EOT) -- (NBFULL ?? NOBORDERS ?? EOT
+  . mkToggle (NBFULL ?? NOBORDERS ?? EOT) -- (NBFULL ?? NOBORDERS ?? EOT
   . spacingRaw True (Border 0 0 0 0) True (Border 10 10 10 10) True -- Spacing between windows
   . gaps defaultGaps -- Gaps between screen and windows
   $ myLayouts
