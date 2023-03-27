@@ -1,10 +1,5 @@
 #!/bin/bash
 
-# Optional, only som wms provide monitor with wmctrl
-# monitor="${1:-}${1:+_}"
-
-action="${1:-}"
-
 get_workspaces () {
   # Get id, active status (*=active), and name
   # Remove NSP-workpace
@@ -13,7 +8,7 @@ get_workspaces () {
   wmctrl -d \
     | awk '{ print $1 " " $2 " " $NF }' \
     | grep -v "NSP" \
-    | grep "${monitor:-}"
+    | grep "${MONITOR:-}"
 }
 
 get_yuck () {
@@ -29,7 +24,7 @@ get_yuck () {
 
     # Add class if workspace has any nodes
     case "$(wmctrl -l | awk '{print "(" $2}' | tr '\n' ')')" in
-      *"(${id})"*) class="${class:-}${class:+ }occupied";;
+      *"(${id})"*) class="${class:-} occupied";;
     esac
 
     # Format workspace-box
@@ -49,15 +44,26 @@ listen () {
     # the desktop changes. We use both ID ($1) and name ($NF) because neither are
     # technically unique, and will break the check if there are multiple desktops
     # with the same name or ID.
-    ws_id="$(wmctrl -d | awk '$2 == "*" { print $1 }')"
+    # ws_id="$(wmctrl -d | awk '$2 == "*" { print $1 }')"
+    ws_id="$(xprop -root _NET_CURRENT_DESKTOP | awk '{print $NF}')"
     ws_name="$(wmctrl -d | awk '$2 == "*" { print $NF }')"
     ws="${ws_id}-${ws_name}"
     nodes="$(wmctrl -l | awk '{print "(" $2}' | tr '\n' ')' | grep -o "(${ws_id})" | wc -l)"
 
     # Only update eww when the currently active workspace is different from the
-    # previously active workspace.
-    if test "${ws:-}" != "${previous_ws}" -o "${nodes:-0}" -lt "${previous_nodes:-0}"; then
-      printf '%s\n' '(box :orientation "h" :class "workspaces" :space-evenly true :halign "start" :valign "center" :vexpand true '"$(get_yuck)"')'
+    # previously active workspace, or there are fewer nodes on the active ws than last time.
+    if test "${ws:-}" != "${previous_ws:-nil}" \
+         -o "${nodes:-0}" -lt "${previous_nodes:-0}"; then
+			read -r -d '' yuck <<-EOYUCK
+			(box :orientation "h"
+			     :class "workspaces"
+			     :space-evenly true
+			     :halign "start"
+			     :valign "center"
+			     :vexpand true
+			     $(get_yuck))
+			EOYUCK
+      paste -s -d ' ' <<< "${yuck}"
     fi
 
     previous_ws="${ws}"
@@ -65,23 +71,20 @@ listen () {
   done
 }
 
-# This is probably very inefficient... but it works :⁾
-if test "${action}" = "up" -o "${action}" = "down"; then
-  get_workspaces | while read -r id active name; do
-    test "${active}" != "*" && continue
+go_to () {
+  operator="${1:-}"
+  ws_n="$(($(get_workspaces | wc -l) - 1))"
+  ws_id="$(xprop -root _NET_CURRENT_DESKTOP | awk '{print $NF}')"
+  ws_next="$((ws_id ${operator}))"
 
-    ws_tot="$(get_workspaces | wc -l)"
-    ws_tot="$((ws_tot - 1))"
+  test "${ws_next}" -lt "0"       && ws_next="0"
+  test "${ws_next}" -ge "${ws_n}" && ws_next="${ws_n}"
 
-    test "${action}" = "up"   && new_id="$((id - 1))"
-    test "${action}" = "down" && new_id="$((id + 1))"
-    test "${new_id}" -lt "0"         && new_id="0"
-    test "${new_id}" -ge "${ws_tot}" && new_id="${ws_tot}"
+  wmctrl -s "${ws_next}"
+}
 
-    wmctrl -s "${new_id}"
-    break
-  done
-else
-  listen
-fi
-
+case "${1:-}" in
+  up) go_to "-1";;
+  down) go_to "+1";;
+  *) listen;;
+esac

@@ -274,6 +274,7 @@ avoidMaster = W.modify' $ \c -> case c of
      W.Stack t [] (r:rs) ->  W.Stack t [r] rs
      otherwise           -> c
 
+-- FIXME Breaks things like `doPipFloat`
 myPlaceHook :: Placement
 myPlaceHook =
   inBounds
@@ -292,7 +293,6 @@ myManageHook :: ManageHook -- {{{
 myManageHook =
     insertPosition Below Newer
     <+> namedScratchpadManageHook myScratchpads
-    <+> placeHook myPlaceHook
     <> let w = workspaces myConfig in composeAll
     [ fmap not willFloat                      --> insertPosition Below Newer
     , fmap not isDialog                       --> doF avoidMaster
@@ -326,6 +326,7 @@ myManageHook =
     , className =? "Carla2"                   --> doShift (w !! 6)
     , className =? "helvum"                   --> doShift (w !! 6)
     ]
+    <+> placeHook myPlaceHook
 -- }}}
 
 doPipFloat = (customFloating $ W.RationalRect x y w h)
@@ -368,12 +369,11 @@ defaultGapW = fromIntegral defaultGap
 defaultGaps = [(U,defaultGap), (R,defaultGap), (D,defaultGap), (L,defaultGap)]
 swapGaps = sendMessage . ModifyGaps $ \gs ->
        if gs == a then b
-  else if gs == b then c
                   else a
   where
     a = defaultGaps
     b = [(U,10),(R,75),(D,75),(L,75)]
-    c = [(U,0),(R,0),(D,0),(L,0)]
+    -- c = [(U,0),(R,0),(D,0),(L,0)]
 
 myLayoutHook -- {{{
   = avoidStruts
