@@ -99,6 +99,9 @@ scale.modifiable trough highlight {
   background-color: $blue-alt;
 }
 
+.workspaces:not(:first-child) {
+  margin-left: 2px;
+}
 .workspaces {
   background-color: $background-alt;
   border-radius: 3px;
@@ -128,9 +131,13 @@ scale.modifiable trough highlight {
     &:not(.occupied) label {
       color: $gray-alt;
     }
+
     &.active label {
       background-color: $blue;
       color: $background;
+    }
+    &.visible label {
+      color: $yellow-alt;
     }
     &.urgent label {
       color: $red;

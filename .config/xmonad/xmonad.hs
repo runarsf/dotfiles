@@ -387,8 +387,8 @@ myLayoutHook -- {{{
   $ myLayouts
   where
     myLayouts = onWorkspaces ["5"] monocle masterStack
-            ||| dual
-            ||| threeCol
+            ||| onWorkspaces ["2"] threeCol dual
+            ||| onWorkspaces ["2"] dual threeCol
             ||| bsp
             ||| onWorkspaces ["5"] masterStack monocle
 -- }}}
