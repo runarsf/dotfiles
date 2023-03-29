@@ -194,8 +194,6 @@ working_directory: None
 
 enable_experimental_conpty_backend: true
 
-alt_send_esc: true
-
 debug: # {{{
   render_timer: false
 
