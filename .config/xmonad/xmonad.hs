@@ -27,6 +27,7 @@ import XMonad.Actions.CycleWS as CycleWS
 import XMonad.Actions.CycleRecentWS
 import XMonad.Actions.ShowText
 import XMonad.Actions.FloatSnap
+import XMonad.Actions.Navigation2D
 import XMonad.Actions.EasyMotion (selectWindow)
 import qualified XMonad.Actions.FlexibleResize as Flex
 -- import XMonad.Actions.TopicSpace
@@ -54,6 +55,7 @@ import XMonad.Util.Ungrab
 import XMonad.Util.NamedScratchpad
 
 -- Layout
+import XMonad.Layout.LayoutScreens
 import XMonad.Layout.Spacing
 import XMonad.Layout.Gaps
 import XMonad.Layout.BinarySpacePartition
@@ -83,6 +85,7 @@ main = xmonad
      . ewmhFullscreen
      . ewmh
      . pagerHints
+     . withNavigation2DConfig def
      $ myConfig
 -- }}}
 
@@ -186,6 +189,8 @@ myKeys =
   , ("M-<Space>", sendMessage NextLayout)
   , ("M-S-<Space>", sendMessage FirstLayout)
   , ("<XF86AudioPlay>", spawn "playerctl play-pause")
+  , ("M-C-<Space>", layoutScreens 2 (TwoPanePersistent Nothing (3/100) (1/2)))
+  , ("M-C-S-<Space>", rescreen)
   -- , ("M-f", sequence_ [sendMessage $ Toggle FULL, sendMessage ToggleStruts])
   , ("M-f", toggleFull)
   , ("M-M1-b", sendMessage ToggleStruts)
@@ -197,24 +202,25 @@ myKeys =
     layout <- getActiveLayoutDescription
     flashText def 1 layout)
   , ("M-o", swapGaps)
-  , ("M-<Left>", do
-    sendMessage $ WN.Go L
-    mouseFollowFocus)
-  , ("M-<Right>", do
-    sendMessage $ WN.Go R
-    mouseFollowFocus)
   , ("M-<Up>", do
     layout <- getActiveLayoutDescription
     case layout of
       x | elem x ["Spacing Monocle","Spacing Dual"] -> windows W.focusUp
-      _                                             -> sendMessage $ WN.Go U
+      _                                             -> windowGo U False
     mouseFollowFocus)
   , ("M-<Down>", do
     layout <- getActiveLayoutDescription
     case layout of
-      x | elem x ["Spacing Monocle","Spacing Dual"] -> windows W.focusDown
-      _                                  -> sendMessage $ WN.Go D
+      x | elem x ["Spacing Monocle","Spacing Dual"] -> windows W.focusUp
+      _                                             -> windowGo D False
     mouseFollowFocus)
+  , ("M-<Left>", do
+    windowGo L False
+    mouseFollowFocus)
+  , ("M-<Right>", do
+    windowGo R False
+    mouseFollowFocus)
+  , ("M--", switchLayer)
   , ("M-S-<Right>", floatOrNot (withFocused (keysMoveWindow ( 20,  0))) (sendMessage $ WN.Swap R))
   , ("M-S-<Left>",  floatOrNot (withFocused (keysMoveWindow (-20,  0))) (sendMessage $ WN.Swap L))
   , ("M-S-<Up>",    floatOrNot (withFocused (keysMoveWindow (  0,-20))) (sendMessage $ WN.Swap U))
