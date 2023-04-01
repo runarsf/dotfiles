@@ -267,7 +267,6 @@
 
 (defwidget delim [] ; A module delimiter {{{
   (box :style "margin: 0 5px; padding: 0;"
-       ;:tooltip tooltip
        :orientation "h"
        :space-evenly false
        :spacing 0
@@ -279,16 +278,14 @@
 (deflisten music :initial ""
   "playerctl --follow metadata --format '{{ artist }} - {{ title }}' || true")
 
-(deflisten traysize
+(deflisten traysize :initial "0"
   "modules/traysize")
 
-(deflisten layout
+(deflisten layout :initial ""
   "modules/layout")
 
-; https://askubuntu.com/a/523899
-(defpoll title :initial ""
-               :interval "250ms"
-  "xdotool getactivewindow getwindowname | awk -v len=60 '{ if (length($0) > len) print substr($0, 1, len-1) \"…\"; else print; }'")
+(deflisten title :initial ""
+  "modules/title")
 
 (defpoll volume :interval "1s"
   "amixer -D pulse sget Master | grep 'Left:' | awk -F'[][]' '{ print $2 }' | tr -d '%' | head -1")

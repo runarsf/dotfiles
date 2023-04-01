@@ -1,0 +1,14 @@
+#!/bin/bash
+
+xprop -root -spy _NET_ACTIVE_WINDOW | while read -r; do
+  title="$( \
+    xdotool getactivewindow getwindowname 2>/dev/null \
+      | awk -v len=60 '{ if (length($0) > len) print substr($0, 1, len-1) "…"; else print; }' \
+    )"
+
+  if test "${title}" != "${previous_title}"; then
+    printf '%s\n' "${title}"
+  fi
+
+  previous_title="${title}"
+done

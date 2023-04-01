@@ -2,86 +2,107 @@
 -- TODO https://github.com/dylanaraps/pywal/issues/172
 
 -- Imports {{{
-import XMonad
-import XMonad.Util.Dmenu
-import Control.Monad
-import Graphics.X11.ExtraTypes.XF86
+import           XMonad
 import qualified XMonad.StackSet as W
-
--- System
-import System.Exit
+import           Control.Monad   (when)
+import           System.Exit     (exitWith,
+                                  ExitCode(ExitSuccess))
 
 -- Data
-import Data.List as L
-import Data.Ratio
-import Data.Word (Word32)
-import qualified Data.Map as M
+import           Data.List  (isSuffixOf)
+import           Data.Ratio ((%))
+import           Data.Word  (Word32)
+import           Data.Map   (member,
+                             fromList)
 
 -- Actions
-import XMonad.Actions.Warp
-import XMonad.Actions.Promote
-import XMonad.Actions.FloatKeys
-import XMonad.Actions.MouseResize
-import XMonad.Actions.CopyWindow
-import XMonad.Actions.CycleWS as CycleWS
-import XMonad.Actions.CycleRecentWS
-import XMonad.Actions.ShowText
-import XMonad.Actions.FloatSnap
-import XMonad.Actions.Navigation2D
-import XMonad.Actions.EasyMotion (selectWindow)
+import           XMonad.Actions.Warp           (warpToWindow,
+                                                banish,
+                                                Corner(UpperRight))
+import           XMonad.Actions.Promote        (promote)
+import           XMonad.Actions.FloatKeys      (keysMoveWindow,
+                                                keysResizeWindow)
+import           XMonad.Actions.CopyWindow     (copyToAll,
+                                                killAllOtherCopies)
+import           XMonad.Actions.CycleRecentWS  (toggleRecentWS)
+import           XMonad.Actions.ShowText       (flashText,
+                                                handleTimerEvent)
+import           XMonad.Actions.FloatSnap      (afterDrag,
+                                                snapMagicMove,
+                                                snapMagicResize)
+import           XMonad.Actions.Navigation2D   (withNavigation2DConfig,
+                                                switchLayer)
+import           XMonad.Actions.EasyMotion     (selectWindow)
 import qualified XMonad.Actions.FlexibleResize as Flex
--- import XMonad.Actions.TopicSpace
+                                               (mouseResizeWindow)
 
 -- Hooks
-import XMonad.Hooks.ServerMode
-import XMonad.Hooks.InsertPosition
-import XMonad.Hooks.DynamicLog
-import XMonad.Hooks.ManageDocks
-import XMonad.Hooks.ManageHelpers
-import XMonad.Hooks.StatusBar
-import XMonad.Hooks.StatusBar.PP
-import XMonad.Hooks.EwmhDesktops
-import XMonad.Hooks.WindowSwallowing
-import XMonad.Hooks.Place
-import XMonad.Hooks.TaffybarPagerHints (pagerHints)
-import XMonad.Hooks.BorderPerWindow (defineBorderWidth, actionQueue)
-import XMonad.Hooks.SetWMName (setWMName)
--- import XMonad.Hooks.UrgencyHook
+import           XMonad.Hooks.ManageHelpers
+import           XMonad.Hooks.InsertPosition     (insertPosition,
+                                                  Position(Below),
+                                                  Focus(Newer))
+import           XMonad.Hooks.ManageDocks        (docks,
+                                                  avoidStruts)
+import           XMonad.Hooks.EwmhDesktops       (ewmhFullscreen,
+                                                  ewmh)
+import           XMonad.Hooks.WindowSwallowing   (swallowEventHook)
+import           XMonad.Hooks.Place              (inBounds,
+                                                  withGaps,
+                                                  smart,
+                                                  placeHook,
+                                                  Placement)
+import           XMonad.Hooks.TaffybarPagerHints (pagerHints)
+import           XMonad.Hooks.SetWMName          (setWMName)
+import           XMonad.Hooks.UrgencyHook        (withUrgencyHook,
+                                                  NoUrgencyHook(..))
 
 -- Util
-import XMonad.Util.EZConfig
-import XMonad.Util.Loggers
-import XMonad.Util.Ungrab
-import XMonad.Util.NamedScratchpad
+import           XMonad.Util.EZConfig        (additionalKeysP)
+import           XMonad.Util.Ungrab          (unGrab)
+import           XMonad.Util.NamedScratchpad (namedScratchpadAction,
+                                              namedScratchpadManageHook,
+                                              customFloating,
+                                              NamedScratchpad(..))
+import           XMonad.Util.Dmenu           (dmenu)
+import           XMonad.Util.SpawnOnce       (spawnOnce)
 
 -- Layout
-import XMonad.Layout.LayoutScreens
-import XMonad.Layout.Spacing
-import XMonad.Layout.Gaps
-import XMonad.Layout.BinarySpacePartition
-import XMonad.Layout.MultiToggle
-import XMonad.Layout.MultiToggle.Instances
-import XMonad.Layout.Reflect
-import XMonad.Layout.Fullscreen
-import XMonad.Layout.ResizableThreeColumns
-import XMonad.Layout.ResizableTile
-import XMonad.Layout.MouseResizableTile
-import XMonad.Layout.Grid
-import XMonad.Layout.TwoPanePersistent
-import XMonad.Layout.Renamed
-import XMonad.Layout.NoBorders
-import XMonad.Layout.PerWorkspace
-import XMonad.Layout.WindowArranger (windowArrange, WindowArrangerMsg(..))
-import qualified XMonad.Layout.WindowNavigation as WN
-import qualified XMonad.Layout.Magnifier as Magn
--- import XMonad.Layout.Tabbed
--- import XMonad.Layout.Combo
--- import XMonad.Layout.BorderResize
+import           XMonad.Layout.StateFull
+import           XMonad.Layout.LayoutScreens         (layoutScreens)
+import           XMonad.Layout.Spacing               (spacingRaw,
+                                                      Border(..))
+import           XMonad.Layout.Gaps                  (gaps,
+                                                      weakModifyGaps,
+                                                      GapMessage(ModifyGaps))
+import           XMonad.Layout.BinarySpacePartition  (emptyBSP,
+                                                      BinarySpacePartition)
+import           XMonad.Layout.ResizableThreeColumns (ResizableThreeCol(ResizableThreeColMid))
+import           XMonad.Layout.ResizableTile         (ResizableTall(..),
+                                                      MirrorResize(MirrorShrink),
+                                                      MirrorResize(MirrorExpand))
+import           XMonad.Layout.TwoPanePersistent     (TwoPanePersistent(..))
+import           XMonad.Layout.Renamed               (renamed,
+                                                      Rename(Replace))
+import           XMonad.Layout.NoBorders             (noBorders,
+                                                      smartBorders)
+import           XMonad.Layout.PerWorkspace          (onWorkspaces)
+import           XMonad.Layout.StateFull             (focusTracking)
+import           XMonad.Layout.WindowArranger        (windowArrange,
+                                                      WindowArrangerMsg(..))
+import           XMonad.Layout.Magnifier             (magnifiercz')
+import           XMonad.Layout.WindowNavigation      (windowNavigation,
+                                                      Navigate(Go),
+                                                      Navigate(Swap),
+                                                      Direction2D(L),
+                                                      Direction2D(R),
+                                                      Direction2D(U),
+                                                      Direction2D(D))
 -- }}}
 
 main :: IO () -- {{{
 main = xmonad
      $ docks
+     . withUrgencyHook NoUrgencyHook
      . ewmhFullscreen
      . ewmh
      . pagerHints
@@ -119,7 +140,7 @@ myStartupHook = do
   spawn "(pgrep eww && eww reload) || (eww close bar || killall -q eww; eww open bar)"
   spawn "killall -q trayer; trayer --edge top --align right --SetDockType true --SetPartialStrut false --expand true --widthtype request --transparent true --alpha 0 --tint 0x0D1117 --height 30 --heighttype pixel --monitor 'primary' --margin 20 --distance 11 --padding 0 &"
   spawn "(nitrogen --restore || (~/.fehbg || feh --bg-scale ~/.config/wall.jpg)) &"
-  -- spawn "killall -q picom; picom -fcCGb --xrender-sync-fence &"
+  spawnOnce "killall -q picom; picom &"
   setWMName "LG3D"
 -- }}}
 
@@ -128,7 +149,7 @@ myStartupHook = do
 -- If the window is floating then (f), if tiled then (n)
 floatOrNot f n = withFocused $ \windowId -> do
     floats <- gets (W.floating . windowset)
-    if windowId `M.member` floats -- if the current window is floating...
+    if windowId `member` floats -- if the current window is floating...
        then f
        else n
 
@@ -154,48 +175,46 @@ getActiveLayoutDescription = do
     workspaces <- gets windowset
     return $ description . W.layout . W.workspace . W.current $ workspaces
 
-myButtons conf@XConfig {XMonad.modMask = modm} = M.fromList $ -- {{{
+myButtons conf@XConfig {XMonad.modMask = modm} = fromList $ -- {{{
   [ ((modm,               button1), (\w -> focus w >> mouseMoveWindow w >> afterDrag (snapMagicMove (Just 25) (Just 25) w)))
   , ((modm .|. shiftMask, button1), (\w -> focus w >> mouseMoveWindow w >> afterDrag (snapMagicResize [L,R,U,D] (Just 500) (Just 500) w)))
-  , ((modm,               button3), (\w -> focus w >> mouseResizeWindow w >> afterDrag (snapMagicResize [R,D] (Just 25) (Just 25) w)))
+  , ((modm,               button3), (\w -> focus w >> Flex.mouseResizeWindow w >> afterDrag (snapMagicResize [R,D] (Just 25) (Just 25) w)))
   ]
 -- }}}
 
 myKeys :: [([Char], X ())] -- {{{
 myKeys =
   [ ("M-<Return>", spawn $ terminal myConfig)
+  , ("M-S-r", spawn "xmonad --recompile && xmonad --restart")
   , ("M-n", do
     namedScratchpadAction myScratchpads "terminal"
     mouseFollowFocus)
   , ("M-p", do
     namedScratchpadAction myScratchpads "calculator"
     mouseFollowFocus)
-  , ("M-S-r", spawn "xmonad --recompile && xmonad --restart")
   , ("M-S-<Return>", promote)
   , ("M-S-f", floatOrNot (withFocused $ windows . W.sink) (withFocused centreFloat'))
   , ("M-q", kill)
-  , ("M-S-q", spawn "xkill")
+  , ("M-S-q", unGrab >> spawn "xkill")
   , ("M-a", windows copyToAll)
-  , ("M-S-a",  killAllOtherCopies)
-  , ("M-d", spawn "rofi -show")
-  , ("M-S-d", spawn "dmenu_run")
+  , ("M-S-a", killAllOtherCopies)
+  , ("M-d", unGrab >> spawn "rofi -show")
+  , ("M-S-d", unGrab >> spawn "dmenu_run")
   , ("M-e", spawn "xdg-open ~")
-  , ("M-S-c", spawn "toggleprogram picom -fcCGb --xrender-sync-fence")
-  , ("M-x", spawn "betterlockscreen --lock dimblur --blur 8")
+  , ("M-S-c", spawn "toggleprogram picom")
+  , ("M-x", unGrab >> spawn "betterlockscreen --lock dimblur --blur 8")
   , ("M-s", selectWindow def >>= (`whenJust` windows . W.focusWindow))
-  , ("M1-p", spawn "screenshot -m region -t -c -o 'screenshot-xbackbone'")
-  , ("M1-S-p", spawn "screenshot -m region -c")
+  , ("M1-p", unGrab >> spawn "screenshot -m region -t -c -o 'screenshot-xbackbone'")
+  , ("M1-S-p", unGrab >> spawn "screenshot -m region -c")
   , ("M-<Tab>", toggleRecentWS)
   , ("M-<Space>", sendMessage NextLayout)
   , ("M-S-<Space>", sendMessage FirstLayout)
-  , ("<XF86AudioPlay>", spawn "playerctl play-pause")
   , ("M-C-<Space>", layoutScreens 2 (TwoPanePersistent Nothing (3/100) (1/2)))
   , ("M-C-S-<Space>", rescreen)
-  -- , ("M-f", sequence_ [sendMessage $ Toggle FULL, sendMessage ToggleStruts])
   , ("M-f", toggleFull)
-  , ("M-M1-b", sendMessage ToggleStruts)
   , ("M-M1-<Down>", sendMessage $ weakModifyGaps decGaps)
   , ("M-M1-<Up>", sendMessage $ weakModifyGaps incGaps)
+  -- TODO Stop when MasterN >= NodeN
   , ("M-m", sendMessage $ IncMasterN $ 1)
   , ("M-S-m", sendMessage $ IncMasterN $ -1)
   , ("M-S-o", do
@@ -206,25 +225,25 @@ myKeys =
     layout <- getActiveLayoutDescription
     case layout of
       x | elem x ["Spacing Monocle","Spacing Dual"] -> windows W.focusUp
-      _                                             -> windowGo U False
+      _                                             -> sendMessage $ Go U
     mouseFollowFocus)
   , ("M-<Down>", do
     layout <- getActiveLayoutDescription
     case layout of
       x | elem x ["Spacing Monocle","Spacing Dual"] -> windows W.focusUp
-      _                                             -> windowGo D False
+      _                                             -> sendMessage $ Go D
     mouseFollowFocus)
   , ("M-<Left>", do
-    windowGo L False
+    sendMessage $ Go L
     mouseFollowFocus)
   , ("M-<Right>", do
-    windowGo R False
+    sendMessage $ Go R
     mouseFollowFocus)
   , ("M--", switchLayer)
-  , ("M-S-<Right>", floatOrNot (withFocused (keysMoveWindow ( 20,  0))) (sendMessage $ WN.Swap R))
-  , ("M-S-<Left>",  floatOrNot (withFocused (keysMoveWindow (-20,  0))) (sendMessage $ WN.Swap L))
-  , ("M-S-<Up>",    floatOrNot (withFocused (keysMoveWindow (  0,-20))) (sendMessage $ WN.Swap U))
-  , ("M-S-<Down>",  floatOrNot (withFocused (keysMoveWindow (  0, 20))) (sendMessage $ WN.Swap D))
+  , ("M-S-<Right>", floatOrNot (withFocused (keysMoveWindow ( 20,  0))) (sendMessage $ Swap R))
+  , ("M-S-<Left>",  floatOrNot (withFocused (keysMoveWindow (-20,  0))) (sendMessage $ Swap L))
+  , ("M-S-<Up>",    floatOrNot (withFocused (keysMoveWindow (  0,-20))) (sendMessage $ Swap U))
+  , ("M-S-<Down>",  floatOrNot (withFocused (keysMoveWindow (  0, 20))) (sendMessage $ Swap D))
   , ("M-C-<Right>", floatOrNot (withFocused (keysResizeWindow ( 20,   0) (0, 0))) (sendMessage Expand))
   , ("M-C-<Left>",  floatOrNot (withFocused (keysResizeWindow (-20,   0) (0, 0))) (sendMessage Shrink))
   , ("M-C-<Up>",    floatOrNot (withFocused (keysResizeWindow (  0, -20) (0, 0))) (sendMessage MirrorExpand))
@@ -299,10 +318,14 @@ myManageHook :: ManageHook -- {{{
 myManageHook =
     insertPosition Below Newer
     <+> namedScratchpadManageHook myScratchpads
+    <> composeOne
+    [ isKDETrayWindow                         -?> doIgnore
+    , transience
+    , isFullscreen                            -?> doFullFloat
+    ]
     <> let w = workspaces myConfig in composeAll
     [ fmap not willFloat                      --> insertPosition Below Newer
     , fmap not isDialog                       --> doF avoidMaster
-    , isFullscreen                            --> doFullFloat
     , isDialog                                --> doCenterFloat
     , isDialog                                --> doF W.shiftMaster <+> doF W.swapDown
     , appName   =? "panel"                    --> doLower
@@ -344,7 +367,7 @@ doPipFloat = (customFloating $ W.RationalRect x y w h)
 
 toggleFull = withFocused (\windowId -> do
     { floats <- gets (W.floating . windowset);
-        if windowId `M.member` floats
+        if windowId `member` floats
         then withFocused $ windows . W.sink
         else withFocused $ windows . (flip W.float $ W.RationalRect 0 0 1 1) })
 
@@ -358,13 +381,13 @@ masterStack = renamed [Replace "Tiled"]
 bsp         = renamed [Replace "BSP"]
             $ emptyBSP
 threeCol    = renamed [Replace "ThreeCol"]
-            $ Magn.magnifiercz' 1.35
+            $ magnifiercz' 1.35
             $ ResizableThreeColMid 1 (3/100) (1/2) []
 dual        = renamed [Replace "Dual"]
             $ TwoPanePersistent Nothing (3/100) (1/2)
 monocle     = renamed [Replace "Monocle"]
             $ noBorders
-            $ Full
+            $ StateFull
 -- }}}
 
 -- https://www.reddit.com/r/xmonad/comments/ygp2ab/toggle_between_two_sets_of_gaps/
@@ -379,15 +402,12 @@ swapGaps = sendMessage . ModifyGaps $ \gs ->
   where
     a = defaultGaps
     b = [(U,10),(R,75),(D,75),(L,75)]
-    -- c = [(U,0),(R,0),(D,0),(L,0)]
 
 myLayoutHook -- {{{
   = avoidStruts
-  . mouseResize
   . windowArrange
   . smartBorders
-  . WN.windowNavigation
-  . mkToggle (NBFULL ?? NOBORDERS ?? EOT) -- (NBFULL ?? NOBORDERS ?? EOT
+  . windowNavigation
   . spacingRaw True (Border 0 0 0 0) True (Border 10 10 10 10) True -- Spacing between windows
   . gaps defaultGaps -- Gaps between screen and windows
   $ myLayouts
