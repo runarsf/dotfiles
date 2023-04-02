@@ -3,68 +3,69 @@
 
 -- Imports {{{
 import           XMonad
-import qualified XMonad.StackSet as W
-import           Control.Monad   (when)
-import           System.Exit     (exitWith,
-                                  ExitCode(ExitSuccess))
+import qualified XMonad.StackSet                     as W
+import           Control.Monad                       (when)
+import           System.Exit                         (exitWith,
+                                                      ExitCode(ExitSuccess))
+import           System.Environment                  (lookupEnv)
 
 -- Data
-import           Data.List  (isSuffixOf)
-import           Data.Ratio ((%))
-import           Data.Word  (Word32)
-import           Data.Map   (member,
-                             fromList)
+import           Data.List                           (isSuffixOf)
+import           Data.Ratio                          ((%))
+import           Data.Word                           (Word32)
+import           Data.Map                            (member,
+                                                      fromList)
 
 -- Actions
-import           XMonad.Actions.Warp           (warpToWindow,
-                                                banish,
-                                                Corner(UpperRight))
-import           XMonad.Actions.Promote        (promote)
-import           XMonad.Actions.FloatKeys      (keysMoveWindow,
-                                                keysResizeWindow)
-import           XMonad.Actions.CopyWindow     (copyToAll,
-                                                killAllOtherCopies)
-import           XMonad.Actions.CycleRecentWS  (toggleRecentWS)
-import           XMonad.Actions.ShowText       (flashText,
-                                                handleTimerEvent)
-import           XMonad.Actions.FloatSnap      (afterDrag,
-                                                snapMagicMove,
-                                                snapMagicResize)
-import           XMonad.Actions.Navigation2D   (withNavigation2DConfig,
-                                                switchLayer)
-import           XMonad.Actions.EasyMotion     (selectWindow)
-import qualified XMonad.Actions.FlexibleResize as Flex
-                                               (mouseResizeWindow)
+import           XMonad.Actions.Warp                 (warpToWindow,
+                                                      banish,
+                                                      Corner(UpperRight))
+import           XMonad.Actions.Promote              (promote)
+import           XMonad.Actions.FloatKeys            (keysMoveWindow,
+                                                      keysResizeWindow)
+import           XMonad.Actions.CopyWindow           (copyToAll,
+                                                      killAllOtherCopies)
+import           XMonad.Actions.CycleRecentWS        (toggleRecentWS)
+import           XMonad.Actions.ShowText             (flashText,
+                                                      handleTimerEvent)
+import           XMonad.Actions.FloatSnap            (afterDrag,
+                                                      snapMagicMove,
+                                                      snapMagicResize)
+import           XMonad.Actions.Navigation2D         (withNavigation2DConfig,
+                                                      switchLayer)
+import           XMonad.Actions.EasyMotion           (selectWindow)
+import qualified XMonad.Actions.FlexibleResize       as Flex
+                                                     (mouseResizeWindow)
 
 -- Hooks
 import           XMonad.Hooks.ManageHelpers
-import           XMonad.Hooks.InsertPosition     (insertPosition,
-                                                  Position(Below),
-                                                  Focus(Newer))
-import           XMonad.Hooks.ManageDocks        (docks,
-                                                  avoidStruts)
-import           XMonad.Hooks.EwmhDesktops       (ewmhFullscreen,
-                                                  ewmh)
-import           XMonad.Hooks.WindowSwallowing   (swallowEventHook)
-import           XMonad.Hooks.Place              (inBounds,
-                                                  withGaps,
-                                                  smart,
-                                                  placeHook,
-                                                  Placement)
-import           XMonad.Hooks.TaffybarPagerHints (pagerHints)
-import           XMonad.Hooks.SetWMName          (setWMName)
-import           XMonad.Hooks.UrgencyHook        (withUrgencyHook,
-                                                  NoUrgencyHook(..))
+import           XMonad.Hooks.InsertPosition         (insertPosition,
+                                                      Position(Below),
+                                                      Focus(Newer))
+import           XMonad.Hooks.ManageDocks            (docks,
+                                                      avoidStruts)
+import           XMonad.Hooks.EwmhDesktops           (ewmhFullscreen,
+                                                      ewmh)
+import           XMonad.Hooks.WindowSwallowing       (swallowEventHook)
+import           XMonad.Hooks.Place                  (inBounds,
+                                                      withGaps,
+                                                      smart,
+                                                      placeHook,
+                                                      Placement)
+import           XMonad.Hooks.TaffybarPagerHints     (pagerHints)
+import           XMonad.Hooks.SetWMName              (setWMName)
+import           XMonad.Hooks.UrgencyHook            (withUrgencyHook,
+                                                      NoUrgencyHook(..))
 
 -- Util
-import           XMonad.Util.EZConfig        (additionalKeysP)
-import           XMonad.Util.Ungrab          (unGrab)
-import           XMonad.Util.NamedScratchpad (namedScratchpadAction,
-                                              namedScratchpadManageHook,
-                                              customFloating,
-                                              NamedScratchpad(..))
-import           XMonad.Util.Dmenu           (dmenu)
-import           XMonad.Util.SpawnOnce       (spawnOnce)
+import           XMonad.Util.EZConfig                (additionalKeysP)
+import           XMonad.Util.Ungrab                  (unGrab)
+import           XMonad.Util.NamedScratchpad         (namedScratchpadAction,
+                                                      namedScratchpadManageHook,
+                                                      customFloating,
+                                                      NamedScratchpad(..))
+import           XMonad.Util.Dmenu                   (dmenu)
+import           XMonad.Util.SpawnOnce               (spawnOnce)
 
 -- Layout
 import           XMonad.Layout.StateFull
@@ -110,16 +111,25 @@ main = xmonad
      $ myConfig
 -- }}}
 
-myConfig = def -- {{{
+getTerminal :: String -> IO [Char]
+getTerminal defaultTerminal = do
+  terminal <- lookupEnv "TERMINAL"
+  let chosenTerminal = case terminal of
+                         Just t -> t
+                         Nothing -> defaultTerminal
+  return chosenTerminal
+
+myConfig =
+  def -- {{{
     { modMask            = mod4Mask::KeyMask
     , layoutHook         = myLayoutHook
     , manageHook         = myManageHook
-    , terminal           = "${TERMINAL:-alacritty}"::String -- TODO System.Environment https://stackoverflow.com/a/60715978
+    , terminal           = "${TERMINAL:-alacritty}"
     , focusFollowsMouse  = True::Bool
     , clickJustFocuses   = False::Bool
     , borderWidth        = 2::Dimension
     , workspaces         = map show $ [1..9::Int]++[0::Int]::[WorkspaceId]
-    , normalBorderColor  = "#383a4a"::String
+    , normalBorderColor  = "#0A0E14"::String
     , focusedBorderColor = "#306998"::String
     , mouseBindings      = myButtons
     , startupHook        = myStartupHook
@@ -319,15 +329,16 @@ myManageHook =
     insertPosition Below Newer
     <+> namedScratchpadManageHook myScratchpads
     <> composeOne
-    [ isKDETrayWindow                         -?> doIgnore
+    [ title     =? "Fig Autocomplete"         -?> doIgnore
     , transience
-    , isFullscreen                            -?> doFullFloat
     ]
     <> let w = workspaces myConfig in composeAll
-    [ fmap not willFloat                      --> insertPosition Below Newer
-    , fmap not isDialog                       --> doF avoidMaster
+    -- fmap not isDialog                       --> doF avoidMaster
+    -- isDialog                                --> doF W.shiftMaster <+> doF W.swapDown
+    [ isFullscreen                            --> doFullFloat
+    , fmap not willFloat                      --> insertPosition Below Newer
     , isDialog                                --> doCenterFloat
-    , isDialog                                --> doF W.shiftMaster <+> doF W.swapDown
+    , isKDETrayWindow                         --> doIgnore
     , appName   =? "panel"                    --> doLower
     , resource  =? "desktop_window"           --> doIgnore
     , role      ~? "PictureInPicture"         --> doPipFloat

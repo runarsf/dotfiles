@@ -392,6 +392,13 @@ local plugins = function(use)
     end,
   })
 
+  -- use({ "mg979/vim-visual-multi",
+  --   config = function()
+  --     vim.g["VM_default_mappings"] = 0
+  --     vim.g["VM_maps"] = {}
+  --   end,
+  -- })
+
   if pkg.Bootstrap then
     pkg.update()
   end
