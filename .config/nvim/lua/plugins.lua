@@ -392,6 +392,8 @@ local plugins = function(use)
     end,
   })
 
+  use({ "NoahTheDuke/vim-just" })
+
   -- use({ "mg979/vim-visual-multi",
   --   config = function()
   --     vim.g["VM_default_mappings"] = 0

@@ -329,13 +329,12 @@ myManageHook =
     insertPosition Below Newer
     <+> namedScratchpadManageHook myScratchpads
     <> composeOne
-    [ title     =? "Fig Autocomplete"         -?> doIgnore
-    , transience
-    ]
+    [ transience ]
     <> let w = workspaces myConfig in composeAll
     -- fmap not isDialog                       --> doF avoidMaster
     -- isDialog                                --> doF W.shiftMaster <+> doF W.swapDown
     [ isFullscreen                            --> doFullFloat
+    , title     =? "Fig Autocomplete"         --> doIgnore
     , fmap not willFloat                      --> insertPosition Below Newer
     , isDialog                                --> doCenterFloat
     , isKDETrayWindow                         --> doIgnore
@@ -365,6 +364,7 @@ myManageHook =
     , className =? "Blueman-manager"          --> doShift (w !! 6)
     , className =? "Carla2"                   --> doShift (w !! 6)
     , className =? "helvum"                   --> doShift (w !! 6)
+    , className =? "qpwgraph"                 --> doShift (w !! 6)
     ]
     <+> placeHook myPlaceHook
 -- }}}
