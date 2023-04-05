@@ -354,6 +354,7 @@ myManageHook =
     ,(className ~? "firefox"                  <&&>
       resource  =? "Dialog")                  --> doCenterFloat
     , className =? "discord"                  --> doShift (w !! 1)
+    , className =? "Mattermost"               --> doShift (w !! 1)
     , className =? "Steam"                    --> doShift (w !! 3)
     , className =? "spotify"                  --> doShift (w !! 3)
     , className =? "VirtualBox Manager"       --> doShift (w !! 4)
