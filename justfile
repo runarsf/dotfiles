@@ -3,6 +3,8 @@
 
 # just -f <(curl -fs https://raw.githubusercontent.com/runarsf/dotfiles/master/justfile) deploy
 
+# TODO use environment variables to configure gum
+
 set positional-arguments
 
 just := just_executable() + " --justfile " + justfile()
@@ -27,27 +29,138 @@ distro := lowercase(`
   fi
   `)
 
+dotfiles_repo := "git@github.com:runarsf/dotfiles.git"
+dotfiles_tree := env_var("HOME")
+dotfiles_dir  := config_dir / "dotfiles/.git"
+dotfiles := 'git --git-dir="' + dotfiles_dir + '" --work-tree="' + dotfiles_tree + '"'
+
 [private]
 @default:
   printf '%s\n' "[$(whoami)@$(hostname)] ({{capitalize(distro)}})"
   {{just}} --list --unsorted --list-heading $'Commands:\n' --list-prefix '  '
 
+[private]
+@requires-tty:
+  xhost >& /dev/null \
+    && exit 1 \
+    || exit 0
+
+[private]
+require *PKGS:
+  #!/usr/bin/env bash
+  # echo "Satisfying conditions by installing candidates: ${@}"
+  case "{{distro}}" in
+    arch|endeavouros)
+      {{just}} require "paru"
+      pkgs=""; aur=""
+      while test "${#}" -gt "0"; do
+        # Already installed
+        pacman -Qi "${1}" >/dev/null 2>&1 \
+          && shift \
+          && continue
+        # Is in the official repos
+        pacman -Ssq "^${1}\$" >/dev/null 2>&1 \
+          && pkgs="${pkgs} ${1}" \
+          || aur="${aur} ${1}"
+        shift
+      done
+      test -n "${pkgs}" && sudo pacman -S --needed ${pkgs}
+      test -n "${aur}" && paru -S --needed ${aur}
+      ;;
+    *) printf '%s\n' "Unknown distribution {{distro}}, skipping package installation..."
+  esac
+  exit 0
+
 # Runs justfile from dotfiles repository
-@remote COMMAND *args:
-  {{just_executable()}} --justfile <(curl -fs https://raw.githubusercontent.com/runarsf/dotfiles/master/justfile) {{COMMAND}} "${@}"
+@remote *args:
+  {{just_executable()}} --justfile <(curl -fs https://raw.githubusercontent.com/runarsf/dotfiles/master/justfile) ${@}
 
 # Deploys dotfiles
-[no-cd]
-deploy:
-  printf '%s\n' "WIP"
+[linux]
+deploy: update init-packages init-utils init-dotfiles update-limits mouse-acceleration init-dm
 
-# Updates everything
-@upgrade: update mouse-acceleration update-limits
+[private]
+init-utils: (require "git" "python3" "make" "zsh")
+  mkdir -p "${HOME}/data"
+  git clone git@github.com:runarsf/wallpapers.git "${HOME}/data/wallpapers"
+  git clone git@github.com:runarsf/fonts.git "${HOME}/.local/share/fonts"
+  fc-cache -vf
+  python3 -m pip install --user --upgrade pynvim
+
+  git clone git@github.com:runarsf/screenshot.git "${HOME}/data/screenshot"
+  sudo make -C "${HOME}/data/screenshot" install
+
+  stack install --stack-yaml {{config_dir / "xmonad/stack.yaml"}}
+  xmonad --recompile
+
+  chsh -s /bin/zsh
+
+[private]
+init-packages:
+  # TODO Split packages into categories
+  sudo pacman -S --needed paru base-devel zsh alacritty rofi dmenu pass dunst vim neovim tmux trash-cli dnsutils acpi autorandr arandr lxrandr lxappearance python3 python-pip ghc firefox-developer-edition docker docker-compose podman podman-compose stack obsidian steam carla telegram-desktop audiorelay noto-fonts noto-fonts-extra noto-fonts-emoji yt-dlp easyeffects starship nitrogen spotify-launcher scrcpy btop bat ripgrep blueman lf gnome-keyring polkit-gnome just redshift jq yq qpwgraph lxinput trayer-srg wmctrl ffcast playerctl xorg-xsetroot xorg-server xorg-apps xorg-xinit xorg-xmessage libx11 libxft libxinerama libxrandr libxss pkgconf xdo xdotool xorg-xbacklight xprintidle xclip numlockx
+  paru -S --needed getrid-git visual-studio-code-bin mullvad-vpn-beta-bin awesome-git yt-dlp-drop-in eww-git colorgrab picom-jonaburg-git ttf-font-awesome-4 dragon-drop wmutils-git betterlockscreen
+
+[private]
+init-keys: (require "git" "openssh" "gnupg")
+  #!/usr/bin/env bash
+  set -euo pipefail
+
+  if test "$(find "${HOME}/.ssh" -type f -name "*.pub" | wc -l)" -le "0"; then
+    ssh-keygen -t ssh-ed25519 -b 4096 -o -a 100 -C "$(gum input --header 'SSH key description' --placeholder '')"
+  fi
+  git config --global user.name >/dev/null \
+    || git config --global user.name "$(gum input --header 'Git User Name' --placeholder '')"
+  git config --global user.email >/dev/null \
+    || git config --global user.email "$(gum input --header 'Git Email' --placeholder '')"
+
+  gpg --import --allow-secret-key-import --pinentry-mode=loopback <(gum write --width 100 --height 10 --header 'GPG Private Key' --placeholder '' --char-limit=0)
+  # TODO
+  # gpg --edit-key <keyid> trust
+  # pass init <keyid>
+  # pass insert Screenshot/XBB_TOKEN
+
+[private]
+init-dotfiles: (require "git" "gum")
+  #!/usr/bin/env bash
+  set -euo pipefail
+
+  if test -d '{{dotfiles_dir}}'; then
+    printf '%s\n' "Dotfiles already deployed..."
+    exit 0
+  fi
+
+  mkdir -p "$(dirname '{{dotfiles_dir}}')" '{{dotfiles_tree}}'
+  git clone --bare '{{dotfiles_repo}}' '{{dotfiles_dir}}'
+  {{dotfiles}} checkout
+
+  {{dotfiles}} config --local status.showUntrackedFiles no
+  {{dotfiles}} config --local core.hooksPath {{config_dir / "dotfiles/hooks"}}
+  {{dotfiles}} config --local user.name "$(git config user.name || gum input --header 'Git User Name' --placeholder '')"
+  {{dotfiles}} config --local user.email "$(git config user.email)"
+  {{dotfiles}} config --local pull.rebase false
+
+  {{dotfiles}} submodule update --init --recursive
+
+[private]
+init-dm: requires-tty
+  #!/usr/bin/env bash
+  set -euo pipefail
+
+  display_managers=( "lightdm" "gdm" "lxdm" "sddm" )
+  for dm in "${display_managers[@]}"; do
+    sudo systemctl stop "${dm}" ||:
+    sudo systemctl disable "${dm}" ||:
+  done
+
+  startx
+
 
 # Updates system
 update:
   #!/usr/bin/env bash
   set -euo pipefail
+
   case "{{distro}}" in
     arch|endeavouros)
       sudo pacman -Syu
@@ -57,16 +170,18 @@ update:
       sudo apt upgrade -y;;
   esac
 
-# Disables mouse acceleration
-mouse-acceleration:
+# Modifies mouse acceleration
+mouse-acceleration DISABLE="yes":
 	#!/usr/bin/env bash
 	set -euo pipefail
+
 	files=(
 		"/etc/X11/xorg.conf.d/50-mouse-acceleration.conf"
 		"/usr/share/X11/xorg.conf.d/50-mouse-acceleration.conf"
 	)
 	for file in "${files[@]}"; do
-		if test ! -e "${file}"; then
+		if test ! -e "${file}" -a "{{lowercase(DISABLE)}}" = "yes"; then
+			printf '%s\n' "Creating ${file}"
 			cat <<-'EOF' | sudo tee "${file}"
 			Section "InputClass"
 			    Identifier "My Mouse"
@@ -76,6 +191,9 @@ mouse-acceleration:
 			    Option "AccelSpeed" "-1"
 			EndSection
 			EOF
+		elif test -e "${file}" -a "{{lowercase(DISABLE)}}" = "no"; then
+			printf '%s\n' "Deleting ${file}"
+			sudo rm -f "${file}"
 		fi
 	done
 
@@ -83,6 +201,7 @@ mouse-acceleration:
 update-limits:
   #!/usr/bin/env bash
   set -euo pipefail
+
   limits=(
     "@audio - nice -20"
     "@audio - rtprio 99"
@@ -95,20 +214,13 @@ update-limits:
   done
 
 # Dumps package list
-pkg-dump PKGLIST=(config_dir / "dotfiles/pkgs" / distro):
-  #!/usr/bin/env bash
-  mkdir -p "$(dirname "{{PKGLIST}}")"
-  case "{{distro}}" in
-    arch|endeavouros)
-      pacman -Qqen > {{PKGLIST}}
-      pacman -Qqem > {{PKGLIST}}-aur;;
-  esac
-
-# Installs package list
-pkg-restore PKGLIST=(config_dir / "dotfiles/pkgs" / distro):
-  #!/usr/bin/env bash
-  case "{{distro}}" in
-    arch|endeavouros)
-      sudo pacman -S --needed - < {{PKGLIST}}
-      paru -S --needed - < {{PKGLIST}}-aur;;
-  esac
+# pkg-dump PKGLIST=(config_dir / "dotfiles/pkgs" / distro):
+#   #!/usr/bin/env bash
+#   set -euo pipefail
+# 
+#   mkdir -p "$(dirname "{{PKGLIST}}")"
+#   case "{{distro}}" in
+#     arch|endeavouros)
+#       pacman -Qqen > {{PKGLIST}}
+#       pacman -Qqem > {{PKGLIST}}-aur;;
+#   esac
