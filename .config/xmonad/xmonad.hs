@@ -81,7 +81,11 @@ import           XMonad.Layout.ResizableThreeColumns (ResizableThreeCol(Resizabl
 import           XMonad.Layout.ResizableTile         (ResizableTall(..),
                                                       MirrorResize(MirrorShrink),
                                                       MirrorResize(MirrorExpand))
+import           XMonad.Layout.Reflect               (REFLECTX(..))
 import           XMonad.Layout.TwoPanePersistent     (TwoPanePersistent(..))
+import           XMonad.Layout.MultiToggle           (mkToggle,
+                                                      single,
+                                                      Toggle(..))
 import           XMonad.Layout.Renamed               (renamed,
                                                       Rename(Replace))
 import           XMonad.Layout.NoBorders             (noBorders,
@@ -222,10 +226,13 @@ myKeys =
   , ("M-C-<Space>", layoutScreens 2 (TwoPanePersistent Nothing (3/100) (1/2)))
   , ("M-C-S-<Space>", rescreen)
   , ("M-f", toggleFull)
+  , ("<KP_Down>", spawn "just --justfile ~/justfile scroll down scrcpy")
+  , ("<KP_End>", spawn "just --justfile ~/justfile scroll up scrcpy")
   , ("M-M1-<Down>", sendMessage $ weakModifyGaps decGaps)
   , ("M-M1-<Up>", sendMessage $ weakModifyGaps incGaps)
   -- TODO Stop when MasterN >= NodeN
   , ("M-m", sendMessage $ IncMasterN $ 1)
+  , ("M-|", sendMessage $ Toggle REFLECTX)
   , ("M-S-m", sendMessage $ IncMasterN $ -1)
   , ("M-S-o", do
     layout <- getActiveLayoutDescription
@@ -286,7 +293,7 @@ myScratchpads = [ NS "terminal" spawnTerm findTerm manageTerm
                 , NS "calculator" spawnCalc findCalc manageCalc
                 ]
   where
-    spawnTerm  = "${TERMINAL:-alacritty}" ++ " --class scratchpad --title scratchpad --option font.size=12 --command tmux new-session -A -s scratchpad"
+    spawnTerm  = "${TERMINAL:-alacritty}" ++ " --class scratchpad --title scratchpad --option font.size=16 --command tmux new-session -A -s scratchpad"
     findTerm   = appName =? "scratchpad"
     manageTerm = customFloating $ W.RationalRect x y w h
            where
@@ -343,6 +350,7 @@ myManageHook =
     , role      ~? "PictureInPicture"         --> doPipFloat
     , className ~? "eww-"                     --> doLower
     , className =? "PrimeNote"                --> doFloat
+    , className ~? "osu"                      --> doIgnore
     , className =? "Gimp"                     --> doCenterFloat
     , className =? "Sxiv"                     --> doCenterFloat
     , appName   =? "scratchpad"               --> doCenterFloat
@@ -422,6 +430,7 @@ myLayoutHook -- {{{
   . windowNavigation
   . spacingRaw True (Border 0 0 0 0) True (Border 10 10 10 10) True -- Spacing between windows
   . gaps defaultGaps -- Gaps between screen and windows
+  . mkToggle (single REFLECTX)
   $ myLayouts
   where
     myLayouts = onWorkspaces ["5"] monocle masterStack

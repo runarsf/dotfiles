@@ -5,22 +5,11 @@ export WINEARCH=win64
 # As low as you can get osu! stable with
 # export STAGING_AUDIO_DURATION=5000
 
-if test -z "${1}"; then
-  wine64 "C:/osu!/osu!.exe"
-fi
+# https://gist.github.com/EXtremeExploit/af3cae2178ce1af3ab5c783ec0087642
 
-if test "${1}" = "config"; then
-  winecfg
-fi
-
-if test "${1}" = "tricks"; then
-  winetricks
-fi
-
-if test "${1}" = "kill"; then
-  wineserver -k
-fi
-
-# wineserver -k
-# cd ~/data/osu-wine # Or wherever you installed osu! in
-# wine osu!.exe "$@"
+case "${1:?}" in
+  config|cfg) winecfg;;
+  tricks) winetricks;;
+  k|kill) wineserver -k;;
+  *) wine64 "C:/osu!/osu!.exe";;
+esac

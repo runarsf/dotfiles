@@ -4,6 +4,7 @@
 # just -f <(curl -fs https://raw.githubusercontent.com/runarsf/dotfiles/master/justfile) deploy
 
 # TODO use environment variables to configure gum
+# TODO firefox
 
 set positional-arguments
 
@@ -224,3 +225,23 @@ update-limits:
 #       pacman -Qqen > {{PKGLIST}}
 #       pacman -Qqem > {{PKGLIST}}-aur;;
 #   esac
+
+scroll DIRECTION CLASS="":
+  #!/usr/bin/env bash
+  set -euo pipefail
+
+  case "{{DIRECTION}}" in
+    up) BUTTON="4";;
+    down) BUTTON="5";;
+    *) printf '%s\n' "Invalid direction '{{DIRECTION}}'..."; exit 1;;
+  esac
+
+  wid=""
+  if test -n "{{CLASS}}"; then
+    wid="$(xdotool search --class '{{CLASS}}' | head -1)"
+  fi
+  export $(xdotool getwindowfocus getwindowgeometry --shell ${wid} | xargs)
+
+  xdotool mousemove "$(( X + (WIDTH / 2) ))" "$(( Y + (HEIGHT / 2) ))"
+  xdotool click "${BUTTON}"
+  xdotool mousemove "$(( X + WIDTH - 10 ))" "$(( Y + 10 ))"

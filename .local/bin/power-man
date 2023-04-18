@@ -17,13 +17,13 @@ DEBUG="${1:+1}"
 
 # NB! Decimals are delimited by a comma, *not* a period, and they're a bit funky
 # TODO Don't pass global variables to functions? Or do? More maintainable
-: "${DIM_AFTER:=5}"
+: "${DIM_AFTER:=0}"
 : "${DIM_LEVEL:=40}"
 # : "${DIM_LEVEL:=$(($(brightnessctl max) / 2))}"
-: "${LOCK_AFTER:=15}"
+: "${LOCK_AFTER:=0}"
 : "${LOCK_COMMAND:=betterlockscreen --lock dimblur --blur 8}"
 : "${LOCK_PROCESS:=i3lock}"
-: "${SUSPEND_AFTER:=25}"
+: "${SUSPEND_AFTER:=0}"
 : "${SUSPEND_METHOD:=suspend}" # suspend / hibernate
 : "${WARN_PERCENTAGE:=15}"
 : "${WARN_MINUTES:=15}"

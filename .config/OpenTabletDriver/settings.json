@@ -1,0 +1,227 @@
+{
+  "Profiles": [
+    {
+      "Tablet": "Wacom CTL-480",
+      "OutputMode": {
+        "Path": "OpenTabletDriver.Desktop.Output.AbsoluteMode",
+        "Settings": [],
+        "Enable": true
+      },
+      "Filters": [
+        {
+          "Path": "HandSpeed.CustomFilter",
+          "Settings": [
+            {
+              "Property": "SpeedFormat",
+              "Value": "{0:N1}{1}"
+            },
+            {
+              "Property": "DistanceFormat",
+              "Value": "{0:N}{1}"
+            },
+            {
+              "Property": "ForcedDistanceUnit",
+              "Value": ""
+            },
+            {
+              "Property": "ForcedSpeedUnit",
+              "Value": ""
+            },
+            {
+              "Property": "OpenWebsiteAutomatically",
+              "Value": true
+            },
+            {
+              "Property": "SaveGlobalDistance",
+              "Value": true
+            },
+            {
+              "Property": "SaveDirectory",
+              "Value": ""
+            },
+            {
+              "Property": "RollingWindow",
+              "Value": 1000
+            },
+            {
+              "Property": "RateLimit",
+              "Value": 10
+            },
+            {
+              "Property": "ClearInterval",
+              "Value": 2000
+            },
+            {
+              "Property": "ServerUri",
+              "Value": "localhost:8073"
+            },
+            {
+              "Property": "BackgroundColor",
+              "Value": "#1C1B22"
+            },
+            {
+              "Property": "TextColor",
+              "Value": "#fff"
+            },
+            {
+              "Property": "Outline",
+              "Value": "1px solid #414141; outline-offset: -1px"
+            },
+            {
+              "Property": "BorderRounding",
+              "Value": "0.75rem"
+            },
+            {
+              "Property": "FontFamily",
+              "Value": "Inter"
+            },
+            {
+              "Property": "FontWeight",
+              "Value": "bold"
+            },
+            {
+              "Property": "FontSize",
+              "Value": "3rem"
+            },
+            {
+              "Property": "Title",
+              "Value": "Hand Speed"
+            },
+            {
+              "Property": "Width",
+              "Value": "20rem"
+            },
+            {
+              "Property": "CustomDivStyle",
+              "Value": ""
+            },
+            {
+              "Property": "CustomTitleStyle",
+              "Value": ""
+            },
+            {
+              "Property": "CustomDistanceStyle",
+              "Value": ""
+            },
+            {
+              "Property": "CustomSpeedStyle",
+              "Value": ""
+            }
+          ],
+          "Enable": false
+        },
+        {
+          "Path": "OpenTabletDriver.Plugin.NoiseReduction",
+          "Settings": [
+            {
+              "Property": "Samples",
+              "Value": 10
+            },
+            {
+              "Property": "DistanceThreshold",
+              "Value": 0.5
+            }
+          ],
+          "Enable": false
+        },
+        {
+          "Path": "TabletDriverFilters.Hawku.Smoothing",
+          "Settings": [
+            {
+              "Property": "Latency",
+              "Value": 2.0
+            },
+            {
+              "Property": "Frequency",
+              "Value": 1000.0
+            }
+          ],
+          "Enable": false
+        }
+      ],
+      "AbsoluteModeSettings": {
+        "Display": {
+          "Width": 2560.0,
+          "Height": 1440.0,
+          "X": 1280.0,
+          "Y": 720.0,
+          "Rotation": 0.0
+        },
+        "Tablet": {
+          "Width": 90.0,
+          "Height": 60.0,
+          "X": 72.31,
+          "Y": 47.5,
+          "Rotation": 0.0
+        },
+        "EnableClipping": true,
+        "EnableAreaLimiting": false,
+        "LockAspectRatio": false
+      },
+      "RelativeModeSettings": {
+        "XSensitivity": 10.0,
+        "YSensitivity": 10.0,
+        "RelativeRotation": 0.0,
+        "RelativeResetDelay": "00:00:00.1000000"
+      },
+      "Bindings": {
+        "TipActivationThreshold": 0.0,
+        "TipButton": {
+          "Path": "OpenTabletDriver.Desktop.Binding.KeyBinding",
+          "Settings": [
+            {
+              "Property": "Key",
+              "Value": "None"
+            }
+          ],
+          "Enable": true
+        },
+        "EraserActivationThreshold": 0.0,
+        "EraserButton": {
+          "Path": "OpenTabletDriver.Desktop.Binding.KeyBinding",
+          "Settings": [
+            {
+              "Property": "Key",
+              "Value": "None"
+            }
+          ],
+          "Enable": true
+        },
+        "PenButtons": [
+          {
+            "Path": "OpenTabletDriver.Desktop.Binding.KeyBinding",
+            "Settings": [
+              {
+                "Property": "Key",
+                "Value": "None"
+              }
+            ],
+            "Enable": true
+          },
+          {
+            "Path": "OpenTabletDriver.Desktop.Binding.KeyBinding",
+            "Settings": [
+              {
+                "Property": "Key",
+                "Value": "None"
+              }
+            ],
+            "Enable": true
+          }
+        ],
+        "AuxButtons": [
+          null,
+          null,
+          null,
+          null
+        ],
+        "MouseButtons": [],
+        "MouseScrollUp": null,
+        "MouseScrollDown": null
+      }
+    }
+  ],
+  "LockUsableAreaDisplay": true,
+  "LockUsableAreaTablet": true,
+  "Tools": []
+}
