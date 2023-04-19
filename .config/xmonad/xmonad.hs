@@ -226,8 +226,8 @@ myKeys =
   , ("M-C-<Space>", layoutScreens 2 (TwoPanePersistent Nothing (3/100) (1/2)))
   , ("M-C-S-<Space>", rescreen)
   , ("M-f", toggleFull)
-  , ("<KP_Down>", spawn "just --justfile ~/justfile scroll down scrcpy")
-  , ("<KP_End>", spawn "just --justfile ~/justfile scroll up scrcpy")
+  -- , ("<KP_Down>", spawn "just --justfile ~/justfile scroll down scrcpy")
+  -- , ("<KP_End>", spawn "just --justfile ~/justfile scroll up scrcpy")
   , ("M-M1-<Down>", sendMessage $ weakModifyGaps decGaps)
   , ("M-M1-<Up>", sendMessage $ weakModifyGaps incGaps)
   -- TODO Stop when MasterN >= NodeN
