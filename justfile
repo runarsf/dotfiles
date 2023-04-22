@@ -78,7 +78,7 @@ require *PKGS:
 
 # Deploys dotfiles
 [linux]
-deploy: update init-packages init-utils init-dotfiles update-limits mouse-acceleration init-dm
+deploy: update init-packages init-utils init-dotfiles init-startup-apps update-limits mouse-acceleration init-dm
 
 [private]
 init-utils: (require "git" "python3" "make" "zsh")
@@ -245,3 +245,29 @@ scroll DIRECTION CLASS="":
   xdotool mousemove "$(( X + (WIDTH / 2) ))" "$(( Y + (HEIGHT / 2) ))"
   xdotool click "${BUTTON}"
   xdotool mousemove "$(( X + WIDTH - 10 ))" "$(( Y + 10 ))"
+
+[private]
+[no-cd]
+[linux]
+requires-gum:
+  #!/usr/bin/env bash
+  set -euo pipefail
+  _gum_version="0.10.0"
+  _gum_bin="${HOME:-~}/.local/bin/gum"
+  if ! command -v gum >/dev/null 2>&1 && test ! -f "${_gum_bin}"; then
+    pushd "$(dirname "${_gum_bin}")" >/dev/null
+    wget -qO- "https://github.com/charmbracelet/gum/releases/download/v${_gum_version}/gum_${_gum_version}_Linux_x86_64.tar.gz" \
+      | tar -xvz gum
+  fi
+
+[linux]
+[private]
+init-startup-apps AUTOSTART_FILE="${XDG_CONFIG_HOME:-${HOME:-~}/.config}/dotfiles/autostart": requires-gum
+  #!/usr/bin/env bash
+  set -euo pipefail
+  applications="$(gum write --header 'Startup applications (CTRL-D to finish)' --placeholder 'Enter startup commands, one per line...')"
+  if test -z "${applications// }"; then
+    exit 0
+  fi
+  mkdir -p "$(dirname "{{AUTOSTART_FILE}}")"
+  printf '%s\n' "${applications}" | awk 'NF{print $0 " &"}' >> "{{AUTOSTART_FILE}}"

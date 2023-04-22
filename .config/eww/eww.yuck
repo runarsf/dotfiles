@@ -63,6 +63,9 @@
   (bbox :class "modules"
         :halign "end"
         :style "padding-right: ${traysize}px;"
+    ; (bbox :tooltip "Pomodoro") ; {{{
+    ; (  (bbutton :onclick "notify-send tomato"
+    ; (    (label :text "🍅")) ; }}}
     (bbox :tooltip "Autorandr" ; {{{
       (bbutton :onclick "rofi-autorandr"
                :onmiddleclick "autorandr --change"

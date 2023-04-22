@@ -293,7 +293,7 @@ myScratchpads = [ NS "terminal" spawnTerm findTerm manageTerm
                 , NS "calculator" spawnCalc findCalc manageCalc
                 ]
   where
-    spawnTerm  = "${TERMINAL:-alacritty}" ++ " --class scratchpad --title scratchpad --option font.size=16 --command tmux new-session -A -s scratchpad"
+    spawnTerm  = "${TERMINAL:-alacritty}" ++ " --class scratchpad --title scratchpad --option font.size=12 --command tmux new-session -A -s scratchpad"
     findTerm   = appName =? "scratchpad"
     manageTerm = customFloating $ W.RationalRect x y w h
            where

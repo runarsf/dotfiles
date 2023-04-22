@@ -66,19 +66,13 @@ if test -x /usr/bin/nm-applet; then
   nm-applet --sm-disable &
 fi
 
-picom &
+# picom &
 
 xdg-mime default "${BROWSER}.desktop" x-scheme-handler/http
 xdg-mime default "${BROWSER}.desktop" x-scheme-handler/https
 
-# trayer --edge top --align right --SetDockType true --SetPartialStrut true --expand true --width 5 --transparent false --tint 0x13141D --height 20 --monitor "primary" &
-
-#xsetwacom --set "Wacom Intuos S Pen stylus" Suppress 2
-#xsetwacom --set "Wacom Intuos S Pen stylus" Rawsample 4
-#xsetwacom --set "Wacom Intuos S Pen stylus" Area 2000 2351 10210 7453
-#xsetwacom --set "Wacom Intuos S Pen stylus" Button 1 '0'
-#xsetwacom --set "Wacom Intuos S Pen stylus" Button 2 '0'
-#xsetwacom --set "Wacom Intuos S Pen stylus" Button 3 '0'
-#xsetwacom --set "Wacom Intuos S Pen stylus" MapToOutput HEAD-0
+if test -f "${AUTOSTART:=${XDG_CONFIG_HOME:-${HOME:-~}/.config}/dotfiles/autostart}"; then
+  . "${AUTOSTART}" &
+fi
 
 exec xmonad
