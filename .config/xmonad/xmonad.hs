@@ -1,20 +1,21 @@
--- TODO https://www.reddit.com/r/xmonad/comments/11qrizh/how_to_show_my_current_layout_in_tint2
--- TODO https://github.com/dylanaraps/pywal/issues/172
-
 -- Imports {{{
 import           XMonad
 import qualified XMonad.StackSet                     as W
-import           Control.Monad                       (when)
+import           Control.Monad                       (when,
+                                                      join,
+                                                      forM)
 import           System.Exit                         (exitWith,
                                                       ExitCode(ExitSuccess))
 import           System.Environment                  (lookupEnv)
 
 -- Data
-import           Data.List                           (isSuffixOf)
+import           Data.List                           (isSuffixOf,
+                                                      isPrefixOf)
 import           Data.Ratio                          ((%))
 import           Data.Word                           (Word32)
 import           Data.Map                            (member,
                                                       fromList)
+import           Data.Bool                           (bool)
 
 -- Actions
 import           XMonad.Actions.Warp                 (warpToWindow,
@@ -40,7 +41,7 @@ import qualified XMonad.Actions.FlexibleResize       as Flex
 -- Hooks
 import           XMonad.Hooks.ManageHelpers
 import           XMonad.Hooks.InsertPosition         (insertPosition,
-                                                      Position(Below),
+                                                      Position(Above),
                                                       Focus(Newer))
 import           XMonad.Hooks.ManageDocks            (docks,
                                                       avoidStruts)
@@ -115,16 +116,7 @@ main = xmonad
      $ myConfig
 -- }}}
 
-getTerminal :: String -> IO [Char]
-getTerminal defaultTerminal = do
-  terminal <- lookupEnv "TERMINAL"
-  let chosenTerminal = case terminal of
-                         Just t -> t
-                         Nothing -> defaultTerminal
-  return chosenTerminal
-
-myConfig =
-  def -- {{{
+myConfig = def -- {{{
     { modMask            = mod4Mask::KeyMask
     , layoutHook         = myLayoutHook
     , manageHook         = myManageHook
@@ -148,7 +140,6 @@ confirm msg cb = do
     when (res == msg) cb
 -- }}}
 
--- Resizing tray automatically: https://www.reddit.com/r/xmonad/comments/10qcqcr/comment/j6q6m31/
 myStartupHook :: X () -- {{{
 myStartupHook = do
   spawn "(pgrep eww && eww reload) || (eww close bar || killall -q eww; eww open bar)"
@@ -198,6 +189,7 @@ myButtons conf@XConfig {XMonad.modMask = modm} = fromList $ -- {{{
 
 myKeys :: [([Char], X ())] -- {{{
 myKeys =
+  let w = workspaces myConfig in
   [ ("M-<Return>", spawn $ terminal myConfig)
   , ("M-S-r", spawn "xmonad --recompile && xmonad --restart")
   , ("M-n", do
@@ -234,9 +226,14 @@ myKeys =
   , ("M-m", sendMessage $ IncMasterN $ 1)
   , ("M-|", sendMessage $ Toggle REFLECTX)
   , ("M-S-m", sendMessage $ IncMasterN $ -1)
+  -- , ("M-S-o", do
+  --   layout <- getActiveLayoutDescription
+  --   flashText def 1 layout)
+  -- TODO When only one instance of firefox, move to ws 0
   , ("M-S-o", do
-    layout <- getActiveLayoutDescription
-    flashText def 1 layout)
+    win' <- findWindows "firefoxdeveloperedition"
+    when (length win' > 0)
+      (windows $ W.shift (w !! 0)))
   , ("M-o", swapGaps)
   , ("M-<Up>", do
     layout <- getActiveLayoutDescription
@@ -291,6 +288,7 @@ myKeys =
 myScratchpads :: [NamedScratchpad] -- {{{
 myScratchpads = [ NS "terminal" spawnTerm findTerm manageTerm
                 , NS "calculator" spawnCalc findCalc manageCalc
+--                , NS "game" spawnGame findGame manageGame
                 ]
   where
     spawnTerm  = "${TERMINAL:-alacritty}" ++ " --class scratchpad --title scratchpad --option font.size=12 --command tmux new-session -A -s scratchpad"
@@ -309,73 +307,75 @@ myScratchpads = [ NS "terminal" spawnTerm findTerm manageTerm
              y = (1/6)
              w = 0.4
              h = (2/3)
+--    spawnGame  = "steam steam://open/games"
+--    findGame   = fmap ("steam_app_" `isPrefixOf`) title
+--    manageGame = customFloating $ W.RationalRect 1 1 1 1
 -- }}}
 
-avoidMaster :: W.StackSet i l a s sd -> W.StackSet i l a s sd
-avoidMaster = W.modify' $ \c -> case c of
-     W.Stack t [] (r:rs) ->  W.Stack t [r] rs
-     otherwise           -> c
-
--- FIXME Breaks things like `doPipFloat`
 myPlaceHook :: Placement
 myPlaceHook =
   inBounds
   $ withGaps (defaultGapW, defaultGapW, defaultGapW, defaultGapW) (smart (1%2, 1%2))
 
 -- TODO Copy all PiP windows to all screens
--- TODO https://stackoverflow.com/a/74252752
--- TODO https://github.com/xmonad/xmonad/issues/152
--- NOTE https://gist.github.com/tylevad/3146111
 role = stringProperty "WM_WINDOW_ROLE"
 -- wtype = stringProperty "_NET_WM_WINDOW_TYPE"
 -- wtype =? "_NET_WM_WINDOW_TYPE_UTILITY" --> dothisthing
 -- , isInProperty "_NET_WM_WINDOW_TYPE" "_NET_WM_WINDOW_TYPE_UTILITY" --> defineBorderWidth 0
 
+findWindows :: String -> X [Window]
+findWindows name = do
+  withWindowSet $ (\ws -> do
+    forM (W.allWindows ws)
+      (\w -> do
+            s <- withDisplay $ \d -> fmap resClass . liftIO $ getClassHint d w
+            return $ bool [] [w] (s == name) :: X [Window]
+      ) >>= return . join
+    )
+
 myManageHook :: ManageHook -- {{{
-myManageHook =
-    insertPosition Below Newer
-    <+> namedScratchpadManageHook myScratchpads
-    <> composeOne
-    [ transience ]
-    <> let w = workspaces myConfig in composeAll
-    -- fmap not isDialog                       --> doF avoidMaster
-    -- isDialog                                --> doF W.shiftMaster <+> doF W.swapDown
-    [ isFullscreen                            --> doFullFloat
-    , title     =? "Fig Autocomplete"         --> doIgnore
-    , fmap not willFloat                      --> insertPosition Below Newer
-    , isDialog                                --> doCenterFloat
-    , isKDETrayWindow                         --> doIgnore
-    , appName   =? "panel"                    --> doLower
-    , resource  =? "desktop_window"           --> doIgnore
-    , role      ~? "PictureInPicture"         --> doPipFloat
-    , className ~? "eww-"                     --> doLower
-    , className =? "PrimeNote"                --> doFloat
-    , className ~? "osu"                      --> doIgnore
-    , className =? "Gimp"                     --> doCenterFloat
-    , className =? "Sxiv"                     --> doCenterFloat
-    , appName   =? "scratchpad"               --> doCenterFloat
-    , className =? "Dragon-drop"              --> doCenterFloat
-    , className =? "Blueman-manager"          --> doCenterFloat
-    , className =? "ColorGrab"                --> doCenterFloat
-    ,(className =? "discord"                  <&&>
-      fmap (not . (" - Discord" `isSuffixOf`)) title ) --> doPipFloat
-    ,(className ~? "firefox"                  <&&>
-      resource  =? "Dialog")                  --> doCenterFloat
-    , className =? "discord"                  --> doShift (w !! 1)
-    , className =? "Mattermost"               --> doShift (w !! 1)
-    , className =? "Steam"                    --> doShift (w !! 3)
-    , className =? "spotify"                  --> doShift (w !! 3)
-    , className =? "VirtualBox Manager"       --> doShift (w !! 4)
-    , className =? "org.remmina.Remmina"      --> doShift (w !! 4)
-    , title     =? "AudioRelay"               --> doShift (w !! 6)
-    , className =? "Pavucontrol"              --> doShift (w !! 6)
-    , className =? "easyeffects"              --> doShift (w !! 6)
-    , className =? "Blueman-manager"          --> doShift (w !! 6)
-    , className =? "Carla2"                   --> doShift (w !! 6)
-    , className =? "helvum"                   --> doShift (w !! 6)
-    , className =? "qpwgraph"                 --> doShift (w !! 6)
+myManageHook = let w = workspaces myConfig in composeAll
+    [ fmap not willFloat                              --> insertPosition Above Newer
+    , isFullscreen                                    --> doFullFloat
+    , isDialog                                        --> doCenterFloat
+    , isKDETrayWindow                                 --> doIgnore
+    , role      ~? "PictureInPicture"                 --> doPipFloat
+    , className ~? "eww-"                             --> doLower
+    , className =? "PrimeNote"                        --> doFloat
+    ,(className =? "discord"                         <&&>
+      fmap (not . (" - Discord" `isSuffixOf`)) title) --> doPipFloat
+    , fmap ("steam_app_" `isPrefixOf`) className      --> doShift (w !! 9)
+    , isDialog                                        --> doF W.shiftMaster <+> doF W.swapDown
     ]
+    <+> (composeAll . concat $
+    [ [ className =? n --> doCenterFloat    | n <- myFloats  ]
+    , [ className =? n --> doIgnore         | n <- myIgnores ]
+    , [ className =? n --> doShift (w !! 0) | n <- ws1       ]
+    , [ className =? n --> doShift (w !! 1) | n <- ws2       ]
+    , [ className =? n --> doShift (w !! 2) | n <- ws3       ]
+    , [ className =? n --> doShift (w !! 3) | n <- ws4       ]
+    , [ className =? n --> doShift (w !! 4) | n <- ws5       ]
+    , [ className =? n --> doShift (w !! 5) | n <- ws6       ]
+    , [ className =? n --> doShift (w !! 6) | n <- ws7       ]
+    , [ className =? n --> doShift (w !! 7) | n <- ws8       ]
+    , [ className =? n --> doShift (w !! 8) | n <- ws9       ]
+    , [ className =? n --> doShift (w !! 9) | n <- ws0       ]
+    ] )
+    <+> namedScratchpadManageHook myScratchpads
     <+> placeHook myPlaceHook
+    where
+      myFloats = [ "XClock", "Gimp", "Sxiv", "Dragon-drop", "Blueman-manager", "ColorGrab" ]
+      myIgnores = [ "osu", "Fig Autocomplete" ]
+      ws1 = []
+      ws2 = [ "discord", "Mattermost" ]
+      ws3 = [ "spotify" ]
+      ws4 = [ "VirtualBox Manager" ]
+      ws5 = [ "Steam", "org.remmina.Remmina" ]
+      ws6 = []
+      ws7 = [ "Pavucontrol", "AudioRelay", "easyeffects", "Blueman-manager", "Carla2", "helvum", "qpwgraph" ]
+      ws8 = []
+      ws9 = []
+      ws0 = []
 -- }}}
 
 doPipFloat = (customFloating $ W.RationalRect x y w h)
@@ -410,7 +410,6 @@ monocle     = renamed [Replace "Monocle"]
             $ StateFull
 -- }}}
 
--- https://www.reddit.com/r/xmonad/comments/ygp2ab/toggle_between_two_sets_of_gaps/
 defaultGap :: Int
 defaultGap = 10
 defaultGapW :: Word32
