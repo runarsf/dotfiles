@@ -91,6 +91,8 @@ zinit light z-shell/zsh-diff-so-fancy
 zinit ice wait'1' as'completion' lucid
 zinit snippet https://github.com/docker/cli/blob/master/contrib/completion/zsh/_docker
 
+zinit light nix-community/nix-zsh-completions
+
 # zinit ice wait'1' lucid
 # zinit light marzocchi/zsh-notify
 #   zstyle ':notify:*' error-title "Command failed after #{time_elapsed} seconds"

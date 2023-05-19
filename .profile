@@ -33,7 +33,10 @@ export GTK2_RC_FILES="${HOME}/.gtkrc-2.0"
 # export MANPATH="${NPM_PACKAGES}/share/man:$(manpath)"
 # export PATH="${PATH}:${NPM_PACKAGES}/bin"
 
+export XDG_DATA_DIRS="${HOME}/.nix-profile/share:${XDG_DATA_DIRS}"
+
 export PATH="${PATH}:${HOME}/.local/bin"
+export PATH="${PATH}:${HOME}/.nix-profile/bin"
 export PATH="${PATH}:${XDG_CONFIG_HOME:-${HOME}/.config}/bspwm/scripts"
 export PATH="${PATH}:${XDG_CONFIG_HOME:-${HOME}/.config}/polybar/scripts"
 export PATH="${PATH}:${HOME}/go/bin"

@@ -42,6 +42,8 @@ import qualified XMonad.Actions.FlexibleResize       as Flex
 import           XMonad.Hooks.ManageHelpers
 import           XMonad.Hooks.InsertPosition         (insertPosition,
                                                       Position(Above),
+                                                      Position(Below),
+                                                      Position(End),
                                                       Focus(Newer))
 import           XMonad.Hooks.ManageDocks            (docks,
                                                       avoidStruts)
@@ -334,20 +336,8 @@ findWindows name = do
     )
 
 myManageHook :: ManageHook -- {{{
-myManageHook = let w = workspaces myConfig in composeAll
-    [ fmap not willFloat                              --> insertPosition Above Newer
-    , isFullscreen                                    --> doFullFloat
-    , isDialog                                        --> doCenterFloat
-    , isKDETrayWindow                                 --> doIgnore
-    , role      ~? "PictureInPicture"                 --> doPipFloat
-    , className ~? "eww-"                             --> doLower
-    , className =? "PrimeNote"                        --> doFloat
-    ,(className =? "discord"                         <&&>
-      fmap (not . (" - Discord" `isSuffixOf`)) title) --> doPipFloat
-    , fmap ("steam_app_" `isPrefixOf`) className      --> doShift (w !! 9)
-    , isDialog                                        --> doF W.shiftMaster <+> doF W.swapDown
-    ]
-    <+> (composeAll . concat $
+myManageHook = let w = workspaces myConfig in
+    (composeAll . concat $
     [ [ className =? n --> doCenterFloat    | n <- myFloats  ]
     , [ className =? n --> doIgnore         | n <- myIgnores ]
     , [ className =? n --> doShift (w !! 0) | n <- ws1       ]
@@ -360,18 +350,31 @@ myManageHook = let w = workspaces myConfig in composeAll
     , [ className =? n --> doShift (w !! 7) | n <- ws8       ]
     , [ className =? n --> doShift (w !! 8) | n <- ws9       ]
     , [ className =? n --> doShift (w !! 9) | n <- ws0       ]
-    ] )
-    <+> namedScratchpadManageHook myScratchpads
-    <+> placeHook myPlaceHook
+    ]) <> composeAll
+    [ fmap not willFloat                              --> insertPosition Below Newer
+    , isFullscreen                                    --> doFullFloat
+    , isDialog                                        --> doCenterFloat
+    , isKDETrayWindow                                 --> doIgnore
+    , role      ~? "PictureInPicture"                 --> doPipFloat
+    , className ~? "eww-"                             --> doLower
+    , className =? "PrimeNote"                        --> doFloat
+    ,(className =? "discord"                         <&&>
+      fmap (not . (" - Discord" `isSuffixOf`)) title) --> doPipFloat
+    , fmap ("steam_app_" `isPrefixOf`) className      --> doShift (w !! 9)
+    , isDialog                                        --> doF W.shiftMaster <> doF W.swapDown
+    -- , TODO floatNextHook
+    ]
+    <> namedScratchpadManageHook myScratchpads
+    <> placeHook myPlaceHook
     where
       myFloats = [ "XClock", "Gimp", "Sxiv", "Dragon-drop", "Blueman-manager", "ColorGrab" ]
       myIgnores = [ "osu", "Fig Autocomplete" ]
       ws1 = []
       ws2 = [ "discord", "Mattermost" ]
       ws3 = [ "spotify" ]
-      ws4 = [ "VirtualBox Manager" ]
-      ws5 = [ "Steam", "org.remmina.Remmina" ]
-      ws6 = []
+      ws4 = [ "Steam" ]
+      ws5 = [ "org.remmina.Remmina" ]
+      ws6 = [ "VirtualBox Manager" ]
       ws7 = [ "Pavucontrol", "AudioRelay", "easyeffects", "Blueman-manager", "Carla2", "helvum", "qpwgraph" ]
       ws8 = []
       ws9 = []
@@ -393,7 +396,7 @@ toggleFull = withFocused (\windowId -> do
 
 myEventHook =
   handleTimerEvent
-  <+> swallowEventHook (className =? "Alacritty") (return True)
+  <> swallowEventHook (className =? "Alacritty") (return True)
 
 -- Layouts {{{
 masterStack = renamed [Replace "Tiled"]
@@ -422,6 +425,7 @@ swapGaps = sendMessage . ModifyGaps $ \gs ->
     a = defaultGaps
     b = [(U,10),(R,75),(D,75),(L,75)]
 
+-- TODO Fullscreen without unfloating
 myLayoutHook -- {{{
   = avoidStruts
   . windowArrange
