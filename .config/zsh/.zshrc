@@ -131,7 +131,7 @@ zinit ice lucid wait atclone"sed -ie 's/fc -rl 1/fc -rli 1/' shell/key-bindings.
                 pick"/dev/null"
 zinit light junegunn/fzf
   export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow --glob "!.git/*" 2> /dev/null'
-  export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+  export FZF_CTRL_T_COMMAND="${FZF_DEFAULT_COMMAND}"
   export FZF_ALT_C_COMMAND="fd -t d ."
   export FZF_CTRL_T_OPTS="--preview '(highlight -O ansi -l {} 2> /dev/null || cat {} || tree -C {}) 2> /dev/null | head -200'"
   export FZF_CTRL_R_OPTS="--preview 'echo {}' --preview-window down:3:hidden:wrap --bind '?:toggle-preview'"
@@ -140,6 +140,17 @@ zinit ice as'command' from'gh-r' \
           atclone'./starship init zsh > init.zsh; ./starship completions zsh > _starship' \
           atpull'%atclone' src'init.zsh'
 zinit light starship/starship
+
+zinit load zshzoo/magic-enter
+magic-enter-cmd () {
+  if test -n "${VIRTUAL_ENV}"; then
+    printf '%s' " clear; python3 --version"
+  elif git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
+    printf '%s' " clear; git -c color.ui=always status --porcelain=v1 -M --show-stash --ignore-submodules"
+  else
+    printf '%s' " clear; \ls --color=always -hAp"
+  fi
+}
 # }}}
 
 # Completions {{{

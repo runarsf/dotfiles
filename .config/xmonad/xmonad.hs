@@ -59,6 +59,7 @@ import           XMonad.Hooks.TaffybarPagerHints     (pagerHints)
 import           XMonad.Hooks.SetWMName              (setWMName)
 import           XMonad.Hooks.UrgencyHook            (withUrgencyHook,
                                                       NoUrgencyHook(..))
+import           XMonad.Hooks.FadeWindows            (isFloating)
 
 -- Util
 import           XMonad.Util.EZConfig                (additionalKeysP)
@@ -350,9 +351,11 @@ myManageHook = let w = workspaces myConfig in
     , [ className =? n --> doShift (w !! 7) | n <- ws8       ]
     , [ className =? n --> doShift (w !! 8) | n <- ws9       ]
     , [ className =? n --> doShift (w !! 9) | n <- ws0       ]
-    ]) <> composeAll
-    [ fmap not willFloat                              --> insertPosition Below Newer
-    , isFullscreen                                    --> doFullFloat
+    ]) <> composeOne
+    [ willFloat         -?> insertPosition Above Newer
+    , fmap not willFloat -?> insertPosition Above Newer
+    ] <> composeAll
+    [ isFullscreen                                    --> doFullFloat
     , isDialog                                        --> doCenterFloat
     , isKDETrayWindow                                 --> doIgnore
     , role      ~? "PictureInPicture"                 --> doPipFloat
