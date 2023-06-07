@@ -94,6 +94,7 @@ import           XMonad.Layout.Renamed               (renamed,
                                                       Rename(Replace))
 import           XMonad.Layout.NoBorders             (noBorders,
                                                       smartBorders)
+import           XMonad.Layout.SimplestFloat         (simplestFloat)
 import           XMonad.Layout.PerWorkspace          (onWorkspaces)
 import           XMonad.Layout.StateFull             (focusTracking)
 import           XMonad.Layout.WindowArranger        (windowArrange,
@@ -336,52 +337,76 @@ findWindows name = do
       ) >>= return . join
     )
 
+hasProperty :: String -> Query Bool
+hasProperty name = ask >>= \w -> liftX $ withDisplay $ queryFunc w
+  where queryFunc window display = do
+          atom <- getAtom name
+
+          prop8 <- io $ getWindowProperty8 display atom window
+          prop16 <- io $ getWindowProperty16 display atom window
+          prop32 <- io $ getWindowProperty32 display atom window
+
+          --
+          -- This is actually the opposite of the Maybe monad (I want to
+          -- *continue* on Nothing), so I can't just use a monad here.
+          --
+          case prop8 of
+            Just x  -> return True
+            Nothing ->
+              case prop16 of
+                Just x  -> return True
+                Nothing ->
+                  case prop32 of
+                    Just x  -> return True
+                    Nothing -> return False
+
 myManageHook :: ManageHook -- {{{
 myManageHook = let w = workspaces myConfig in
-    (composeAll . concat $
-    [ [ className =? n --> doCenterFloat    | n <- myFloats  ]
-    , [ className =? n --> doIgnore         | n <- myIgnores ]
-    , [ className =? n --> doShift (w !! 0) | n <- ws1       ]
-    , [ className =? n --> doShift (w !! 1) | n <- ws2       ]
-    , [ className =? n --> doShift (w !! 2) | n <- ws3       ]
-    , [ className =? n --> doShift (w !! 3) | n <- ws4       ]
-    , [ className =? n --> doShift (w !! 4) | n <- ws5       ]
-    , [ className =? n --> doShift (w !! 5) | n <- ws6       ]
-    , [ className =? n --> doShift (w !! 6) | n <- ws7       ]
-    , [ className =? n --> doShift (w !! 7) | n <- ws8       ]
-    , [ className =? n --> doShift (w !! 8) | n <- ws9       ]
-    , [ className =? n --> doShift (w !! 9) | n <- ws0       ]
-    ]) <> composeOne
-    [ willFloat         -?> insertPosition Above Newer
-    , fmap not willFloat -?> insertPosition Above Newer
-    ] <> composeAll
-    [ isFullscreen                                    --> doFullFloat
-    , isDialog                                        --> doCenterFloat
-    , isKDETrayWindow                                 --> doIgnore
-    , role      ~? "PictureInPicture"                 --> doPipFloat
-    , className ~? "eww-"                             --> doLower
-    , className =? "PrimeNote"                        --> doFloat
-    ,(className =? "discord"                         <&&>
-      fmap (not . (" - Discord" `isSuffixOf`)) title) --> doPipFloat
-    , fmap ("steam_app_" `isPrefixOf`) className      --> doShift (w !! 9)
-    , isDialog                                        --> doF W.shiftMaster <> doF W.swapDown
-    -- , TODO floatNextHook
-    ]
-    <> namedScratchpadManageHook myScratchpads
-    <> placeHook myPlaceHook
-    where
-      myFloats = [ "XClock", "Gimp", "Sxiv", "Dragon-drop", "Blueman-manager", "ColorGrab" ]
-      myIgnores = [ "osu", "Fig Autocomplete" ]
-      ws1 = []
-      ws2 = [ "discord", "Mattermost" ]
-      ws3 = [ "spotify" ]
-      ws4 = [ "Steam" ]
-      ws5 = [ "org.remmina.Remmina" ]
-      ws6 = [ "VirtualBox Manager" ]
-      ws7 = [ "Pavucontrol", "AudioRelay", "easyeffects", "Blueman-manager", "Carla2", "helvum", "qpwgraph" ]
-      ws8 = []
-      ws9 = []
-      ws0 = []
+  (composeAll . concat $
+  [ [ className =? n --> doCenterFloat    | n <- myFloats  ]
+  , [ className =? n --> doIgnore         | n <- myIgnores ]
+  , [ className =? n --> doShift (w !! 0) | n <- ws1       ]
+  , [ className =? n --> doShift (w !! 1) | n <- ws2       ]
+  , [ className =? n --> doShift (w !! 2) | n <- ws3       ]
+  , [ className =? n --> doShift (w !! 3) | n <- ws4       ]
+  , [ className =? n --> doShift (w !! 4) | n <- ws5       ]
+  , [ className =? n --> doShift (w !! 5) | n <- ws6       ]
+  , [ className =? n --> doShift (w !! 6) | n <- ws7       ]
+  , [ className =? n --> doShift (w !! 7) | n <- ws8       ]
+  , [ className =? n --> doShift (w !! 8) | n <- ws9       ]
+  , [ className =? n --> doShift (w !! 9) | n <- ws0       ]
+  ]) <> composeOne
+  [ willFloat         -?> insertPosition Above Newer
+  , fmap not willFloat -?> insertPosition Above Newer
+  ] <> composeAll
+  [ isFullscreen                                    --> doFullFloat
+  , isDialog                                        --> doCenterFloat
+  , isKDETrayWindow                                 --> doIgnore
+  , role      ~? "PictureInPicture"                 --> doPipFloat
+  , className ~? "eww-"                             --> doLower
+  , className =? "PrimeNote"                        --> doFloat
+  ,(className =? "discord"                         <&&>
+    fmap (not . (" - Discord" `isSuffixOf`)) title) --> doPipFloat
+  , fmap ("steam_app_" `isPrefixOf`) className      --> doShift (w !! 9)
+  , hasProperty "_STEAM_GAME"                       --> doShift (w !! 9)
+  , isDialog                                        --> doF W.shiftMaster <> doF W.swapDown
+  -- , TODO floatNextHook
+  ]
+  <> namedScratchpadManageHook myScratchpads
+  <> placeHook myPlaceHook
+  where
+    myFloats = [ "XClock", "Gimp", "Sxiv", "Dragon-drop", "Blueman-manager", "ColorGrab" ]
+    myIgnores = [ "osu", "Fig Autocomplete" ]
+    ws1 = []
+    ws2 = [ "discord", "Mattermost" ]
+    ws3 = [ "spotify" ]
+    ws4 = [ "Steam" ]
+    ws5 = [ "org.remmina.Remmina" ]
+    ws6 = [ "VirtualBox Manager" ]
+    ws7 = [ "Pavucontrol", "AudioRelay", "easyeffects", "Blueman-manager", "Carla2", "helvum", "qpwgraph" ]
+    ws8 = []
+    ws9 = []
+    ws0 = []
 -- }}}
 
 doPipFloat = (customFloating $ W.RationalRect x y w h)
@@ -404,8 +429,8 @@ myEventHook =
 -- Layouts {{{
 masterStack = renamed [Replace "Tiled"]
             $ ResizableTall 1 (3/100) (1/2) []
-bsp         = renamed [Replace "BSP"]
-            $ emptyBSP
+-- bsp         = renamed [Replace "BSP"]
+--             $ emptyBSP
 threeCol    = renamed [Replace "ThreeCol"]
             $ magnifiercz' 1.35
             $ ResizableThreeColMid 1 (3/100) (1/2) []
@@ -414,6 +439,8 @@ dual        = renamed [Replace "Dual"]
 monocle     = renamed [Replace "Monocle"]
             $ noBorders
             $ StateFull
+floating    = renamed [Replace "Floating"]
+            $ simplestFloat
 -- }}}
 
 defaultGap :: Int
@@ -439,9 +466,10 @@ myLayoutHook -- {{{
   . mkToggle (single REFLECTX)
   $ myLayouts
   where
-    myLayouts = onWorkspaces ["5"] monocle masterStack
+    -- TODO Reference workspace by `(ws !! index)`
+    myLayouts = onWorkspaces ["5"] monocle
+              $ onWorkspaces ["0"] floating masterStack
             ||| onWorkspaces ["2"] threeCol dual
             ||| onWorkspaces ["2"] dual threeCol
-            ||| bsp
             ||| onWorkspaces ["5"] masterStack monocle
 -- }}}
