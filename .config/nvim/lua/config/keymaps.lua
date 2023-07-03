@@ -1,11 +1,6 @@
+-- Overrides https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
+
 local cfg = require("util")
-
-vim.opt.timeoutlen = 300 -- time to wait for a mapped sequence to complete (in milliseconds)
-vim.opt.ttimeoutlen = 50 -- affects escape from insert mode
-
--- NOTE All leader maps go in ./config/which-key.lua
-vim.g.mapleader = ","
-vim.g.maplocalleader = " "
 
 -- https://github.com/mhinz/vim-galore#saner-behavior-of-n-and-n
 cfg.map("n", "n", "'Nn'[v:searchforward]", { expr=true })
@@ -55,8 +50,8 @@ cfg.map("t", "<C-k>", "<C-\\><C-N><C-w>k")
 cfg.map("t", "<C-l>", "<C-\\><C-N><C-w>l")
 
 -- nvim-tree
-cfg.map("n", "<C-n>", "<CMD>NvimTreeToggle<CR>")
-cfg.map("v", "<C-n>", "<ESC><CMD>NvimTreeToggle<CR>")
-cfg.map("i", "<C-n>", "<ESC><CMD>NvimTreeToggle<CR>")
+-- cfg.map("n", "<C-n>", "<CMD>NvimTreeToggle<CR>")
+-- cfg.map("v", "<C-n>", "<ESC><CMD>NvimTreeToggle<CR>")
+-- cfg.map("i", "<C-n>", "<ESC><CMD>NvimTreeToggle<CR>")
 
 vim.cmd("cnoreabbrev q1 q!")

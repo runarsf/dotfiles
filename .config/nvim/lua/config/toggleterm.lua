@@ -2,7 +2,8 @@ local cfg = require("util")
 local ok, toggleterm = pcall(require, "toggleterm")
 if not ok then return end
 
--- requires `hidden` to be set
+vim.opt.hidden = true
+
 toggleterm.setup({
   open_mapping = "<M-n>",
   size = 20,

@@ -1,3 +1,5 @@
+-- Overrides https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/autocmds.lua
+
 vim.cmd [[
   " Get rid of that pesky command-line-window (:h command-line-window)
   autocmd CmdwinEnter * q
