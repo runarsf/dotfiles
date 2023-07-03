@@ -1,27 +1,7 @@
-local cfg = require("util")
-local ok, toggleterm = pcall(require, "toggleterm")
+-- TODO
+local ok, toggleterm = pcall(require, "toggleterm.terminal")
 if not ok then return end
-
-vim.opt.hidden = true
-
-toggleterm.setup({
-  open_mapping = "<M-n>",
-  size = 20,
-  shading_factor = 2,
-  direction = "float",
-  float_opts = {
-    border = "curved",
-    winblend = 0,
-    highlights = {
-      border = "Normal",
-      background = "Normal",
-    },
-  },
-})
-
-cfg.map("t", "<ESC><ESC>", "<C-\\><C-N>")
-
-local Terminal = require('toggleterm.terminal').Terminal
+local Terminal = toggleterm.Terminal
 
 local M = {}
 

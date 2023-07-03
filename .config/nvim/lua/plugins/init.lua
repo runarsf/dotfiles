@@ -1,5 +1,7 @@
 local cfg = require("util")
 
+-- TODO Open neo-tree when opening folder
+
 return {
   { "Shatur/neovim-ayu",
     config = function()
@@ -27,13 +29,48 @@ return {
     config = true,
   },
 
-  --[[ { "folke/which-key.nvim",
-    opts = function(_, opts)
-      vim.list_extend(opts.defaults, {
-        ["<leader>q"] = { "quit" }
-      })
-    end,
-  }, ]]
+  { "folke/which-key.nvim",
+    opts = {
+      defaults = {
+        ["<leader>"] = {
+          [".."] = { "<CMD>lua require'telescope'.extensions.notify.notify()<CR>", "Show Notifications" },
+          ["<SPACE>"] = { "<CMD>nohlsearch<CR>", "Unhighlight Search" },
+          L = {
+            { "<CMD>set cursorline!<CR>", "Toggle Cursorline" },
+            name = "LSP",
+            L = { "<CMD>set cursorcolumn!<CR>", "Toggle Cusorcolumn" },
+          },
+          m = {
+            { "<CMD>lua require'util'.ToggleMouse()<CR>", "Toggle Mouse" },
+            d = { "<CMD>w<CR><CMD>MarkdownPreview<CR>", "Markdown Preview (web)" },
+            g = { "<CMD>w<CR><CMD>lua require'config.toggleterm'.Glow()<CR>", "Markdown Preview (glow)" },
+          },
+          n = { "<CMD>lua require'util'.CopyMode()<CR>", "Toggle Numbers" },
+          P = {
+            "<CMD>Legendary<CR>",
+            "Command Palette",
+          },
+          q = { "<CMD>q<CR>", "Quit" },
+          r = {
+            name = "REST Client",
+            r = { "<Plug>RestNvim", "Run Under Cursor" },
+            c = { "<Plug>RestNvimPreview", "Preview CURL Command" },
+            a = { "<Plug>RestNvimLast", "Re-Run Last Request" },
+          },
+          T = {
+            "<CMD>TodoTelescope<CR>",
+            "TODO"
+          },
+          u = { "<CMD>UndotreeToggle<CR><CMD>UndotreeFocus<CR>", "Toggle Undo Tree" },
+          w = {
+            { "<CMD>w!<CR>", "Write" },
+            q = { "<CMD>wq!<CR>", "Write and Quit" },
+            r = { "<CMD>set wrap!<CR>", "Toggle Word Wrap" },
+          },
+        }
+      }
+    }
+  },
 
   { "hrsh7th/nvim-cmp",
     dependencies = { "hrsh7th/cmp-emoji" },
@@ -163,14 +200,13 @@ return {
         -- pyright will be automatically installed with mason and loaded with lspconfig
         pyright = {},
       },
+      autoformat = false,
     },
   },
 
   { "kaarmu/typst.vim",
     ft = "typst",
   },
-
-  { import = "lazyvim.plugins.extras.lang.typescript" },
 
   { "nvim-treesitter/nvim-treesitter",
     dependencies = {
@@ -237,12 +273,6 @@ return {
       }
     },
   },
-
-  -- use mini.starter instead of alpha
-  -- { import = "lazyvim.plugins.extras.ui.mini-starter" },
-
-  -- add jsonls and schemastore packages, and setup treesitter for json, json5 and jsonc
-  { import = "lazyvim.plugins.extras.lang.json" },
 
   { "williamboman/mason.nvim",
     opts = {
