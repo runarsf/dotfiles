@@ -1,5 +1,13 @@
 -- Overrides https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/autocmds.lua
 
+-- Disable autoformat for lua files
+vim.api.nvim_create_autocmd({ "FileType" }, {
+  pattern = { "lua" },
+  callback = function()
+    vim.b.autoformat = false
+  end,
+})
+
 vim.cmd [[
   " Get rid of that pesky command-line-window (:h command-line-window)
   autocmd CmdwinEnter * q

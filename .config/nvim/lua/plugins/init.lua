@@ -1,7 +1,3 @@
-local cfg = require("util")
-
--- TODO Open neo-tree when opening folder
-
 return {
   { "Shatur/neovim-ayu",
     config = function()
@@ -81,17 +77,6 @@ return {
     end,
   },
 
-  { "nvim-neo-tree/neo-tree.nvim",
-    config = function()
-      cfg.map("", "<C-n>", "<CMD>Neotree toggle<CR>")
-    end,
-    keys = function(_, keys)
-      vim.list_extend(keys, {
-        "<C-n>"
-      })
-    end,
-  },
-
   { "telescope.nvim",
     dependencies = {
       "nvim-telescope/telescope-fzf-native.nvim",
@@ -101,6 +86,26 @@ return {
         require("telescope").load_extension("fzf")
       end,
     },
+  },
+
+  -- https://www.lazyvim.org/plugins/ui#alpha-nvim
+  { "alpha-nvim",
+    opts = function()
+      local alpha = require("alpha")
+      local dashboard = require("alpha.themes.dashboard")
+      require("alpha.term")
+      
+      dashboard.section.header.type = "terminal"
+      dashboard.section.header.command = "cat ~/.config/dotfiles/ascii.txt"
+      dashboard.section.header.width = 28
+      dashboard.section.header.height = 14
+      dashboard.section.header.opts.position = "center"
+      dashboard.section.header.opts.hl = "String"
+
+      dashboard.opts.layout[1].val = 1
+  
+      return dashboard
+    end,
   },
 
   { "folke/todo-comments.nvim",
@@ -188,7 +193,7 @@ return {
     ft = { "yuck", "lisp" },
   },
   { "eraserhd/parinfer-rust",
-    run = "cargo build --release",
+    build = "cargo build --release",
     ft = { "yuck", "lisp" },
   },
 
