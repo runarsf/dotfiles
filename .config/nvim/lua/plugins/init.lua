@@ -5,17 +5,18 @@ return {
     end,
   },
 
-  { "nvim-lua/popup.nvim" },            -- Popup API from Vim in Neovim
-  { "nvim-lua/plenary.nvim" },            -- Useful lua functions
-  { "antoinemadec/FixCursorHold.nvim" },  -- Fixes lsp doc highlight
-  { "lewis6991/impatient.nvim" },         -- Speed up Lua module loading
-  { "nathom/filetype.nvim" },             -- Speed up startup time
-
   { "LazyVim/LazyVim",
     opts = {
       colorscheme = "ayu-dark",
     },
   },
+
+  { "akinsho/bufferline.nvim", enabled=false },
+
+  { "nvim-lua/popup.nvim" },            -- Popup API from Vim in Neovim
+  { "nvim-lua/plenary.nvim" },            -- Useful lua functions
+  { "antoinemadec/FixCursorHold.nvim" },  -- Fixes lsp doc highlight
+  { "lewis6991/impatient.nvim" },         -- Speed up Lua module loading
 
   -- { "andweeb/presence.nvim", },
 
@@ -94,7 +95,7 @@ return {
       local alpha = require("alpha")
       local dashboard = require("alpha.themes.dashboard")
       require("alpha.term")
-      
+
       dashboard.section.header.type = "terminal"
       dashboard.section.header.command = "cat ~/.config/dotfiles/ascii.txt"
       dashboard.section.header.width = 28
@@ -103,7 +104,7 @@ return {
       dashboard.section.header.opts.hl = "String"
 
       dashboard.opts.layout[1].val = 1
-  
+
       return dashboard
     end,
   },

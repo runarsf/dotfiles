@@ -53,6 +53,7 @@ if test command -v "numlockx" &>/dev/null; then
   numlockx on
 fi
 
+lxpolkit &
 /usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
 /usr/lib/polkit-kde-authentication-agent-1 &
 
@@ -66,7 +67,7 @@ if test -x /usr/bin/nm-applet; then
   nm-applet --sm-disable &
 fi
 
-# picom &
+picom --config ~/.config/picom-jonaburg.conf &
 
 xdg-mime default "${BROWSER}.desktop" x-scheme-handler/http
 xdg-mime default "${BROWSER}.desktop" x-scheme-handler/https

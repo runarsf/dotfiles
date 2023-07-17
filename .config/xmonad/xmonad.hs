@@ -149,7 +149,7 @@ myStartupHook = do
   spawn "(pgrep eww && eww reload) || (eww close bar || killall -q eww; eww open bar)"
   spawn "killall -q trayer; trayer --edge top --align right --SetDockType true --SetPartialStrut false --expand true --widthtype request --transparent true --alpha 0 --tint 0x0D1117 --height 30 --heighttype pixel --monitor 'primary' --margin 20 --distance 11 --padding 0 &"
   spawn "(nitrogen --restore || (~/.fehbg || feh --bg-scale ~/.config/wall.jpg)) &"
-  spawnOnce "killall -q picom; picom &"
+  spawnOnce "killall -q picom; picom --config ~/.config/picom-jonaburg.conf &"
   setWMName "LG3D"
 -- }}}
 
@@ -211,7 +211,7 @@ myKeys =
   , ("M-d", unGrab >> spawn "rofi -show")
   , ("M-S-d", unGrab >> spawn "dmenu_run")
   , ("M-e", spawn "xdg-open ~")
-  , ("M-S-c", spawn "toggleprogram picom")
+  , ("M-S-c", spawn "toggleprogram picom --config ~/.config/picom-jonaburg.conf")
   , ("M-x", unGrab >> spawn "betterlockscreen --lock dimblur --blur 8")
   , ("M-s", selectWindow def >>= (`whenJust` windows . W.focusWindow))
   , ("M1-p", unGrab >> spawn "screenshot -m region -t -c -o 'screenshot-xbackbone'")
