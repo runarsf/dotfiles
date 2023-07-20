@@ -435,6 +435,7 @@ threeCol    = renamed [Replace "ThreeCol"]
             $ magnifiercz' 1.35
             $ ResizableThreeColMid 1 (3/100) (1/2) []
 dual        = renamed [Replace "Dual"]
+            $ magnifiercz' 1.5
             $ TwoPanePersistent Nothing (3/100) (1/2)
 monocle     = renamed [Replace "Monocle"]
             $ noBorders
@@ -469,7 +470,6 @@ myLayoutHook -- {{{
     -- TODO Reference workspace by `(ws !! index)`
     myLayouts = onWorkspaces ["5"] monocle
               $ onWorkspaces ["0"] floating masterStack
-            ||| onWorkspaces ["2"] threeCol dual
-            ||| onWorkspaces ["2"] dual threeCol
+            ||| dual
             ||| onWorkspaces ["5"] masterStack monocle
 -- }}}
