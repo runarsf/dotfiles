@@ -208,8 +208,24 @@ dotfiles () {
 # }}}
 # }}}
 
-# {{{
+# Directory commands {{{
+# https://gist.github.com/dofy/ff397555ae941987a123a81c879b5f8e
+directory-autocmds() {
+  case "${PWD}" in
+    */assets*)
+      if test "${CONDA_DEFAULT_ENV}" = "base"; then
+        conda activate assets
+      fi;;
+    *)
+      if test "${CONDA_DEFAULT_ENV}" != "base"; then
+        conda activate base
+      fi;;
+  esac
+}
+add-zsh-hook chpwd directory-autocmds
+# }}}
 
+# {{{
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
 __conda_setup="$('/usr/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
