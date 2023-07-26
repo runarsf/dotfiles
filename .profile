@@ -33,7 +33,7 @@ export GTK2_RC_FILES="${HOME}/.gtkrc-2.0"
 # export MANPATH="${NPM_PACKAGES}/share/man:$(manpath)"
 # export PATH="${PATH}:${NPM_PACKAGES}/bin"
 
-export XDG_DATA_DIRS="${HOME}/.nix-profile/share:${XDG_DATA_DIRS}"
+# export XDG_DATA_DIRS="${XDG_DATA_DIRS}:${HOME}/.nix-profile/share"
 
 export PATH="${PATH}:${HOME}/.local/bin"
 export PATH="${PATH}:${HOME}/.nix-profile/bin"
