@@ -469,7 +469,8 @@ myLayoutHook -- {{{
   where
     -- TODO Reference workspace by `(ws !! index)`
     myLayouts = onWorkspaces ["5"] monocle
-              $ onWorkspaces ["0"] floating masterStack
-            ||| dual
+              $ onWorkspaces ["0"] floating
+              $ onWorkspaces ["3"] dual masterStack
+            ||| onWorkspaces ["3"] masterStack dual
             ||| onWorkspaces ["5"] masterStack monocle
 -- }}}
