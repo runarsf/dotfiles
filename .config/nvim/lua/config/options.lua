@@ -27,6 +27,7 @@ local options = { -- {{{
   ttimeoutlen = 50,                        -- affects escape from insert mode
   mouse = "c",                             -- allow the mouse to be used in neovim
   foldmethod = "marker",
+  conceallevel = 0,
 
   -- backup = false,                          -- creates a backup file
   -- cmdheight = 1,                           -- more space in the neovim command line for displaying messages

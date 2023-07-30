@@ -33,11 +33,20 @@
   (bar))
 ; }}}
 
+; Dynamic padding from trayer
+(defwidget tray [] ; {{{
+  (bbox :style "padding-right: ${traysize}px;"))
+(deflisten traysize :initial "0"
+  "modules/traysize")
+; }}}
+
 (defwidget bar [] ; {{{
   (centerbox :orientation "h"
     (workspaces)
     (info)
-    (modules)))
+    (bbox :halign "end"
+      (modules)
+      (tray))))
 ; }}}
 
 (defwidget workspaces [] ; {{{
@@ -62,7 +71,6 @@
 (defwidget modules [] ; {{{
   (bbox :class "modules"
         :halign "end"
-        :style "padding-right: ${traysize}px;"
     ; (bbox :tooltip "Pomodoro") ; {{{
     ; (  (bbutton :onclick "notify-send tomato"
     ; (    (label :text "🍅")) ; }}}
@@ -280,9 +288,6 @@
 ; Listeners / pollers {{{
 (deflisten music :initial ""
   "playerctl --follow metadata --format '{{ artist }} - {{ title }}' || true")
-
-(deflisten traysize :initial "0"
-  "modules/traysize")
 
 (deflisten layout :initial ""
   "modules/layout")
