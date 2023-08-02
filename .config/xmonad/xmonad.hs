@@ -27,8 +27,8 @@ import           XMonad.Actions.FloatKeys            (keysMoveWindow,
 import           XMonad.Actions.CopyWindow           (copyToAll,
                                                       killAllOtherCopies)
 import           XMonad.Actions.CycleRecentWS        (toggleRecentWS)
-import           XMonad.Actions.ShowText             (flashText,
-                                                      handleTimerEvent)
+-- import           XMonad.Actions.ShowText             (flashText,
+                                                      -- handleTimerEvent)
 import           XMonad.Actions.FloatSnap            (afterDrag,
                                                       snapMagicMove,
                                                       snapMagicResize)
@@ -48,7 +48,9 @@ import           XMonad.Hooks.InsertPosition         (insertPosition,
 import           XMonad.Hooks.ManageDocks            (docks,
                                                       avoidStruts)
 import           XMonad.Hooks.EwmhDesktops           (ewmhFullscreen,
-                                                      ewmh)
+                                                      ewmh,
+                                                      addEwmhWorkspaceSort,
+                                                      addEwmhWorkspaceRename)
 import           XMonad.Hooks.WindowSwallowing       (swallowEventHook)
 import           XMonad.Hooks.Place                  (inBounds,
                                                       withGaps,
@@ -57,16 +59,18 @@ import           XMonad.Hooks.Place                  (inBounds,
                                                       Placement)
 import           XMonad.Hooks.TaffybarPagerHints     (pagerHints)
 import           XMonad.Hooks.SetWMName              (setWMName)
-import           XMonad.Hooks.UrgencyHook            (withUrgencyHook,
-                                                      NoUrgencyHook(..))
+-- import           XMonad.Hooks.UrgencyHook            (withUrgencyHook,
+                                                      -- NoUrgencyHook(..))
 import           XMonad.Hooks.FadeWindows            (isFloating)
 
 -- Util
 import           XMonad.Util.EZConfig                (additionalKeysP)
+import           XMonad.Util.WorkspaceCompare        (filterOutWs)
 import           XMonad.Util.Ungrab                  (unGrab)
 import           XMonad.Util.NamedScratchpad         (namedScratchpadAction,
                                                       namedScratchpadManageHook,
                                                       customFloating,
+                                                      scratchpadWorkspaceTag,
                                                       NamedScratchpad(..))
 import           XMonad.Util.Dmenu                   (dmenu)
 import           XMonad.Util.SpawnOnce               (spawnOnce)
@@ -87,11 +91,14 @@ import           XMonad.Layout.ResizableTile         (ResizableTall(..),
                                                       MirrorResize(MirrorExpand))
 import           XMonad.Layout.Reflect               (REFLECTX(..))
 import           XMonad.Layout.TwoPanePersistent     (TwoPanePersistent(..))
-import           XMonad.Layout.MultiToggle           (mkToggle,
-                                                      single,
-                                                      Toggle(..))
 import           XMonad.Layout.Renamed               (renamed,
                                                       Rename(Replace))
+import           XMonad.Layout.MultiToggle           (mkToggle,
+                                                      single,
+                                                      (??),
+                                                      Toggle(..),
+                                                      EOT(..))
+-- import           XMonad.Layout.MultiToggle.Instances (StdTransformers(NBFULL))
 import           XMonad.Layout.NoBorders             (noBorders,
                                                       smartBorders)
 import           XMonad.Layout.SimplestFloat         (simplestFloat)
@@ -109,14 +116,22 @@ import           XMonad.Layout.WindowNavigation      (windowNavigation,
                                                       Direction2D(D))
 -- }}}
 
+myFilter = filterOutWs [scratchpadWorkspaceTag]
+
+-- TODO
+-- myRename :: String -> WindowSpace -> String
+-- myRename s _w = concatMap show s
+
 main :: IO () -- {{{
 main = xmonad
      $ docks
-     . withUrgencyHook NoUrgencyHook
+     --  . withUrgencyHook NoUrgencyHook
      . ewmhFullscreen
      . ewmh
      . pagerHints
-     . withNavigation2DConfig def
+     . addEwmhWorkspaceSort (pure myFilter)
+     -- . addEwmhWorkspaceRename (pure myRename)
+     --  . withNavigation2DConfig def
      $ myConfig
 -- }}}
 
@@ -144,17 +159,7 @@ confirm msg cb = do
     when (res == msg) cb
 -- }}}
 
-myStartupHook :: X () -- {{{
-myStartupHook = do
-  spawn "(pgrep eww && eww reload) || (eww close bar || killall -q eww; eww open bar)"
-  spawn "killall -q trayer; trayer --edge top --align right --SetDockType true --SetPartialStrut false --expand true --widthtype request --transparent true --alpha 0 --tint 0x0D1117 --height 30 --heighttype pixel --monitor 'primary' --margin 20 --distance 11 --padding 0 &"
-  spawn "(nitrogen --restore || (~/.fehbg || feh --bg-scale ~/.config/wall.jpg)) &"
-  spawnOnce "killall -q picom; picom --config ~/.config/picom-jonaburg.conf &"
-  setWMName "LG3D"
--- }}}
-
 -- float toggle {{{
-
 -- If the window is floating then (f), if tiled then (n)
 floatOrNot f n = withFocused $ \windowId -> do
     floats <- gets (W.floating . windowset)
@@ -172,10 +177,10 @@ centreFloat win = do
 centreFloat' w = windows $ W.float w (W.RationalRect 0.25 0.25 0.5 0.5)
 
 -- Make a window my 'standard size' (half of the screen) keeping the centre of the window fixed
-standardSize win = do
+{- standardSize win = do
     (_, W.RationalRect x y w h) <- floatLocation win
     windows $ W.float win (W.RationalRect x y 0.5 0.5)
-    return ()
+    return () -}
 -- }}}
 
 -- Get the name of the active layout.
@@ -210,8 +215,8 @@ myKeys =
   , ("M-S-a", killAllOtherCopies)
   , ("M-d", unGrab >> spawn "rofi -show")
   , ("M-S-d", unGrab >> spawn "dmenu_run")
-  , ("M-e", spawn "xdg-open ~")
-  , ("M-S-c", spawn "toggleprogram picom --config ~/.config/picom-jonaburg.conf")
+  , ("M-e", spawn "thunar")
+  , ("M-S-c", spawn "toggleprogram picom")
   , ("M-x", unGrab >> spawn "betterlockscreen --lock dimblur --blur 8")
   , ("M-s", selectWindow def >>= (`whenJust` windows . W.focusWindow))
   , ("M1-p", unGrab >> spawn "screenshot -m region -t -c -o 'screenshot-xbackbone'")
@@ -222,6 +227,7 @@ myKeys =
   , ("M-C-<Space>", layoutScreens 2 (TwoPanePersistent Nothing (3/100) (1/2)))
   , ("M-C-S-<Space>", rescreen)
   , ("M-f", toggleFull)
+  -- , ("M-f", sequence_ [sendMessage $ Toggle NBFULL, toggleGaps])
   -- , ("<KP_Down>", spawn "just --justfile ~/justfile scroll down scrcpy")
   -- , ("<KP_End>", spawn "just --justfile ~/justfile scroll up scrcpy")
   , ("M-M1-<Down>", sendMessage $ weakModifyGaps decGaps)
@@ -292,10 +298,9 @@ myKeys =
 myScratchpads :: [NamedScratchpad] -- {{{
 myScratchpads = [ NS "terminal" spawnTerm findTerm manageTerm
                 , NS "calculator" spawnCalc findCalc manageCalc
---                , NS "game" spawnGame findGame manageGame
                 ]
   where
-    spawnTerm  = "${TERMINAL:-alacritty}" ++ " --class scratchpad --title scratchpad --option font.size=12 --command tmux new-session -A -s scratchpad"
+    spawnTerm  = "alacritty --class scratchpad --title scratchpad --option font.size=12 --command tmux new-session -A -s scratchpad"
     findTerm   = appName =? "scratchpad"
     manageTerm = customFloating $ W.RationalRect x y w h
            where
@@ -311,9 +316,6 @@ myScratchpads = [ NS "terminal" spawnTerm findTerm manageTerm
              y = (1/6)
              w = 0.4
              h = (2/3)
---    spawnGame  = "steam steam://open/games"
---    findGame   = fmap ("steam_app_" `isPrefixOf`) title
---    manageGame = customFloating $ W.RationalRect 1 1 1 1
 -- }}}
 
 myPlaceHook :: Placement
@@ -326,6 +328,8 @@ role = stringProperty "WM_WINDOW_ROLE"
 -- wtype = stringProperty "_NET_WM_WINDOW_TYPE"
 -- wtype =? "_NET_WM_WINDOW_TYPE_UTILITY" --> dothisthing
 -- , isInProperty "_NET_WM_WINDOW_TYPE" "_NET_WM_WINDOW_TYPE_UTILITY" --> defineBorderWidth 0
+-- isPopupMenu :: Query Bool
+-- isPopupMenu = isInProperty "_NET_WM_WINDOW_TYPE" "_NET_WM_WINDOW_TYPE_POPUP_MENU"
 
 findWindows :: String -> X [Window]
 findWindows name = do
@@ -346,10 +350,8 @@ hasProperty name = ask >>= \w -> liftX $ withDisplay $ queryFunc w
           prop16 <- io $ getWindowProperty16 display atom window
           prop32 <- io $ getWindowProperty32 display atom window
 
-          --
           -- This is actually the opposite of the Maybe monad (I want to
           -- *continue* on Nothing), so I can't just use a monad here.
-          --
           case prop8 of
             Just x  -> return True
             Nothing ->
@@ -375,15 +377,18 @@ myManageHook = let w = workspaces myConfig in
   , [ className =? n --> doShift (w !! 7) | n <- ws8       ]
   , [ className =? n --> doShift (w !! 8) | n <- ws9       ]
   , [ className =? n --> doShift (w !! 9) | n <- ws0       ]
-  ]) <> composeOne
-  [ willFloat         -?> insertPosition Above Newer
+  ]) {- <> composeOne
+  [ willFloat          -?> insertPosition Above Newer
   , fmap not willFloat -?> insertPosition Above Newer
-  ] <> composeAll
+  ] -} <> composeAll
   [ isFullscreen                                    --> doFullFloat
   , isDialog                                        --> doCenterFloat
   , isKDETrayWindow                                 --> doIgnore
   , role      ~? "PictureInPicture"                 --> doPipFloat
+  , role      ~? "PictureInPicture"                 --> doRaise
   , className ~? "eww-"                             --> doLower
+  , className =? "trayer"                           --> doLower
+  , className =? "panel"                            --> doLower
   , className =? "PrimeNote"                        --> doFloat
   ,(className =? "discord"                         <&&>
     fmap (not . (" - Discord" `isSuffixOf`)) title) --> doPipFloat
@@ -400,7 +405,7 @@ myManageHook = let w = workspaces myConfig in
     ws1 = []
     ws2 = [ "discord", "Mattermost" ]
     ws3 = [ "spotify" ]
-    ws4 = [ "Steam" ]
+    ws4 = [ "Steam", "steamwebhelper", "steam" ]
     ws5 = [ "org.remmina.Remmina" ]
     ws6 = [ "VirtualBox Manager" ]
     ws7 = [ "Pavucontrol", "AudioRelay", "easyeffects", "Blueman-manager", "Carla2", "helvum", "qpwgraph" ]
@@ -423,8 +428,8 @@ toggleFull = withFocused (\windowId -> do
         else withFocused $ windows . (flip W.float $ W.RationalRect 0 0 1 1) })
 
 myEventHook =
-  handleTimerEvent
-  <> swallowEventHook (className =? "Alacritty") (return True)
+  -- handleTimerEvent <>
+  swallowEventHook (className =? "Alacritty") (return True)
 
 -- Layouts {{{
 masterStack = renamed [Replace "Tiled"]
@@ -450,21 +455,28 @@ defaultGapW :: Word32
 defaultGapW = fromIntegral defaultGap
 defaultGaps = [(U,defaultGap), (R,defaultGap), (D,defaultGap), (L,defaultGap)]
 swapGaps = sendMessage . ModifyGaps $ \gs ->
-       if gs == a then b
-                  else a
+  if gs == a then b
+             else a
   where
     a = defaultGaps
     b = [(U,10),(R,75),(D,75),(L,75)]
+{-toggleGaps = sendMessage . ModifyGaps $ \gs ->
+  if gs /= a then a
+             else b
+  where
+    a = [(U,0),(R,0),(D,0),(L,0)]
+    b = defaultGaps-}
 
 -- TODO Fullscreen without unfloating
 myLayoutHook -- {{{
-  = avoidStruts
-  . windowArrange
+  = windowArrange
   . smartBorders
-  . windowNavigation
   . spacingRaw True (Border 0 0 0 0) True (Border 10 10 10 10) True -- Spacing between windows
   . gaps defaultGaps -- Gaps between screen and windows
+  -- . mkToggle (NBFULL ?? EOT)
   . mkToggle (single REFLECTX)
+  . avoidStruts
+  . windowNavigation
   $ myLayouts
   where
     -- TODO Reference workspace by `(ws !! index)`
@@ -473,4 +485,13 @@ myLayoutHook -- {{{
               $ onWorkspaces ["3"] dual masterStack
             ||| onWorkspaces ["3"] masterStack dual
             ||| onWorkspaces ["5"] masterStack monocle
+-- }}}
+
+myStartupHook :: X () -- {{{
+myStartupHook = do
+  spawn "~/.config/eww/launch-eww.sh"
+  spawn "killall -q trayer; trayer --edge top --align right --SetDockType true --SetPartialStrut false --expand true --widthtype request --transparent true --alpha 0 --tint 0x0D1117 --height 30 --heighttype pixel --monitor 'primary' --margin 20 --distance 11 --padding 0 &"
+  spawn "(nitrogen --restore || (~/.fehbg || feh --bg-scale ~/.config/wall.jpg)) &"
+  spawnOnce "killall -q picom; picom &"
+  setWMName "LG3D"
 -- }}}

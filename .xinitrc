@@ -63,11 +63,12 @@ dunst --config "${XDG_CONFIG_HOME:-${HOME:-~}/.config}/dunst/dunstrc" &
 # xscreensaver -no-splash &
 # xfce4-power-manager &
 (nitrogen --restore || ("${HOME:-~}/.fehbg" || feh --bg-scale "${XDG_CONFIG_HOME:-${HOME:-~}/.config}/wall.jpg")) &
+easyeffects --gapplication-service &
 if test -x /usr/bin/nm-applet; then
   nm-applet --sm-disable &
 fi
 
-picom --config ~/.config/picom-jonaburg.conf &
+picom --config &
 
 xdg-mime default "${BROWSER}.desktop" x-scheme-handler/http
 xdg-mime default "${BROWSER}.desktop" x-scheme-handler/https
