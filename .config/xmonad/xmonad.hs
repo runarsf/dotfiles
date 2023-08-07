@@ -59,8 +59,8 @@ import           XMonad.Hooks.Place                  (inBounds,
                                                       Placement)
 import           XMonad.Hooks.TaffybarPagerHints     (pagerHints)
 import           XMonad.Hooks.SetWMName              (setWMName)
--- import           XMonad.Hooks.UrgencyHook            (withUrgencyHook,
-                                                      -- NoUrgencyHook(..))
+import           XMonad.Hooks.UrgencyHook            (withUrgencyHook,
+                                                      NoUrgencyHook(..))
 import           XMonad.Hooks.FadeWindows            (isFloating)
 
 -- Util
@@ -125,7 +125,7 @@ myFilter = filterOutWs [scratchpadWorkspaceTag]
 main :: IO () -- {{{
 main = xmonad
      $ docks
-     --  . withUrgencyHook NoUrgencyHook
+     . withUrgencyHook NoUrgencyHook
      . ewmhFullscreen
      . ewmh
      . pagerHints

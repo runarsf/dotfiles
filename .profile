@@ -48,6 +48,12 @@ export PATH="${PATH}:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl"
 # if xhost >& /dev/null ; then echo "Display exists"
 # else echo "Display invalid" ; fi
 
+KeyboardInterrupt () {
+  printf '%s\n' "oop"
+}
+
+trap KeyboardInterrupt SIGINT
+
 if [[ $- == *i* ]]; then
   # Auto start ssh-agent
   eval "$(ssh-agent)" && ssh-add
