@@ -50,6 +50,7 @@ export PATH="${PATH}:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl"
 
 KeyboardInterrupt () {
   printf '%s\n' "oop"
+  trap - SIGINT
 }
 
 trap KeyboardInterrupt SIGINT

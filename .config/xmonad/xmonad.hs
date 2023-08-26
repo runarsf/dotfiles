@@ -204,8 +204,11 @@ myKeys =
   , ("M-n", do
     namedScratchpadAction myScratchpads "terminal"
     mouseFollowFocus)
-  , ("M-p", do
+  , ("M-S-p", do
     namedScratchpadAction myScratchpads "calculator"
+    mouseFollowFocus)
+  , ("M-p", do
+    namedScratchpadAction myScratchpads "math"
     mouseFollowFocus)
   , ("M-S-<Return>", promote)
   , ("M-S-f", floatOrNot (withFocused $ windows . W.sink) (withFocused centreFloat'))
@@ -298,6 +301,7 @@ myKeys =
 myScratchpads :: [NamedScratchpad] -- {{{
 myScratchpads = [ NS "terminal" spawnTerm findTerm manageTerm
                 , NS "calculator" spawnCalc findCalc manageCalc
+                , NS "math" spawnMath findMath manageMath
                 ]
   where
     spawnTerm  = "alacritty --class scratchpad --title scratchpad --option font.size=12 --command tmux new-session -A -s scratchpad"
@@ -316,6 +320,14 @@ myScratchpads = [ NS "terminal" spawnTerm findTerm manageTerm
              y = (1/6)
              w = 0.4
              h = (2/3)
+    spawnMath  = "alacritty --class math --title math --option font.size=14 --command tmux new-session -A -s math xonsh"
+    findMath   = appName =? "math"
+    manageMath = customFloating $ W.RationalRect x y w h
+           where
+             x = 0.25
+             y = 0.23
+             w = 0.5
+             h = 0.54
 -- }}}
 
 myPlaceHook :: Placement
