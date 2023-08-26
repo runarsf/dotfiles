@@ -39,3 +39,9 @@ format = "[$symbol$branch]($style) "
 
 [git_status]
 ignore_submodules = true
+
+[shell]
+disabled = false
+zsh_indicator = ""
+xonsh_indicator = "@ "
+format = "[$indicator]($style)"
