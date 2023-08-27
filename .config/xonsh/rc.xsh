@@ -177,4 +177,7 @@ for alias in aliases:
             abbrevs[alias] = aliases[alias]
 # }}}
 
+if 'START_DIR' in __xonsh__.env:
+    cd @(__xonsh__.env.get('START_DIR', ''))
+
 execx($(starship init xonsh))

@@ -45,6 +45,7 @@ export PATH="${PATH}:${HOME}/go/bin"
 export PATH="${PATH}:${HOME}/.gem/ruby/*/bin"
 export PATH="${PATH}:/snap/bin"
 export PATH="${PATH}:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl"
+export PATH="${PATH}:${HOME}/.local/share/miniconda3/bin"
 
 # Test if in x session
 # if xhost >& /dev/null ; then echo "Display exists"

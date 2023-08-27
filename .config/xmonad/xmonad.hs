@@ -320,7 +320,7 @@ myScratchpads = [ NS "terminal" spawnTerm findTerm manageTerm
              y = (1/6)
              w = 0.4
              h = (2/3)
-    spawnMath  = "alacritty --class math --title math --option font.size=14 --command tmux new-session -A -s math xonsh"
+    spawnMath  = "alacritty --class math --title math --option font.size=14 --command tmux new-session -A -s math 'START_DIR=Documents/notes xonsh'"
     findMath   = appName =? "math"
     manageMath = customFloating $ W.RationalRect x y w h
            where
@@ -504,6 +504,6 @@ myStartupHook = do
   spawn "~/.config/eww/launch-eww.sh"
   spawn "killall -q trayer; trayer --edge top --align right --SetDockType true --SetPartialStrut false --expand true --widthtype request --transparent true --alpha 0 --tint 0x0D1117 --height 30 --heighttype pixel --monitor 'primary' --margin 20 --distance 11 --padding 0 &"
   spawn "(nitrogen --restore || (~/.fehbg || feh --bg-scale ~/.config/wall.jpg)) &"
-  spawnOnce "killall -q picom; picom &"
+  -- spawnOnce "killall -q picom; picom &"
   setWMName "LG3D"
 -- }}}
