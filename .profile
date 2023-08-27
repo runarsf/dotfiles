@@ -18,6 +18,8 @@ export XBB_URL="https://i.runarsf.dev/upload"
 # export XBB_TOKEN="$(pass Screenshot/XBB_TOKEN)"
 export XBB_RAW="true"
 export STARSHIP_CONFIG=~/.config/starship.toml
+export MANPAGER="less -X"
+export LESS="--ignore-case --quit-if-one-screen --quit-on-intr FRXQ"
 
 export BYOBU_CONFIG_DIR="${XDG_CONFIG_HOME:-${HOME}/.config}/byobu"
 export CALIBRE_USE_DARK_PALETTE=1

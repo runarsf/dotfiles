@@ -1,11 +1,9 @@
 # vim: set syntax=python foldmethod=marker:
-from os.path import realpath, join
-from shutil import which
-from xonsh.xontribs import xontribs_load
-from xonsh.platform import ON_LINUX
-from xonsh.aliases import source_foreign_fn
-
-# pip install 'xonsh[full]' xontrib-abbrevs
+from os.path import (realpath as _realpath, join as _join)
+from shutil import which as _which
+from xonsh.xontribs import xontribs_load as _xontribs_load
+from xonsh.platform import ON_LINUX as _ON_LINUX
+# from xonsh.aliases import source_foreign_fn
 
 # Redirect output of python command to file
 #   >>> echo @(__import__('inspect').getsource($PROMPT_FIELDS['gitstatus'])) >> FILE
@@ -13,7 +11,7 @@ from xonsh.aliases import source_foreign_fn
 #   >>> __import__('inspect').getsource($PROMPT_FIELDS['gitstatus'])
 
 # Helper function to join paths and get full path.
-path = lambda *arg: realpath(join(*arg))
+path = lambda *arg: _realpath(_join(*arg))
 
 # Environment variables - https://xon.sh/envvars.html {{{
 
@@ -69,7 +67,7 @@ $XONSH_AUTOPAIR = True
 aliases['ls'] = ['ls', '-l', '-A', '-F', '-h']
 if $(ls --version 2>/dev/null).strip():
     aliases['ls'].append('--color=auto')
-if which('exa') is not None:
+if _which('exa') is not None:
     aliases['ls'] = ['exa', '--group-directories-first', '--git', '--long', '--all']
 
 aliases['dk'] = ['docker']
@@ -83,13 +81,27 @@ aliases['dkcu'] = aliases['dkc'] + ['up']
 aliases['dkcU'] = aliases['dkcu'] + ['-d']
 aliases['dkcUf'] = aliases['dkcU'] + ['--force-recreate', '--remove-orphans']
 aliases['dkx']   = lambda args: $[docker exec -it @(args) sh]
+
+@aliases.register(".")
+@aliases.register("..")
+@aliases.register("...")
+@aliases.register("....")
+def _supercomma():
+    cd @("../" * len($__ALIAS_NAME))
+
+aliases |= {
+    '-': 'cd -',
+    '..': 'cd ..',
+}
 # }}}
 
 # Xontribs {{{
-xontribs = [
+_xontribs = [
   'abbrevs',
   'readable-traceback',
   'argcomplete',
+  'mpl',
+  'jupyter',
 ]
 # }}}
 
@@ -104,16 +116,19 @@ __builtin__.null = None
 # }}}
 
 # Platform-specific settings {{{
-if ON_LINUX:
+if _ON_LINUX:
     # if which('zsh') is not None:
     #     source-foreign zsh --overwrite-aliases --interactive True --sourcer source 'echo Loading foreign shell zsh.'
 
-    xontribs = list(set([
+    _xontribs = list(set([
         # 'coreutils',          # Additional core utilities that are implemented in xonsh.
         'fzf-widgets',        # Adds some fzf widgets.
-        'zoxide',             # - curl -sS https://webinstall.dev/zoxide | bash
+        # 'zoxide',             # - curl -sS https://webinstall.dev/zoxide | bash
         'sh',                 # Paste and run commands from bash, zsh, fish in xonsh.
-    ] + xontribs))
+        'argcomplete',
+        # 'docker_tabcomplete',
+        'default_command',
+    ] + _xontribs))
 
     def _git_bare(git_dir, work_tree, *args):
         if not args:
@@ -148,7 +163,8 @@ if ON_LINUX:
     del x11docker
 # }}}
 
-xontribs_load(xontribs)
+xontrib load -s @(_xontribs)
+# xontribs_load(_xontribs)
 
 # Abbreviations {{{
 if 'abbrevs' not in locals():
