@@ -320,7 +320,7 @@ myScratchpads = [ NS "terminal" spawnTerm findTerm manageTerm
              y = (1/6)
              w = 0.4
              h = (2/3)
-    spawnMath  = "alacritty --class math --title math --option font.size=14 --command tmux new-session -A -s math 'START_DIR=Documents/notes xonsh'"
+    spawnMath  = "SHELL=$(which xonsh) START_DIR=~/Documents/notes alacritty --class math --title math --option font.size=14 --command tmux -L xonsh new-session -A -s math"
     findMath   = appName =? "math"
     manageMath = customFloating $ W.RationalRect x y w h
            where
