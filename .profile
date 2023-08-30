@@ -46,6 +46,7 @@ export PATH="${PATH}:${HOME}/.gem/ruby/*/bin"
 export PATH="${PATH}:/snap/bin"
 export PATH="${PATH}:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl"
 export PATH="${PATH}:${HOME}/.local/share/miniconda3/bin"
+export PATH="${PATH}:${HOME}/.local/share/JetBrains/Toolbox/scripts"
 
 # Test if in x session
 # if xhost >& /dev/null ; then echo "Display exists"
@@ -65,3 +66,4 @@ if [[ $- == *i* ]]; then
   # Start graphical server on tty1 if not already running.
   test "$(tty)" = "/dev/tty1" >/dev/null 2>&1 && ! pgrep -x Xorg >/dev/null 2>&1 && startx
 fi
+

@@ -14,9 +14,7 @@ get_workspaces() {
 
   # Get workspaces and filter out unwanted ones
   workspaces="$(wmctrl -d \
-    | awk -v mon="${monitor:+^${monitor}$}" '{ if ($6 ~ mon) print $1 " " $2 " " $NF }' \
-    | grep -v "NSP" \
-    | grep -v "VP: N/A")"
+    | awk -v mon="${monitor:+^${monitor}$}" '{ if ($6 ~ mon) printf $1 " " $2 " "; for (i=9; i<=NF; ++i) printf $i "" FS ; print ""}')"
 
   # Tag visible workspaces
   while IFS= read -r workspace; do
