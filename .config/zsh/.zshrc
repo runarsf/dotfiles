@@ -144,11 +144,11 @@ zinit light starship/starship
 zinit load zshzoo/magic-enter
 magic-enter-cmd () {
   if test -n "${VIRTUAL_ENV}"; then
-    printf '%s' " clear; python3 --version"
+    printf '%s' " python3 --version"
   elif git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
-    printf '%s' " clear; git -c color.ui=always status --porcelain=v1 -M --show-stash --ignore-submodules"
+    printf '%s' " git -c color.ui=always status --porcelain=v1 -M --show-stash --ignore-submodules"
   else
-    printf '%s' " clear; \ls --color=always -hAp"
+    printf '%s' " \ls --color=always -hAp"
   fi
 }
 # }}}
