@@ -88,6 +88,8 @@ init-utils: (require "git" "python3" "make" "zsh")
   fc-cache -vf
   python3 -m pip install --user --upgrade pynvim
 
+  git config --global init.defaultBranch main
+
   git clone git@github.com:runarsf/screenshot.git "${HOME}/data/screenshot"
   sudo make -C "${HOME}/data/screenshot" install
 

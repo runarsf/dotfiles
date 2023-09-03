@@ -35,6 +35,9 @@ import           XMonad.Actions.FloatSnap            (afterDrag,
 import           XMonad.Actions.Navigation2D         (withNavigation2DConfig,
                                                       switchLayer)
 import           XMonad.Actions.EasyMotion           (selectWindow)
+-- import           XMonad.Actions.SpawnOn              (manageSpawn,
+--                                                       spawnOn,
+--                                                       spawnAndDo)
 import qualified XMonad.Actions.FlexibleResize       as Flex
                                                      (mouseResizeWindow)
 
@@ -73,7 +76,8 @@ import           XMonad.Util.NamedScratchpad         (namedScratchpadAction,
                                                       scratchpadWorkspaceTag,
                                                       NamedScratchpad(..))
 import           XMonad.Util.Dmenu                   (dmenu)
-import           XMonad.Util.SpawnOnce               (spawnOnce)
+import           XMonad.Util.SpawnOnce               (spawnOnce,
+                                                      spawnOnOnce)
 
 -- Layout
 import           XMonad.Layout.StateFull
@@ -411,6 +415,7 @@ myManageHook = let w = workspaces myConfig in
   ]
   <> namedScratchpadManageHook myScratchpads
   <> placeHook myPlaceHook
+  -- <> manageSpawn
   where
     myFloats = [ "XClock", "Gimp", "Sxiv", "Dragon-drop", "Blueman-manager", "ColorGrab" ]
     myIgnores = [ "osu", "Fig Autocomplete" ]
@@ -500,10 +505,12 @@ myLayoutHook -- {{{
 -- }}}
 
 myStartupHook :: X () -- {{{
-myStartupHook = do
+myStartupHook = let w = workspaces myConfig in do
   spawn "~/.config/eww/launch-eww.sh"
   spawn "killall -q trayer; trayer --edge top --align right --SetDockType true --SetPartialStrut false --expand true --widthtype request --transparent true --alpha 0 --tint 0x0D1117 --height 30 --heighttype pixel --monitor 'primary' --margin 20 --distance 11 --padding 0 &"
   spawn "(nitrogen --restore || (~/.fehbg || feh --bg-scale ~/.config/wall.jpg)) &"
-  -- spawnOnce "killall -q picom; picom &"
+  spawnOnce "discord"
+  spawnOnce "pavucontrol"
+  spawnOnOnce (w !! 0) "firefox-developer-edition"
   setWMName "LG3D"
 -- }}}

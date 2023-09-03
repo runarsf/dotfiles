@@ -12,13 +12,30 @@ GIT_WORKING_TREE="$(git rev-parse --show-toplevel)"
 
 GPG_USER="root@runarsf.dev"
 
+# Open stdin
+exec < /dev/tty
+
 while IFS= read -r dotfile; do
   encfile="$(realpath --no-symlinks "${GIT_WORKING_TREE}/${dotfile}")"
   decfile="$(printf '%s\n' "${encfile}" | sed -e 's/.enc$//')"
   if test -f "${decfile}"; then
+    while true; do
+      read -p "[post-commit hook] Check for outdated gems? (Y/n) " yn
+      if [ "$yn" = "" ]; then
+        yn='Y'
+      fi
+      case $yn in
+          [Yy] ) bundle outdated --pre; break;;
+          [Nn] ) exit;;
+          * ) echo "Please answer y or n for yes or no.";;
+      esac
+    done
     printf '%s\n' "Encrypting ${decfile} -> ${encfile}"
     rm -f "${encfile}"
     gpg --output "${encfile}" --encrypt --recipient "${GPG_USER}" "${decfile}"
     git --git-dir="${GIT_DIR}" --work-tree="${GIT_WORKING_TREE}" add "${encfile}"
   fi
 done < <(git --git-dir="${GIT_DIR}" --work-tree="${GIT_WORKING_TREE}" ls-files --full-name --deduplicate --no-empty-directory "${GIT_WORKING_TREE}" | grep '\.enc$')
+
+# Close stdin
+exec <&-

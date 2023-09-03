@@ -10,6 +10,9 @@ set -o nounset
 GIT_DIR="$(git rev-parse --git-dir)"
 GIT_WORKING_TREE="$(git rev-parse --show-toplevel)"
 
+# Open stdin
+exec < /dev/tty
+
 while IFS= read -r dotfile; do
   encfile="$(realpath --no-symlinks "${GIT_WORKING_TREE}/${dotfile}")"
   decfile="$(printf '%s\n' "${encfile}" | sed -e 's/.enc$//')"
@@ -19,3 +22,6 @@ while IFS= read -r dotfile; do
     gpg --output "${decfile}" --decrypt "${encfile}"
   fi
 done < <(git --git-dir="${GIT_DIR}" ls-tree --full-tree -r 'HEAD' --name-only | grep '\.enc$')
+
+# Close stdin
+exec <&-

@@ -35,6 +35,29 @@
 ;  (bar))
 ; }}}
 
+(defwindow volume
+  :monitor 0
+  :windowtype "dialog"
+  :stacking "fg"
+  :wm-ignore true
+  :hexpand false
+  :vexpand false
+  :geometry (geometry :x "95%"
+                      :y "45%"
+                      :width "70px"
+                      :height "280px"
+                      :anchor "center")
+  (box
+      (scale
+        :orientation "vertical"
+        :marks "1"
+        :draw-value "20"
+        :round-digits "0"
+        :value "20"
+        :min "0"
+        :max "100"
+          (label "hi"))))
+
 ; Dynamic padding from trayer
 (defwidget tray [] ; {{{
   (bbox :style "padding-right: ${traysize}px;"))

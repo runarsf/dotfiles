@@ -73,8 +73,4 @@ fi
 xdg-mime default "${BROWSER}.desktop" x-scheme-handler/http
 xdg-mime default "${BROWSER}.desktop" x-scheme-handler/https
 
-if test -f "${AUTOSTART:=${XDG_CONFIG_HOME:-${HOME:-~}/.config}/dotfiles/autostart}"; then
-  . "${AUTOSTART}" &
-fi
-
 exec xmonad

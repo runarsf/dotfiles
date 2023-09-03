@@ -203,6 +203,20 @@ dotfiles () {
   if test "${#}" -eq "0"; then
     set - status
   fi
+  dotfiles::no_add_dirs() {
+    while test "${#}" -gt "0"; do
+      if test -d "${1}"; then
+        printf '%s\n' "Adding directories (${1}) is not permitted..."
+        return 1
+      fi
+      shift
+    done
+  }
+  if test "${1}" = "add"; then
+    if ! dotfiles::no_add_dirs ${@:2}; then
+      return
+    fi
+  fi
   git --git-dir="${DOTFILES_DIR}" --work-tree="${DOTFILES_TREE}" "${@}"
 }
 # }}}
