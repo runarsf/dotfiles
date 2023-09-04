@@ -1,18 +1,26 @@
 #!/bin/bash
 
-# Function to send a notification
-send_notification() {
-    # Replace this with your favorite notification command
-    notify-send "Volume Changed" "Volume was adjusted. ${1}"
-    pactl list sinks \
-      | grep -E '^Sink #4442' -A 15 \
+eww update volpoll=false
+#mkdir -p pipes
+#mkfifo pipes/volume
+
+handle_sink_event() {
+    sink="$(printf '%s\n' "${1}" | sed -nr 's/.+\s(#[0-9]+)$/\1/p')"
+    volume="$(pactl list sinks \
+      | grep -E "^Sink ${sink}" -A 15 \
       | grep -E '^\s+Volume:' \
-      | sed -nr 's/.+\s([0-9]{1,3}%)\s.+/\1/p'
+      | sed -nr 's/.+\s([0-9]{1,3}%)\s.+/\1/p')"
 }
 
-pactl subscribe | while read -r event; do
-  if [[ $event =~ "sink" ]]; then
-    send_notification "${event}"
-  fi
-done
-
+# pactl subscribe | while read -r event; do
+#   if [[ "${event}" =~ "sink" ]]; then
+#     handle_sink_event "${event}"
+#   fi
+# done
+# 
+# cleanup() {
+#   #rm -f pipes/volume
+#   eww close volume
+# }
+# 
+# trap cleanup EXIT

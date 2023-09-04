@@ -35,28 +35,35 @@
 ;  (bar))
 ; }}}
 
-(defwindow volume
+; (defvar muted-icon "tail -f"))
+; (deflisten muteicon `modules/volume`))
+;(deflisten muted `modules/pipes/muteicon`)
+(defwindow volume-panel
   :monitor 0
   :windowtype "dialog"
   :stacking "fg"
   :wm-ignore true
   :hexpand false
   :vexpand false
-  :geometry (geometry :x "95%"
-                      :y "45%"
-                      :width "70px"
-                      :height "280px"
-                      :anchor "center")
+  :geometry (geometry :x "-10px"
+                      :y "0px"
+                      :width "100px"
+                      :height "400px"
+                      :anchor "right center")
   (box
-      (scale
-        :orientation "vertical"
-        :marks "1"
-        :draw-value "20"
-        :round-digits "0"
-        :value "20"
-        :min "0"
-        :max "100"
-          (label "hi"))))
+    :orientation "vertical"
+    :class "volume-panel"
+    (scale
+      :min 0
+      :max 101
+      :value volume
+      :flipped true
+      :round-digits 0
+      :draw-value true
+      :orientation "vertical"
+      :onchange "amixer -D pulse sset Master {}%")
+    (button :onclick "amixer -D pulse set Master 1+ toggle"
+      (label :text volume))))
 
 ; Dynamic padding from trayer
 (defwidget tray [] ; {{{
