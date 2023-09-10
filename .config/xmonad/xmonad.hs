@@ -74,6 +74,8 @@ import           XMonad.Util.NamedScratchpad         (namedScratchpadAction,
                                                       namedScratchpadManageHook,
                                                       customFloating,
                                                       scratchpadWorkspaceTag,
+                                                      toggleDynamicNSP,
+                                                      dynamicNSPAction,
                                                       NamedScratchpad(..))
 import           XMonad.Util.Dmenu                   (dmenu)
 import           XMonad.Util.SpawnOnce               (spawnOnce,
@@ -217,6 +219,8 @@ myKeys =
   , ("M-S-<Return>", promote)
   , ("M-S-f", floatOrNot (withFocused $ windows . W.sink) (withFocused centreFloat'))
   , ("M-q", kill)
+  , ("M-.", withFocused $ toggleDynamicNSP "dyn")
+  , ("M-S-.", dynamicNSPAction "dyn")
   , ("M-S-q", unGrab >> spawn "xkill")
   , ("M-a", windows copyToAll)
   , ("M-S-a", killAllOtherCopies)
