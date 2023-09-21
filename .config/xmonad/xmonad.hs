@@ -10,6 +10,7 @@ import           System.Environment                  (lookupEnv)
 
 -- Data
 import           Data.List                           (isSuffixOf,
+                                                      isInfixOf,
                                                       isPrefixOf)
 import           Data.Ratio                          ((%))
 import           Data.Word                           (Word32)
@@ -27,8 +28,8 @@ import           XMonad.Actions.FloatKeys            (keysMoveWindow,
 import           XMonad.Actions.CopyWindow           (copyToAll,
                                                       killAllOtherCopies)
 import           XMonad.Actions.CycleRecentWS        (toggleRecentWS)
--- import           XMonad.Actions.ShowText             (flashText,
-                                                      -- handleTimerEvent)
+import           XMonad.Actions.ShowText             (flashText,
+                                                      handleTimerEvent)
 import           XMonad.Actions.FloatSnap            (afterDrag,
                                                       snapMagicMove,
                                                       snapMagicResize)
@@ -247,42 +248,92 @@ myKeys =
   , ("M-m", sendMessage $ IncMasterN $ 1)
   , ("M-|", sendMessage $ Toggle REFLECTX)
   , ("M-S-m", sendMessage $ IncMasterN $ -1)
-  -- , ("M-S-o", do
-  --   layout <- getActiveLayoutDescription
-  --   flashText def 1 layout)
-  -- TODO When only one instance of firefox, move to ws 0
   , ("M-S-o", do
-    win' <- findWindows "firefoxdeveloperedition"
-    when (length win' > 0)
-      (windows $ W.shift (w !! 0)))
+    layout <- getActiveLayoutDescription
+    flashText def 1 layout)
+  -- TODO When only one instance of firefox, move to ws 0
+  -- , ("M-S-o", do
+  --   win' <- findWindows "firefoxdeveloperedition"
+  --   when (length win' > 0)
+  --     (windows $ W.shift (w !! 0)))
   , ("M-o", swapGaps)
+  , ("M--", switchLayer)
   , ("M-<Up>", do
     layout <- getActiveLayoutDescription
     case layout of
       x | elem x ["Spacing Monocle","Spacing Dual"] -> windows W.focusUp
-      _                                             -> sendMessage $ Go U
+      _ -> case isInfixOf "ReflectY" layout of
+             False -> sendMessage $ Go U
+             True  -> sendMessage $ Go D
     mouseFollowFocus)
   , ("M-<Down>", do
     layout <- getActiveLayoutDescription
     case layout of
       x | elem x ["Spacing Monocle","Spacing Dual"] -> windows W.focusUp
-      _                                             -> sendMessage $ Go D
+      _ -> case isInfixOf "ReflectY" layout of
+             False -> sendMessage $ Go D
+             True  -> sendMessage $ Go U
     mouseFollowFocus)
   , ("M-<Left>", do
-    sendMessage $ Go L
+    layout <- getActiveLayoutDescription
+    case isInfixOf "ReflectX" layout of
+      False -> sendMessage $ Go L
+      True  -> sendMessage $ Go R
     mouseFollowFocus)
   , ("M-<Right>", do
-    sendMessage $ Go R
+    layout <- getActiveLayoutDescription
+    case isInfixOf "ReflectX" layout of
+      False -> sendMessage $ Go R
+      True  -> sendMessage $ Go L
     mouseFollowFocus)
-  , ("M--", switchLayer)
-  , ("M-S-<Right>", floatOrNot (withFocused (keysMoveWindow ( 20,  0))) (sendMessage $ Swap R))
-  , ("M-S-<Left>",  floatOrNot (withFocused (keysMoveWindow (-20,  0))) (sendMessage $ Swap L))
-  , ("M-S-<Up>",    floatOrNot (withFocused (keysMoveWindow (  0,-20))) (sendMessage $ Swap U))
-  , ("M-S-<Down>",  floatOrNot (withFocused (keysMoveWindow (  0, 20))) (sendMessage $ Swap D))
-  , ("M-C-<Right>", floatOrNot (withFocused (keysResizeWindow ( 20,   0) (0, 0))) (sendMessage Expand))
-  , ("M-C-<Left>",  floatOrNot (withFocused (keysResizeWindow (-20,   0) (0, 0))) (sendMessage Shrink))
-  , ("M-C-<Up>",    floatOrNot (withFocused (keysResizeWindow (  0, -20) (0, 0))) (sendMessage MirrorExpand))
-  , ("M-C-<Down>",  floatOrNot (withFocused (keysResizeWindow (  0,  20) (0, 0))) (sendMessage MirrorShrink))
+  , ("M-S-<Up>", do
+    layout <- getActiveLayoutDescription
+    floatOrNot (withFocused (keysMoveWindow (0, -20)))
+      (case isInfixOf "ReflectY" layout of
+        False -> sendMessage $ Swap U
+        True  -> sendMessage $ Swap D))
+  , ("M-S-<Down>", do
+    layout <- getActiveLayoutDescription
+    floatOrNot (withFocused (keysMoveWindow (0, 20)))
+      (case isInfixOf "ReflectY" layout of
+        False -> sendMessage $ Swap D
+        True  -> sendMessage $ Swap U))
+  , ("M-S-<Left>", do
+    layout <- getActiveLayoutDescription
+    floatOrNot (withFocused (keysMoveWindow (-20, 0)))
+      (case isInfixOf "ReflectX" layout of
+        False -> sendMessage $ Swap L
+        True  -> sendMessage $ Swap R))
+  , ("M-S-<Right>", do
+    layout <- getActiveLayoutDescription
+    floatOrNot (withFocused (keysMoveWindow (20, 0)))
+      (case isInfixOf "ReflectX" layout of
+        False -> sendMessage $ Swap R
+        True  -> sendMessage $ Swap L))
+  , ("M-C-<Up>", do
+    layout <- getActiveLayoutDescription
+    floatOrNot (withFocused (keysResizeWindow (0, -20) (0, 0)))
+      (case isInfixOf "ReflectY" layout of
+        False -> sendMessage MirrorExpand
+        True  -> sendMessage MirrorShrink))
+  , ("M-C-<Down>", do
+    layout <- getActiveLayoutDescription
+    floatOrNot (withFocused (keysResizeWindow (0, 20) (0, 0)))
+      (case isInfixOf "ReflectY" layout of
+        False -> sendMessage MirrorShrink
+        True  -> sendMessage MirrorExpand))
+  , ("M-C-<Left>", do
+    layout <- getActiveLayoutDescription
+    floatOrNot (withFocused (keysResizeWindow (-20, 0) (0, 0)))
+      (case isInfixOf "ReflectX" layout of
+        False -> sendMessage Shrink
+        True  -> sendMessage Expand))
+  , ("M-C-<Right>", do
+    layout <- getActiveLayoutDescription
+    floatOrNot (withFocused (keysResizeWindow (20, 0) (0, 0)))
+      (case isInfixOf "ReflectX" layout of
+        False -> sendMessage Expand
+        True  -> sendMessage Shrink))
   , ("M-S-e", confirm "Exit" $ io (exitWith ExitSuccess))
   , ("<XF86AudioPause>",       spawn "playerctl play-pause")
   , ("<XF86AudioPlay>",        spawn "playerctl play-pause")
