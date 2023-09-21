@@ -93,12 +93,13 @@ zinit snippet https://github.com/docker/cli/blob/master/contrib/completion/zsh/_
 
 zinit light nix-community/nix-zsh-completions
 
-# zinit ice wait'1' lucid
-# zinit light marzocchi/zsh-notify
-#   zstyle ':notify:*' error-title "Command failed after #{time_elapsed} seconds"
-#   zstyle ':notify:*' success-title "Command finished after #{time_elapsed} seconds"
-#   zstyle ':notify:*' command-complete-timeout 15
-#   zstyle ':notify:*' always-notify-on-failure no
+#zinit ice wait'1' lucid
+zinit load marzocchi/zsh-notify
+  zstyle ':notify:*' command-complete-timeout 15
+  zstyle ':notify:*' always-check-active-window yes
+  zstyle ':notify:*' check-focus no
+  zstyle ':notify:*' always-notify-on-failure no
+  zstyle ':notify:*' blacklist-regex 'find|git|vim|nvim'
 
 zinit light olets/zsh-abbr
   abbr -S -qq yay='paru'
