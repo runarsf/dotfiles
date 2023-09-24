@@ -99,7 +99,8 @@ zinit load marzocchi/zsh-notify
   zstyle ':notify:*' always-check-active-window yes
   zstyle ':notify:*' check-focus no
   zstyle ':notify:*' always-notify-on-failure no
-  zstyle ':notify:*' blacklist-regex 'find|git|vim|nvim'
+  zstyle ':notify:*' blacklist-regex 'find|git|vi|vim|nvim|neovim'
+  zstyle ':notify:*' expire-time 5000
 
 zinit light olets/zsh-abbr
   abbr -S -qq yay='paru'
