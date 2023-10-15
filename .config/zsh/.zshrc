@@ -226,19 +226,17 @@ dotfiles () {
 
 # Directory commands {{{
 # https://gist.github.com/dofy/ff397555ae941987a123a81c879b5f8e
-directory-autocmds() {
-  case "${PWD}" in
-    */assets*)
-      if test "${CONDA_DEFAULT_ENV}" = "base"; then
-        conda activate assets
-      fi;;
-    *)
-      if test "${CONDA_DEFAULT_ENV}" != "base"; then
-        conda activate base
-      fi;;
-  esac
-}
-add-zsh-hook chpwd directory-autocmds
+# conda_envs="$(conda info --envs | sed '/^#/d' | sed '/^base/d' | cut -d ' ' -f 1)"
+# directory-autocmds() {
+#   dirname="$(basename "$(pwd)")"
+#   if printf '%s\n' "${conda_envs}" | grep -Fxq "${dirname}"; then
+#     conda activate "${dirname}"
+#   elif test "${CONDA_DEFAULT_ENV}" != "base"; then
+#       conda activate base
+#   fi
+#   esac
+# }
+# add-zsh-hook chpwd directory-autocmds
 # }}}
 
 # {{{

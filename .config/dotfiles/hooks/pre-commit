@@ -1,41 +1,47 @@
 #!/bin/sh
 
-printf '%s\n' "Running pre-commit hook."
+printf 'pre-commit: Running git hook.\n'
 
 source "$(git --exec-path)/git-sh-setup"
+
+GIT_DIR="$(git rev-parse --git-dir 2>/dev/null)"
+: "${GIT_DIR:=${HOME}/.config/.git}"
+
+GIT_WORKING_TREE="$(git rev-parse --show-toplevel 2>/dev/null)"
+: "${GIT_WORKING_TREE:=${HOME}}"
 
 set -o errexit
 set -o nounset
 
-GIT_DIR="$(git rev-parse --git-dir)"
-GIT_WORKING_TREE="$(git rev-parse --show-toplevel)"
+GIT_DIR="$(realpath "${GIT_DIR}")"
+GIT_WORKING_TREE="$(realpath "${GIT_WORKING_TREE}")"
 
-GPG_USER="root@runarsf.dev"
+alias dotfiles="git --git-dir=${GIT_DIR} --work-tree=${GIT_WORKING_TREE}"
+
+GPG_RECIPIENT="$(dotfiles config user.email)"
 
 # Open stdin
 exec < /dev/tty
 
+# Iterate over all tracked files ending with '.enc'
 while IFS= read -r dotfile; do
-  encfile="$(realpath --no-symlinks "${GIT_WORKING_TREE}/${dotfile}")"
-  decfile="$(printf '%s\n' "${encfile}" | sed -e 's/.enc$//')"
-  if test -f "${decfile}"; then
-    while true; do
-      read -p "[post-commit hook] Check for outdated gems? (Y/n) " yn
-      if [ "$yn" = "" ]; then
-        yn='Y'
-      fi
-      case $yn in
-          [Yy] ) bundle outdated --pre; break;;
-          [Nn] ) exit;;
-          * ) echo "Please answer y or n for yes or no.";;
-      esac
-    done
-    printf '%s\n' "Encrypting ${decfile} -> ${encfile}"
-    rm -f "${encfile}"
-    gpg --output "${encfile}" --encrypt --recipient "${GPG_USER}" "${decfile}"
-    git --git-dir="${GIT_DIR}" --work-tree="${GIT_WORKING_TREE}" add "${encfile}"
+  encrypted="$(realpath --no-symlinks "${GIT_WORKING_TREE}/${dotfile}")"
+  decrypted="$(printf '%s\n' "${encrypted}" | sed -e 's/.enc$//')"
+
+  if test -f "${decrypted}"; then
+    printf 'pre-commit: Encrypting %s -> %s\n' "${decrypted}" "${encrypted}"
+    gpg --batch --yes --trust-model always --recipient "${GPG_RECIPIENT}" --output "${encrypted}" --encrypt "${decrypted}"
+    # We won't know that the file has changed on disk, since it isn't tracked,
+    # so we have to encrypt it every time.
+    dotfiles add "${encrypted}"
   fi
-done < <(git --git-dir="${GIT_DIR}" --work-tree="${GIT_WORKING_TREE}" ls-files --full-name --deduplicate --no-empty-directory "${GIT_WORKING_TREE}" | grep '\.enc$')
+
+  # Remove the unencrypted file if it's tracked
+  if dotfiles ls-files --error-unmatch "${decrypted}" >/dev/null 2>&1; then
+    printf 'pre-commit: Removing unencrypted file: %s\n' "${decrypted}"
+    dotfiles rm --cached "${decrypted}" >/dev/null
+  fi
+done < <(dotfiles ls-files --full-name --deduplicate --no-empty-directory "${GIT_WORKING_TREE}" | grep '\.enc$')
 
 # Close stdin
 exec <&-
