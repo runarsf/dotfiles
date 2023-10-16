@@ -1,28 +1,48 @@
 #!/bin/sh
 
-printf '%s\n' "Running post-merge hook."
+printf '%s: Running git hook.\n' "${0}"
 
-# source "$(git --exec-path)/git-sh-setup"
-# 
-# set -o errexit
-# set -o nounset
-# 
-# GIT_DIR="$(git rev-parse --git-dir)"
-# GIT_WORKING_TREE="$(git rev-parse --show-toplevel)"
-# 
-# # Open stdin
-# exec < /dev/tty
-# 
-# while IFS= read -r dotfile; do
-#   encfile="$(realpath --no-symlinks "${GIT_WORKING_TREE}/${dotfile}")"
-#   decfile="$(printf '%s\n' "${encfile}" | sed -e 's/.enc$//')"
-#   if test ! -f "${decfile}"; then
-#     printf '%s\n' "Decrypting ${encfile} -> ${decfile}"
-#     printf '%s\n' 'RELOADAGENT' | gpg-connect-agent # https://stackoverflow.com/a/59170001
-#     gpg --output "${decfile}" --decrypt "${encfile}"
-#   fi
-# done < <(git --git-dir="${GIT_DIR}" ls-tree --full-tree -r 'HEAD' --name-only | grep '\.enc$')
-# 
-# # Close stdin
-# exec <&-
-# 
+source "$(git --exec-path)/git-sh-setup"
+
+GIT_DIR="$(git rev-parse --git-dir 2>/dev/null)"
+: "${GIT_DIR:=${HOME}/.config/.git}"
+
+GIT_WORKING_TREE="$(git rev-parse --show-toplevel 2>/dev/null)"
+: "${GIT_WORKING_TREE:=${HOME}}"
+
+set -o errexit
+set -o nounset
+
+GIT_DIR="$(realpath "${GIT_DIR}")"
+GIT_WORKING_TREE="$(realpath "${GIT_WORKING_TREE}")"
+
+alias dotfiles="git --git-dir=${GIT_DIR} --work-tree=${GIT_WORKING_TREE}"
+
+GPG_RECIPIENT="$(dotfiles config user.email)"
+
+# Open stdin
+exec < /dev/tty
+
+# Iterate over all tracked files ending with '.enc'
+while IFS= read -r dotfile; do
+  encrypted="$(realpath --no-symlinks "${GIT_WORKING_TREE}/${dotfile}")"
+  decrypted="$(printf '%s\n' "${encrypted}" | sed -e 's/.enc$//')"
+
+  while test -f "${decrypted}"; do
+    read -p "${0}: ${decrypted} already exists, decrypt? (Y/n)" choice
+    case "${choice}" in
+      y|Y|n|N|'') break;;
+      *) printf 'Invalid choice %s\n' "${choice}";;
+    esac
+  done
+  case "${choice}" in
+    n|N) continue;;
+  esac
+
+  printf '%s: Decrypting %s -> %s\n' "${0}" "${encrypted}" "${decrypted}"
+  printf 'RELOADAGENT\n' | gpg-connect-agent # https://stackoverflow.com/a/59170001
+  gpg --batch --yes --output "${decrypted}" --decrypt "${encrypted}"
+done < <(dotfiles ls-files --full-name --deduplicate --no-empty-directory "${GIT_WORKING_TREE}" | grep '\.enc$')
+
+# Close stdin
+exec <&-
