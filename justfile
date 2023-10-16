@@ -273,3 +273,15 @@ init-startup-apps AUTOSTART_FILE="${XDG_CONFIG_HOME:-${HOME:-~}/.config}/dotfile
   fi
   mkdir -p "$(dirname "{{AUTOSTART_FILE}}")"
   printf '%s\n' "${applications}" | awk 'NF{print $0 " &"}' >> "{{AUTOSTART_FILE}}"
+
+[linux]
+natural-scrolling:
+  #!/usr/bin/env bash
+  DEVICE_ID="$(xinput list | sed -rn 's/.+(touchpad|glidepoint)\s+id=([0-9]{1,2}).+/\2/pi')"
+  PROP_ID="$(xinput list-props "${DEVICE_ID}" | sed -rn 's/.+Natural Scrolling Enabled \(([0-9]+)\).+/\1/pi')"
+  xinput set-prop "${DEVICE_ID}" "${PROP_ID}" 1
+  if test "${?}" -ne "0"; then
+    printf '%s\n' "Failed to set natural scrolling..."
+  else
+    printf '%s\n' "Natural scrolling enabled..."
+  fi
