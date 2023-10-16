@@ -1,6 +1,6 @@
 #!/bin/sh
 
-printf 'pre-commit: Running git hook.\n'
+printf '%s: Running git hook.\n' "$(basename "${0}")"
 
 source "$(git --exec-path)/git-sh-setup"
 
@@ -29,7 +29,7 @@ while IFS= read -r dotfile; do
   decrypted="$(printf '%s\n' "${encrypted}" | sed -e 's/.enc$//')"
 
   if test -f "${decrypted}"; then
-    printf 'pre-commit: Encrypting %s -> %s\n' "${decrypted}" "${encrypted}"
+    printf '%s: Encrypting %s -> %s\n' "$(basename "${0}")" "${decrypted}" "${encrypted}"
     gpg --batch --yes --trust-model always --recipient "${GPG_RECIPIENT}" --output "${encrypted}" --encrypt "${decrypted}"
     # We won't know that the file has changed on disk, since it isn't tracked,
     # so we have to encrypt it every time.
@@ -38,7 +38,7 @@ while IFS= read -r dotfile; do
 
   # Remove the unencrypted file if it's tracked
   if dotfiles ls-files --error-unmatch "${decrypted}" >/dev/null 2>&1; then
-    printf 'pre-commit: Removing unencrypted file: %s\n' "${decrypted}"
+    printf '%s: Removing unencrypted file: %s\n' "$(basename "${0}")" "${decrypted}"
     dotfiles rm --cached "${decrypted}" >/dev/null
   fi
 done < <(dotfiles ls-files --full-name --deduplicate --no-empty-directory "${GIT_WORKING_TREE}" | grep '\.enc$')

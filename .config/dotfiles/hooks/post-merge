@@ -1,6 +1,6 @@
 #!/bin/sh
 
-printf '%s: Running git hook.\n' "${0}"
+printf '%s: Running git hook.\n' "$(basename "${0}")"
 
 source "$(git --exec-path)/git-sh-setup"
 
@@ -29,7 +29,7 @@ while IFS= read -r dotfile; do
   decrypted="$(printf '%s\n' "${encrypted}" | sed -e 's/.enc$//')"
 
   while test -f "${decrypted}"; do
-    read -p "${0}: ${decrypted} already exists, decrypt? (Y/n)" choice
+    read -p "$(basename "${0}"): ${decrypted} already exists, decrypt? (Y/n)" choice
     case "${choice}" in
       y|Y|n|N|'') break;;
       *) printf 'Invalid choice %s\n' "${choice}";;
@@ -39,7 +39,7 @@ while IFS= read -r dotfile; do
     n|N) continue;;
   esac
 
-  printf '%s: Decrypting %s -> %s\n' "${0}" "${encrypted}" "${decrypted}"
+  printf '%s: Decrypting %s -> %s\n' "$(basename "${0}")" "${encrypted}" "${decrypted}"
   printf 'RELOADAGENT\n' | gpg-connect-agent # https://stackoverflow.com/a/59170001
   gpg --batch --yes --output "${decrypted}" --decrypt "${encrypted}"
 done < <(dotfiles ls-files --full-name --deduplicate --no-empty-directory "${GIT_WORKING_TREE}" | grep '\.enc$')
