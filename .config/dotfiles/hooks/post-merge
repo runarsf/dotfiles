@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -o xtrace
+
 printf '%s: Running git hook.\n' "$(basename "${0}")"
 
 source "$(git --exec-path)/git-sh-setup"
