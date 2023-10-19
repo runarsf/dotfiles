@@ -1,6 +1,6 @@
 #!/bin/sh
 
-set -o xtrace
+# set -o xtrace
 
 printf '%s: Running git hook.\n' "$(basename "${0}")"
 
