@@ -1,7 +1,5 @@
 #!/bin/sh
 
-# set -o xtrace
-
 printf '%s: Running git hook.\n' "$(basename "${0}")"
 
 source "$(git --exec-path)/git-sh-setup"
@@ -30,16 +28,10 @@ while IFS= read -r dotfile; do
   encrypted="$(realpath --no-symlinks "${GIT_WORKING_TREE}/${dotfile}")"
   decrypted="$(printf '%s\n' "${encrypted}" | sed -e 's/.enc$//')"
 
-  while test -f "${decrypted}"; do
-    read -p "$(basename "${0}"): ${decrypted} already exists, decrypt? (Y/n)" choice
-    case "${choice}" in
-      y|Y|n|N|'') break;;
-      *) printf 'Invalid choice %s\n' "${choice}";;
-    esac
-  done
-  case "${choice}" in
-    n|N) continue;;
-  esac
+  if test -f "${decrypted}"; then
+    cp "${decrypted}" "${decrypted}.bak"
+    printf '%s: Backing up %s -> %s\n' "$(basename "${0}")" "${decrypted}" "${decrypted}.bak"
+  fi
 
   printf '%s: Decrypting %s -> %s\n' "$(basename "${0}")" "${encrypted}" "${decrypted}"
   printf 'RELOADAGENT\n' | gpg-connect-agent # https://stackoverflow.com/a/59170001
