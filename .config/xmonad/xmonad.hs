@@ -276,15 +276,19 @@ myKeys =
     mouseFollowFocus)
   , ("M-<Left>", do
     layout <- getActiveLayoutDescription
-    case isInfixOf "ReflectX" layout of
-      False -> sendMessage $ Go L
-      True  -> sendMessage $ Go R
+    case layout of
+      x | elem x ["Spacing Monocle","Spacing Dual"] -> windows W.focusUp
+      _ -> case isInfixOf "ReflectX" layout of
+             False -> sendMessage $ Go L
+             True  -> sendMessage $ Go R
     mouseFollowFocus)
   , ("M-<Right>", do
     layout <- getActiveLayoutDescription
-    case isInfixOf "ReflectX" layout of
-      False -> sendMessage $ Go R
-      True  -> sendMessage $ Go L
+    case layout of
+      x | elem x ["Spacing Monocle","Spacing Dual"] -> windows W.focusDown
+      _ -> case isInfixOf "ReflectX" layout of
+             False -> sendMessage $ Go R
+             True  -> sendMessage $ Go L
     mouseFollowFocus)
   , ("M-S-<Up>", do
     layout <- getActiveLayoutDescription
