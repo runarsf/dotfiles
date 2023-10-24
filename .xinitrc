@@ -68,7 +68,7 @@ if test -x /usr/bin/nm-applet; then
   nm-applet --sm-disable &
 fi
 
-# picom --config &
+picom &
 
 xdg-mime default "${BROWSER}.desktop" x-scheme-handler/http
 xdg-mime default "${BROWSER}.desktop" x-scheme-handler/https
