@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 printf '%s: Running git hook.\n' "$(basename "${0}")"
 
@@ -16,7 +16,9 @@ set -o nounset
 GIT_DIR="$(realpath "${GIT_DIR}")"
 GIT_WORKING_TREE="$(realpath "${GIT_WORKING_TREE}")"
 
-alias dotfiles="git --git-dir=${GIT_DIR} --work-tree=${GIT_WORKING_TREE}"
+dotfiles() {
+  git --git-dir="${GIT_DIR}" --work-tree="${GIT_WORKING_TREE}" "${@}"
+}
 
 GPG_RECIPIENT="$(dotfiles config user.email)"
 
@@ -24,12 +26,13 @@ GPG_RECIPIENT="$(dotfiles config user.email)"
 exec < /dev/tty
 
 # Iterate over all tracked files ending with '.enc'
+i=0
 while IFS= read -r dotfile; do
   encrypted="$(realpath --no-symlinks "${GIT_WORKING_TREE}/${dotfile}")"
   decrypted="$(printf '%s\n' "${encrypted}" | sed -e 's/.enc$//')"
 
   if test -f "${decrypted}"; then
-    printf '%s: Encrypting %s -> %s\n' "$(basename "${0}")" "${decrypted}" "${encrypted}"
+    printf '%s (%i): Encrypting %s -> %s\n' "$(basename "${0}")" "${i}" "${decrypted}" "${encrypted}"
     gpg --batch --yes --trust-model always --recipient "${GPG_RECIPIENT}" --output "${encrypted}" --encrypt "${decrypted}"
     # We won't know that the file has changed on disk, since it isn't tracked,
     # so we have to encrypt it every time.
@@ -38,9 +41,10 @@ while IFS= read -r dotfile; do
 
   # Remove the unencrypted file if it's tracked
   if dotfiles ls-files --error-unmatch "${decrypted}" >/dev/null 2>&1; then
-    printf '%s: Removing unencrypted file: %s\n' "$(basename "${0}")" "${decrypted}"
+    printf '%s (%i): Removing unencrypted file: %s\n' "$(basename "${0}")" "${i}" "${decrypted}"
     dotfiles rm --cached "${decrypted}" >/dev/null
   fi
+  i=$((i+1))
 done < <(dotfiles ls-files --full-name --deduplicate --no-empty-directory "${GIT_WORKING_TREE}" | grep '\.enc$')
 
 # Close stdin

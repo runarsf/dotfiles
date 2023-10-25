@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 printf '%s: Running git hook.\n' "$(basename "${0}")"
 
@@ -16,7 +16,9 @@ set -o nounset
 GIT_DIR="$(realpath "${GIT_DIR}")"
 GIT_WORKING_TREE="$(realpath "${GIT_WORKING_TREE}")"
 
-alias dotfiles="git --git-dir=${GIT_DIR} --work-tree=${GIT_WORKING_TREE}"
+dotfiles() {
+  git --git-dir="${GIT_DIR}" --work-tree="${GIT_WORKING_TREE}" "${@}"
+}
 
 GPG_RECIPIENT="$(dotfiles config user.email)"
 
@@ -24,18 +26,20 @@ GPG_RECIPIENT="$(dotfiles config user.email)"
 exec < /dev/tty
 
 # Iterate over all tracked files ending with '.enc'
+i=0
 while IFS= read -r dotfile; do
   encrypted="$(realpath --no-symlinks "${GIT_WORKING_TREE}/${dotfile}")"
   decrypted="$(printf '%s\n' "${encrypted}" | sed -e 's/.enc$//')"
 
   if test -f "${decrypted}"; then
     cp "${decrypted}" "${decrypted}.bak"
-    printf '%s: Backing up %s -> %s\n' "$(basename "${0}")" "${decrypted}" "${decrypted}.bak"
+    printf '%s (%i): Backing up %s -> %s\n' "$(basename "${0}")" "${i}" "${decrypted}" "${decrypted}.bak"
   fi
 
-  printf '%s: Decrypting %s -> %s\n' "$(basename "${0}")" "${encrypted}" "${decrypted}"
+  printf '%s (%i): Decrypting %s -> %s\n' "$(basename "${0}")" "${i}" "${encrypted}" "${decrypted}"
   printf 'RELOADAGENT\n' | gpg-connect-agent # https://stackoverflow.com/a/59170001
   gpg --output "${decrypted}" --decrypt "${encrypted}"
+  i=$((i+1))
 done < <(dotfiles ls-files --full-name --deduplicate --no-empty-directory "${GIT_WORKING_TREE}" | grep '\.enc$')
 
 # Close stdin
