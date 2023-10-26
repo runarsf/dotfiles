@@ -285,3 +285,8 @@ natural-scrolling:
   else
     printf '%s\n' "Natural scrolling enabled..."
   fi
+
+[linux]
+wayland:
+  paru -S wlprop wl-clip-persist-git
+  pip install pyprland

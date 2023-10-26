@@ -64,6 +64,7 @@ if [[ $- == *i* ]]; then
   eval "$(ssh-agent)" && ssh-add
 
   # Start graphical server on tty1 if not already running.
-  test "$(tty)" = "/dev/tty1" >/dev/null 2>&1 && ! pgrep -x Xorg >/dev/null 2>&1 && startx
+  # test "$(tty)" = "/dev/tty1" >/dev/null 2>&1 && ! pgrep -x Xorg >/dev/null 2>&1 && startx
+  test "$(tty)" = "/dev/tty1" >/dev/null 2>&1 && Hyprland
 fi
 
