@@ -1,0 +1,4 @@
+# https://github.com/Duckonaut/hyprload/issues/25
+plugins = [
+  { git = "https://github.com/hyprwm/hyprland-plugins.git", branch = "main", name = "hyprbars" }
+]
