@@ -292,7 +292,9 @@ audio:
 
 [linux]
 wayland:
-  paru -S hyprland-git hyprland-nvidia-git xdg-desktop-portal-hyprland-git xorg-xwayland extramaus wofi hyprpaper waybar wlprop wl-clip-persist-git gtklock cage greetd greetd-gtkgreet qt5-wayland qt6-wayland wl-clipboard hyprpicker-git xwaylandvideobridge-cursor-mode-2-git wev webcord
+  paru -S hyprland-git
+  paru -S hyprland-nvidia-git
+  paru -S xdg-desktop-portal-hyprland-git xorg-xwayland extramaus wofi waybar wlprop wl-clip-persist-git gtklock cage greetd greetd-gtkgreet qt5-wayland qt6-wayland wl-clipboard hyprpicker-git xwaylandvideobridge-cursor-mode-2-git wev webcord jq swww hyprpaper
   pip install pyprland
   # git clone https://github.com/hyprwm/hyprland-plugins ~/.config/hypr-plugins
   # command = "cage -s -- gtkgreet" in /etc/greetd/config.toml
