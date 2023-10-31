@@ -4,7 +4,8 @@
   },
   "scratchpads": {
     "term": {
-      "command": "alacritty --class scratchpad --title scratchpad --option font.size=12 --command tmux new-session -A -s scratchpad"
+      "command": "alacritty --class scratchpad --title scratchpad --option font.size=12 --command tmux new-session -A -s scratchpad",
+      "hide": false
     }
   }
 }
