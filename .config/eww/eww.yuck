@@ -19,23 +19,23 @@
 
 ; NOTE Bars are dynamically defined in bars.yuck when running launch-eww.sh
 
-(deflisten hyprland-workspaces :initial "[]" "bash ~/.config/eww/modules/hyprland-get-workspaces")
-(deflisten hyprland-current_workspace :initial "1" "bash ~/.config/eww/modules/hyprland-get-active-workspace")
-(defwidget hyprland-workspaces []
-  (eventbox :onscroll "bash ~/.config/eww/scripts/change-active-workspace {} ${hyprland-current_workspace}" :class "workspaces-widget"
-    (box :space-evenly true
-      (label :text "${hyprland-workspaces}${hyprland-current_workspace}" :visible false)
-      (for workspace in hyprland-workspaces
-        (eventbox :onclick "hyprctl dispatch workspace ${workspace.id}"
-          (box :class "workspace-entry ${workspace.id == current_workspace ? "current" : ""} ${workspace.windows > 0 ? "occupied" : "empty"}"
-            (label :text "${workspace.id}")))))))
-
-(deflisten hyprland-window :initial "..." "sh ~/.config/eww/modules/hyprland-get-window-title")
-(defwidget hyprland-window_w []
-  (box
-    (label :text "${hyprland-window}"
-    )
-  )
+; (deflisten hyprland-workspaces :initial "[]" "bash ~/.config/eww/modules/hyprland-get-workspaces")
+; (deflisten hyprland-current_workspace :initial "1" "bash ~/.config/eww/modules/hyprland-get-active-workspace")
+; (defwidget hyprland-workspaces []
+;   (eventbox :onscroll "bash ~/.config/eww/scripts/change-active-workspace {} ${hyprland-current_workspace}" :class "workspaces-widget"
+;     (box :space-evenly true
+;       (label :text "${hyprland-workspaces}${hyprland-current_workspace}" :visible false)
+;       (for workspace in hyprland-workspaces
+;         (eventbox :onclick "hyprctl dispatch workspace ${workspace.id}"
+;           (box :class "workspace-entry ${workspace.id == current_workspace ? "current" : ""} ${workspace.windows > 0 ? "occupied" : "empty"}"
+;             (label :text "${workspace.id}")))))))
+; 
+; (deflisten hyprland-window :initial "..." "sh ~/.config/eww/modules/hyprland-get-window-title")
+; (defwidget hyprland-window_w []
+;   (box
+;     (label :text "${hyprland-window}"
+;     )
+;   )
 
 
 ; (defvar muted-icon "tail -f"))

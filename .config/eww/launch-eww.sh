@@ -33,18 +33,35 @@ get_yuck() {
 
 rm -f "${CONFIG_DIR}/bars.yuck"
 
-while read -r monitor; do
-  _id="$(printf '%s' "${monitor}" | awk -F ':' '/1/ {print $1}')"
-  if [[ "$(printf '%s' "${monitor}" | awk '{print $2}')" == *"*"* ]]; then
-    _widget="${PRIMARY_BAR_WIDGET}"
-  else
-    _widget="${ALT_BAR_WIDGET}"
-  fi
-  
-  printf '%s\n\n' "$(get_yuck "${_id}" "${_widget}")" >> "${CONFIG_DIR}/bars.yuck"
-  
-  set -- "${@}" "bar-${_id}"
-done < <(xrandr --listmonitors | tail -n+2)
+case "${XDG_CURRENT_DESKTOP}" in
+  Hyprland)
+    while read -r monitor; do
+      if test "${monitor}" -eq "0"; then
+        _widget="${PRIMARY_BAR_WIDGET}"
+      else
+        _widget="${ALT_BAR_WIDGET}"
+      fi
+
+      printf '%s\n\n' "$(get_yuck "${monitor}" "${_widget}")" >> "${CONFIG_DIR}/bars.yuck"
+
+      set -- "${@}" "bar-${monitor}"
+    done < <(hyprctl -j monitors | jq '.[] | .id')
+    ;;
+  *)
+    while read -r monitor; do
+      _id="$(printf '%s' "${monitor}" | awk -F ':' '/1/ {print $1}')"
+      if [[ "$(printf '%s' "${monitor}" | awk '{print $2}')" == *"*"* ]]; then
+        _widget="${PRIMARY_BAR_WIDGET}"
+      else
+        _widget="${ALT_BAR_WIDGET}"
+      fi
+
+      printf '%s\n\n' "$(get_yuck "${_id}" "${_widget}")" >> "${CONFIG_DIR}/bars.yuck"
+
+      set -- "${@}" "bar-${_id}"
+    done < <(xrandr --listmonitors | tail -n+2)
+    ;;
+esac
 
 sleep 0.5
 eww kill
