@@ -21,12 +21,12 @@ mon_y="$(printf '%s\n' "${monitor}" | jq -r '.y')"
 mon_w="$(printf '%s\n' "${monitor}" | jq -r '.width')"
 mon_h="$(printf '%s\n' "${monitor}" | jq -r '.height')"
 
+max_w="$((${mon_w} - 2 * ${padding}))"
+max_h="$((${mon_h} - 2 * ${padding}))"
 min_x="$((${mon_x} + ${padding}))"
 min_y="$((${mon_y} + ${padding}))"
-max_x="$((${mon_w} - ${w} - ${padding}))"
-max_y="$((${mon_h} - ${h} - ${padding}))"
-max_w="$((${mon_w} - ${padding} - ${padding}))"
-max_h="$((${mon_h} - ${padding} - ${padding}))"
+max_x="$((${mon_w} - ${max_w} - ${padding}))"
+max_y="$((${mon_h} - ${max_h} - ${padding}))"
 
 new_x="${x}"
 new_y="${y}"
@@ -40,5 +40,9 @@ test "${y}" -gt "${max_y}" && new_y="${max_y}"
 test "${w}" -gt "${max_w}" && new_w="${max_w}"
 test "${h}" -gt "${max_h}" && new_h="${max_h}"
 
-hyprctl dispatch resizewindowpixel exact "${new_w}" "${new_h}",pid:${pid}
-hyprctl dispatch movewindowpixel exact "${new_x}" "${new_y}",pid:${pid}
+if test "${w}" -ne "${new_w}" -o "${h}" -ne "${new_h}"; then
+  hyprctl dispatch resizewindowpixel exact "${new_w}" "${new_h}",pid:${pid}
+fi
+if test "${x}" -ne "${new_x}" -o "${y}" -ne "${new_y}"; then
+  hyprctl dispatch movewindowpixel exact "${new_x}" "${new_y}",pid:${pid}
+fi
