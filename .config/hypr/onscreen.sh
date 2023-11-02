@@ -2,12 +2,12 @@
 
 # Automatically moves the window to the nearest edge of the monitor.
 
+window="$(hyprctl -j activewindow)"
+monitor="$(hyprctl -j monitors | jq -r '.[] | select(.focused)')"
+
 gaps="$(hyprctl -j getoption general:gaps_out | jq -r '.int')"
 border="$(hyprctl -j getoption general:border_size | jq -r '.int')"
 padding="$((gaps + border))"
-
-window="$(hyprctl -j activewindow)"
-monitor="$(hyprctl -j monitors | jq -r '.[] | select(.focused)')"
 
 pid="$(printf '%s\n' "${window}" | jq -r '.pid')"
 
