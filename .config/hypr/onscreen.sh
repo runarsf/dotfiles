@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Automatically moves the window to the nearest edge of the monitor.
+# Automatically moves the window to the nearest edge of the monitor and resizes it to fit the screen.
 
 window="$(hyprctl -j activewindow)"
 monitor="$(hyprctl -j monitors | jq -r '.[] | select(.focused)')"
@@ -25,13 +25,20 @@ min_x="$((${mon_x} + ${padding}))"
 min_y="$((${mon_y} + ${padding}))"
 max_x="$((${mon_w} - ${w} - ${padding}))"
 max_y="$((${mon_h} - ${h} - ${padding}))"
+max_w="$((${mon_w} - ${padding} - ${padding}))"
+max_h="$((${mon_h} - ${padding} - ${padding}))"
 
 new_x="${x}"
 new_y="${y}"
+new_w="${w}"
+new_h="${h}"
 
 test "${x}" -lt "${min_x}" && new_x="${min_x}"
 test "${y}" -lt "${min_y}" && new_y="${min_y}"
 test "${x}" -gt "${max_x}" && new_x="${max_x}"
 test "${y}" -gt "${max_y}" && new_y="${max_y}"
+test "${w}" -gt "${max_w}" && new_w="${max_w}"
+test "${h}" -gt "${max_h}" && new_h="${max_h}"
 
+hyprctl dispatch resizewindowpixel exact "${new_w}" "${new_h}",pid:${pid}
 hyprctl dispatch movewindowpixel exact "${new_x}" "${new_y}",pid:${pid}
