@@ -21,6 +21,8 @@ export STARSHIP_CONFIG=~/.config/starship.toml
 export MANPAGER="less -X"
 export LESS="--ignore-case --quit-if-one-screen --quit-on-intr FRXQ"
 
+export SSH_AUTH_SOCK="${XDG_RUNTIME_DIR}/gcr/ssh"
+
 export BYOBU_CONFIG_DIR="${XDG_CONFIG_HOME:-${HOME}/.config}/byobu"
 export CALIBRE_USE_DARK_PALETTE=1
 export QT_QPA_PLATFORMTHEME="qt5ct"
@@ -52,19 +54,19 @@ export PATH="${PATH}:${HOME}/.local/share/JetBrains/Toolbox/scripts"
 # if xhost >& /dev/null ; then echo "Display exists"
 # else echo "Display invalid" ; fi
 
-KeyboardInterrupt () {
-  printf '%s\n' "oop"
-  trap - SIGINT
-}
+# KeyboardInterrupt () {
+#   printf '%s\n' "oop"
+#   trap - SIGINT
+# }
 
-trap KeyboardInterrupt SIGINT
+# trap KeyboardInterrupt SIGINT
 
-if [[ $- == *i* ]]; then
+# if [[ $- == *i* ]]; then
   # Auto start ssh-agent
-  eval "$(ssh-agent)" && ssh-add
+  # eval "$(ssh-agent)" && ssh-add
 
   # Start graphical server on tty1 if not already running.
   # test "$(tty)" = "/dev/tty1" >/dev/null 2>&1 && ! pgrep -x Xorg >/dev/null 2>&1 && startx
-  test "$(tty)" = "/dev/tty1" >/dev/null 2>&1 && Hyprland
-fi
+  # test "$(tty)" = "/dev/tty1" >/dev/null 2>&1 && Hyprland
+# fi
 

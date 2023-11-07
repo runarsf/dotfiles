@@ -7,7 +7,11 @@ monitor="$(hyprctl -j monitors | jq -r '.[] | select(.focused)')"
 
 gaps="$(hyprctl -j getoption general:gaps_out | jq -r '.int')"
 border="$(hyprctl -j getoption general:border_size | jq -r '.int')"
-padding="$((gaps + border))"
+
+pad_n="$((${gaps} + ${border} + $(hyprctl -j monitors | jq -r '.[] | select(.focused) | .reserved[1]')))"
+pad_s="$((${gaps} + ${border} + $(hyprctl -j monitors | jq -r '.[] | select(.focused) | .reserved[3]')))"
+pad_w="$((${gaps} + ${border} + $(hyprctl -j monitors | jq -r '.[] | select(.focused) | .reserved[0]')))"
+pad_e="$((${gaps} + ${border} + $(hyprctl -j monitors | jq -r '.[] | select(.focused) | .reserved[2]')))"
 
 pid="$(printf '%s\n' "${window}" | jq -r '.pid')"
 
@@ -26,16 +30,16 @@ mon_y="$(printf '%s\n' "${monitor}" | jq -r '.y')"
 mon_w="$(printf '%s\n' "${monitor}" | jq -r '.width')"
 mon_h="$(printf '%s\n' "${monitor}" | jq -r '.height')"
 
-max_w="$((${mon_w} - 2 * ${padding}))"
-max_h="$((${mon_h} - 2 * ${padding}))"
+max_w="$((${mon_w} - ${pad_w} - ${pad_e}))"
+max_h="$((${mon_h} - ${pad_n} - ${pad_s}))"
 
 test "${w}" -gt "${max_w}" && w="${max_w}"
 test "${h}" -gt "${max_h}" && h="${max_h}"
 
-max_x="$((${mon_w} - ${w} - ${padding}))"
-max_y="$((${mon_h} - ${h} - ${padding}))"
-min_x="$((${mon_x} + ${padding}))"
-min_y="$((${mon_y} + ${padding}))"
+max_x="$((${mon_w} - ${w} - ${pad_s}))"
+max_y="$((${mon_h} - ${h} - ${pad_e}))"
+min_x="$((${mon_x} + ${pad_w}))"
+min_y="$((${mon_y} + ${pad_n}))"
 
 test "${x}" -gt "${max_x}" && x="${max_x}"
 test "${y}" -gt "${max_y}" && y="${max_y}"

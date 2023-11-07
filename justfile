@@ -294,9 +294,14 @@ audio:
 wayland:
   paru -S hyprland-git
   paru -S hyprland-nvidia-git
-  paru -S xdg-desktop-portal-hyprland-git xorg-xwayland extramaus wofi waybar wlprop wl-clip-persist-git gtklock cage greetd greetd-gtkgreet qt5-wayland qt6-wayland wl-clipboard hyprpicker xwaylandvideobridge-cursor-mode-2-git wev webcord jq swww hyprpaper nwg-look-bin hyprprop kanshi wlr-randr sway-audio-idle-inhibit-git swayidle
+  paru -S xdg-desktop-portal-hyprland-git xorg-xwayland extramaus wofi waybar wlprop wl-clip-persist-git cage greetd qt5-wayland qt6-wayland wl-clipboard hyprpicker xwaylandvideobridge-cursor-mode-2-git wev webcord jq swww hyprpaper nwg-look-bin hyprprop kanshi wlr-randr sway-audio-idle-inhibit-git swayidle ly seahorse polkit-gnome libsecret authconfig
   pip install pyprland
   # git clone https://github.com/hyprwm/hyprland-plugins ~/.config/hypr-plugins
   # command = "cage -s -- gtkgreet" in /etc/greetd/config.toml
   # sudo systemctl enable greetd
   # add each login environment on a line to /etc/greetd/environments
+  # Add auth optional pam_gnome_keyring.so at the end of the auth section and session optional pam_gnome_keyring.so auto_start at the end of the session section. 
+  #   https://wiki.archlinux.org/title/GNOME/Keyring
+  # systemctl --user enable --now gcr-ssh-agent.socket
+  # git config --global credential.helper /usr/lib/git-core/git-credential-libsecret
+
