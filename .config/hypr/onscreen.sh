@@ -30,8 +30,8 @@ mon_y="$(printf '%s\n' "${monitor}" | jq -r '.y')"
 mon_w="$(printf '%s\n' "${monitor}" | jq -r '.width')"
 mon_h="$(printf '%s\n' "${monitor}" | jq -r '.height')"
 
-max_w="$((${mon_w} - 2 * ${padding}))"
-max_h="$((${mon_h} - 2 * ${padding}))"
+max_w="$((${mon_w} - ${pad_w} - ${pad_e}))"
+max_h="$((${mon_h} - ${pad_n} - ${pad_s}))"
 
 test "${w}" -gt "${max_w}" && w="${max_w}"
 test "${h}" -gt "${max_h}" && h="${max_h}"

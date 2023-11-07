@@ -53,8 +53,6 @@ if test command -v "numlockx" &>/dev/null; then
   numlockx on
 fi
 
-lxpolkit &
-/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &
 /usr/lib/polkit-kde-authentication-agent-1 &
 
 # Start common apps
@@ -73,4 +71,4 @@ picom &
 xdg-mime default "${BROWSER}.desktop" x-scheme-handler/http
 xdg-mime default "${BROWSER}.desktop" x-scheme-handler/https
 
-exec xmonad
+exec Hyprland
