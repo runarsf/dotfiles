@@ -14,9 +14,9 @@ export READER="zathura"
 export PYTHONDONTWRITEBYTECODE=1
 export ZDOTDIR="${XDG_CONFIG_HOME:-${HOME}/.config}/zsh"
 export FZF_DEFAULT_OPTS="--layout=reverse --height 40%"
-export XBB_URL="https://i.runarsf.dev/upload"
+# export XBB_URL="https://i.runarsf.dev/upload"
 # export XBB_TOKEN="$(pass Screenshot/XBB_TOKEN)"
-export XBB_RAW="true"
+# export XBB_RAW="true"
 export STARSHIP_CONFIG=~/.config/starship.toml
 export MANPAGER="less -X"
 export LESS="--ignore-case --quit-if-one-screen --quit-on-intr FRXQ"
@@ -49,6 +49,10 @@ export PATH="${PATH}:/snap/bin"
 export PATH="${PATH}:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl"
 export PATH="${PATH}:${HOME}/.local/share/miniconda3/bin"
 export PATH="${PATH}:${HOME}/.local/share/JetBrains/Toolbox/scripts"
+
+if test "${XDG_SESSION_TYPE}" = "wayland"; then
+  export MOZ_ENABLE_WAYLAND=1
+fi
 
 # Test if in x session
 # if xhost >& /dev/null ; then echo "Display exists"

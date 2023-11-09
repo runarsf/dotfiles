@@ -296,7 +296,7 @@ wayland:
   paru -S hyprland-nvidia-git
   paru -S xdg-desktop-portal-hyprland-git xorg-xwayland extramaus wofi waybar wlprop wl-clip-persist-git cage greetd qt5-wayland qt6-wayland wl-clipboard hyprpicker xwaylandvideobridge-cursor-mode-2-git wev webcord jq swww hyprpaper nwg-look-bin hyprprop kanshi wlr-randr sway-audio-idle-inhibit-git swayidle ly seahorse polkit-gnome libsecret authconfig
   pip install pyprland
-  # git clone https://github.com/hyprwm/hyprland-plugins ~/.config/hypr-plugins
+  # git clone https://github.com/hyprwm/hyprland-plugins ~/.config/hypr/plugins
   # command = "cage -s -- gtkgreet" in /etc/greetd/config.toml
   # sudo systemctl enable greetd
   # add each login environment on a line to /etc/greetd/environments
