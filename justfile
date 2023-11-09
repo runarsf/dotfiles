@@ -102,7 +102,7 @@ init-utils: (require "git" "python3" "make" "zsh")
 init-packages:
   # TODO Split packages into categories
   sudo pacman -S --needed paru base-devel zsh alacritty rofi dmenu pass dunst vim neovim tmux trash-cli dnsutils acpi autorandr arandr lxrandr lxappearance python3 python-pip ghc firefox-developer-edition docker docker-compose podman podman-compose stack obsidian steam carla telegram-desktop audiorelay noto-fonts noto-fonts-extra noto-fonts-emoji yt-dlp easyeffects starship nitrogen spotify-launcher scrcpy btop bat ripgrep blueman lf gnome-keyring polkit-gnome just redshift jq yq qpwgraph lxinput trayer-srg wmctrl ffcast playerctl xorg-xsetroot xorg-server xorg-apps xorg-xinit xorg-xmessage libx11 libxft libxinerama libxrandr libxss pkgconf xdo xdotool xorg-xbacklight xprintidle xclip numlockx
-  paru -S --needed getrid-git visual-studio-code-bin mullvad-vpn-beta-bin awesome-git yt-dlp-drop-in eww-git colorgrab picom-jonaburg-git ttf-font-awesome-4 dragon-drop wmutils-git betterlockscreen
+  paru -S --needed getrid-git expect visual-studio-code-bin mullvad-vpn-beta-bin awesome-git yt-dlp-drop-in eww-git colorgrab picom-jonaburg-git ttf-font-awesome-4 dragon-drop wmutils-git betterlockscreen
 
 [private]
 init-keys: (require "git" "openssh" "gnupg")

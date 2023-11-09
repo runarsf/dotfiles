@@ -71,4 +71,4 @@ picom &
 xdg-mime default "${BROWSER}.desktop" x-scheme-handler/http
 xdg-mime default "${BROWSER}.desktop" x-scheme-handler/https
 
-exec Hyprland
+exec xmonad
