@@ -10,7 +10,7 @@ client_id="$(printf '%s\n' "${client}" | jq -r '.pid')"
 clients="$(hyprctl -j clients | jq -r ".[] | select(.workspace.id == ${workspace_id}) | select(.pid != ${client_id})")"
 
 # How far away a window should snap
-gravity="50"
+gravity="25"
 
 client_n="$(printf '%s\n' "${client}" | jq -r '.at[1]')"
 client_s="$(printf '%s\n' "${client}" | jq -r '.at[1] + .size[1]')"
