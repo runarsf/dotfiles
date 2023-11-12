@@ -74,3 +74,4 @@ fi
   # test "$(tty)" = "/dev/tty1" >/dev/null 2>&1 && Hyprland
 # fi
 
+test -f "${HOME}/.cargo/env" && . "${HOME}/.cargo/env
