@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-# Automatically moves the window to the nearest edge of the monitor and resizes it to fit the screen.
+# Automatically moves and resizes a floating window to fit the screen.
+# Useful to run on release of binds that move / resize a window.
 
 window="$(hyprctl -j activewindow)"
 monitor="$(hyprctl -j monitors | jq -r '.[] | select(.focused)')"
@@ -47,8 +48,8 @@ test "${x}" -lt "${min_x}" && x="${min_x}"
 test "${y}" -lt "${min_y}" && y="${min_y}"
 
 if test "${x}" -ne "${old_x}" -o "${y}" -ne "${old_y}"; then
-  hyprctl dispatch movewindowpixel exact "${x}" "${y}",pid:${pid}
+  hyprctl dispatch movewindowpixel -- exact "${x}" "${y}",pid:${pid}
 fi
 if test "${w}" -ne "${old_w}" -o "${h}" -ne "${old_h}"; then
-  hyprctl dispatch resizewindowpixel exact "${w}" "${h}",pid:${pid}
+  hyprctl dispatch resizewindowpixel -- exact "${w}" "${h}",pid:${pid}
 fi
