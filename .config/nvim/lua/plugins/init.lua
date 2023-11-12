@@ -214,6 +214,12 @@ return {
     ft = "typst",
   },
 
+  {
+  "theRealCarneiro/hyprland-vim-syntax",
+    dependencies = { "nvim-treesitter/nvim-treesitter" },
+    ft = "hypr",
+  },
+
   { "nvim-treesitter/nvim-treesitter",
     dependencies = {
       "mrjones2014/nvim-ts-rainbow",
