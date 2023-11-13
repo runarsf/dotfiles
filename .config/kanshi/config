@@ -1,3 +1,7 @@
-{
-  output "ASUSTek COMPUTER INC VG27B K8LMQS151792" enable mode 2560x1440@119.998001Hz position 0,0
+profile {
+  output "ASUSTek COMPUTER INC VG27B K8LMQS151792" enable mode 2560x1440@119.998001Hz position 0,0 scale 1
+}
+
+profile {
+  output "eDP-1" enable mode 1920x1080@60.012001Hz position 0,0 scale 1
 }
