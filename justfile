@@ -306,4 +306,5 @@ wayland:
   #   https://wiki.archlinux.org/title/GNOME/Keyring
   # systemctl --user enable --now gcr-ssh-agent.socket
   # git config --global credential.helper /usr/lib/git-core/git-credential-libsecret
+  nix-shell -p nwg-displays
 
