@@ -55,6 +55,7 @@
     gtk3 # For gtk-launch
     polkit_gnome
     libnotify
+    brightnessctl
     # imv
     # mimeo
     # primary-xwayland
@@ -310,8 +311,8 @@
         "SHIFT, XF86AudioMute, exec, ${pkgs.playerctl}/bin/playerctl play-pause"
         ", XF86AudioNext, exec, ${pkgs.playerctl}/bin/playerctl next"
         ", XF86AudioPrev, exec, ${pkgs.playerctl}/bin/playerctl previous"
-        ", XF86MonBrightnessUp, exec, ${pkgs.brillo}/bin/brillo -q -A 5"
-        ", XF86MonBrightnessDown, exec, ${pkgs.brillo}/bin/brillo -q -U 5"
+        ", XF86MonBrightnessUp, exec, ${pkgs.brightnessctl}/bin/brightnessctl set 5%+"
+        ", XF86MonBrightnessDown, exec, ${pkgs.brightnessctl}/bin/brightnessctl set 5%-"
       ];
       bindr = [
         "${mod} CTRL, right, exec, ${./. + builtins.toPath "/bin/hypr-snap"}"

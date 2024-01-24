@@ -57,13 +57,13 @@ in {
 
     font = {
       size = 12;
-      # name = "JetBrainsMono Nerd Font";
-      # package = pkgs.unstable.nerdfonts.override {
-      #   fonts = [ "JetBrainsMono" ];
-      # };
+      name = "JetBrainsMono Nerd Font";
+      package = pkgs.unstable.nerdfonts.override {
+        fonts = [ "JetBrainsMono" ];
+      };
 
-      name = "undefined medium";
-      package = pkgs.undefined-medium;
+      # name = "undefined medium";
+      # package = pkgs.undefined-medium;
     };
 
     keybindings = { };

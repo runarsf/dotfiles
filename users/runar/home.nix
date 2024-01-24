@@ -1,8 +1,10 @@
-{ config, inputs, outputs, system, hostname, name, pkgs, ... }@args:
+{ config, outputs, system, hostname, name, pkgs, ... }:
 
 outputs.lib.mkFor system hostname {
   common = {
     imports = [
+      { _module.args.keys = [ "${config.home.homeDirectory}/.ssh/id_priv" ]; }
+
       ../../modules/users/convenience.nix
       ../../modules/users/development.nix
       ../../modules/users/fonts.nix
@@ -14,11 +16,9 @@ outputs.lib.mkFor system hostname {
       ../../modules/users/writing.nix
       ../../modules/users/tmux.nix
       ../../modules/users/lf
-      (import ../../modules/users/keychain.nix (args // {
-        keys = [ "${config.home.homeDirectory}/.ssh/id_ed25519" ];
-      }))
-      # ../../modules/users/sops.nix
-      # ./config/secrets.nix
+      ../../modules/users/keychain.nix
+      ../../modules/users/sops.nix
+      ./config/secrets.nix
     ];
 
     programs.git = {

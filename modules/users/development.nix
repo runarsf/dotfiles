@@ -4,6 +4,7 @@
   imports = [
     ./nix.nix
     ./python.nix
+    ./vscode.nix
   ];
 
   home = {
