@@ -1,4 +1,4 @@
-{ pkgs, outputs, ... }:
+{ pkgs, ... }:
 
 let
   theme = "ayu-dark";
@@ -31,6 +31,10 @@ let
   };
 
 in {
+  imports = [
+    ./fonts.nix
+  ];
+
   home.shellAliases.ssh = "TERM=xterm-256color ssh";
 
   # Bitmap fonts aren't—and will never be—supported by Kitty; this patch fixes that.
@@ -53,13 +57,13 @@ in {
 
     font = {
       size = 12;
-      name = "JetBrainsMono Nerd Font";
-      package = pkgs.unstable.nerdfonts.override {
-        fonts = [ "JetBrainsMono" ];
-      };
+      # name = "JetBrainsMono Nerd Font";
+      # package = pkgs.unstable.nerdfonts.override {
+      #   fonts = [ "JetBrainsMono" ];
+      # };
 
-      # name = "Cozette";
-      # package = pkgs.unstable.cozette;
+      name = "undefined medium";
+      package = pkgs.undefined-medium;
     };
 
     keybindings = { };

@@ -45,9 +45,9 @@
     noto-fonts-extra
 
     # Bitmap fonts
-    undefined-medium
-    tewi-font
     unstable.cozette
+    tamzen
+    undefined-medium
 
     # Coding
     jetbrains-mono
