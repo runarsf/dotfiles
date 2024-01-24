@@ -980,7 +980,8 @@
         "nixvim": "nixvim",
         "nur": "nur",
         "rednix": "rednix",
-        "sops-nix": "sops-nix"
+        "sops-nix": "sops-nix",
+        "vault": "vault"
       }
     },
     "sops-nix": {
@@ -1129,6 +1130,22 @@
         "owner": "numtide",
         "repo": "flake-utils",
         "type": "github"
+      }
+    },
+    "vault": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1706134894,
+        "narHash": "sha256-r78b5t6kJE4Z/izS/yAZ2LqXOC7mTzbVnsbAdjNeGek=",
+        "ref": "refs/heads/main",
+        "rev": "b0d2491d16ceb634168b9ce8ebd18f836f61baf3",
+        "revCount": 1,
+        "type": "git",
+        "url": "ssh://git@github.com/runarsf/vault"
+      },
+      "original": {
+        "type": "git",
+        "url": "ssh://git@github.com/runarsf/vault"
       }
     },
     "wlroots": {

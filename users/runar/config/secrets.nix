@@ -3,9 +3,13 @@
 outputs.lib.mkFor system hostname {
   hosts.runix = {
     sops.secrets = {
-      sshConfig = outputs.lib.mkSecretFile {
-        source = "${inputs.vault}/ssh/config";
-        destination = "${config.home.homeDirectory}/.ssh/config";
+      private_key = outputs.lib.mkSecretFile {
+        source = "${inputs.vault}/ssh/id_priv";
+        destination = "${config.home.homeDirectory}/.ssh/id_priv";
+      };
+      public_key = outputs.lib.mkSecretFile {
+        source = "${inputs.vault}/ssh/id_priv.pub";
+        destination = "${config.home.homeDirectory}/.ssh/id_priv.pub";
       };
     };
   };

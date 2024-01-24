@@ -1,4 +1,4 @@
-{ outputs, system, hostname, name, pkgs, ... }:
+{ config, inputs, outputs, system, hostname, name, pkgs, ... }@args:
 
 outputs.lib.mkFor system hostname {
   common = {
@@ -14,7 +14,9 @@ outputs.lib.mkFor system hostname {
       ../../modules/users/writing.nix
       ../../modules/users/tmux.nix
       ../../modules/users/lf
-
+      (import ../../modules/users/keychain.nix (args // {
+        keys = [ "${config.home.homeDirectory}/.ssh/id_ed25519" ];
+      }))
       # ../../modules/users/sops.nix
       # ./config/secrets.nix
     ];
@@ -57,22 +59,33 @@ outputs.lib.mkFor system hostname {
           description = "Runar";
           home = "/home/runar";
           shell = pkgs.zsh;
-          extraGroups = [ "wheel" "networkmanager" "docker" "audio" "video" "libvirtd" "input"];
+          extraGroups = [
+            "wheel"
+            "networkmanager"
+            "docker"
+            "audio"
+            "video"
+            "libvirtd"
+            "input"
+          ];
         };
       };
     };
   };
 
   hosts = {
-    # runix = {
-    #   programs.git = {
-    #     userName = "Runar Fredagsvik";
-    #     userEmail = "i@runar.ch";
-    #     signing = {
-    #       key = "";
-    #       signByDefault = true;
-    #     };
-    #   };
-    # };
+    runix = {
+      # imports = [
+      #   (import ../../modules/users/red.nix { inherit inputs pkgs; })
+      # ];
+      #   programs.git = {
+      #     userName = "Runar Fredagsvik";
+      #     userEmail = "i@runar.ch";
+      #     signing = {
+      #       key = "";
+      #       signByDefault = true;
+      #     };
+      #   };
+    };
   };
 }

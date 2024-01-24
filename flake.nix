@@ -48,10 +48,10 @@
 
     nixvim.url = "github:runarsf/nixvim";
 
-    # vault = {
-    #   url = "git+ssh://git@github.com/runarsf/vault";
-    #   flake = false;
-    # };
+    vault = {
+      url = "git+ssh://git@github.com/runarsf/vault";
+      flake = false;
+    };
   };
 
   outputs = inputs:
