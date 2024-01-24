@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+client="$(hyprctl -j activewindow)"
+pid="$(printf '%s' "${client}" | jq '.pid')"
+floating="$(printf '%s' "${client}" | jq '.floating')"
+pinned="$(printf '%s' "${client}" | jq '.pinned')"
+
+if test "${floating}" == "false"; then
+  hyprctl dispatch togglefloating
+fi
+
+# Toggles pinned state
+hyprctl dispatch pin
+
+if test "${pinned}" == "true"; then
+  notify-send "Hypr" "Unpinned window"
+
+  # Toggle floating state back to original state
+  if test "$(cat "/tmp/hypr-${pid}.dat" | jq -r '.floating')" == "false"; then
+    hyprctl dispatch togglefloating
+  fi
+
+  rm -f "/tmp/hypr-${pid}.dat"
+else
+  notify-send "Hypr" "Pinned window"
+
+  printf '%s' "${client}" > "/tmp/hypr-${pid}.dat"
+fi

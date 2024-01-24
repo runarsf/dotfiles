@@ -1,5 +1,0 @@
- ln -s /usr/share/fontconfig/conf.avail/11-lcdfilter-default.conf /etc/fonts/conf.d
- ln -s /usr/share/fontconfig/conf.avail/10-sub-pixel-rgb.conf /etc/fonts/conf.d
- https://gist.github.com/cryzed/e002e7057435f02cc7894b9e748c5671
- Afterwards: gdk-pixbuf-query-loaders --update-cache
-

@@ -1,6 +1,0 @@
-#!/usr/bin/env bash
-
-for id in $(bspc query -N -n .leaf.local); do
-  value=$(bspc query -N SUBTREE -n ${id}.descendant_of > /dev/null && echo off || echo on)
-  bspc node $id -g hidden=${value}
-done
