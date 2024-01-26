@@ -1,8 +1,10 @@
 { keys ? [ ], ... }:
 
 {
-  services.ssh-agent.enable = true;
-  programs.ssh.addKeysToAgent = "yes";
+  imports = [
+    ./ssh.nix
+    ./gpg.nix
+  ];
 
   programs.keychain = {
     enable = true;

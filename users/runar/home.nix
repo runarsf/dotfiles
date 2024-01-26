@@ -9,7 +9,6 @@ outputs.lib.mkFor system hostname {
       ../../modules/users/development.nix
       ../../modules/users/fonts.nix
       ../../modules/users/git.nix
-      ../../modules/users/kitty.nix
       ../../modules/users/neovim.nix
       ../../modules/users/starship.nix
       ../../modules/users/zsh.nix
@@ -18,6 +17,7 @@ outputs.lib.mkFor system hostname {
       ../../modules/users/lf
       ../../modules/users/keychain.nix
       ../../modules/users/sops.nix
+      ../../modules/users/kitty
       ./config/secrets.nix
     ];
 
@@ -41,6 +41,7 @@ outputs.lib.mkFor system hostname {
   systems = {
     linux = {
       imports = [
+        ../../modules/users/eww
         ../../modules/users/discord.nix
         ../../modules/users/gtk.nix
         ../../modules/users/wallpaper.nix
@@ -56,6 +57,8 @@ outputs.lib.mkFor system hostname {
         users.users.${name} = {
           isNormalUser = true;
           initialPassword = "changeme";
+          # TODO https://github.com/Mic92/sops-nix#setting-a-users-password
+          # hashedPasswordFile = config.sops.secrets.password_runar.path;
           description = "Runar";
           home = "/home/runar";
           shell = pkgs.zsh;
@@ -78,6 +81,9 @@ outputs.lib.mkFor system hostname {
       # imports = [
       #   (import ../../modules/users/red.nix { inherit inputs pkgs; })
       # ];
+      home.packages = with pkgs; [
+        geogebra
+      ];
       #   programs.git = {
       #     userName = "Runar Fredagsvik";
       #     userEmail = "i@runar.ch";

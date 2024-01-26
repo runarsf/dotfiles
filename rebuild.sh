@@ -92,6 +92,16 @@ build__home_manager () {
     ${@}
 }
 
+build__darwin () {
+  sudo true
+  darwin-rebuild \
+    --verbose \
+    --log-format 'internal-json' \
+    --flake ".#${FLAKE}" \
+    ${@} \
+ |& nom --json
+}
+
 main () {
   parse_args "${@}"
 

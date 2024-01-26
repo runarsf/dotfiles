@@ -5,6 +5,12 @@
     inputs.nixos-hardware.nixosModules.lenovo-thinkpad-t480s
     ../../modules/hosts/greeter.nix
     ../../modules/hosts/network.nix
+    ../../modules/hosts/docker.nix
+    ../../modules/hosts/podman.nix
+    ../../modules/hosts/bluetooth.nix
+    ../../modules/hosts/firewall.nix
+    ../../modules/hosts/printing.nix
+    ../../modules/hosts/pipewire.nix
   ];
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;

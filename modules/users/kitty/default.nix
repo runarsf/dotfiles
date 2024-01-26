@@ -32,10 +32,15 @@ let
 
 in {
   imports = [
-    ./fonts.nix
+    ../fonts.nix
   ];
 
   home.shellAliases.ssh = "TERM=xterm-256color ssh";
+
+  xdg.configFile."kitty/relative_resize.py" = {
+    source = ./relative_resize.py;
+    executable = true;
+  };
 
   # Bitmap fonts aren't—and will never be—supported by Kitty; this patch fixes that.
   # Considering there is no official support for them, some visdual bugs and crashes may occur.
@@ -45,7 +50,7 @@ in {
     (_: prev: {
       patched-kitty = prev.kitty.overrideAttrs (previousAttrs: {
         patches = previousAttrs.patches ++ [
-          ./kitty-bitmap.patch
+          ./bitmap-fonts.patch
         ];
       });
     })
@@ -131,10 +136,15 @@ in {
       map ${chord}>bar combine : goto_layout splits : launch --cwd=current --location=vsplit
       map ${chord}>minus combine : goto_layout splits : launch --cwd=current --location=hsplit
 
-      map alt+shift+left resize_window narrower
-      map alt+shift+right resize_window wider
-      map alt+shift+up resize_window taller
-      map alt+shift+down resize_window shorter
+      # map alt+shift+left resize_window narrower
+      # map alt+shift+right resize_window wider
+      # map alt+shift+up resize_window taller
+      # map alt+shift+down resize_window shorter
+
+      map alt+shift+left kitten relative_resize.py left
+      map alt+shift+down kitten relative_resize.py down
+      map alt+shift+up kitten relative_resize.py up
+      map alt+shift+right kitten relative_resize.py right
 
       map ${chord}>d detach_tab ask
 
