@@ -1,0 +1,135 @@
+#! /usr/bin/env nix-shell
+#! nix-shell -i bash -p bash xprop wmctrl xprop jq
+
+visible_workspaces() {
+  # _XMONAD_VISIBLE_WORKSPACES returns a list of workspace names, not IDs.
+  xprop -root _XMONAD_VISIBLE_WORKSPACES \
+    | cut -d ' ' -f 3- \
+    | sed 's/, /\n/g' \
+    | sed 's/^"//g' \
+    | sed 's/"$//g'
+}
+
+get_workspaces() {
+  monitor="${1:-}"
+
+  # Get workspaces and filter out unwanted ones
+  workspaces="$(wmctrl -d \
+    | awk -v mon="${monitor:+^${monitor}$}" '{ if ($6 ~ mon) printf $1 " " $2 " "; for (i=9; i<=NF; ++i) printf $i "" FS ; print ""}')"
+
+  # Tag visible workspaces
+  while IFS= read -r workspace; do
+    workspaces="$(printf '%s\n' "${workspaces}" \
+                    | sed "s/ - ${workspace}$/ + ${workspace}/g")"
+  done <<< "$(visible_workspaces)"
+
+  printf '%s\n' "${workspaces}"
+}
+
+get_yuck() {
+  get_yuck__workspaces() {
+    get_workspaces "${1:-}" | while read -r id status name; do
+      # Get content after '_' (if monitor is defined)
+      name="$(printf '%s\n' "${name}" | cut -d '_' -f2)"
+      class=""
+
+      # Add class if workspace is active / visible / has nodes
+      case "${status}" in
+        "*") class="${class:+${class} }active";;
+        "+") class="${class:+${class} }visible";;
+      esac
+      case "$(wmctrl -l | awk '{print "(" $2}' | tr '\n' ')')" in
+        *"(${id})"*) class="${class:-} occupied";;
+      esac
+
+      # Format workspace-box
+			read -r -d '' ws_yuck <<-EOYUCK
+			  (button
+			    ${class:+ :class '${class:-}'}
+			    :onclick 'wmctrl -s ${id}'
+			    '${name}')
+			EOYUCK
+      printf '%s\n' "${ws_yuck}"
+    done
+  }
+
+  get_yuck__segments() {
+    monitors="$(wmctrl -d | grep -v 'VP: N/A' | grep -v 'NSP$' | awk '{print $6}' | sort | uniq)"
+    while IFS= read -r monitor; do
+			read -r -d '' bar_yuck <<-EOYUCK
+			  (box :orientation "h"
+			       :class "workspaces"
+			       :space-evenly true
+			       :halign "start"
+			       :valign "center"
+			       :vexpand true
+			       $(get_yuck__workspaces "${monitor}"))
+			EOYUCK
+      printf '%s\n' "${bar_yuck}"
+    done <<< "${monitors}"
+  }
+
+	read -r -d '' wrapper_yuck <<-EOYUCK
+	  (box :orientation "h"
+	       :space-evenly false
+	       :halign "start"
+	       :valign "center"
+	       :vexpand true
+	       $(get_yuck__segments))
+	EOYUCK
+
+  paste -s -d ' ' <<< "${wrapper_yuck}"
+}
+
+listen() {
+  xprop -spy -root _NET_CURRENT_DESKTOP _NET_CLIENT_LIST | while read -r; do
+    # If wses get left behind or updated weirdly, add a small delay to allow
+    # the wm some wiggle room to manage desktops.
+    sleep .02
+
+    # When listening for changes on _NET_ACTIVE_WINDOW, this prevents the CPU from
+    # going ham when switching between windows frquently by only updating eww when
+    # the desktop changes. We use both ID ($1) and name ($NF) because neither are
+    # technically unique, and will break the check if there are multiple desktops
+    # with the same name or ID.
+    # ws_id="$(wmctrl -d | awk '$2 == "*" { print $1 }')"
+    ws_id="$(xprop -root _NET_CURRENT_DESKTOP | awk '{print $NF}')"
+    ws_name="$(wmctrl -d | awk '$2 == "*" { print $NF }')"
+    ws="${ws_id}-${ws_name}"
+    nodes="$(wmctrl -l | awk '{print "(" $2}' | tr '\n' ')' | grep -o "(${ws_id})" | wc -l)"
+
+    # Only update eww when the currently active workspace is different from the
+    # previously active workspace, or there are fewer nodes on the active ws than last time.
+    if test "${ws:-}" != "${previous_ws:-}" \
+         -o "${nodes:-0}" -lt "${previous_nodes:-0}"; then
+      get_yuck
+    fi
+
+    previous_ws="${ws}"
+    previous_nodes="${nodes}"
+  done
+}
+
+go_to() {
+  operator="${1:-}"
+  ws_n="$(($(get_workspaces | wc -l) - 1))"
+  ws_id="$(xprop -root _NET_CURRENT_DESKTOP | awk '{print $NF}')"
+  ws_next="$((ws_id ${operator}))"
+
+  test "${ws_next}" -lt "0"       && ws_next="0"
+  test "${ws_next}" -ge "${ws_n}" && ws_next="${ws_n}"
+
+  wmctrl -s "${ws_next}"
+}
+
+case "${1:-}" in
+  up|prev) go_to "-1";;
+  down|next) go_to "+1";;
+  *) listen;;
+esac
+
+
+# https://superuser.com/questions/196532/how-do-i-find-out-my-screen-resolution-from-a-shell-script
+# xrandr --query | grep '*' | uniq | awk '{print $1}' | cut -d 'x' -f1
+# x="$(printf '%s' "${ws}" | awk '{print $6}' | cut -d ',' -f1)"
+# y="$(printf '%s' "${ws}" | awk '{print $6}' | cut -d ',' -f2)"

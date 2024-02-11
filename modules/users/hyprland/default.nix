@@ -1,9 +1,14 @@
 { config, inputs, pkgs, name, system, ... }:
 
 {
+  # TODO swaylock service
+  # TODO swyaidle service
+  # TODO swaynotificationcenter
   imports = [
     ../wayland.nix
   ];
+
+  # TODO https://github.com/CMurtagh-LGTM/grab-workspace
 
   system = {
     users.users.${name}.extraGroups = [ "video" ];
@@ -49,20 +54,14 @@
   home.packages = with pkgs; [
     pyprland
     # inputs.pyprland.packages.${pkgs.system}.default
-    pkgs.master.nwg-displays
+    master.nwg-displays
+    swaynotificationcenter
     swaylock-effects
-    # grim
-    gtk3 # For gtk-launch
+    gtk3
     polkit_gnome
     libnotify
     brightnessctl
-    # imv
-    # mimeo
-    # primary-xwayland
     xwaylandvideobridge
-    wireplumber
-    playerctl
-    # hyprpicker
     xdg-desktop-portal-hyprland
     xwayland
     wofi
@@ -70,7 +69,6 @@
     slurp
     waypipe
     cinnamon.nemo
-    # wf-recorder
     wl-clipboard
     wl-clip-persist
     libsForQt5.qt5.qtwayland
@@ -124,6 +122,10 @@
           ${config.home.homeDirectory}/.config/hypr/workspaces.conf
   '';
 
+  xdg.configFile."swaync/config.json".text = builtins.toJSON {
+    scripts = {};
+  };
+
   xdg.configFile."hypr/pyprland.json".text = builtins.toJSON {
     pyprland.plugins = [ "scratchpads" ];
     scratchpads = {
@@ -173,6 +175,7 @@
         "${pkgs.swayidle}/bin/swayidle -w timeout 450 '${lock}'"
         "${pkgs.swayidle}/bin/swayidle -w timeout 900 'systemctl suspend'"
         "${pkgs.swayidle}/bin/swayidle -w before-sleep '${lock}'"
+        "${pkgs.swaynotificationcenter}/bin/swaync"
       ];
       general = {
         gaps_in = 5;
@@ -195,7 +198,7 @@
 
         touchpad = {
           natural_scroll = true;
-          drag_lock = true;
+          drag_lock = false;
           tap-and-drag = true;
         };
 
@@ -255,12 +258,14 @@
         "${mod}, E, exec, ${pkgs.cinnamon.nemo}/bin/nemo"
         "${mod}, K, exec, ${pkgs.gnome.seahorse}/bin/seahorse"
         "${mod} SHIFT, F, togglefloating"
+        "${mod} ALT, F, workspaceopt, allfloat"
         "${mod}, F, fullscreen, 0"
         "${mod} SHIFT, space, fullscreen, 1"
         "${mod}, D, exec, ${pkgs.wofi}/bin/wofi --show drun"
         "${mod}, space, exec, ${./. + builtins.toPath "/bin/hypr-layouts"}"
         "${mod}, A, exec, ${./. + builtins.toPath "/bin/hypr-pin"}"
         "ALT, P, exec, hyprshot capture region --copy"
+        "${mod} SHIFT, N, exec, ${pkgs.swaynotificationcenter}/bin/swaync-client -t"
 
         "${mod} SHIFT, TAB, centerwindow"
 

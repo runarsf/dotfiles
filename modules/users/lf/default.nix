@@ -33,12 +33,12 @@
       t = "";
       md = "push :mkdir<space>";
       mf = "push :mkfile<space>";
-      "+r" = ''chmod +r "$f"'';
-      "-r" = ''chmod -r "$f"'';
-      "+w" = ''chmod +w "$f"'';
-      "-w" = ''chmod -w "$f"'';
-      "+x" = ''chmod +x "$f"'';
-      "-x" = ''chmod -x "$f"'';
+      "+r" = ''$chmod +r "$f"'';
+      "-r" = ''$chmod -r "$f"'';
+      "+w" = ''$chmod +w "$f"'';
+      "-w" = ''$chmod -w "$f"'';
+      "+x" = ''$chmod +x "$f"'';
+      "-x" = ''$chmod -x "$f"'';
       "." = "set hidden!";
       "<enter>" = "open";
       p = "paste";
@@ -50,6 +50,9 @@
       z = ''$zathura "$f" &'';
       "<esc>" = "quit";
       "q" = "quit";
+
+      w = "";
+      wp = ''$\${pkgs.swww}/bin/swww img --transition-type any --transition-step 100 --transition-fps 60 "$f"'';
 
       dr = "dragon-out";
 

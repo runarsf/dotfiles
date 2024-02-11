@@ -18,6 +18,7 @@ outputs.lib.mkFor system hostname {
       ../../modules/users/keychain.nix
       ../../modules/users/sops.nix
       ../../modules/users/kitty
+      ../../modules/users/mullvad.nix
       ./config/secrets.nix
     ];
 
@@ -41,20 +42,24 @@ outputs.lib.mkFor system hostname {
   systems = {
     linux = {
       imports = [
-        ../../modules/users/eww
         ../../modules/users/discord.nix
         ../../modules/users/gtk.nix
         ../../modules/users/wallpaper.nix
         ../../modules/users/gaming.nix
         ../../modules/users/gtk.nix
-        ../../modules/users/dunst.nix
         ../../modules/users/desktop.nix
         ../../modules/users/hyprland
+        ../../modules/users/eww
+        ../../modules/users/firefox
+      ];
+      home.packages = with pkgs; [
+        obs-studio
+        # firefox-devedition
       ];
       wallpaper = ./wallpaper.jpg;
       system = {
         programs.zsh.enable = true;
-        users.users.${name} = {
+        users.users."${name}" = {
           isNormalUser = true;
           initialPassword = "changeme";
           # TODO https://github.com/Mic92/sops-nix#setting-a-users-password
@@ -78,11 +83,9 @@ outputs.lib.mkFor system hostname {
 
   hosts = {
     runix = {
-      # imports = [
+      imports = [
       #   (import ../../modules/users/red.nix { inherit inputs pkgs; })
-      # ];
-      home.packages = with pkgs; [
-        geogebra
+        ../../modules/users/adb.nix
       ];
       #   programs.git = {
       #     userName = "Runar Fredagsvik";

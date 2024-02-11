@@ -10,6 +10,8 @@
     };
   };
 
+  programs.zoxide.enable = true;
+
   programs.zsh = {
     enable = true;
 
@@ -33,7 +35,7 @@
         "MichaelAquilina/zsh-auto-notify"
         "olets/zsh-abbr"
         "zshzoo/magic-enter"
-        "agkozak/zsh-z"
+        # "agkozak/zsh-z"
         "ohmyzsh/ohmyzsh path:lib"
         "ohmyzsh/ohmyzsh path:plugins/extract"
       ];

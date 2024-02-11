@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+# Show active window manager layout.
+
+# For XMonad:
+#   import XMonad.Hooks.TaffybarPagerHints (pagerHints)
+#
+#   main :: IO () main = ... pagerHints ... $ def
+
+
+get_layout() {
+  layout="$(xprop -root _XMONAD_CURRENT_LAYOUT \
+    | awk '{print $NF}' \
+    | tr -d "\"")"
+  printf '%s\n' "${layout:-0}"
+}
+
+# Initial layout
+sleep 1
+get_layout
+
+xprop -root -spy _XMONAD_CURRENT_LAYOUT | while read -r; do
+  sleep .02
+
+  layout="$(get_layout)"
+
+  if test "${layout:-}" != "${previous_layout:-}"; then
+    printf '%s\n' "${layout}"
+  fi
+
+  previous_layout="${layout}"
+done

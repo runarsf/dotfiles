@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+while IFS= read -r popup; do
+  window_name="$(printf '%s' "${popup}" | cut -c 2-)"
+  eww close "${window_name}"
+done < <(eww windows | grep '^\*pop-' 2>/dev/null)
+
+if test ! -z "${1}"; then
+  eww open "pop-${1}"
+fi

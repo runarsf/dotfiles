@@ -87,7 +87,6 @@ in {
       shell_integration = "no-cursor";
       hide_window_decorations = true;
       scrollback_lines = 10000;
-      show_hyperlink_targets = true;
       enable_audio_bell = false;
       enabled_layouts = "tall,grid,fat,splits,stack";
       confirm_os_window_close = 0;
@@ -115,7 +114,6 @@ in {
       map ${chord}>up scroll_to_prompt -1
       map ${mod}+page_down scroll_to_prompt 1
       map ${chord}>down scroll_to_prompt 1
-      map f1 launch --stdin-source=@screen_scrollback --stdin-add-formatting --type=overlay less +G -R
 
       map ${mod}+space next_layout
       map ${chord}>space goto_layout stack

@@ -8,5 +8,5 @@
     "electron-25.9.0"
   ];
 
-  home.packages = with pkgs.unstable; [ obsidian libreoffice-fresh typst pandoc poppler_utils ];
+  home.packages = with pkgs.unstable; [ obsidian libreoffice-fresh typst pandoc poppler_utils sc-im ];
 }

@@ -1,4 +1,4 @@
-{ pkgs, outputs, ... }:
+{ pkgs, outputs, inputs, ... }:
 
 {
   nixpkgs.overlays = [
@@ -6,6 +6,18 @@
       apple-fonts = import ./apple-fonts.nix {
         inherit (prev) stdenv fetchurl p7zip;
         lib = outputs.lib;
+      };
+    })
+    (final: prev: {
+      sf-mono-liga-bin = prev.stdenvNoCC.mkDerivation {
+        pname = "sf-mono-liga-bin";
+        version = "dev";
+        src = inputs.sf-mono-liga-src;
+        dontConfigure = true;
+        installPhase = ''
+          mkdir -p $out/share/fonts/opentype
+          cp -R $src/*.otf $out/share/fonts/opentype/
+        '';
       };
     })
   ];
@@ -29,7 +41,7 @@
   home.packages = with pkgs; [
    fontpreview
 
-    apple-fonts
+   sf-mono-liga-bin
 
     # Writing
     libertine

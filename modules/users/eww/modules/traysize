@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+# Listen for tray size changes and report new size.
+
+# Spawn tray icons for testing:
+#   for i in {1..5}; do yad --notification --command="notify-send -t 500 'click'" &; done
+
+# TODO if tray doesn't initially exist, the script won't restart and won't get a tray padding
+# restartself () {
+#   $0 "$@" &
+#   exit 0
+# }
+# trap restartself EXIT
+
+get_tray_size() {
+  size="$(xprop -name panel \
+    | grep 'program specified minimum size' \
+    | cut -d ' ' -f 5)"
+  printf '%s\n' "${size:-0}"
+}
+
+# Initial tray size
+sleep 1
+get_tray_size
+
+xprop -name panel -spy WM_NORMAL_HINTS | while read -r; do
+  sleep .02
+
+  tray_size="$(get_tray_size)"
+
+  if test "${tray_size:-}" != "${previous_tray_size:-}"; then
+    printf '%s\n' "${tray_size}"
+  fi
+
+  previous_tray_size="${tray_size}"
+done

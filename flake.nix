@@ -48,6 +48,11 @@
 
     nixvim.url = "github:runarsf/nixvim";
 
+    sf-mono-liga-src = {
+      url = "github:shaunsingh/SFMono-Nerd-Font-Ligaturized";
+      flake = false;
+    };
+
     vault = {
       url = "git+ssh://git@github.com/runarsf/vault";
       flake = false;
