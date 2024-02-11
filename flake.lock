@@ -837,11 +837,11 @@
         "nixvim": "nixvim_2"
       },
       "locked": {
-        "lastModified": 1706269774,
-        "narHash": "sha256-vd/MyU+ST4c26+K/ZU0L6kRwq++Mwolv18PGr5koblA=",
+        "lastModified": 1706621375,
+        "narHash": "sha256-6AnrPIiUEqYj6otiXPtTlTMaBLI5bocLlazy4EQ5eg4=",
         "owner": "runarsf",
         "repo": "nixvim",
-        "rev": "fbc905d54aefc088b72fc28abdb2e3125047d795",
+        "rev": "fd0c3e8885fe8398d999171322a2baa739041a7f",
         "type": "github"
       },
       "original": {
@@ -877,11 +877,11 @@
     },
     "nur": {
       "locked": {
-        "lastModified": 1705002794,
-        "narHash": "sha256-kOd7hd8A1sGFZSYJGn+cEH3RSpGVAQ004Pd1lZabuIo=",
+        "lastModified": 1707302670,
+        "narHash": "sha256-0lGQHRfZiQRVTGURGmCmq/3s1Q2FRFE01R2t/yFXliI=",
         "owner": "nix-community",
         "repo": "nur",
-        "rev": "753418854902ccec235420cf3ee6b8bb9da3de67",
+        "rev": "1dd57a39f8db7ca6cff9696c9ccf543df15bc263",
         "type": "github"
       },
       "original": {
@@ -980,8 +980,25 @@
         "nixvim": "nixvim",
         "nur": "nur",
         "rednix": "rednix",
+        "sf-mono-liga-src": "sf-mono-liga-src",
         "sops-nix": "sops-nix",
         "vault": "vault"
+      }
+    },
+    "sf-mono-liga-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1688258025,
+        "narHash": "sha256-AYjKrVLISsJWXN6Cj74wXmbJtREkFDYOCRw1t2nVH2w=",
+        "owner": "shaunsingh",
+        "repo": "SFMono-Nerd-Font-Ligaturized",
+        "rev": "dc5a3e6fcc2e16ad476b7be3c3c17c2273b260ea",
+        "type": "github"
+      },
+      "original": {
+        "owner": "shaunsingh",
+        "repo": "SFMono-Nerd-Font-Ligaturized",
+        "type": "github"
       }
     },
     "sops-nix": {
