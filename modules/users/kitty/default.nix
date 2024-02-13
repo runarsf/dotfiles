@@ -87,6 +87,7 @@ in {
       shell_integration = "no-cursor";
       hide_window_decorations = true;
       scrollback_lines = 10000;
+      show_hyperlink_targets = false;
       enable_audio_bell = false;
       enabled_layouts = "tall,grid,fat,splits,stack";
       confirm_os_window_close = 0;

@@ -26,7 +26,15 @@
 
     profiles."${name}" = {
       isDefault = true;
-      userChrome = builtins.readFile ./userChrome.css;
+      id = 0;
+      userChrome = builtins.concatStringsSep "\n" [
+        # builtins.readFile ./userChrome.css
+        ''
+        #urlbar .urlbarView {
+           display: none !important;
+        }
+        ''
+      ];
       arkenfox = {
         enable = true;
         "0000".enable = true;
@@ -50,7 +58,6 @@
         };
       };
       settings = {
-        "browser.search.hiddenOneOffs" = "Google,Amazon.com,Bing,DuckDuckGo,Wikipedia (en),Bookmarks,Tabs,History,Actions";
         "ui.osk.enabled" = true;
         "apz.overscroll.enabled" = false;
         "media.videocontrols.picture-in-picture.video-toggle.enabled" = false;
@@ -136,7 +143,12 @@
 
         "browser.tabs.drawInTitlebar" = true;
         "browser.tabs.inTitlebar" = 1;
-        "browser.uiCustomization.state" = outputs.lib.replaceStrings ["\n"] [""] (builtins.readFile ./uiState.json);
+        # "browser.uiCustomization.state" = outputs.lib.replaceStrings ["\n"] [""] (builtins.readFile ./uiState.json);
+
+        # https://support.mozilla.org/en-US/kb/sync-custom-preferences
+        "services.sync.prefs.dangerously_allow_arbitrary" = true;
+        "services.sync.prefs.sync.browser.uiCustomization.state" = true;
+        "services.sync.prefs.sync.browser.uidensity" = true;
       };
       # extensions = builtins.attrValues {
       #   inherit (pkgs.ff-addons)

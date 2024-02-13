@@ -1,7 +1,7 @@
 { pkgs, ... }:
 
 {
-  environment.systemPackages = with pkgs; [ pavucontrol qpwgraph ];
+  environment.systemPackages = with pkgs; [ pavucontrol qpwgraph wireplumber ];
 
   sound.enable = true;
 
