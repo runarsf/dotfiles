@@ -1,14 +1,13 @@
 { config, inputs, pkgs, name, system, ... }:
 
-{
-  # TODO swaylock service
-  # TODO swyaidle service
-  # TODO swaynotificationcenter
+# TODO https://github.com/CMurtagh-LGTM/grab-workspace
+
+let lock = "${pkgs.hyprlock}/bin/hyprlock";
+
+in {
   imports = [
     ../wayland.nix
   ];
-
-  # TODO https://github.com/CMurtagh-LGTM/grab-workspace
 
   system = {
     users.users.${name}.extraGroups = [ "video" ];
@@ -21,9 +20,6 @@
       };
     };
     xdg.portal.extraPortals = with pkgs; [ xdg-desktop-portal-hyprland ];
-    # Required for swaylock
-    programs.sway.enable = true;
-    security.pam.services.swaylock = { };
   };
 
   nix.settings = {
@@ -32,31 +28,10 @@
     extra-trusted-users = [ name ];
   };
 
-  # security.polkit.enable = true;
-  # security.polkit.extraConfig = ''
-  #   polkit.addRule(function(action, subject) {
-  #     if (
-  #       subject.isInGroup("users")
-  #         && (
-  #           action.id == "org.freedesktop.login1.reboot" ||
-  #           action.id == "org.freedesktop.login1.reboot-multiple-sessions" ||
-  #           action.id == "org.freedesktop.login1.power-off" ||
-  #           action.id == "org.freedesktop.login1.power-off-multiple-sessions"
-  #         )
-  #       )
-  #     {
-  #       return polkit.Result.YES;
-  #     }
-  #   })
-  # '';
-
-
   home.packages = with pkgs; [
     pyprland
-    # inputs.pyprland.packages.${pkgs.system}.default
     master.nwg-displays
     swaynotificationcenter
-    swaylock-effects
     gtk3
     polkit_gnome
     libnotify
@@ -66,6 +41,7 @@
     xwayland
     wofi
     pulseaudio
+    unstable.hyprlock
     slurp
     waypipe
     cinnamon.nemo
@@ -88,8 +64,6 @@
     # hyprslurp
     # hyprpicker
     kanshi
-    # nwg-displays
-    # wlr-randr
     wdisplays
     wf-recorder
     grim
@@ -126,14 +100,90 @@
     scripts = {};
   };
 
+  xdg.configFile."hypr/hyprlock.conf".text = ''
+    background {
+      monitor =
+      path = ${./. + /lock.png}
+      color = rgba(25, 20, 20, 1.0)
+
+      # all these options are taken from hyprland, see https://wiki.hyprland.org/Configuring/Variables/#blur for explanations
+      blur_passes = 4 # 0 disables blurring
+      blur_size = 7
+      noise = 0.0117
+      contrast = 0.8916
+      brightness = 0.8172
+      vibrancy = 0.1696
+      vibrancy_darkness = 0.0
+    }
+
+    input-field {
+      monitor =
+      size = 200, 30
+      outline_thickness = 3
+      dots_size = 0.33 # Scale of input-field height, 0.2 - 0.8
+      dots_spacing = 0.15 # Scale of dots' absolute size, 0.0 - 1.0
+      dots_center = false
+      outer_color = rgb(151515)
+      inner_color = rgb(200, 200, 200)
+      font_color = rgb(10, 10, 10)
+      fade_on_empty = true
+      placeholder_text =
+      hide_input = false
+
+      position = 0, -25
+      halign = center
+      valign = center
+    }
+    label {
+      monitor =
+      text = $TIME
+      color = rgba(200, 200, 200, 1.0)
+      font_size = 80
+      font_family = JetBrainsMono NF ExtraBold
+
+      position = 0, 150
+      halign = center
+      valign = center
+    }
+    label {
+      monitor =
+      text = Hi there, $USER
+      color = rgba(200, 200, 200, 1.0)
+      font_size = 18
+      font_family = JetBrains Mono Nerd Font
+
+      position = 0, 10
+      halign = center
+      valign = center
+    }
+  '';
+
+  xdg.configFile."hypr/hypridle.conf".text = ''
+    general {
+      lock_cmd = ${lock}
+      before_sleep_cmd = ${lock}
+    }
+    listener {
+      timeout = 300
+      on-timeout = ${./. + /bin/hypr-brightness} off
+      on-resume = ${./. + /bin/hypr-brightness} on
+    }
+    listener {
+      timeout = 500
+      on-timeout = ${lock}
+    }
+    listener {
+      timeout = 900
+      on-timeout = systemctl suspend
+    }
+  '';
+
   xdg.configFile."hypr/pyprland.json".text = builtins.toJSON {
     pyprland.plugins = [ "scratchpads" ];
     scratchpads = {
       term = {
         command =
           "${config.programs.kitty.package}/bin/kitty --class scratchpad --title scratchpad";
-          # "${config.programs.kitty.package}/bin/kitty --class scratchpad --title scratchpad -- ${config.programs.tmux.package}/bin/tmux new-session -A -s scratchpad";
-          # "${config.programs.alacritty.package}/bin/alacritty --class scratchpad --title scratchpad --option font.size=12 --command ${pkgs.tmux}/bin/tmux new-session -A -s scratchpad";
         hide = false;
       };
       qalc = {
@@ -147,20 +197,10 @@
   # watch -n 0.1 "cat "/tmp/hypr/$(echo $HYPRLAND_INSTANCE_SIGNATURE)/hyprland.log" | grep -v "efresh" | grep "rule" | tail -n 40"
   wayland.windowManager.hyprland = let
     mod = "SUPER";
-    lock =
-      "${pkgs.swaylock-effects}/bin/swaylock --screenshots --clock --indicator-idle-visible --indicator-radius 100 --indicator-thickness 7 --effect-blur 7x5 --effect-vignette 0.5:0.5 --ring-color 306998 --key-hl-color 002366 --line-color 00000000 --inside-color 00000088 --separator-color 00000000 --grace 5";
   in {
     enable = true;
     package = pkgs.inputs.hyprland.hyprland.override { wrapRuntimeDeps = false; };
-    # pkgs.inputs.hyprland.hyprland
-    systemd = {
-      enable = true;
-      # Same as default, but stop graphical-session too
-      #extraCommands = lib.mkBefore [
-      #  "systemctl --user stop graphical-session.target"
-      #  "systemctl --user start hyprland-session.target"
-      #];
-    };
+    systemd.enable = true;
     plugins = with inputs.hyprland-plugins.packages.${system}; [
       borders-plus-plus
       inputs.hycov.packages.${system}.hycov
@@ -171,10 +211,6 @@
         "${pkgs.wl-clip-persist}/bin/wl-clip-persist --clipboard both"
         "${pkgs.pyprland}/bin/pypr"
         "${pkgs.sway-audio-idle-inhibit}/bin/sway-audio-idle-inhibit"
-        "${pkgs.swayidle}/bin/swayidle -w timeout 300 '~/.local/bin/hypr-brightness off' resume '~/.local/bin/hypr-brightness on'"
-        "${pkgs.swayidle}/bin/swayidle -w timeout 450 '${lock}'"
-        "${pkgs.swayidle}/bin/swayidle -w timeout 900 'systemctl suspend'"
-        "${pkgs.swayidle}/bin/swayidle -w before-sleep '${lock}'"
         "${pkgs.swaynotificationcenter}/bin/swaync"
       ];
       general = {
@@ -195,6 +231,7 @@
         accel_profile = "flat";
 
         follow_mouse = 1;
+        mouse_refocus = false;
 
         touchpad = {
           natural_scroll = true;
@@ -215,9 +252,10 @@
         };
 
         drop_shadow = true;
-        shadow_range = 4;
+        shadow_range = 14;
         shadow_render_power = 3;
-        "col.shadow" = "rgba(1a1a1aee)";
+        shadow_ignore_window = true;
+        "col.shadow" = "rgba(00000045)";
       };
       animations = {
         enabled = "yes";
@@ -286,7 +324,7 @@
         "${mod}, TAB, exec, ${./. + builtins.toPath "/bin/hypr-ws"} previous"
 
         "${mod} SHIFT, R, exec, hyprctl reload"
-        "${mod}, C, exec, ${pkgs.grim}/bin/grim -g \"''$(${pkgs.slurp}/bin/slurp -p)\" -t ppm - | ${pkgs.imagemagick}/bin/convert - -format '%[pixel:p{0,0}]' txt:- | tail -n 1 | cut -d ' ' -f 4 | ${pkgs.wl-clipboard}/bin/wl-copy"
+        "${mod}, C, exec, ${pkgs.wl-color-picker}/bin/wl-color-picker clipboard"
 
         "${mod} SHIFT, C, exec, ${./. + builtins.toPath "/bin/hypr-gamemode"}"
 
@@ -355,6 +393,8 @@
         "opacity 0.8 override,title:^(.*)(New Tab)(.*)$"
         "opacity 0.8 override,title:^(Firefox)(.*)$"
 
+        "noinitialfocus,class:^jetbrains-(?!toolbox),floating:1"
+
         "noinitialfocus, class:^(steam)$"
         "stayfocused, title:^()$,class:^(steam)$"
         "minsize 1 1, title:^()$,class:^(steam)$"
@@ -369,7 +409,6 @@
         "workspace 7, class:^(qpwgraph)$"
         "workspace 10, class:^(osu!)$"
         "workspace 10, class:^(steam_app_)(.*)$"
-        # TODO  hasProperty "_STEAM_GAME" --> doShift (w !! 9)
 
         "float, class:(org.kde.polkit-kde-authentication-agent-1)"
         "float, class:(seahorse)"
