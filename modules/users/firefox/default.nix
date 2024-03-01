@@ -1,7 +1,13 @@
-{ inputs, outputs, name, ... }:
+{ pkgs, inputs, outputs, name, ... }:
 
 {
   imports = [ inputs.arkenfox.hmModules.arkenfox ];
+
+  # TODO Link hover effects from Firefox-Alpha
+  home.file.".mozilla/firefox/${name}/chrome/" = {
+    source = ./chrome;
+    recursive = true;
+  };
 
   # home.packages = with pkgs; [ nur.repos.rycee.mozilla-addons-to-nix ];
 
@@ -16,6 +22,10 @@
   #   })
   # ];
 
+  home.packages = with pkgs; [
+    # nur.repos.wolfangaukang.vdhcoapp
+  ];
+
   programs.firefox = {
     enable = true;
 
@@ -27,14 +37,173 @@
     profiles."${name}" = {
       isDefault = true;
       id = 0;
-      userChrome = builtins.concatStringsSep "\n" [
-        # builtins.readFile ./userChrome.css
-        ''
-        #urlbar .urlbarView {
-           display: none !important;
+      userChrome = ''
+        @media {
+          :root {
+            --sidebar-width: 48px;
+            --sidebar-hover-width: 225px;
+            --sidebar-debounce-delay: 500ms;
+          }
+
+          [sidebarcommand*="tabcenter"] #sidebar-header > *,
+          [sidebarcommand*="tabcenter"] #sidebar-header,
+          [sidebarcommand*="treestyletab_piro_sakura_ne_jp-sidebar-action"] #sidebar-header > *,
+          [sidebarcommand*="treestyletab_piro_sakura_ne_jp-sidebar-action"] #sidebar-header,
+          [sidebarcommand*="_3c078156-979c-498b-8990-85f7987dd929_-sidebar-action"] #sidebar-header > *,
+          [sidebarcommand*="_3c078156-979c-498b-8990-85f7987dd929_-sidebar-action"] #sidebar-header {
+            visibility: collapse;
+            display: none;
+          }
+
+          #sidebar-box {
+            background-color: transparent !important;
+          }
+
+          #sidebar-box[sidebarcommand*="tabcenter"],
+          #sidebar-box[sidebarcommand*="treestyletab_piro_sakura_ne_jp-sidebar-action"],
+          #sidebar-box[sidebarcommand*="_3c078156-979c-498b-8990-85f7987dd929_-sidebar-action"] {
+            position: relative;
+            min-width: var(--sidebar-width) !important;
+            width: var(--sidebar-width) !important;
+            max-width: var(--sidebar-width) !important;
+            z-index: 1;
+            /*display: grid !important;
+            min-width: var(--sidebar-width) !important;
+            max-width: var(--sidebar-width) !important;
+            overflow: visible !important;
+            height: 100% !important;
+            min-height: 100% !important;
+            max-height: 100% !important;*/
+          }
+
+          #sidebar-box[sidebarcommand*="tabcenter"] > #sidebar-splitter,
+          #sidebar-box[sidebarcommand*="treestyletab_piro_sakura_ne_jp-sidebar-action"] > #sidebar-splitter,
+          #sidebar-box[sidebarcommand*="_3c078156-979c-498b-8990-85f7987dd929_-sidebar-action"] > #sidebar-splitter {
+            display: none !important;
+          }
+
+          #sidebar-box[sidebarcommand*="tabcenter"] > #sidebar,
+          #sidebar-box[sidebarcommand*="treestyletab_piro_sakura_ne_jp-sidebar-action"] > #sidebar,
+          #sidebar-box[sidebarcommand*="_3c078156-979c-498b-8990-85f7987dd929_-sidebar-action"] > #sidebar {
+            transition: min-width 115ms linear var(--sidebar-debounce-delay) !important;
+            min-width: var(--sidebar-width) !important;
+            will-change: min-width;
+            /*height: 100% !important;
+            width: var(--sidebar-hover-width) !important;
+            z-index: 200 !important;
+            position: absolute !important;
+            transition: width 150ms var(--sidebar-debounce-delay) ease !important;
+            min-width: 0 !important;*/
+          }
+
+          #sidebar-box[sidebarcommand*="tabcenter"]:hover > #sidebar,
+          #sidebar-box[sidebarcommand*="treestyletab_piro_sakura_ne_jp-sidebar-action"]:hover > #sidebar,
+          #sidebar-box[sidebarcommand*="_3c078156-979c-498b-8990-85f7987dd929_-sidebar-action"]:hover > #sidebar {
+            min-width: var(--sidebar-hover-width) !important;
+            transition-delay: 100ms !important;
+          }
+
+          #main-window[sizemode="screen"] #sidebar-box,
+          #main-window[sizemode="fullscreen"] #sidebar-box { --sidebar-width: 1px; }
+          /* Move statuspanel to the other side when sidebar is hovered so it doesn't get covered by sidebar */
+          #sidebar-box:not([positionend]):hover ~ #appcontent #statuspanel { inset-inline: auto 0px !important; }
+          #sidebar-box:not([positionend]):hover ~ #appcontent #statuspanel-label { margin-inline: 0px !important; border-left-style: solid !important; }
+        } /* }}} */
+
+
+        /** --- TABBAR {{{
+         * Styles with a fox in them are only active when Sidebery is visible (if configured correctly),
+         * under Sidebery-settings > Help, add "🦊 " as window prefix.
+         * Moves tabbar above sidebar.
+         * Doesn't work well with Lepton.
+         */
+        @media DISABLED {
+          #main-window[titlepreface*="🦊 "] .tabbrowser-tab {
+            visibility: collapse !important;
+          }
+          #main-window[titlepreface*="🦊 "] .titlebar-button {
+            height: 40px !important;
+          }
+          #main-window[titlepreface*="🦊 "] #nav-bar:not([customizing="true"]) {
+            margin-right: 137px;
+            box-shadow: none !important;
+          }
+          #main-window[titlepreface*="🦊 "] #titlebar-spacer {
+            background-color: var(--chrome-secondary-background-color);
+          }
+          #main-window[titlepreface*="🦊 "] #titlebar-buttonbox-container {
+            background-color: var(--chrome-secondary-background-color);
+          }
+          #main-window[titlepreface*="🦊 "] .titlebar-color {
+            background-color: var(--toolbar-bgcolor);
+          }
+          /* #main-window[titlepreface*="🦊 "][uidensity="compact"]  */
+          #main-window[titlepreface*="🦊 "]:not([uidensity="compact"]) #nav-bar:not([customizing="true"]) {
+            margin-top: -41px; /* --menubar-height */
+          }
+          #main-window[titlepreface*="🦊 "][uidensity="compact"] #nav-bar:not([customizing="true"]) {
+            margin-top: -36px; /* --menubar-height */
+          }
+          #main-window[titlepreface*="🦊 "][uidensity="compact"] .titlebar-buttonbox {
+            height: 36px !important;
+          } 
         }
-        ''
-      ];
+
+        @media {
+         .toolbarbutton-icon,
+         .unified-extensions-item-icon {
+            filter: grayscale();
+          }
+
+          /* Hide UI buttons */
+          #nav-bar:not([customizing="true"]) #back-button[disabled="true"],
+          #nav-bar:not([customizing="true"]) #forward-button[disabled="true"],
+          #nav-bar:not([customizing="true"]) #reload-button[disabled="true"],
+          .urlbarView-row[type="tip"], /* remove "refresh firefox" button */
+          .panel-subview-body toolbarseparator:not(:first-of-type),
+          #appMenu-new-tab-button2,
+          #appMenu-new-window-button2,
+          #appMenu-new-private-window-button2,
+          #appMenu-history-button,
+          #appMenu-passwords-button,
+          #appMenu-print-button2,
+          #appMenu-save-file-button2,
+          #appMenu-find-button2,
+          #appMenu-quit-button2,
+          #appMenu-zoom-controls2,
+          #appMenu-downloads-button,
+          #toolbar-context-menu menuseparator,
+          #toggle_toolbar-menubar,
+          #toolbar-context-selectAllTabs,
+          #toolbar-context-undoCloseTab,
+          #toggle_PersonalToolbar,
+          #toolbar-context-bookmarkSelectedTab,
+          #context_undoCloseTab,
+          #context_closeTabOptions,
+          #context_closeTab,
+          #tabContextMenu menuseparator:not(:last-of-type),
+          #context_openANewTab,
+          #context_duplicateTab,
+          #context_moveTabOptions,
+          #share-tab-url-item,
+          #context_selectAllTabs,
+          #contentAreaContextMenu menuseparator:not(:last-of-type),
+          #context-undo[disabled="true"],
+          #context-redo[disabled="true"],
+          #context-inspect-a11y,
+          #context-take-screenshot,
+          #context-savepage,
+          #context-viewsource,
+          #context-selectall,
+          #context-sendpagetodevice,
+          #sidebar-splitter,
+          #context-back[disabled="true"],
+          #context-forward[disabled="true"] {
+            visibility: collapse;
+            display: none;
+          }
+        }
+      '';
       arkenfox = {
         enable = true;
         "0000".enable = true;
@@ -149,6 +318,8 @@
         "services.sync.prefs.dangerously_allow_arbitrary" = true;
         "services.sync.prefs.sync.browser.uiCustomization.state" = true;
         "services.sync.prefs.sync.browser.uidensity" = true;
+
+        "mozilla.widget.use-argb-visuals" = true;
       };
       # extensions = builtins.attrValues {
       #   inherit (pkgs.ff-addons)
