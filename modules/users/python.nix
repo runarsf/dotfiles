@@ -20,6 +20,7 @@ let
 
       jupyter-client
       jupyter-core
+      notebook
       ipykernel
       cairosvg
       pnglatex

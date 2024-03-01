@@ -19,7 +19,7 @@
     ];
 
     shellAliases = {
-      ls = "EZA_ICON_SPACING=2 ${pkgs.eza}/bin/eza -lFga --hyperlink --group-directories-first --no-time --git --total-size";
+      ls = "EZA_ICON_SPACING=2 ${pkgs.eza}/bin/eza -lFga --group-directories-first --no-time --git --total-size";
       grep = "grep --color=always";
       cat = "${pkgs.bat}/bin/bat";
     };

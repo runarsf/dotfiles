@@ -44,8 +44,6 @@
 
     rednix.url = "github:redcode-labs/RedNix";
 
-    ags.url = "github:Aylur/ags";
-
     nixvim.url = "github:runarsf/nixvim";
 
     sf-mono-liga-src = {

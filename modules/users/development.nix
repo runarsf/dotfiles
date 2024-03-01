@@ -5,10 +5,13 @@
     ./nix.nix
     ./python.nix
     ./vscode.nix
+    ./neovim.nix
   ];
 
   home = {
     packages = with pkgs.unstable; [
+      helix
+
       # JavaScript
       nodejs
       yarn
@@ -37,6 +40,7 @@
 
       # IDEs
       jetbrains.clion
+      jetbrains.pycharm-professional
     ];
   };
 

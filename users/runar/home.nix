@@ -9,7 +9,6 @@ outputs.lib.mkFor system hostname {
       ../../modules/users/development.nix
       ../../modules/users/fonts.nix
       ../../modules/users/git.nix
-      ../../modules/users/neovim.nix
       ../../modules/users/starship.nix
       ../../modules/users/zsh.nix
       ../../modules/users/writing.nix
@@ -26,17 +25,6 @@ outputs.lib.mkFor system hostname {
       userName = "Runar Fredagsvik";
       userEmail = "i@runar.ch";
     };
-
-    home = {
-      sessionVariables = {
-        EDITOR = "nvim";
-        GIT_EDITOR = "nvim";
-        VISUAL = "nvim";
-        DIFFPROG = "nvim -d";
-        MANPAGER = "nvim +Man!";
-        MANWIDTH = 999;
-      };
-    };
   };
 
   systems = {
@@ -52,10 +40,7 @@ outputs.lib.mkFor system hostname {
         ../../modules/users/eww
         ../../modules/users/firefox
       ];
-      home.packages = with pkgs; [
-        obs-studio
-        # firefox-devedition
-      ];
+      home.packages = with pkgs; [ obs-studio ];
       wallpaper = ./wallpaper.jpg;
       system = {
         programs.zsh.enable = true;
@@ -84,9 +69,11 @@ outputs.lib.mkFor system hostname {
   hosts = {
     runix = {
       imports = [
-      #   (import ../../modules/users/red.nix { inherit inputs pkgs; })
+        #   (import ../../modules/users/red.nix { inherit inputs pkgs; })
         ../../modules/users/adb.nix
+        # ../../modules/users/warp.nix
       ];
+      system.virtualisation.waydroid.enable = true;
       #   programs.git = {
       #     userName = "Runar Fredagsvik";
       #     userEmail = "i@runar.ch";
