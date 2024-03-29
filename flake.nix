@@ -30,10 +30,6 @@
       url = "github:hyprwm/hyprland-plugins";
       inputs.hyprland.follows = "hyprland";
     };
-    hycov = {
-      url = "github:DreamMaoMao/hycov";
-      inputs.hyprland.follows = "hyprland";
-    };
 
     arkenfox = {
       url = "github:dwarfmaster/arkenfox-nixos";

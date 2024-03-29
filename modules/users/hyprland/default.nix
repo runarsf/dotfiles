@@ -1,12 +1,16 @@
 { config, inputs, pkgs, name, system, ... }:
 
 # TODO https://github.com/CMurtagh-LGTM/grab-workspace
+# TODO https://github.com/zakk4223/hyprRiver
 
 let lock = "${pkgs.hyprlock}/bin/hyprlock";
 
 in {
   imports = [
+    ./hyprlock.nix
+    ./hypridle.nix
     ../wayland.nix
+    ../waybar
   ];
 
   system = {
@@ -41,7 +45,6 @@ in {
     xwayland
     wofi
     pulseaudio
-    unstable.hyprlock
     slurp
     waypipe
     cinnamon.nemo
@@ -59,7 +62,6 @@ in {
     gnome.seahorse
     # wl-mirror
     # wl-mirror-pick
-    # xdg-utils-spawn-terminal # Patched to open terminal
     # ydotool
     # hyprslurp
     # hyprpicker
@@ -82,12 +84,12 @@ in {
       '';
     })
   ];
+  # FIXME hyprctl setcursor GoogleDot-Black 24
   home.sessionVariables = {
     LIBSEAT_BACKEND = "logind";
     XDG_SESSION_TYPE = "wayland";
     WLR_NO_HARDWARE_CURSORS = "1";
     _JAVA_AWT_WM_NONREPARENTING = "1";
-    XCURSOR_SIZE = "24";
     GDK_SCALE = "2";
   };
 
@@ -99,84 +101,6 @@ in {
   xdg.configFile."swaync/config.json".text = builtins.toJSON {
     scripts = {};
   };
-
-  xdg.configFile."hypr/hyprlock.conf".text = ''
-    background {
-      monitor =
-      path = ${./. + /lock.png}
-      color = rgba(25, 20, 20, 1.0)
-
-      # all these options are taken from hyprland, see https://wiki.hyprland.org/Configuring/Variables/#blur for explanations
-      blur_passes = 4 # 0 disables blurring
-      blur_size = 7
-      noise = 0.0117
-      contrast = 0.8916
-      brightness = 0.8172
-      vibrancy = 0.1696
-      vibrancy_darkness = 0.0
-    }
-
-    input-field {
-      monitor =
-      size = 200, 30
-      outline_thickness = 3
-      dots_size = 0.33 # Scale of input-field height, 0.2 - 0.8
-      dots_spacing = 0.15 # Scale of dots' absolute size, 0.0 - 1.0
-      dots_center = false
-      outer_color = rgb(151515)
-      inner_color = rgb(200, 200, 200)
-      font_color = rgb(10, 10, 10)
-      fade_on_empty = true
-      placeholder_text =
-      hide_input = false
-
-      position = 0, -25
-      halign = center
-      valign = center
-    }
-    label {
-      monitor =
-      text = $TIME
-      color = rgba(200, 200, 200, 1.0)
-      font_size = 80
-      font_family = JetBrainsMono NF ExtraBold
-
-      position = 0, 150
-      halign = center
-      valign = center
-    }
-    label {
-      monitor =
-      text = Hi there, $USER
-      color = rgba(200, 200, 200, 1.0)
-      font_size = 18
-      font_family = JetBrains Mono Nerd Font
-
-      position = 0, 10
-      halign = center
-      valign = center
-    }
-  '';
-
-  xdg.configFile."hypr/hypridle.conf".text = ''
-    general {
-      lock_cmd = ${lock}
-      before_sleep_cmd = ${lock}
-    }
-    listener {
-      timeout = 300
-      on-timeout = ${./. + /bin/hypr-brightness} off
-      on-resume = ${./. + /bin/hypr-brightness} on
-    }
-    listener {
-      timeout = 500
-      on-timeout = ${lock}
-    }
-    listener {
-      timeout = 900
-      on-timeout = systemctl suspend
-    }
-  '';
 
   xdg.configFile."hypr/pyprland.json".text = builtins.toJSON {
     pyprland.plugins = [ "scratchpads" ];
@@ -203,7 +127,6 @@ in {
     systemd.enable = true;
     plugins = with inputs.hyprland-plugins.packages.${system}; [
       borders-plus-plus
-      inputs.hycov.packages.${system}.hycov
     ];
     settings = {
       source = [ "${config.home.homeDirectory}/.config/hypr/monitors.conf" ];
@@ -251,6 +174,12 @@ in {
           passes = 1;
         };
 
+        layerrule = [
+          # "blur,waybar"
+          "blurpopups,waybar"
+          "blur,wofi"
+        ];
+
         drop_shadow = true;
         shadow_range = 14;
         shadow_render_power = 3;
@@ -280,7 +209,7 @@ in {
         allow_small_split = true;
       };
       gestures = { workspace_swipe = false; };
-      "device:epic mouse V1" = { sensitivity = -0.5; };
+      # "device:epic mouse V1" = { sensitivity = -0.5; };
       misc = {
         disable_hyprland_logo = true;
         enable_swallow = true;
@@ -442,21 +371,6 @@ in {
       ];
     };
     extraConfig = ''
-      bind = ${mod} CTRL,tab,hycov:toggleoverview
-      # bind = ALT,left,hycov:movefocus,l
-      # bind = ALT,right,hycov:movefocus,r
-      # bind = ALT,up,hycov:movefocus,u
-      # bind = ALT,down,hycov:movefocus,d
-
-      plugin {
-        hycov {
-          overview_gappo = 120 #gaps width from screen
-          overview_gappi = 24 #gaps width from clients
-          hotarea_size = 0 #hotarea size in bottom left,10x10
-          enable_hotarea = 0 # enable mouse cursor hotarea
-        }
-      }
-
       # Passthrough mode (e.g. for VNC)
       bind=${mod} SHIFT,P,submap,passthrough
       submap=passthrough

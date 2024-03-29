@@ -1,0 +1,81 @@
+@define-color bg rgba(1, 1, 12, 0.5);
+@define-color border rgba(53, 52, 61, 1);
+@define-color fg @ghostwhite;
+
+window#waybar {
+  font-family: "CaskaydiaCove Nerd Font";
+  background: transparent;
+  font-size: 16px;
+}
+
+tooltip,
+.module:not(#custom-pad) {
+  padding: 0 1em;
+  background: @bg;
+  border: 1px solid @border;
+  border-radius: 0.5em;
+  margin: 0 0.25em;
+}
+#waybar > * > * > :first-child > .module {
+  margin-left: 0;
+}
+#waybar > * > * > :last-child > .module {
+  margin-right: 0;
+}
+.modules-left,
+.modules-center,
+.modules-right {
+  margin: 0.5em 0.5em 0 0.5em;
+}
+
+
+#workspaces label {
+  font-size: 12px;
+  color: #9C9CB9;
+}
+#workspaces .empty label {
+  color: #686883;
+}
+#workspaces .visible label {
+  color: #C9A0F8;
+}
+
+
+window#waybar #window {
+  font-size: 12px;
+  border: none;
+}
+window#waybar.empty #window {
+  background-color: transparent;
+}
+
+
+.module#custom-music {
+  border: none;
+}
+.module#custom-music.custom-spotify {
+  background: #20D760;
+  color: #0F1B1D;
+}
+.module#custom-music.custom-firefox {
+  background: #FE8A4F;
+  color: #0F1B1D;
+}
+
+
+@keyframes blink {
+  to {
+    background-color: #ffffff;
+    color: #000000;
+  }
+}
+
+#battery.critical:not(.charging) {
+  background-color: #f53c3c;
+  color: #ffffff;
+  animation-name: blink;
+  animation-duration: 0.5s;
+  animation-timing-function: steps(12);
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}

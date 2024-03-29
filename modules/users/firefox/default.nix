@@ -4,8 +4,9 @@
   imports = [ inputs.arkenfox.hmModules.arkenfox ];
 
   # TODO Link hover effects from Firefox-Alpha
+  # https://github.com/Naezr/ShyFox
   home.file.".mozilla/firefox/${name}/chrome/" = {
-    source = ./chrome;
+    source = ./styles;
     recursive = true;
   };
 
@@ -37,6 +38,11 @@
     profiles."${name}" = {
       isDefault = true;
       id = 0;
+      # userChrome = ''
+      #   @import url("edge-frfox/chrome/userChrome.css");
+      #   @import url("edge-frfox/chrome/userContent.css");
+      #   @import url("EdgyArc-fr/chrome/custom.css");
+      # '';
       userChrome = ''
         @media {
           :root {
@@ -109,45 +115,6 @@
           #sidebar-box:not([positionend]):hover ~ #appcontent #statuspanel { inset-inline: auto 0px !important; }
           #sidebar-box:not([positionend]):hover ~ #appcontent #statuspanel-label { margin-inline: 0px !important; border-left-style: solid !important; }
         } /* }}} */
-
-
-        /** --- TABBAR {{{
-         * Styles with a fox in them are only active when Sidebery is visible (if configured correctly),
-         * under Sidebery-settings > Help, add "🦊 " as window prefix.
-         * Moves tabbar above sidebar.
-         * Doesn't work well with Lepton.
-         */
-        @media DISABLED {
-          #main-window[titlepreface*="🦊 "] .tabbrowser-tab {
-            visibility: collapse !important;
-          }
-          #main-window[titlepreface*="🦊 "] .titlebar-button {
-            height: 40px !important;
-          }
-          #main-window[titlepreface*="🦊 "] #nav-bar:not([customizing="true"]) {
-            margin-right: 137px;
-            box-shadow: none !important;
-          }
-          #main-window[titlepreface*="🦊 "] #titlebar-spacer {
-            background-color: var(--chrome-secondary-background-color);
-          }
-          #main-window[titlepreface*="🦊 "] #titlebar-buttonbox-container {
-            background-color: var(--chrome-secondary-background-color);
-          }
-          #main-window[titlepreface*="🦊 "] .titlebar-color {
-            background-color: var(--toolbar-bgcolor);
-          }
-          /* #main-window[titlepreface*="🦊 "][uidensity="compact"]  */
-          #main-window[titlepreface*="🦊 "]:not([uidensity="compact"]) #nav-bar:not([customizing="true"]) {
-            margin-top: -41px; /* --menubar-height */
-          }
-          #main-window[titlepreface*="🦊 "][uidensity="compact"] #nav-bar:not([customizing="true"]) {
-            margin-top: -36px; /* --menubar-height */
-          }
-          #main-window[titlepreface*="🦊 "][uidensity="compact"] .titlebar-buttonbox {
-            height: 36px !important;
-          } 
-        }
 
         @media {
          .toolbarbutton-icon,
@@ -234,7 +201,9 @@
         "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
         "svg.context-properties.content.enabled" = true;
         "layout.css.color-mix.enabled" = true;
+        "layout.css.light-dark.enabled" = true;
         "layout.css.backdrop-filter.enabled" = true;
+        "layout.css.has-selector.enabled" = true;
 
         "devtools.toolbox.zoomValue" = 1.1;
         "devtools.toolbox.tabsOrder" = "inspector,webconsole,storage,netmonitor,styleeditor,jsdebugger,@react-devtools,@react-devtools";
@@ -320,6 +289,8 @@
         "services.sync.prefs.sync.browser.uidensity" = true;
 
         "mozilla.widget.use-argb-visuals" = true;
+
+        "widget.gtk.rounded-bottom-corners.enabled" = true;
       };
       # extensions = builtins.attrValues {
       #   inherit (pkgs.ff-addons)

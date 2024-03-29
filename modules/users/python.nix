@@ -1,22 +1,40 @@
 { pkgs, ... }:
 
-let
-  python-packages = p:
-    with p; [
+{
+  home.packages = with pkgs; [
+    poetry
+
+    stdenv.cc.cc.lib
+    taglib
+    openssl
+    libxml2
+    libxslt
+    libzip
+    zlib
+    git
+
+    (python311.withPackages (ps: with ps; [
+      pip
       python-pam
       requests
+      pygobject3
+
       pandas
       pyglet
       scipy
       numpy
       mpmath
       sympy
+      pyopengl
+      pyopengl-accelerate
+      numba
+      llvmlite
+
       ipykernel
       matplotlib
       jupyterlab
       pyzmq
       venvShellHook
-      pip
 
       jupyter-client
       jupyter-core
@@ -27,20 +45,6 @@ let
       plotly
       pyperclip
       nbformat
-    ];
-
-in {
-  home.packages = with pkgs; [
-    poetry
-
-    stdenv.cc.cc.lib
-    taglib
-    openssl
-    git
-    libxml2
-    libxslt
-    libzip
-    zlib
-    (python311.withPackages python-packages)
+    ]))
   ];
 }

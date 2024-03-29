@@ -35,6 +35,7 @@
         "MichaelAquilina/zsh-auto-notify"
         "olets/zsh-abbr"
         "zshzoo/magic-enter"
+        # "darvid/zsh-poetry"
         # "agkozak/zsh-z"
         "ohmyzsh/ohmyzsh path:lib"
         "ohmyzsh/ohmyzsh path:plugins/extract"
@@ -72,6 +73,8 @@
            printf '${pkgs.eza}/bin/eza -laF --git --no-time --group-directories-first --hyperlink'
         fi
       }
+
+      # export ZSH_POETRY_AUTO_DEACTIVATE=""
 
       # Workaround for pyprland overriding the python version with its bundled one
       export PATH="''${HOME}/.nix-profile/bin:''${PATH}";

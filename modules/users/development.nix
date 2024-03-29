@@ -41,6 +41,8 @@
       # IDEs
       jetbrains.clion
       jetbrains.pycharm-professional
+
+      graphviz
     ];
   };
 

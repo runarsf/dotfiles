@@ -5,7 +5,8 @@
     services.pcscd.enable = true;
     programs.gnupg.agent = {
       enable = true;
-      pinentryFlavor = "curses";
+      pinentryPackage = pkgs.pinentry-gnome3;
+      # pinentryPackage = pkgs.pinentry-curses;
       # enableSSHSupport = if osConfig.services.openssh.enable
       # && !osConfig.programs.ssh.startAgent then
       #   false

@@ -30,12 +30,9 @@ outputs.lib.mkFor system hostname {
   systems = {
     linux = {
       imports = [
-        ../../modules/users/discord.nix
-        ../../modules/users/gtk.nix
+        ../../modules/users/desktop.nix
         ../../modules/users/wallpaper.nix
         ../../modules/users/gaming.nix
-        ../../modules/users/gtk.nix
-        ../../modules/users/desktop.nix
         ../../modules/users/hyprland
         ../../modules/users/eww
         ../../modules/users/firefox
