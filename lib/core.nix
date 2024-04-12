@@ -38,13 +38,9 @@ rec {
     let modules = builtins.map (file: import file args) paths;
     in deepMerge modules;
 
-  # Extend `nixpkgs.lib.types` with deep-mergible attribute sets.
-  types = {
-    deepMergedAttrs = extlib.mkOptionType {
-      name = "deep-merged attribute set";
-      merge = _: definitions:
-        let values = builtins.map (definition: definition.value) definitions;
-        in deepMerge values;
-    };
-  };
+  # Override nixpkgs.lib.types.attrs to be deep-mergible. This avoids configs
+  # from mistakenly overriding values due to the use of `//`.
+  types.attrs.merge = _: definitions:
+    let values = builtins.map (definition: definition.value) definitions;
+    in deepMerge values;
 }

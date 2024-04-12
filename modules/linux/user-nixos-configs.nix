@@ -8,6 +8,6 @@ let
       osConfig = config;
     }) users;
 
-  systemConfigs = builtins.map (user: user.config.system) userConfigs;
+  nixosConfigs = builtins.map (user: user.config.nixos) userConfigs;
 
-in outputs.lib.deepMerge systemConfigs
+in outputs.lib.deepMerge nixosConfigs

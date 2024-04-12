@@ -11,6 +11,7 @@
     packages = with pkgs; [
       nil
       nixfmt
+      cached-nix-shell
       deadnix
       statix
       manix

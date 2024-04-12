@@ -3,12 +3,14 @@
 with outputs.lib;
 
 {
+  imports = [ ./user-nixos-configs.nix ];
+
   system.stateVersion = mkDefault stateVersion;
   networking.hostName = mkDefault hostname;
 
   time.timeZone = mkDefault "Europe/Oslo";
   i18n.defaultLocale = mkDefault "en_GB.UTF-8";
-  console.keyMap = mkDefault "sg";
+  console.keyMap = mkDefault "no";
   services.xserver = {
     layout = mkDefault "nb";
     xkbVariant = mkDefault "legacy";

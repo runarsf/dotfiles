@@ -5,10 +5,10 @@
 
   # TODO Link hover effects from Firefox-Alpha
   # https://github.com/Naezr/ShyFox
-  home.file.".mozilla/firefox/${name}/chrome/" = {
-    source = ./styles;
-    recursive = true;
-  };
+  # home.file.".mozilla/firefox/${name}/chrome/" = {
+  #   source = ./styles;
+  #   recursive = true;
+  # };
 
   # home.packages = with pkgs; [ nur.repos.rycee.mozilla-addons-to-nix ];
 

@@ -10,7 +10,5 @@ outputs.lib.mkFor system hostname {
     ./system-config-support.nix
   ];
 
-  systems.darwin.imports = [
-    inputs.mac-app-util.homeManagerModules.default
-  ];
+  systems.darwin.imports = [ inputs.mac-app-util.homeManagerModules.default ];
 }

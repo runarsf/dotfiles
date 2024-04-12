@@ -6,6 +6,9 @@
   home = {
     packages = with pkgs; [
       bat
+      sad
+      gay
+      blahaj
       btop
       eza
       tldr

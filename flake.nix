@@ -5,6 +5,11 @@
     nixpkgs-master.url = "github:nixos/nixpkgs/master";
     nur.url = "github:nix-community/nur";
 
+    nix-darwin = {
+      url = "github:lnl7/nix-darwin";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
@@ -64,6 +69,7 @@
       };
 
       nixosConfigurations.runix = lib.mkHost {
+        system = "x86_64-linux";
         hostname = "runix";
         users = [ "runar" ];
       };

@@ -11,6 +11,8 @@
   home = {
     packages = with pkgs.unstable; [
       helix
+      gnumake
+      just
 
       # JavaScript
       nodejs
@@ -43,6 +45,7 @@
       jetbrains.pycharm-professional
 
       graphviz
+      pkgs.master.warp-terminal
     ];
   };
 

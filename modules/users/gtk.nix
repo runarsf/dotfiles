@@ -7,7 +7,7 @@
     enable = true;
     settings."org/gnome/desktop/interface".color-scheme = "prefer-dark";
   };
-  system.programs.dconf.enable = true;
+  nixos.programs.dconf.enable = true;
 
   qt = {
     enable = true;

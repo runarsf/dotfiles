@@ -31,15 +31,13 @@ outputs.lib.mkFor system hostname {
     linux = {
       imports = [
         ../../modules/users/desktop.nix
-        ../../modules/users/wallpaper.nix
         ../../modules/users/gaming.nix
         ../../modules/users/hyprland
         ../../modules/users/eww
         ../../modules/users/firefox
       ];
       home.packages = with pkgs; [ obs-studio ];
-      wallpaper = ./wallpaper.jpg;
-      system = {
+      nixos = {
         programs.zsh.enable = true;
         users.users."${name}" = {
           isNormalUser = true;
@@ -57,6 +55,7 @@ outputs.lib.mkFor system hostname {
             "video"
             "libvirtd"
             "input"
+            "i2c"
           ];
         };
       };
@@ -70,7 +69,7 @@ outputs.lib.mkFor system hostname {
         ../../modules/users/adb.nix
         # ../../modules/users/warp.nix
       ];
-      system.virtualisation.waydroid.enable = true;
+      nixos.virtualisation.waydroid.enable = true;
       #   programs.git = {
       #     userName = "Runar Fredagsvik";
       #     userEmail = "i@runar.ch";

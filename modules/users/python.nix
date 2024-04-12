@@ -18,6 +18,10 @@
       python-pam
       requests
       pygobject3
+      # TODO These are required for swww, put them the appropriate place
+      platformdirs
+      importlib-resources
+      importlib-metadata
 
       pandas
       pyglet

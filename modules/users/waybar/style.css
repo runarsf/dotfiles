@@ -1,43 +1,49 @@
-@define-color bg rgba(1, 1, 12, 0.5);
-@define-color border rgba(53, 52, 61, 1);
-@define-color fg @ghostwhite;
+@define-color bg rgba(1, 1, 12, 0.75);
+@define-color border rgba(67, 67, 67, 0.85);
+@define-color fg rgba(248, 248, 255, 0.9);
+
+* {
+  padding: 0;
+  margin: 0;
+}
+
+button {
+  padding: 0 0.25em;
+}
 
 window#waybar {
   font-family: "CaskaydiaCove Nerd Font";
   background: transparent;
-  font-size: 16px;
+  font-size: 14px;
+  color: @fg;
 }
 
+
 tooltip,
-.module:not(#custom-pad) {
-  padding: 0 1em;
+.module {
+  padding: 0.3em 1em;
   background: @bg;
   border: 1px solid @border;
   border-radius: 0.5em;
-  margin: 0 0.25em;
+  margin: 0 0.2em;
 }
-#waybar > * > * > :first-child > .module {
+:first-child > .module {
   margin-left: 0;
 }
-#waybar > * > * > :last-child > .module {
+:last-child > .module {
   margin-right: 0;
-}
-.modules-left,
-.modules-center,
-.modules-right {
-  margin: 0.5em 0.5em 0 0.5em;
 }
 
 
 #workspaces label {
   font-size: 12px;
-  color: #9C9CB9;
+  color: #C4C4C4;
 }
 #workspaces .empty label {
-  color: #686883;
+  color: #414141;
 }
 #workspaces .visible label {
-  color: #C9A0F8;
+  color: #7CB5E0;
 }
 
 
@@ -46,7 +52,16 @@ window#waybar #window {
   border: none;
 }
 window#waybar.empty #window {
-  background-color: transparent;
+  background: transparent;
+}
+
+
+#tray > .passive {
+    -gtk-icon-effect: dim;
+}
+#tray > .needs-attention {
+    -gtk-icon-effect: highlight;
+    background: #eb4d4b;
 }
 
 
@@ -65,17 +80,17 @@ window#waybar.empty #window {
 
 @keyframes blink {
   to {
-    background-color: #ffffff;
+    background: #ffffff;
     color: #000000;
   }
 }
 
 #battery.critical:not(.charging) {
-  background-color: #f53c3c;
-  color: #ffffff;
+  background: #f53c3c;
   animation-name: blink;
   animation-duration: 0.5s;
   animation-timing-function: steps(12);
   animation-iteration-count: infinite;
   animation-direction: alternate;
 }
+

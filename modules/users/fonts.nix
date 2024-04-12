@@ -22,7 +22,7 @@
     })
   ];
 
-  system = {
+  nixos = {
     fonts.fontconfig = {
       enable = true;
       hinting = {

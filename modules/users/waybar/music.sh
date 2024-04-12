@@ -11,8 +11,8 @@ case "${STATUS}" in
   *) exit 1;;
 esac
 
-ARTIST="$(playerctl metadata artist 2>/dev/null | head -1)"
-TITLE="$(playerctl metadata title 2>/dev/null | head -1)"
+ARTIST="$(playerctl metadata artist 2>/dev/null | head -1 | sed 's/&/&amp;/g')"
+TITLE="$(playerctl metadata title 2>/dev/null | head -1 | sed 's/&/&amp;/g')"
 
 printf '{ "text": "%s - %s", "class": "custom-%s", "alt": "%s" }\n' \
   "${ARTIST}" \
