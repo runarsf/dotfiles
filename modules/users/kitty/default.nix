@@ -74,13 +74,15 @@ in {
     keybindings = { };
 
     settings = {
-      background_opacity = "0.85";
+      background_opacity = "0.75";
       background_blur = 40;
 
       cursor_shape = "block";
       cursor_underline_thickness = 1;
       cursor_stop_blinking_after = 0;
       remember_window_size = "no";
+
+      strip_trailing_spaces = "smart";
 
       modify_font = "underline_position 2";
 

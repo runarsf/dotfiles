@@ -917,11 +917,11 @@
         "nixvim": "nixvim_2"
       },
       "locked": {
-        "lastModified": 1712923374,
-        "narHash": "sha256-h82LmRo8zYAf/7ssEO6IAUzgErGChw6xr3hrHoY2tyU=",
+        "lastModified": 1713105890,
+        "narHash": "sha256-1/NZdbv9zyAfCvXziWddsAnWoN7XAz9ImQ34PjSr2F4=",
         "owner": "runarsf",
         "repo": "nixvim",
-        "rev": "ebe384008867b5b6c04d8dc2d9f29fc5de6a87f3",
+        "rev": "84cada34d67b28284a4cfedee02b0bbc7cf73687",
         "type": "github"
       },
       "original": {

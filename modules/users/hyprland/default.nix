@@ -7,13 +7,14 @@ let lock = "${pkgs.hyprlock}/bin/hyprlock";
 
 in {
   imports = [
+    inputs.hyprland.homeManagerModules.default
     ./hyprlock.nix
     ./hypridle.nix
     ../wayland.nix
     ../waybar
   ];
 
-  system = {
+  nixos = {
     users.users.${name}.extraGroups = [ "video" ];
     services.greetd = {
       settings = {
@@ -44,6 +45,7 @@ in {
     xdg-desktop-portal-hyprland
     xwayland
     wofi
+    hyprcursor
     pulseaudio
     slurp
     waypipe
@@ -74,7 +76,7 @@ in {
       name = "hyprshot";
       src = pkgs.fetchurl {
         url = "https://raw.githubusercontent.com/runarsf/screenshot/main/bin/hyprshot";
-        sha256 = "128mypbbbwsb0f208b07i50srnh7q5dfqd97l0zdl1qgz32cygjy";
+        sha256 = "sha256-nIlSJQ2IwFgRDs5CfMdsjJi8fdDEgrpV8gOCrJ40fmw=";
       };
       unpackPhase = "true";
       installPhase = ''
@@ -110,8 +112,9 @@ in {
           "${config.programs.kitty.package}/bin/kitty --class scratchpad --title scratchpad";
         hide = false;
       };
-      qalc = {
-        command = "${pkgs.qalculate-gtk}/bin/qalculate-gtk";
+      math = {
+        command =
+          "${config.programs.kitty.package}/bin/kitty -o font_size=14 --class math-scratchpad --title math-scratchpad python";
         hide = false;
       };
     };
@@ -123,8 +126,11 @@ in {
     mod = "SUPER";
   in {
     enable = true;
-    package = pkgs.inputs.hyprland.hyprland.override { wrapRuntimeDeps = false; };
-    systemd.enable = true;
+    # package = pkgs.inputs.hyprland.hyprland.override { wrapRuntimeDeps = false; };
+    systemd = {
+      enable = true;
+      variables = ["--all"];
+    };
     plugins = with inputs.hyprland-plugins.packages.${system}; [
       borders-plus-plus
     ];
@@ -135,6 +141,9 @@ in {
         "${pkgs.pyprland}/bin/pypr"
         "${pkgs.sway-audio-idle-inhibit}/bin/sway-audio-idle-inhibit"
         "${pkgs.swaynotificationcenter}/bin/swaync"
+      ];
+      exec = [
+        "${pkgs.swww}/bin/swww query || ${pkgs.swww}/bin/swww init"
       ];
       general = {
         gaps_in = 5;
@@ -170,13 +179,13 @@ in {
 
         blur = {
           enabled = true;
-          size = 3;
-          passes = 1;
+          size = 5;
+          passes = 2;
         };
 
         layerrule = [
-          # "blur,waybar"
-          "blurpopups,waybar"
+          "blur,swaync-control-center"
+          "blur,bar"
           "blur,wofi"
         ];
 
@@ -227,9 +236,9 @@ in {
         "${mod} SHIFT, F, togglefloating"
         "${mod} ALT, F, workspaceopt, allfloat"
         "${mod}, F, fullscreen, 0"
+        "${mod}, space, fullscreen, 1"
         "${mod} SHIFT, space, fullscreen, 1"
         "${mod}, D, exec, ${pkgs.wofi}/bin/wofi --show drun"
-        "${mod}, space, exec, ${./. + builtins.toPath "/bin/hypr-layouts"}"
         "${mod}, A, exec, ${./. + builtins.toPath "/bin/hypr-pin"}"
         "ALT, P, exec, hyprshot capture region --copy"
         "${mod} SHIFT, N, exec, ${pkgs.swaynotificationcenter}/bin/swaync-client -t"
@@ -246,14 +255,16 @@ in {
         "${mod}, up, movecursortocorner, 2"
         "${mod}, down, movecursortocorner, 2"
 
+        "${mod} SHIFT, space, exec, ${./. + builtins.toPath "/bin/hypr-layouts"}"
         "${mod} SHIFT, Return, layoutmsg, swapwithmaster"
         "${mod}, bar, layoutmsg, orientationcycle left right"
 
         "${mod}, X, exec, ${lock}"
-        "${mod}, TAB, exec, ${./. + builtins.toPath "/bin/hypr-ws"} previous"
+        # "${mod}, TAB, exec, ${./. + builtins.toPath "/bin/hypr-ws"} previous"
+        "${mod}, TAB, workspace, previous"
 
         "${mod} SHIFT, R, exec, hyprctl reload"
-        "${mod}, C, exec, ${pkgs.wl-color-picker}/bin/wl-color-picker clipboard"
+        "${mod}, C, exec, ${pkgs.wl-color-picker}/bin/wl-color-picker"
 
         "${mod} SHIFT, C, exec, ${./. + builtins.toPath "/bin/hypr-gamemode"}"
 
@@ -261,7 +272,7 @@ in {
         "${mod}, mouse_up, workspace, e-1"
 
         "${mod}, N, exec, ${pkgs.pyprland}/bin/pypr toggle term"
-        "${mod}, P, exec, ${pkgs.pyprland}/bin/pypr toggle qalc"
+        "${mod}, P, exec, ${pkgs.pyprland}/bin/pypr toggle math"
       ];
       binde = [
         "${mod} CTRL, right, resizeactive, 50 0"
@@ -307,15 +318,10 @@ in {
         "nofocus,class:^(xwaylandvideobridge)$"
         "noinitialfocus,class:^(xwaylandvideobridge)$"
 
-        "float, class:^(scratchpad)$"
-        "workspace special silent, class:^(scratchpad)$"
-        "size 60% 65%, class:^(scratchpad)$"
-        "center, class:^(scratchpad)$"
-
-        "float, class:^(qalculate-gtk)$"
-        "workspace special silent, class:^(qalculate-gtk)$"
-        "size 60% 65%, class:^(qalculate-gtk)$"
-        "center, class:^(qalculate-gtk)$"
+        "float, class:^(.*)(scratchpad)$"
+        "workspace special silent, class:^(.*)(scratchpad)$"
+        "size 60% 65%, class:^(.*)(scratchpad)$"
+        "center, class:^(.*)(scratchpad)$"
 
         "noborder, fullscreen:1"
 
