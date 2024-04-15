@@ -3,14 +3,14 @@
 {
   imports = [
     inputs.nixos-hardware.nixosModules.lenovo-thinkpad-t480s
-    ../../modules/hosts/greeter.nix
-    ../../modules/hosts/network.nix
-    ../../modules/hosts/docker.nix
-    ../../modules/hosts/podman.nix
-    ../../modules/hosts/bluetooth.nix
-    ../../modules/hosts/firewall.nix
-    ../../modules/hosts/printing.nix
-    ../../modules/hosts/pipewire.nix
+    ../../modules/linux/greeter.nix
+    ../../modules/linux/networkmanager.nix
+    ../../modules/linux/docker.nix
+    ../../modules/linux/podman.nix
+    ../../modules/linux/bluetooth.nix
+    ../../modules/linux/firewall.nix
+    ../../modules/linux/printing.nix
+    ../../modules/linux/pipewire.nix
   ];
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;

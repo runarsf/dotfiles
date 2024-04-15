@@ -74,6 +74,12 @@
         users = [ "runar" ];
       };
 
+      nixosConfigurations.rpi = lib.mkHost {
+        system = "aarch64-linux";
+        hostname = "rpi";
+        users = [ "runar" ];
+      };
+
       homeConfigurations.runar = lib.mkUser { username = "runar"; };
 
       homeConfigurations."runar@runix" = lib.mkUser {
@@ -82,6 +88,12 @@
         hostname = "runix";
       };
 
-      formatter = lib.forEachSystem systems (pkgs: pkgs.nixfmt);
+      homeConfigurations."runar@rpi" = lib.mkUser {
+        username = "runar";
+        system = "aarch64-linux";
+        hostname = "rpi";
+      };
+
+      formatter = lib.forEachSystem systems (pkgs: pkgs.nixfmt-rfc-style);
     };
 }

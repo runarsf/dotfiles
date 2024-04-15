@@ -4,7 +4,7 @@
   imports = [
     ./nix.nix
     ./python.nix
-    ./vscode.nix
+    # ./vscode.nix
     ./neovim.nix
   ];
 
@@ -41,11 +41,12 @@
       gitui
 
       # IDEs
-      jetbrains.clion
-      jetbrains.pycharm-professional
+      # TODO isDesktop
+      # jetbrains.clion
+      # jetbrains.pycharm-professional
 
-      graphviz
-      pkgs.master.warp-terminal
+      # graphviz
+      # pkgs.master.warp-terminal
     ];
   };
 

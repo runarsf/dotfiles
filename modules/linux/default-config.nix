@@ -11,9 +11,9 @@ with outputs.lib;
   time.timeZone = mkDefault "Europe/Oslo";
   i18n.defaultLocale = mkDefault "en_GB.UTF-8";
   console.keyMap = mkDefault "no";
-  services.xserver = {
+  services.xserver.xkb = {
     layout = mkDefault "nb";
-    xkbVariant = mkDefault "legacy";
+    variant = mkDefault "legacy";
   };
 
   environment.systemPackages = with pkgs; [ vim git wget curl ];

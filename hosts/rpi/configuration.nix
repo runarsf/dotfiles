@@ -11,9 +11,11 @@ in {
 
     # nixpkgs/nixos/modules/installer/sd-card/sd-image-aarch64-installer.nix
     # nixpkgs/nixos/modules/installer/cd-dvd/channel.nix
-    ../common/podman.nix
-    (import ../common/nginx.nix { inherit config domain cert key email pkgs; })
-    (import ../common/containers/pialert.nix { inherit config domain cert key email; })
+    # (import ../common/containers/pialert.nix { inherit config domain cert key email; })
+    # (import ../../modules/linux/nginx.nix { inherit config domain cert key email pkgs; })
+    ../../modules/linux/docker.nix
+    ../../modules/linux/podman.nix
+    ../../modules/linux/firewall.nix
   ];
 
   system.stateVersion = "23.11";

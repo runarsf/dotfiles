@@ -15,8 +15,8 @@
   programs.zsh = {
     enable = true;
 
-    enableAutosuggestions = true;
     enableCompletion = true;
+    autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
 
     antidote = {
@@ -33,8 +33,8 @@
         "z-shell/zsh-diff-so-fancy"
         "nix-community/nix-zsh-completions"
         "MichaelAquilina/zsh-auto-notify"
-        "olets/zsh-abbr"
         "zshzoo/magic-enter"
+        # "olets/zsh-abbr"
         # "darvid/zsh-poetry"
         # "agkozak/zsh-z"
         "ohmyzsh/ohmyzsh path:lib"

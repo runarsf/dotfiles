@@ -13,7 +13,7 @@
     allowedTCPPorts = [ 80 443 ];
   };
 
-  users.groups.acmereceivers = { members = [ "nginx" ]; };
+  users.groups.acmereceivers.members = [ "nginx" ];
 
   security.acme = {
     defaults = {

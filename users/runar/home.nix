@@ -6,18 +6,13 @@ outputs.lib.mkFor system hostname {
       { _module.args.keys = [ "${config.home.homeDirectory}/.ssh/id_priv" ]; }
 
       ../../modules/users/convenience.nix
-      ../../modules/users/development.nix
-      ../../modules/users/fonts.nix
       ../../modules/users/git.nix
       ../../modules/users/starship.nix
       ../../modules/users/zsh.nix
-      ../../modules/users/writing.nix
       ../../modules/users/tmux.nix
       ../../modules/users/lf
       ../../modules/users/keychain.nix
       ../../modules/users/sops.nix
-      ../../modules/users/kitty
-      ../../modules/users/mullvad.nix
       ./config/secrets.nix
     ];
 
@@ -29,14 +24,6 @@ outputs.lib.mkFor system hostname {
 
   systems = {
     linux = {
-      imports = [
-        ../../modules/users/desktop.nix
-        ../../modules/users/gaming.nix
-        ../../modules/users/hyprland
-        ../../modules/users/eww
-        ../../modules/users/firefox
-      ];
-      home.packages = with pkgs; [ obs-studio ];
       nixos = {
         programs.zsh.enable = true;
         users.users."${name}" = {
@@ -64,10 +51,30 @@ outputs.lib.mkFor system hostname {
 
   hosts = {
     runix = {
+      # TODO isDesktop
       imports = [
         #   (import ../../modules/users/red.nix { inherit inputs pkgs; })
         ../../modules/users/adb.nix
-        # ../../modules/users/warp.nix
+        ../../modules/users/desktop.nix
+        ../../modules/users/gaming.nix
+        ../../modules/users/hyprland
+        ../../modules/users/eww
+        ../../modules/users/firefox
+        ../../modules/users/vscode.nix
+        ../../modules/users/development.nix
+        ../../modules/users/fonts.nix # TODO isDesktop
+        ../../modules/users/writing.nix # TODO isDesktop
+        ../../modules/users/kitty # TODO isDesktop
+        ../../modules/users/mullvad.nix # TODO isDesktop
+      ];
+      home.packages = with pkgs.unstable; [
+        obs-studio
+
+        jetbrains.clion
+        jetbrains.pycharm-professional
+
+        graphviz
+        pkgs.master.warp-terminal
       ];
       nixos.virtualisation.waydroid.enable = true;
       #   programs.git = {
