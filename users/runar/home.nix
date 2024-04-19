@@ -1,10 +1,11 @@
-{ config, outputs, system, hostname, name, pkgs, ... }:
+{ config, inputs, outputs, system, hostname, name, pkgs, ... }:
 
 outputs.lib.mkFor system hostname {
   common = {
     imports = [
-      { _module.args.keys = [ "${config.home.homeDirectory}/.ssh/id_priv" ]; }
+      { _module.args.keys = [ "${config.home.homeDirectory}/.ssh/runix" ]; }
 
+      ../../modules/users/nix.nix
       ../../modules/users/convenience.nix
       ../../modules/users/git.nix
       ../../modules/users/starship.nix

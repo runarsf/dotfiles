@@ -1,6 +1,10 @@
-{ domain, cert, key, email, pkgs, ... }:
+{ config, inputs, pkgs, domain, email, cert, key, ... }:
 
 {
+  imports = [
+    inputs.sops-nix.nixosModules.sops
+  ];
+
   services.nginx = {
     enable = true;
     recommendedGzipSettings = true;
@@ -9,11 +13,9 @@
     recommendedTlsSettings = true;
   };
 
-  networking.firewall = {
-    allowedTCPPorts = [ 80 443 ];
-  };
-
+  networking.firewall.allowedTCPPorts = [ 80 443 ];
   users.groups.acmereceivers.members = [ "nginx" ];
+  # systemd.user.services.nginx.Unit.After = [ "sops-nix.service" ];
 
   security.acme = {
     defaults = {
@@ -27,10 +29,7 @@
       extraDomainNames = [ domain ];
       group = "acmereceivers";
       dnsProvider = "cloudflare";
-      # TODO Use sops key
-      credentialsFile = "${pkgs.writeText "cloudflare-credentials" ''
-        CLOUDFLARE_DNS_API_TOKEN=
-      ''}";
+      credentialsFile = config.sops.templates."acme-credentials".path;
     };
   };
 
@@ -43,23 +42,26 @@
     };
   };
 
-  # https://dash.cloudflare.com/profile/api-tokens
-  #  #dns_records:edit
-  #  #zone:read
-  # ??? https://github.com/NixOS/nixpkgs/blob/master/nixos/modules/services/misc/cfdyndns.nix
-  # virtualisation.oci-containers.containers.cloudflare-ddns = {
-  #   image = "joshava/cloudflare-ddns:latest";
-  #   autoStart = true;
-  #   environment = {
-  #     PUID = "1000";
-  #     GUID = "1000";
-  #     CRON = "0 */12 * * *";
-  #     ZONE = domain;
-  #     HOST = "*.${domain},${domain}";
-  #     EMAIL = email;
-  #     API = "";
-  #   };
-  #   # FIXME
-  #   volumes = [ "${../../. + builtins.toPath "/cloudflare-ddns.yaml"}:/app/config.yaml" ];
-  # };
-}
+  # This converts your ssh key to an age key during every build,
+  # puts it in $XDG_RUNTIME_DIR/secrets.d/age-keys.txt,
+  # and points age.keyFile to the generated age key.
+  sops.age.sshKeyPaths = [ "/home/runar/.ssh/runix" ];
+
+  sops = {
+    defaultSopsFile = "${inputs.vault}/secrets.yaml";
+  };
+
+  services.cloudflare-dyndns = {
+    enable = true;
+    domains = [ "*.${domain}" "${domain}" ];
+    apiTokenFile = config.sops.templates."cloudflare-dyndns".path;
+  };
+
+  sops.secrets.cloudflare_token = {};
+  sops.templates."acme-credentials".content = ''
+    CLOUDFLARE_DNS_API_TOKEN=${config.sops.placeholder.cloudflare_token}
+  '';
+  sops.templates."cloudflare-dyndns".content = ''
+    CLOUDFLARE_API_TOKEN=${config.sops.placeholder.cloudflare_token}
+  '';
+} 

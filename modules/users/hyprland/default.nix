@@ -184,8 +184,6 @@ in {
         };
 
         layerrule = [
-          "blur,swaync-control-center"
-          "blur,bar"
           "blur,wofi"
         ];
 

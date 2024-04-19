@@ -34,7 +34,6 @@
         "nix-community/nix-zsh-completions"
         "MichaelAquilina/zsh-auto-notify"
         "zshzoo/magic-enter"
-        # "olets/zsh-abbr"
         # "darvid/zsh-poetry"
         # "agkozak/zsh-z"
         "ohmyzsh/ohmyzsh path:lib"
@@ -61,8 +60,6 @@
 
       _comp_options+=(globdots)
 
-      abbr -S -qq yay=paru
-      bindkey " " abbr-expand-and-space
       AUTO_NOTIFY_IGNORE+=("zsh" "lf")
 
       wim () { ''${EDITOR} "$(which ''${1:?No file selected...})" "''${@:2}" }

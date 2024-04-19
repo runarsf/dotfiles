@@ -1,9 +1,13 @@
-{ pkgs, ... }:
+{ config, pkgs, ... }:
 
 {
   imports = [
     ./json2nix.nix
   ];
+
+  home.sessionVariables = {
+    FLAKE = "${config.home.homeDirectory}/.config/nixos";
+  };
 
   programs.nix-index-database.comma.enable = true;
 
@@ -14,9 +18,12 @@
       cached-nix-shell
       deadnix
       statix
-      manix
-      nix-tree
+
+      nh
       nix-output-monitor
+      nvd
+      nix-tree
+      manix
     ];
   };
 }

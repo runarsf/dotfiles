@@ -1,8 +1,5 @@
 flake@{ outputs, ... }:
 
-# inputs.home-manager.nixosModules.home-manager
-# inputs.sops-nix.nixosModules.sops
-
 let
   sharedModules = [
     ../modules/nix/nix.nix
