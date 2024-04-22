@@ -1,7 +1,7 @@
 { config, domain, cert, key, ... }:
 
 # FIXME Service account path
-let base = "/home/runar/data/containers/gonic";
+let base = "${config.users.users.ops.home}/containers/gonic";
 
 in {
   # networking.firewall = {
@@ -14,13 +14,12 @@ in {
              ${base}/podcasts \
              ${base}/playlists \
              ${base}/cache \
-             /home/runar/data/music
+             ${config.users.users.ops.home}/data/music
   '';
 
   virtualisation.oci-containers.containers.gonic = {
     image = "sentriz/gonic:latest";
     extraOptions = [ "--pull=newer" "--group-add=audio" "--device=/dev/snd:/dev/snd" ];
-    autoStart = true;
     ports = [ "4747:80" ];
     environment = {
       TZ = "${config.time.timeZone}";
@@ -28,7 +27,7 @@ in {
     };
     volumes = [
       "${base}/data:/data"
-      "/home/runar/data/music:/music:ro"
+      "${config.users.users.ops.home}/data/music:/music:ro"
       "${base}/podcasts:/podcasts"
       "${base}/playlists:/playlists"
       "${base}/cache:/cache"

@@ -14,6 +14,7 @@ in {
     # nixpkgs/nixos/modules/installer/sd-card/sd-image-aarch64-installer.nix
     # nixpkgs/nixos/modules/installer/cd-dvd/channel.nix
     # (import ../common/containers/pialert.nix { inherit config domain cert key email; })
+    ../../modules/linux/service-account.nix
     (import ../../modules/linux/nginx.nix { inherit config inputs pkgs domain cert key email; })
     (import ../../modules/linux/containers/gonic.nix { inherit config domain cert key; })
     (import ../../modules/linux/containers/copyparty.nix { inherit config domain cert key; })

@@ -1,6 +1,6 @@
 { config, domain, cert, key, ... }:
 
-let base = "/home/runar/data/containers/copyparty";
+let base = "${config.users.users.ops.home}/data/containers/copyparty";
 
 in {
   # networking.firewall = {
@@ -16,10 +16,9 @@ in {
   virtualisation.oci-containers.containers.copyparty = {
     image = "ghcr.io/9001/copyparty-dj:latest";
     extraOptions = [ "--pull=newer" ];
-    autoStart = true;
     ports = [ "3923:3923" ];
     volumes = [
-      "/home/runar/data/music:/w"
+      "${config.users.users.ops.home}/data/music:/w"
       "${base}/config:/cfg"
       "${config.sops.templates."copyparty-cfg".path}:/cfg/copyparty.conf:ro"
     ];

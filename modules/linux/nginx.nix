@@ -45,7 +45,7 @@
   # This converts your ssh key to an age key during every build,
   # puts it in $XDG_RUNTIME_DIR/secrets.d/age-keys.txt,
   # and points age.keyFile to the generated age key.
-  sops.age.sshKeyPaths = [ "/home/runar/.ssh/runix" ];
+  sops.age.sshKeyPaths = [ "/home/runar/.ssh/nix" ];
 
   sops = {
     defaultSopsFile = "${inputs.vault}/secrets.yaml";
@@ -53,6 +53,7 @@
 
   services.cloudflare-dyndns = {
     enable = true;
+    proxied = true;
     domains = [ "*.${domain}" "${domain}" ];
     apiTokenFile = config.sops.templates."cloudflare-dyndns".path;
   };

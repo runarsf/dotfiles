@@ -3,7 +3,7 @@
 outputs.lib.mkFor system hostname {
   common = {
     imports = [
-      { _module.args.keys = [ "${config.home.homeDirectory}/.ssh/runix" ]; }
+      { _module.args.keys = [ "${config.home.homeDirectory}/.ssh/nix" ]; }
 
       ../../modules/users/nix.nix
       ../../modules/users/convenience.nix
