@@ -26,6 +26,7 @@
     defaults.email = email;
     certs."${domain}" = {
       domain = "*.${domain}";
+      # TODO Add support for multiple domains
       extraDomainNames = [ domain ];
       group = "acmereceivers";
       dnsProvider = "cloudflare";
@@ -45,6 +46,7 @@
   # This converts your ssh key to an age key during every build,
   # puts it in $XDG_RUNTIME_DIR/secrets.d/age-keys.txt,
   # and points age.keyFile to the generated age key.
+  # TODO Don't hardcode
   sops.age.sshKeyPaths = [ "/home/runar/.ssh/nix" ];
 
   sops = {

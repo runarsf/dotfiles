@@ -10,7 +10,7 @@ in {
 
   system.userActivationScripts.copyparty-data.text = ''
     mkdir -p ${base}/config \
-             /home/runar/data/music
+             ${config.users.users.ops.home}/data/music
   '';
 
   virtualisation.oci-containers.containers.copyparty = {
