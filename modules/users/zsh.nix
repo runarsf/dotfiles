@@ -18,17 +18,10 @@
   programs.zsh = {
     enable = true;
 
-    # enableCompletion = true;
-    # autosuggestion.enable = true;
-    # syntaxHighlighting.enable = true;
-
     antidote = {
       enable = true;
       useFriendlyNames = true;
       plugins = [
-        "zsh-users/zsh-syntax-highlighting"
-        "zsh-users/zsh-autosuggestions"
-        "zsh-users/zsh-completions"
         "hlissner/zsh-autopair"
         "akarzim/zsh-docker-aliases"
         "z-shell/zsh-diff-so-fancy"
@@ -37,6 +30,9 @@
         "jimhester/per-directory-history"
         "ohmyzsh/ohmyzsh path:lib"
         "ohmyzsh/ohmyzsh path:plugins/extract"
+        # "zsh-users/zsh-syntax-highlighting"
+        # "zsh-users/zsh-autosuggestions"
+        # "zsh-users/zsh-completions"
         # "zsh-users/zsh-history-substring-search"
         # "darvid/zsh-poetry"
       ];
@@ -93,7 +89,8 @@
         "directory"
         "spectrum"
         "utility"
-        "history-substring-search"
+        "syntax-highlighting"
+        "autosuggestions"
         "completion"
       ];
     };
