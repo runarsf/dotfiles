@@ -11,6 +11,7 @@
     ../../modules/linux/firewall.nix
     ../../modules/linux/printing.nix
     ../../modules/linux/pipewire.nix
+    # ../../modules/linux/virtualisation.nix
   ];
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;

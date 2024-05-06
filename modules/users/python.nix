@@ -23,6 +23,8 @@
       importlib-resources
       importlib-metadata
 
+      debugpy
+
       pandas
       pyglet
       scipy

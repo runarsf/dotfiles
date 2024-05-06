@@ -70,6 +70,7 @@ outputs.lib.mkFor system hostname {
       ];
       home.packages = with pkgs.unstable; [
         obs-studio
+        stremio
 
         jetbrains.clion
         jetbrains.pycharm-professional

@@ -4,6 +4,7 @@
   imports = [
     ./discord.nix
     ./xdg.nix
+    # ./easyeffects
   ];
 
   home.packages = with pkgs; [
@@ -11,6 +12,7 @@
     bitwarden
     qalculate-gtk
     spotify
+    vlc
   ];
 
   services.mpd = {

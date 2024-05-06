@@ -10,6 +10,5 @@
     enable = true;
     agents = [ "ssh" "gpg" ];
     keys = keys;
-    enableZshIntegration = false;
   };
 }

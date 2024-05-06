@@ -11,37 +11,46 @@
   };
 
   programs.zoxide.enable = true;
+  programs.fzf.enable = true;
+
+  nixos.environment.pathsToLink = [ "/share/zsh" ];
 
   programs.zsh = {
     enable = true;
 
-    enableCompletion = true;
-    autosuggestion.enable = true;
-    syntaxHighlighting.enable = true;
+    # enableCompletion = true;
+    # autosuggestion.enable = true;
+    # syntaxHighlighting.enable = true;
 
     antidote = {
       enable = true;
       useFriendlyNames = true;
       plugins = [
-        "zsh-users/zsh-autosuggestions"
         "zsh-users/zsh-syntax-highlighting"
+        "zsh-users/zsh-autosuggestions"
         "zsh-users/zsh-completions"
         "hlissner/zsh-autopair"
-        "zsh-users/zsh-history-substring-search"
         "akarzim/zsh-docker-aliases"
-        "jimhester/per-directory-history"
         "z-shell/zsh-diff-so-fancy"
         "nix-community/nix-zsh-completions"
-        "MichaelAquilina/zsh-auto-notify"
         "zshzoo/magic-enter"
-        # "darvid/zsh-poetry"
-        # "agkozak/zsh-z"
+        "jimhester/per-directory-history"
         "ohmyzsh/ohmyzsh path:lib"
         "ohmyzsh/ohmyzsh path:plugins/extract"
+        # "zsh-users/zsh-history-substring-search"
+        # "darvid/zsh-poetry"
       ];
     };
+    initExtraFirst = ''
+      # See categorized startup times: zprof
+      # See total startup delay: time zsh -i -c exit
+      zmodload zsh/zprof
+    '';
+    initExtraBeforeCompInit = ''
+      autoload -Uz vcs_info
+      vcs_info 'prompt'
+    '';
     initExtra = ''
-      # https://thevaluable.dev/zsh-completion-guide-examples/
       zstyle ':completion:*' special-dirs ..
       zstyle ':completion:*' special-dirs last
       zstyle ':completion:*' squeeze-slashes true
@@ -60,21 +69,14 @@
 
       _comp_options+=(globdots)
 
-      AUTO_NOTIFY_IGNORE+=("zsh" "lf")
-
-      wim () { ''${EDITOR} "$(which ''${1:?No file selected...})" "''${@:2}" }
+      wim () { set -o nounset; set -o errexit; ''${EDITOR} "$(which ''${1:?No file selected...})" ''${@:2} }
       magic-enter-cmd () {
         if command git rev-parse --is-inside-work-tree &>/dev/null; then
            printf 'git -c color.ui=always status -sb --show-stash --ignore-submodules'
         else
-           printf '${pkgs.eza}/bin/eza -laF --git --no-time --group-directories-first --hyperlink'
+           printf 'ls'
         fi
       }
-
-      # export ZSH_POETRY_AUTO_DEACTIVATE=""
-
-      # Workaround for pyprland overriding the python version with its bundled one
-      export PATH="''${HOME}/.nix-profile/bin:''${PATH}";
     '';
     prezto = {
       enable = true;
@@ -83,6 +85,17 @@
       editor.dotExpansion = true;
       editor.promptContext = true;
       utility.safeOps = false;
+      pmodules = [
+        "ssh"
+        "environment"
+        "terminal"
+        "history"
+        "directory"
+        "spectrum"
+        "utility"
+        "history-substring-search"
+        "completion"
+      ];
     };
   };
 }

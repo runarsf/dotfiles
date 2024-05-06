@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ config, pkgs, ... }:
 
 let
   theme = "ayu-dark";
@@ -80,6 +80,7 @@ in {
       cursor_shape = "block";
       cursor_underline_thickness = 1;
       cursor_stop_blinking_after = 0;
+
       remember_window_size = "no";
 
       strip_trailing_spaces = "smart";
@@ -105,6 +106,8 @@ in {
       mod = "ctrl+shift";
       chord = "ctrl+a";
     in ''
+      env PATH=${config.home.profileDirectory}/bin:''${PATH}
+
       map ${mod}+t new_tab
       map ${chord}>t new_tab
       map ${chord}>n new_tab

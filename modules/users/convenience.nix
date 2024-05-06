@@ -10,6 +10,8 @@
       gay
       blahaj
       btop
+      yt-dlp
+      appimage-run
       eza
       tldr
       yq
@@ -29,7 +31,7 @@
     ];
 
     shellAliases = rec {
-      ls = "EZA_ICON_SPACING=2 ${pkgs.eza}/bin/eza -l -F -g -a --group-directories-first --no-time --git --total-size";
+      ls = "EZA_ICON_SPACING=2 ${pkgs.eza}/bin/eza -l -F -g -a --group-directories-first --no-time --git";
       sl = "${ls} | rev";
       grep = "grep --color=always";
       cat = "${pkgs.bat}/bin/bat";

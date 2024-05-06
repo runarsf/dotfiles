@@ -24,8 +24,9 @@ in {
         };
       };
     };
-    xdg.portal.extraPortals = with pkgs; [ xdg-desktop-portal-hyprland ];
+    xdg.portal.extraPortals = with pkgs; [ xdg-desktop-portal-hyprland xdg-desktop-portal-gtk ];
   };
+  xdg.portal.configPackages = with pkgs; [ xdg-desktop-portal-hyprland xdg-desktop-portal-gtk ];
 
   nix.settings = {
     extra-substituters = [ "https://hyprland.cachix.org" ];
@@ -36,17 +37,20 @@ in {
   home.packages = with pkgs; [
     pyprland
     master.nwg-displays
+    master.nwg-look
+    wlr-randr
     swaynotificationcenter
     gtk3
     polkit_gnome
     libnotify
     brightnessctl
     xwaylandvideobridge
-    xdg-desktop-portal-hyprland
     xwayland
     wofi
     hyprcursor
     pulseaudio
+    pipewire
+    wireplumber
     slurp
     waypipe
     cinnamon.nemo
@@ -58,20 +62,10 @@ in {
     swww
     waypaper
     jq
-    nwg-look
     sway-audio-idle-inhibit
-    swayidle
     gnome.seahorse
-    # wl-mirror
-    # wl-mirror-pick
-    # ydotool
-    # hyprslurp
-    # hyprpicker
     kanshi
-    wdisplays
-    wf-recorder
-    grim
-    ffmpeg
+
     (pkgs.stdenv.mkDerivation {
       name = "hyprshot";
       src = pkgs.fetchurl {
@@ -85,6 +79,9 @@ in {
         chmod +x $out/bin/hyprshot
       '';
     })
+    wf-recorder
+    grim
+    ffmpeg
   ];
   # FIXME hyprctl setcursor GoogleDot-Black 24
   home.sessionVariables = {
@@ -114,7 +111,7 @@ in {
       };
       math = {
         command =
-          "${config.programs.kitty.package}/bin/kitty -o font_size=14 --class math-scratchpad --title math-scratchpad python";
+          "${config.programs.kitty.package}/bin/kitty -o font_size=16 --class math-scratchpad --title math-scratchpad zsh -c python";
         hide = false;
       };
     };
@@ -143,7 +140,7 @@ in {
         "${pkgs.swaynotificationcenter}/bin/swaync"
       ];
       exec = [
-        "${pkgs.swww}/bin/swww query || ${pkgs.swww}/bin/swww init"
+        "${pkgs.swww}/bin/swww kill; ${pkgs.swww}/bin/swww query || ${pkgs.swww}/bin/swww init"
       ];
       general = {
         gaps_in = 5;
@@ -374,6 +371,7 @@ in {
         "stayfocused, class:(gcr-prompter)"
       ];
     };
+          # bind = ${mod}, ${ws}, exec, ${./. + builtins.toPath "/bin/hypr-ws"} ${toString (x + 1)}
     extraConfig = ''
       # Passthrough mode (e.g. for VNC)
       bind=${mod} SHIFT,P,submap,passthrough
@@ -385,7 +383,7 @@ in {
       ${builtins.concatStringsSep "\n" (builtins.genList (x:
         let ws = let c = (x + 1) / 10; in builtins.toString (x + 1 - (c * 10));
         in ''
-          bind = ${mod}, ${ws}, exec, ${./. + builtins.toPath "/bin/hypr-ws"} ${toString (x + 1)}
+          bind = ${mod}, ${ws}, exec, hyprctl dispatch focusworkspaceoncurrentmonitor ${toString (x + 1)}
           bind = ${mod} SHIFT, ${ws}, movetoworkspacesilent, ${toString (x + 1)}
         '') 10)}
     '';

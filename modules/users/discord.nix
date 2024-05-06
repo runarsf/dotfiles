@@ -4,7 +4,7 @@
   # Krisp: https://github.com/NixOS/nixpkgs/issues/195512
 
   home.packages = with pkgs.master;
-    if (outputs.lib.isWayland config) then [ vesktop ] else [ discord ];
+    if (outputs.lib.isWayland config) then [ vesktop webcord ] else [ discord ];
 
   nixpkgs.overlays = [
     (_: prev: {

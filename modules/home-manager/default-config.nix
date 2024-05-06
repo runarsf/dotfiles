@@ -1,4 +1,4 @@
-{ outputs, name, system, hostname, stateVersion, osConfig, ... }:
+{ config, outputs, name, system, hostname, stateVersion, osConfig, ... }:
 
 with outputs.lib;
 
@@ -9,10 +9,10 @@ mkFor system hostname {
       stateVersion = mkDefault stateVersion;
 
       sessionVariables = rec {
-        XDG_CACHE_HOME = "\${HOME}/.local/cache";
-        XDG_CONFIG_HOME = "\${HOME}/.config";
-        XDG_BIN_HOME = "\${HOME}/.local/bin";
-        XDG_DATA_HOME = "\${HOME}/.local/share";
+        XDG_CACHE_HOME = "${config.home.homeDirectory}/.local/cache";
+        XDG_CONFIG_HOME = "${config.home.homeDirectory}/.config";
+        XDG_BIN_HOME = "${config.home.homeDirectory}/.local/bin";
+        XDG_DATA_HOME = "${config.home.homeDirectory}/.local/share";
 
         PATH = "${XDG_BIN_HOME}:\${PATH}";
       };

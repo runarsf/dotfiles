@@ -1,5 +1,8 @@
-{ config, lib, pkgs, ... }:
-let configPath = ../. + builtins.toPath "/${config.home.username}/config/easyeffects";
+{ lib, ... }:
+
+# let configPath = ../. + builtins.toPath "/easyeffects";
+let configPath = ./config;
+
 in {
   services.easyeffects.enable = true;
 
