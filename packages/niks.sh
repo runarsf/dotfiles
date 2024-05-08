@@ -22,6 +22,15 @@ while test "${#}" -gt "0"; do
     os-test)
       printf '\nBuild success! Remember to switch if everything looks good ;⁾\n'
       printf '$ nh os switch\n'
+      ;;
+    home-switch)
+      generations="$(home-manager generations | wc -l)"
+      if test "${generations}" -gt "10"; then
+        printf '\nYou currently have %s generations, consider cleaning them up:\n' "${generations}"
+        printf '$ nh clean all --keep=5\n'
+        printf 'OR\n'
+        printf '$ nix-collect-garbage -d\n'
+      fi;;
   esac
 
   shift
