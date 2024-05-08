@@ -7,17 +7,19 @@
     })
   ];
 
-  home.packages = with pkgs; [ neovim ];
 
-  home = {
+  home = let
+    nvim = "${pkgs.neovim}/bin/nvim";
+  in {
+    packages = with pkgs; [ neovim ];
     sessionVariables = {
-      EDITOR = "nvim";
-      GIT_EDITOR = "nvim";
-      VISUAL = "nvim";
-      DIFFPROG = "nvim -d";
-      MANPAGER = "nvim +Man!";
+      EDITOR = "${nvim}";
+      GIT_EDITOR = "${nvim}";
+      VISUAL = "${nvim}";
+      DIFFPROG = "${nvim} -d";
+      MANPAGER = "${nvim} +Man!";
       MANWIDTH = 999;
     };
-    shellAliases.vim = "${pkgs.neovim}/bin/nvim";
+    shellAliases.vim = "${nvim}";
   };
 }

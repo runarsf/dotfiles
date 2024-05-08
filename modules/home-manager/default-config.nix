@@ -1,4 +1,4 @@
-{ config, outputs, name, system, hostname, stateVersion, osConfig, ... }:
+{ pkgs, config, outputs, name, system, hostname, stateVersion, osConfig, ... }:
 
 with outputs.lib;
 
@@ -16,6 +16,8 @@ mkFor system hostname {
 
         PATH = "${XDG_BIN_HOME}:\${PATH}";
       };
+
+      packages = with pkgs; [ niks ];
     };
 
     programs = {

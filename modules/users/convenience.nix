@@ -3,12 +3,42 @@
 {
   programs.fzf.enable = true;
 
+  nixos = {
+    programs.nix-ld.enable = true;
+    programs.nix-ld.libraries = with pkgs; [
+      ell
+      xorg.libpthreadstubs
+      fuse
+      xorg.libX11
+      fontconfig
+      freetype
+      expat
+      libdrm
+      xorg.libxcb
+      alsa-lib
+      e2fsprogs
+      libgpg-error
+      nss
+      sane-backends
+      nspr
+      zlib
+      libglvnd
+      qt5.qtbase
+      qt5.qtsvg
+      qt5.qtdeclarative
+      qt5.qtwayland
+      qt6.qt5compat
+      stdenv.cc.cc
+    ];
+  };
+
   home = {
     packages = with pkgs; [
       bat
       sad
       gay
       blahaj
+      krabby
       btop
       yt-dlp
       appimage-run

@@ -24,6 +24,10 @@
           };
         };
       })
+
+      (_: prev: {
+        niks = import ../../packages/niks.nix { pkgs = prev; };
+      })
     ];
   };
 }

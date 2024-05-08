@@ -37,11 +37,6 @@
         # "darvid/zsh-poetry"
       ];
     };
-    initExtraFirst = ''
-      # See categorized startup times: zprof
-      # See total startup delay: time zsh -i -c exit
-      zmodload zsh/zprof
-    '';
     initExtraBeforeCompInit = ''
       autoload -Uz vcs_info
       vcs_info 'prompt'
@@ -67,11 +62,12 @@
 
       wim () { set -o nounset; set -o errexit; ''${EDITOR} "$(which ''${1:?No file selected...})" ''${@:2} }
       magic-enter-cmd () {
-        if command git rev-parse --is-inside-work-tree &>/dev/null; then
-           printf 'git -c color.ui=always status -sb --show-stash --ignore-submodules'
-        else
-           printf 'ls'
-        fi
+        # if command git rev-parse --is-inside-work-tree &>/dev/null; then
+        #    printf 'git -c color.ui=always status -sb --show-stash --ignore-submodules'
+        # else
+        #    printf 'ls'
+        # fi
+        print '${pkgs.krabby}/bin/krabby random | tail -n+2'
       }
     '';
     prezto = {

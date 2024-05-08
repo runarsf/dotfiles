@@ -101,6 +101,10 @@ in {
     scripts = {};
   };
 
+  # TODO Scratchpad binds:
+  #  M-n   - Toggle scratchpad ws containing all scratchpads, spawning zsh-scratch if not running
+  #  M-S-n - Spawn zsh-scrath
+  #  M-S-p - Spawn xonsh-scratch
   xdg.configFile."hypr/pyprland.json".text = builtins.toJSON {
     pyprland.plugins = [ "scratchpads" ];
     scratchpads = {
@@ -111,7 +115,7 @@ in {
       };
       math = {
         command =
-          "${config.programs.kitty.package}/bin/kitty -o font_size=16 --class math-scratchpad --title math-scratchpad zsh -c python";
+          "${config.programs.kitty.package}/bin/kitty -o font_size=16 --class math-scratchpad --title math-scratchpad ${pkgs.xonsh}/bin/xonsh";
         hide = false;
       };
     };
@@ -315,7 +319,8 @@ in {
 
         "float, class:^(.*)(scratchpad)$"
         "workspace special silent, class:^(.*)(scratchpad)$"
-        "size 60% 65%, class:^(.*)(scratchpad)$"
+        "size 60% 65%, class:^(scratchpad)$"
+        "size 50% 55%, class:^(math-scratchpad)$"
         "center, class:^(.*)(scratchpad)$"
 
         "noborder, fullscreen:1"

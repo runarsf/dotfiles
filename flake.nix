@@ -68,6 +68,11 @@
         inherit (inputs.self) outputs;
       };
 
+      packages = lib.forEachSystem systems (pkgs: rec {
+        niks = import ./packages/niks.nix { inherit pkgs; };
+        default = niks;
+      });
+
       nixosConfigurations.runix = lib.mkHost {
         system = "x86_64-linux";
         hostname = "runix";

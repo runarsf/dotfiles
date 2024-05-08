@@ -1,8 +1,6 @@
 { outputs, ... }:
 
 {
-  imports = [ ./fonts.nix ];
-
   programs.starship = {
     enable = true;
 
@@ -24,13 +22,21 @@
       add_newline = false;
 
       character = {
-        error_symbol = "[¬](bold red)";
+        # error_symbol = "[¬](bold red)";
+        error_symbol = "[×](bold red)";
         success_symbol = "[»](bold green)";
         vimcmd_symbol = "[«](bold yellow)";
         vimcmd_visual_symbol = "[«](bold cyan)";
         vimcmd_replace_symbol = "[«](bold purple)";
         vimcmd_replace_one_symbol = "[«](bold purple)";
       };
+      # TODO Add xonsh symbol to the symbols in character
+      # env_var.XONSH_VERSION = {
+      #    symbol = "@";
+      #    format = "$symbol[$env_value]($style) ";
+      #    variable = "XONSH_VERSION";
+      #    default = "";
+      # };
 
       username = {
         format = "[$user]($style)";
@@ -57,6 +63,10 @@
       directory = {
         format = "[$path]($style)([:$read_only]($read_only_style))";
         truncation_length = 2;
+      };
+      shell = {
+        zsh_indicator = "";
+        xonsh_indicator = "@";
       };
 
       git_branch = {

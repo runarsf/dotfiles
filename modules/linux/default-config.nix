@@ -16,7 +16,7 @@ with outputs.lib;
     variant = mkDefault "legacy";
   };
 
-  environment.systemPackages = with pkgs; [ vim git wget curl ];
+  environment.systemPackages = with pkgs; [ vim git wget curl niks ];
 
   nix.gc = {
     automatic = mkDefault true;
