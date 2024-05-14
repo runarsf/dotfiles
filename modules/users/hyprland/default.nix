@@ -60,7 +60,7 @@ in {
     qt6.qtwayland
     wev
     swww
-    waypaper
+    unstable.waypaper
     jq
     sway-audio-idle-inhibit
     gnome.seahorse
@@ -142,6 +142,7 @@ in {
         "${pkgs.pyprland}/bin/pypr"
         "${pkgs.sway-audio-idle-inhibit}/bin/sway-audio-idle-inhibit"
         "${pkgs.swaynotificationcenter}/bin/swaync"
+        "${./. + builtins.toPath "/bin/monocle.sh"}"
       ];
       exec = [
         "${pkgs.swww}/bin/swww kill; ${pkgs.swww}/bin/swww query || ${pkgs.swww}/bin/swww init"
@@ -236,7 +237,6 @@ in {
         "${mod} ALT, F, workspaceopt, allfloat"
         "${mod}, F, fullscreen, 0"
         "${mod}, space, fullscreen, 1"
-        "${mod} SHIFT, space, fullscreen, 1"
         "${mod}, D, exec, ${pkgs.wofi}/bin/wofi --show drun"
         "${mod}, A, exec, ${./. + builtins.toPath "/bin/hypr-pin"}"
         "ALT, P, exec, hyprshot capture region --copy"
@@ -254,8 +254,8 @@ in {
         "${mod}, up, movecursortocorner, 2"
         "${mod}, down, movecursortocorner, 2"
 
-        "${mod} SHIFT, space, exec, ${./. + builtins.toPath "/bin/hypr-layouts"}"
         "${mod} SHIFT, Return, layoutmsg, swapwithmaster"
+        "${mod} SHIFT, space, layoutmsg, orientationcycle left center"
         "${mod}, bar, layoutmsg, orientationcycle left right"
 
         "${mod}, X, exec, ${lock}"
@@ -316,6 +316,12 @@ in {
         "noanim,class:^(xwaylandvideobridge)$"
         "nofocus,class:^(xwaylandvideobridge)$"
         "noinitialfocus,class:^(xwaylandvideobridge)$"
+
+        "float, title:^(oneko)$"
+        "noblur, title:^(oneko)$"
+        "nofocus, title:^(oneko)$"
+        "noshadow, title:^(oneko)$"
+        "noborder, title:^(oneko)$"
 
         "float, class:^(.*)(scratchpad)$"
         "workspace special silent, class:^(.*)(scratchpad)$"

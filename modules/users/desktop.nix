@@ -13,7 +13,10 @@
     qalculate-gtk
     spotify
     vlc
+    piper
   ];
+
+  nixos.services.ratbagd.enable = true;
 
   services.mpd = {
     enable = true;

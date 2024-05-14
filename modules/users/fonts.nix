@@ -2,6 +2,8 @@
 
 {
   nixpkgs.overlays = [
+    # TODO sf-mono font https://gist.github.com/robbins/dccf1238e971973a6a963b04c486c099
+    #  https://github.com/johnae/nixos-config/blob/master/overlays/packages.nix
     (_: prev: {
       apple-fonts = import ./apple-fonts.nix {
         inherit (prev) stdenv fetchurl p7zip;

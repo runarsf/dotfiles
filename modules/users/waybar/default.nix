@@ -37,8 +37,9 @@
         "hyprland/workspaces" = {
           format = "{icon}";
           format-window-separator = " ";
-          persistent-workspaces."*" = 5;
+          # persistent-workspaces."*" = 5;
           format-icons.default = "";
+          all-outputs = true;
           # active = "";
           # empty = "";
         };
@@ -106,7 +107,7 @@
         network = {
           format = "⚠${i} Disabled";
           format-wifi = "${i} {essid}";
-          format-ethernet = "${i} {ifname}: {ipaddr}/{cidr}";
+          format-ethernet = "${i} {ipaddr}";
           format-disconnected = "⚠${i} Disconnected";
           on-click = "${pkgs.networkmanagerapplet}/bin/nm-connection-editor";
         };

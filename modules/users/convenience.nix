@@ -39,6 +39,7 @@
       gay
       blahaj
       krabby
+      socat
       btop
       yt-dlp
       appimage-run

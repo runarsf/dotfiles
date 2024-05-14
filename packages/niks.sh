@@ -11,6 +11,7 @@ COMMAND="${1}"
 while test "${#}" -gt "0"; do
   case "${COMMAND}-${1}" in
     os-switch)
+      # Only attempt if sudo is already cached
       if sudo -n true 2>/dev/null; then
         generations="$(sudo nix-env --list-generations --profile /nix/var/nix/profiles/system | wc -l)"
         if test "${generations}" -gt "10"; then
@@ -21,8 +22,7 @@ while test "${#}" -gt "0"; do
       fi;;
     os-test)
       printf '\nBuild success! Remember to switch if everything looks good ;⁾\n'
-      printf '$ nh os switch\n'
-      ;;
+      printf '$ nh os switch\n';;
     home-switch)
       generations="$(home-manager generations | wc -l)"
       if test "${generations}" -gt "10"; then
