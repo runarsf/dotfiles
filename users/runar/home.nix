@@ -68,6 +68,7 @@ outputs.lib.mkFor system hostname {
         ../../modules/users/kitty # TODO isDesktop
         ../../modules/users/mullvad.nix # TODO isDesktop
         ../../modules/users/xonsh.nix
+        ../../modules/users/gnome.nix
       ];
       home.packages = with pkgs.unstable; [
         obs-studio

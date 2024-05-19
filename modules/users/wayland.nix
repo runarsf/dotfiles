@@ -13,11 +13,11 @@
 
   # FIXME "Existing file '/home/runar/.config/mimeapps.list' is in the way ..."
   #  https://discourse.nixos.org/t/home-manager-and-the-mimeapps-list-file-on-plasma-kde-desktops/37694/4
-  xdg = {
-    mimeApps.enable = true;
-    portal = {
-      enable = true;
-      extraPortals = with pkgs; [ xdg-desktop-portal-wlr xdg-desktop-portal-gtk ];
-    };
-  };
+  # xdg = {
+  #   mimeApps.enable = true;
+  #   portal = {
+  #     enable = true;
+  #     extraPortals = with pkgs; [ xdg-desktop-portal-wlr xdg-desktop-portal-gtk ];
+  #   };
+  # };
 }

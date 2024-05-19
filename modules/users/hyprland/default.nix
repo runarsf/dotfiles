@@ -24,9 +24,9 @@ in {
         };
       };
     };
-    xdg.portal.extraPortals = with pkgs; [ xdg-desktop-portal-hyprland xdg-desktop-portal-gtk ];
+    xdg.portal.extraPortals = with pkgs; [ xdg-desktop-portal-hyprland ]; # xdg-desktop-portal-gtk ];
   };
-  xdg.portal.configPackages = with pkgs; [ xdg-desktop-portal-hyprland xdg-desktop-portal-gtk ];
+  xdg.portal.configPackages = with pkgs; [ xdg-desktop-portal-hyprland ]; # xdg-desktop-portal-gtk ];
 
   nix.settings = {
     extra-substituters = [ "https://hyprland.cachix.org" ];
@@ -244,15 +244,10 @@ in {
 
         "${mod} SHIFT, TAB, centerwindow"
 
-        "${mod}, left, movefocus, l"
-        "${mod}, right, movefocus, r"
-        "${mod}, up, movefocus, u"
-        "${mod}, down, movefocus, d"
-
-        "${mod}, left, movecursortocorner, 2"
-        "${mod}, right, movecursortocorner, 2"
-        "${mod}, up, movecursortocorner, 2"
-        "${mod}, down, movecursortocorner, 2"
+        "${mod}, left, exec, ${./. + builtins.toPath "/bin/movefocus.sh"} l"
+        "${mod}, right, exec, ${./. + builtins.toPath "/bin/movefocus.sh"} r"
+        "${mod}, up, exec, ${./. + builtins.toPath "/bin/movefocus.sh"} u"
+        "${mod}, down, exec, ${./. + builtins.toPath "/bin/movefocus.sh"} d"
 
         "${mod} SHIFT, Return, layoutmsg, swapwithmaster"
         "${mod} SHIFT, space, layoutmsg, orientationcycle left center"
