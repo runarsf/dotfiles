@@ -37,7 +37,8 @@ handle () {
 
     closewindow)
       clients="$(hyprctl -j activeworkspace | jq -r '.windows')"
-      if test "${monocle}" = "true" -a "${clients}" -gt "1"; then
+      fullscreen="$(hyprctl -j activewindow | jq -r '.fullscreen')"
+      if test "${monocle}" = "true" -a "${clients}" -gt "1" -a "${fullscreen}" != "true"; then
         hyprctl dispatch fullscreen 1 >/dev/null
       fi
       ;;
