@@ -25,9 +25,9 @@
         };
       })
 
-      (_: prev: {
-        niks = import ../../packages/niks.nix { pkgs = prev; };
-      })
+      (_: prev:
+        import ../../packages { pkgs = prev.pkgs.unstable; }
+      )
     ];
   };
 }

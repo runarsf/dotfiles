@@ -21,6 +21,7 @@ in {
     ../../modules/linux/docker.nix
     ../../modules/linux/podman.nix
     ../../modules/linux/firewall.nix
+    # TODODhttps://github.com/glanceapp/glance
   ];
 
   system.stateVersion = "23.11";

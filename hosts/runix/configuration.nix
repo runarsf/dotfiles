@@ -17,6 +17,7 @@
   boot.loader.efi.canTouchEfiVariables = true;
 
   time.timeZone = "Europe/Oslo";
+  services.hardware.bolt.enable = true;
 
   i18n.defaultLocale = "en_GB.UTF-8";
   i18n.extraLocaleSettings = {

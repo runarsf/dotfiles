@@ -75,6 +75,14 @@
         print '${pkgs.krabby}/bin/krabby random | tail -n+2'
       }
 
+      __git_files () {
+        _wanted files expl 'local files' _files
+      }
+
+
+      bindkey '^G' per-directory-history-toggle-history
+      bindkey -M vicmd '^G' per-directory-history-toggle-history
+
       autopair-init
     '';
     prezto = {

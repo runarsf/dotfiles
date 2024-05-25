@@ -17,7 +17,7 @@ handle () {
 
   case "${event}" in
     focusedmon|workspacev2|fullscreen|openwindow)
-      fullscreen="$(hyprctl -j activewindow | jq -r '(.fullscreen|tostring) + "-" + (.fullscreenMode|tostring)')"
+      fullscreen="$(hyprctl -j activeworkspace | jq -r '.hasfullscreen')"
       if test "${fullscreen}" = "true-1"; then
         monocle="true"
       else

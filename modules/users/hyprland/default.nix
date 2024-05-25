@@ -3,7 +3,8 @@
 # TODO https://github.com/CMurtagh-LGTM/grab-workspace
 # TODO https://github.com/zakk4223/hyprRiver
 
-let lock = "${pkgs.hyprlock}/bin/hyprlock";
+let
+  lock = "${pkgs.hyprlock}/bin/hyprlock";
 
 in {
   imports = [
@@ -14,28 +15,31 @@ in {
     ../waybar
   ];
 
-  nixos = {
-    users.users.${name}.extraGroups = [ "video" ];
-    services.greetd = {
-      settings = {
-        default_session = {
-          command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --remember --cmd Hyprland";
-          user = name;
-        };
-      };
-    };
-    xdg.portal.extraPortals = with pkgs; [ xdg-desktop-portal-hyprland ]; # xdg-desktop-portal-gtk ];
-  };
+  # nixos = {
+  #   users.users."${name}".extraGroups = [ "video" ];
+  #   services.greetd = {
+  #     settings = {
+  #       default_session = {
+  #         # command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --remember --remember-session";
+  #         user = name;
+  #       };
+  #     };
+  #   };
+  # };
+
+  nixos.xdg.portal.extraPortals = with pkgs; [ xdg-desktop-portal-hyprland ]; # xdg-desktop-portal-gtk ];
   xdg.portal.configPackages = with pkgs; [ xdg-desktop-portal-hyprland ]; # xdg-desktop-portal-gtk ];
 
-  nix.settings = {
-    extra-substituters = [ "https://hyprland.cachix.org" ];
-    extra-trusted-public-keys = [ "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc=" ];
-    extra-trusted-users = [ name ];
-  };
+  nixos.programs.hyprland.enable = true;
+
+  # nixos.nix.settings = {
+  #   extra-substituters = [ "https://hyprland.cachix.org" ];
+  #   extra-trusted-public-keys = [ "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc=" ];
+  #   extra-trusted-users = [ name ];
+  # };
 
   home.packages = with pkgs; [
-    pyprland
+    unstable.pyprland
     master.nwg-displays
     master.nwg-look
     wlr-randr
@@ -83,7 +87,6 @@ in {
     grim
     ffmpeg
   ];
-  # FIXME hyprctl setcursor GoogleDot-Black 24
   home.sessionVariables = {
     LIBSEAT_BACKEND = "logind";
     XDG_SESSION_TYPE = "wayland";
@@ -142,7 +145,7 @@ in {
         "${pkgs.pyprland}/bin/pypr"
         "${pkgs.sway-audio-idle-inhibit}/bin/sway-audio-idle-inhibit"
         "${pkgs.swaynotificationcenter}/bin/swaync"
-        "${./. + builtins.toPath "/bin/monocle.sh"}"
+        "${./. + /bin/monocle.sh}"
       ];
       exec = [
         "${pkgs.swww}/bin/swww kill; ${pkgs.swww}/bin/swww query || ${pkgs.swww}/bin/swww init"
@@ -238,29 +241,29 @@ in {
         "${mod}, F, fullscreen, 0"
         "${mod}, space, fullscreen, 1"
         "${mod}, D, exec, ${pkgs.wofi}/bin/wofi --show drun"
-        "${mod}, A, exec, ${./. + builtins.toPath "/bin/hypr-pin"}"
+        "${mod}, A, exec, ${./. + /bin/hypr-pin}"
         "ALT, P, exec, hyprshot capture region --copy"
         "${mod} SHIFT, N, exec, ${pkgs.swaynotificationcenter}/bin/swaync-client -t"
 
         "${mod} SHIFT, TAB, centerwindow"
 
-        "${mod}, left, exec, ${./. + builtins.toPath "/bin/movefocus.sh"} l"
-        "${mod}, right, exec, ${./. + builtins.toPath "/bin/movefocus.sh"} r"
-        "${mod}, up, exec, ${./. + builtins.toPath "/bin/movefocus.sh"} u"
-        "${mod}, down, exec, ${./. + builtins.toPath "/bin/movefocus.sh"} d"
+        "${mod}, left, exec, ${./. + /bin/movefocus.sh} l"
+        "${mod}, right, exec, ${./. + /bin/movefocus.sh} r"
+        "${mod}, up, exec, ${./. + /bin/movefocus.sh} u"
+        "${mod}, down, exec, ${./. + /bin/movefocus.sh} d"
 
         "${mod} SHIFT, Return, layoutmsg, swapwithmaster"
         "${mod} SHIFT, space, layoutmsg, orientationcycle left center"
         "${mod}, bar, layoutmsg, orientationcycle left right"
 
         "${mod}, X, exec, ${lock}"
-        # "${mod}, TAB, exec, ${./. + builtins.toPath "/bin/hypr-ws"} previous"
+        # "${mod}, TAB, exec, ${./. + /bin/hypr-ws} previous"
         "${mod}, TAB, workspace, previous"
 
         "${mod} SHIFT, R, exec, hyprctl reload"
         "${mod}, C, exec, ${pkgs.wl-color-picker}/bin/wl-color-picker"
 
-        "${mod} SHIFT, C, exec, ${./. + builtins.toPath "/bin/hypr-gamemode"}"
+        "${mod} SHIFT, C, exec, ${./. + /bin/hypr-gamemode}"
 
         "${mod}, mouse_down, workspace, e+1"
         "${mod}, mouse_up, workspace, e-1"
@@ -292,18 +295,18 @@ in {
         ", XF86MonBrightnessDown, exec, ${pkgs.brightnessctl}/bin/brightnessctl set 5%-"
       ];
       bindr = [
-        "${mod} CTRL, right, exec, ${./. + builtins.toPath "/bin/hypr-snap"}"
-        "${mod} CTRL, left, exec, ${./. + builtins.toPath "/bin/hypr-snap"}"
-        "${mod} CTRL, up, exec, ${./. + builtins.toPath "/bin/hypr-snap"}"
-        "${mod} CTRL, down, exec, ${./. + builtins.toPath "/bin/hypr-snap"}"
+        "${mod} CTRL, right, exec, ${./. + /bin/hypr-snap}"
+        "${mod} CTRL, left, exec, ${./. + /bin/hypr-snap}"
+        "${mod} CTRL, up, exec, ${./. + /bin/hypr-snap}"
+        "${mod} CTRL, down, exec, ${./. + /bin/hypr-snap}"
 
-        "${mod} SHIFT, right, exec, ${./. + builtins.toPath "/bin/hypr-snap"}"
-        "${mod} SHIFT, left, exec, ${./. + builtins.toPath "/bin/hypr-snap"}"
-        "${mod} SHIFT, up, exec, ${./. + builtins.toPath "/bin/hypr-snap"}"
-        "${mod} SHIFT, down, exec, ${./. + builtins.toPath "/bin/hypr-snap"}"
+        "${mod} SHIFT, right, exec, ${./. + /bin/hypr-snap}"
+        "${mod} SHIFT, left, exec, ${./. + /bin/hypr-snap}"
+        "${mod} SHIFT, up, exec, ${./. + /bin/hypr-snap}"
+        "${mod} SHIFT, down, exec, ${./. + /bin/hypr-snap}"
 
-        "${mod}, mouse:272, exec, ${./. + builtins.toPath "/bin/hypr-snap"}"
-        "${mod}, mouse:273, exec, ${./. + builtins.toPath "/bin/hypr-snap"}"
+        "${mod}, mouse:272, exec, ${./. + /bin/hypr-snap}"
+        "${mod}, mouse:273, exec, ${./. + /bin/hypr-snap}"
       ];
       bindm = [ "${mod}, mouse:272, movewindow" "${mod}, mouse:273, resizewindow" ];
       windowrulev2 = [
@@ -349,7 +352,9 @@ in {
         "float, class:(org.kde.polkit-kde-authentication-agent-1)"
         "float, class:(seahorse)"
         "float, class:^(firefox)(.*)$, title:(Picture-in-Picture)"
-        "pin, class:^(firefox)(.*)$, title:(Picture-in-Picture)"
+        "workspace 2, class:^(firefox)(.*)$, title:(Picture-in-Picture)"
+        "dimaround, class:^(firefox)(.*)$, title:(Picture-in-Picture)"
+        "keepaspectratio, class:^(firefox)(.*)$, title:(Picture-in-Picture)"
 
         # Discord has initialClass ' - Discord'
         # Discord popout has initialClass 'Discord Popout'
@@ -377,7 +382,6 @@ in {
         "stayfocused, class:(gcr-prompter)"
       ];
     };
-          # bind = ${mod}, ${ws}, exec, ${./. + builtins.toPath "/bin/hypr-ws"} ${toString (x + 1)}
     extraConfig = ''
       # Passthrough mode (e.g. for VNC)
       bind=${mod} SHIFT,P,submap,passthrough

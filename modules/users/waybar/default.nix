@@ -1,7 +1,12 @@
 { pkgs, ... }:
 
 {
-  home.packages = with pkgs; [ upower playerctl gobject-introspection ];
+  home.packages = with pkgs; [
+    upower
+    playerctl
+    gobject-introspection
+    unstable.hyprland-autoname-workspaces
+  ];
 
   programs.waybar = {
     enable = true;
@@ -10,8 +15,7 @@
     style = ''
       ${builtins.readFile ./style.css}
     '';
-    settings = let
-      i = "&#8201;";
+    settings = let i = "&#8201;";
     in {
       mainBar = {
         height = 30;
@@ -20,7 +24,8 @@
         margin = "10 10 0 10";
         reload_style_on_change = true;
 
-        modules-left = [ "hyprland/workspaces" "wlr/taskbar" "tray" ];
+        modules-left =
+          [ "hyprland/workspaces" "wlr/taskbar" "tray" "custom/layout" ];
         modules-center = [ ];
         modules-right = [
           "custom/music"
@@ -39,7 +44,7 @@
           format-window-separator = " ";
           # persistent-workspaces."*" = 5;
           format-icons.default = "";
-          all-outputs = true;
+          all-outputs = false;
           # active = "";
           # empty = "";
         };
@@ -92,7 +97,8 @@
         backlight = {
           format = "{icon}${i}";
           tooltip = "{percent: >3}%";
-          format-icons = [ "" "" "" "" "" "" "" "" "" "" "" "" "" ];
+          format-icons =
+            [ "" "" "" "" "" "" "" "" "" "" "" "" "" ];
         };
         battery = {
           states = {
@@ -125,9 +131,16 @@
             car = "";
             default = [ "" "" ];
           };
-          on-click = "${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_SINK@ toggle";
-          on-click-right = "${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_SOURCE@ toggle";
+          on-click =
+            "${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_SINK@ toggle";
+          on-click-right =
+            "${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_SOURCE@ toggle";
           on-click-middle = "${pkgs.pavucontrol}/bin/pavucontrol";
+        };
+        "custom/layout" = {
+          format = "{}";
+          tooltip = false;
+          exec = "${./. + /bin/hypr-layout.sh}";
         };
         "custom/music" = {
           format = "{icon}${i}";
@@ -143,7 +156,7 @@
           on-click-middle = "${pkgs.playerctl}/bin/playerctl play-pause";
           on-click-right = "${pkgs.playerctl}/bin/playerctl next";
           interval = 10;
-          exec = "${./. + builtins.toPath "/music.sh"}";
+          exec = "${./. + /bin/music.sh}";
         };
 
       };

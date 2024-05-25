@@ -55,9 +55,9 @@ outputs.lib.mkFor system hostname {
       # TODO isDesktop
       imports = [
         #   (import ../../modules/users/red.nix { inherit inputs pkgs; })
-        ../../modules/users/adb.nix
+        ../../modules/users/android.nix
         ../../modules/users/desktop.nix
-        ../../modules/users/gaming.nix
+        # ../../modules/users/gaming.nix
         ../../modules/users/hyprland
         ../../modules/users/eww
         ../../modules/users/firefox
@@ -73,14 +73,42 @@ outputs.lib.mkFor system hostname {
       home.packages = with pkgs.unstable; [
         obs-studio
         stremio
+        chromium
+
+        qmk
 
         jetbrains.clion
         jetbrains.pycharm-professional
-
-        graphviz
-        pkgs.master.warp-terminal
       ];
-      nixos.virtualisation.waydroid.enable = true;
+      # nixos.services.udev.packages = with pkgs; [ via ];
+        # for VIA
+        # KERNEL=="hidraw*", SUBSYSTEM=="hidraw", ATTRS{serial}=="*vial:f64c2b3c*", MODE="0660", GROUP="users", TAG+="uaccess", TAG+="udev-acl"
+        nixos.services.udev.packages = let
+          qmk-rules = pkgs.writeTextFile {
+            name = "50-qmk.rules";
+            text = builtins.readFile ./qmk.rules;
+            destination = "/etc/udev/rules.d/50-qmk.rules";
+          };
+        in [ qmk-rules ];
+      nixos.services.udev.extraRules = builtins.readFile ./qmk.rules;
+      # nixos.services.udev.extraRules = ''
+      #   # For ATMega32u4 keyboards like the viterbi
+      #   # Atmel ATMega32U4
+      #   SUBSYSTEMS=="usb", ATTRS{idVendor}=="03eb", ATTRS{idProduct}=="2ff4", TAG+="uaccess"
+      #   # Atmel USBKEY AT90USB1287
+      #   SUBSYSTEMS=="usb", ATTRS{idVendor}=="03eb", ATTRS{idProduct}=="2ffb", TAG+="uaccess"
+      #   # Atmel ATMega32U2
+      #   SUBSYSTEMS=="usb", ATTRS{idVendor}=="03eb", ATTRS{idProduct}=="2ff0", TAG+="uaccess"
+      #   # Atmel ATMega328p / USBAspLoader
+      #   SUBSYSTEMS=="usb", ATTRS{idVendor}=="16c0", ATTRS{idProduct}=="05dc", TAG+="uaccess"
+
+      #   # For OLKB keyboards
+      #   # stm32duino
+      #   SUBSYSTEMS=="usb", ATTRS{idVendor}=="1eaf", ATTRS{idProduct}=="0003", MODE:="0666"
+      #   # Generic stm32
+      #   SUBSYSTEMS=="usb", ATTRS{idVendor}=="0483", ATTRS{idProduct}=="df11", MODE:="0666"
+      # '';
+      # nixos.virtualisation.waydroid.enable = true;
       #   programs.git = {
       #     userName = "Runar Fredagsvik";
       #     userEmail = "i@runar.ch";

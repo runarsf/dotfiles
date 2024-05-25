@@ -3,6 +3,7 @@
 {
   imports = [
     ./discord.nix
+    ./signal.nix
     ./xdg.nix
     # ./easyeffects
   ];

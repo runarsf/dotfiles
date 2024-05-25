@@ -8,5 +8,7 @@
     "electron-25.9.0"
   ];
 
+  programs.zathura.enable = true;
+
   home.packages = with pkgs.unstable; [ obsidian libreoffice-fresh typst pandoc poppler_utils sc-im anki ];
 }
