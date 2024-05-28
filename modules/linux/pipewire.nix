@@ -27,11 +27,11 @@
       wireplumber.enable = true;
 
       extraConfig.pipewire = {
-        "90-sample-rates" = {
-          context.properties = {
-            default.clock.allowed-rates = [ 44100 48000 ];
-          };
-        };
+        # "90-sample-rates" = {
+        #   context.properties = {
+        #     default.clock.allowed-rates = [ 44100 48000 ];
+        #   };
+        # };
         "92-low-latency" = lib.mkIf config.lowLatency {
           context.properties = {
             default.clock.rate = 48000;

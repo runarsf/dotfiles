@@ -56,8 +56,7 @@ outputs.lib.mkFor system hostname {
       imports = [
         #   (import ../../modules/users/red.nix { inherit inputs pkgs; })
         ../../modules/users/android.nix
-        ../../modules/users/redshift.nix
-        ../../modules/users/easyeffects
+        # ../../modules/users/easyeffects
         ../../modules/users/desktop.nix
         # ../../modules/users/gaming.nix
         ../../modules/users/hyprland
