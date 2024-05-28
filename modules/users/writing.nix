@@ -8,7 +8,18 @@
     "electron-25.9.0"
   ];
 
-  programs.zathura.enable = true;
+  programs.zathura = {
+    enable = true;
+    package = pkgs.zathura;
+    options = {
+      recolor = true;
+    };
+    mappings = {
+      "<C-i>" = "recolor";
+    };
+  };
+
+  nixpkgs.config.zathura.useMupdf = false;
 
   home.packages = with pkgs.unstable; [ obsidian libreoffice-fresh typst pandoc poppler_utils sc-im anki ];
 }

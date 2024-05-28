@@ -165,6 +165,8 @@ in {
         kb_options = "ctrl:nocaps";
 
         numlock_by_default = true;
+
+        sensitivity = "-0.4";
         accel_profile = "flat";
 
         follow_mouse = 1;
@@ -175,8 +177,6 @@ in {
           drag_lock = false;
           tap-and-drag = true;
         };
-
-        sensitivity = "0.6";
       };
       xwayland = { force_zero_scaling = true; };
       decoration = {
@@ -219,6 +219,7 @@ in {
       master = {
         new_is_master = true;
         allow_small_split = true;
+        always_center_master = true;
       };
       gestures = { workspace_swipe = false; };
       # "device:epic mouse V1" = { sensitivity = -0.5; };
