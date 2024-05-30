@@ -908,11 +908,11 @@
         "utils": "utils"
       },
       "locked": {
-        "lastModified": 1716905297,
-        "narHash": "sha256-+5nih9GGe8E4oqG5dKYm+JgwuBAcuz86u1SnJy42eyo=",
+        "lastModified": 1716992213,
+        "narHash": "sha256-8lN0HawYpj3XOZcdYRP2YSerNew7xk04cc/kihZvcfA=",
         "owner": "runarsf",
         "repo": "nixvim",
-        "rev": "b986b95b58597bec5f078bff45cb6351dd0ad885",
+        "rev": "860d14993ac23529538009c7c04f4cdedd13a137",
         "type": "github"
       },
       "original": {
