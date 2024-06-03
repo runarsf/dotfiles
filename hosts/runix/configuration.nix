@@ -11,6 +11,7 @@
     ../../modules/linux/firewall.nix
     ../../modules/linux/printing.nix
     ../../modules/linux/pipewire.nix
+    # ../../modules/linux/stylix.nix
     # ../../modules/linux/virtualisation.nix
   ];
   boot.loader.systemd-boot.enable = true;
@@ -57,5 +58,5 @@
 
   services.xserver.libinput.enable = true;
 
-  system.stateVersion = "23.11";
+  system.stateVersion = "24.05";
 }

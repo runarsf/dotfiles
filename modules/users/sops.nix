@@ -1,6 +1,7 @@
 { config, inputs, pkgs, keys ? [ ], ... }:
 
 {
+  # TODO Use system-wide sops module, look in nginx config
   imports = [ inputs.sops-nix.homeManagerModules.sops ];
 
   # home.activation.setupEtc = config.lib.dag.entryAfter [ "writeBoundary" ] ''

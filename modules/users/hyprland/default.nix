@@ -182,6 +182,8 @@ in {
         follow_mouse = 1;
         mouse_refocus = false;
 
+        sensitivity = 0.6;
+
         touchpad = {
           natural_scroll = true;
           drag_lock = false;
@@ -227,12 +229,11 @@ in {
         force_split = 2;
       };
       master = {
-        new_is_master = true;
+        new_is_master = false;
         allow_small_split = true;
         always_center_master = true;
       };
       gestures = { workspace_swipe = false; };
-      # "device:epic mouse V1" = { sensitivity = -0.5; };
       misc = {
         disable_hyprland_logo = true;
         enable_swallow = true;
