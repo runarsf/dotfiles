@@ -43,6 +43,7 @@
       btop
       yt-dlp
       appimage-run
+      nmap
       eza
       tldr
       yq
@@ -57,6 +58,7 @@
       openssl
       unzip
       ripgrep
+      fd
       expect
       imagemagick
     ];

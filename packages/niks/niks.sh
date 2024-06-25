@@ -16,8 +16,9 @@ while test "${#}" -gt "0"; do
       if sudo -n true 2>/dev/null; then
         generations="$(sudo nix-env --list-generations --profile /nix/var/nix/profiles/system | wc -l)"
         if test "${generations}" -gt "10"; then
-          printf '\nYou currently have %s generations, consider cleaning them up:\n' "${generations}"
+          printf '\nYou currently have %s generations, consider cleaning up your system:\n' "${generations}"
           printf '$ sudo nix-collect-garbage -d\n'
+          printf '$ nix-collect-garbage -d\n'
           printf '$ %s os switch\n' "${bin}"
         fi
       fi;;
@@ -28,9 +29,8 @@ while test "${#}" -gt "0"; do
       generations="$(home-manager generations | wc -l)"
       if test "${generations}" -gt "10"; then
         printf '\n\033[1;33mYou currently have \033[0;31m%s generations\033[1;33m, consider cleaning them up:\n' "${generations}"
-        printf '$ %s clean all --keep=5\n' "${bin}"
-        printf '(or)\n'
-        printf '$ nix-collect-garbage -d\n'
+        printf '   $ %s clean all --keep=5\n' "${bin}"
+        printf 'or $ nix-collect-garbage -d\n'
       fi;;
   esac
 

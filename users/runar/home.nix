@@ -60,7 +60,7 @@ outputs.lib.mkFor system hostname {
         ../../modules/users/desktop.nix
         # ../../modules/users/gaming.nix
         ../../modules/users/hyprland
-        ../../modules/users/eww
+        # ../../modules/users/eww
         ../../modules/users/firefox
         ../../modules/users/vscode.nix
         ../../modules/users/development.nix
@@ -69,7 +69,6 @@ outputs.lib.mkFor system hostname {
         ../../modules/users/kitty # TODO isDesktop
         ../../modules/users/mullvad.nix # TODO isDesktop
         ../../modules/users/xonsh.nix
-        ../../modules/users/gnome.nix
       ];
       home.packages = with pkgs.unstable; [
         obs-studio
@@ -81,6 +80,7 @@ outputs.lib.mkFor system hostname {
 
         jetbrains.clion
         jetbrains.pycharm-professional
+        jetbrains.rider
       ];
       nixos.services.udev.packages =
         let

@@ -1,5 +1,7 @@
 { pkgs, ... }:
 
+# TODO languages = [ "python", "node", ... ]
+
 {
   imports = [
     ./nix.nix
@@ -8,23 +10,22 @@
     ./neovim.nix
   ];
 
+  home.sessionVariables = {
+    CHROME_EXECUTABLE = "${pkgs.chromium}/bin/chromium";
+  };
+
   home = {
     packages = with pkgs.unstable; [
-      helix
-      gnumake
-      just
-
       # JavaScript
       nodejs
+      nodePackages."@angular/cli"
       yarn
-      deno
 
       # Rust
       cargo
       rustc
-      # rustup
 
-      # C/C++
+      # C/C++/C#
       (with dotnetCorePackages; combinePackages [ sdk_6_0 sdk_7_0 sdk_8_0 ])
       cmake
       gcc
@@ -33,22 +34,27 @@
       ghc
       cabal-install
 
-      # Networking
-      nmap
+      # Flutter
+      unstable.flutter
+      graphite2
+      gtk3
 
       # Misc
       watchexec
-      gitui
+      gnumake
+      just
+
+      # Formatters & LSPs
+      prettierd
 
       # IDEs
       # TODO isDesktop
       # jetbrains.clion
       # jetbrains.pycharm-professional
-
-      # graphviz
-      # pkgs.master.warp-terminal
+      master.android-studio-full
     ];
   };
+  nixpkgs.config.android_sdk.accept_license = true;
 
   programs.java = {
     enable = true;

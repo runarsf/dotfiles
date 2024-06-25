@@ -275,9 +275,10 @@
         "media.block-autoplay-until-in-foreground" = false;
         "alerts.useSystemBackend" = true;
 
-        "browser.display.background_color" = "#2B2A33";
-        "browser.display.background_color.dark" = "#2B2A33";
-        "editor.background_color" = "#000000";
+        # While this works, it messes with unstyled background colors :(
+        # "browser.display.background_color" = "#2B2A33";
+        # "browser.display.background_color.dark" = "#2B2A33";
+        # "editor.background_color" = "#000000";
 
         "browser.tabs.drawInTitlebar" = true;
         "browser.tabs.inTitlebar" = 1;

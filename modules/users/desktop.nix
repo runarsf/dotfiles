@@ -3,8 +3,9 @@
 {
   imports = [
     ./discord.nix
-    ./signal.nix
+    # ./signal.nix
     ./xdg.nix
+    ./spotify.nix
     # ./easyeffects
   ];
 
@@ -12,7 +13,6 @@
     networkmanagerapplet
     bitwarden
     qalculate-gtk
-    spotify
     vlc
     piper
   ];

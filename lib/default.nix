@@ -20,5 +20,6 @@ in core.deepMerge [
     ./secrets.nix
     ./state.nix
     ./users.nix
+    ./utils.nix
   ] flake)
 ]

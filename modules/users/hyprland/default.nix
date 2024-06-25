@@ -28,7 +28,7 @@ in {
   # };
 
   nixos.xdg.portal.extraPortals = with pkgs; [ xdg-desktop-portal-hyprland ]; # xdg-desktop-portal-gtk ];
-  xdg.portal.configPackages = with pkgs; [ xdg-desktop-portal-hyprland ]; # xdg-desktop-portal-gtk ];
+  xdg.portal.configPackages = with pkgs; [ xdg-desktop-portal-hyprland  xdg-desktop-portal-gtk ];
 
   nixos.programs.hyprland.enable = true;
 
@@ -41,10 +41,9 @@ in {
   home.packages = with pkgs; [
     unstable.pyprland
     master.nwg-displays
-    master.nwg-look
     wlr-randr
     swaynotificationcenter
-    gtk3
+    unstable.gtk3
     polkit_gnome
     libnotify
     brightnessctl
@@ -113,7 +112,7 @@ in {
     scratchpads = {
       term = {
         command =
-          "${config.programs.kitty.package}/bin/kitty --class scratchpad --title scratchpad";
+          "${config.programs.kitty.package}/bin/kitty -o font_size=14 --class scratchpad --title scratchpad";
         hide = false;
       };
       math = {
@@ -182,7 +181,7 @@ in {
         follow_mouse = 1;
         mouse_refocus = false;
 
-        sensitivity = 0.6;
+        sensitivity = 0.5;
 
         touchpad = {
           natural_scroll = true;
@@ -229,7 +228,7 @@ in {
         force_split = 2;
       };
       master = {
-        new_is_master = false;
+        new_status = "inherit";
         allow_small_split = true;
         always_center_master = true;
       };
@@ -269,6 +268,7 @@ in {
         "${mod}, bar, layoutmsg, orientationcycle left right"
 
         "${mod}, X, exec, ${lock}"
+        "${mod}, L, exec, ${lock}"
         # "${mod}, TAB, exec, ${./. + /bin/hypr-ws} previous"
         "${mod}, TAB, workspace, previous"
 
@@ -307,6 +307,7 @@ in {
         ", XF86MonBrightnessDown, exec, ${pkgs.brightnessctl}/bin/brightnessctl set 5%-"
       ];
       bindr = [
+        # FIXMERhypr-snap, make it listen to changes instead
         "${mod} CTRL, right, exec, ${./. + /bin/hypr-snap}"
         "${mod} CTRL, left, exec, ${./. + /bin/hypr-snap}"
         "${mod} CTRL, up, exec, ${./. + /bin/hypr-snap}"
@@ -342,7 +343,8 @@ in {
         "noborder, fullscreen:1"
 
         "opacity 0.8 override,title:^(.*)(New Tab)(.*)$"
-        "opacity 0.8 override,title:^(Firefox)(.*)$"
+        "opacity 0.8 override,title:^(Mozilla Firefox)(.*)$"
+        "opacity 0.8 override,title:^(🦊 — Mozilla Firefox)$"
 
         "noinitialfocus,class:^jetbrains-(?!toolbox),floating:1"
 

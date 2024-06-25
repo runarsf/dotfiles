@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 let
   theme = "ayu-dark";
@@ -60,21 +60,9 @@ in {
     enable = true;
     package = pkgs.buildPackages.patched-kitty;
 
-    font = {
-      size = 12;
-      name = "JetBrainsMono Nerd Font";
-      package = pkgs.unstable.nerdfonts.override {
-        fonts = [ "JetBrainsMono" ];
-      };
-
-      # name = "undefined medium";
-      # package = pkgs.undefined-medium;
-    };
-
     keybindings = { };
 
     settings = {
-      background_opacity = "0.75";
       background_blur = 40;
 
       cursor_shape = "block";

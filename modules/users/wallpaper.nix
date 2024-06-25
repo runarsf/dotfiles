@@ -1,6 +1,7 @@
 { pkgs, outputs, config, ... }:
 
 {
+  # TODO Set wallpaper for other apps, like firefox homepage, lock screen
   options.wallpaper = outputs.lib.mkOption {
     default = "";
     type = outputs.lib.types.path;

@@ -2,7 +2,7 @@ _:
 
 {
   networking.firewall = {
-    enable = true;
+    enable = false; # ooo no good ca ca
     allowedTCPPorts = [ 80 443 ];
   };
 }

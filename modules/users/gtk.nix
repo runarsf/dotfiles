@@ -30,14 +30,14 @@
     #   name = "GoogleDot-Black";
     #   package = pkgs.google-cursor;
     # };
-    theme = {
-      name = "Catppuccin-Mocha-Compact-Sapphire-Dark";
-      package = pkgs.catppuccin-gtk.override {
-        accents = [ "sapphire" ];
-        size = "compact";
-        tweaks = [ "rimless" "black" ];
-        variant = "mocha";
-      };
-    };
+    # theme = {
+    #   name = "Catppuccin-Mocha-Compact-Sapphire-Dark";
+    #   package = pkgs.catppuccin-gtk.override {
+    #     accents = [ "sapphire" ];
+    #     size = "compact";
+    #     tweaks = [ "rimless" "black" ];
+    #     variant = "mocha";
+    #   };
+    # };
   };
 }

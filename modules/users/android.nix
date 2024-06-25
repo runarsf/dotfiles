@@ -1,6 +1,7 @@
 { pkgs, name, ... }:
 
 {
+  # TODO Make this a nixos module and just import as a nixos module instead?
   nixos = {
     programs.adb.enable = true;
     users.users."${name}".extraGroups = [ "adbusers" "plugdev" "kvm" ];

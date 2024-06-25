@@ -1,6 +1,8 @@
 { pkgs, inputs, ... }:
 
 {
+  # NOTE Stylix requires both nixos and home-manager to have the same stateVersion
+  # FIXME https://github.com/danth/stylix/issues/241
   imports = [
     inputs.stylix.nixosModules.stylix
   ];
