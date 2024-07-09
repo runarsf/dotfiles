@@ -1,29 +1,29 @@
 { outputs, config, pkgs, ... }:
 
 {
-  # Krisp: https://github.com/NixOS/nixpkgs/issues/195512
-
-  home.packages = with pkgs.master;
-    if (outputs.lib.isWayland config) then [ vesktop webcord ] else [ discord ];
+  # FIXME Discord uses x?
+  home.packages = with pkgs;
+    if (outputs.lib.isWayland config) then [ waycord vesktop ] else [ discord ];
 
   nixpkgs.overlays = [
-    (_: prev: {
+    (final: prev: {
       discord = prev.discord.override {
         withOpenASAR = true;
         withVencord = true;
       };
-      # vesktop = prev.symlinkJoin {
-      #   name = "vencorddesktop";
-      #   paths = [
-      #     (prev.writeShellScriptBin "asd" ''
-      #       exec ${pkgs.unstable.vesktop}/bin/vencorddesktop \
-      #         --enable-features=UseOzonePlatform \
-      #         --ozone-platform=wayland
-      #         $@
-      #     '')
-      #     prev.vesktop
-      #   ];
-      # };
+      waycord = prev.symlinkJoin {
+        name = "discord";
+        paths = [
+          (prev.writeShellScriptBin "discord" ''
+            exec ${final.discord}/bin/discord \
+              --enable-features=UseOzonePlatform,WaylandWindowDecorations \
+              --ozone-platform-hint=auto \
+              --ozone-platform=wayland \
+              "$@"
+          '')
+          final.discord
+        ];
+      };
     })
   ];
 }

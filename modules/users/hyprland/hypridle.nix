@@ -4,7 +4,7 @@
 let lock = "${pkgs.hyprlock}/bin/hyprlock";
 
 in {
-  home.packages = with pkgs.unstable; [ hypridle ];
+  services.hypridle.enable = true;
 
   wayland.windowManager.hyprland.settings.exec-once = [
     "${pkgs.hypridle}/bin/hypridle"

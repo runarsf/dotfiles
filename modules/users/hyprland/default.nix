@@ -1,7 +1,8 @@
-{ config, inputs, pkgs, name, system, ... }:
+{ config, inputs, outputs, pkgs, system, ... }:
 
 # TODO https://github.com/CMurtagh-LGTM/grab-workspace
 # TODO https://github.com/zakk4223/hyprRiver
+# TODO https://github.com/zakk4223/hyprWorkspaceLayouts
 
 let
   lock = "${pkgs.hyprlock}/bin/hyprlock";
@@ -15,45 +16,31 @@ in {
     ../waybar
   ];
 
-  # nixos = {
-  #   users.users."${name}".extraGroups = [ "video" ];
-  #   services.greetd = {
-  #     settings = {
-  #       default_session = {
-  #         # command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --remember --remember-session";
-  #         user = name;
-  #       };
-  #     };
-  #   };
-  # };
-
   nixos.xdg.portal.extraPortals = with pkgs; [ xdg-desktop-portal-hyprland ]; # xdg-desktop-portal-gtk ];
   xdg.portal.configPackages = with pkgs; [ xdg-desktop-portal-hyprland  xdg-desktop-portal-gtk ];
 
   nixos.programs.hyprland.enable = true;
-
-  # nixos.nix.settings = {
-  #   extra-substituters = [ "https://hyprland.cachix.org" ];
-  #   extra-trusted-public-keys = [ "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc=" ];
-  #   extra-trusted-users = [ name ];
-  # };
+  programs = outputs.lib.enable [
+    "fuzzel"
+    "wofi"
+    "jq"
+  ];
+  services = outputs.lib.enable [
+    "kanshi"
+    "swaync"
+  ];
 
   home.packages = with pkgs; [
     unstable.pyprland
     master.nwg-displays
     wlr-randr
-    swaynotificationcenter
     unstable.gtk3
     polkit_gnome
     libnotify
     brightnessctl
     xwaylandvideobridge
     xwayland
-    wofi
     hyprcursor
-    pulseaudio
-    pipewire
-    wireplumber
     slurp
     waypipe
     cinnamon.nemo
@@ -64,10 +51,8 @@ in {
     wev
     swww
     unstable.waypaper
-    jq
     sway-audio-idle-inhibit
     gnome.seahorse
-    kanshi
 
     (pkgs.stdenv.mkDerivation {
       name = "hyprshot";
@@ -156,7 +141,7 @@ in {
         "col.active_border" = "rgba(676767ee) rgba(414141ee) 90deg";
         "col.inactive_border" = "rgba(67676766) rgba(41414166) 90deg";
 
-        layout = "master";
+        layout = "dwindle";
         resize_on_border = false;
       };
       # hyprctl -j devices | jq -r '.mice | .[] | .name'
@@ -256,16 +241,19 @@ in {
         "ALT, P, exec, hyprshot capture region --copy"
         "${mod} SHIFT, N, exec, ${pkgs.swaynotificationcenter}/bin/swaync-client -t"
 
-        "${mod} SHIFT, TAB, centerwindow"
-
         "${mod}, left, exec, ${./. + /bin/movefocus.sh} l"
         "${mod}, right, exec, ${./. + /bin/movefocus.sh} r"
         "${mod}, up, exec, ${./. + /bin/movefocus.sh} u"
         "${mod}, down, exec, ${./. + /bin/movefocus.sh} d"
 
+        "${mod} SHIFT, TAB, centerwindow"
         "${mod} SHIFT, Return, layoutmsg, swapwithmaster"
         "${mod} SHIFT, space, layoutmsg, orientationcycle left center"
         "${mod}, bar, layoutmsg, orientationcycle left right"
+        "${mod}, bar, layoutmsg, swapsplit"
+        "${mod}, O, pseudo"
+        "${mod}, B, exec, hyprctl keyword general:layout master"
+        "${mod} SHIFT, B, exec, hyprctl keyword general:layout dwindle"
 
         "${mod}, X, exec, ${lock}"
         "${mod}, L, exec, ${lock}"
@@ -276,6 +264,7 @@ in {
         "${mod}, C, exec, ${pkgs.wl-color-picker}/bin/wl-color-picker"
 
         "${mod} SHIFT, C, exec, ${./. + /bin/hypr-gamemode}"
+        ''${mod}, V, exec, ${pkgs.wl-clipboard}/bin/wl-paste -t text -w bash -c '[ "$(${pkgs.xclip}/bin/xclip -selection clipboard -o)" = "$(${pkgs.wl-clipboard}/bin/wl-paste -n)" ] || [ "$(${pkgs.wl-clipboard}/bin/wl-paste -l | grep image)" = "" ] && ${pkgs.xclip}/bin/xclip -selection clipboard' ''
 
         "${mod}, mouse_down, workspace, e+1"
         "${mod}, mouse_up, workspace, e-1"
@@ -307,7 +296,7 @@ in {
         ", XF86MonBrightnessDown, exec, ${pkgs.brightnessctl}/bin/brightnessctl set 5%-"
       ];
       bindr = [
-        # FIXMERhypr-snap, make it listen to changes instead
+        # FIXMERhypr-snap, make it get id on mouse down
         "${mod} CTRL, right, exec, ${./. + /bin/hypr-snap}"
         "${mod} CTRL, left, exec, ${./. + /bin/hypr-snap}"
         "${mod} CTRL, up, exec, ${./. + /bin/hypr-snap}"
@@ -328,12 +317,6 @@ in {
         "nofocus,class:^(xwaylandvideobridge)$"
         "noinitialfocus,class:^(xwaylandvideobridge)$"
 
-        "float, title:^(oneko)$"
-        "noblur, title:^(oneko)$"
-        "nofocus, title:^(oneko)$"
-        "noshadow, title:^(oneko)$"
-        "noborder, title:^(oneko)$"
-
         "float, class:^(.*)(scratchpad)$"
         "workspace special silent, class:^(.*)(scratchpad)$"
         "size 60% 65%, class:^(scratchpad)$"
@@ -342,9 +325,9 @@ in {
 
         "noborder, fullscreen:1"
 
-        "opacity 0.8 override,title:^(.*)(New Tab)(.*)$"
-        "opacity 0.8 override,title:^(Mozilla Firefox)(.*)$"
-        "opacity 0.8 override,title:^(🦊 — Mozilla Firefox)$"
+        # "opacity 0.8 override,title:^(.*)(New Tab)(.*)$"
+        # "opacity 0.8 override,title:^(Mozilla Firefox)(.*)$"
+        # "opacity 0.8 override,title:^(🦊 — Mozilla Firefox)$"
 
         "noinitialfocus,class:^jetbrains-(?!toolbox),floating:1"
 
@@ -354,6 +337,7 @@ in {
 
         "workspace 2 silent, class:^(WebCord)$"
         "workspace 2 silent, class:^(Discord)$"
+        "workspace 2 silent, class:^(vesktop)$"
         "workspace 4 silent, class:^(steam)$"
         "workspace 4 silent, class:^(steamwebhelper)$"
         "workspace 7 silent, class:^(easyeffects)$"

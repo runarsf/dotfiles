@@ -51,7 +51,7 @@
       # TODO isDesktop
       # jetbrains.clion
       # jetbrains.pycharm-professional
-      master.android-studio-full
+      android-studio
     ];
   };
   nixpkgs.config.android_sdk.accept_license = true;

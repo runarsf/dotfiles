@@ -1,4 +1,8 @@
 {
+  # TODO https://github.com/astro/deadnix
+  # TODO https://nixos.wiki/wiki/Storage_optimization
+  # TODO https://github.com/symphorien/nix-du
+
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixpkgs-unstable";

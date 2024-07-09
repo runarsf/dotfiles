@@ -1,4 +1,4 @@
-{ outputs, pkgs, ... }:
+{ config, outputs, pkgs, ... }:
 
 {
   home = {
@@ -79,6 +79,8 @@
         _wanted files expl 'local files' _files
       }
 
+      ze () { "$EDITOR" "$("${config.programs.zoxide.package}/bin/zoxide" query "$@")" }
+      zcode () { "${config.programs.vscode.package}/bin/code" "$("${config.programs.zoxide.package}/bin/zoxide" query "$@")" }
 
       bindkey '^G' per-directory-history-toggle-history
       bindkey -M vicmd '^G' per-directory-history-toggle-history

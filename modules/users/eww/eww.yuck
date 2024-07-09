@@ -203,7 +203,7 @@
                     :class "condensed"
                     :onclick "modules/popup calendar"
         (label :text "${date}-")
-        (label :text ":${seconds}")
+        (label :text ":${seconds}") 
         (label :text time))))) ; }}}
 ; }}}
 

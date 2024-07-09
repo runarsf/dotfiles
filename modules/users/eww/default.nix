@@ -1,14 +1,19 @@
-{ pkgs, config, outputs, ... }:
+{ inputs, pkgs, name, config, ... }:
 
 {
-  imports = [ ../trayer.nix ];
+  # system = {
+  #   boot.kernelModules = ["i2c-dev" "ddcci_backlight"];
+  #   services.udev.extraRules = ''
+  #         KERNEL=="i2c-[0-9]*", GROUP="i2c", MODE="0660"
+  #   '';
+  #   users.users."${name}".extraGroups = ["i2c"];
+  # };
 
-  programs.eww = {
-    enable = true;
-    configDir = ./.;
-    package = with pkgs;
-      if (outputs.lib.isWayland config) then eww-wayland else eww;
-  };
-  # wayland.windowManager.hyprland.settings.exec = [ ./launch-eww.sh ];
-  wayland.windowManager.hyprland.settings.exec = [ "${config.home.homeDirectory}/.config/eww/launch-eww.sh" ];
+  home.packages = with pkgs; [ ddcutil master.eww ];
+  # programs.eww = {
+  #   enable = true;
+  #   configDir = ./.;
+  #   package = pkgs.master.eww;
+  # };
+  # wayland.windowManager.hyprland.settings.exec = [ "${config.home.homeDirectory}/.config/eww/launch-eww.sh" ];
 }

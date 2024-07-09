@@ -16,8 +16,7 @@
               --enable-features=UseOzonePlatform,WaylandWindowDecorations \
               --ozone-platform-hint=auto \
               --ozone-platform=wayland \
-              --unity-launch \
-              "$@"
+              "$@" # FIXME For some reason this doesn't work
           '')
           prev.vscode-fhs
         ];
