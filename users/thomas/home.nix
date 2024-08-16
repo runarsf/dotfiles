@@ -12,12 +12,23 @@
 outputs.lib.mkFor system hostname {
   common = {
     imports = [
+      # { _module.args.keys = [ "${config.home.homeDirectory}/.ssh/id_nix" ]; }
+
+      ../../modules/users/development/neovim.nix
       ../../modules/users/development/nix.nix
       ../../modules/users/git.nix
       ../../modules/users/zsh.nix
       ../../modules/users/keychain.nix
+      ../../modules/users/wallpaper.nix
+      # ../../modules/users/sops.nix
+      # ./config/secrets.nix
     ];
 
+    modules.neovim.enable = true;
+    modules.zsh.enable = true;
+    modules.git.enable = true;
+    modules.keychain.enable = true;
+    modules.sops.enable = true;
     wallpaper = ./wallpaper.jpg;
 
     programs.git = {
@@ -28,6 +39,13 @@ outputs.lib.mkFor system hostname {
 
   systems = {
     linux = {
+      imports = [
+        ../../modules/users/discord.nix
+        ../../modules/users/fonts.nix
+        ../../modules/users/stylix.nix
+        ../../modules/users/hyprland
+        ../../modules/users/firefox
+      ];
       nixos = {
         programs.zsh.enable = true;
         users.users."${name}" = {
@@ -53,22 +71,7 @@ outputs.lib.mkFor system hostname {
 
   hosts = {
     toaster = {
-      imports = [
-        # NOTE Add modules from toaster
-        ../../modules/users/gaming.nix
-      ];
-    };
-    toaster = {
-      imports = [
-        ../../modules/users/desktop.nix
-        ../../modules/users/hyprland
-        ../../modules/users/firefox
-        ../../modules/users/vscode.nix
-        ../../modules/users/development.nix
-        ../../modules/users/fonts.nix
-        ../../modules/users/writing.nix
-        ../../modules/users/kitty
-      ];
+      isDesktop = true;
     };
   };
 }
