@@ -28,7 +28,7 @@ outputs.lib.mkFor system hostname {
     modules.zsh.enable = true;
     modules.git.enable = true;
     modules.keychain.enable = true;
-    modules.sops.enable = true;
+    # modules.sops.enable = true;
     wallpaper = ./wallpaper.jpg;
 
     programs.git = {
