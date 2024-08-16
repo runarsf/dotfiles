@@ -12,7 +12,7 @@
 outputs.lib.mkFor system hostname {
   common = {
     imports = [
-      # { _module.args.keys = [ "${config.home.homeDirectory}/.ssh/id_nix" ]; }
+      { _module.args.keys = [ "${config.home.homeDirectory}/.ssh/id_nix" ]; }
 
       ../../modules/users/development/neovim.nix
       ../../modules/users/development/nix.nix
