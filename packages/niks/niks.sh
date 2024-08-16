@@ -19,7 +19,7 @@ while test "${#}" -gt "0"; do
           printf '\nYou currently have %s generations, consider cleaning up your system:\n' "${generations}"
           printf '$ sudo nix-collect-garbage -d\n'
           printf '$ nix-collect-garbage -d\n'
-          printf '$ %s os switch\n' "${bin}"
+          printf '\n$ %s os switch\n' "${bin}"
         fi
       fi;;
     os-test)

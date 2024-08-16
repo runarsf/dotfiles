@@ -53,14 +53,7 @@
 
     nixos-hardware.url = "github:nixos/nixos-hardware";
 
-    rednix.url = "github:redcode-labs/RedNix";
-
     nixvim.url = "github:runarsf/nixvim";
-
-    sf-mono-liga-src = {
-      url = "github:shaunsingh/SFMono-Nerd-Font-Ligaturized";
-      flake = false;
-    };
 
     vault = {
       url = "git+ssh://git@github.com/runarsf/vault";
@@ -68,11 +61,16 @@
     };
   };
 
-  outputs = inputs:
+  outputs =
+    inputs:
     let
-      systems = [ "x86_64-linux" "aarch64-linux" ];
+      systems = [
+        "x86_64-linux"
+        "aarch64-linux"
+      ];
 
-    in rec {
+    in
+    rec {
       lib = import ./lib {
         inherit inputs;
         inherit (inputs.self) outputs;

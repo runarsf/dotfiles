@@ -3,13 +3,14 @@
 outputs.lib.mkFor system hostname {
   common = {
     imports = [
-      ../../modules/users/nix.nix
-      ../../modules/users/convenience.nix
+      ../../modules/users/development/nix.nix
       ../../modules/users/git.nix
-      ../../modules/users/starship.nix
       ../../modules/users/zsh.nix
       ../../modules/users/keychain.nix
     ];
+
+    wallpaper = ./wallpaper.jpg;
+
 
     programs.git = {
       userName = "Thomas Espervik";
@@ -59,10 +60,6 @@ outputs.lib.mkFor system hostname {
         ../../modules/users/fonts.nix
         ../../modules/users/writing.nix
         ../../modules/users/kitty
-      ];
-      home.packages = with pkgs.unstable; [
-        jetbrains.clion
-        jetbrains.pycharm-professional
       ];
     };
   };

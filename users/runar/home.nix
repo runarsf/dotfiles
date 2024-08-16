@@ -1,21 +1,42 @@
-{ config, inputs, outputs, system, hostname, name, pkgs, ... }:
+{
+  config,
+  inputs,
+  outputs,
+  system,
+  hostname,
+  name,
+  pkgs,
+  ...
+}:
 
+let
+  ifIsDesktop = outputs.lib.optionals (outputs.lib.isDesktop config hostname);
+
+in
 outputs.lib.mkFor system hostname {
   common = {
     imports = [
-      { _module.args.keys = [ "${config.home.homeDirectory}/.ssh/nix" ]; }
+      { _module.args.keys = [ "${config.home.homeDirectory}/.ssh/id_nix" ]; }
 
-      ../../modules/users/nix.nix
-      ../../modules/users/convenience.nix
-      ../../modules/users/git.nix
-      ../../modules/users/starship.nix
+      ../../modules/users/development/neovim.nix
+      ../../modules/users/development/nix.nix
       ../../modules/users/zsh.nix
-      ../../modules/users/tmux.nix
-      ../../modules/users/lf
+      ../../modules/users/git.nix
       ../../modules/users/keychain.nix
+      ../../modules/users/wallpaper.nix
       ../../modules/users/sops.nix
+      ../../modules/users/zellij.nix
       ./config/secrets.nix
     ];
+
+    modules.zellij.enable = true;
+    modules.neovim.enable = true;
+    modules.zsh.enable = true;
+    modules.git.enable = true;
+    modules.keychain.enable = true;
+    modules.sops.enable = true;
+    modules.javascript.enable = true;
+    wallpaper = ./wallpaper.jpg;
 
     programs.git = {
       userName = "Runar Fredagsvik";
@@ -25,6 +46,24 @@ outputs.lib.mkFor system hostname {
 
   systems = {
     linux = {
+      imports = [
+        # ../../modules/users/easyeffects
+        # ../../modules/users/gaming.nix
+        # ../../modules/users/eww
+        # ../../modules/users/writing.nix
+        # ../../modules/users/mullvad.nix
+        # ../../modules/users/xonsh.nix
+
+        # TODO All modules should eventually have to be manually enabled, then you can just import ./.
+        ../../modules/users/discord.nix
+        # ../../modules/users/xdg.nix
+        # ../../modules/users/spotify.nix
+        ../../modules/users/development
+        ../../modules/users/fonts.nix
+        ../../modules/users/stylix.nix
+        ../../modules/users/hyprland
+        ../../modules/users/firefox
+      ];
       nixos = {
         programs.zsh.enable = true;
         users.users."${name}" = {
@@ -52,45 +91,21 @@ outputs.lib.mkFor system hostname {
 
   hosts = {
     runix = {
-      # TODO isDesktop
-      imports = [
-        ../../modules/users/stylix.nix
-        ../../modules/users/android.nix
-        # ../../modules/users/easyeffects
-        ../../modules/users/desktop.nix
-        # ../../modules/users/gaming.nix
-        ../../modules/users/hyprland
-        # ../../modules/users/eww
-        ../../modules/users/firefox
-        ../../modules/users/vscode.nix
-        ../../modules/users/development.nix
-        ../../modules/users/fonts.nix # TODO isDesktop
-        ../../modules/users/writing.nix # TODO isDesktop
-        ../../modules/users/kitty # TODO isDesktop
-        ../../modules/users/mullvad.nix # TODO isDesktop
-        ../../modules/users/xonsh.nix
-      ];
-      home.packages = with pkgs.unstable; [
-        obs-studio
-        stremio
-        chromium
+      isDesktop = true;
+      # FIXME Module doesn't exist
+      modules.android.enable = true;
+      # modules.dev.android.enable = false;
+      nixos.hardware.logitech.wireless.enable = true;
 
-        # TODO Make qmk module
-        qmk
-
-        jetbrains.clion
-        jetbrains.pycharm-professional
-        jetbrains.rider
-      ];
-      nixos.services.udev.packages =
-        let
-          qmk-rules = pkgs.writeTextFile {
-            name = "50-qmk.rules";
-            text = builtins.readFile ./qmk.rules;
-            destination = "/etc/udev/rules.d/50-qmk.rules";
-          };
-        in [ qmk-rules ];
-      nixos.services.udev.extraRules = builtins.readFile ./qmk.rules;
+      home.packages =
+        with pkgs.unstable;
+        ifIsDesktop [
+          solaar
+          prismlauncher
+          stremio
+          obs-studio
+          chromium
+        ];
     };
   };
 }

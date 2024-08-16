@@ -1,12 +1,11 @@
-{ pkgs, inputs, ... }:
+{ config, pkgs, inputs, outputs, ... }:
 
-{
+outputs.lib.mkModule config "Neovim" {
   nixpkgs.overlays = [
     (_: prev: {
       neovim = inputs.nixvim.packages.${prev.system}.default;
     })
   ];
-
 
   home = let
     nvim = "${pkgs.neovim}/bin/nvim";

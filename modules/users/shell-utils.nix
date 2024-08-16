@@ -1,6 +1,11 @@
-{ pkgs, ... }:
+{ pkgs, outputs, config, ... }:
 
 {
+  imports = [
+    ../../modules/users/lf
+  ];
+} // outputs.lib.mkEnabledModule config "Shell Utils" {
+  modules.lf.enable = true;
   programs.fzf.enable = true;
 
   nixos = {
@@ -44,6 +49,7 @@
       yt-dlp
       appimage-run
       nmap
+      dig
       eza
       tldr
       yq
@@ -61,6 +67,7 @@
       fd
       expect
       imagemagick
+      watchexec
     ];
 
     shellAliases = rec {

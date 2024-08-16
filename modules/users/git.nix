@@ -1,6 +1,6 @@
-{ pkgs, outputs, ... }:
+{ pkgs, outputs, config, ... }:
 
-{
+outputs.lib.mkModule config "Git" {
   # TODO Per directory git config https://stackoverflow.com/a/43884702
   #  https://git-scm.com/docs/git-config#_conditional_includes
   programs.git = {
@@ -11,6 +11,7 @@
     userEmail = outputs.lib.mkDefault (throw "programs.git.userEmail is not set");
     userName = outputs.lib.mkDefault (throw "programs.git.userName is not set");
 
+    # TODO Convert to attrset
     extraConfig = ''
       [includeIf "gitdir:golog/"]
         path = ${pkgs.writeText ".gitconfig-golog" ''

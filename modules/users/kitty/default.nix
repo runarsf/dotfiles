@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, outputs, ... }:
 
 let
   theme = "ayu-dark";
@@ -34,8 +34,13 @@ in {
   imports = [
     ../fonts.nix
   ];
-
+} // outputs.lib.mkDesktopModule' config "Kitty" {
+  kitty.enableBitmap = outputs.lib.mkEnableOption "Enable bitmap fonts in Kitty";
+} {
   home.shellAliases.ssh = "TERM=xterm-256color ssh";
+  home.sessionVariables = {
+    TERMINAL = "kitty";
+  };
 
   xdg.configFile."kitty/relative_resize.py" = {
     source = ./relative_resize.py;
@@ -58,7 +63,7 @@ in {
 
   programs.kitty = {
     enable = true;
-    package = pkgs.buildPackages.patched-kitty;
+    package = with pkgs; if config.kitty.enableBitmap then buildPackages.patched-kitty else kitty;
 
     keybindings = { };
 
@@ -87,8 +92,10 @@ in {
       tab_separator = ''""'';
       tab_bar_edge = "bottom";
       cursor_blink_interval = 0;
-      tab_title_template = ''"{fmt.bg._2D3036}{fmt.fg._0A0E14} {bell_symbol}{index} {fmt.bg.default}{fmt.fg.default} {title} "'';
-      active_tab_title_template = ''"{fmt.bg._f9af4f}{fmt.fg._0A0E14} {bell_symbol}{index} {fmt.bg.default}{fmt.fg.default} {title} "'';
+      # tab_title_template = ''"{fmt.bg._2D3036}{fmt.fg._0A0E14} {bell_symbol}{index} {fmt.bg.default}{fmt.fg.default} {title} "'';
+      # active_tab_title_template = ''"{fmt.bg._f9af4f}{fmt.fg._0A0E14} {bell_symbol}{index} {fmt.bg.default}{fmt.fg.default} {title} "'';
+      tab_title_template = ''"{fmt.bg.default}{fmt.fg._2D3036}{fmt.bg._2D3036}{fmt.fg._0A0E14} {bell_symbol}{title} {fmt.bg.default}{fmt.fg._2D3036}{fmt.bg.default} "'';
+      active_tab_title_template = ''"{fmt.bg.default}{fmt.fg._F9AF4F}{fmt.bg._F9AF4F}{fmt.fg._0A0E14} {bell_symbol}{title} {fmt.bg.default}{fmt.fg._F9AF4F}{fmt.bg.default} "'';
     } // themes."${theme}";
     extraConfig = let
       mod = "ctrl+shift";

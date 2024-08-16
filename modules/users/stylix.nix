@@ -1,11 +1,16 @@
-{ pkgs, inputs, outputs, ... }:
+{
+  config,
+  pkgs,
+  inputs,
+  outputs,
+  ...
+}:
 
 {
+  imports = [ inputs.stylix.homeManagerModules.stylix ];
+}
+// outputs.lib.mkDesktopModule config "Stylix" {
   # NOTE Stylix requires both nixos and home-manager to have the same stateVersion
-  # FIXME https://github.com/danth/stylix/issues/241
-  imports = [
-    inputs.stylix.homeManagerModules.stylix
-  ];
 
   nixos.environment.systemPackages = with pkgs; [
     gtk2
@@ -21,7 +26,9 @@
   gtk = {
     enable = true;
 
-    gtk3.extraConfig = { gtk-application-prefer-dark-theme = 1; };
+    gtk3.extraConfig = {
+      gtk-application-prefer-dark-theme = 1;
+    };
 
     gtk4.extraConfig = {
       gtk-application-prefer-dark-theme = 1;
@@ -52,7 +59,7 @@
       size = 30;
     };
 
-    image = ../../users/runar/wallpaper.jpg;
+    image = outputs.lib.mkDefault ../../users/runar/wallpaper.jpg;
 
     opacity = {
       terminal = 0.8;
@@ -61,7 +68,7 @@
 
     fonts = {
       sizes = {
-        terminal = 14;
+        terminal = 16;
         applications = 12;
         desktop = 10;
         popups = 10;
@@ -75,10 +82,8 @@
         package = pkgs.dejavu_fonts;
         name = "DejaVu Sans";
       };
-      monospace = {
-        package = pkgs.unstable.nerdfonts.override {
-          fonts = [ "JetBrainsMono" ];
-        };
+      monospace = outputs.lib.mkDefault {
+        package = pkgs.unstable.nerdfonts.override { fonts = [ "JetBrainsMono" ]; };
         name = "JetBrainsMono Nerd Font";
       };
       emoji = {

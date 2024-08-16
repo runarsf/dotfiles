@@ -3,7 +3,8 @@
 let
   pyinstaller = pkgs.callPackage ./pyinstaller { };
 
-in {
-  niks = pkgs.callPackage ./niks { };
-  pixelflasher = pkgs.callPackage ./pixelflasher { inherit pyinstaller; };
+in with pkgs; {
+  niks = callPackage ./niks { };
+  # monolisa = callPackage ./monolisa { };
+  pixelflasher = callPackage ./pixelflasher { inherit pyinstaller; };
 }

@@ -40,7 +40,8 @@
         ];
 
         "hyprland/workspaces" = {
-          format = "{icon}";
+          # format = "{icon}";
+          format = "{id}";
           format-window-separator = " ";
           # persistent-workspaces."*" = 5;
           format-icons.default = "";

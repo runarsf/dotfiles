@@ -1,6 +1,6 @@
-{ pkgs, ... }:
+{ outputs, config, pkgs, ... }:
 
-{
+outputs.lib.mkModule config "lf" {
   xdg.configFile."lf/icons".source = ./lficons;
 
   programs.lf = {

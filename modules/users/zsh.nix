@@ -1,6 +1,13 @@
 { config, outputs, pkgs, ... }:
 
 {
+  imports = [
+    ../../modules/users/starship.nix
+    ../../modules/users/shell-utils.nix
+  ];
+} // outputs.lib.mkModule config "Zsh" {
+  modules.starship.enable = true;
+
   home = {
     packages = with pkgs; [
       libnotify
@@ -70,9 +77,9 @@
 
       _comp_options+=(globdots)
 
-      wim () { set -o nounset; set -o errexit; ''${EDITOR} "$(which ''${1:?No file selected...})" ''${@:2} }
+      wim () { set -eu; ''${EDITOR:-vim} "$(which ''${1:?No file selected...})" ''${@:2}; set +eu }
       magic-enter-cmd () {
-        print '${pkgs.krabby}/bin/krabby random | tail -n+2'
+        print ' ${pkgs.krabby}/bin/krabby random | tail -n+2'
       }
 
       __git_files () {
@@ -81,6 +88,7 @@
 
       ze () { "$EDITOR" "$("${config.programs.zoxide.package}/bin/zoxide" query "$@")" }
       zcode () { "${config.programs.vscode.package}/bin/code" "$("${config.programs.zoxide.package}/bin/zoxide" query "$@")" }
+      zd () { set -e; cd "$("${config.programs.zoxide.package}/bin/zoxide" query "$PWD" "$@")"; set +e }
 
       bindkey '^G' per-directory-history-toggle-history
       bindkey -M vicmd '^G' per-directory-history-toggle-history

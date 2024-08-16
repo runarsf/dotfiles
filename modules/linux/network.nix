@@ -1,8 +1,6 @@
 { pkgs, ... }:
 
 {
-  programs.nm-applet.enable = true;
-
   networking.networkmanager = {
     enable = true;
     plugins = with pkgs; [
@@ -10,6 +8,8 @@
       networkmanager-l2tp
     ];
   };
+
+  programs.nm-applet.enable = true;
 
   # Required for Unify L2TP VPN, enable *only* MSCHAPv2 in networkmanager.
   services.strongswan = {

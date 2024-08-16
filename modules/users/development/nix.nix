@@ -1,10 +1,10 @@
-{ config, pkgs, ... }:
+{ config, pkgs, outputs, ... }:
 
 {
   imports = [
     ./json2nix.nix
   ];
-
+} // outputs.lib.mkEnabledModule config "Nix" {
   home.sessionVariables = {
     FLAKE = "${config.home.homeDirectory}/.config/nixos";
   };
@@ -18,8 +18,9 @@
       cached-nix-shell
       deadnix
       statix
-
+      # TODO https://github.com/viperML/nh?tab=readme-ov-file#nixos-module
       nh
+      nix-inspect
       nix-output-monitor
       nvd
       nix-tree

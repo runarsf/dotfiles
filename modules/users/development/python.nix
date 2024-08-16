@@ -1,6 +1,8 @@
-{ pkgs, ... }:
+{ pkgs, outputs, config, ... }:
 
-{
+outputs.lib.mkModule' config "Python" {
+  dev.python.ide = outputs.lib.mkEnableOption "Enable PyCharm Professional";
+} {
   home.packages = with pkgs; [
     poetry
 
@@ -52,5 +54,5 @@
       pyperclip
       nbformat
     ]))
-  ];
+  ] ++ outputs.lib.optional config.dev.python.ide pkgs.unstable.jetbrains.pycharm-professional;
 }

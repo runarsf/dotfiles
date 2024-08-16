@@ -1,29 +1,14 @@
-{ pkgs, outputs, inputs, ... }:
-
 {
-  nixpkgs.overlays = [
-    # TODO sf-mono font https://gist.github.com/robbins/dccf1238e971973a6a963b04c486c099
-    #  https://github.com/johnae/nixos-config/blob/master/overlays/packages.nix
-    (_: prev: {
-      apple-fonts = import ./apple-fonts.nix {
-        inherit (prev) stdenv fetchurl p7zip;
-        lib = outputs.lib;
-      };
-    })
-    (final: prev: {
-      sf-mono-liga-bin = prev.stdenvNoCC.mkDerivation {
-        pname = "sf-mono-liga-bin";
-        version = "dev";
-        src = inputs.sf-mono-liga-src;
-        dontConfigure = true;
-        installPhase = ''
-          mkdir -p $out/share/fonts/opentype
-          cp -R $src/*.otf $out/share/fonts/opentype/
-        '';
-      };
-    })
-  ];
+  pkgs,
+  outputs,
+  inputs,
+  config,
+  ...
+}:
 
+# TODO https://codeberg.org/adamcstephens/apple-fonts.nix/src/branch/main
+
+outputs.lib.mkDesktopModule config "Fonts" {
   nixos = {
     fonts.fontconfig = {
       enable = true;
@@ -41,9 +26,7 @@
   fonts.fontconfig.enable = true;
 
   home.packages = with pkgs; [
-   fontpreview
-
-   sf-mono-liga-bin
+    fontpreview
 
     # Writing
     libertine
@@ -67,6 +50,8 @@
     jetbrains-mono
     sudo-font
     cascadia-code
+    maple-mono-NF
+    mplus-outline-fonts.githubRelease
 
     # https://github.com/NixOS/nixpkgs/blob/nixpkgs-unstable/pkgs/data/fonts/nerdfonts/shas.nix
     (nerdfonts.override {
@@ -78,11 +63,15 @@
         "Monaspace"
         "UbuntuMono"
         "CommitMono"
+        "IBMPlexMono"
+        "FiraCode"
+        "Hasklig"
         "Gohu"
         "iA-Writer"
         "Lilex"
         "Noto"
         "Terminus"
+        "Agave"
       ];
     })
   ];
