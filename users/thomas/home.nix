@@ -11,7 +11,6 @@ outputs.lib.mkFor system hostname {
 
     wallpaper = ./wallpaper.jpg;
 
-
     programs.git = {
       userName = "Thomas Espervik";
       userEmail = "thoesp@protonmail.com";
@@ -44,7 +43,7 @@ outputs.lib.mkFor system hostname {
   };
 
   hosts = {
-    boiler = {
+    toaster = {
       imports = [
         # NOTE Add modules from toaster
         ../../modules/users/gaming.nix

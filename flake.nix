@@ -88,9 +88,9 @@
         users = [ "runar" ];
       };
 
-      nixosConfigurations.boiler = lib.mkHost {
+      nixosConfigurations.toaster = lib.mkHost {
         system = "x86_64-linux";
-        hostname = "boiler";
+        hostname = "toaster";
         users = [ "thomas" ];
       };
 
@@ -109,10 +109,10 @@
         hostname = "rpi";
       };
 
-      homeConfigurations."thomas@boiler" = lib.mkUser {
+      homeConfigurations."thomas@toaster" = lib.mkUser {
         username = "thomas";
         system = "x86_64-linux";
-        hostname = "boiler";
+        hostname = "toaster";
       };
 
       formatter = lib.forEachSystem systems (pkgs: pkgs.nixfmt-rfc-style);
