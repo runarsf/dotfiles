@@ -1,8 +1,7 @@
-{ inputs, ... }:
+_:
 
 {
   imports = [
-    inputs.nixos-hardware.nixosModules.lenovo-thinkpad-t490s
     ../../modules/linux/locales/norwegian.nix
     ../../modules/linux/systemd-boot.nix
     ../../modules/linux/thunderbolt.nix
