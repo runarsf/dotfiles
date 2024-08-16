@@ -1,4 +1,13 @@
-{ config, inputs, outputs, system, hostname, name, pkgs, ... }:
+{
+  config,
+  inputs,
+  outputs,
+  system,
+  hostname,
+  name,
+  pkgs,
+  ...
+}:
 
 outputs.lib.mkFor system hostname {
   common = {
@@ -25,7 +34,7 @@ outputs.lib.mkFor system hostname {
           isNormalUser = true;
           initialPassword = "changeme";
           description = "Thomas";
-          home = "/home/thomas";
+          home = "/home/thoesp";
           shell = pkgs.zsh;
           extraGroups = [
             "wheel"
