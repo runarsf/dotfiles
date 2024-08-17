@@ -45,6 +45,7 @@ outputs.lib.mkFor system hostname {
         ../../modules/users/stylix.nix
         ../../modules/users/hyprland
         ../../modules/users/firefox
+        ../../modules/users/development
       ];
       nixos = {
         programs.zsh.enable = true;
