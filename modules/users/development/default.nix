@@ -23,6 +23,7 @@
     packages = with pkgs; [
       gnumake
       just
+      ngrok
     ];
   };
 }

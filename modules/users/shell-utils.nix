@@ -5,7 +5,6 @@
     ../../modules/users/lf
   ];
 } // outputs.lib.mkEnabledModule config "Shell Utils" {
-  modules.lf.enable = true;
   programs.fzf.enable = true;
 
   nixos = {
@@ -68,6 +67,7 @@
       expect
       imagemagick
       watchexec
+      walk
     ];
 
     shellAliases = rec {
