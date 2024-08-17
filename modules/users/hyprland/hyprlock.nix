@@ -1,10 +1,11 @@
-_:
+{ pkgs, ... }:
 
 {
-  nixos.security.pam.services.hyprlock = {};
+  nixos.security.pam.services.hyprlock = { };
 
   programs.hyprlock = {
     enable = true;
+    package = pkgs.unstable.hyprlock;
 
     settings = {
       background = {
