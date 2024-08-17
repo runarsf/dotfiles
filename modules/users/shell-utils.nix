@@ -11,6 +11,7 @@
     programs.nix-ld.enable = true;
     programs.nix-ld.libraries = with pkgs; [
       ell
+      moreutils
       xorg.libpthreadstubs
       fuse
       xorg.libX11
