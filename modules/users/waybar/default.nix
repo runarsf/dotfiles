@@ -25,7 +25,7 @@
         reload_style_on_change = true;
 
         modules-left =
-          [ "hyprland/workspaces" "wlr/taskbar" "tray" "custom/layout" ];
+          [ "hyprland/workspaces" "tray" "custom/layout" ];
         modules-center = [ ];
         modules-right = [
           "custom/music"
