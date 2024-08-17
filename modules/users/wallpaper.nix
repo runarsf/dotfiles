@@ -16,6 +16,8 @@ in {
       (builtins.toString config.wallpaper);
     home.file."${wp}".source = config.wallpaper;
 
+    stylix.image = outputs.lib.mkForce config.wallpaper;
+
     programs.firefox.profiles."${name}" = {
         # url(about:blank),
       userContent = ''

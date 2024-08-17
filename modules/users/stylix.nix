@@ -59,6 +59,7 @@
       size = 30;
     };
 
+    # FIXME DO NOT HARDCODE!!!!!
     image = outputs.lib.mkDefault ../../users/runar/wallpaper.jpg;
 
     opacity = {

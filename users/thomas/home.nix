@@ -52,7 +52,7 @@ outputs.lib.mkFor system hostname {
           isNormalUser = true;
           initialPassword = "changeme";
           description = "Thomas";
-          home = "/home/thoesp";
+          home = "/home/thomas";
           shell = pkgs.zsh;
           extraGroups = [
             "wheel"
