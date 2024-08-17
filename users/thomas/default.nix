@@ -21,7 +21,7 @@ outputs.lib.mkFor system hostname {
       ../../modules/users/keychain.nix
       ../../modules/users/wallpaper.nix
       ../../modules/users/sops.nix
-      # ./config/secrets.nix
+      ./config/secrets.nix
     ];
 
     modules.neovim.enable = true;

@@ -3,7 +3,7 @@ args@{ inputs, outputs, system, hostname, users, ... }:
 let
   importUserConfig = name: {
     imports = [
-      ../../users/${name}/home.nix
+      ../../users/${name}
 
       # This works because the Home Manager NixOS module passes `name`, which is
       # the attribute name of `users.<name>`, to all submodules automatically.

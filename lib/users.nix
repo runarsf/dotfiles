@@ -25,7 +25,7 @@ flake@{ outputs, ... }:
         ../modules/home-manager/shared.nix
         ../modules/home-manager/default-config.nix
         ../modules/nix/nix.nix
-        ../users/${username}/home.nix
+        ../users/${username}
       ];
     };
 }
