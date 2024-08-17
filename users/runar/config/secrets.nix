@@ -10,7 +10,7 @@ let
   mkSecretFiles = map (key: {
     name = key;
     value = outputs.lib.mkSecretFile {
-      source = "${inputs.vault}/keys/${key}";
+      source = "${inputs.vault}/runar/keys/${key}";
       destination = "${config.home.homeDirectory}/.ssh/${key}";
     };
   }) keys;
@@ -29,24 +29,24 @@ let
   # };
   # } //
 in outputs.lib.mkFor system hostname {
-  hosts.rpi.sops.secrets = {
-    cloudflare = { sopsFile = "${inputs.vault}/secrets/cloudflare.txt"; };
-  };
+  # hosts.rpi.sops.secrets = {
+    # cloudflare = { sopsFile = "${inputs.vault}/secrets/cloudflare.txt"; };
+  # };
   hosts.runix = {
     sops = {
       secrets = outputs.lib.deepMerge [
         secretFilesSet
         {
           monolisa = {
-            sopsFile = "${inputs.vault}/fonts/MonoLisa.zip";
+            sopsFile = "${inputs.vault}/shared/fonts/MonoLisa.zip";
             format = "binary";
           };
           dankmono = {
-            sopsFile = "${inputs.vault}/fonts/DankMono.zip";
+            sopsFile = "${inputs.vault}/shared/fonts/DankMono.zip";
             format = "binary";
           };
           operatormono = {
-            sopsFile = "${inputs.vault}/fonts/OperatorMono.zip";
+            sopsFile = "${inputs.vault}/shared/fonts/OperatorMono.zip";
             format = "binary";
           };
         }

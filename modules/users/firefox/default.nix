@@ -25,7 +25,6 @@
 
   programs.firefox = {
     enable = true;
-    package = pkgs.unstable.firefox-devedition;
 
     arkenfox = {
       enable = true;
@@ -35,6 +34,7 @@
     profiles."${name}" = {
       isDefault = true;
       id = 0;
+      # https://www.reddit.com/r/FirefoxCSS/comments/1etangp/the_new_way_to_have_transparency_in_new_tab/
       userContent = ''
         :root {
           --in-content-page-background: #00000000 !important;
