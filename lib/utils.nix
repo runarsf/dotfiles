@@ -1,11 +1,15 @@
 { outputs, ... }:
 
+let
+  sanitize = name: builtins.replaceStrings [ " " ] [ "-" ] (outputs.lib.toLower name);
+
+in
 rec {
   enable =
     elems:
     builtins.listToAttrs (
       map (name: {
-        name = name;
+        inherit name;
         value.enable = true;
       }) elems
     );
@@ -30,22 +34,21 @@ rec {
       }) elems
     );
 
-  
-    mkModuleWithOptions =
+  mkModuleWithOptions =
     {
       config,
       name,
       result,
       default ? false,
       extraOptions ? { },
+      extraCondition ? true,
     }:
-    let
-      mname = builtins.replaceStrings [ " " ] [ "-" ] (outputs.lib.toLower name);
-    in
     {
       options = outputs.lib.deepMerge [
         {
-          modules.${mname}.enable = outputs.lib.mkOption {
+          # TODO the property name of the module should be nest-able
+          #  e.g. modules.python.enable and modules.python.ide.enable
+          modules.${name}.enable = outputs.lib.mkOption {
             inherit default;
             type = outputs.lib.types.bool;
             description = "Enable ${name} module";
@@ -53,11 +56,11 @@ rec {
         }
         extraOptions
       ];
-      config = outputs.lib.mkIf config.modules.${mname}.enable result;
+      config = outputs.lib.mkIf (config.modules.${name}.enable && extraCondition) result;
     };
- 
 
-  /* mkModuleWithOptions =
+  /*
+    mkModuleWithOptions =
     {
       config,
       name,
@@ -95,11 +98,8 @@ rec {
     in
     {
       inherit options config;
-    }; */
-
-  mkModule =
-    config: name: result:
-    mkModuleWithOptions { inherit config name result; };
+    };
+  */
 
   mkModule' =
     config: name: extraOptions: result:
@@ -112,12 +112,9 @@ rec {
         ;
     };
 
-  mkEnabledModule =
+  mkModule =
     config: name: result:
-    mkModuleWithOptions {
-      inherit config name result;
-      default = true;
-    };
+    mkModule' config name { } result;
 
   mkEnabledModule' =
     config: name: extraOptions: result:
@@ -131,14 +128,9 @@ rec {
       default = true;
     };
 
-  # TODO mkDesktopModule should have a second "master" option for enabling/disabling.
-  #  e.g. modules.discord.enable and modules.discord.onDesktop, where both need to be true.
-  mkDesktopModule =
+  mkEnabledModule =
     config: name: result:
-    mkModuleWithOptions {
-      inherit config name result;
-      default = outputs.lib.isDesktop' config;
-    };
+    mkEnabledModule' config name { } result;
 
   mkDesktopModule' =
     config: name: extraOptions: result:
@@ -149,6 +141,10 @@ rec {
         result
         extraOptions
         ;
-      default = outputs.lib.isDesktop' config;
+      extraCondition = outputs.lib.isDesktop' config;
     };
+
+  mkDesktopModule =
+    config: name: result:
+    mkDesktopModule' config name { } result;
 }

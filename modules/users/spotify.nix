@@ -1,6 +1,6 @@
 { config, outputs, pkgs, ... }:
 
-{
+outputs.lib.mkDesktopModule config "spotify" {
   home.packages = with pkgs; [
     (if (outputs.lib.isWayland config) then spotify-wayland else unstable.spotify)
   ];

@@ -1,6 +1,11 @@
-{ pkgs, ... }:
-
 {
+  config,
+  pkgs,
+  outputs,
+  ...
+}:
+
+outputs.lib.mkDesktopModule config "waybar" {
   home.packages = with pkgs; [
     upower
     playerctl
@@ -15,152 +20,178 @@
     style = ''
       ${builtins.readFile ./style.css}
     '';
-    settings = let i = "&#8201;";
-    in {
-      mainBar = {
-        height = 30;
-        layer = "top";
-        position = "top";
-        margin = "10 10 0 10";
-        reload_style_on_change = true;
+    settings =
+      let
+        i = "&#8201;";
+      in
+      {
+        mainBar = {
+          height = 30;
+          layer = "top";
+          position = "top";
+          margin = "10 10 0 10";
+          reload_style_on_change = true;
 
-        modules-left =
-          [ "hyprland/workspaces" "tray" "custom/layout" ];
-        modules-center = [ ];
-        modules-right = [
-          "custom/music"
-          "idle_inhibitor"
-          "backlight"
-          "cpu"
-          "memory"
-          "pulseaudio"
-          "network"
-          "battery"
-          "clock"
-        ];
+          modules-left = [
+            "hyprland/workspaces"
+            "tray"
+            "custom/layout"
+          ];
+          modules-center = [ ];
+          modules-right = [
+            "custom/music"
+            "idle_inhibitor"
+            "backlight"
+            "cpu"
+            "memory"
+            "pulseaudio"
+            "network"
+            "battery"
+            "clock"
+          ];
 
-        "hyprland/workspaces" = {
-          # format = "{icon}";
-          format = "{id}";
-          format-window-separator = " ";
-          # persistent-workspaces."*" = 5;
-          format-icons.default = "";
-          all-outputs = false;
-          # active = "";
-          # empty = "";
-        };
-
-        idle_inhibitor = {
-          format = "{icon}${i}";
-          format-icons = {
-            activated = "";
-            deactivated = "";
+          "hyprland/workspaces" = {
+            # format = "{icon}";
+            format = "{id}";
+            format-window-separator = " ";
+            # persistent-workspaces."*" = 5;
+            format-icons.default = "";
+            all-outputs = false;
+            # active = "";
+            # empty = "";
           };
-        };
 
-        clock = {
-          tooltip-format = "<tt><small>{calendar}</small></tt>";
-          calendar = {
-            mode = "month";
-            mode-mon-col = 3;
-            weeks-pos = "right";
-            on-scroll = 1;
-            on-click-right = "mode";
-            format = {
-              months = "<span color='#ffead3'><b>{}</b></span>";
-              days = "<span color='#ecc6d9'><b>{}</b></span>";
-              weeks = "<span color='#99ffdd'><b>W{}</b></span>";
-              weekdays = "<span color='#ffcc66'><b>{}</b></span>";
-              today = "<span color='#ff6699'><b><u>{}</u></b></span>";
+          idle_inhibitor = {
+            format = "{icon}${i}";
+            format-icons = {
+              activated = "";
+              deactivated = "";
             };
           };
-          actions = {
-            on-click-right = "mode";
-            on-click-forward = "tz_up";
-            on-click-backward = "tz_down";
-            on-scroll-up = "shift_up";
-            on-scroll-down = "shift_down";
-          };
-          format = "${i} {:%H:%M}";
-          format-alt = "${i} {:%d/%m/%Y  %H:%M:%S}";
-          interval = 1;
-        };
 
-        cpu = {
-          format = "${i}{usage: >3}%";
-          on-click = "${pkgs.kitty}/bin/kitty btop";
-        };
-        memory = {
-          format = "󰧑${i}{: >3}%";
-          on-click = "${pkgs.kitty}/bin/kitty btop";
-        };
+          clock = {
+            tooltip-format = "<tt><small>{calendar}</small></tt>";
+            calendar = {
+              mode = "month";
+              mode-mon-col = 3;
+              weeks-pos = "right";
+              on-scroll = 1;
+              on-click-right = "mode";
+              format = {
+                months = "<span color='#ffead3'><b>{}</b></span>";
+                days = "<span color='#ecc6d9'><b>{}</b></span>";
+                weeks = "<span color='#99ffdd'><b>W{}</b></span>";
+                weekdays = "<span color='#ffcc66'><b>{}</b></span>";
+                today = "<span color='#ff6699'><b><u>{}</u></b></span>";
+              };
+            };
+            actions = {
+              on-click-right = "mode";
+              on-click-forward = "tz_up";
+              on-click-backward = "tz_down";
+              on-scroll-up = "shift_up";
+              on-scroll-down = "shift_down";
+            };
+            format = "${i} {:%H:%M}";
+            format-alt = "${i} {:%d/%m/%Y  %H:%M:%S}";
+            interval = 1;
+          };
 
-        backlight = {
-          format = "{icon}${i}";
-          tooltip = "{percent: >3}%";
-          format-icons =
-            [ "" "" "" "" "" "" "" "" "" "" "" "" "" ];
-        };
-        battery = {
-          states = {
-            good = 95;
-            warning = 30;
-            critical = 15;
+          cpu = {
+            format = "${i}{usage: >3}%";
+            on-click = "${pkgs.kitty}/bin/kitty btop";
           };
-          format = "{icon}${i}{capacity: >3}%";
-          format-full = "";
-          format-icons = [ "" "" "" "" "" ];
-        };
-        network = {
-          format = "⚠${i} Disabled";
-          format-wifi = "${i} {essid}";
-          format-ethernet = "${i} {ipaddr}";
-          format-disconnected = "⚠${i} Disconnected";
-          on-click = "${pkgs.networkmanagerapplet}/bin/nm-connection-editor";
-        };
-        pulseaudio = {
-          scroll-step = 1;
-          format = "{icon}${i}{volume: >3}%";
-          format-bluetooth = "{icon}${i}{volume: >3}%";
-          format-muted = "${i}";
-          format-icons = {
-            headphones = "";
-            handsfree = "";
-            headset = "";
-            phone = "";
-            portable = "";
-            car = "";
-            default = [ "" "" ];
+          memory = {
+            format = "󰧑${i}{: >3}%";
+            on-click = "${pkgs.kitty}/bin/kitty btop";
           };
-          on-click =
-            "${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_SINK@ toggle";
-          on-click-right =
-            "${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_SOURCE@ toggle";
-          on-click-middle = "${pkgs.pavucontrol}/bin/pavucontrol";
-        };
-        "custom/layout" = {
-          format = "{}";
-          tooltip = false;
-          exec = "${./. + /bin/hypr-layout.sh}";
-        };
-        "custom/music" = {
-          format = "{icon}${i}";
-          format-alt = "{icon}${i} {}";
-          format-icons = {
-            spotify = "";
-            firefox = "󰈹";
-            paused = "";
-            default = "󰎆";
-          };
-          tooltip = false;
-          return-type = "json";
-          on-click-middle = "${pkgs.playerctl}/bin/playerctl play-pause";
-          on-click-right = "${pkgs.playerctl}/bin/playerctl next";
-          interval = 10;
-          exec = "${./. + /bin/music.sh}";
-        };
 
+          backlight = {
+            format = "{icon}${i}";
+            tooltip = "{percent: >3}%";
+            format-icons = [
+              ""
+              ""
+              ""
+              ""
+              ""
+              ""
+              ""
+              ""
+              ""
+              ""
+              ""
+              ""
+              ""
+            ];
+          };
+          battery = {
+            states = {
+              good = 95;
+              warning = 30;
+              critical = 15;
+            };
+            format = "{icon}${i}{capacity: >3}%";
+            format-full = "";
+            format-icons = [
+              ""
+              ""
+              ""
+              ""
+              ""
+            ];
+          };
+          network = {
+            format = "⚠${i} Disabled";
+            format-wifi = "${i} {essid}";
+            format-ethernet = "${i} {ipaddr}";
+            format-disconnected = "⚠${i} Disconnected";
+            on-click = "${pkgs.networkmanagerapplet}/bin/nm-connection-editor";
+          };
+          pulseaudio = {
+            scroll-step = 1;
+            format = "{icon}${i}{volume: >3}%";
+            format-bluetooth = "{icon}${i}{volume: >3}%";
+            format-muted = "${i}";
+            format-icons = {
+              headphones = "";
+              handsfree = "";
+              headset = "";
+              phone = "";
+              portable = "";
+              car = "";
+              default = [
+                ""
+                ""
+              ];
+            };
+            on-click = "${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_SINK@ toggle";
+            on-click-right = "${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_SOURCE@ toggle";
+            on-click-middle = "${pkgs.pavucontrol}/bin/pavucontrol";
+          };
+          "custom/layout" = {
+            format = "{}";
+            tooltip = false;
+            exec = "${./. + /bin/hypr-layout.sh}";
+          };
+          "custom/music" = {
+            format = "{icon}${i}";
+            format-alt = "{icon}${i} {}";
+            format-icons = {
+              spotify = "";
+              firefox = "󰈹";
+              paused = "";
+              default = "󰎆";
+            };
+            tooltip = false;
+            return-type = "json";
+            on-click-middle = "${pkgs.playerctl}/bin/playerctl play-pause";
+            on-click-right = "${pkgs.playerctl}/bin/playerctl next";
+            interval = 10;
+            exec = "${./. + /bin/music.sh}";
+          };
+
+        };
       };
-    };
   };
 }

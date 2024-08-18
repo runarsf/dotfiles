@@ -1,6 +1,6 @@
-{ pkgs, ... }:
+{ config, pkgs, outputs, ... }:
 
-{
+outputs.lib.mkDesktopModule config "wezterm" {
   programs.wezterm = {
     enable = true;
     package = pkgs.master.wezterm;

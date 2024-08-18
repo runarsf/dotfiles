@@ -8,7 +8,7 @@
 
 # TODO https://codeberg.org/adamcstephens/apple-fonts.nix/src/branch/main
 
-outputs.lib.mkDesktopModule config "Fonts" {
+outputs.lib.mkDesktopModule config "fonts" {
   nixos = {
     fonts.fontconfig = {
       enable = true;

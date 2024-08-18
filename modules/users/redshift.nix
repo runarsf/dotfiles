@@ -1,6 +1,6 @@
-_:
+{ config, outputs, ... }:
 
-{
+outputs.lib.mkDesktopModule config "redshift" {
   services.redshift = {
     enable = true;
     tray = true;

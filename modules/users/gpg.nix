@@ -1,6 +1,6 @@
-{ pkgs, ... }:
+{ config, pkgs, outputs, ... }:
 
-{
+outputs.lib.mkModule config "gpg" {
   nixos = {
     services.pcscd.enable = true;
     programs.gnupg.agent = {

@@ -1173,6 +1173,26 @@
         "type": "github"
       }
     },
+    "nypkgs_2": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1720792364,
+        "narHash": "sha256-3AvMMvTKkvtDPlTtBZADrQaIRHjW09EO9uyEZNdHOkw=",
+        "owner": "yunfachi",
+        "repo": "nypkgs",
+        "rev": "209a7be0d39ee9a3f5a726abddcdf79753c4f47e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "yunfachi",
+        "repo": "nypkgs",
+        "type": "github"
+      }
+    },
     "pre-commit": {
       "inputs": {
         "flake-compat": "flake-compat_2",
@@ -1209,6 +1229,7 @@
         "nixpkgs-wayland": "nixpkgs-wayland",
         "nixvim": "nixvim",
         "nur": "nur",
+        "nypkgs": "nypkgs_2",
         "sops-nix": "sops-nix",
         "stylix": "stylix",
         "vault": "vault"

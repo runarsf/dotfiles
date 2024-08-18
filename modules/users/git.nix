@@ -1,6 +1,6 @@
 { pkgs, outputs, config, ... }:
 
-outputs.lib.mkModule config "Git" {
+outputs.lib.mkModule config "git" {
   # TODO Per directory git config https://stackoverflow.com/a/43884702
   #  https://git-scm.com/docs/git-config#_conditional_includes
   programs.git = {
@@ -11,18 +11,18 @@ outputs.lib.mkModule config "Git" {
     userEmail = outputs.lib.mkDefault (throw "programs.git.userEmail is not set");
     userName = outputs.lib.mkDefault (throw "programs.git.userName is not set");
 
-    # TODO Convert to attrset
-    extraConfig = ''
-      [includeIf "gitdir:golog/"]
-        path = ${pkgs.writeText ".gitconfig-golog" ''
+    # TODO Convert to attrset, and make it work
+    /* extraConfig = ''
+      [includeIf "gitdir:work/"]
+        path = ${pkgs.writeText ".gitconfig-work" ''
           [user]
             name = Runar Fredagsvik
-            email = runar.fredagsvik@golog.ch
+            email = runar.fredagsvik@work.com
 
           [core]
-            sshCommand = ssh -i ~/.ssh/id_golog
+            sshCommand = ssh -i ~/.ssh/id_work
       ''}
-    '';
+    ''; */
 
     aliases = rec {
       aliases = "config --get-regexp alias";

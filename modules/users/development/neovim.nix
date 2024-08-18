@@ -1,6 +1,6 @@
 { config, pkgs, inputs, outputs, ... }:
 
-outputs.lib.mkModule config "Neovim" {
+outputs.lib.mkModule config "neovim" {
   nixpkgs.overlays = [
     (_: prev: {
       neovim = inputs.nixvim.packages.${prev.system}.default;

@@ -6,10 +6,10 @@ let
     extlib = with inputs; nixpkgs.lib // nix-darwin.lib // home-manager.lib;
   };
 
-in core.deepMerge [
-  inputs.nixpkgs.lib
-  inputs.nix-darwin.lib
-  inputs.home-manager.lib
+in with inputs; core.deepMerge [
+  nixpkgs.lib
+  nix-darwin.lib
+  home-manager.lib
 
   core
 

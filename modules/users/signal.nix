@@ -1,7 +1,13 @@
-{ outputs, config, pkgs, ... }:
-
 {
-  home.packages = with pkgs.master;
+  outputs,
+  config,
+  pkgs,
+  ...
+}:
+
+outputs.lib.mkDesktopModule config "signal" {
+  home.packages =
+    with pkgs.master;
     if (outputs.lib.isWayland config) then [ signal-wayland ] else [ signal-x ];
 
   nixpkgs.overlays = [

@@ -6,15 +6,8 @@
   ...
 }:
 
-outputs.lib.mkModule' config "android"
-  {
-    modules.android.ide = outputs.lib.mkOption {
-      default = config.modules.android.enable;
-      type = outputs.lib.types.bool;
-      description = "Enable Android Studio";
-    };
-  }
-  {
+outputs.lib.deepMerge [
+  (outputs.lib.mkModule config "android" {
     nixos = {
       programs.adb.enable = true;
       users.users."${name}".extraGroups = [
@@ -26,50 +19,53 @@ outputs.lib.mkModule' config "android"
       environment.systemPackages = with pkgs; [ android-tools ];
     };
 
-    home.packages =
-      with pkgs.unstable;
-      [
-        flutter
-        graphite2
-        gtk3
-      ]
-      ++ outputs.lib.optional config.modules.android.ide pkgs.unstable.android-studio;
+    home.packages = with pkgs.unstable; [
+      flutter
+      graphite2
+      gtk3
+    ];
 
     nixpkgs.config.android_sdk.accept_license = true;
 
-    home.file.".local/bin/adbrute".source = let
-      script = pkgs.writers.writeBashBin "adbrute" ''
-        set -uo pipefail
+    home.file.".local/bin/adbrute".source =
+      let
+        script = pkgs.writers.writeBashBin "adbrute" ''
+          set -uo pipefail
 
-        IP="''${1:?Usage: ''${0} <IP>}"
-        PORT="''${2:-}"
+          IP="''${1:?Usage: ''${0} <IP>}"
+          PORT="''${2:-}"
 
-        if [[ ! -z "''${PORT// }" ]]; then
-          timeout 2.5s ${pkgs.android-tools}/bin/adb connect "''${IP}:''${PORT}"
-          exit ''${?}
-        fi
-
-        if [[ "''${IP}" != *"."* ]]; then
-          HOST_IP="$(${pkgs.inetutils}/bin/ifconfig | ${pkgs.gnused}/bin/sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p')"
-          IP="$(printf '%s\n' "''${HOST_IP}" | awk -v IP="''${IP}" -F'.' '{print $1"."$2"."$3"."IP}')"
-          printf 'Only the last octet was provided, assuming %s...\n' "''${IP}"
-        fi
-
-        printf 'Scanning for open ports on %s...\n' "''${IP}"
-        PORTS="$(${pkgs.nmap}/bin/nmap "''${IP}" -p 30000-50000 | awk '/\/tcp/' | cut -d/ -f1)"
-
-        while IFS= read -r port; do
-          if [[ -z "''${port// }" ]]; then
-            printf 'No open ports found.\n'
-            break
+          if [[ ! -z "''${PORT// }" ]]; then
+            timeout 2.5s ${pkgs.android-tools}/bin/adb connect "''${IP}:''${PORT}"
+            exit ''${?}
           fi
 
-          printf 'Trying %s:%s...\n' "''${IP}" "''${port}"
-
-          if timeout 2.5s ${pkgs.android-tools}/bin/adb connect "''${IP}:''${port}"; then
-            break
+          if [[ "''${IP}" != *"."* ]]; then
+            HOST_IP="$(${pkgs.inetutils}/bin/ifconfig | ${pkgs.gnused}/bin/sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\.){3}[0-9]*).*/\2/p')"
+            IP="$(printf '%s\n' "''${HOST_IP}" | awk -v IP="''${IP}" -F'.' '{print $1"."$2"."$3"."IP}')"
+            printf 'Only the last octet was provided, assuming %s...\n' "''${IP}"
           fi
-        done <<< "''${PORTS}"
-      '';
-    in "${script}/bin/adbrute";
-  }
+
+          printf 'Scanning for open ports on %s...\n' "''${IP}"
+          PORTS="$(${pkgs.nmap}/bin/nmap "''${IP}" -p 30000-50000 | awk '/\/tcp/' | cut -d/ -f1)"
+
+          while IFS= read -r port; do
+            if [[ -z "''${port// }" ]]; then
+              printf 'No open ports found.\n'
+              break
+            fi
+
+            printf 'Trying %s:%s...\n' "''${IP}" "''${port}"
+
+            if timeout 2.5s ${pkgs.android-tools}/bin/adb connect "''${IP}:''${port}"; then
+              break
+            fi
+          done <<< "''${PORTS}"
+        '';
+      in
+      "${script}/bin/adbrute";
+  })
+  (outputs.lib.mkDesktopModule config "android-ide" {
+    home.packages = with pkgs; [ unstable.android-studio ];
+  })
+]

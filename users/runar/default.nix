@@ -18,14 +18,17 @@ outputs.lib.mkFor system hostname {
     imports = [
       { _module.args.keys = [ "${config.home.homeDirectory}/.ssh/id_nix" ]; }
 
-      ../../modules/users/development/neovim.nix
-      ../../modules/users/development/nix.nix
+      # (inputs.nypkgs.lib.${system}.umport { path = ../../modules/users/development; })
+
       ../../modules/users/zsh.nix
       ../../modules/users/git.nix
+      ../../modules/users/gpg.nix
+      ../../modules/users/ssh.nix
       ../../modules/users/keychain.nix
       ../../modules/users/wallpaper.nix
       ../../modules/users/sops.nix
       ../../modules/users/zellij.nix
+
       ./config/secrets.nix
     ];
 
@@ -33,9 +36,13 @@ outputs.lib.mkFor system hostname {
     modules.neovim.enable = true;
     modules.zsh.enable = true;
     modules.git.enable = true;
+    modules.gpg.enable = true;
+    modules.ssh.enable = true;
     modules.keychain.enable = true;
     modules.sops.enable = true;
     modules.javascript.enable = true;
+    modules.nix.enable = true;
+
     wallpaper = ./wallpaper.jpg;
 
     programs.git = {
@@ -46,31 +53,37 @@ outputs.lib.mkFor system hostname {
 
   systems = {
     linux = {
-      imports = [
-        # ../../modules/users/easyeffects
-        # ../../modules/users/gaming.nix
-        # ../../modules/users/eww
-        # ../../modules/users/writing.nix
-        # ../../modules/users/mullvad.nix
-        # ../../modules/users/xonsh.nix
+      modules.firefox.enable = true;
+      modules.discord.enable = true;
+      modules.fonts.enable = true;
+      modules.stylix.enable = true;
+      modules.vscode.enable = true;
+      modules.hyprland.enable = true;
+      modules.kitty.enable = true;
+      modules.python.enable = true;
+      modules.python-ide.enable = true;
+      modules.c.enable = true;
+      modules.c-ide.enable = true;
+      modules.writing.enable = true;
+      modules.spotify.enable = true;
 
-        # TODO All modules should eventually have to be manually enabled, then you can just import ./.
+      imports = [
         ../../modules/users/discord.nix
-        # ../../modules/users/xdg.nix
-        # ../../modules/users/spotify.nix
+        ../../modules/users/writing.nix
+        ../../modules/users/xdg.nix
+        ../../modules/users/spotify.nix
         ../../modules/users/development
         ../../modules/users/fonts.nix
         ../../modules/users/stylix.nix
         ../../modules/users/hyprland
         ../../modules/users/firefox
       ];
+
       nixos = {
         programs.zsh.enable = true;
         users.users."${name}" = {
           isNormalUser = true;
           initialPassword = "changeme";
-          # TODO https://github.com/Mic92/sops-nix#setting-a-users-password
-          # hashedPasswordFile = config.sops.secrets.password_runar.path;
           description = "Runar";
           home = "/home/runar";
           shell = pkgs.zsh;

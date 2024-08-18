@@ -1,10 +1,14 @@
-{ pkgs, outputs, config, ... }:
+{
+  pkgs,
+  outputs,
+  config,
+  ...
+}:
 
 {
-  imports = [
-    ../../modules/users/lf
-  ];
-} // outputs.lib.mkEnabledModule config "Shell Utils" {
+  imports = [ ../../modules/users/lf ];
+}
+// outputs.lib.mkEnabledModule config "shell-utils" {
   programs.fzf.enable = true;
 
   nixos = {

@@ -1,6 +1,6 @@
 { config, outputs, ... }:
 
-{
+outputs.lib.mkDesktopModule config "fuzzel" {
   programs.fuzzel = {
     enable = true;
     settings = {
