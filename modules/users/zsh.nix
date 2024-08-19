@@ -5,7 +5,7 @@
     ../../modules/users/starship.nix
     ../../modules/users/shell-utils.nix
   ];
-} // outputs.lib.mkModule config "Zsh" {
+} // outputs.lib.mkModule config "zsh" {
   modules.starship.enable = true;
 
   home = {

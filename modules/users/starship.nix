@@ -1,6 +1,6 @@
 { outputs, config, ... }:
 
-outputs.lib.mkEnabledModule config "Starship" {
+outputs.lib.mkModule config "starship" {
   programs.starship = {
     enable = true;
 
@@ -74,7 +74,9 @@ outputs.lib.mkEnabledModule config "Starship" {
         style = "purple";
         symbol = "";
       };
-      git_commit = { format = "[\\($hash$tag\\)]($style)"; };
+      git_commit = {
+        format = "[\\($hash$tag\\)]($style)";
+      };
       git_state = {
         format = "\\([$state( $progress_current/$progress_total)]($style)\\)";
       };
@@ -93,12 +95,16 @@ outputs.lib.mkEnabledModule config "Starship" {
         style = "cyan";
         heuristic = true;
       };
-      package = { format = "[$symbol$version]($style)"; };
+      package = {
+        format = "[$symbol$version]($style)";
+      };
 
       gcloud = {
         format = "[$symbol$active(/$project)(\\($region\\))]($style)";
       };
-      aws = { format = "[$symbol$profile(\\($region\\))]($style)"; };
+      aws = {
+        format = "[$symbol$profile(\\($region\\))]($style)";
+      };
 
       aws.symbol = "  ";
       conda.symbol = " ";

@@ -1,6 +1,6 @@
 { config, pkgs, outputs, ... }:
 
-outputs.lib.mkModule config "QMK" {
+outputs.lib.mkModule config "qmk" {
   home.packages = with pkgs.unstable; [
     qmk
   ];

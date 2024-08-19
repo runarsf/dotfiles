@@ -7,9 +7,9 @@
 }:
 
 {
-  imports = [ inputs.stylix.homeManagerModules.stylix ];
+  imports = [  inputs.stylix.homeManagerModules.stylix  ];
 }
-// outputs.lib.mkDesktopModule config "Stylix" {
+// outputs.lib.mkDesktopModule config "stylix" {
   # NOTE Stylix requires both nixos and home-manager to have the same stateVersion
 
   nixos.environment.systemPackages = with pkgs; [
@@ -23,6 +23,14 @@
     "${pkgs.gsettings-desktop-schemas}/share/gsettings-schemas/${pkgs.gsettings-desktop-schemas.name}"
   ];
 
+  /*
+    dconf = {
+      enable = true;
+      settings."org/gnome/desktop/interface".color-scheme = "prefer-dark";
+    };
+    nixos.programs.dconf.enable = true;
+  */
+
   gtk = {
     enable = true;
 
@@ -35,6 +43,13 @@
       gtk-cursor-theme-name = "Qogir Cursors";
     };
   };
+
+  /*
+    qt = {
+      enable = true;
+      platformTheme = "gtk";
+    };
+  */
 
   stylix = {
     enable = true;

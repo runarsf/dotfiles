@@ -1,6 +1,6 @@
-_:
+{ config, outputs, ... }:
 
-{
+outputs.lib.mkDesktopModule config "dunst" {
   services.dunst = {
     enable = true;
     settings = {

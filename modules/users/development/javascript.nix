@@ -1,8 +1,7 @@
 { outputs, pkgs, config, ... }:
 
-outputs.lib.mkModule config "JavaScript" {
+outputs.lib.mkModule config "javascript" {
   home.packages = with pkgs.unstable; [
     nodejs
-    nodePackages."@nestjs/cli"
   ];
 }

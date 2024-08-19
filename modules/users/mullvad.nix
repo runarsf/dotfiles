@@ -1,6 +1,6 @@
-{ pkgs, ... }:
+{ config, pkgs, outputs, ... }:
 
-{
+outputs.lib.mkModule config "mullvad" {
   nixos = {
     environment.systemPackages = with pkgs; [
       mullvad-vpn

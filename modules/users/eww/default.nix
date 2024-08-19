@@ -1,6 +1,13 @@
-{ inputs, pkgs, name, config, ... }:
-
 {
+  config,
+  pkgs,
+  inputs,
+  outputs,
+  name,
+  ...
+}:
+
+outputs.lib.mkDesktopModule config "eww" {
   # system = {
   #   boot.kernelModules = ["i2c-dev" "ddcci_backlight"];
   #   services.udev.extraRules = ''
@@ -9,7 +16,10 @@
   #   users.users."${name}".extraGroups = ["i2c"];
   # };
 
-  home.packages = with pkgs; [ ddcutil master.eww ];
+  home.packages = with pkgs; [
+    ddcutil
+    master.eww
+  ];
   # programs.eww = {
   #   enable = true;
   #   configDir = ./.;

@@ -1,6 +1,6 @@
-{ config, pkgs, ... }:
+{ config, pkgs, outputs, ... }:
 
-{
+outputs.lib.mkModule config "tmux" {
   programs.tmux = {
     enable = true;
     plugins = with pkgs.tmuxPlugins; [ catppuccin extrakto resurrect mode-indicator yank sensible ];

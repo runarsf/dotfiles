@@ -4,7 +4,7 @@
   imports = [
     ./json2nix.nix
   ];
-} // outputs.lib.mkEnabledModule config "Nix" {
+} // outputs.lib.mkModule config "nix" {
   home.sessionVariables = {
     FLAKE = "${config.home.homeDirectory}/.config/nixos";
   };

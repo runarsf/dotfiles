@@ -27,11 +27,15 @@ in
     ../waybar
   ];
 }
-// outputs.lib.mkDesktopModule config "Hyprland" {
+// outputs.lib.mkDesktopModule config "hyprland" {
+  modules.wayland.enable = true;
+  modules.waybar.enable = true;
+  modules.fuzzel.enable = true;
+
   # FIXME Adding this will make *all* other packages build from source instaed of fetching...
   # nix.settings = {
-    # substituters = [ "https://hyprland.cachix.org" ];
-    # trusted-public-keys = [ "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc=" ];
+  # substituters = [ "https://hyprland.cachix.org" ];
+  # trusted-public-keys = [ "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc=" ];
   # };
   nixos.xdg.portal.extraPortals = with pkgs; [ xdg-desktop-portal-hyprland ]; # xdg-desktop-portal-gtk ];
   xdg.portal.configPackages = with pkgs; [
@@ -62,7 +66,7 @@ in
     hyprcursor
     slurp
     waypipe
-    cinnamon.nemo
+    nemo
     wl-clipboard
     wl-clip-persist
     libsForQt5.qt5.qtwayland
@@ -247,7 +251,7 @@ in
           "${mod}, Return, exec, ${config.programs.kitty.package}/bin/kitty"
           "${mod}, Q, killactive"
           "${mod} SHIFT, E, exit"
-          "${mod}, E, exec, ${pkgs.cinnamon.nemo}/bin/nemo"
+          "${mod}, E, exec, ${pkgs.nemo}/bin/nemo"
           "${mod}, K, exec, ${pkgs.seahorse}/bin/seahorse"
           "${mod} SHIFT, F, togglefloating"
           "${mod} ALT, F, workspaceopt, allfloat"

@@ -1,6 +1,12 @@
-{ pkgs, ... }:
+{
+  config,
+  pkgs,
+  outputs,
+  ...
+}:
 
-let waylandEnv = {
+let
+  waylandEnv = {
     NIXOS_OZONE_WL = "1";
     MOZ_ENABLE_WAYLAND = "1";
     QT_QPA_PLATFORM = "wayland";
@@ -12,7 +18,8 @@ let waylandEnv = {
     ELECTRON_OZONE_PLATFORM_HINT = "wayland";
   };
 
-in {
+in
+outputs.lib.mkModule config "wayland" {
   home.sessionVariables = waylandEnv;
   # NOTE This will break stuff if there is a non-wayland user on the same machine,
   #  but application launchers need this.

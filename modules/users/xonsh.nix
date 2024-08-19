@@ -1,4 +1,9 @@
-{ pkgs, ... }:
+{
+  config,
+  pkgs,
+  outputs,
+  ...
+}:
 
 # TODO Add xontribs
 #  https://github.com/scopatz/xontrib-kitty
@@ -11,7 +16,7 @@
 #  https://github.com/vaaaaanquish/xontrib-readable-traceback
 #  https://github.com/anki-code/xontrib-sh
 
-{
+outputs.lib.mkModule config "xonsh" {
   nixos.programs.xonsh = {
     enable = true;
     config = ''

@@ -1,8 +1,16 @@
-{ config, pkgs, inputs, outputs, name, ... }:
+{
+  config,
+  pkgs,
+  inputs,
+  outputs,
+  name,
+  ...
+}:
 
 {
   imports = [ inputs.arkenfox.hmModules.arkenfox ];
-} // outputs.lib.mkDesktopModule config "firefox" {
+}
+// outputs.lib.mkDesktopModule config "firefox" {
   # TODO Link hover effects from Firefox-Alpha
   # https://github.com/Naezr/ShyFox
   # home.file.".mozilla/firefox/${name}/chrome/" = {
@@ -242,21 +250,27 @@
       #     }
       #   }
       # '';
+
+      # https://arkenfox.dwarfmaster.net/
       arkenfox = {
         enable = true;
         "0000".enable = true;
         "0100" = {
           enable = true;
           "0102"."browser.startup.page".value = 3;
-          # "0103"."browser.startup.homepage".value = "about:home";
-          # "0104"."browser.newtabpage.enabled".value = true;
         };
         "0200".enable = true;
         "0300".enable = true;
         "0600".enable = true;
         "0600"."0602".enable = false;
         "0800".enable = true;
-        "0800"."0830".enable = false;
+        "0800" = {
+          "0830".enable = false;
+          "0803" = {
+            "browser.search.suggest.enabled".value = true;
+            "browser.urlbar.suggest.searches".value = true;
+          };
+        };
         "0900".enable = true;
         "1200".enable = true;
         "1700".enable = true;
@@ -280,9 +294,8 @@
         "layout.css.has-selector.enabled" = true;
 
         "devtools.toolbox.zoomValue" = 1.1;
-        "devtools.toolbox.tabsOrder" =
-          "inspector,webconsole,storage,netmonitor,styleeditor,jsdebugger,@react-devtools,@react-devtools";
-        "devtools.toolbox.host" = "bottom";
+        "devtools.toolbox.tabsOrder" = "inspector,webconsole,storage,netmonitor,styleeditor,jsdebugger,@react-devtools,@react-devtools";
+        # "devtools.toolbox.host" = "bottom";
         "devtools.toolbox.selectedTool" = "webconsole";
         "devtools.cache.disabled" = true;
         "devtools.webconsole.input.editorOnboarding" = false;
@@ -319,9 +332,9 @@
         "browser.urlbar.suggest.remotetab" = false;
         "browser.urlbar.suggest.topsites" = false;
 
-        "keyword.enabled" = true;
-        "browser.search.suggest.enabled" = false;
-        "browser.urlbar.suggest.searches" = false;
+        # "keyword.enabled" = true;
+        # "browser.search.suggest.enabled" = false;
+        # "browser.urlbar.suggest.searches" = false;
 
         "extensions.webextensions.tabhide.enabled" = true;
 
