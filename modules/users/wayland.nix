@@ -45,7 +45,7 @@ outputs.lib.mkModule config "wayland" {
       enable = true;
       extraPortals = with pkgs; [
         xdg-desktop-portal-wlr
-        xdg-desktop-portal-gtk
+        xdg-desktop-portal-gtk # FIXME This is also added in hyprland, add only once
       ];
     };
   };

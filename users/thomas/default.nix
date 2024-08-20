@@ -16,14 +16,16 @@ outputs.lib.mkFor system hostname {
       ./config/secrets.nix
     ];
 
-    modules.neovim.enable = true;
-    modules.zsh.enable = true;
-    modules.git.enable = true;
-    modules.gpg.enable = true;
-    modules.ssh.enable = true;
-    modules.keychain.enable = true;
-    modules.sops.enable = true;
-    modules.nix.enable = true;
+    modules = outputs.lib.enable [
+      "neovim"
+      "zsh"
+      "git"
+      "gpg"
+      "ssh"
+      "keychain"
+      "sops"
+      "nix"
+    ];
 
     wallpaper = ./wallpaper.jpg;
 
@@ -35,18 +37,20 @@ outputs.lib.mkFor system hostname {
 
   systems = {
     linux = {
-      modules.firefox.enable = true;
-      modules.discord.enable = true;
-      modules.fonts.enable = true;
-      modules.stylix.enable = true;
-      modules.vscode.enable = true;
-      modules.hyprland.enable = true;
-      modules.kitty.enable = true;
-      modules.python.enable = true;
-      modules.c.enable = true;
-      modules.c-ide.enable = true;
-      modules.writing.enable = true;
-      modules.spotify.enable = true;
+      modules = outputs.lib.enable [
+        "firefox"
+        "discord"
+        "fonts"
+        "stylix"
+        "vscode"
+        "hyprland"
+        "kitty"
+        "python"
+        "c"
+        "c"
+        "writing"
+        "spotify"
+      ];
 
       nixos = {
         programs.zsh.enable = true;
