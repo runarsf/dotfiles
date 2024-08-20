@@ -47,7 +47,7 @@ outputs.lib.mkFor system hostname {
         "kitty"
         "python"
         "c"
-        "c"
+        "c-ide"
         "writing"
         "spotify"
       ];

@@ -16,6 +16,7 @@ in
 outputs.lib.mkFor system hostname {
   common = {
     # TODO Make this apply to all users
+    # TODO Do this for hosts as well
     imports = outputs.lib.umport { path = ../../modules/users; } ++ [
       { _module.args.keys = [ "${config.home.homeDirectory}/.ssh/id_nix" ]; }
       ./config/secrets.nix
@@ -53,9 +54,8 @@ outputs.lib.mkFor system hostname {
         "hyprland"
         "kitty"
         "python"
-        "python"
         "c"
-        "c"
+        "c-ide"
         "writing"
         "spotify"
       ];
