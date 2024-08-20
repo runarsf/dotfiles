@@ -19,12 +19,8 @@ in
 {
   imports = [
     inputs.hyprland.homeManagerModules.default
-    ./hyprlock.nix
     ./hypridle.nix
-    ../kitty
-    ../fuzzel.nix
-    ../wayland.nix
-    ../waybar
+    ./hyprlock.nix
   ];
 }
 // outputs.lib.mkDesktopModule config "hyprland" {
@@ -152,7 +148,7 @@ in
           "col.active_border" = "rgba(676767ee) rgba(414141ee) 90deg";
           "col.inactive_border" = "rgba(67676766) rgba(41414166) 90deg";
 
-          layout = "dwindle";
+          layout = "master";
           resize_on_border = false;
         };
         # hyprctl -j devices | jq -r '.mice | .[] | .name'

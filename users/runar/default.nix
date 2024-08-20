@@ -1,36 +1,16 @@
-{
-  config,
-  inputs,
-  outputs,
-  system,
-  hostname,
-  name,
-  pkgs,
-  ...
-}:
+{ config, inputs, outputs, system, hostname, name, pkgs, ... }:
 
-let
-  ifIsDesktop = outputs.lib.optionals (outputs.lib.isDesktop config hostname);
+let ifIsDesktop = outputs.lib.optionals (outputs.lib.isDesktop config hostname);
 
-in
-outputs.lib.mkFor system hostname {
+in outputs.lib.mkFor system hostname {
   common = {
-    imports = [
-      { _module.args.keys = [ "${config.home.homeDirectory}/.ssh/id_nix" ]; }
-
-      # (inputs.nypkgs.lib.${system}.umport { path = ../../modules/users/development; })
-
-      ../../modules/users/zsh.nix
-      ../../modules/users/git.nix
-      ../../modules/users/gpg.nix
-      ../../modules/users/ssh.nix
-      ../../modules/users/keychain.nix
-      ../../modules/users/wallpaper.nix
-      ../../modules/users/sops.nix
-      ../../modules/users/zellij.nix
-
-      ./config/secrets.nix
-    ];
+    # TODO Find a way to exclude things like firefox/addons.nix, that should be imported in firefox/default.nix
+    # imports = inputs.nypkgs.lib.${system}.umport { path = ../../modules/users; }
+    imports = outputs.lib.umport { path = ../../modules/users; }
+      ++ [
+        { _module.args.keys = [ "${config.home.homeDirectory}/.ssh/id_nix" ]; }
+        ./config/secrets.nix
+      ];
 
     modules.zellij.enable = true;
     modules.neovim.enable = true;
@@ -42,6 +22,7 @@ outputs.lib.mkFor system hostname {
     modules.sops.enable = true;
     modules.javascript.enable = true;
     modules.nix.enable = true;
+    modules.lf.enable = true;
 
     wallpaper = ./wallpaper.jpg;
 
@@ -66,18 +47,6 @@ outputs.lib.mkFor system hostname {
       modules.c-ide.enable = true;
       modules.writing.enable = true;
       modules.spotify.enable = true;
-
-      imports = [
-        ../../modules/users/discord.nix
-        ../../modules/users/writing.nix
-        ../../modules/users/xdg.nix
-        ../../modules/users/spotify.nix
-        ../../modules/users/development
-        ../../modules/users/fonts.nix
-        ../../modules/users/stylix.nix
-        ../../modules/users/hyprland
-        ../../modules/users/firefox
-      ];
 
       nixos = {
         programs.zsh.enable = true;
@@ -105,20 +74,9 @@ outputs.lib.mkFor system hostname {
   hosts = {
     runix = {
       isDesktop = true;
-      # FIXME Module doesn't exist
-      modules.android.enable = true;
-      # modules.dev.android.enable = false;
-      nixos.hardware.logitech.wireless.enable = true;
 
-      home.packages =
-        with pkgs.unstable;
-        ifIsDesktop [
-          solaar
-          prismlauncher
-          stremio
-          obs-studio
-          chromium
-        ];
+      home.packages = with pkgs.unstable;
+        ifIsDesktop [ stremio obs-studio chromium ];
     };
   };
 }

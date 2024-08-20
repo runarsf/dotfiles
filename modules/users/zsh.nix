@@ -86,7 +86,7 @@
         _wanted files expl 'local files' _files
       }
 
-      lf () { cd "$(${pkgs.walk}/bin/walk "$@")" }
+      lk () { cd "$(${pkgs.walk}/bin/walk "$@")" }
       ze () { "$EDITOR" "$("${config.programs.zoxide.package}/bin/zoxide" query "$@")" }
       zcode () { "${config.programs.vscode.package}/bin/code" "$("${config.programs.zoxide.package}/bin/zoxide" query "$@")" }
       zd () { set -e; cd "$("${config.programs.zoxide.package}/bin/zoxide" query "$PWD" "$@")"; set +e }
