@@ -11,17 +11,8 @@
 
 outputs.lib.mkFor system hostname {
   common = {
-    imports = [
+    imports = outputs.lib.umport { path = ../../modules/users; } ++ [
       { _module.args.keys = [ "${config.home.homeDirectory}/.ssh/id_nix" ]; }
-
-      ../../modules/users/zsh.nix
-      ../../modules/users/git.nix
-      ../../modules/users/gpg.nix
-      ../../modules/users/ssh.nix
-      ../../modules/users/keychain.nix
-      ../../modules/users/wallpaper.nix
-      ../../modules/users/sops.nix
-
       ./config/secrets.nix
     ];
 
@@ -56,19 +47,6 @@ outputs.lib.mkFor system hostname {
       modules.c-ide.enable = true;
       modules.writing.enable = true;
       modules.spotify.enable = true;
-
-      imports = [
-        ../../modules/users/discord.nix
-        ../../modules/users/writing.nix
-        ../../modules/users/xdg.nix
-        ../../modules/users/spotify.nix
-        ../../modules/users/development
-        ../../modules/users/fonts.nix
-        ../../modules/users/stylix.nix
-        ../../modules/users/hyprland
-        ../../modules/users/firefox
-        ../../modules/users/development
-      ];
 
       nixos = {
         programs.zsh.enable = true;

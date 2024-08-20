@@ -1,16 +1,25 @@
-{ config, inputs, outputs, system, hostname, name, pkgs, ... }:
+{
+  config,
+  inputs,
+  outputs,
+  system,
+  hostname,
+  name,
+  pkgs,
+  ...
+}:
 
-let ifIsDesktop = outputs.lib.optionals (outputs.lib.isDesktop config hostname);
+let
+  ifIsDesktop = outputs.lib.optionals (outputs.lib.isDesktop config hostname);
 
-in outputs.lib.mkFor system hostname {
+in
+outputs.lib.mkFor system hostname {
   common = {
-    # TODO Find a way to exclude things like firefox/addons.nix, that should be imported in firefox/default.nix
-    # imports = inputs.nypkgs.lib.${system}.umport { path = ../../modules/users; }
-    imports = outputs.lib.umport { path = ../../modules/users; }
-      ++ [
-        { _module.args.keys = [ "${config.home.homeDirectory}/.ssh/id_nix" ]; }
-        ./config/secrets.nix
-      ];
+    # TODO Make this apply to all users
+    imports = outputs.lib.umport { path = ../../modules/users; } ++ [
+      { _module.args.keys = [ "${config.home.homeDirectory}/.ssh/id_nix" ]; }
+      ./config/secrets.nix
+    ];
 
     modules.zellij.enable = true;
     modules.neovim.enable = true;
@@ -22,7 +31,6 @@ in outputs.lib.mkFor system hostname {
     modules.sops.enable = true;
     modules.javascript.enable = true;
     modules.nix.enable = true;
-    modules.lf.enable = true;
 
     wallpaper = ./wallpaper.jpg;
 
@@ -75,8 +83,13 @@ in outputs.lib.mkFor system hostname {
     runix = {
       isDesktop = true;
 
-      home.packages = with pkgs.unstable;
-        ifIsDesktop [ stremio obs-studio chromium ];
+      home.packages =
+        with pkgs.unstable;
+        ifIsDesktop [
+          stremio
+          obs-studio
+          chromium
+        ];
     };
   };
 }

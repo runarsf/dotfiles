@@ -19,10 +19,11 @@
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
-    nypkgs = {
-      url = "github:yunfachi/nypkgs";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    # Used for umport, but updated version in utils
+    # nypkgs = {
+    #   url = "github:yunfachi/nypkgs";
+    #   inputs.nixpkgs.follows = "nixpkgs";
+    # };
 
     sops-nix = {
       url = "github:Mic92/sops-nix";

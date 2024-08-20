@@ -29,13 +29,24 @@ outputs.lib.mkModule config "wayland" {
 
   home.packages = with pkgs; [ xorg.xeyes ];
 
-  # FIXME "Existing file '/home/runar/.config/mimeapps.list' is in the way ..."
-  #  https://discourse.nixos.org/t/home-manager-and-the-mimeapps-list-file-on-plasma-kde-desktops/37694/4
-  # xdg = {
-  #   mimeApps.enable = true;
-  #   portal = {
-  #     enable = true;
-  #     extraPortals = with pkgs; [ xdg-desktop-portal-wlr xdg-desktop-portal-gtk ];
-  #   };
-  # };
+  # https://discourse.nixos.org/t/home-manager-and-the-mimeapps-list-file-on-plasma-kde-desktops/37694/7
+  xdg = {
+    # Don't generate config at the usual place.
+    # Allow desktop applications to write their file association
+    # preferences to this file.
+    configFile."mimeapps.list".enable = false;
+    # Home-manager also writes xdg-mime-apps configuration to the
+    # "deprecated" location. Desktop applications will look in this
+    # list for associations, if no association was found in the
+    # previous config file.
+    dataFile."applications/mimeapps.list".force = true;
+    mimeApps.enable = true;
+    portal = {
+      enable = true;
+      extraPortals = with pkgs; [
+        xdg-desktop-portal-wlr
+        xdg-desktop-portal-gtk
+      ];
+    };
+  };
 }

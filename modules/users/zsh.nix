@@ -1,17 +1,21 @@
-{ config, outputs, pkgs, ... }:
+{
+  config,
+  outputs,
+  pkgs,
+  ...
+}:
 
 {
   imports = [
     ../../modules/users/starship.nix
     ../../modules/users/shell-utils.nix
   ];
-} // outputs.lib.mkModule config "zsh" {
+}
+// outputs.lib.mkModule config "zsh" {
   modules.starship.enable = true;
 
   home = {
-    packages = with pkgs; [
-      libnotify
-    ];
+    packages = with pkgs; [ libnotify ];
     shellAliases = {
       develop = outputs.lib.mkForce "nix develop --command zsh";
     };
@@ -73,7 +77,6 @@
              menucomplete \
              autoparamslash \
              nonomatch
-      # FIXME nonomatch
 
       _comp_options+=(globdots)
 
@@ -86,7 +89,6 @@
         _wanted files expl 'local files' _files
       }
 
-      lk () { cd "$(${pkgs.walk}/bin/walk "$@")" }
       ze () { "$EDITOR" "$("${config.programs.zoxide.package}/bin/zoxide" query "$@")" }
       zcode () { "${config.programs.vscode.package}/bin/code" "$("${config.programs.zoxide.package}/bin/zoxide" query "$@")" }
       zd () { set -e; cd "$("${config.programs.zoxide.package}/bin/zoxide" query "$PWD" "$@")"; set +e }
