@@ -1,15 +1,8 @@
-{
-  outputs,
-  config,
-  pkgs,
-  ...
-}:
+{ outputs, config, pkgs, ... }:
 
 {
   imports = [ ./fonts.nix ];
-  modules.alacritty.enable = false;
-}
-// outputs.lib.mkDesktopModule config "alacritty" {
+} // outputs.lib.mkDesktopModule config "alacritty" {
 
   # https://alacritty.org/config-alacritty.html
   programs.alacritty = {

@@ -1,3 +1,4 @@
+eat my ass
 { buildFirefoxXpiAddon, fetchurl, lib, stdenv }:
   {
     "adaptive-tab-bar-colour" = buildFirefoxXpiAddon {

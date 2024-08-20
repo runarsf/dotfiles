@@ -1,16 +1,20 @@
-{
-  config,
-  pkgs,
-  inputs,
-  outputs,
-  name,
-  ...
-}:
+{ config, pkgs, inputs, outputs, name, ... }:
 
 {
   imports = [ inputs.arkenfox.hmModules.arkenfox ];
-}
-// outputs.lib.mkDesktopModule config "firefox" {
+} // outputs.lib.mkDesktopModule config "firefox" {
+  xdg.mimeApps = {
+    enable = true;
+    defaultApplications = {
+      "default-web-browser" = [ "firefox.desktop" ];
+      "text/html" = [ "firefox.desktop" ];
+      "x-scheme-handler/http" = [ "firefox.desktop" ];
+      "x-scheme-handler/https" = [ "firefox.desktop" ];
+      "x-scheme-handler/about" = [ "firefox.desktop" ];
+      "x-scheme-handler/unknown" = [ "firefox.desktop" ];
+    };
+  };
+
   # TODO Link hover effects from Firefox-Alpha
   # https://github.com/Naezr/ShyFox
   # home.file.".mozilla/firefox/${name}/chrome/" = {
@@ -294,7 +298,8 @@
         "layout.css.has-selector.enabled" = true;
 
         "devtools.toolbox.zoomValue" = 1.1;
-        "devtools.toolbox.tabsOrder" = "inspector,webconsole,storage,netmonitor,styleeditor,jsdebugger,@react-devtools,@react-devtools";
+        "devtools.toolbox.tabsOrder" =
+          "inspector,webconsole,storage,netmonitor,styleeditor,jsdebugger,@react-devtools,@react-devtools";
         # "devtools.toolbox.host" = "bottom";
         "devtools.toolbox.selectedTool" = "webconsole";
         "devtools.cache.disabled" = true;

@@ -5,10 +5,7 @@
   ...
 }:
 
-{
-  imports = [ ../../modules/users/lf ];
-}
-// outputs.lib.mkEnabledModule config "shell-utils" {
+outputs.lib.mkEnabledModule config "shell-utils" {
   programs.fzf.enable = true;
 
   nixos = {
