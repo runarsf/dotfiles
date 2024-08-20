@@ -1,8 +1,6 @@
 { config, pkgs, outputs, ... }:
 
-{
-  imports = [ ./json2nix.nix ];
-} // outputs.lib.mkModule config "nix" {
+outputs.lib.mkModule config "nix" {
   home.sessionVariables = {
     FLAKE = "${config.home.homeDirectory}/.config/nixos";
   };
