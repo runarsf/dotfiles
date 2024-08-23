@@ -187,22 +187,38 @@ in
         decoration = {
           rounding = 5;
 
+          # blur = {
+          #   enabled = true;
+          #   size = 5;
+          #   passes = 2;
+          # };
           blur = {
             enabled = true;
-            size = 5;
-            passes = 2;
+            size = 16;
+            passes = 3;
+            new_optimizations = true;
+            ignore_opacity = true;
+            vibrancy = 1;
+            brightness = 1;
+            xray = true;
+            noise = 3.0e-2;
+            contrast = 1;
           };
+
+          drop_shadow = true;
+          shadow_range = 32;
+          shadow_render_power = 3;
+          shadow_ignore_window = true;
+          shadow_scale = 1;
+          "col.shadow" = "rgba(00000048)";
+          "col.shadow_inactive" = "rgba(00000028)";
+          # shadow_range = 14;
+          # "col.shadow" = "rgba(00000045)";
 
           layerrule = [
             "blur,wofi"
             "blur,launcher"
           ];
-
-          drop_shadow = true;
-          shadow_range = 14;
-          shadow_render_power = 3;
-          shadow_ignore_window = true;
-          "col.shadow" = "rgba(00000045)";
         };
         animations = {
           enabled = "yes";
@@ -344,6 +360,11 @@ in
           "center, class:^(.*)(scratchpad)$"
 
           "noborder, fullscreen:1"
+
+          # electron apps have resize artifacts with animations enabled, disable for now {{{
+          "noanim,class:^(obsidian)$"
+          "noanim,class:^(discord)$"
+          "noanim,initialTitle:^(Visual Studio Code)$"
 
           "opacity 0.9 0.9, class:^(kitty)$"
           "opacity 0.9 0.9, class:^(scratchpad)$"

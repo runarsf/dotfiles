@@ -18,5 +18,8 @@
 
   # users.users.ops.extraGroups = [ "docker" ];
 
-  environment.systemPackages = with pkgs.unstable; [ podman podman-compose ];
+  environment.systemPackages = with pkgs.unstable; [
+    podman
+    podman-compose
+  ];
 }

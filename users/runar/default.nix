@@ -17,10 +17,10 @@ outputs.lib.mkFor system hostname {
   common = {
     # TODO Make this apply to all users
     # TODO Do this for hosts as well
-    imports = outputs.lib.umport { path = ../../modules/users; } ++ [
-      { _module.args.keys = [ "${config.home.homeDirectory}/.ssh/id_nix" ]; }
-      ./config/secrets.nix
-    ];
+    imports =
+      outputs.lib.umport { path = ../../modules/users; }
+      ++ outputs.lib.umport { path = ./config; }
+      ++ [ { _module.args.keys = [ "${config.home.homeDirectory}/.ssh/id_nix" ]; } ];
 
     modules = outputs.lib.enable [
       "zellij"
@@ -36,11 +36,6 @@ outputs.lib.mkFor system hostname {
     ];
 
     wallpaper = ./wallpaper.jpg;
-
-    programs.git = {
-      userName = "Runar Fredagsvik";
-      userEmail = "i@runar.ch";
-    };
   };
 
   systems = {
@@ -86,6 +81,8 @@ outputs.lib.mkFor system hostname {
   hosts = {
     runix = {
       isDesktop = true;
+
+      modules = outputs.lib.enable [ "ctf" ];
 
       home.packages =
         with pkgs.unstable;

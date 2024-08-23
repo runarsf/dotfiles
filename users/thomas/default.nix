@@ -78,6 +78,8 @@ outputs.lib.mkFor system hostname {
   hosts = {
     toaster = {
       isDesktop = true;
+
+      modules = outputs.lib.enable [ "ctf" ];
     };
   };
 }

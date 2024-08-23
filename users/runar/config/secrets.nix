@@ -1,11 +1,20 @@
-{ config, inputs, outputs, pkgs, system, hostname, ... }:
+{
+  config,
+  inputs,
+  outputs,
+  pkgs,
+  system,
+  hostname,
+  ...
+}:
 
 let
-  keys = outputs.lib.concatMap (key: [ key "${key}.pub" ]) [
+  privateKeys = [
     "id_priv"
     "id_ntnu"
     "id_golog"
   ];
+  keys = privateKeys ++ map (key: "${key}.pub") privateKeys;
 
   mkSecretFiles = map (key: {
     name = key;
@@ -15,24 +24,30 @@ let
     };
   }) keys;
 
+  secretFileDestinations = map (key: "${config.home.homeDirectory}/.ssh/${key}") privateKeys;
+
   secretFilesSet = builtins.listToAttrs mkSecretFiles;
 
-  # {
-  # sops = {
-  #   defaultSopsFile = "${inputs.vault}/secrets.yaml";
-  #   secrets = {
-  #     password_runar = {
-  #       sopsFile = "${inputs.vault}/passwords/runar";
-  #       neededForUsers = true;
-  #     };
-  #   };
-  # };
-  # } //
-in outputs.lib.mkFor system hostname {
+in
+# {
+# sops = {
+#   defaultSopsFile = "${inputs.vault}/secrets.yaml";
+#   secrets = {
+#     password_runar = {
+#       sopsFile = "${inputs.vault}/passwords/runar";
+#       neededForUsers = true;
+#     };
+#   };
+# };
+# } //
+outputs.lib.mkFor system hostname {
   # hosts.rpi.sops.secrets = {
-    # cloudflare = { sopsFile = "${inputs.vault}/secrets/cloudflare.txt"; };
+  # cloudflare = { sopsFile = "${inputs.vault}/secrets/cloudflare.txt"; };
   # };
   hosts.runix = {
+    programs.ssh.matchBlocks."" = {
+      identityFile = secretFileDestinations;
+    };
     sops = {
       secrets = outputs.lib.deepMerge [
         secretFilesSet
@@ -55,8 +70,12 @@ in outputs.lib.mkFor system hostname {
     programs.kitty.font.name = "Operator Mono Lig";
     stylix.targets.kitty.enable = false;
     systemd.user.services.myfonts = {
-      Unit = { Description = "Fonts with stupid licenses"; };
-      Install = { WantedBy = [ "default.target" ]; };
+      Unit = {
+        Description = "Fonts with stupid licenses";
+      };
+      Install = {
+        WantedBy = [ "default.target" ];
+      };
       Service = {
         ExecStart = "${pkgs.writeShellScript "install-fonts" ''
           #!/run/current-system/sw/bin/bash

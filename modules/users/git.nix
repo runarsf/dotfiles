@@ -1,8 +1,11 @@
-{ pkgs, outputs, config, ... }:
+{
+  pkgs,
+  outputs,
+  config,
+  ...
+}:
 
 outputs.lib.mkModule config "git" {
-  # TODO Per directory git config https://stackoverflow.com/a/43884702
-  #  https://git-scm.com/docs/git-config#_conditional_includes
   programs.git = {
     enable = true;
 
@@ -10,19 +13,6 @@ outputs.lib.mkModule config "git" {
 
     userEmail = outputs.lib.mkDefault (throw "programs.git.userEmail is not set");
     userName = outputs.lib.mkDefault (throw "programs.git.userName is not set");
-
-    # TODO Convert to attrset, and make it work
-    /* extraConfig = ''
-      [includeIf "gitdir:work/"]
-        path = ${pkgs.writeText ".gitconfig-work" ''
-          [user]
-            name = Runar Fredagsvik
-            email = runar.fredagsvik@work.com
-
-          [core]
-            sshCommand = ssh -i ~/.ssh/id_work
-      ''}
-    ''; */
 
     aliases = rec {
       aliases = "config --get-regexp alias";
@@ -37,16 +27,12 @@ outputs.lib.mkModule config "git" {
       latest = "log -1";
       last = latest;
 
-      graph =
-        "log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit";
+      graph = "log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit";
 
-      pull-all =
-        "!fn() { find . -type d -depth 1 -exec git --git-dir={}/.git --work-tree=$PWD/{} pull ';'; }; fn";
-      discard-all =
-        "!fn() { git checkout main; git branch | grep -v 'main' | xargs git branch -D; }; fn";
+      pull-all = "!fn() { find . -type d -depth 1 -exec git --git-dir={}/.git --work-tree=$PWD/{} pull ';'; }; fn";
+      discard-all = "!fn() { git checkout main; git branch | grep -v 'main' | xargs git branch -D; }; fn";
 
-      purge =
-        "!fn() { git delete-all-branches; git fetch --prune; git reset --hard origin/main; git clean -df; }; fn";
+      purge = "!fn() { git delete-all-branches; git fetch --prune; git reset --hard origin/main; git clean -df; }; fn";
     };
   };
 

@@ -6,13 +6,15 @@
   ...
 }:
 
-let
-  # TODO If the profile doesn't exist (firefox not enabled), don't die
-  wp = "${config.home.homeDirectory}/.mozilla/firefox/${
-    config.programs.firefox.profiles."${name}".path
-  }/chrome/wallpaper.jpg";
+# let
+# TODO If the profile doesn't exist (firefox not enabled), don't die
+# wp =
+# outputs.lib.optionalString (config.programs.firefox.profiles ? name)
+# "${config.home.homeDirectory}/.mozilla/firefox/${
+# config.programs.firefox.profiles."${name}".path
+# }/chrome/wallpaper.jpg";
 
-in
+# in
 {
   options.wallpaper = outputs.lib.mkOption {
     default = null;
@@ -21,7 +23,7 @@ in
 
   config = outputs.lib.mkIf (config.wallpaper != null) {
     programs.hyprlock.settings.background.path = (builtins.toString config.wallpaper);
-    home.file."${wp}".source = config.wallpaper;
+    # home.file."${wp}".source = config.wallpaper;
 
     stylix.image = outputs.lib.mkForce config.wallpaper;
 
