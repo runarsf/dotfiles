@@ -1,11 +1,15 @@
-{
-  config,
-  pkgs,
-  outputs,
-  ...
-}:
+{ config, pkgs, inputs, outputs, ... }:
 
+# {
+  # TODO https://github.com/redcode-labs/RedNix/issues/10
+  # $ nixos-container start rednix
+  # $ systemctl status container@rednix
+  # $ nixos-container root-login rednix
+  # imports = [ inputs.rednix.container ];
+# } //
 outputs.lib.mkModule config "ctf" {
+  # containers.rednix.autoStart = false;
+
   home = {
     packages = with pkgs; [
       radare2
@@ -31,14 +35,12 @@ outputs.lib.mkModule config "ctf" {
       wget
     ];
 
-    file.".local/bin/nc-respond".source =
-      let
-        script = pkgs.writeShellApplication {
-          name = "nc-respond";
-          runtimeInputs = with pkgs; [ coreutils ];
-          text = builtins.readFile ./nc-respond.sh;
-        };
-      in
-      "${script}/bin/nc-respond";
+    file.".local/bin/nc-respond".source = let
+      script = pkgs.writeShellApplication {
+        name = "nc-respond";
+        runtimeInputs = with pkgs; [ coreutils ];
+        text = builtins.readFile ./nc-respond.sh;
+      };
+    in "${script}/bin/nc-respond";
   };
 }

@@ -55,6 +55,8 @@
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
+    rednix.url = "github:redcode-labs/RedNix";
+
     stylix.url = "github:danth/stylix";
 
     nixos-hardware.url = "github:nixos/nixos-hardware";

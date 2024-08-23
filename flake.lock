@@ -170,6 +170,27 @@
         "type": "github"
       }
     },
+    "chainsaw": {
+      "inputs": {
+        "nixpkgs": [
+          "rednix",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1724090188,
+        "narHash": "sha256-gCJqx5w0M45H2v37P750sujj2yC10H1STzMNVnXp56A=",
+        "owner": "WithSecureLabs",
+        "repo": "chainsaw",
+        "rev": "c95d48786b120cbf0b6a89bd0e2f1ab7990f9195",
+        "type": "github"
+      },
+      "original": {
+        "owner": "WithSecureLabs",
+        "repo": "chainsaw",
+        "type": "github"
+      }
+    },
     "devshell": {
       "inputs": {
         "flake-utils": "flake-utils_3",
@@ -476,6 +497,31 @@
         "owner": "GNOME",
         "ref": "46.1",
         "repo": "gnome-shell",
+        "type": "github"
+      }
+    },
+    "hackpkgs": {
+      "inputs": {
+        "flake-utils": [
+          "rednix",
+          "utils"
+        ],
+        "nixpkgs": [
+          "rednix",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1658745217,
+        "narHash": "sha256-VyP2WOYmMZG5zmysQWDAXri8H1KwIQ0c+YU9eRiKjc0=",
+        "owner": "applePrincess",
+        "repo": "hackpkgs",
+        "rev": "dd31e977fb99a6f7226954d2cb1d6f48869d8a55",
+        "type": "github"
+      },
+      "original": {
+        "owner": "applePrincess",
+        "repo": "hackpkgs",
         "type": "github"
       }
     },
@@ -1073,6 +1119,22 @@
     },
     "nixpkgs_6": {
       "locked": {
+        "lastModified": 1690548937,
+        "narHash": "sha256-x3ZOPGLvtC0/+iFAg9Kvqm/8hTAIkGjc634SqtgaXTA=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "2a9d660ff0f7ffde9d73be328ee6e6f10ef66b28",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixpkgs-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs_7": {
+      "locked": {
         "lastModified": 1714912032,
         "narHash": "sha256-clkcOIkg8G4xuJh+1onLG4HPMpbtzdLv4rHxFzgsH9c=",
         "owner": "NixOS",
@@ -1194,6 +1256,27 @@
         "type": "github"
       }
     },
+    "rednix": {
+      "inputs": {
+        "chainsaw": "chainsaw",
+        "hackpkgs": "hackpkgs",
+        "nixpkgs": "nixpkgs_6",
+        "utils": "utils_2"
+      },
+      "locked": {
+        "lastModified": 1704656811,
+        "narHash": "sha256-9Hu16UF7jscR7+sTKlvdXMJWYFhGx45UEOEtX9lSksQ=",
+        "owner": "redcode-labs",
+        "repo": "RedNix",
+        "rev": "8e974d3c53701c2c2d48ec39fc8a586b022437e4",
+        "type": "github"
+      },
+      "original": {
+        "owner": "redcode-labs",
+        "repo": "RedNix",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "arkenfox": "arkenfox",
@@ -1209,6 +1292,7 @@
         "nixpkgs-wayland": "nixpkgs-wayland",
         "nixvim": "nixvim",
         "nur": "nur",
+        "rednix": "rednix",
         "sops-nix": "sops-nix",
         "stylix": "stylix",
         "vault": "vault"
@@ -1247,7 +1331,7 @@
         "flake-compat": "flake-compat_5",
         "gnome-shell": "gnome-shell",
         "home-manager": "home-manager_3",
-        "nixpkgs": "nixpkgs_6"
+        "nixpkgs": "nixpkgs_7"
       },
       "locked": {
         "lastModified": 1723834469,
@@ -1392,6 +1476,21 @@
         "owner": "numtide",
         "repo": "flake-utils",
         "rev": "b1d9ab70662946ef0850d488da1c9019f3a9752a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
+    "utils_2": {
+      "locked": {
+        "lastModified": 1678901627,
+        "narHash": "sha256-U02riOqrKKzwjsxc/400XnElV+UtPUQWpANPlyazjH0=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "93a2b84fc4b70d9e089d029deacc3583435c2ed6",
         "type": "github"
       },
       "original": {
