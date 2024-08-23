@@ -1,4 +1,14 @@
-{ config, pkgs, inputs, outputs, ... }:
+{ config, pkgs, outputs, ... }:
+
+# Useful tools
+#   https://binary.ninja/
+#   https://en.wikipedia.org/wiki/List_of_file_signatures
+#   https://gchq.github.io/CyberChef/
+#   https://www.cachesleuth.com/
+#   https://futureboy.us/stegano/decinput.html
+#   https://www.dcode.fr/tools-list
+#   https://pequalsnp-team.github.io/cheatsheet/steganography-101
+#   https://webhook.site/
 
 # {
   # TODO https://github.com/redcode-labs/RedNix/issues/10
@@ -22,6 +32,7 @@ outputs.lib.mkModule config "ctf" {
       wireshark
 
       binutils
+      foremost
       gdb
       capstone
       checksec
