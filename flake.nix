@@ -57,6 +57,8 @@
 
     rednix.url = "github:redcode-labs/RedNix";
 
+    # firefox-nightly.url = "github:nix-community/flake-firefox-nightly";
+
     stylix.url = "github:danth/stylix";
 
     nixos-hardware.url = "github:nixos/nixos-hardware";

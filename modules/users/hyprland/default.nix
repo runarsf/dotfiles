@@ -152,7 +152,7 @@ in
           resize_on_border = false;
         };
         # hyprctl -j devices | jq -r '.mice | .[] | .name'
-        device = [
+        device = outputs.lib.mkDefault [
           {
             name = "logitech-mx-ergo-1";
             sensitivity = "0.6";
@@ -187,11 +187,6 @@ in
         decoration = {
           rounding = 5;
 
-          # blur = {
-          #   enabled = true;
-          #   size = 5;
-          #   passes = 2;
-          # };
           blur = {
             enabled = true;
             size = 16;

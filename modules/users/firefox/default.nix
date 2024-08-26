@@ -1,8 +1,16 @@
-{ config, pkgs, inputs, outputs, name, ... }:
+{
+  config,
+  pkgs,
+  inputs,
+  outputs,
+  name,
+  ...
+}:
 
 {
   imports = [ inputs.arkenfox.hmModules.arkenfox ];
-} // outputs.lib.mkDesktopModule config "firefox" {
+}
+// outputs.lib.mkDesktopModule config "firefox" {
   xdg.mimeApps = {
     enable = true;
     defaultApplications = {
@@ -34,6 +42,8 @@
   #     };
   #   })
   # ];
+
+  # home.packages = with pkgs; [ inputs.firefox-nightly.packages.${pkgs.system}.firefox-nightly-bin ];
 
   programs.firefox = {
     enable = true;
@@ -298,8 +308,7 @@
         "layout.css.has-selector.enabled" = true;
 
         "devtools.toolbox.zoomValue" = 1.1;
-        "devtools.toolbox.tabsOrder" =
-          "inspector,webconsole,storage,netmonitor,styleeditor,jsdebugger,@react-devtools,@react-devtools";
+        "devtools.toolbox.tabsOrder" = "inspector,webconsole,storage,netmonitor,styleeditor,jsdebugger,@react-devtools,@react-devtools";
         # "devtools.toolbox.host" = "bottom";
         "devtools.toolbox.selectedTool" = "webconsole";
         "devtools.cache.disabled" = true;
