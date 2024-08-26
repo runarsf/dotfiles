@@ -79,7 +79,7 @@ outputs.lib.mkFor system hostname {
     toaster = {
       isDesktop = true;
 
-      modules = outputs.lib.enable [ "ctf" ];
+      modules = outputs.lib.enable [ "ctf" "steam" "ffxiv" ];
     };
   };
 }
