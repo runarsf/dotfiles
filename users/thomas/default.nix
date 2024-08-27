@@ -19,6 +19,7 @@ outputs.lib.mkFor system hostname {
     modules = outputs.lib.enable [
       "neovim"
       "zsh"
+      "xonsh"
       "git"
       "gpg"
       "ssh"
@@ -79,7 +80,11 @@ outputs.lib.mkFor system hostname {
     toaster = {
       isDesktop = true;
 
-      modules = outputs.lib.enable [ "ctf" "steam" "ffxiv" ];
+      modules = outputs.lib.enable [
+        "ctf"
+        "steam"
+        "ffxiv"
+      ];
     };
   };
 }

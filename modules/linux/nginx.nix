@@ -1,9 +1,16 @@
-{ config, inputs, pkgs, domain, email, cert, key, ... }:
+{
+  config,
+  inputs,
+  pkgs,
+  domains,
+  email,
+  cert,
+  key,
+  ...
+}:
 
 {
-  imports = [
-    inputs.sops-nix.nixosModules.sops
-  ];
+  imports = [ inputs.sops-nix.nixosModules.sops ];
 
   services.nginx = {
     enable = true;
@@ -13,7 +20,10 @@
     recommendedTlsSettings = true;
   };
 
-  networking.firewall.allowedTCPPorts = [ 80 443 ];
+  networking.firewall.allowedTCPPorts = [
+    80
+    443
+  ];
   users.groups.acmereceivers.members = [ "nginx" ];
   # systemd.user.services.nginx.Unit.After = [ "sops-nix.service" ];
 
@@ -24,14 +34,18 @@
     };
     acceptTerms = true;
     defaults.email = email;
-    certs."${domain}" = {
-      domain = "*.${domain}";
-      # TODO Add support for multiple domains
-      extraDomainNames = [ domain ];
-      group = "acmereceivers";
-      dnsProvider = "cloudflare";
-      credentialsFile = config.sops.templates."acme-credentials".path;
-    };
+    certs = builtins.listToAttrs (
+      map (domain: {
+        name = domain;
+        value = {
+          domain = "*.${domain}";
+          extraDomainNames = [ domain ];
+          group = "acmereceivers";
+          dnsProvider = "cloudflare";
+          credentialsFile = config.sops.templates."acme-credentials".path;
+        };
+      }) domains
+    );
   };
 
   services.nginx.virtualHosts = {
@@ -39,7 +53,9 @@
       forceSSL = true;
       sslCertificate = cert;
       sslCertificateKey = key;
-      locations."/" = { return = "418"; };
+      locations."/" = {
+        return = "418";
+      };
     };
   };
 
@@ -56,15 +72,18 @@
   services.cloudflare-dyndns = {
     enable = true;
     proxied = true;
-    domains = [ "*.${domain}" "${domain}" ];
+    domains = [
+      "*.${domain}"
+      "${domain}"
+    ];
     apiTokenFile = config.sops.templates."cloudflare-dyndns".path;
   };
 
-  sops.secrets.cloudflare_token = {};
+  sops.secrets.cloudflare_token = { };
   sops.templates."acme-credentials".content = ''
     CLOUDFLARE_DNS_API_TOKEN=${config.sops.placeholder.cloudflare_token}
   '';
   sops.templates."cloudflare-dyndns".content = ''
     CLOUDFLARE_API_TOKEN=${config.sops.placeholder.cloudflare_token}
   '';
-} 
+}

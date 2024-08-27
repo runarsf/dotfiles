@@ -1,12 +1,20 @@
-{ config, lib, pkgs, inputs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  inputs,
+  ...
+}:
 
 let
-  domain = "runar.ch";
+  domains = [ "runar.ch" ];
+  domain = builtins.head domains;
   email = "i@${domain}";
   cert = "/var/lib/acme/${domain}/cert.pem";
   key = "/var/lib/acme/${domain}/key.pem";
 
-in {
+in
+{
   # https://github.com/lucernae/nixos-pi
   imports = [
     inputs.nixos-hardware.nixosModules.raspberry-pi-4
@@ -15,13 +23,36 @@ in {
     # nixpkgs/nixos/modules/installer/cd-dvd/channel.nix
     # (import ../common/containers/pialert.nix { inherit config domain cert key email; })
     ../../modules/linux/service-account.nix
-    (import ../../modules/linux/nginx.nix { inherit config inputs pkgs domain cert key email; })
-    (import ../../modules/linux/containers/gonic.nix { inherit config domain cert key; })
-    (import ../../modules/linux/containers/copyparty.nix { inherit config domain cert key; })
+    (import ../../modules/linux/nginx.nix {
+      inherit
+        config
+        inputs
+        pkgs
+        domains
+        cert
+        key
+        email
+        ;
+    })
+    (import ../../modules/linux/containers/gonic.nix {
+      inherit
+        config
+        domain
+        cert
+        key
+        ;
+    })
+    (import ../../modules/linux/containers/copyparty.nix {
+      inherit
+        config
+        domain
+        cert
+        key
+        ;
+    })
     ../../modules/linux/docker.nix
     ../../modules/linux/podman.nix
     ../../modules/linux/firewall.nix
-    # TODODhttps://github.com/glanceapp/glance
   ];
 
   system.stateVersion = "23.11";
@@ -44,11 +75,25 @@ in {
   # Settings above are the bare minimum
   # All settings below are customized depending on your needs
 
-  nixpkgs.overlays =
-    [ (final: super: { makeModulesClosure = x: super.makeModulesClosure (x // { allowMissing = true; }); }) ];
+  nixpkgs.overlays = [
+    (final: super: {
+      makeModulesClosure = x: super.makeModulesClosure (x // { allowMissing = true; });
+    })
+  ];
 
   # systemPackages
-  environment.systemPackages = with pkgs; [ vim curl wget nano bind iptables openvpn python3 nodejs_20 docker ];
+  environment.systemPackages = with pkgs; [
+    vim
+    curl
+    wget
+    nano
+    bind
+    iptables
+    openvpn
+    python3
+    nodejs_20
+    docker
+  ];
 
   services.openssh = {
     enable = true;
@@ -123,11 +168,15 @@ in {
       name = "nixos";
       group = "nixos";
       shell = pkgs.zsh;
-      extraGroups = [ "wheel" "docker" ];
+      extraGroups = [
+        "wheel"
+        "docker"
+      ];
     };
   };
-  users.extraUsers.root.openssh.authorizedKeys.keys =
-    [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO8PMmq0UL+Q9SRoKV6iWD6NNlINSir5HGdQh/tL3Pre runarsf" ];
+  users.extraUsers.root.openssh.authorizedKeys.keys = [
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO8PMmq0UL+Q9SRoKV6iWD6NNlINSir5HGdQh/tL3Pre runarsf"
+  ];
 
   networking = {
     nat = {
@@ -142,7 +191,7 @@ in {
     };
 
     wireguard.interfaces = {
-      wg0 = rec {
+      wg0 = {
         ips = [ "10.100.0.1/24" ];
         listenPort = 51820;
         postSetup = ''
@@ -152,12 +201,14 @@ in {
           ${pkgs.iptables}/bin/iptables -t nat -D POSTROUTING -s 10.100.0.0/24 -o eth0 -j MASQUERADE
         '';
         privateKeyFile = "/root/.config/wireguard/private";
-        peers = [{ # edu
-          publicKey = "tTmKN+/IsrrWxsdhttjvpYVVAmLkb7oyed/o8FCPvRo=";
-          allowedIPs = [ "10.100.0.2/32" ];
-        }];
+        peers = [
+          {
+            # edu
+            publicKey = "tTmKN+/IsrrWxsdhttjvpYVVAmLkb7oyed/o8FCPvRo=";
+            allowedIPs = [ "10.100.0.2/32" ];
+          }
+        ];
       };
     };
   };
 }
-

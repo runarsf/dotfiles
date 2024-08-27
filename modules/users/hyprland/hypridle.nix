@@ -1,32 +1,42 @@
 { pkgs, ... }:
 
-# TODO Provide this as a parameter to the file
-let lock = "${pkgs.hyprlock}/bin/hyprlock";
+let
+  lockCmd = "${pkgs.hyprlock}/bin/hyprlock";
 
-in {
-  services.hypridle.enable = true;
+in
+{
+  services.hypridle = {
+    enable = true;
+    settings = {
+      general = {
+        lock_cmd = lockCmd;
+        before_sleep_cmd = lockCmd;
+        after_sleep_cmd = "hyprctl dispatch dpms on";
+        ignore_dbus_inhibit = false;
+      };
 
-  wayland.windowManager.hyprland.settings.exec-once = [
-    "${pkgs.hypridle}/bin/hypridle"
-  ];
+      listener = [
+        {
+          timeout = 300;
+          on-timeout = "${./. + /bin/hypr-brightness} off";
+          on-resume = "${./. + /bin/hypr-brightness} on";
+        }
+        {
+          timeout = 900;
+          on-timeout = lockCmd;
+        }
+        {
+          timeout = 1000;
+          on-timeout = "hyprctl dispatch dpms off";
+          on-resume = "hyprctl dispatch dpms on";
+        }
+        {
+          timeout = 1200;
+          on-timeout = "systemctl suspend";
+        }
+      ];
+    };
+  };
 
-  xdg.configFile."hypr/hypridle.conf".text = ''
-    general {
-      lock_cmd = ${lock}
-      before_sleep_cmd = ${lock}
-    }
-    listener {
-      timeout = 300
-      on-timeout = ${./. + /bin/hypr-brightness} off
-      on-resume = ${./. + /bin/hypr-brightness} on
-    }
-    listener {
-      timeout = 500
-      on-timeout = ${lock}
-    }
-    listener {
-      timeout = 900
-      on-timeout = systemctl suspend
-    }
-  '';
+  # wayland.windowManager.hyprland.settings.exec-once = [ "${pkgs.hypridle}/bin/hypridle" ];
 }

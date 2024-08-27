@@ -26,6 +26,7 @@ outputs.lib.mkFor system hostname {
       "zellij"
       "neovim"
       "zsh"
+      "xonsh"
       "git"
       "gpg"
       "ssh"

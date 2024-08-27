@@ -7,7 +7,7 @@
 }:
 
 {
-  imports = [  inputs.stylix.homeManagerModules.stylix  ];
+  imports = [ inputs.stylix.homeManagerModules.stylix ];
 }
 // outputs.lib.mkDesktopModule config "stylix" {
   # NOTE Stylix requires both nixos and home-manager to have the same stateVersion
@@ -74,8 +74,9 @@
       size = 30;
     };
 
-    # FIXME DO NOT HARDCODE!!!!!
-    image = outputs.lib.mkDefault ../../users/runar/wallpaper.jpg;
+    image = outputs.lib.mkDefault (
+      if "wallpaper" ? config then config.wallpaper else (throw "stylix.image or wallpaper not set")
+    );
 
     opacity = {
       terminal = 0.8;

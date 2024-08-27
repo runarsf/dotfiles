@@ -67,7 +67,7 @@ in outputs.lib.mkDesktopModule' config "kitty" {
     font.size = outputs.lib.mkDefault 14;
 
     settings = {
-      background_blur = 40;
+      # background_blur = 40;
 
       cursor_shape = "block";
       cursor_underline_thickness = 1;

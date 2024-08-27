@@ -111,7 +111,7 @@ in
         hide = false;
       };
       math = {
-        command = "${config.programs.kitty.package}/bin/kitty -o font_size=16 --class math-scratchpad --title math-scratchpad ${pkgs.xonsh}/bin/xonsh";
+        command = "${config.programs.kitty.package}/bin/kitty -o font_size=16 --class math-scratchpad --title math-scratchpad xonsh";
         hide = false;
       };
     };
@@ -361,8 +361,8 @@ in
           "noanim,class:^(discord)$"
           "noanim,initialTitle:^(Visual Studio Code)$"
 
-          "opacity 0.9 0.9, class:^(kitty)$"
-          "opacity 0.9 0.9, class:^(scratchpad)$"
+          "opacity 0.8 0.8, class:^(kitty)$"
+          "opacity 0.8 0.8, class:^(scratchpad)$"
           # "opacity 0.8 override,title:^(.*)(New Tab)(.*)$"
           # "opacity 0.8 override,title:^(Mozilla Firefox)(.*)$"
           # "opacity 0.8 override,title:^(🦊 — Mozilla Firefox)$"
