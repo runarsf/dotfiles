@@ -11,10 +11,15 @@
 
 outputs.lib.mkFor system hostname {
   common = {
-    imports = outputs.lib.umport { path = ../../modules/users; } ++ [
-      { _module.args.keys = [ "${config.home.homeDirectory}/.ssh/id_nix" ]; }
-      ./config/secrets.nix
+    imports = outputs.lib.umport { path = ../../modules/users; }
+      ++ outputs.lib.umport { path = ./config; }
+      ++ [ { _module.args.keys = [ "${config.home.homeDirectory}/.ssh/id_nix" ]; } ];
+
+    privateKeys = [
+      "id_priv"
+      "id_ntnu"
     ];
+    publicKeys = [];
 
     modules = outputs.lib.enable [
       "neovim"
@@ -26,6 +31,7 @@ outputs.lib.mkFor system hostname {
       "keychain"
       "sops"
       "nix"
+      "yazi"
     ];
 
     wallpaper = ./wallpaper.jpg;
@@ -51,6 +57,7 @@ outputs.lib.mkFor system hostname {
         "c-ide"
         "writing"
         "spotify"
+        "sops-fonts"
       ];
 
       nixos = {

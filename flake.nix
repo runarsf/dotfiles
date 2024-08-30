@@ -19,6 +19,8 @@
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
+    alien.url = "github:thiagokokada/nix-alien";
+
     # Used for umport, but updated version in utils
     # nypkgs = {
     #   url = "github:yunfachi/nypkgs";

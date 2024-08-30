@@ -82,7 +82,7 @@
 
       wim () { set -eu; ''${EDITOR:-vim} "$(which ''${1:?No file selected...})" ''${@:2}; set +eu }
       magic-enter-cmd () {
-        print ' ${pkgs.krabby}/bin/krabby random | tail -n+2'
+        printf ' ${pkgs.krabby}/bin/krabby random | tail -n+2\n'
       }
 
       __git_files () {

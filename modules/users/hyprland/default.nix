@@ -108,10 +108,12 @@ in
     scratchpads = {
       term = {
         command = "${config.programs.kitty.package}/bin/kitty -o font_size=14 --class scratchpad --title scratchpad";
+        lazy = true;
         hide = false;
       };
       math = {
         command = "${config.programs.kitty.package}/bin/kitty -o font_size=16 --class math-scratchpad --title math-scratchpad xonsh";
+        lazy = true;
         hide = false;
       };
     };

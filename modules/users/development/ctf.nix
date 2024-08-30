@@ -1,4 +1,9 @@
-{ config, pkgs, outputs, ... }:
+{
+  config,
+  pkgs,
+  outputs,
+  ...
+}:
 
 # Useful tools
 #   https://binary.ninja/
@@ -11,11 +16,11 @@
 #   https://webhook.site/
 
 # {
-  # TODO https://github.com/redcode-labs/RedNix/issues/10
-  # $ nixos-container start rednix
-  # $ systemctl status container@rednix
-  # $ nixos-container root-login rednix
-  # imports = [ inputs.rednix.container ];
+# TODO https://github.com/redcode-labs/RedNix/issues/10
+# $ nixos-container start rednix
+# $ systemctl status container@rednix
+# $ nixos-container root-login rednix
+# imports = [ inputs.rednix.container ];
 # } //
 outputs.lib.mkModule config "ctf" {
   # containers.rednix.autoStart = false;
@@ -30,12 +35,14 @@ outputs.lib.mkModule config "ctf" {
       socat
       unstable.steghide
       wireshark
+      metasploit
+      pwntools
+      exiftool
 
       binutils
       foremost
       gdb
       capstone
-      checksec
       jq
       yq
       gobuster
@@ -46,12 +53,14 @@ outputs.lib.mkModule config "ctf" {
       wget
     ];
 
-    file.".local/bin/nc-respond".source = let
-      script = pkgs.writeShellApplication {
-        name = "nc-respond";
-        runtimeInputs = with pkgs; [ coreutils ];
-        text = builtins.readFile ./nc-respond.sh;
-      };
-    in "${script}/bin/nc-respond";
+    file.".local/bin/nc-respond".source =
+      let
+        script = pkgs.writeShellApplication {
+          name = "nc-respond";
+          runtimeInputs = with pkgs; [ coreutils ];
+          text = builtins.readFile ./nc-respond.sh;
+        };
+      in
+      "${script}/bin/nc-respond";
   };
 }

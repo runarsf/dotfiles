@@ -22,6 +22,16 @@ outputs.lib.mkFor system hostname {
       ++ outputs.lib.umport { path = ./config; }
       ++ [ { _module.args.keys = [ "${config.home.homeDirectory}/.ssh/id_nix" ]; } ];
 
+    privateKeys = [
+      "id_priv"
+      "id_ntnu"
+    ];
+    publicKeys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGwThBXxJMvEDSf/WUlXtgvs+R5TTZwILnAvCp5Zl02Z nix"
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPcGHHx0Mx+zKzfq1eBig7CdNKKFdyv8W8AAFnHtDXx0 i@runar.ch"
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINOTdUX/fNducOTIVd+y10N4gXjp5QxBAtBZAWqzH8ly runarsfr@stud.ntnu.no"
+    ];
+
     modules = outputs.lib.enable [
       "zellij"
       "neovim"
@@ -34,6 +44,7 @@ outputs.lib.mkFor system hostname {
       "sops"
       "javascript"
       "nix"
+      "yazi"
     ];
 
     wallpaper = ./wallpaper.jpg;
@@ -54,6 +65,7 @@ outputs.lib.mkFor system hostname {
         "c-ide"
         "writing"
         "spotify"
+        "sops-fonts"
       ];
 
       nixos = {

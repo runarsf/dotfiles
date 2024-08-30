@@ -45,6 +45,7 @@ outputs.lib.mkDesktopModule config "fonts" {
     unstable.cozette
     tamzen
     undefined-medium
+    monocraft
 
     # Coding
     jetbrains-mono

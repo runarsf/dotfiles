@@ -5,11 +5,10 @@
   ...
 }:
 
-# ~/.config/Vencord/themes
-
 outputs.lib.mkDesktopModule config "discord" {
-  home.packages = with pkgs; [ discord ];
-  # if (outputs.lib.isWayland config) then [ waycord vesktop ] else [ discord ];
+  home.packages =
+    with pkgs;
+    if (outputs.lib.isWayland config) then [ discord-wayland ] else [ discord ];
 
   xdg.configFile = {
     "Vencord/themes/SettingsModal.theme.css".source = pkgs.fetchurl {
@@ -23,24 +22,27 @@ outputs.lib.mkDesktopModule config "discord" {
   };
 
   nixpkgs.overlays = [
-    (final: prev: {
-      discord = prev.discord.override {
-        withOpenASAR = true;
-        withVencord = true;
-      };
-      # waycord = prev.symlinkJoin {
-      #   name = "discord";
-      #   paths = [
-      #     (prev.writeShellScriptBin "discord" ''
-      #       exec ${final.discord}/bin/discord \
-      #         --enable-features=UseOzonePlatform,WaylandWindowDecorations \
-      #         --ozone-platform-hint=auto \
-      #         --ozone-platform=wayland \
-      #         "$@"
-      #     '')
-      #     final.discord
-      #   ];
-      # };
+    (_: prev: {
+      discord-wayland =
+        let
+          discord = prev.discord.override {
+            withOpenASAR = true;
+            withVencord = true;
+          };
+        in
+        prev.symlinkJoin {
+          name = "Discord";
+          paths = [
+            (prev.writeShellScriptBin "Discord" ''
+              exec ${discord}/bin/Discord \
+                --enable-features=UseOzonePlatform,WaylandWindowDecorations \
+                --ozone-platform-hint=auto \
+                --ozone-platform=wayland \
+                "$@"
+            '')
+            discord
+          ];
+        };
     })
   ];
 }

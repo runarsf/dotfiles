@@ -1,5 +1,6 @@
 {
   pkgs,
+  inputs,
   outputs,
   config,
   ...
@@ -40,6 +41,7 @@ outputs.lib.mkEnabledModule config "shell-utils" {
 
   home = {
     packages = with pkgs; [
+      inputs.alien.packages.${system}.nix-alien
       bat
       sad
       gay
@@ -69,7 +71,6 @@ outputs.lib.mkEnabledModule config "shell-utils" {
       expect
       imagemagick
       watchexec
-      walk
     ];
 
     shellAliases = rec {
