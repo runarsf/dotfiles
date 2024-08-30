@@ -13,7 +13,7 @@ in
 {
   options = {
     privateKeys = outputs.lib.mkOption {
-      default = [];
+      default = [ ];
       type = outputs.lib.types.listOf outputs.lib.types.str;
       description = "List of private key names";
     };
@@ -33,7 +33,7 @@ in
       );
 
     in
-    outputs.lib.mkIf (config.privateKeys != []) {
+    outputs.lib.mkIf (config.privateKeys != [ ]) {
       programs.ssh.matchBlocks."".identityFile = privateKeyDestinations;
       sops.secrets = secretFiles;
     };

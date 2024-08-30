@@ -1747,11 +1747,11 @@
     "vault": {
       "flake": false,
       "locked": {
-        "lastModified": 1724139994,
-        "narHash": "sha256-/xkU+N5klH3COMfeUks6HqbZg/MEDf+ClVuO6nAnEWM=",
+        "lastModified": 1725044250,
+        "narHash": "sha256-vasape114owyL5ekkHhZoHc+4iItN8mHAlSxL3SMuUA=",
         "ref": "refs/heads/main",
-        "rev": "5e37345a381e0f71937200a342fd7c1f58e70619",
-        "revCount": 22,
+        "rev": "1f03b44d13bfae564a8550f81a370a69d6052893",
+        "revCount": 25,
         "type": "git",
         "url": "ssh://git@github.com/runarsf/vault"
       },

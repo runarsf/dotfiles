@@ -28,8 +28,8 @@ outputs.lib.mkFor system hostname {
     ];
     publicKeys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGwThBXxJMvEDSf/WUlXtgvs+R5TTZwILnAvCp5Zl02Z nix"
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPcGHHx0Mx+zKzfq1eBig7CdNKKFdyv8W8AAFnHtDXx0 i@runar.ch"
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINOTdUX/fNducOTIVd+y10N4gXjp5QxBAtBZAWqzH8ly runarsfr@stud.ntnu.no"
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBT5zQFdVRooe5SfFZ2gKpruHF7FTw1OycTczRrLsR+M i@runar.ch"
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO6Y4kk5hFzs/B6vze9u9RPG9d+vVM5EIRIOug4OnJBk runarsfr@stud.ntnu.no"
     ];
 
     modules = outputs.lib.enable [
