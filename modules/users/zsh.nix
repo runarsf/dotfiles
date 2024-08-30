@@ -97,10 +97,6 @@
       bindkey -M vicmd '^G' per-directory-history-toggle-history
 
       autopair-init
-
-      function lf {
-        cd "$(walk "$@")"
-      }
     '';
     prezto = {
       enable = true;
