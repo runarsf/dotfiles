@@ -40,6 +40,7 @@ outputs.lib.mkDesktopModule config "waybar" {
           modules-center = [ ];
           modules-right = [
             "custom/music"
+            "custom/notifs"
             "idle_inhibitor"
             "backlight"
             "cpu"
@@ -168,6 +169,11 @@ outputs.lib.mkDesktopModule config "waybar" {
             on-click = "${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_SINK@ toggle";
             on-click-right = "${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_SOURCE@ toggle";
             on-click-middle = "${pkgs.pavucontrol}/bin/pavucontrol";
+          };
+          "custom/notifs" = {
+            format = " ";
+            tooltip = false;
+            on-click = "${pkgs.swaynotificationcenter}/bin/swaync-client -t";
           };
           "custom/layout" = {
             format = "{}";

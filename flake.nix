@@ -1,7 +1,7 @@
 {
-  # TODO https://github.com/astro/deadnix
+  # NOTE https://github.com/astro/deadnix
+  # NOTE https://github.com/symphorien/nix-du
   # TODO https://nixos.wiki/wiki/Storage_optimization
-  # TODO https://github.com/symphorien/nix-du
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
@@ -20,12 +20,6 @@
     };
 
     alien.url = "github:thiagokokada/nix-alien";
-
-    # Used for umport, but updated version in utils
-    # nypkgs = {
-    #   url = "github:yunfachi/nypkgs";
-    #   inputs.nixpkgs.follows = "nixpkgs";
-    # };
 
     sops-nix = {
       url = "github:Mic92/sops-nix";
@@ -75,16 +69,10 @@
     };
   };
 
-  outputs =
-    inputs:
-    let
-      systems = [
-        "x86_64-linux"
-        "aarch64-linux"
-      ];
+  outputs = inputs:
+    let systems = [ "x86_64-linux" "aarch64-linux" ];
 
-    in
-    rec {
+    in rec {
       lib = import ./lib {
         inherit inputs;
         inherit (inputs.self) outputs;
