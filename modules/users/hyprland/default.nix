@@ -325,21 +325,28 @@ in
           ", XF86MonBrightnessUp, exec, ${pkgs.brightnessctl}/bin/brightnessctl set 5%+"
           ", XF86MonBrightnessDown, exec, ${pkgs.brightnessctl}/bin/brightnessctl set 5%-"
         ];
-        bindr = [
-          # FIXMERhypr-snap, make it get id on mouse down
-          "${mod} CTRL, right, exec, ${./. + /bin/hypr-snap}"
-          "${mod} CTRL, left, exec, ${./. + /bin/hypr-snap}"
-          "${mod} CTRL, up, exec, ${./. + /bin/hypr-snap}"
-          "${mod} CTRL, down, exec, ${./. + /bin/hypr-snap}"
+        bindr =
+          let
+            script = pkgs.writeShellApplication {
+              name = "hypr-snap";
+              runtimeInputs = with pkgs; [ jq ];
+              text = builtins.readFile ./bin/hypr-snap;
+            };
+          in [
+            # FIXMERhypr-snap, make it get id on mouse down
+            "${mod} CTRL, right, exec, ${script}/bin/hypr-snap"
+            "${mod} CTRL, left, exec, ${script}/bin/hypr-snap"
+            "${mod} CTRL, up, exec, ${script}/bin/hypr-snap"
+            "${mod} CTRL, down, exec, ${script}/bin/hypr-snap"
 
-          "${mod} SHIFT, right, exec, ${./. + /bin/hypr-snap}"
-          "${mod} SHIFT, left, exec, ${./. + /bin/hypr-snap}"
-          "${mod} SHIFT, up, exec, ${./. + /bin/hypr-snap}"
-          "${mod} SHIFT, down, exec, ${./. + /bin/hypr-snap}"
+            "${mod} SHIFT, right, exec, ${script}/bin/hypr-snap"
+            "${mod} SHIFT, left, exec, ${script}/bin/hypr-snap"
+            "${mod} SHIFT, up, exec, ${script}/bin/hypr-snap"
+            "${mod} SHIFT, down, exec, ${script}/bin/hypr-snap"
 
-          "${mod}, mouse:272, exec, ${./. + /bin/hypr-snap}"
-          "${mod}, mouse:273, exec, ${./. + /bin/hypr-snap}"
-        ];
+            "${mod}, mouse:272, exec, ${script}/bin/hypr-snap"
+            "${mod}, mouse:273, exec, ${script}/bin/hypr-snap"
+          ];
         bindm = [
           "${mod}, mouse:272, movewindow"
           "${mod}, mouse:273, resizewindow"
