@@ -239,7 +239,7 @@ in
           force_split = 2;
         };
         master = {
-          new_status = "inherit";
+          new_status = "slave";
           allow_small_split = true;
           always_center_master = true;
         };
