@@ -5,7 +5,7 @@ outputs.lib.mkDesktopModule config "c-ide" {
     [
       (if (outputs.lib.isWayland config) then
         (builtins.trace
-          "In CLion, add '-Dawt.toolkit.name=WLToolkit' to Help > Edit Custom VM Options..."
+          "For Wayland support in CLion, add '-Dawt.toolkit.name=WLToolkit' to Help > Edit Custom VM Options..."
           unstable.jetbrains.clion)
       else
         unstable.jetbrains.clion)
