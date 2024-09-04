@@ -328,10 +328,9 @@ in
         bindr =
           let
             script = pkgs.writers.writePython3 "hypr-snap" {
-              flakeIgnore = [ "E305" "E501" "E227" "E302" ];
+              flakeIgnore = [ "E305" "E501" "E227" "E302" "E225" ];
             } (builtins.readFile ./bin/hypr-snap.py);
           in [
-            # FIXMERhypr-snap, make it get id on mouse down
             "${mod} CTRL, right, exec, ${script}"
             "${mod} CTRL, left, exec, ${script}"
             "${mod} CTRL, up, exec, ${script}"

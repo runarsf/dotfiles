@@ -43,8 +43,40 @@ def get_geometry(client: dict) -> dict:
 
 client_geometry = get_geometry(client)
 clients_geometry = list(map(get_geometry, clients))
-
 closest_edges = {"n": None, "s": None, "w": None, "e": None}
+
+# monitor_id = list(filter(lambda w: w["id"] == client["workspace"]["id"], hyprctl("workspaces")))[0]["monitorID"]
+# monitor = list(filter(lambda m: m["id"] == monitor_id, hyprctl("monitors")))[0]
+monitor = list(filter(lambda m: m["focused"], hyprctl("monitors")))[0]
+
+pad = {cardinal: 0 for cardinal in closest_edges.keys()}
+
+gaps = hyprctl("getoption general:gaps_out")
+if "int" in gaps:
+    for cardinal in pad.keys():
+        gaps[cardinal] = gaps["int"]
+else:
+    gaps = [int(g) for g in gaps["custom"].split(" ")]
+    pad["n"] += gaps[1]
+    pad["w"] += gaps[3]
+    pad["s"] += gaps[0]
+    pad["e"] += gaps[2]
+
+border = hyprctl("getoption general:border_size")["int"]
+pad = {cardinal: pad[cardinal] + border for cardinal in pad.keys()}
+pad["n"] += monitor["reserved"][1]
+pad["s"] += monitor["reserved"][3]
+pad["w"] += monitor["reserved"][0]
+pad["e"] += monitor["reserved"][2]
+
+if closest_edges["w"] is None and client_geometry["w"] < (w:=(monitor["x"] + pad["w"])):
+    closest_edges["w"] = w
+if closest_edges["e"] is None and client_geometry["e"] > (e:=(monitor["x"] + monitor["width"] - pad["w"])):
+    closest_edges["e"] = e
+if closest_edges["n"] is None and client_geometry["n"] < (n:=(monitor["y"] + pad["n"])):
+    closest_edges["n"] = n
+if closest_edges["s"] is None and client_geometry["s"] > (s:=(monitor["y"] + monitor["height"] - pad["s"])):
+    closest_edges["s"] = s
 
 for other in clients_geometry:
     for edge in closest_edges.keys():

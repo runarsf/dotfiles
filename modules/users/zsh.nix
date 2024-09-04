@@ -43,6 +43,7 @@
         "nix-community/nix-zsh-completions"
         "zshzoo/magic-enter"
         "jimhester/per-directory-history"
+        "getantidote/use-omz"
         "ohmyzsh/ohmyzsh path:lib"
         "ohmyzsh/ohmyzsh path:plugins/extract"
       ];
