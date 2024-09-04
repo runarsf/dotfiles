@@ -117,6 +117,6 @@
         hostname = "toaster";
       };
 
-      formatter = lib.forEachSystem systems (pkgs: pkgs.nixfmt-rfc-style);
+      formatter = lib.forEachSystem systems (pkgs: pkgs.nixfmt);
     };
 }

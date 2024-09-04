@@ -1,31 +1,17 @@
-{
-  config,
-  inputs,
-  outputs,
-  system,
-  hostname,
-  name,
-  pkgs,
-  ...
-}:
+{ config, inputs, outputs, system, hostname, name, pkgs, ... }:
 
-let
-  ifIsDesktop = outputs.lib.optionals (outputs.lib.isDesktop config hostname);
+let ifIsDesktop = outputs.lib.optionals (outputs.lib.isDesktop config hostname);
 
-in
-outputs.lib.mkFor system hostname {
+in outputs.lib.mkFor system hostname {
   common = {
     # TODO Make this apply to all users
     # TODO Do this for hosts as well
-    imports =
-      outputs.lib.umport { path = ../../modules/users; }
-      ++ outputs.lib.umport { path = ./config; }
-      ++ [ { _module.args.keys = [ "${config.home.homeDirectory}/.ssh/id_nix" ]; } ];
+    imports = outputs.lib.umport { path = ../../modules/users; }
+      ++ outputs.lib.umport { path = ./config; } ++ [{
+        _module.args.keys = [ "${config.home.homeDirectory}/.ssh/id_nix" ];
+      }];
 
-    privateKeys = [
-      "id_priv"
-      "id_ntnu"
-    ];
+    privateKeys = [ "id_priv" "id_ntnu" ];
     publicKeys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGwThBXxJMvEDSf/WUlXtgvs+R5TTZwILnAvCp5Zl02Z nix"
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBT5zQFdVRooe5SfFZ2gKpruHF7FTw1OycTczRrLsR+M i@runar.ch"
@@ -97,13 +83,8 @@ outputs.lib.mkFor system hostname {
 
       modules = outputs.lib.enable [ "ctf" ];
 
-      home.packages =
-        with pkgs.unstable;
-        ifIsDesktop [
-          stremio
-          obs-studio
-          chromium
-        ];
+      home.packages = with pkgs.unstable;
+        ifIsDesktop [ stremio obs-studio chromium ];
     };
   };
 }

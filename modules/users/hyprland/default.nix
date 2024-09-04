@@ -327,25 +327,23 @@ in
         ];
         bindr =
           let
-            script = pkgs.writeShellApplication {
-              name = "hypr-snap";
-              runtimeInputs = with pkgs; [ jq ];
-              text = builtins.readFile ./bin/hypr-snap;
-            };
+            script = pkgs.writers.writePython3 "hypr-snap" {
+              flakeIgnore = [ "E305" "E501" "E227" "E302" ];
+            } (builtins.readFile ./bin/hypr-snap.py);
           in [
             # FIXMERhypr-snap, make it get id on mouse down
-            "${mod} CTRL, right, exec, ${script}/bin/hypr-snap"
-            "${mod} CTRL, left, exec, ${script}/bin/hypr-snap"
-            "${mod} CTRL, up, exec, ${script}/bin/hypr-snap"
-            "${mod} CTRL, down, exec, ${script}/bin/hypr-snap"
+            "${mod} CTRL, right, exec, ${script}"
+            "${mod} CTRL, left, exec, ${script}"
+            "${mod} CTRL, up, exec, ${script}"
+            "${mod} CTRL, down, exec, ${script}"
 
-            "${mod} SHIFT, right, exec, ${script}/bin/hypr-snap"
-            "${mod} SHIFT, left, exec, ${script}/bin/hypr-snap"
-            "${mod} SHIFT, up, exec, ${script}/bin/hypr-snap"
-            "${mod} SHIFT, down, exec, ${script}/bin/hypr-snap"
+            "${mod} SHIFT, right, exec, ${script}"
+            "${mod} SHIFT, left, exec, ${script}"
+            "${mod} SHIFT, up, exec, ${script}"
+            "${mod} SHIFT, down, exec, ${script}"
 
-            "${mod}, mouse:272, exec, ${script}/bin/hypr-snap"
-            "${mod}, mouse:273, exec, ${script}/bin/hypr-snap"
+            "${mod}, mouse:272, exec, ${script}"
+            "${mod}, mouse:273, exec, ${script}"
           ];
         bindm = [
           "${mod}, mouse:272, movewindow"

@@ -7,8 +7,8 @@
 
 {
   imports = [
-    ../../modules/users/starship.nix
-    ../../modules/users/shell-utils.nix
+    ./starship.nix
+    ./shell-utils.nix
   ];
 }
 // outputs.lib.mkModule config "zsh" {
