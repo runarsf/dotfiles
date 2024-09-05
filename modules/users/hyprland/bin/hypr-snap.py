@@ -34,8 +34,8 @@ if not client["floating"]:
     exit(0)
 
 workspace_id = hyprctl("activeworkspace")["id"]
-client_pid = client["pid"]
-clients = list(filter(lambda c: c["workspace"]["id"] == workspace_id and c["pid"] != client_pid, hyprctl("clients")))
+client_addr = client["address"]
+clients = list(filter(lambda c: c["workspace"]["id"] == workspace_id and c["address"] != client_addr, hyprctl("clients")))
 
 def get_geometry(client: dict) -> dict:
     return {
@@ -106,7 +106,7 @@ def snap_to_closest_edges(window, closest_edges):
         else:
             y = closest_edges['s'] - h
 
-    os.system(f'hyprctl dispatch movewindowpixel -- exact "{x}" "{y}",pid:{client_pid}')
-    os.system(f'hyprctl dispatch resizewindowpixel -- exact "{w}" "{h}",pid:{client_pid}')
+    os.system(f'hyprctl dispatch movewindowpixel -- exact "{x}" "{y}",address:{client_addr}')
+    os.system(f'hyprctl dispatch resizewindowpixel -- exact "{w}" "{h}",address:{client_addr}')
 
 snap_to_closest_edges(client, closest_edges)
