@@ -8,6 +8,7 @@
 outputs.lib.mkDesktopModule config "waybar" {
   home.packages = with pkgs; [
     upower
+    polycat
     playerctl
     gobject-introspection
     unstable.hyprland-autoname-workspaces
@@ -43,8 +44,7 @@ outputs.lib.mkDesktopModule config "waybar" {
             "custom/notifs"
             "idle_inhibitor"
             "backlight"
-            "custom/polycat"
-            "cpu"
+            "group/cpu"
             "memory"
             "pulseaudio"
             "network"
@@ -64,7 +64,7 @@ outputs.lib.mkDesktopModule config "waybar" {
           };
 
           idle_inhibitor = {
-            format = "{icon}${i}";
+            format = "{icon} ";
             format-icons = {
               activated = "";
               deactivated = "";
@@ -99,10 +99,24 @@ outputs.lib.mkDesktopModule config "waybar" {
             interval = 1;
           };
 
+          "group/cpu" = {
+            orientation = "horizontal";
+            modules = [
+              "custom/polycat"
+              "cpu"
+            ];
+          };
+          "custom/polycat" = {
+            format = "<span font='polycat'>{}</span>";
+            tooltip = false;
+            exec = outputs.lib.getExe pkgs.polycat;
+          };
           cpu = {
-            format = "${i}{usage: >3}%";
+            # 
+            format = "${i}{usage: >3}%";
             on-click = "${pkgs.kitty}/bin/kitty btop";
           };
+
           memory = {
             format = "󰧑${i}{: >3}%";
             on-click = "${pkgs.kitty}/bin/kitty btop";
@@ -172,14 +186,9 @@ outputs.lib.mkDesktopModule config "waybar" {
             on-click-middle = "${pkgs.pavucontrol}/bin/pavucontrol";
           };
           "custom/notifs" = {
-            format = " ";
+            format = "${i}";
             tooltip = false;
             on-click = "${pkgs.swaynotificationcenter}/bin/swaync-client -t";
-          };
-          "custom/polycat" = {
-            format = "<span font='polycat'>{}</span>";
-            tooltip = false;
-            exec = outputs.lib.getExe pkgs.polycat;
           };
           "custom/layout" = {
             format = "{}";

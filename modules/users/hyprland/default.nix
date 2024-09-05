@@ -347,7 +347,9 @@ in
           ];
         bindm = [
           "${mod}, mouse:272, movewindow"
+          "${mod} SHIFT, mouse:272, movewindow"
           "${mod}, mouse:273, resizewindow"
+          "${mod} SHIFT, mouse:273, resizewindow"
         ];
         windowrulev2 = [
           "opacity 0.0 override 0.0 override,class:^(xwaylandvideobridge)$"

@@ -34,9 +34,24 @@ tooltip,
   margin-right: 0;
 }
 
+/* Groups */
+.modules-right > * > .horizontal {
+  padding: 0.3em 1em;
+  background: @bg;
+  border: 1px solid @border;
+  border-radius: 0.5em;
+  margin: 0 0.2em;
+}
+.modules-right > * > .horizontal .module {
+  background: transparent;
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
 
 #workspaces label {
-  font-size: 12px;
+  font-size: 13px;
   color: #C4C4C4;
 }
 #workspaces .empty label {
@@ -93,4 +108,5 @@ window#waybar.empty #window {
   animation-iteration-count: infinite;
   animation-direction: alternate;
 }
+
 
