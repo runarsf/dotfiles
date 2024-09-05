@@ -38,6 +38,7 @@ outputs.lib.mkModule config "ctf" {
       metasploit
       pwntools
       exiftool
+      binwalk
 
       binutils
       foremost

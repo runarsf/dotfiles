@@ -362,11 +362,6 @@ in
 
           "noborder, fullscreen:1"
 
-          # electron apps have resize artifacts with animations enabled, disable for now {{{
-          "noanim,class:^(obsidian)$"
-          "noanim,class:^(discord)$"
-          "noanim,initialTitle:^(Visual Studio Code)$"
-
           "opacity 0.8 0.8, class:^(kitty)$"
           "opacity 0.8 0.8, class:^(scratchpad)$"
           # "opacity 0.8 override,title:^(.*)(New Tab)(.*)$"

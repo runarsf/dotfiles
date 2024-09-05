@@ -29,6 +29,10 @@ def hyprctl(command: str, args: list[str] = ["-j"]) -> str|dict:
 gravity = 30
 
 client = hyprctl("activewindow")
+
+if not client["floating"]:
+    exit(0)
+
 workspace_id = hyprctl("activeworkspace")["id"]
 client_pid = client["pid"]
 clients = list(filter(lambda c: c["workspace"]["id"] == workspace_id and c["pid"] != client_pid, hyprctl("clients")))
