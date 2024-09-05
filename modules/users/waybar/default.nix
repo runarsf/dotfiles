@@ -43,6 +43,7 @@ outputs.lib.mkDesktopModule config "waybar" {
             "custom/notifs"
             "idle_inhibitor"
             "backlight"
+            "custom/polycat"
             "cpu"
             "memory"
             "pulseaudio"
@@ -174,6 +175,11 @@ outputs.lib.mkDesktopModule config "waybar" {
             format = " ";
             tooltip = false;
             on-click = "${pkgs.swaynotificationcenter}/bin/swaync-client -t";
+          };
+          "custom/polycat" = {
+            format = "<span font='polycat'>{}</span>";
+            tooltip = false;
+            exec = outputs.lib.getExe pkgs.polycat;
           };
           "custom/layout" = {
             format = "{}";

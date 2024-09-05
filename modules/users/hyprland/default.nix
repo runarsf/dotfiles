@@ -11,6 +11,7 @@
 # TODO https://github.com/CMurtagh-LGTM/grab-workspace
 # TODO https://github.com/zakk4223/hyprRiver
 # TODO https://github.com/zakk4223/hyprWorkspaceLayouts
+# TODO https://github.com/ArtsyMacaw/wlogout
 
 let
   lock = "${pkgs.hyprlock}/bin/hyprlock";

@@ -5,6 +5,6 @@ let
 
 in with pkgs; {
   niks = callPackage ./niks { };
-  # monolisa = callPackage ./monolisa { };
   pixelflasher = callPackage ./pixelflasher { inherit pyinstaller; };
+  polycat = callPackage ./polycat { };
 }
