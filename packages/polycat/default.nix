@@ -31,5 +31,6 @@ pkgs.stdenv.mkDerivation {
     description = "Polycat";
     homepage = "https://github.com/2IMT/polycat";
     license = licenses.mit;
+    mainProgram = "polycat";
   };
 }

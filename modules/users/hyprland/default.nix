@@ -74,6 +74,7 @@ in
     sway-audio-idle-inhibit
     seahorse
 
+    # TODO shotman, swappy, grim
     wofi # for hyprshot
     (pkgs.stdenv.mkDerivation {
       name = "hyprshot";
@@ -254,6 +255,9 @@ in
           animate_manual_resizes = true;
           animate_mouse_windowdragging = true;
         };
+        monitor = [
+          ", preferred, auto, 1, bitdepth, 10"
+        ];
         binds = {
           allow_workspace_cycles = true;
         };
@@ -352,10 +356,11 @@ in
           "${mod} SHIFT, mouse:273, resizewindow"
         ];
         windowrulev2 = [
-          "opacity 0.0 override 0.0 override,class:^(xwaylandvideobridge)$"
-          "noanim,class:^(xwaylandvideobridge)$"
-          "nofocus,class:^(xwaylandvideobridge)$"
-          "noinitialfocus,class:^(xwaylandvideobridge)$"
+          "opacity 0.0 override, class:^(xwaylandvideobridge)$"
+          "noanim, class:^(xwaylandvideobridge)$"
+          "noinitialfocus, class:^(xwaylandvideobridge)$"
+          "maxsize 1 1, class:^(xwaylandvideobridge)$"
+          "noblur, class:^(xwaylandvideobridge)$"
 
           "float, class:^(.*)(scratchpad)$"
           "workspace special silent, class:^(.*)(scratchpad)$"

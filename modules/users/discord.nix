@@ -19,6 +19,19 @@ outputs.lib.mkDesktopModule config "discord" {
       url = "https://raw.githubusercontent.com/refact0r/midnight-discord/bc6c15487eb6a416b0914d8e5b48af47f7608ffe/midnight.css";
       sha256 = "sha256-6UgSgsn6Kb5w2V1VdHMxipQ5c1W5Zm8Jbx9GefK89oo=";
     };
+    "Vencord/themes/system24.theme.css".source = pkgs.fetchurl {
+      url = "https://raw.githubusercontent.com/refact0r/system24/main/theme/system24.theme.css";
+      sha256 = "sha256-WJYNWeo1DdgOh7cFne6QSEHQagqapFznqWfeoCsqM+8=";
+    };
+    "Vencord/themes/CustomFonts.theme.css".source = builtins.toString (pkgs.writeText "CustomFonts.theme.css" ''
+      *:not([class*="hljs"]):not(code) {
+        font-family: 'Monocraft' !important;
+      }
+
+      code {
+        font-family: 'Operator Mono Lig' !important;
+      }
+    '');
   };
 
   nixpkgs.overlays = [
