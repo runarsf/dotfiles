@@ -34,11 +34,20 @@ in
   # substituters = [ "https://hyprland.cachix.org" ];
   # trusted-public-keys = [ "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc=" ];
   # };
-  nixos.xdg.portal.extraPortals = with pkgs; [ xdg-desktop-portal-hyprland ]; # xdg-desktop-portal-gtk ];
-  xdg.portal.configPackages = with pkgs; [
-    xdg-desktop-portal-hyprland
-    xdg-desktop-portal-gtk
-  ];
+
+  # nixos.xdg.portal.extraPortals = with pkgs; [ xdg-desktop-portal-hyprland ]; # xdg-desktop-portal-gtk ];
+  # xdg.portal.configPackages = with pkgs; [
+  #   xdg-desktop-portal-hyprland
+  #   xdg-desktop-portal-gtk
+  # ];
+  xdg.portal = {
+    enable = true;
+    config.common.default = "*";
+    extraPortals = with pkgs; [
+      xdg-desktop-portal-gtk
+      xdg-desktop-portal-hyprland
+    ];
+  };
 
   nixos.programs.hyprland.enable = true;
   programs.jq.enable = true;
@@ -255,9 +264,9 @@ in
           animate_manual_resizes = true;
           animate_mouse_windowdragging = true;
         };
-        monitor = [
-          ", preferred, auto, 1, bitdepth, 10"
-        ];
+        # monitor = [
+        #   ", preferred, auto, 1, bitdepth, 10"
+        # ];
         binds = {
           allow_workspace_cycles = true;
         };
@@ -273,7 +282,9 @@ in
           "${mod}, space, fullscreen, 1"
           "${mod}, D, exec, ${config.programs.fuzzel.package}/bin/fuzzel"
           "${mod}, A, exec, ${./. + /bin/hypr-pin}"
-          "ALT, P, exec, hyprshot capture region --copy"
+          ''ALT, P, exec, ${pkgs.grim}/bin/grim -g "$(${pkgs.slurp}/bin/slurp)" - | ${pkgs.imagemagick}/bin/convert - -shave 1x1 PNG:- | ${pkgs.wl-clipboard}/bin/wl-copy''
+          ''ALT SHIFT, P, exec, ${pkgs.grim}/bin/grim -g "$(${pkgs.slurp}/bin/slurp)" - | ${pkgs.imagemagick}/bin/convert - -shave 1x1 PNG:- | ${pkgs.swappy}/bin/swappy -f -''
+          ''ALT CTRL, P, exec, (${pkgs.killall}/bin/killall -SIGINT wl-screenrec && (${pkgs.wl-clipboard}/bin/wl-copy < /tmp/screenrecord.mp4; ${pkgs.cinnamon.nemo}/bin/nemo /tmp/screenrecord.mp4)) || (cd /tmp; ${pkgs.wl-screenrec}/bin/wl-screenrec -g "$(${pkgs.slurp}/bin/slurp)" --audio)''
           "${mod} SHIFT, N, exec, ${pkgs.swaynotificationcenter}/bin/swaync-client -t"
 
           "${mod}, left, exec, ${./. + /bin/movefocus.sh} l"

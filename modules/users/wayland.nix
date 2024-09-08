@@ -41,12 +41,12 @@ outputs.lib.mkModule config "wayland" {
     # previous config file.
     dataFile."applications/mimeapps.list".force = true;
     mimeApps.enable = true;
-    portal = {
-      enable = true;
-      extraPortals = with pkgs; [
-        xdg-desktop-portal-wlr
-        xdg-desktop-portal-gtk # FIXME This is also added in hyprland, add only once
-      ];
-    };
+      # portal = {
+      #   enable = true;
+      #   extraPortals = with pkgs; [
+      #     xdg-desktop-portal-wlr
+      #     xdg-desktop-portal-gtk # FIXME This is also added in hyprland, add only once
+      #   ];
+      # };
   };
 }
