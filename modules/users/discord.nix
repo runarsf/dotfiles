@@ -8,7 +8,7 @@
 outputs.lib.mkDesktopModule config "discord" {
   home.packages =
     with pkgs;
-    if (outputs.lib.isWayland config) then [ discord-wayland ] else [ discord ];
+    if (outputs.lib.isWayland config) then [ discord-wayland vesktop ] else [ discord ];
 
   xdg.configFile = {
     "Vencord/themes/SettingsModal.theme.css".source = pkgs.fetchurl {

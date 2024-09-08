@@ -84,7 +84,15 @@ in outputs.lib.mkFor system hostname {
       modules = outputs.lib.enable [ "ctf" ];
 
       home.packages = with pkgs.unstable;
-        ifIsDesktop [ stremio obs-studio chromium ];
+        ifIsDesktop [
+          stremio
+          obs-studio
+          chromium
+
+          # TODO Use android module
+          android-tools
+          scrcpy
+        ];
     };
   };
 }
