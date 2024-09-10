@@ -107,7 +107,7 @@ outputs.lib.mkDesktopModule config "waybar" {
             ];
           };
           "custom/polycat" = {
-            format = "<span font='polycat'>{}</span>";
+            format = "<span font='polycat 16'>{}</span>";
             tooltip = false;
             exec = outputs.lib.getExe pkgs.polycat;
           };

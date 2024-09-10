@@ -41,6 +41,7 @@
         "akarzim/zsh-docker-aliases"
         "z-shell/zsh-diff-so-fancy"
         "nix-community/nix-zsh-completions"
+        "MichaelAquilina/zsh-auto-notify"
         "zshzoo/magic-enter"
         "jimhester/per-directory-history"
         "getantidote/use-omz"
@@ -58,6 +59,7 @@
     initExtraFirst = ''
       AUTOPAIR_INHIBIT_INIT=1
       AUTOPAIR_SPC_WIDGET="abbr-expand-and-insert"
+      AUTO_NOTIFY_THRESHOLD=20
     '';
     initExtraBeforeCompInit = ''
       autoload -Uz vcs_info

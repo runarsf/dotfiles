@@ -44,27 +44,35 @@ in {
   };
 
   home.packages = with pkgs; [
-    unstable.pyprland
     master.nwg-displays
     wlr-randr
-    unstable.gtk3
     polkit_gnome
     libnotify
     brightnessctl
     xwaylandvideobridge
-    xwayland
-    hyprcursor
     nemo
     wl-clipboard
     wl-clip-persist
     libsForQt5.qt5.qtwayland
-    qt6.qtwayland
     wev
     swww
     unstable.waypaper
     sway-audio-idle-inhibit
     seahorse
     ffmpeg
+
+    # For clipsync
+    (pkgs.clipnotify.overrideAttrs (oldAttrs: {
+      version = "master";
+      src = pkgs.fetchFromGitHub {
+        owner = "cdown";
+        repo = "clipnotify";
+        rev = "25ba143c7da8ae0f196cb0db2797d30e6d04e15c";
+        sha256 = "sha256-m0Ji48cRp4mvhHeNKhXTT4UDK32OUYoMoss/2yc7TDg=";
+      };
+    }))
+    xclip
+    wl-clipboard
   ];
 
   home.activation.touch = ''
@@ -96,6 +104,11 @@ in {
     };
   };
 
+  xdg.configFile."hypr/shaders" = {
+    source = ./shaders;
+    recursive = true;
+  };
+
   # Log rules: watch -n 0.1 "cat "/tmp/hypr/$(echo $HYPRLAND_INSTANCE_SIGNATURE)/hyprland.log" | grep -v "efresh" | grep "rule" | tail -n 40"
   wayland.windowManager.hyprland = let mod = "SUPER";
   in {
@@ -111,10 +124,11 @@ in {
     settings = {
       source = [ "${config.home.homeDirectory}/.config/hypr/monitors.conf" ];
       exec-once = [
-        "${pkgs.wl-clip-persist}/bin/wl-clip-persist --clipboard both"
-        "${pkgs.pyprland}/bin/pypr"
+        # "${pkgs.wl-clip-persist}/bin/wl-clip-persist --clipboard both"
+        "${pkgs.unstable.pyprland}/bin/pypr"
         "${pkgs.sway-audio-idle-inhibit}/bin/sway-audio-idle-inhibit"
         "${pkgs.swaynotificationcenter}/bin/swaync"
+        # "${./. + /bin/clipsync} watch with-notifications"
         "${./. + /bin/monocle.sh}"
       ];
       exec = [
@@ -182,10 +196,8 @@ in {
         shadow_render_power = 3;
         shadow_ignore_window = true;
         shadow_scale = 1;
-        "col.shadow" = "rgba(00000048)";
+        "col.shadow" = "rgba(00000055)";
         "col.shadow_inactive" = "rgba(00000028)";
-        # shadow_range = 14;
-        # "col.shadow" = "rgba(00000045)";
 
         layerrule = [ "blur,wofi" "blur,launcher" ];
       };
@@ -245,6 +257,8 @@ in {
           ALT CTRL, P, exec, (${pkgs.killall}/bin/killall -SIGINT wl-screenrec && (${pkgs.wl-clipboard}/bin/wl-copy < /tmp/screenrecord.mp4; ${pkgs.nemo}/bin/nemo /tmp/screenrecord.mp4)) || (cd /tmp; ${pkgs.wl-screenrec}/bin/wl-screenrec -g "$(${pkgs.slurp}/bin/slurp)" --audio)''
         "${mod} SHIFT, N, exec, ${pkgs.swaynotificationcenter}/bin/swaync-client -t"
 
+        ''${mod} SHIFT, S, exec, hyprctl keyword decoration:screen_shader "${config.home.homeDirectory}/.config/hypr/shaders/$(find "${config.home.homeDirectory}/.config/hypr/shaders" -name *.frag | xargs -n1 basename | fuzzel --dmenu)"''
+        "${mod} CTRL SHIFT, S, exec, hyprctl keyword decoration:screen_shader '[[EMPTY]]'"
         "${mod}, left, exec, ${./. + /bin/movefocus.sh} l"
         "${mod}, right, exec, ${./. + /bin/movefocus.sh} r"
         "${mod}, up, exec, ${./. + /bin/movefocus.sh} u"
@@ -265,7 +279,7 @@ in {
         "${mod}, TAB, workspace, previous"
 
         "${mod} SHIFT, R, exec, hyprctl reload"
-        "${mod}, C, exec, ${pkgs.wl-color-picker}/bin/wl-color-picker"
+        "${mod}, C, exec, ${pkgs.hyprpicker}/bin/hyprpicker | ${pkgs.wl-clipboard}/bin/wl-copy"
 
         "${mod} SHIFT, C, exec, ${./. + /bin/hypr-gamemode}"
         ''
@@ -301,22 +315,22 @@ in {
         ", XF86MonBrightnessDown, exec, ${pkgs.brightnessctl}/bin/brightnessctl set 5%-"
       ];
       bindr = let
-        script = pkgs.writers.writePython3 "hypr-snap" {
+        hypr-snap = pkgs.writers.writePython3 "hypr-snap" {
           flakeIgnore = [ "E305" "E501" "E227" "E302" "E225" ];
         } (builtins.readFile ./bin/hypr-snap.py);
       in [
-        "${mod} CTRL, right, exec, ${script}"
-        "${mod} CTRL, left, exec, ${script}"
-        "${mod} CTRL, up, exec, ${script}"
-        "${mod} CTRL, down, exec, ${script}"
+        "${mod} CTRL, right, exec, ${hypr-snap}"
+        "${mod} CTRL, left, exec, ${hypr-snap}"
+        "${mod} CTRL, up, exec, ${hypr-snap}"
+        "${mod} CTRL, down, exec, ${hypr-snap}"
 
-        "${mod} SHIFT, right, exec, ${script}"
-        "${mod} SHIFT, left, exec, ${script}"
-        "${mod} SHIFT, up, exec, ${script}"
-        "${mod} SHIFT, down, exec, ${script}"
+        "${mod} SHIFT, right, exec, ${hypr-snap}"
+        "${mod} SHIFT, left, exec, ${hypr-snap}"
+        "${mod} SHIFT, up, exec, ${hypr-snap}"
+        "${mod} SHIFT, down, exec, ${hypr-snap}"
 
-        "${mod}, mouse:272, exec, ${script}"
-        "${mod}, mouse:273, exec, ${script}"
+        "${mod}, mouse:272, exec, ${hypr-snap}"
+        "${mod}, mouse:273, exec, ${hypr-snap}"
       ];
       bindm = [
         "${mod}, mouse:272, movewindow"
