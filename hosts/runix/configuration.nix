@@ -1,6 +1,7 @@
 { inputs, ... }:
 
 {
+  # TODO Make most of these modules user-based
   imports = [
     inputs.nixos-hardware.nixosModules.lenovo-thinkpad-t480s
     ../../modules/linux/locales/norwegian.nix
@@ -10,7 +11,6 @@
     # ../../modules/linux/greeter.nix
     # ../../modules/linux/docker.nix
     ../../modules/linux/podman.nix
-    ../../modules/linux/bluetooth.nix
     ../../modules/linux/firewall.nix
     ../../modules/linux/printing.nix
     ../../modules/linux/pipewire.nix

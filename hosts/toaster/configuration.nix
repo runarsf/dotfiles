@@ -6,7 +6,6 @@ _:
     ../../modules/linux/systemd-boot.nix
     ../../modules/linux/thunderbolt.nix
     ../../modules/linux/network.nix
-    ../../modules/linux/bluetooth.nix
     ../../modules/linux/firewall.nix
     ../../modules/linux/printing.nix
     ../../modules/linux/pipewire.nix

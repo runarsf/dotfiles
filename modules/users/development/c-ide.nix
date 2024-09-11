@@ -1,6 +1,7 @@
 { config, pkgs, outputs, ... }:
 
 # TODO Make VM options automatic: ~/.config/JetBrains/CLion2024.1/clion64.vmoptions
+#  Maybe using xdg.configFile and onChange
 
 outputs.lib.mkDesktopModule config "c-ide" {
   home.packages = with pkgs;

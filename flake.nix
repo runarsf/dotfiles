@@ -36,7 +36,10 @@
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
-    wezterm.url = "github:wez/wezterm?dir=nix";
+    wezterm = {
+      url = "github:wez/wezterm?dir=nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     hyprland = {
       type = "git";
