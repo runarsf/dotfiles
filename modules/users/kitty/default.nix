@@ -40,8 +40,8 @@ in
 outputs.lib.mkDesktopModule' config "kitty"
   { modules.kitty.enableBitmap = outputs.lib.mkEnableOption "Enable bitmap fonts in Kitty"; }
   {
-    home.shellAliases.ssh = "TERM=xterm-256color ssh";
-    home.sessionVariables.TERMINAL = "kitty";
+    home.sessionVariables.TERMINAL = outputs.lib.mkDefault "kitty";
+    home.shellAliases.ssh = outputs.lib.mkIf (config.home.sessionVariables == "kitty") "TERM=xterm-256color ssh";
 
     xdg.configFile."kitty/relative_resize.py" = {
       source = ./relative_resize.py;

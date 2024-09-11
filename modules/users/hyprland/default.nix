@@ -21,6 +21,19 @@ in {
   programs.jq.enable = true;
   services = outputs.lib.enable [ "kanshi" "swaync" ];
 
+  xdg.portal = {
+    enable = true;
+    config.common.default = "*";
+    configPackages = with pkgs; [
+      inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland
+      xdg-desktop-portal-gtk
+    ];
+    extraPortals = with pkgs; [
+      inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland
+      xdg-desktop-portal-gtk
+    ];
+  };
+
   nixos = {
     programs = {
       xwayland.enable = true;
@@ -138,8 +151,8 @@ in {
         gaps_in = 5;
         gaps_out = 20;
         border_size = 1;
-        "col.active_border" = "rgba(676767ee) rgba(414141ee) 90deg";
-        "col.inactive_border" = "rgba(67676766) rgba(41414166) 90deg";
+        "col.active_border" = "rgba(717585FF) rgba(707480FF) 90deg";
+        "col.inactive_border" = "rgba(616977FF) rgba(636973FF) 90deg";
 
         layout = "master";
         resize_on_border = false;
@@ -279,7 +292,7 @@ in {
         "${mod}, TAB, workspace, previous"
 
         "${mod} SHIFT, R, exec, hyprctl reload"
-        "${mod}, C, exec, ${pkgs.hyprpicker}/bin/hyprpicker | ${pkgs.wl-clipboard}/bin/wl-copy"
+        "${mod}, C, exec, ${pkgs.hyprpicker}/bin/hyprpicker | tr -d '\\n' | ${pkgs.wl-clipboard}/bin/wl-copy"
 
         "${mod} SHIFT, C, exec, ${./. + /bin/hypr-gamemode}"
         ''

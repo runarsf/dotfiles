@@ -62,6 +62,7 @@ outputs.lib.mkFor system hostname {
         "writing"
         "spotify"
         "sops-fonts"
+        "bluetooth"
       ];
 
       nixos = {
