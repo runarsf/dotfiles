@@ -13,8 +13,9 @@ in {
     inputs.hyprland.homeManagerModules.default
     ./hypridle.nix
     ./hyprlock.nix
-  ];
-} // outputs.lib.mkDesktopModule config "hyprland" {
+    ];
+    # TODO Move defaultTerminal somewhere else
+  } // outputs.lib.mkDesktopModule config "hyprland" {
   modules.wayland.enable = true;
   modules.waybar.enable = true;
   modules.fuzzel.enable = true;
@@ -103,14 +104,15 @@ in {
     pyprland.plugins = [ "scratchpads" ];
     scratchpads = {
       term = {
-        command =
-          "${config.programs.kitty.package}/bin/kitty -o font_size=14 --class scratchpad --title scratchpad";
+        command = config.modules.${config.defaultTerminal}.exec { };
         lazy = true;
         hide = false;
       };
       math = {
-        command =
-          "${config.programs.kitty.package}/bin/kitty -o font_size=16 --class math-scratchpad --title math-scratchpad xonsh";
+        command = config.modules.${config.defaultTerminal}.exec {
+          class = "math-scratchpad";
+          command = outputs.lib.getExe pkgs.xonsh;
+        };
         lazy = true;
         hide = false;
       };
@@ -251,7 +253,7 @@ in {
       # ];
       binds = { allow_workspace_cycles = true; };
       bind = [
-        "${mod}, Return, exec, ${config.programs.kitty.package}/bin/kitty"
+        "${mod}, Return, exec, ${config.modules.${config.defaultTerminal}.exe}"
         "${mod}, Q, killactive"
         "${mod} SHIFT, E, exit"
         "${mod}, E, exec, ${pkgs.nemo}/bin/nemo"

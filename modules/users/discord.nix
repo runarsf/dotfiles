@@ -24,13 +24,14 @@ outputs.lib.mkDesktopModule config "discord" {
       sha256 = "sha256-WJYNWeo1DdgOh7cFne6QSEHQagqapFznqWfeoCsqM+8=";
     };
     "Vencord/themes/CustomFonts.theme.css".source = builtins.toString (pkgs.writeText "CustomFonts.theme.css" ''
-      *:not([class*="hljs"]):not(code) {
-        font-family: 'Monocraft' !important;
+      *:not([class*="hljs"]):not(code),
+      code {
+        font-family: 'Monocraft', 'Operator Mono Lig' !important;
       }
 
-      code {
+      /* code {
         font-family: 'Operator Mono Lig' !important;
-      }
+      } */
     '');
   };
 

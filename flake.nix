@@ -21,6 +21,8 @@
 
     alien.url = "github:thiagokokada/nix-alien";
 
+    binsider.url = "github:orhun/binsider";
+
     sops-nix = {
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs-unstable";

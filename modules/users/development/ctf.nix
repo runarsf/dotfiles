@@ -1,9 +1,4 @@
-{
-  config,
-  pkgs,
-  outputs,
-  ...
-}:
+{ config, pkgs, inputs, outputs, ... }:
 
 # Useful tools
 #   https://binary.ninja/
@@ -52,16 +47,16 @@ outputs.lib.mkModule config "ctf" {
       p7zip # HTB archives can't be unpacked by `unzip`...
       patchelf
       wget
+
+      inputs.binsider.packages.${pkgs.system}.default
     ];
 
-    file.".local/bin/nc-respond".source =
-      let
-        script = pkgs.writeShellApplication {
-          name = "nc-respond";
-          runtimeInputs = with pkgs; [ coreutils ];
-          text = builtins.readFile ./nc-respond.sh;
-        };
-      in
-      "${script}/bin/nc-respond";
+    file.".local/bin/nc-respond".source = let
+      script = pkgs.writeShellApplication {
+        name = "nc-respond";
+        runtimeInputs = with pkgs; [ coreutils ];
+        text = builtins.readFile ./nc-respond.sh;
+      };
+    in "${script}/bin/nc-respond";
   };
 }

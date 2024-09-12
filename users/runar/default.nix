@@ -18,11 +18,9 @@ in outputs.lib.mkFor system hostname {
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO6Y4kk5hFzs/B6vze9u9RPG9d+vVM5EIRIOug4OnJBk runarsfr@stud.ntnu.no"
     ];
 
-    # TODO Add defaultTerminal option to terminals for scratchpads
-    home.sessionVariables.TERMINAL = outputs.lib.mkForce "wezterm";
+    defaultTerminal = "wezterm";
 
     modules = outputs.lib.enable [
-      "zellij"
       "neovim"
       "zsh"
       "xonsh"

@@ -1,12 +1,4 @@
-{
-  config,
-  inputs,
-  outputs,
-  pkgs,
-  system,
-  hostname,
-  ...
-}:
+{ config, inputs, outputs, pkgs, name, system, hostname, ... }:
 
 # This is a module that utilizes the shared sops secrets in the vault.
 
@@ -32,24 +24,20 @@ outputs.lib.mkDesktopModule config "sops-fonts" {
   systemd.user.services.sops-fonts = {
     Unit = {
       Description = "Fonts with stupid licenses";
+      PartOf = [ "home-manager-${name}.service" ];
     };
-    Install = {
-      WantedBy = [ "default.target" ];
-    };
-    Service = {
-      ExecStart = builtins.toString (
-        pkgs.writeShellScript "install-fonts" ''
-          #!/run/current-system/sw/bin/bash
-          set -o errexit
-          set -o nounset
+    Install.WantedBy = [ "default.target" ];
+    Service.ExecStart = builtins.toString
+      (pkgs.writeShellScript "install-fonts" ''
+        #!/run/current-system/sw/bin/bash
+        set -o errexit
+        set -o nounset
 
-          ${pkgs.coreutils}/bin/mkdir -p "${config.xdg.dataHome}/fonts"
-          ${pkgs.unzip}/bin/unzip -o "${config.sops.secrets.monolisa.path}" -d "${config.xdg.dataHome}/fonts"
-          ${pkgs.unzip}/bin/unzip -o "${config.sops.secrets.dankmono.path}" -d "${config.xdg.dataHome}/fonts"
-          ${pkgs.unzip}/bin/unzip -o "${config.sops.secrets.operatormono.path}" -d "${config.xdg.dataHome}/fonts"
-          ${pkgs.fontconfig}/bin/fc-cache -f
-        ''
-      );
-    };
+        ${pkgs.coreutils}/bin/mkdir -p "${config.xdg.dataHome}/fonts"
+        ${pkgs.unzip}/bin/unzip -o "${config.sops.secrets.monolisa.path}" -d "${config.xdg.dataHome}/fonts"
+        ${pkgs.unzip}/bin/unzip -o "${config.sops.secrets.dankmono.path}" -d "${config.xdg.dataHome}/fonts"
+        ${pkgs.unzip}/bin/unzip -o "${config.sops.secrets.operatormono.path}" -d "${config.xdg.dataHome}/fonts"
+        ${pkgs.fontconfig}/bin/fc-cache -f
+      '');
   };
 }
