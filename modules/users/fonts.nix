@@ -47,6 +47,7 @@ outputs.lib.mkDesktopModule config "fonts" {
     undefined-medium
     scientifica
     curie
+    zpix-pixel-font
     # proggyfonts
     # creep
     # gohufont
