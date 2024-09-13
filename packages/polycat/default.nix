@@ -9,7 +9,7 @@ pkgs.stdenv.mkDerivation {
   src = pkgs.fetchgit {
     url = "https://github.com/2IMT/polycat.git";
     rev = "0c836d592591ae4c1622e7fa51c0f86fbc4a9941";
-    sha256 = "sha256-+XusjPX1Oui74BAj6/h1eb49xCK44eQB2Fvr3RoCg4E=";
+    sha256 = "sha256-MVU2KdZzFcvIjFKIAQQGJKJVXaClCloL9B5zRTpTPrk=";
     fetchSubmodules = true;
     deepClone = true;
   };
