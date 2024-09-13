@@ -24,13 +24,11 @@ in {
 
   xdg.portal = {
     enable = true;
-    config.common.default = "*";
-    configPackages = with pkgs; [
-      inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland
-      xdg-desktop-portal-gtk
+    configPackages = [
+      inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland
     ];
     extraPortals = with pkgs; [
-      inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland
+      # inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland
       xdg-desktop-portal-gtk
     ];
   };
@@ -244,7 +242,7 @@ in {
       misc = {
         disable_hyprland_logo = true;
         enable_swallow = true;
-        swallow_regex = "^(Alacritty|kitty)$";
+        swallow_regex = "^(Alacritty|kitty|org.wezfurlong.wezterm)$";
         animate_manual_resizes = true;
         animate_mouse_windowdragging = true;
       };
@@ -368,8 +366,9 @@ in {
 
         "noborder, fullscreen:1"
 
-        "opacity 0.8 0.8, class:^(kitty)$"
         "opacity 0.8 0.8, class:^(scratchpad)$"
+        "opacity 0.8 0.8, class:^(kitty)$"
+        "opacity 0.8 0.8, class:^(org.wezfurlong.wezterm)$"
         # "opacity 0.8 override,title:^(.*)(New Tab)(.*)$"
         # "opacity 0.8 override,title:^(Mozilla Firefox)(.*)$"
         # "opacity 0.8 override,title:^(🦊 — Mozilla Firefox)$"

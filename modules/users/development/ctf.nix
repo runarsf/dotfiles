@@ -48,7 +48,7 @@ outputs.lib.mkModule config "ctf" {
       patchelf
       wget
 
-      inputs.binsider.packages.${pkgs.system}.default
+      # inputs.binsider.packages.${pkgs.system}.default
     ];
 
     file.".local/bin/nc-respond".source = let

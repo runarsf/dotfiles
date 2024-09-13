@@ -53,6 +53,10 @@
       inputs.hyprland.follows = "hyprland";
     };
 
+    nix-flatpak.url = "github:gmodena/nix-flatpak";
+
+    zen-browser.url = "github:MarceColl/zen-browser-flake";
+
     arkenfox = {
       url = "github:dwarfmaster/arkenfox-nixos";
       inputs.nixpkgs.follows = "nixpkgs-unstable";

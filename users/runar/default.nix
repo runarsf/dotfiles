@@ -55,6 +55,7 @@ in outputs.lib.mkFor system hostname {
         "sops-fonts"
         "wezterm"
         "bluetooth"
+        "zen"
       ];
 
       nixos = {

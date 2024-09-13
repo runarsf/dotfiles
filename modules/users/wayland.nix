@@ -9,13 +9,13 @@ outputs.lib.mkModule config "wayland" {
   home.sessionVariables = {
     NIXOS_OZONE_WL = "1";
     MOZ_ENABLE_WAYLAND = "1";
-    QT_QPA_PLATFORM = "wayland";
-    LIBSEAT_BACKEND = "logind";
-    XDG_SESSION_TYPE = "wayland";
-    WLR_NO_HARDWARE_CURSORS = "1";
-    _JAVA_AWT_WM_NONREPARENTING = "1";
-    GDK_SCALE = "2";
-    ELECTRON_OZONE_PLATFORM_HINT = "wayland";
+    # QT_QPA_PLATFORM = "wayland";
+    # LIBSEAT_BACKEND = "logind";
+    # XDG_SESSION_TYPE = "wayland";
+    # WLR_NO_HARDWARE_CURSORS = "1";
+    # _JAVA_AWT_WM_NONREPARENTING = "1";
+    # GDK_SCALE = "2";
+    # ELECTRON_OZONE_PLATFORM_HINT = "wayland";
   };
   # NOTE This will break stuff if there is a non-wayland user on the same machine,
   #  but application launchers need this.

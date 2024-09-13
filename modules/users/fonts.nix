@@ -45,6 +45,13 @@ outputs.lib.mkDesktopModule config "fonts" {
     unstable.cozette
     tamzen
     undefined-medium
+    scientifica
+    curie
+    # proggyfonts
+    # creep
+    # gohufont
+    unifont
+    terminus_font
     monocraft
 
     # Coding

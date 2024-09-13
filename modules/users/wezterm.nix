@@ -4,9 +4,6 @@
 #  https://wezfurlong.org/wezterm/config/lua/config/default_domain.html
 #  https://wezfurlong.org/wezterm/config/lua/config/default_mux_server_domain.html
 
-# TODO Slower scroll speed
-# TODO Tab bar cuts off long names
-
 let wezterm = inputs.wezterm.packages.${pkgs.system}.default;
 in outputs.lib.mkDesktopModule' config "wezterm" {
   modules.wezterm.exe = outputs.lib.mkOption {
@@ -20,6 +17,10 @@ in outputs.lib.mkDesktopModule' config "wezterm" {
       "${config.modules.wezterm.exe} start --class ${class} ${command}";
     readOnly = true;
   };
+  modules.wezterm.fonts = outputs.lib.mkOption {
+    type = outputs.lib.types.listOf outputs.lib.types.str;
+    default = [ "CozetteHiDpi" "Operator Mono Lig" ];
+  };
 } {
   nixos = {
     environment.systemPackages = with pkgs; [ egl-wayland ];
@@ -29,6 +30,7 @@ in outputs.lib.mkDesktopModule' config "wezterm" {
     };
   };
 
+  home.packages = [ wezterm ];
   programs.wezterm = {
     enable = true;
     package = wezterm;
@@ -45,15 +47,16 @@ in outputs.lib.mkDesktopModule' config "wezterm" {
       -- config.color_scheme = 'Ayu Dark (Gogh)'
       -- config.font = wezterm.font 'Operator Mono Lig'
       config.font = wezterm.font_with_fallback({
-        { family = 'Monocraft', weight = 'Regular' },
-        'Operator Mono Lig',
+        ${builtins.concatStringsSep ",\n  " (map (font: "'${font}'") config.modules.wezterm.fonts)}
       })
       config.font_size = 14.0
+      config.warn_about_missing_glyphs = false
       config.default_cursor_style = "SteadyBar"
       config.window_decorations = "NONE"
       config.tab_bar_at_bottom = true
       config.hide_tab_bar_if_only_one_tab = true
       config.show_new_tab_button_in_tab_bar = false
+      -- config.alternate_buffer_wheel_scroll_speed = 1
       config.colors = {
         tab_bar = {
           background = 'none',
@@ -81,9 +84,9 @@ in outputs.lib.mkDesktopModule' config "wezterm" {
       }
       config.window_padding = {
         left = 2,
-        right = 2,
+        right = 0,
         top = 2,
-        bottom = 2,
+        bottom = 0,
       }
 
       config.set_environment_variables = {
@@ -128,7 +131,11 @@ in outputs.lib.mkDesktopModule' config "wezterm" {
 
           local title = tab_title(tab)
 
-          title = wezterm.truncate_right(title, max_width - 2)
+          if tab.tab_id > 0 then
+            title = wezterm.truncate_right(title, max_width - 3)
+          else
+            title = wezterm.truncate_right(title, max_width - 2)
+          end
 
           local bar = {
             { Background = { Color = edge_background } },
@@ -235,7 +242,7 @@ in outputs.lib.mkDesktopModule' config "wezterm" {
         {
           key = 'T',
           mods = 'CTRL|SHIFT',
-          action = wezterm.action.SpawnTab('DefaultDomain'),
+          action = wezterm.action.SpawnCommandInNewTab { cwd = wezterm.home_dir },
         }
       }
 

@@ -10,5 +10,7 @@
 
   config = outputs.lib.mkIf (outputs.lib.isDesktop' config) {
     home.sessionVariables.TERMINAL = config.defaultTerminal;
+
+    modules.${config.defaultTerminal}.enable = true;
   };
 }
