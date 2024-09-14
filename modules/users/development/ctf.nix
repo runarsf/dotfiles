@@ -1,4 +1,4 @@
-{ config, pkgs, inputs, outputs, ... }:
+{ config, pkgs, inputs, outputs, name, ... }:
 
 # Useful tools
 #   https://binary.ninja/
@@ -20,6 +20,15 @@
 outputs.lib.mkModule config "ctf" {
   # containers.rednix.autoStart = false;
 
+  nixos = {
+    programs.wireshark = {
+      enable = true;
+      package = pkgs.wireshark;
+    };
+    # Probably not necessary with [programs.wireshark.enable]
+    users.users."${name}".extraGroups = [ "wireshark" ];
+  };
+
   home = {
     packages = with pkgs; [
       radare2
@@ -29,7 +38,6 @@ outputs.lib.mkModule config "ctf" {
       fcrackzip
       socat
       unstable.steghide
-      wireshark
       metasploit
       pwntools
       exiftool
