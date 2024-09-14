@@ -20,66 +20,67 @@ outputs.lib.mkDesktopModule config "zen" {
   home.packages = [ inputs.zen-browser.packages."${pkgs.system}".default ];
 
   home.file.".zen/${name}/chrome/userChrome.css".text = ''
+    /* Not compatible with 'Allow Toolbar Theming'.
+     * If using 'Bookmark Toolbar Tweaks', enable [uc.bookmarks.transparent].
+     */
+
     :root {
-      --bg: #00000000;
-      --tabpanel-background-color: #00000000 !important;
-      --zen-themed-toolbar-bg: #00000000 !important;
+      --zen-themed-toolbar-bg: transparent !important;
+      /* --zen-colors-tertiary: transparent !important; */
     }
 
-    #main-window {
+    /*#main-window {
       background: var(--bg) !important;
-    }
+    }*/
 
-    /*current tab*/
+    /*current tab
     tab.tabbrowser-tab[selected="true"] stack.tab-stack vbox.tab-background {
       background: #FFFFFF22 !important;
-    }
+    }*/
 
-    /*hover tab*/
+    /*hover tab
     tab.tabbrowser-tab:hover stack.tab-stack vbox.tab-background {
       background: #FFFFFF22 !important;
-    }
+    }*/
 
-    /*hibernated*/
+    /*hibernated
     tab.tabbrowser-tab stack.tab-stack vbox.tab-background {
       background: transparent !important;
-    }
+    }*/
 
-    /*bookmarks*/
-    toolbar {
+    /*bookmarks
+    toolbar:not(:hover) {
       background: transparent !important;
-    }
+    }*/
 
     /*idk*/
-    #nav-bar {
+    /*#nav-bar {
       background: transparent  !important;
-    }
+    }*/
 
-    /*idk but keep*/
+    /*idk but keep
     #navigator-toolbox {
       background: transparent !important;
       border: none !important;
-    }
+    }*/
 
     /*urlbar*/
     #urlbar-background {
-      background: #00000044 !important;
+      background: #00000030 !important;
     }
 
-    /*suggestions dropdown*/
+    /* Suggestions dropdown */
     #urlbar:is([open]) hbox#urlbar-background {
-      background: #42414D !important;
+      background: var(--tabpanel-background-color) !important;
+      border: 1px solid var(--sidebar-border-color) !important;
+      border-radius: var(--zen-border-radius) !important;
     }
 
-    /*little contextual buttons at left of urlbar*/
-    #urlbar box#identity-box box {
-      background: inherit !important;
-    }
-    #urlbar box#identity-box box:hover {
-      background: #FFFFFF22 !important;
-    }
+    /* Little contextual buttons at left of urlbar */
+    #urlbar box#identity-box box,
+    #urlbar box#identity-box box:hover,
     #urlbar box#identity-box box:active {
-      background: #FFFFFF44 !important;
+      opacity: 0.8;
     }
   '';
 }

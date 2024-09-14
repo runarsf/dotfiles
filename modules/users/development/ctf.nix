@@ -25,7 +25,6 @@ outputs.lib.mkModule config "ctf" {
       enable = true;
       package = pkgs.wireshark;
     };
-    # Probably not necessary with [programs.wireshark.enable]
     users.users."${name}".extraGroups = [ "wireshark" ];
   };
 
