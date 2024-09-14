@@ -11,7 +11,7 @@
   imports = [ inputs.arkenfox.hmModules.arkenfox ];
 }
 // outputs.lib.mkDesktopModule config "firefox" {
-  xdg.mimeApps = {
+  xdg.mimeApps = outputs.lib.mkIf (config.defaultBrowser == "firefox") {
     enable = true;
     defaultApplications = {
       "default-web-browser" = [ "firefox.desktop" ];

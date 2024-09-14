@@ -60,6 +60,7 @@
       AUTOPAIR_INHIBIT_INIT=1
       AUTOPAIR_SPC_WIDGET="abbr-expand-and-insert"
       AUTO_NOTIFY_THRESHOLD=20
+      AUTO_NOTIFY_EXPIRE_TIME=20000
     '';
     initExtraBeforeCompInit = ''
       autoload -Uz vcs_info

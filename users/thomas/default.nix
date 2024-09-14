@@ -15,6 +15,7 @@ outputs.lib.mkFor system hostname {
     ];
 
     defaultTerminal = "wezterm";
+    defaultBrowser = "zen";
 
     modules = outputs.lib.enable [
       "neovim"

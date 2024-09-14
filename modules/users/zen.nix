@@ -5,22 +5,19 @@ outputs.lib.mkDesktopModule config "zen" {
 
   # nixos.services.flatpak.packages = [ "io.github.zen_browser.zen" ];
 
-  # TODO Add this and make defaultBrowser
-  # xdg.mimeApps = {
-  #   enable = true;
-  #   defaultApplications = {
-  #     "default-web-browser" = [ "zen.desktop" ];
-  #     "text/html" = [ "zen.desktop" ];
-  #     "x-scheme-handler/http" = [ "zen.desktop" ];
-  #     "x-scheme-handler/https" = [ "zen.desktop" ];
-  #     "x-scheme-handler/about" = [ "zen.desktop" ];
-  #     "x-scheme-handler/unknown" = [ "zen.desktop" ];
-  #   };
-  # };
+  xdg.mimeApps = outputs.lib.mkIf (config.defaultBrowser == "zen") {
+    enable = true;
+    defaultApplications = {
+      "default-web-browser" = [ "zen.desktop" ];
+      "text/html" = [ "zen.desktop" ];
+      "x-scheme-handler/http" = [ "zen.desktop" ];
+      "x-scheme-handler/https" = [ "zen.desktop" ];
+      "x-scheme-handler/about" = [ "zen.desktop" ];
+      "x-scheme-handler/unknown" = [ "zen.desktop" ];
+    };
+  };
 
-  home.packages = [
-    inputs.zen-browser.packages."${pkgs.system}".default
-  ];
+  home.packages = [ inputs.zen-browser.packages."${pkgs.system}".default ];
 
   home.file.".zen/${name}/chrome/userChrome.css".text = ''
     :root {
