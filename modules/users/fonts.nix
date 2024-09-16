@@ -1,14 +1,28 @@
-{
-  pkgs,
-  outputs,
-  inputs,
-  config,
-  ...
-}:
+{ pkgs, outputs, inputs, config, ... }:
 
 # TODO https://codeberg.org/adamcstephens/apple-fonts.nix/src/branch/main
 
-outputs.lib.mkDesktopModule config "fonts" {
+let
+  nofontsdir = font:
+    font.overrideAttrs (oldAttrs: {
+      installPhase = oldAttrs.installPhase + ''
+        find "$out/share/fonts" -type f -name 'fonts.dir' -delete
+      '';
+    });
+  resizebdf = pkgs.writers.writePython3Bin "resizebdf" {
+    libraries = with pkgs.python3Packages; [ numpy ];
+    flakeIgnore = [
+      "E302"
+      "W293"
+      "E226"
+      "E305"
+      "E265" # from nix-shell shebang
+      "E501" # line too long (82 > 79 characters)
+      "F403" # ‘from module import *’ used; unable to detect undefined names
+      "F405" # name may be undefined, or defined from star imports: module
+    ];
+  } (builtins.readFile ./resize_bdf.py);
+in outputs.lib.mkDesktopModule config "fonts" {
   nixos = {
     fonts.fontconfig = {
       enable = true;
@@ -25,7 +39,7 @@ outputs.lib.mkDesktopModule config "fonts" {
 
   fonts.fontconfig.enable = true;
 
-  home.packages = with pkgs; [
+  home.packages = with pkgs.unstable; [
     fontpreview
 
     # Writing
@@ -40,20 +54,32 @@ outputs.lib.mkDesktopModule config "fonts" {
     noto-fonts-emoji
     noto-fonts-cjk
     noto-fonts-extra
+    powerline-fonts
 
     # Bitmap fonts
-    unstable.cozette
-    tamzen
+    cozette
     undefined-medium
-    scientifica
-    curie
+    (scientifica.overrideAttrs (oldAttrs:
+      let base = "$out/share/fonts/misc/";
+      in {
+        installPhase = oldAttrs.installPhase + ''
+          mv ${base}/scientifica-11.bdf ${base}/scientificaItalic-11.bdf ${base}/scientificaBold-11.bdf .
+          ${resizebdf}/bin/resizebdf ./scientifica-11.bdf ${base}/scientifica-11.bdf 2
+          ${resizebdf}/bin/resizebdf ./scientificaItalic-11.bdf ${base}/scientificaItalic-11.bdf 2
+          ${resizebdf}/bin/resizebdf ./scientificaBold-11.bdf ${base}/scientificaBold-11.bdf 2
+        '';
+      }))
     zpix-pixel-font
-    # proggyfonts
-    # creep
-    # gohufont
-    unifont
+    termsyn
     terminus_font
     monocraft
+    (nofontsdir tamzen)
+    (nofontsdir proggyfonts)
+    (nofontsdir creep)
+    (nofontsdir unifont)
+    (nofontsdir unifont_upper)
+    (nofontsdir gohufont)
+    (nofontsdir spleen)
 
     # Coding
     jetbrains-mono

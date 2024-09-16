@@ -33,6 +33,7 @@ in outputs.lib.mkFor system hostname {
       "javascript"
       "nix"
       "yazi"
+      "fun"
     ];
 
     wallpaper = ./wallpaper.jpg;

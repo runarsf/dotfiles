@@ -97,6 +97,16 @@
       zcode () { "${config.programs.vscode.package}/bin/code" "$("${config.programs.zoxide.package}/bin/zoxide" query "$@")" }
       zd () { set -e; cd "$("${config.programs.zoxide.package}/bin/zoxide" query "$PWD" "$@")"; set +e }
       electron-wayland () { "''${1:?No program specificed...}" --enable-features=UseOzonePlatform,WaylandWindowDecorations --platform-hint=auto --ozone-platform=wayland "''${@:2}" }
+      tmpvim () {
+        if test ! -f "''${1:?No file specified...}"; then
+          printf "File doesn't exist...\n"
+        fi
+
+        mv "$1" "$1.bak"
+        cat "$1.bak" > "$1"
+        $EDITOR "$1"
+        mv "$1.bak" "$1"
+      }
 
       bindkey '^G' per-directory-history-toggle-history
       bindkey -M vicmd '^G' per-directory-history-toggle-history

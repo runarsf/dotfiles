@@ -1,6 +1,18 @@
 { config, pkgs, inputs, outputs, name, ... }:
 
-outputs.lib.mkDesktopModule config "zen" {
+let
+  zenBrowserPkg = inputs.zen-browser.packages."${pkgs.system}".default;
+
+  updatedZenBrowser = zenBrowserPkg.overrideAttrs (oldAttrs: rec {
+    version = "1.0.1-a";
+    src = builtins.fetchTarball {
+      url =
+        "https://github.com/zen-browser/desktop/releases/download/${version}/zen.linux-generic.tar.bz2";
+      sha256 = "sha256:15fdk6imk34p55kxi18q9dvldhq43rl14nssdzdbrs5zj1snrjz6";
+    };
+  });
+
+in outputs.lib.mkDesktopModule config "zen" {
   # modules.flatpak.enable = true;
 
   # nixos.services.flatpak.packages = [ "io.github.zen_browser.zen" ];
@@ -17,7 +29,8 @@ outputs.lib.mkDesktopModule config "zen" {
     };
   };
 
-  home.packages = [ inputs.zen-browser.packages."${pkgs.system}".default ];
+  # home.packages = [ inputs.zen-browser.packages."${pkgs.system}".default ];
+  home.packages = [ updatedZenBrowser ];
 
   home.file.".zen/${name}/chrome/userChrome.css".text = ''
     /* Not compatible with 'Allow Toolbar Theming'.

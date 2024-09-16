@@ -19,7 +19,7 @@ in outputs.lib.mkDesktopModule' config "wezterm" {
   };
   modules.wezterm.fonts = outputs.lib.mkOption {
     type = outputs.lib.types.listOf outputs.lib.types.str;
-    default = [ "CozetteHiDpi" "Operator Mono Lig" ];
+    default = [ "scientifica" "Cozette" "TamzenForPowerline" "Unifont" "Unifont Upper" "CaskaydiaCove NFM" ];
   };
 } {
   nixos = {
@@ -47,7 +47,10 @@ in outputs.lib.mkDesktopModule' config "wezterm" {
       -- config.color_scheme = 'Ayu Dark (Gogh)'
       -- config.font = wezterm.font 'Operator Mono Lig'
       config.font = wezterm.font_with_fallback({
-        ${builtins.concatStringsSep ",\n  " (map (font: "'${font}'") config.modules.wezterm.fonts)}
+        ${
+          builtins.concatStringsSep ",\n  "
+          (map (font: "'${font}'") config.modules.wezterm.fonts)
+        }
       })
       config.font_size = 14.0
       config.warn_about_missing_glyphs = false
@@ -131,11 +134,7 @@ in outputs.lib.mkDesktopModule' config "wezterm" {
 
           local title = tab_title(tab)
 
-          if tab.tab_id > 0 then
-            title = wezterm.truncate_right(title, max_width - 3)
-          else
-            title = wezterm.truncate_right(title, max_width - 2)
-          end
+          title = wezterm.truncate_right(title, max_width - 3)
 
           local bar = {
             { Background = { Color = edge_background } },
@@ -147,11 +146,8 @@ in outputs.lib.mkDesktopModule' config "wezterm" {
             { Background = { Color = edge_background } },
             { Foreground = { Color = edge_foreground } },
             { Text = RIGHT_HALF_CIRCLE },
+            { Text = " " },
           }
-
-          if tab.tab_id > 0 then
-            table.insert(bar, 1, { Text = " " })
-          end
 
           return bar
         end

@@ -44,9 +44,6 @@ outputs.lib.mkEnabledModule config "shell-utils" {
       inputs.alien.packages.${system}.nix-alien
       bat
       sad
-      gay
-      blahaj
-      krabby
       socat
       btop
       yt-dlp
@@ -73,9 +70,8 @@ outputs.lib.mkEnabledModule config "shell-utils" {
       watchexec
     ];
 
-    shellAliases = rec {
+    shellAliases = {
       ls = "EZA_ICON_SPACING=2 ${pkgs.eza}/bin/eza -l -F -g -a --group-directories-first --no-time --git";
-      sl = "${ls} | rev";
       grep = "grep --color=always";
       cat = "${pkgs.bat}/bin/bat";
     };

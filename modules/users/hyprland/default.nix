@@ -266,8 +266,8 @@ in {
           ALT, P, exec, ${pkgs.grim}/bin/grim -g "$(${pkgs.slurp}/bin/slurp)" - | ${pkgs.imagemagick}/bin/convert - -shave 1x1 PNG:- | ${pkgs.wl-clipboard}/bin/wl-copy''
         ''
           ALT SHIFT, P, exec, ${pkgs.grim}/bin/grim -g "$(${pkgs.slurp}/bin/slurp)" - | ${pkgs.imagemagick}/bin/convert - -shave 1x1 PNG:- | ${pkgs.swappy}/bin/swappy -f -''
-        ''
-          ALT CTRL, P, exec, (${pkgs.killall}/bin/killall -SIGINT wl-screenrec && (${pkgs.wl-clipboard}/bin/wl-copy < /tmp/screenrecord.mp4; ${pkgs.nemo}/bin/nemo /tmp/screenrecord.mp4)) || (cd /tmp; ${pkgs.wl-screenrec}/bin/wl-screenrec -g "$(${pkgs.slurp}/bin/slurp)" --audio)''
+        ''ALT CTRL, P, exec, (${pkgs.killall}/bin/killall -SIGINT wl-screenrec && (${pkgs.wl-clipboard}/bin/wl-copy < /tmp/screenrecord.mp4; ${pkgs.nemo}/bin/nemo /tmp/screenrecord.mp4)) || (cd /tmp; ${pkgs.wl-screenrec}/bin/wl-screenrec -g "$(${pkgs.slurp}/bin/slurp)")''
+        ''ALT SHIFT CTRL, P, exec, (${pkgs.killall}/bin/killall -SIGINT wl-screenrec && (${pkgs.wl-clipboard}/bin/wl-copy < /tmp/screenrecord.mp4; ${pkgs.nemo}/bin/nemo /tmp/screenrecord.mp4)) || (cd /tmp; ${pkgs.wl-screenrec}/bin/wl-screenrec -g "$(${pkgs.slurp}/bin/slurp)" --audio)''
         "${mod} SHIFT, N, exec, ${pkgs.swaynotificationcenter}/bin/swaync-client -t"
 
         ''${mod} SHIFT, S, exec, hyprctl keyword decoration:screen_shader "${config.home.homeDirectory}/.config/hypr/shaders/$(find "${config.home.homeDirectory}/.config/hypr/shaders" -name *.frag | xargs -n1 basename | fuzzel --dmenu)"''
@@ -403,19 +403,19 @@ in {
 
         # Discord has initialClass ' - Discord'
         # Discord popout has initialClass 'Discord Popout'
-        "float, class:(discord), title:^((?! - Discord).)*$"
-        "pin, class:(discord), title:^((?! - Discord).)*$"
-        "noborder, class:(discord), title:^((?! - Discord).)*$"
-        "size 565 317, class:(discord), title:^((?! - Discord).)*$"
-        "move onscreen 100%-0, class:discord, title:^((?! - Discord).)*$"
+        # "float, class:(discord), title:^((?! - Discord).)*$"
+        # "pin, class:(discord), title:^((?! - Discord).)*$"
+        # "noborder, class:(discord), title:^((?! - Discord).)*$"
+        # "size 565 317, class:(discord), title:^((?! - Discord).)*$"
+        # "move onscreen 100%-0, class:discord, title:^((?! - Discord).)*$"
 
         # WebCord has initialClass '[ID] WebCord - #channel'
         # WebCord popout has initialClass 'vc name'
-        "float, class:(WebCord), title:^((?!WebCord - ).)*$"
-        "pin, class:(WebCord), title:^((?!WebCord - ).)*$"
-        "noborder, class:(WebCord), title:^((?!WebCord - ).)*$"
-        "size 565 317, class:(WebCord), title:^((?!WebCord - ).)*$"
-        "move onscreen 100%-0, class:(WebCord), title:^((?!WebCord - ).)*$"
+        # "float, class:(WebCord), title:^((?!WebCord - ).)*$"
+        # "pin, class:(WebCord), title:^((?!WebCord - ).)*$"
+        # "noborder, class:(WebCord), title:^((?!WebCord - ).)*$"
+        # "size 565 317, class:(WebCord), title:^((?!WebCord - ).)*$"
+        # "move onscreen 100%-0, class:(WebCord), title:^((?!WebCord - ).)*$"
 
         "float, class:^(firefox).*$, title:^(Opening)(.*)$"
         "float, class:^(firefox).*$, title:^$"
