@@ -63,6 +63,7 @@ in outputs.lib.mkDesktopModule config "fonts" {
       let base = "$out/share/fonts/misc/";
       in {
         installPhase = oldAttrs.installPhase + ''
+          find "$out/share/fonts" -type f \( -name '*.ttf' -o -name '*.otb' \) -delete
           mv ${base}/scientifica-11.bdf ${base}/scientificaItalic-11.bdf ${base}/scientificaBold-11.bdf .
           ${resizebdf}/bin/resizebdf ./scientifica-11.bdf ${base}/scientifica-11.bdf 2
           ${resizebdf}/bin/resizebdf ./scientificaItalic-11.bdf ${base}/scientificaItalic-11.bdf 2
