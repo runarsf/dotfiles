@@ -29,34 +29,35 @@ outputs.lib.mkModule config "ctf" {
   };
 
   home = {
-    packages = with pkgs; [
-      radare2
-      ghidra
-      sshpass
-      file
-      fcrackzip
-      socat
-      unstable.steghide
-      metasploit
-      pwntools
-      exiftool
-      binwalk
+    packages = with pkgs;
+      [
+        radare2
+        ghidra
+        sshpass
+        file
+        fcrackzip
+        socat
+        unstable.steghide
+        metasploit
+        pwntools
+        exiftool
+        binwalk
 
-      binutils
-      foremost
-      gdb
-      capstone
-      jq
-      yq
-      gobuster
-      one_gadget
-      nmap
-      p7zip # HTB archives can't be unpacked by `unzip`...
-      patchelf
-      wget
+        binutils
+        foremost
+        gdb
+        capstone
+        jq
+        yq
+        gobuster
+        one_gadget
+        nmap
+        p7zip # HTB archives can't be unpacked by `unzip`...
+        patchelf
+        wget
 
-      # inputs.binsider.packages.${pkgs.system}.default
-    ];
+        # inputs.binsider.packages.${pkgs.system}.default
+      ] ++ outputs.lib.optionals config.modules.android.enable [ pkgs.frida-tools ];
 
     file.".local/bin/nc-respond".source = let
       script = pkgs.writeShellApplication {

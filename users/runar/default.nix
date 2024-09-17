@@ -87,7 +87,7 @@ in outputs.lib.mkFor system hostname {
     runix = {
       isDesktop = true;
 
-      modules = outputs.lib.enable [ "ctf" ];
+      modules = outputs.lib.enable [ "ctf" "android" "android-ide" ];
 
       home.packages = with pkgs.unstable;
         ifIsDesktop [

@@ -1,7 +1,7 @@
 IP="${1:?Usage: ${0} <IP>}"
 PORT="${2:-}"
 
-if [[ ! -z "${PORT// }" ]]; then
+if [[ -n "${PORT// }" ]]; then
   timeout 2.5s adb connect "${IP}:${PORT}"
   exit ${?}
 fi

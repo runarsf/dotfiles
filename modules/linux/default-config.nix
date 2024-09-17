@@ -13,6 +13,6 @@ with outputs.lib;
   nix.gc = {
     automatic = mkDefault true;
     dates = mkDefault "weekly";
-    options = mkDefault "--delete-older-than 7d";
+    options = mkDefault "--delete-older-than 5d";
   };
 }
