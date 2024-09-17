@@ -5,6 +5,7 @@
 # TODO https://github.com/zakk4223/hyprRiver
 # TODO https://github.com/zakk4223/hyprWorkspaceLayouts
 # TODO https://github.com/ArtsyMacaw/wlogout
+# TODO Use dex instaed of autostart https://github.com/jceb/dex
 
 let lock = "${pkgs.hyprlock}/bin/hyprlock";
 
@@ -266,8 +267,8 @@ in {
           ALT, P, exec, ${pkgs.grim}/bin/grim -g "$(${pkgs.slurp}/bin/slurp)" - | ${pkgs.imagemagick}/bin/convert - -shave 1x1 PNG:- | ${pkgs.wl-clipboard}/bin/wl-copy''
         ''
           ALT SHIFT, P, exec, ${pkgs.grim}/bin/grim -g "$(${pkgs.slurp}/bin/slurp)" - | ${pkgs.imagemagick}/bin/convert - -shave 1x1 PNG:- | ${pkgs.swappy}/bin/swappy -f -''
-        ''ALT CTRL, P, exec, (${pkgs.killall}/bin/killall -SIGINT wl-screenrec && (${pkgs.wl-clipboard}/bin/wl-copy < /tmp/screenrecord.mp4; ${pkgs.nemo}/bin/nemo /tmp/screenrecord.mp4)) || (cd /tmp; ${pkgs.wl-screenrec}/bin/wl-screenrec -g "$(${pkgs.slurp}/bin/slurp)")''
-        ''ALT SHIFT CTRL, P, exec, (${pkgs.killall}/bin/killall -SIGINT wl-screenrec && (${pkgs.wl-clipboard}/bin/wl-copy < /tmp/screenrecord.mp4; ${pkgs.nemo}/bin/nemo /tmp/screenrecord.mp4)) || (cd /tmp; ${pkgs.wl-screenrec}/bin/wl-screenrec -g "$(${pkgs.slurp}/bin/slurp)" --audio)''
+        ''ALT CTRL, P, exec, (${pkgs.killall}/bin/killall -SIGINT wf-recorder && (${pkgs.wl-clipboard}/bin/wl-copy < /tmp/screenrecord.mp4; ${pkgs.nemo}/bin/nemo /tmp/screenrecord.mp4)) || (set -euo pipefail; GEOMETRY="$(${pkgs.slurp}/bin/slurp)" && ${pkgs.wf-recorder}/bin/wf-recorder -f /tmp/screenrecord.mp4 -y -g "''${GEOMETRY}")''
+        ''ALT CTRL, P, exec, (${pkgs.killall}/bin/killall -SIGINT wf-recorder && (${pkgs.wl-clipboard}/bin/wl-copy < /tmp/screenrecord.mp4; ${pkgs.nemo}/bin/nemo /tmp/screenrecord.mp4)) || (set -euo pipefail; GEOMETRY="$(${pkgs.slurp}/bin/slurp)" && ${pkgs.wf-recorder}/bin/wf-recorder -f /tmp/screenrecord.mp4 -y -a -g "''${GEOMETRY}")''
         "${mod} SHIFT, N, exec, ${pkgs.swaynotificationcenter}/bin/swaync-client -t"
 
         ''${mod} SHIFT, S, exec, hyprctl keyword decoration:screen_shader "${config.home.homeDirectory}/.config/hypr/shaders/$(find "${config.home.homeDirectory}/.config/hypr/shaders" -name *.frag | xargs -n1 basename | fuzzel --dmenu)"''
