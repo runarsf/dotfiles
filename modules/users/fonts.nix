@@ -73,9 +73,16 @@ in outputs.lib.mkDesktopModule config "fonts" {
     termsyn
     terminus_font
     monocraft
+    (creep2.overrideAttrs (oldAttrs:
+      let base = "$out/share/fonts/misc/";
+      in {
+        installPhase = oldAttrs.installPhase + ''
+          mv ${base}/creep2-11.bdf .
+          ${resizebdf}/bin/resizebdf ./creep2-11.bdf ${base}/creep2-11.bdf 2
+        '';
+      }))
     (nofontsdir tamzen)
     (nofontsdir proggyfonts)
-    (nofontsdir creep)
     (nofontsdir unifont)
     (nofontsdir unifont_upper)
     (nofontsdir gohufont)
