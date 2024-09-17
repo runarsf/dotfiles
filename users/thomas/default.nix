@@ -57,6 +57,7 @@ outputs.lib.mkFor system hostname {
         "bluetooth"
         "wezterm"
         "zen"
+        "japanese"
       ];
 
       nixos = {
