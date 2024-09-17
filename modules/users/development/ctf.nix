@@ -57,7 +57,8 @@ outputs.lib.mkModule config "ctf" {
         wget
 
         # inputs.binsider.packages.${pkgs.system}.default
-      ] ++ outputs.lib.optionals config.modules.android.enable [ pkgs.frida-tools ];
+      ] ++ outputs.lib.optionals config.modules.android.enable
+      (with pkgs; [ frida-tools unstable.jadx apktool ]);
 
     file.".local/bin/nc-respond".source = let
       script = pkgs.writeShellApplication {
