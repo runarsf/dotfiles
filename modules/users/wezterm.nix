@@ -19,7 +19,7 @@ in outputs.lib.mkDesktopModule' config "wezterm" {
   };
   modules.wezterm.fonts = outputs.lib.mkOption {
     type = outputs.lib.types.listOf outputs.lib.types.str;
-    default = [ "scientifica" "Cozette" "TamzenForPowerline" "Unifont" "Unifont Upper" "CaskaydiaCove NFM" ];
+    default = [ "scientifica" "CozetteHiDpi" "TamzenForPowerline" "Unifont" "Unifont Upper" "CaskaydiaCove NFM" ];
   };
 } {
   nixos = {
