@@ -13,7 +13,7 @@
   imports = [ inputs.sops-nix.homeManagerModules.sops ];
 } // outputs.lib.mkModule config "sops" {
   # home.activation.setupEtc = config.lib.dag.entryAfter [ "writeBoundary" ] ''
-  #   /run/current-system/sw/bin/systemctl start --user sops-nix
+  #   run /run/current-system/sw/bin/systemctl start --user sops-nix
   # '';
 
   # This converts your ssh key to an age key during every build,

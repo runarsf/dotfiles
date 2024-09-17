@@ -14,9 +14,6 @@ pkgs.stdenv.mkDerivation {
 
   installPhase = ''
     install -Dm644 -t $out/share/fonts/misc/ $src/*.bdf
-    install -Dm644 -t $out/share/fonts/misc/ $src/*.ttf
-    install -Dm644 -t $out/share/fonts/misc/ $src/*.fon
-    install -Dm644 -t $out/share/fonts/misc/ $src/*.sfd
   '';
 
   meta = with pkgs.lib; {
