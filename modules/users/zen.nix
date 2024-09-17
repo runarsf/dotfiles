@@ -4,11 +4,11 @@ let
   zenBrowserPkg = inputs.zen-browser.packages."${pkgs.system}".default;
 
   updatedZenBrowser = zenBrowserPkg.overrideAttrs (oldAttrs: rec {
-    version = "1.0.1-a";
+    version = "1.0.1-a.1";
     src = builtins.fetchTarball {
       url =
         "https://github.com/zen-browser/desktop/releases/download/${version}/zen.linux-generic.tar.bz2";
-      sha256 = "sha256:15fdk6imk34p55kxi18q9dvldhq43rl14nssdzdbrs5zj1snrjz6";
+      sha256 = "sha256:0f86xhl66sqci8pskd7mk26vs9wc58kgfi3ci608d097gp4piams";
     };
   });
 
