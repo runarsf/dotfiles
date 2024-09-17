@@ -87,7 +87,7 @@ outputs.lib.mkFor system hostname {
     toaster = {
       isDesktop = true;
 
-      modules = outputs.lib.enable [ "ctf" "steam" "ffxiv" ];
+      modules = outputs.lib.enable [ "ctf" "android" "android-ide" "steam" "ffxiv" "fun" ];
     };
   };
 }

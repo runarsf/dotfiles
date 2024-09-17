@@ -18,32 +18,36 @@ outputs.lib.mkDesktopModule config "japanese" {
   dconf.settings."org/gnome/settings-daemon/plugins/xsettings" = {
     overrides = "{'Gtk/IMModule':<'fcitx'>}";
   };
-  xdg.configFile."fcitx5/profile".text = ''
-    [Groups/0]
-    # Group Name
-    Name=Default
-    # Layout
-    Default Layout=no
-    # Default Input Method
-    DefaultIM=mozc
-
-    [Groups/0/Items/0]
-    # Name
-    Name=keyboard-no
-    # Layout
-    Layout=null
-
-    [Groups/0/Items/1]
-    # Name
-    Name=mozc
-    # Layout
-    Layout=
-
-    [GroupOrder]
-    0=Default
-  '';
   home.sessionVariables = { XMODIFIERS = "@im=fcitx"; };
-  nukeFiles = [ "${config.home.homeDirectory}/.config/fcitx5/profile" ];
+  xdg.configFile."fcitx5/profile" = {
+    target = "fcitx5/profile_source";
+    onChange =
+      "cat ${config.xdg.configHome}/fcitx5/profile_source > ${config.xdg.configHome}/fcitx5/profile";
+    text = ''
+      [Groups/0]
+      # Group Name
+      Name=Default
+      # Layout
+      Default Layout=no
+      # Default Input Method
+      DefaultIM=mozc
+
+      [Groups/0/Items/0]
+      # Name
+      Name=keyboard-no
+      # Layout
+      Layout=null
+
+      [Groups/0/Items/1]
+      # Name
+      Name=mozc
+      # Layout
+      Layout=
+
+      [GroupOrder]
+      0=Default
+    '';
+  };
   # nixos = {
   #   environment.systemPackages = with pkgs; [ fcitx5-mozc ];
   #   services.xserver.desktopManager.runXdgAutostartIfNone = true;
