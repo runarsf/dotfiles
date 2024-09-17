@@ -43,6 +43,7 @@ outputs.lib.mkDesktopModule config "japanese" {
     0=Default
   '';
   home.sessionVariables = { XMODIFIERS = "@im=fcitx"; };
+  nukeFiles = [ "${config.home.homeDirectory}/.config/fcitx5/profile" ];
   # nixos = {
   #   environment.systemPackages = with pkgs; [ fcitx5-mozc ];
   #   services.xserver.desktopManager.runXdgAutostartIfNone = true;
