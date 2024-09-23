@@ -22,6 +22,9 @@ in outputs.lib.mkDesktopModule' config "wezterm" {
     default = [ "scientifica" "CozetteHiDpi" "TamzenForPowerline" "Unifont" "Unifont Upper" "CaskaydiaCove NFM" ];
   };
 } {
+  home.shellAliases.ssh = outputs.lib.mkIf (config.defaultTerminal == "wezterm")
+    "TERM=xterm-256color ssh";
+
   nixos = {
     environment.systemPackages = with pkgs; [ egl-wayland ];
     hardware.graphics = {
