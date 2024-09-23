@@ -4,11 +4,11 @@ let
   zenBrowserPkg = inputs.zen-browser.packages."${pkgs.system}".default;
 
   updatedZenBrowser = zenBrowserPkg.overrideAttrs (oldAttrs: rec {
-    version = "1.0.1-a.1";
+    version = "1.0.1-a.3";
     src = builtins.fetchTarball {
       url =
         "https://github.com/zen-browser/desktop/releases/download/${version}/zen.linux-generic.tar.bz2";
-      sha256 = "sha256:0f86xhl66sqci8pskd7mk26vs9wc58kgfi3ci608d097gp4piams";
+      sha256 = "sha256:1yzaipj8nqlgvwc5fi0lpb1cl2nhbj1y8m1zgx9g5vbz17g7y6yg";
     };
   });
 
@@ -40,6 +40,10 @@ in outputs.lib.mkDesktopModule config "zen" {
     :root {
       --zen-themed-toolbar-bg: transparent !important;
       /* --zen-colors-tertiary: transparent !important; */
+    }
+
+    .browserSidebarContainer {
+      background: var(--zen-colors-tertiary) !important;
     }
 
     /*#main-window {
