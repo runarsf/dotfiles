@@ -31,6 +31,8 @@ outputs.lib.mkModule config "python" {
 
         debugpy
 
+        pydantic
+
         pandas
         pyglet
         scipy
