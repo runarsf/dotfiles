@@ -5,7 +5,6 @@
 # TODO https://github.com/zakk4223/hyprRiver
 # TODO https://github.com/zakk4223/hyprWorkspaceLayouts
 # TODO https://github.com/ArtsyMacaw/wlogout
-# TODO Use dex instaed of autostart https://github.com/jceb/dex
 
 let lock = "${pkgs.hyprlock}/bin/hyprlock";
 
@@ -14,9 +13,10 @@ in {
     inputs.hyprland.homeManagerModules.default
     ./hypridle.nix
     ./hyprlock.nix
-    ];
-    # TODO Move defaultTerminal somewhere else
-  } // outputs.lib.mkDesktopModule config "hyprland" {
+    ./hyprpaper.nix
+  ];
+  # TODO Move defaultTerminal somewhere else
+} // outputs.lib.mkDesktopModule config "hyprland" {
   modules.wayland.enable = true;
   modules.waybar.enable = true;
   modules.fuzzel.enable = true;
@@ -25,13 +25,13 @@ in {
 
   xdg.portal = {
     enable = true;
-    configPackages = [
-      inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland
-    ];
-    extraPortals = with pkgs; [
-      # inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland
-      xdg-desktop-portal-gtk
-    ];
+    configPackages =
+      [ inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland ];
+    extraPortals = with pkgs;
+      [
+        # inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland
+        xdg-desktop-portal-gtk
+      ];
   };
 
   nixos = {
@@ -95,22 +95,21 @@ in {
 
   xdg.configFile."swaync/config.json".text = builtins.toJSON { scripts = { }; };
 
-  # TODO Scratchpad binds:
-  #  M-n   - Toggle scratchpad ws containing all scratchpads, spawning zsh-scratch if not running
-  #  M-S-n - Spawn zsh-scrath
-  #  M-S-p - Spawn xonsh-scratch
   xdg.configFile."hypr/pyprland.json".text = builtins.toJSON {
     pyprland.plugins = [ "scratchpads" ];
     scratchpads = {
       term = {
-        command = config.modules.${config.defaultTerminal}.exec { };
+        command = config.modules.${config.defaultTerminal}.exec {
+          class = "scratchpad";
+          command = [ "connect" "scratchpad" ];
+        };
         lazy = true;
         hide = false;
       };
       math = {
         command = config.modules.${config.defaultTerminal}.exec {
           class = "math-scratchpad";
-          command = outputs.lib.getExe pkgs.xonsh;
+          command = [ (outputs.lib.getExe pkgs.xonsh) ];
         };
         lazy = true;
         hide = false;
@@ -267,11 +266,14 @@ in {
           ALT, P, exec, ${pkgs.grim}/bin/grim -g "$(${pkgs.slurp}/bin/slurp)" - | ${pkgs.imagemagick}/bin/convert - -shave 1x1 PNG:- | ${pkgs.wl-clipboard}/bin/wl-copy''
         ''
           ALT SHIFT, P, exec, ${pkgs.grim}/bin/grim -g "$(${pkgs.slurp}/bin/slurp)" - | ${pkgs.imagemagick}/bin/convert - -shave 1x1 PNG:- | ${pkgs.swappy}/bin/swappy -f -''
-        ''ALT CTRL, P, exec, (${pkgs.killall}/bin/killall -SIGINT wf-recorder && (${pkgs.wl-clipboard}/bin/wl-copy < /tmp/screenrecord.mp4; ${pkgs.nemo}/bin/nemo /tmp/screenrecord.mp4)) || (set -euo pipefail; GEOMETRY="$(${pkgs.slurp}/bin/slurp)" && ${pkgs.wf-recorder}/bin/wf-recorder -f /tmp/screenrecord.mp4 -y -g "''${GEOMETRY}")''
-        ''ALT CTRL, P, exec, (${pkgs.killall}/bin/killall -SIGINT wf-recorder && (${pkgs.wl-clipboard}/bin/wl-copy < /tmp/screenrecord.mp4; ${pkgs.nemo}/bin/nemo /tmp/screenrecord.mp4)) || (set -euo pipefail; GEOMETRY="$(${pkgs.slurp}/bin/slurp)" && ${pkgs.wf-recorder}/bin/wf-recorder -f /tmp/screenrecord.mp4 -y -a -g "''${GEOMETRY}")''
+        ''
+          ALT CTRL, P, exec, (${pkgs.killall}/bin/killall -SIGINT wf-recorder && (${pkgs.wl-clipboard}/bin/wl-copy < /tmp/screenrecord.mp4; ${pkgs.nemo}/bin/nemo /tmp/screenrecord.mp4)) || (set -euo pipefail; GEOMETRY="$(${pkgs.slurp}/bin/slurp)" && ${pkgs.wf-recorder}/bin/wf-recorder -f /tmp/screenrecord.mp4 -y -g "''${GEOMETRY}")''
+        ''
+          ALT CTRL, P, exec, (${pkgs.killall}/bin/killall -SIGINT wf-recorder && (${pkgs.wl-clipboard}/bin/wl-copy < /tmp/screenrecord.mp4; ${pkgs.nemo}/bin/nemo /tmp/screenrecord.mp4)) || (set -euo pipefail; GEOMETRY="$(${pkgs.slurp}/bin/slurp)" && ${pkgs.wf-recorder}/bin/wf-recorder -f /tmp/screenrecord.mp4 -y -a -g "''${GEOMETRY}")''
         "${mod} SHIFT, N, exec, ${pkgs.swaynotificationcenter}/bin/swaync-client -t"
 
-        ''${mod} SHIFT, S, exec, hyprctl keyword decoration:screen_shader "${config.home.homeDirectory}/.config/hypr/shaders/$(find "${config.home.homeDirectory}/.config/hypr/shaders" -name *.frag | xargs -n1 basename | fuzzel --dmenu)"''
+        ''
+          ${mod} SHIFT, S, exec, hyprctl keyword decoration:screen_shader "${config.home.homeDirectory}/.config/hypr/shaders/$(find "${config.home.homeDirectory}/.config/hypr/shaders" -name *.frag | xargs -n1 basename | fuzzel --dmenu)"''
         "${mod} CTRL SHIFT, S, exec, hyprctl keyword decoration:screen_shader '[[EMPTY]]'"
         "${mod}, left, exec, ${./. + /bin/movefocus.sh} l"
         "${mod}, right, exec, ${./. + /bin/movefocus.sh} r"

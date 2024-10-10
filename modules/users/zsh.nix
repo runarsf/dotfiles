@@ -5,17 +5,11 @@
   ...
 }:
 
-{
-  imports = [
-    ./starship.nix
-    ./shell-utils.nix
-  ];
-}
-// outputs.lib.mkModule config "zsh" {
+outputs.lib.mkModule config "zsh" {
   modules.starship.enable = true;
 
   home = {
-    packages = with pkgs; [ libnotify ];
+    packages = with pkgs; [ libnotify libqalculate ];
     shellAliases = {
       develop = outputs.lib.mkForce "nix develop --command zsh";
     };
@@ -42,8 +36,10 @@
         "z-shell/zsh-diff-so-fancy"
         "nix-community/nix-zsh-completions"
         "MichaelAquilina/zsh-auto-notify"
-        "zshzoo/magic-enter"
         "jimhester/per-directory-history"
+        "Sam-programs/zsh-calc"
+        "Tarrasch/zsh-functional"
+        "zshzoo/magic-enter"
         "getantidote/use-omz"
         "ohmyzsh/ohmyzsh path:lib"
         "ohmyzsh/ohmyzsh path:plugins/extract"
@@ -83,6 +79,10 @@
              nonomatch
 
       _comp_options+=(globdots)
+
+      typeset -A ZSH_HIGHLIGHT_REGEXP
+      ZSH_HIGHLIGHT_REGEXP+=('[0-9]' fg=cyan)
+      ZSH_HIGHLIGHT_HIGHLIGHTERS+=(main regexp)
 
       wim () { set -eu; ''${EDITOR:-vim} "$(which ''${1:?No file selected...})" ''${@:2}; set +eu }
       magic-enter-cmd () {

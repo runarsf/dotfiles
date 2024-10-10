@@ -1,4 +1,4 @@
-{ config }:
+_:
 
 {
   services.hyprpaper = {

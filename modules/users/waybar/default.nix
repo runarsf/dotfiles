@@ -1,5 +1,9 @@
 { config, pkgs, outputs, ... }:
 
+# env GTK_DEBUG=interactive waybar
+
+# TODO If media widget is empty, don't show the group itself
+
 outputs.lib.mkDesktopModule config "waybar" {
   home.packages = with pkgs; [
     upower
@@ -14,9 +18,9 @@ outputs.lib.mkDesktopModule config "waybar" {
     package = pkgs.unstable.waybar;
     systemd.enable = true;
     style = builtins.readFile ./style.css;
-    settings = let i = "&#8201;";
+    settings = let sep = "&#8201;";
     in {
-      mainBar = {
+      mainBar = rec {
         height = 30;
         layer = "top";
         position = "top";
@@ -26,7 +30,7 @@ outputs.lib.mkDesktopModule config "waybar" {
         modules-left = [ "hyprland/workspaces" "tray" "custom/layout" ];
         modules-center = [ "hyprland/window" ];
         modules-right = [
-          "custom/music"
+          "group/media"
           "custom/notifs"
           "idle_inhibitor"
           "backlight"
@@ -35,7 +39,7 @@ outputs.lib.mkDesktopModule config "waybar" {
           "pulseaudio"
           "network"
           "battery"
-          "clock"
+          "group/clock"
         ];
 
         "hyprland/workspaces" = {
@@ -45,8 +49,8 @@ outputs.lib.mkDesktopModule config "waybar" {
           # persistent-workspaces."*" = 5;
           format-icons.default = "";
           all-outputs = false;
-          # active = "";
-          # empty = "";
+          format-icons.active = "";
+          format-icons.empty = "";
         };
 
         "hyprland/window" = {
@@ -63,6 +67,18 @@ outputs.lib.mkDesktopModule config "waybar" {
           };
         };
 
+        "group/clock" = {
+          orientation = "inherit";
+          drawer = {
+            transition-duration = 500;
+            children-class = "child";
+            transition-left-to-right = false;
+          };
+          modules = [
+            "clock#time"
+            "clock#date"
+          ];
+        };
         clock = {
           tooltip-format = "<tt><small>{calendar}</small></tt>";
           calendar = {
@@ -86,13 +102,17 @@ outputs.lib.mkDesktopModule config "waybar" {
             on-scroll-up = "shift_up";
             on-scroll-down = "shift_down";
           };
-          format = "${i} {:%H:%M}";
-          format-alt = "${i} {:%d/%m/%Y  %H:%M:%S}";
           interval = 1;
+        };
+        "clock#time" = clock // {
+          format = "${sep} {:%H:%M}";
+        };
+        "clock#date" = clock // {
+          format = "${sep} {:%d/%m/%Y}";
         };
 
         "group/cpu" = {
-          orientation = "horizontal";
+          orientation = "inherit";
           modules = [ "custom/polycat" "cpu" ];
         };
         "custom/polycat" = {
@@ -102,17 +122,17 @@ outputs.lib.mkDesktopModule config "waybar" {
         };
         cpu = {
           # 
-          format = "${i}{usage: >3}%";
+          format = "${sep}{usage: >3}%";
           on-click = "${pkgs.kitty}/bin/kitty btop";
         };
 
         memory = {
-          format = "󰧑${i}{: >3}%";
+          format = "󰧑${sep}{: >3}%";
           on-click = "${pkgs.kitty}/bin/kitty btop";
         };
 
         backlight = {
-          format = "{icon}${i}";
+          format = "{icon}${sep}";
           tooltip = "{percent: >3}%";
           format-icons =
             [ "" "" "" "" "" "" "" "" "" "" "" "" "" ];
@@ -123,22 +143,22 @@ outputs.lib.mkDesktopModule config "waybar" {
             warning = 30;
             critical = 15;
           };
-          format = "{icon}${i}{capacity: >3}%";
+          format = "{icon}${sep}{capacity: >3}%";
           format-full = "";
           format-icons = [ "" "" "" "" "" ];
         };
         network = {
-          format = "⚠${i} Disabled";
-          format-wifi = "${i} {essid}";
-          format-ethernet = "${i} {ipaddr}";
-          format-disconnected = "⚠${i} Disconnected";
+          format = "⚠${sep} Disabled";
+          format-wifi = "${sep} {essid}";
+          format-ethernet = "${sep} {ipaddr}";
+          format-disconnected = "⚠${sep} Disconnected";
           on-click = "${pkgs.networkmanagerapplet}/bin/nm-connection-editor";
         };
         pulseaudio = {
           scroll-step = 1;
-          format = "{icon}${i}{volume: >3}%";
-          format-bluetooth = "{icon}${i}{volume: >3}%";
-          format-muted = "${i}";
+          format = "{icon}${sep}{volume: >3}%";
+          format-bluetooth = "{icon}${sep}{volume: >3}%";
+          format-muted = "${sep}";
           format-icons = {
             headphones = "";
             handsfree = "";
@@ -155,7 +175,7 @@ outputs.lib.mkDesktopModule config "waybar" {
           on-click-middle = "${pkgs.pavucontrol}/bin/pavucontrol";
         };
         "custom/notifs" = {
-          format = "${i}";
+          format = "${sep}";
           tooltip = false;
           on-click = "${pkgs.swaynotificationcenter}/bin/swaync-client -t";
         };
@@ -164,9 +184,20 @@ outputs.lib.mkDesktopModule config "waybar" {
           tooltip = false;
           exec = "${./. + /bin/hypr-layout.sh}";
         };
-        "custom/music" = {
-          format = "{icon}${i}";
-          format-alt = "{icon}${i} {}";
+
+        "group/media" = {
+          orientation = "inherit";
+          drawer = {
+            transition-duration = 500;
+            children-class = "child";
+            transition-left-to-right = false;
+          };
+          modules = [
+            "custom/media#icon"
+            "custom/media#info"
+          ];
+        };
+        media = {
           format-icons = {
             spotify = "";
             firefox = "󰈹";
@@ -180,7 +211,12 @@ outputs.lib.mkDesktopModule config "waybar" {
           interval = 10;
           exec = "${./. + /bin/music.sh}";
         };
-
+        "custom/media#icon" = media // {
+          format = "{icon}";
+        };
+        "custom/media#info" = media // {
+          format-alt = "{}";
+        };
       };
     };
   };

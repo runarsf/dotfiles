@@ -6,6 +6,7 @@
 }:
 
 outputs.lib.mkModule config "wayland" {
+  # TODO These should be set *by* hyprland, not here, so you can use x-wms still
   home.sessionVariables = {
     NIXOS_OZONE_WL = "1";
     MOZ_ENABLE_WAYLAND = "1";

@@ -2,8 +2,8 @@
 
 outputs.lib.mkFor system hostname {
   common = {
-    imports = outputs.lib.umport { path = ../../modules/users; }
-      ++ outputs.lib.umport { path = ./config; } ++ [{
+    imports = outputs.lib.concatImports { path = ../../modules/users; }
+      ++ outputs.lib.concatImports { path = ./config; } ++ [{
         _module.args.keys = [ "${config.home.homeDirectory}/.ssh/id_nix" ];
       }];
 
@@ -28,9 +28,9 @@ outputs.lib.mkFor system hostname {
       "sops"
       "nix"
       "yazi"
-    ];
-
-    wallpaper = ./wallpaper.jpg;
+    ] // {
+      wallpaper = ./wallpaper.jpg;
+    };
 
     programs.git = {
       userName = "Thomas Espervik";
@@ -44,7 +44,6 @@ outputs.lib.mkFor system hostname {
         "firefox"
         "discord"
         "fonts"
-        "stylix"
         "vscode"
         "hyprland"
         "kitty"
@@ -58,7 +57,13 @@ outputs.lib.mkFor system hostname {
         "wezterm"
         "zen"
         "japanese"
-      ];
+      ] // {
+        stylix = {
+          enable = true;
+          system-wide = false;
+          theme = "ayu-dark";
+        };
+      };
 
       nixos = {
         programs.zsh.enable = true;

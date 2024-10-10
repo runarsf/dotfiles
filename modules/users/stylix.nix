@@ -1,117 +1,153 @@
-{
-  config,
-  pkgs,
-  inputs,
-  outputs,
-  ...
-}:
+{ outputs, config, pkgs, name, ... }:
 
-{
-  imports = [ inputs.stylix.homeManagerModules.stylix ];
-}
-// outputs.lib.mkDesktopModule config "stylix" {
-  # NOTE Stylix requires both nixos and home-manager to have the same stateVersion
-
-  nixos.environment.systemPackages = with pkgs; [
-    gtk2
-    gtk3
-    gtk4
-  ];
-
-  xdg.systemDirs.data = [
-    "${pkgs.gtk3}/share/gsettings-schemas/${pkgs.gtk3.name}"
-    "${pkgs.gsettings-desktop-schemas}/share/gsettings-schemas/${pkgs.gsettings-desktop-schemas.name}"
-  ];
-
-  /*
-    dconf = {
-      enable = true;
-      settings."org/gnome/desktop/interface".color-scheme = "prefer-dark";
-    };
-    nixos.programs.dconf.enable = true;
-  */
-
-  gtk = {
+let
+  stylix-config = {
     enable = true;
 
-    gtk3.extraConfig = {
-      gtk-application-prefer-dark-theme = 1;
-    };
-
-    gtk4.extraConfig = {
-      gtk-application-prefer-dark-theme = 1;
-      gtk-cursor-theme-name = "Qogir Cursors";
-    };
-  };
-
-  /*
-    qt = {
-      enable = true;
-      platformTheme = "gtk";
-    };
-  */
-
-  home.sessionVariables = {
-    XCURSOR_SIZE = 24;
-    HYPRCURSOR_SIZE = 24;
-  };
-
-  stylix = {
-    enable = true;
     polarity = "dark";
+    image = config.modules.wallpaper;
 
-    # ~/.config/stylix/palette.html
-    # /etc/stylix/palette.html
-    # https://github.com/tinted-theming/schemes
-    base16Scheme = "${pkgs.base16-schemes}/share/themes/ayu-dark.yaml";
-
-    targets = outputs.lib.disable [
-      "hyprland"
-      "nixvim"
-      "kitty"
-      "waybar"
-      "vscode"
-    ];
+    targets = outputs.lib.disable [ "nixvim" ];
 
     cursor = {
       package = pkgs.bibata-cursors;
       name = "Bibata-Modern-Classic";
-      size = 30;
-    };
-
-    image = outputs.lib.mkDefault (
-      if "wallpaper" ? config then config.wallpaper else (throw "stylix.image or wallpaper not set")
-    );
-
-    opacity = {
-      terminal = 0.8;
-      popups = 0.9;
+      size = 24;
     };
 
     fonts = {
+      monospace = {
+        package = pkgs.nerdfonts.override { fonts = [ "CascadiaMono" ]; };
+        name = "Cascadia Mono NF";
+      };
+
+      sansSerif = {
+        package = pkgs.dejavu_fonts;
+        name = "DejaVu Sans";
+      };
+
+      serif = {
+        package = pkgs.libertine;
+        name = "Linux Libertine O";
+      };
+
       sizes = {
-        terminal = 16;
+        terminal = 14;
         applications = 12;
         desktop = 10;
         popups = 10;
       };
 
-      serif = {
-        package = pkgs.dejavu_fonts;
-        name = "DejaVu Serif";
-      };
-      sansSerif = {
-        package = pkgs.dejavu_fonts;
-        name = "DejaVu Sans";
-      };
-      monospace = outputs.lib.mkDefault {
-        package = pkgs.unstable.nerdfonts.override { fonts = [ "JetBrainsMono" ]; };
-        name = "JetBrainsMono Nerd Font";
-      };
       emoji = {
         package = pkgs.noto-fonts-emoji;
         name = "Noto Color Emoji";
       };
     };
+
+    opacity = {
+      applications = 1.0;
+      terminal = 0.8;
+      desktop = 1.0;
+      popups = 1.0;
+    };
+
+    base16Scheme =
+      "${pkgs.base16-schemes}/share/themes/${config.modules.stylix.theme}.yaml";
   };
+
+  settings = {
+    user = {
+      stylix = stylix-config // {
+        targets = outputs.lib.disable [ "vscode" "hyprland" "kitty" "waybar" ];
+      };
+
+      # This needs to always be set for the Stylix system configuation to be valid,
+      # even if Stylix is disabled system-wide
+      nixos.stylix.image = config.modules.wallpaper;
+
+      gtk = {
+        enable = true;
+        gtk3.extraConfig.gtk-application-prefer-dark-theme = true;
+        gtk4.extraConfig.gtk-application-prefer-dark-theme = true;
+      };
+
+      home.sessionVariables = {
+        XCURSOR_SIZE = stylix-config.cursor.size;
+        HYPRCURSOR_SIZE = stylix-config.cursor.size;
+      };
+
+      xdg.systemDirs.data = [
+        "${pkgs.gtk3}/share/gsettings-schemas/${pkgs.gtk3.name}"
+        "${pkgs.gsettings-desktop-schemas}/share/gsettings-schemas/${pkgs.gsettings-desktop-schemas.name}"
+      ];
+
+      systemd.user.services.rm-gtk = {
+        Unit = {
+          Description = "Remove GTK files built by Home Manager";
+          PartOf = [ "home-manager-${name}.target" ];
+        };
+
+        Service.ExecStart = builtins.toString (pkgs.writeShellScript "rm-gtk" ''
+          #!/run/current-system/sw/bin/bash
+          set -o errexit
+          set -o nounset
+
+          printf "Removing GTK files built by Home Manager\n"
+
+          rm -rf ~/.config/gtk-3.0
+          rm -rf ~/.config/gtk-4.0
+          rm -f .gtkrc-2.0
+        '');
+
+        Install.WantedBy = [ "default.target" ];
+      };
+    };
+
+    system-wide = {
+      stylix = stylix-config // { targets = outputs.lib.disable [ "grub" ]; };
+    };
+  };
+
+in {
+  options = {
+    modules = {
+      wallpaper = outputs.lib.mkOption {
+        type = outputs.lib.types.path;
+        default = ./assets/wp-default-dark.png;
+        description = "Path to the wallpaper.";
+      };
+
+      stylix = {
+        enable = outputs.lib.mkEnableOption "Enable Stylix";
+        system-wide = outputs.lib.mkEnableOption
+          "Enable Stylix system-wide. This will install Stylix for all users.";
+
+        # https://github.com/tinted-theming/schemes
+        theme = outputs.lib.mkOption {
+          type = outputs.lib.types.str;
+          default = "ayu-dark";
+          description = "The Base16 theme to use.";
+        };
+      };
+    };
+  };
+
+  config = outputs.lib.mkIf config.modules.stylix.enable (outputs.lib.mkMerge [
+    # TODO Is there not user-config that we still want on the system-wide version
+    (outputs.lib.mkIf config.modules.stylix.system-wide {
+      nixos = outputs.lib.trace
+        "info: Enabling Stylix system-wide. This will override the configs of all users with ${name}'s config."
+        settings.system-wide;
+    })
+    (outputs.lib.mkIf (!config.modules.stylix.system-wide) settings.user)
+    {
+      programs.hyprlock.settings.background.path =
+        builtins.toString config.modules.wallpaper;
+
+      services.hyprpaper.settings = {
+        preload = [ "${config.modules.wallpaper}" ];
+        wallpaper = [ ", ${config.modules.wallpaper}" ];
+      };
+    }
+  ]);
 }

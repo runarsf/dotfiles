@@ -1,4 +1,4 @@
-args@{ outputs, users, ... }:
+args@{ outputs, users, config, ... }:
 
 let
   userConfigs = builtins.map (username:
@@ -6,6 +6,7 @@ let
       inherit username;
       inherit (args) system hostname;
       stateVersion = outputs.lib.defaultStateVersion;
+      osConfig = config;
     }) users;
 
   macosConfigs = builtins.map (user: user.config.macos) userConfigs;

@@ -10,7 +10,7 @@ outputs.lib.mkFor system hostname {
       ../nix/nixpkgs.nix
       ./system-config-support.nix
     ];
-    options.isDesktop = outputs.lib.mkEnableOption "Override isDesktop";
+    # TODO Put isDesktop here
   };
 
   systems.darwin.imports = [ inputs.mac-app-util.homeManagerModules.default ];

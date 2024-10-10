@@ -2,6 +2,7 @@
   # NOTE https://github.com/astro/deadnix
   # NOTE https://github.com/symphorien/nix-du
   # TODO https://nixos.wiki/wiki/Storage_optimization
+  # TODO Check based things in https://github.com/Misterio77/nix-starter-configs
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
@@ -20,8 +21,6 @@
     };
 
     alien.url = "github:thiagokokada/nix-alien";
-
-    binsider.url = "github:orhun/binsider";
 
     sops-nix = {
       url = "github:Mic92/sops-nix";
@@ -62,10 +61,6 @@
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
-    rednix.url = "github:redcode-labs/RedNix";
-
-    # firefox-nightly.url = "github:nix-community/flake-firefox-nightly";
-
     stylix.url = "github:danth/stylix";
 
     nixos-hardware.url = "github:nixos/nixos-hardware";
@@ -87,43 +82,49 @@
         inherit (inputs.self) outputs;
       };
 
-      nixosConfigurations.runix = lib.mkHost {
-        system = "x86_64-linux";
-        hostname = "runix";
-        users = [ "runar" ];
+      nixosConfigurations = {
+        # TODO Should isDesktop be an option to mkHost?
+        runix = lib.mkHost {
+          system = "x86_64-linux";
+          hostname = "runix";
+          users = [ "runar" ];
+        };
+
+        rpi = lib.mkHost {
+          system = "aarch64-linux";
+          hostname = "rpi";
+          users = [ "runar" ];
+        };
+
+        toaster = lib.mkHost {
+          system = "x86_64-linux";
+          hostname = "toaster";
+          users = [ "thomas" ];
+        };
       };
 
-      nixosConfigurations.rpi = lib.mkHost {
-        system = "aarch64-linux";
-        hostname = "rpi";
-        users = [ "runar" ];
-      };
+      homeConfigurations = {
+        runar = lib.mkUser { username = "runar"; };
 
-      nixosConfigurations.toaster = lib.mkHost {
-        system = "x86_64-linux";
-        hostname = "toaster";
-        users = [ "thomas" ];
-      };
+        "runar@runix" = lib.mkUser {
+          username = "runar";
+          system = "x86_64-linux";
+          hostname = "runix";
+        };
 
-      homeConfigurations.runar = lib.mkUser { username = "runar"; };
-      homeConfigurations.thomas = lib.mkUser { username = "thomas"; };
+        "runar@rpi" = lib.mkUser {
+          username = "runar";
+          system = "aarch64-linux";
+          hostname = "rpi";
+        };
 
-      homeConfigurations."runar@runix" = lib.mkUser {
-        username = "runar";
-        system = "x86_64-linux";
-        hostname = "runix";
-      };
+        thomas = lib.mkUser { username = "thomas"; };
 
-      homeConfigurations."runar@rpi" = lib.mkUser {
-        username = "runar";
-        system = "aarch64-linux";
-        hostname = "rpi";
-      };
-
-      homeConfigurations."thomas@toaster" = lib.mkUser {
-        username = "thomas";
-        system = "x86_64-linux";
-        hostname = "toaster";
+        "thomas@toaster" = lib.mkUser {
+          username = "thomas";
+          system = "x86_64-linux";
+          hostname = "toaster";
+        };
       };
 
       formatter = lib.forEachSystem systems (pkgs: pkgs.nixfmt);

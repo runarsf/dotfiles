@@ -22,6 +22,7 @@ outputs.lib.mkModule' config "ssh"
         config.publicKeys != [ ]
       ) config.publicKeys;
     };
+    # TODO users.extraUsers.root.openssh.authorizedKeys.keys
 
     # NOTE https://github.com/nix-community/home-manager/issues/322#issuecomment-1856128020
     home.file.".ssh/config" = {

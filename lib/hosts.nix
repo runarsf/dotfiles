@@ -1,4 +1,4 @@
-flake@{ outputs, ... }:
+flake@{ inputs, outputs, ... }:
 
 let
   sharedModules = [
@@ -32,6 +32,9 @@ in rec {
         ../hosts/${hostname}/configuration.nix
         ../hosts/${hostname}/hardware-configuration.nix
         ../modules/linux/default-config.nix
+
+        inputs.stylix.nixosModules.stylix
+        inputs.sops-nix.nixosModules.sops
       ];
     };
 

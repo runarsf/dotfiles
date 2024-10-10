@@ -9,7 +9,7 @@
 sudo nixos-rebuild --flake .# --accept-flake-config switch
 
 # If the previous is stuck building for a while, try this instead
-nix build --substituters "https://hyprland.cachix.org https://cache.nixos.org" --trusted-public-keys "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc= hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc=" ".#nixosConfigurations.$(hostname).config.system.build.toplevel"
+nix build --substituters "https://hyprland.cachix.org https://cache.nixos.org" --trusted-public-keys "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc= cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=" ".#nixosConfigurations.$(hostname).config.system.build.toplevel"
 sudo nixos-rebuild --flake .# switch
 
 # Afterwards, start a new shell and verify that both hyprland.cachix.org and cache.nixos.org are substituters

@@ -10,7 +10,6 @@
     ../../modules/linux/network.nix
     # ../../modules/linux/greeter.nix
     # ../../modules/linux/docker.nix
-    ../../modules/linux/podman.nix
     ../../modules/linux/firewall.nix
     ../../modules/linux/printing.nix
     ../../modules/linux/pipewire.nix

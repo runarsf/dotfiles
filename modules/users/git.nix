@@ -17,7 +17,7 @@ outputs.lib.mkModule config "git" {
     aliases = rec {
       aliases = "config --get-regexp alias";
 
-      quick = "!fn() { git add -A && git commit -m \"$*\" && git push; }; fn";
+      quick = "!fn() { git add -A && git commit --allow-empty -m \"$*\" && git push; }; fn";
       again = "!fn() { git add -A && git commit --amend --no-edit --gpg-sign; }; fn";
 
       unstage = "reset --";

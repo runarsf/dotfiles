@@ -4,32 +4,28 @@ let
   zenBrowserPkg = inputs.zen-browser.packages."${pkgs.system}".default;
 
   updatedZenBrowser = zenBrowserPkg.overrideAttrs (oldAttrs: rec {
-    version = "1.0.1-a.3";
+    version = "1.0.1-a.7";
     src = builtins.fetchTarball {
       url =
         "https://github.com/zen-browser/desktop/releases/download/${version}/zen.linux-generic.tar.bz2";
-      sha256 = "sha256:1yzaipj8nqlgvwc5fi0lpb1cl2nhbj1y8m1zgx9g5vbz17g7y6yg";
+      sha256 = "sha256:18dx6a2vgc2x87sv7b1a9fsq59h7aamk63k3lxaag1kg2q32ppb1";
     };
   });
 
 in outputs.lib.mkDesktopModule config "zen" {
-  # modules.flatpak.enable = true;
+  # FIXME Use the desktop file from the program
+  # xdg.mimeApps = outputs.lib.mkIf (config.defaultBrowser == "zen") {
+  #   enable = true;
+  #   defaultApplications = {
+  #     "default-web-browser" = [ "zen.desktop" ];
+  #     "text/html" = [ "zen.desktop" ];
+  #     "x-scheme-handler/http" = [ "zen.desktop" ];
+  #     "x-scheme-handler/https" = [ "zen.desktop" ];
+  #     "x-scheme-handler/about" = [ "zen.desktop" ];
+  #     "x-scheme-handler/unknown" = [ "zen.desktop" ];
+  #   };
+  # };
 
-  # nixos.services.flatpak.packages = [ "io.github.zen_browser.zen" ];
-
-  xdg.mimeApps = outputs.lib.mkIf (config.defaultBrowser == "zen") {
-    enable = true;
-    defaultApplications = {
-      "default-web-browser" = [ "zen.desktop" ];
-      "text/html" = [ "zen.desktop" ];
-      "x-scheme-handler/http" = [ "zen.desktop" ];
-      "x-scheme-handler/https" = [ "zen.desktop" ];
-      "x-scheme-handler/about" = [ "zen.desktop" ];
-      "x-scheme-handler/unknown" = [ "zen.desktop" ];
-    };
-  };
-
-  # home.packages = [ inputs.zen-browser.packages."${pkgs.system}".default ];
   home.packages = [ updatedZenBrowser ];
 
   home.file.".zen/${name}/chrome/userChrome.css".text = ''

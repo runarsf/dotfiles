@@ -25,6 +25,7 @@ tooltip,
   background: @bg;
   border: 1px solid @border;
   border-radius: 0.5em;
+  transition: border-radius 0.18s ease-in-out 0.32s;
   margin: 0 0.2em;
 }
 :first-child > .module {
@@ -36,19 +37,50 @@ tooltip,
 
 /* Groups */
 .modules-right > * > .horizontal {
-  padding: 0.3em 1em;
   background: @bg;
   border: 1px solid @border;
   border-radius: 0.5em;
-  margin: 0 0.2em;
 }
+/* All grouped widgets */
 .modules-right > * > .horizontal .module {
   background: transparent;
-  margin: 0;
-  padding: 0;
   border: none;
+  margin: 0;
+  border-radius: 0;
+  padding: 0.3em 0;
 }
-
+.modules-right > * > .horizontal :first-child > .module {
+  border-radius: 0.5em 0 0 0.5em;
+  padding-left: 1em;
+}
+:not(.drawer) > * > :last-child > .module {
+  border-radius: 0 0.5em 0.5em 0;
+  padding-right: 1em;
+}
+:hover > .drawer~:not(.drawer) .module {
+  transition: none;
+}
+:not(:hover) > .drawer~:not(.drawer) .module {
+  padding-left: 1em;
+  border-radius: 0.5em;
+}
+/* The first module in a group */
+/* .drawer > .horizontal :first-child .module { */
+/*   border-radius: 0.5em 0 0 0.5em; */
+/*   padding-right: 0; */
+/* } */
+/* Middle modules in a group */
+/* .drawer > .horizontal :not(:first-child) .module { */
+/*   border-radius: 0; */
+/*   padding-left: 0; */
+/*   padding-right: 0; */
+/* } */
+/* The last module in a group */
+/* :hover > .drawer~:not(.drawer) .module { */
+/*   border-radius: 0 0.5em 0.5em 0; */
+/*   padding-left: 0; */
+/*   transition: none; */
+/* } */
 
 #workspaces label {
   font-size: 13px;
@@ -60,7 +92,6 @@ tooltip,
 #workspaces .visible label {
   color: #7CB5E0;
 }
-
 
 window#waybar #window {
   font-size: 12px;
@@ -80,14 +111,11 @@ window#waybar.empty #window {
 }
 
 
-.module#custom-music {
-  border: none;
-}
-.module#custom-music.custom-spotify {
+#media .custom-spotify {
   background: #20D760;
   color: #0F1B1D;
 }
-.module#custom-music.custom-firefox {
+#media .custom-firefox {
   background: #FE8A4F;
   color: #0F1B1D;
 }

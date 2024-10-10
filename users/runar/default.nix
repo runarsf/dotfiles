@@ -1,13 +1,14 @@
 { config, inputs, outputs, system, hostname, name, pkgs, ... }:
 
-let ifIsDesktop = outputs.lib.optionals (outputs.lib.isDesktop config hostname);
+let
+  ifIsDesktop = outputs.lib.optionals
+    config.isDesktop; # (outputs.lib.isDesktop config hostname);
 
 in outputs.lib.mkFor system hostname {
   common = {
     # TODO Make this apply to all users
-    # TODO Do this for hosts as well
-    imports = outputs.lib.umport { path = ../../modules/users; }
-      ++ outputs.lib.umport { path = ./config; } ++ [{
+    imports = outputs.lib.concatImports { path = ../../modules/users; }
+      ++ outputs.lib.concatImports { path = ./config; } ++ [{
         _module.args.keys = [ "${config.home.homeDirectory}/.ssh/id_nix" ];
       }];
 
@@ -34,18 +35,16 @@ in outputs.lib.mkFor system hostname {
       "nix"
       "yazi"
       "fun"
-    ];
-
-    wallpaper = ./wallpaper.jpg;
+    ] // {
+      wallpaper = ./wallpaper.jpg;
+    };
   };
 
   systems = {
     linux = {
       modules = outputs.lib.enable [
-        "firefox"
         "discord"
         "fonts"
-        "stylix"
         "vscode"
         "hyprland"
         "kitty"
@@ -58,7 +57,13 @@ in outputs.lib.mkFor system hostname {
         "wezterm"
         "bluetooth"
         "zen"
-      ];
+      ] // {
+        stylix = {
+          enable = true;
+          system-wide = false;
+          theme = "ayu-dark";
+        };
+      };
 
       nixos = {
         programs.zsh.enable = true;
@@ -87,18 +92,35 @@ in outputs.lib.mkFor system hostname {
     runix = {
       isDesktop = true;
 
-      modules = outputs.lib.enable [ "ctf" "android" "android-ide" ];
+      modules =
+        outputs.lib.enable [ "ctf" "android" "android-ide" "java" "flatpak" ];
+
+      nixos.services.flatpak.packages = [ "hu.irl.cameractrls" ];
 
       home.packages = with pkgs.unstable;
         ifIsDesktop [
           stremio
+          guvcview
           obs-studio
           chromium
+          zed-editor
 
           # TODO Use android module
           android-tools
           scrcpy
         ];
+    };
+
+    rpi = {
+      isDesktop = false;
+
+      modules = outputs.lib.enable [ "sops" "podman" "gonic" ] // {
+        nginx = {
+          enable = true;
+          domains = [ "runar.ch" ];
+          email = "i@runar.ch";
+        };
+      };
     };
   };
 }

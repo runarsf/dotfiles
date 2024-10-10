@@ -6,14 +6,6 @@
   ...
 }:
 
-let
-  domains = [ "runar.ch" ];
-  domain = builtins.head domains;
-  email = "i@${domain}";
-  cert = "/var/lib/acme/${domain}/cert.pem";
-  key = "/var/lib/acme/${domain}/key.pem";
-
-in
 {
   # https://github.com/lucernae/nixos-pi
   imports = [
@@ -22,36 +14,6 @@ in
     # nixpkgs/nixos/modules/installer/sd-card/sd-image-aarch64-installer.nix
     # nixpkgs/nixos/modules/installer/cd-dvd/channel.nix
     # (import ../common/containers/pialert.nix { inherit config domain cert key email; })
-    ../../modules/linux/service-account.nix
-    (import ../../modules/linux/nginx.nix {
-      inherit
-        config
-        inputs
-        pkgs
-        domains
-        cert
-        key
-        email
-        ;
-    })
-    (import ../../modules/linux/containers/gonic.nix {
-      inherit
-        config
-        domain
-        cert
-        key
-        ;
-    })
-    (import ../../modules/linux/containers/copyparty.nix {
-      inherit
-        config
-        domain
-        cert
-        key
-        ;
-    })
-    ../../modules/linux/docker.nix
-    ../../modules/linux/podman.nix
     ../../modules/linux/firewall.nix
   ];
 
@@ -140,7 +102,6 @@ in
     wireless.enable = true;
     wireless.interfaces = [ "wlan0" ];
     # If you want to connect also via WIFI to your router
-    wireless.networks."p7p".psk = "bingchillingsss";
     wireless.networks."Bern".psk = "gagatondra";
     # You can set default nameservers
     # nameservers = [ "1.1.1.1", "1.0.0.1" ];
@@ -190,25 +151,25 @@ in
       allowedUDPPorts = [ 51820 ];
     };
 
-    wireguard.interfaces = {
-      wg0 = {
-        ips = [ "10.100.0.1/24" ];
-        listenPort = 51820;
-        postSetup = ''
-          ${pkgs.iptables}/bin/iptables -t nat -A POSTROUTING -s 10.100.0.0/24 -o eth0 -j MASQUERADE
-        '';
-        postShutdown = ''
-          ${pkgs.iptables}/bin/iptables -t nat -D POSTROUTING -s 10.100.0.0/24 -o eth0 -j MASQUERADE
-        '';
-        privateKeyFile = "/root/.config/wireguard/private";
-        peers = [
-          {
-            # edu
-            publicKey = "tTmKN+/IsrrWxsdhttjvpYVVAmLkb7oyed/o8FCPvRo=";
-            allowedIPs = [ "10.100.0.2/32" ];
-          }
-        ];
-      };
-    };
+    # wireguard.interfaces = {
+    #   wg0 = {
+    #     ips = [ "10.100.0.1/24" ];
+    #     listenPort = 51820;
+    #     postSetup = ''
+    #       ${pkgs.iptables}/bin/iptables -t nat -A POSTROUTING -s 10.100.0.0/24 -o eth0 -j MASQUERADE
+    #     '';
+    #     postShutdown = ''
+    #       ${pkgs.iptables}/bin/iptables -t nat -D POSTROUTING -s 10.100.0.0/24 -o eth0 -j MASQUERADE
+    #     '';
+    #     privateKeyFile = "/root/.config/wireguard/private";
+    #     peers = [
+    #       {
+    #         # edu
+    #         publicKey = "tTmKN+/IsrrWxsdhttjvpYVVAmLkb7oyed/o8FCPvRo=";
+    #         allowedIPs = [ "10.100.0.2/32" ];
+    #       }
+    #     ];
+    #   };
+    # };
   };
 }
