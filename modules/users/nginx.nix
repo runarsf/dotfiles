@@ -1,4 +1,4 @@
-{ config, outputs, osConfig, ... }:
+{ config, pkgs, outputs, osConfig, ... }:
 
 outputs.lib.mkModule' config "nginx" {
   modules.nginx = {
@@ -13,13 +13,11 @@ outputs.lib.mkModule' config "nginx" {
     email = outputs.lib.mkOption { type = outputs.lib.types.str; };
     cert = outputs.lib.mkOption {
       type = outputs.lib.types.str;
-      default =
-        "/var/lib/acme/${config.modules.nginx.domain}/cert.pem";
+      default = "/var/lib/acme/${config.modules.nginx.domain}/cert.pem";
     };
     key = outputs.lib.mkOption {
       type = outputs.lib.types.str;
-      default =
-        "/var/lib/acme/${config.modules.nginx.domain}/key.pem";
+      default = "/var/lib/acme/${config.modules.nginx.domain}/key.pem";
     };
   };
 } {
@@ -37,10 +35,34 @@ outputs.lib.mkModule' config "nginx" {
 
     services.nginx = {
       enable = true;
+      # https://github.com/NixOS/nixpkgs/blob/nixos-unstable/pkgs/servers/http/nginx/modules.nix
+      additionalModules = with pkgs.nginxModules; [ pam dav ];
       recommendedGzipSettings = true;
       recommendedOptimisation = true;
       recommendedProxySettings = true;
       recommendedTlsSettings = true;
+
+      # TODO https://nixos.wiki/wiki/Nginx#Hardened_setup_with_TLS_and_HSTS_preloading
+
+      # https://nixos.wiki/wiki/Nginx#Using_realIP_when_behind_CloudFlare_or_other_CDN
+      commonHttpConfig = let
+        realIpsFromList = outputs.lib.strings.concatMapStringsSep "\n"
+          (x: "set_real_ip_from  ${x};");
+        fileToList = x:
+          outputs.lib.strings.splitString "\n" (builtins.readFile x);
+        cfipv4 = fileToList (pkgs.fetchurl {
+          url = "https://www.cloudflare.com/ips-v4";
+          sha256 = "0ywy9sg7spafi3gm9q5wb59lbiq0swvf0q3iazl0maq1pj1nsb7h";
+        });
+        cfipv6 = fileToList (pkgs.fetchurl {
+          url = "https://www.cloudflare.com/ips-v6";
+          sha256 = "1ad09hijignj6zlqvdjxv7rjj8567z357zfavv201b9vx3ikk7cy";
+        });
+      in ''
+        ${realIpsFromList cfipv4}
+        ${realIpsFromList cfipv6}
+        real_ip_header CF-Connecting-IP;
+      '';
     };
 
     networking.firewall.allowedTCPPorts = [ 80 443 ];

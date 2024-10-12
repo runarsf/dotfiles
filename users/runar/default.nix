@@ -92,8 +92,24 @@ in outputs.lib.mkFor system hostname {
     runix = {
       isDesktop = true;
 
-      modules =
-        outputs.lib.enable [ "ctf" "android" "android-ide" "java" "flatpak" ];
+      modules = outputs.lib.enable [
+        "ctf"
+        "android"
+        "android-ide"
+        "java"
+        "flatpak"
+        "gonic"
+        "filebrowser"
+        "lidarr"
+        "beets"
+        "webdav"
+      ] // {
+        nginx = {
+          enable = true;
+          domains = [ "runar.ch" ];
+          email = "i@runar.ch";
+        };
+      };
 
       nixos.services.flatpak.packages = [ "hu.irl.cameractrls" ];
 
