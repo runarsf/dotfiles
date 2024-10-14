@@ -35,6 +35,7 @@ outputs.lib.mkModule config "python" {
 
         pandas
         pyglet
+        manim
         scipy
         numpy
         mpmath
