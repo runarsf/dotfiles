@@ -48,7 +48,6 @@ outputs.lib.mkFor system hostname {
         "hyprland"
         "kitty"
         "python"
-        "python-manim"
         "c"
         "c-ide"
         "writing"
