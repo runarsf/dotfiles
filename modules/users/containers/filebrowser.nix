@@ -26,7 +26,7 @@ in outputs.lib.mkServiceModule config "${service}" {
     };
 
     services.nginx.virtualHosts = outputs.lib.mkIf config.modules.nginx.enable {
-      "fs.${config.modules.nginx.domain}" = {
+      "fs.${config.modules.services.filebrowser.domain}" = {
         forceSSL = true;
         sslCertificate = config.modules.nginx.cert;
         sslCertificateKey = config.modules.nginx.key;

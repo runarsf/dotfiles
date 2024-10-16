@@ -30,7 +30,7 @@ in outputs.lib.mkServiceModule config "${service}" {
     };
 
     services.nginx.virtualHosts = outputs.lib.mkIf config.modules.nginx.enable {
-      "beets.${config.modules.nginx.domain}" = {
+      "beets.${config.modules.services.beets.domain}" = {
         forceSSL = true;
         sslCertificate = config.modules.nginx.cert;
         sslCertificateKey = config.modules.nginx.key;
