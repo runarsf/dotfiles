@@ -6,10 +6,17 @@ let
   media = "${config.home.homeDirectory}/data/media";
 
 in outputs.lib.mkModule config "${service}" {
+  home.activation."${service}" = ''
+    mkdir -p ${base} \
+             ${media}/music
+    touch ${base}/filebrowser.db
+  '';
+
   nixos = {
-    system.userActivationScripts."${service}".text = ''
-      mkdir -p ${media}/music
-    '';
+      # system.userActivationScripts."${service}".text = ''
+      #   mkdir -p ${media}/music
+      #   touch ${base}/filebrowser.db
+      # '';
 
     virtualisation.oci-containers.containers."${service}" = {
       image = "filebrowser/filebrowser:latest";
@@ -19,7 +26,7 @@ in outputs.lib.mkModule config "${service}" {
     };
 
     services.nginx.virtualHosts = outputs.lib.mkIf config.modules.nginx.enable {
-      "files.${config.modules.nginx.domain}" = {
+      "fs.${config.modules.nginx.domain}" = {
         forceSSL = true;
         sslCertificate = config.modules.nginx.cert;
         sslCertificateKey = config.modules.nginx.key;

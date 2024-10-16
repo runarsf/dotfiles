@@ -12,7 +12,7 @@ let
 in
 {
   options = {
-    privateKeys = outputs.lib.mkOption {
+    modules.sops.privateKeys = outputs.lib.mkOption {
       default = [ ];
       type = outputs.lib.types.listOf outputs.lib.types.str;
       description = "List of private key names";
@@ -21,7 +21,7 @@ in
 
   config =
     let
-      privateKeyDestinations = map (key: toKeyPath key) config.privateKeys;
+      privateKeyDestinations = map (key: toKeyPath key) config.modules.sops.privateKeys;
       secretFiles = builtins.listToAttrs (
         map (key: {
           name = key;
@@ -29,11 +29,11 @@ in
             source = "${inputs.vault}/${name}/keys/${key}";
             destination = toKeyPath key;
           };
-        }) config.privateKeys
+        }) config.modules.sops.privateKeys
       );
 
     in
-    outputs.lib.mkIf (config.privateKeys != [ ]) {
+    outputs.lib.mkIf (config.modules.sops.privateKeys != [ ]) {
       programs.ssh.matchBlocks."".identityFile = privateKeyDestinations;
       sops.secrets = secretFiles;
     };

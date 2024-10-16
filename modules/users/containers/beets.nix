@@ -34,7 +34,7 @@ in outputs.lib.mkModule config "${service}" {
         forceSSL = true;
         sslCertificate = config.modules.nginx.cert;
         sslCertificateKey = config.modules.nginx.key;
-        locations."/".proxyPass = "http://0.0.0.0:8686";
+        locations."/".proxyPass = "http://0.0.0.0:8337";
       };
     };
   };

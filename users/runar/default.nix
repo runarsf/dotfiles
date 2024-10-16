@@ -12,13 +12,6 @@ in outputs.lib.mkFor system hostname {
         _module.args.keys = [ "${config.home.homeDirectory}/.ssh/id_nix" ];
       }];
 
-    privateKeys = [ "id_priv" "id_ntnu" ];
-    publicKeys = [
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGwThBXxJMvEDSf/WUlXtgvs+R5TTZwILnAvCp5Zl02Z nix"
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBT5zQFdVRooe5SfFZ2gKpruHF7FTw1OycTczRrLsR+M i@runar.ch"
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO6Y4kk5hFzs/B6vze9u9RPG9d+vVM5EIRIOug4OnJBk runarsfr@stud.ntnu.no"
-    ];
-
     defaultTerminal = "wezterm";
     defaultBrowser = "zen";
 
@@ -28,15 +21,25 @@ in outputs.lib.mkFor system hostname {
       "xonsh"
       "git"
       "gpg"
-      "ssh"
       "keychain"
-      "sops"
       "javascript"
       "nix"
       "yazi"
       "fun"
     ] // {
       wallpaper = ./wallpaper.jpg;
+      sops = {
+        enable = true;
+        privateKeys = [ "id_priv" "id_ntnu" ];
+      };
+      ssh = {
+        enable = true;
+        publicKeys = [
+          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGwThBXxJMvEDSf/WUlXtgvs+R5TTZwILnAvCp5Zl02Z nix"
+          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBT5zQFdVRooe5SfFZ2gKpruHF7FTw1OycTczRrLsR+M i@runar.ch"
+          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO6Y4kk5hFzs/B6vze9u9RPG9d+vVM5EIRIOug4OnJBk runarsfr@stud.ntnu.no"
+        ];
+      };
     };
   };
 
@@ -92,29 +95,14 @@ in outputs.lib.mkFor system hostname {
     runix = {
       isDesktop = true;
 
-      modules = outputs.lib.enable [
-        "ctf"
-        "android"
-        "android-ide"
-        "java"
-        "flatpak"
-        "gonic"
-        "filebrowser"
-        "lidarr"
-        "beets"
-        "webdav"
-      ] // {
-        nginx = {
-          enable = true;
-          domains = [ "runar.ch" ];
-          email = "i@runar.ch";
-        };
-      };
+      modules =
+        outputs.lib.enable [ "ctf" "android" "android-ide" "java" "flatpak" ];
 
       nixos.services.flatpak.packages = [ "hu.irl.cameractrls" ];
 
       home.packages = with pkgs.unstable;
         ifIsDesktop [
+          p7zip
           stremio
           guvcview
           obs-studio

@@ -1,24 +1,24 @@
 { config, pkgs, outputs, osConfig, ... }:
 
+# TODO mkServiceModule that lets you define domain
+
 outputs.lib.mkModule' config "nginx" {
-  modules.nginx = {
-    domains = outputs.lib.mkOption {
-      type = outputs.lib.types.listOf outputs.lib.types.str;
-    };
-    domain = outputs.lib.mkOption {
-      type = outputs.lib.types.str;
-      default = builtins.head config.modules.nginx.domains;
-      defaultText = "First domain in the list";
-    };
-    email = outputs.lib.mkOption { type = outputs.lib.types.str; };
-    cert = outputs.lib.mkOption {
-      type = outputs.lib.types.str;
-      default = "/var/lib/acme/${config.modules.nginx.domain}/cert.pem";
-    };
-    key = outputs.lib.mkOption {
-      type = outputs.lib.types.str;
-      default = "/var/lib/acme/${config.modules.nginx.domain}/key.pem";
-    };
+  domains = outputs.lib.mkOption {
+    type = outputs.lib.types.listOf outputs.lib.types.str;
+  };
+  domain = outputs.lib.mkOption {
+    type = outputs.lib.types.str;
+    default = builtins.head config.modules.nginx.domains;
+    defaultText = "First domain in the list";
+  };
+  email = outputs.lib.mkOption { type = outputs.lib.types.str; };
+  cert = outputs.lib.mkOption {
+    type = outputs.lib.types.str;
+    default = "/var/lib/acme/${config.modules.nginx.domain}/cert.pem";
+  };
+  key = outputs.lib.mkOption {
+    type = outputs.lib.types.str;
+    default = "/var/lib/acme/${config.modules.nginx.domain}/key.pem";
   };
 } {
   nixos = {
@@ -32,6 +32,7 @@ outputs.lib.mkModule' config "nginx" {
         CLOUDFLARE_API_TOKEN=${osConfig.sops.placeholder.cloudflare_token}
       '';
     };
+    systemd.services.nginx.serviceConfig.ReadWritePaths = [ "/var/spool/nginx/logs/" ];
 
     services.nginx = {
       enable = true;

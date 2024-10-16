@@ -31,14 +31,14 @@ let
   };
 
 in outputs.lib.mkDesktopModule' config "kitty" {
-  modules.kitty.enableBitmap =
+  enableBitmap =
     outputs.lib.mkEnableOption "Enable bitmap fonts in Kitty";
-  modules.kitty.exe = outputs.lib.mkOption {
+  exe = outputs.lib.mkOption {
     default = outputs.lib.getExe config.programs.kitty.package;
     type = outputs.lib.types.str;
     readOnly = true;
   };
-  modules.kitty.exec = outputs.lib.mkOption {
+  exec = outputs.lib.mkOption {
     type = outputs.lib.types.functionTo outputs.lib.types.str;
     default = { class ? "scratchpad", command ? "" }:
       "${config.modules.kitty.exe} --class ${class} ${command}";

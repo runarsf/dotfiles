@@ -86,6 +86,7 @@
         # TODO Should isDesktop be an option to mkHost?
         runix = lib.mkHost {
           system = "x86_64-linux";
+          # TODO graphical = true;
           hostname = "runix";
           users = [ "runar" ];
         };

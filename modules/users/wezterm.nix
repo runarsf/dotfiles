@@ -6,12 +6,12 @@
 
 let wezterm = inputs.wezterm.packages.${pkgs.system}.default;
 in outputs.lib.mkDesktopModule' config "wezterm" {
-  modules.wezterm.exe = outputs.lib.mkOption {
+  exe = outputs.lib.mkOption {
     default = outputs.lib.getExe config.programs.wezterm.package;
     type = outputs.lib.types.str;
     readOnly = true;
   };
-  modules.wezterm.exec = outputs.lib.mkOption {
+  exec = outputs.lib.mkOption {
     type = outputs.lib.types.functionTo outputs.lib.types.str;
     default = { class ? null, command ? [ "start" ] }:
       let
@@ -24,7 +24,7 @@ in outputs.lib.mkDesktopModule' config "wezterm" {
       in "${config.modules.wezterm.exe} ${args}";
     readOnly = true;
   };
-  modules.wezterm.fonts = outputs.lib.mkOption {
+  fonts = outputs.lib.mkOption {
     type = outputs.lib.types.listOf outputs.lib.types.str;
     default = [
       "scientifica"

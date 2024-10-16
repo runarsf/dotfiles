@@ -6,12 +6,12 @@ let
   media = "${config.home.homeDirectory}/data/media";
 
 in outputs.lib.mkModule config "${service}" {
-  nixos = {
-    system.userActivationScripts."${service}".text = ''
+    home.activation."${service}" = ''
       mkdir -p ${base}/config \
                ${media}/music
     '';
 
+  nixos = {
     virtualisation.oci-containers.containers."${service}" = {
       image = "ghcr.io/9001/copyparty-ac:latest";
       extraOptions =
@@ -25,7 +25,7 @@ in outputs.lib.mkModule config "${service}" {
     };
 
     services.nginx.virtualHosts = outputs.lib.mkIf config.modules.nginx.enable {
-      "files.${config.modules.nginx.domain}" = {
+      "fs.${config.modules.nginx.domain}" = {
         forceSSL = true;
         sslCertificate = config.modules.nginx.cert;
         sslCertificateKey = config.modules.nginx.key;
@@ -38,30 +38,23 @@ in outputs.lib.mkModule config "${service}" {
       owner = name;
       content = ''
         [global]
-          e2dsa  # enable file indexing and filesystem scanning
-          e2ts   # enable multimedia indexing
-          ansi   # enable colors in log messages
+          e2dsa
+          e2ts
+          ansi
 
-          # q, lo: /cfg/log/%Y-%m%d.log   # log to file instead of docker
-
-          # p: 3939          # listen on another port
-          # ipa: 10.89.      # only allow connections from 10.89.*
           df: 2           # stop accepting uploads if less than 2 GB free disk space
-          # ver              # show copyparty version in the controlpanel
-          # grid             # show thumbnails/grid-view by default
           # theme: 2         # monokai
-          name: files  # change the server-name that's displayed in the browser
-          # stats, nos-dup   # enable the prometheus endpoint, but disable the dupes counter (too slow)
-          no-robots, force-js  # make it harder for search engines to read your server
+          name: files
+          no-robots, force-js
 
         [accounts]
-          ${name}: ${osConfig.sops.placeholder.copyparty_runar}   # username: password
+          ${name}: ${osConfig.sops.placeholder.copyparty_runar}
 
-        [/]            # create a volume at "/" (the webroot), which will
-          /w           # share /w (the docker data volume)
+        [/]
+          /w
           accs:
-            # rw: *      # everyone gets read-write access, but
-            rwmda: ${name} # the user "ed" gets read-write-move-delete-admin
+            r: *
+            rwmda: ${name}
       '';
     };
 

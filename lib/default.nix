@@ -21,5 +21,6 @@ in with inputs; core.deepMerge [
     ./state.nix
     ./users.nix
     ./utils.nix
+    ./modules.nix
   ] flake)
 ]

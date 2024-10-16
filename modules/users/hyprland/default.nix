@@ -141,6 +141,7 @@ in {
         "${pkgs.unstable.pyprland}/bin/pypr"
         "${pkgs.sway-audio-idle-inhibit}/bin/sway-audio-idle-inhibit"
         "${pkgs.swaynotificationcenter}/bin/swaync"
+        "${pkgs.wl-clipboard}/bin/wl-paste -t text -w ${pkgs.xclip}/bin/xclip -selection clipboard"
         # "${./. + /bin/clipsync} watch with-notifications"
         "${./. + /bin/monocle.sh}"
       ];

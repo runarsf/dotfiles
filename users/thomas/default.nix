@@ -7,13 +7,6 @@ outputs.lib.mkFor system hostname {
         _module.args.keys = [ "${config.home.homeDirectory}/.ssh/id_nix" ];
       }];
 
-    privateKeys = [ "id_priv" "id_ntnu" ];
-    publicKeys = [
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBYghkkwi+HG+q91Xhcdc+Ac8wYdIo8BzUZKUPa2/00f thomes@stud.ntnu.no"
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL8glmBsdfxRsQxzZrljQynBF09jljQD4KIH33Kcx9Hw thoesp@protonmail.com"
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFw8lBpuv2bWKYxxXeeG6pZ7Ut2GCtjuEbuvVEp9DmeY nix"
-    ];
-
     defaultTerminal = "wezterm";
     defaultBrowser = "zen";
 
@@ -23,13 +16,23 @@ outputs.lib.mkFor system hostname {
       "xonsh"
       "git"
       "gpg"
-      "ssh"
       "keychain"
-      "sops"
       "nix"
       "yazi"
     ] // {
       wallpaper = ./wallpaper.jpg;
+      sops = {
+        enable = true;
+        privateKeys = [ "id_priv" "id_ntnu" ];
+      };
+      ssh = {
+        enable = true;
+        publicKeys = [
+          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBYghkkwi+HG+q91Xhcdc+Ac8wYdIo8BzUZKUPa2/00f thomes@stud.ntnu.no"
+          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL8glmBsdfxRsQxzZrljQynBF09jljQD4KIH33Kcx9Hw thoesp@protonmail.com"
+          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFw8lBpuv2bWKYxxXeeG6pZ7Ut2GCtjuEbuvVEp9DmeY nix"
+        ];
+      };
     };
 
     programs.git = {
@@ -92,7 +95,14 @@ outputs.lib.mkFor system hostname {
     toaster = {
       isDesktop = true;
 
-      modules = outputs.lib.enable [ "ctf" "android" "android-ide" "steam" "ffxiv" "fun" ];
+      modules = outputs.lib.enable [
+        "ctf"
+        "android"
+        "android-ide"
+        "steam"
+        "ffxiv"
+        "fun"
+      ];
     };
   };
 }
