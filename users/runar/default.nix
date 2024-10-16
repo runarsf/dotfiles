@@ -95,8 +95,13 @@ in outputs.lib.mkFor system hostname {
     runix = {
       isDesktop = true;
 
-      modules =
-        outputs.lib.enable [ "ctf" "android" "android-ide" "java" "flatpak" ];
+      modules = outputs.lib.enable [
+        "ctf"
+        "android"
+        "android-ide"
+        "java"
+        "flatpak"
+      ];
 
       nixos.services.flatpak.packages = [ "hu.irl.cameractrls" ];
 
@@ -107,6 +112,7 @@ in outputs.lib.mkFor system hostname {
           guvcview
           obs-studio
           chromium
+          pokemmo-installer
           zed-editor
 
           # TODO Use android module
@@ -118,7 +124,8 @@ in outputs.lib.mkFor system hostname {
     rpi = {
       isDesktop = false;
 
-      modules = outputs.lib.enable [ "sops" "podman" "gonic" ] // {
+      modules = outputs.lib.enable [ "sops" "podman" ] // {
+        services.gonic.enable = true;
         nginx = {
           enable = true;
           domains = [ "runar.ch" ];

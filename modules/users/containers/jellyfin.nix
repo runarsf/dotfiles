@@ -4,7 +4,7 @@ let
   container = "jellyfin";
   base = "${config.home.homeDirectory}/data/containers/${container}";
 
-in outputs.lib.mkModule config "${container}" {
+in outputs.lib.mkServiceModule config "${container}" {
   nixos = {
     system.userActivationScripts."${container}".text = ''
       mkdir -p ${base}/config \

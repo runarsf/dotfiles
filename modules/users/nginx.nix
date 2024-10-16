@@ -88,15 +88,6 @@ outputs.lib.mkModule' config "nginx" {
       }) config.modules.nginx.domains);
     };
 
-    services.nginx.virtualHosts = {
-      "_" = {
-        forceSSL = true;
-        sslCertificate = config.modules.nginx.cert;
-        sslCertificateKey = config.modules.nginx.key;
-        locations."/" = { return = "418"; };
-      };
-    };
-
     services.cloudflare-dyndns = {
       enable = true;
       proxied = true;

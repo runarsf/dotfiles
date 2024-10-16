@@ -10,7 +10,7 @@ let
     "Enabling container ${container}, if it doesn't work, try running podman pull ${container}"
     container;
 
-in outputs.lib.mkModule config "${container}" {
+in outputs.lib.mkServiceModule config "${container}" {
   nixos = {
     # networking.firewall = {
     #   allowedTCPPorts = [ 8384 22000 ];

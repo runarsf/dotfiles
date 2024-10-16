@@ -10,7 +10,7 @@ let
   base = "${config.home.homeDirectory}/data/containers/${service}";
   media = "${config.home.homeDirectory}/data/media";
 
-in outputs.lib.mkModule config "${service}" {
+in outputs.lib.mkServiceModule config "${service}" {
   home.activation."${service}" = ''
     mkdir -p ${base}/data \
              ${base}/playlists \
@@ -46,7 +46,7 @@ in outputs.lib.mkModule config "${service}" {
     };
 
     services.nginx.virtualHosts = outputs.lib.mkIf config.modules.nginx.enable {
-      "fm.${config.modules.nginx.domain}" = {
+      "fm.${config.modules.services.gonic.domain}" = {
         forceSSL = true;
         sslCertificate = config.modules.nginx.cert;
         sslCertificateKey = config.modules.nginx.key;

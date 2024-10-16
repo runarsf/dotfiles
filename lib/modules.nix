@@ -46,4 +46,39 @@ rec {
 
   mkDesktopModule = config: name: moduleConfig:
     mkDesktopModule' config name { } moduleConfig;
+
+  mkServiceModule' = config: name: extraOptions: moduleConfig:
+    let
+      serviceName = "services.${name}";
+      namePathList = outputs.lib.splitString "." serviceName;
+      modulePath = [ "modules" ] ++ namePathList;
+
+    in mkModuleWithOptions {
+      inherit config moduleConfig;
+      name = serviceName;
+      # Defines overrides for nginx-related properties
+      extraOptions = let
+        domain =
+          outputs.lib.getAttrFromPath (modulePath ++ [ "domain" ]) config;
+      in {
+        domain = outputs.lib.mkOption {
+          default = config.modules.nginx.domain;
+          type = outputs.lib.types.str;
+          description = "Domain for [${name}] service";
+        };
+        cert = outputs.lib.mkOption {
+          default = "/var/lib/acme/${domain}/cert.pem";
+          type = outputs.lib.types.str;
+          description = "Certificate for [${name}] service";
+        };
+        key = outputs.lib.mkOption {
+          default = "/var/lib/acme/${domain}/key.pem";
+          type = outputs.lib.types.str;
+          description = "Certificate for [${name}] service";
+        };
+      } // extraOptions;
+    };
+
+  mkServiceModule = config: name: moduleConfig:
+    mkServiceModule' config name { } moduleConfig;
 }

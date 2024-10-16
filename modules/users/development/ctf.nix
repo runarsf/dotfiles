@@ -55,6 +55,7 @@ outputs.lib.mkModule config "ctf" {
         p7zip # HTB archives can't be unpacked by `unzip`...
         patchelf
         wget
+        burpsuite
 
         # inputs.binsider.packages.${pkgs.system}.default
       ] ++ outputs.lib.optionals config.modules.android.enable

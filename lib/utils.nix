@@ -5,6 +5,7 @@ let
     builtins.replaceStrings [ " " ] [ "-" ] (outputs.lib.toLower name);
 
 in rec {
+  # TODO Support name paths from list
   enable = elems:
     builtins.listToAttrs (map (name: {
       inherit name;

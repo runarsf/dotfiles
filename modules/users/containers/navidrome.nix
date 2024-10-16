@@ -5,7 +5,7 @@ let
   base = "${config.home.homeDirectory}/data/containers/${service}";
   media = "${config.home.homeDirectory}/data/media";
 
-in outputs.lib.mkModule config "${service}" {
+in outputs.lib.mkServiceModule config "${service}" {
   nixos = {
     system.userActivationScripts."${service}".text = ''
       mkdir -p ${base}/data \
