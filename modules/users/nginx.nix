@@ -3,23 +3,23 @@
 # TODO mkServiceModule that lets you define domain
 
 outputs.lib.mkModule' config "nginx" {
+  email = outputs.lib.mkOption { type = outputs.lib.types.str; };
   domains = outputs.lib.mkOption {
     type = outputs.lib.types.listOf outputs.lib.types.str;
   };
-  domain = outputs.lib.mkOption {
-    type = outputs.lib.types.str;
-    default = builtins.head config.modules.nginx.domains;
-    defaultText = "First domain in the list";
-  };
-  email = outputs.lib.mkOption { type = outputs.lib.types.str; };
-  cert = outputs.lib.mkOption {
-    type = outputs.lib.types.str;
-    default = "/var/lib/acme/${config.modules.nginx.domain}/cert.pem";
-  };
-  key = outputs.lib.mkOption {
-    type = outputs.lib.types.str;
-    default = "/var/lib/acme/${config.modules.nginx.domain}/key.pem";
-  };
+  # domain = outputs.lib.mkOption {
+  #   type = outputs.lib.types.str;
+  #   default = builtins.head config.modules.nginx.domains;
+  #   defaultText = "First domain in the list";
+  # };
+  # cert = outputs.lib.mkOption {
+  #   type = outputs.lib.types.str;
+  #   default = "/var/lib/acme/${config.modules.nginx.domain}/cert.pem";
+  # };
+  # key = outputs.lib.mkOption {
+  #   type = outputs.lib.types.str;
+  #   default = "/var/lib/acme/${config.modules.nginx.domain}/key.pem";
+  # };
 } {
   nixos = {
     # TODO Migrate to hm sops-nix when templates are supported https://github.com/Mic92/sops-nix/issues/423
