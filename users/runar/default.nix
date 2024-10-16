@@ -113,7 +113,8 @@ in outputs.lib.mkFor system hostname {
           obs-studio
           chromium
           pokemmo-installer
-          zed-editor
+          # TODO Wait for zed support in home manager https://github.com/nix-community/home-manager/pull/5455
+          nixd zed-editor
 
           # TODO Use android module
           android-tools

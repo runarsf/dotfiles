@@ -2,6 +2,7 @@
 
 let
   service = "copyparty";
+  self = config.modules.services."${service}";
   base = "${config.home.homeDirectory}/data/containers/${service}";
   media = "${config.home.homeDirectory}/data/media";
 
@@ -25,10 +26,10 @@ in outputs.lib.mkServiceModule config "${service}" {
     };
 
     services.nginx.virtualHosts = outputs.lib.mkIf config.modules.nginx.enable {
-      "fs.${config.modules.services.copyparty.domain}" = {
+      "fs.${self.domain}" = {
         forceSSL = true;
-        sslCertificate = config.modules.nginx.cert;
-        sslCertificateKey = config.modules.nginx.key;
+        sslCertificate = self.cert;
+        sslCertificateKey = self.key;
         locations."/".proxyPass = "http://0.0.0.0:3923";
       };
     };
@@ -60,4 +61,3 @@ in outputs.lib.mkServiceModule config "${service}" {
 
   };
 }
-

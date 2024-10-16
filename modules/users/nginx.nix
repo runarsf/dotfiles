@@ -7,19 +7,6 @@ outputs.lib.mkModule' config "nginx" {
   domains = outputs.lib.mkOption {
     type = outputs.lib.types.listOf outputs.lib.types.str;
   };
-  # domain = outputs.lib.mkOption {
-  #   type = outputs.lib.types.str;
-  #   default = builtins.head config.modules.nginx.domains;
-  #   defaultText = "First domain in the list";
-  # };
-  # cert = outputs.lib.mkOption {
-  #   type = outputs.lib.types.str;
-  #   default = "/var/lib/acme/${config.modules.nginx.domain}/cert.pem";
-  # };
-  # key = outputs.lib.mkOption {
-  #   type = outputs.lib.types.str;
-  #   default = "/var/lib/acme/${config.modules.nginx.domain}/key.pem";
-  # };
 } {
   nixos = {
     # TODO Migrate to hm sops-nix when templates are supported https://github.com/Mic92/sops-nix/issues/423

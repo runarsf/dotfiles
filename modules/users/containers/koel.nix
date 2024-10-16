@@ -1,23 +1,24 @@
 { config, outputs, ... }:
 
 let
-  container = "koel";
+  service = "koel";
+  self = config.modules.services."${service}";
   # TODO  "/var/lib/containers/${container}";
-  base = "${config.home.homeDirectory}/data/containers/${container}";
+  base = "${config.home.homeDirectory}/data/containers/${service}";
 
   fuckDockerHub = container:
     builtins.trace
     "Enabling container ${container}, if it doesn't work, try running podman pull ${container}"
     container;
 
-in outputs.lib.mkServiceModule config "${container}" {
+in outputs.lib.mkServiceModule config "${service}" {
   nixos = {
     # networking.firewall = {
     #   allowedTCPPorts = [ 8384 22000 ];
     #   allowedUDPPorts = [ 8384 22000 21027 ];
     # };
 
-    system.userActivationScripts."${container}".text = ''
+    system.userActivationScripts."${service}".text = ''
       mkdir -p ${base}/music \
                ${base}/covers \
                ${base}/search_index \
@@ -27,7 +28,7 @@ in outputs.lib.mkServiceModule config "${container}" {
     '';
 
     virtualisation.oci-containers.containers = {
-      "${container}" = builtins.trace ''
+      "${service}" = builtins.trace ''
         sudo podman exec --user www-data -it koel bash
         php artisan koel:init --no-assets'' {
           image = fuckDockerHub "docker.io/phanan/koel:latest";
@@ -35,7 +36,7 @@ in outputs.lib.mkServiceModule config "${container}" {
           ports = [ "4747:80" ];
           environment = {
             DB_CONNECTION = "mysql";
-            DB_HOST = "${container}db";
+            DB_HOST = "${service}db";
             DB_PORT = "3306";
             DB_USERNAME = "koel";
             DB_PASSWORD = "passmord";
@@ -46,9 +47,9 @@ in outputs.lib.mkServiceModule config "${container}" {
             "${base}/covers:/var/www/html/public/img/covers"
             "${base}/search_index:/var/www/html/storage/search-indexes"
           ];
-          # dependsOn = [ "${container}-db" ];
+          # dependsOn = [ "${service}-db" ];
         };
-      "${container}db" = {
+      "${service}db" = {
         image = fuckDockerHub "docker.io/mariadb:10.11";
         extraOptions = [ "--pull=newer" ];
         environment = {
@@ -59,7 +60,7 @@ in outputs.lib.mkServiceModule config "${container}" {
         };
         volumes = [ "${base}/db:/var/lib/mysql" ];
       };
-      # "${container}db" = {
+      # "${service}db" = {
       #   image = fuckDockerHub "docker.io/library/postgres:13";
       #   extraOptions = [ "--pull=newer" ];
       #   environment = {
@@ -81,4 +82,3 @@ in outputs.lib.mkServiceModule config "${container}" {
     #};
   };
 }
-

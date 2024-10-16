@@ -1,12 +1,9 @@
 { config, outputs, ... }:
 
-# https://github.com/awesome-selfhosted/awesome-selfhosted?tab=readme-ov-file#file-transfer---web-based-file-managers
-# https://github.com/filebrowser/filebrowser
-# https://docs.filegator.io/install.html
-
 let
-  # TODO Where tf should this *actually* be stored? /var/lib?
   service = "gonic";
+  self = config.modules.services."${service}";
+  # TODO Where tf should this *actually* be stored? /var/lib?
   base = "${config.home.homeDirectory}/data/containers/${service}";
   media = "${config.home.homeDirectory}/data/media";
 
@@ -46,10 +43,10 @@ in outputs.lib.mkServiceModule config "${service}" {
     };
 
     services.nginx.virtualHosts = outputs.lib.mkIf config.modules.nginx.enable {
-      "fm.${config.modules.services.gonic.domain}" = {
+      "fm.${self.domain}" = {
         forceSSL = true;
-        sslCertificate = config.modules.nginx.cert;
-        sslCertificateKey = config.modules.nginx.key;
+        sslCertificate = self.cert;
+        sslCertificateKey = self.key;
         locations."/".proxyPass = "http://0.0.0.0:4747";
       };
     };

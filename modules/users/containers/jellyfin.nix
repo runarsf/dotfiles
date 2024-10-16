@@ -34,4 +34,3 @@ in outputs.lib.mkServiceModule config "${container}" {
     };
   };
 }
-
