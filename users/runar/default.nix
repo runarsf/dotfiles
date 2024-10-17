@@ -51,7 +51,6 @@ in outputs.lib.mkFor system hostname {
         "vscode"
         "hyprland"
         "kitty"
-        "python"
         "c"
         "c-ide"
         "writing"
@@ -60,11 +59,17 @@ in outputs.lib.mkFor system hostname {
         "wezterm"
         "bluetooth"
         "zen"
+        "zed"
       ] // {
         stylix = {
           enable = true;
           system-wide = false;
           theme = "ayu-dark";
+        };
+        python = {
+          enable = true;
+          packageName = "python311";
+          presets = outputs.lib.enable [ "math" "jupyter" ];
         };
       };
 
@@ -95,13 +100,8 @@ in outputs.lib.mkFor system hostname {
     runix = {
       isDesktop = true;
 
-      modules = outputs.lib.enable [
-        "ctf"
-        "android"
-        "android-ide"
-        "java"
-        "flatpak"
-      ];
+      modules =
+        outputs.lib.enable [ "ctf" "android" "android-ide" "java" "flatpak" ];
 
       nixos.services.flatpak.packages = [ "hu.irl.cameractrls" ];
 
@@ -113,12 +113,6 @@ in outputs.lib.mkFor system hostname {
           obs-studio
           chromium
           pokemmo-installer
-          # TODO Wait for zed support in home manager https://github.com/nix-community/home-manager/pull/5455
-          nixd zed-editor
-
-          # TODO Use android module
-          android-tools
-          scrcpy
         ];
     };
 
@@ -130,7 +124,7 @@ in outputs.lib.mkFor system hostname {
         nginx = {
           enable = true;
           domains = [ "runar.ch" ];
-          email = "i@runar.ch";
+          email = "ssl@runar.ch";
         };
       };
     };

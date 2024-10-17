@@ -1,14 +1,59 @@
-{
-  pkgs,
-  outputs,
-  config,
-  ...
-}:
+{ config, outputs, pkgs, ... }:
 
-outputs.lib.mkModule config "python" {
+let
+  self = config.modules.python;
+  packagesFrom = pythonVersion:
+    outputs.lib.getAttr "${pythonVersion}Packages" pkgs;
+
+in outputs.lib.mkModule' config "python" (with outputs.lib; {
+  # TODO Make ide an option here instead of in python-ide.nix
+  packageName = mkOption {
+    type = types.enum [ "python311" "python312" ];
+    description = "The package name of the python version to use";
+    default = "python311";
+  };
+  packages = mkOption {
+    type = types.listOf types.package;
+    default = [ ];
+  };
+  presets = {
+    math.enable = mkEnableOption "Enable math-related packages";
+    jupyter.enable = mkEnableOption "Enable jupyter-related packages";
+  };
+}) {
+  modules.python.packages = with packagesFrom self.packageName;
+    [
+      pip
+      pydantic
+      python-pam
+      requests
+      pygobject3
+      debugpy
+      mypy # Required comment for formatting :⁾
+    ] ++ outputs.lib.optionals self.presets.math.enable [
+      plotly
+      pandas
+      pyglet
+      scipy
+      numpy
+      mpmath
+      sympy
+      pyopengl
+      pyopengl-accelerate
+      numba
+      llvmlite
+      matplotlib
+    ] ++ outputs.lib.optionals self.presets.jupyter.enable [
+      ipykernel
+      jupyterlab
+      nbformat
+      jupyter-client
+      jupyter-core
+      notebook
+    ];
+
   home.packages = with pkgs; [
     poetry
-
     stdenv.cc.cc.lib
     taglib
     openssl
@@ -16,50 +61,18 @@ outputs.lib.mkModule config "python" {
     libxslt
     libzip
     zlib
-    git
+    ruff
+    ruff-lsp
 
-    (python311.withPackages (
-      ps: with ps; [
-        pip
-        python-pam
-        requests
-        pygobject3
-        # TODO These are required for swww, put them the appropriate place
-        # platformdirs
-        # importlib-resources
-        # importlib-metadata
+    (let python = outputs.lib.getAttr self.packageName pkgs;
+    in (python.withPackages (ps: self.packages)))
 
-        debugpy
-
-        pydantic
-
-        pandas
-        pyglet
-        scipy
-        numpy
-        mpmath
-        sympy
-        pyopengl
-        pyopengl-accelerate
-        numba
-        llvmlite
-
-        ipykernel
-        matplotlib
-        jupyterlab
-        pyzmq
-        venvShellHook
-
-        jupyter-client
-        jupyter-core
-        notebook
-        ipykernel
-        cairosvg
-        pnglatex
-        plotly
-        pyperclip
-        nbformat
-      ]
-    ))
+    # This uses strings to define packages
+    # (python311.withPackages (ps:
+    #   (map (pkg:
+    #     let pkgPath = outputs.lib.splitString "." pkg;
+    #     in outputs.lib.getAttrFromPath pkgPath ps))
+    #   (builtins.filter (pkg: outputs.lib.isString pkg)
+    #     self.packages)))
   ];
 }

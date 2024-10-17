@@ -48,9 +48,9 @@ outputs.lib.mkFor system hostname {
         "discord"
         "fonts"
         "vscode"
+        "zed"
         "hyprland"
         "kitty"
-        "python"
         "c"
         "c-ide"
         "writing"
@@ -65,6 +65,11 @@ outputs.lib.mkFor system hostname {
           enable = true;
           system-wide = false;
           theme = "ayu-dark";
+        };
+        python = {
+          enable = true;
+          packageName = "python311";
+          presets = outputs.lib.enable [ "math" "jupyter" ];
         };
       };
 
@@ -102,7 +107,9 @@ outputs.lib.mkFor system hostname {
         "steam"
         "ffxiv"
         "fun"
-      ];
+      ] // {
+        python.packages = with pkgs.python311Packages; [ manim ];
+      };
     };
   };
 }
