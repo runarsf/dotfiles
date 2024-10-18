@@ -8,7 +8,6 @@ _:
     ../../modules/linux/network.nix
     ../../modules/linux/firewall.nix
     ../../modules/linux/printing.nix
-    ../../modules/linux/pipewire.nix
   ];
 
   services.libinput.enable = true;

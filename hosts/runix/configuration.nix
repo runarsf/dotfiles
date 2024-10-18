@@ -12,10 +12,15 @@
     # ../../modules/linux/docker.nix
     ../../modules/linux/firewall.nix
     ../../modules/linux/printing.nix
-    ../../modules/linux/pipewire.nix
     # ../../modules/linux/stylix.nix
     # ../../modules/linux/virtualisation.nix
   ];
+
+  # TODO Make this user config
+  # services.openssh = {
+  #   enable = true;
+  #   settings.PermitRootLogin = "yes";
+  # };
 
   services.libinput.enable = true;
   services.xserver.enable = true;

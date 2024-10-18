@@ -62,7 +62,7 @@ rec {
           outputs.lib.getAttrFromPath (modulePath ++ [ "domain" ]) config;
       in {
         domain = outputs.lib.mkOption {
-          default = config.modules.nginx.domain;
+          default = builtins.head config.modules.nginx.domains;
           type = outputs.lib.types.str;
           description = "Domain for [${name}] service";
         };

@@ -60,6 +60,7 @@ in outputs.lib.mkFor system hostname {
         "bluetooth"
         "zen"
         "zed"
+        "pipewire"
       ] // {
         stylix = {
           enable = true;
@@ -100,8 +101,14 @@ in outputs.lib.mkFor system hostname {
     runix = {
       isDesktop = true;
 
-      modules =
-        outputs.lib.enable [ "ctf" "android" "android-ide" "java" "flatpak" ];
+      modules = outputs.lib.enable [
+        "ctf"
+        "android"
+        "android-ide"
+        "java"
+        "flatpak"
+        "easyeffects"
+      ];
 
       nixos.services.flatpak.packages = [ "hu.irl.cameractrls" ];
 

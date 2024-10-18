@@ -60,6 +60,7 @@ outputs.lib.mkFor system hostname {
         "wezterm"
         "zen"
         "japanese"
+        "pipewire"
       ] // {
         stylix = {
           enable = true;

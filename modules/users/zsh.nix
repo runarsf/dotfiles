@@ -85,8 +85,11 @@ outputs.lib.mkModule config "zsh" {
       ZSH_HIGHLIGHT_HIGHLIGHTERS+=(main regexp)
 
       wim () { set -eu; ''${EDITOR:-vim} "$(which ''${1:?No file selected...})" ''${@:2}; set +eu }
+      ? () {
+        ${pkgs.krabby}/bin/krabby random | tail -n+2
+      }
       magic-enter-cmd () {
-        printf ' ${pkgs.krabby}/bin/krabby random | tail -n+2\n'
+        printf ' ?\n'
       }
 
       __git_files () {

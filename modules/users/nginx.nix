@@ -75,6 +75,15 @@ outputs.lib.mkModule' config "nginx" {
       }) config.modules.nginx.domains);
     };
 
+    services.nginx.virtualHosts = {
+      "_" = {
+        forceSSL = true;
+        sslCertificate = "/var/lib/acme/${builtins.head config.modules.nginx.cert}/cert.pem";
+        sslCertificateKey = "/var/lib/acme/${builtins.head config.modules.nginx.cert}/key.pem";
+        locations."/" = { return = "418"; };
+      };
+    };
+
     services.cloudflare-dyndns = {
       enable = true;
       proxied = true;
