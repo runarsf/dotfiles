@@ -8,9 +8,6 @@ outputs.lib.mkDesktopModule' config "pipewire" (with outputs.lib; {
   nixos = {
     environment.systemPackages = with pkgs; [ pavucontrol qpwgraph ];
 
-    # Fix for pipewire-pulse breaking recently
-    systemd.user.services.pipewire-pulse.path = [ pkgs.pulseaudio ];
-
     services.pipewire = {
       enable = true;
       audio.enable = true;
@@ -18,14 +15,6 @@ outputs.lib.mkDesktopModule' config "pipewire" (with outputs.lib; {
       alsa.support32Bit = true;
       pulse.enable = true;
       wireplumber.enable = true;
-      wireplumber.extraConfig.bluetoothEnhancements = {
-        "monitor.bluez.properties" = {
-          "bluez5.enable-sbc-xq" = true;
-          "bluez5.enable-msbc" = true;
-          "bluez5.enable-hw-volume" = true;
-          "bluez5.roles" = [ "hsp_hs" "hsp_ag" "hfp_hf" "hfp_ag" ];
-        };
-      };
 
       extraConfig.pipewire = {
         "90-sample-rates" = {
@@ -50,6 +39,9 @@ outputs.lib.mkDesktopModule' config "pipewire" (with outputs.lib; {
 
     hardware.pulseaudio.enable = false;
     security.rtkit.enable = true;
+
+    # Fix for pipewire-pulse breaking recently
+    systemd.user.services.pipewire-pulse.path = [ pkgs.pulseaudio ];
 
     # Prevent Spotify from muting when another audio source is running
     hardware.pulseaudio.extraConfig = "unload-module module-role-cork";
