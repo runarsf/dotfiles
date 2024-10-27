@@ -61,6 +61,7 @@ outputs.lib.mkFor system hostname {
         "zen"
         "japanese"
         "pipewire"
+        "mpv"
       ] // {
         stylix = {
           enable = true;

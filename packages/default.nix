@@ -8,4 +8,5 @@ in with pkgs; {
   pixelflasher = callPackage ./pixelflasher.nix { inherit pyinstaller; };
   polycat = callPackage ./polycat.nix { };
   creep2 = callPackage ./creep2.nix { };
+  skip-intro = callPackage ./skip-intro.nix { };
 }

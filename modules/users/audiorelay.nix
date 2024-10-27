@@ -1,7 +1,7 @@
 { config, pkgs, inputs, outputs, ... }:
 
 outputs.lib.mkDesktopModule config "audiorelay" {
-  nixpkgs.overlays = [ (outputs.lib.print inputs.stackpkgs.overlays.default) ];
+  nixpkgs.overlays = [ inputs.stackpkgs.overlays.default ];
 
   nixos.networking.firewall = {
     allowedUDPPorts = [ 59100 59200 ];
