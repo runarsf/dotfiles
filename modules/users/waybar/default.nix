@@ -27,11 +27,10 @@ outputs.lib.mkDesktopModule config "waybar" {
         margin = "10 10 0 10";
         reload_style_on_change = true;
 
-        modules-left = [ "hyprland/workspaces" "tray" "custom/layout" ];
+        modules-left = [ "custom/logo" "hyprland/workspaces" "tray" "custom/layout" ];
         modules-center = [ "hyprland/window" ];
         modules-right = [
           "group/media"
-          "custom/notifs"
           "idle_inhibitor"
           "backlight"
           "group/cpu"
@@ -40,6 +39,7 @@ outputs.lib.mkDesktopModule config "waybar" {
           "network"
           "battery"
           "group/clock"
+          "custom/notifs"
         ];
 
         "hyprland/workspaces" = {
@@ -179,6 +179,13 @@ outputs.lib.mkDesktopModule config "waybar" {
           tooltip = false;
           on-click = "${pkgs.swaynotificationcenter}/bin/swaync-client -t";
         };
+        "custom/logo" = {
+          # FIXME consistent width for icons (2ch maybe)
+          format = "${sep}";
+          tooltip = false;
+          on-click = "${config.programs.fuzzel.package}/bin/fuzzel";
+        };
+        # FIXME custom/layout
         "custom/layout" = {
           format = "{}";
           tooltip = false;

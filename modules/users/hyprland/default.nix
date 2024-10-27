@@ -5,6 +5,7 @@
 # TODO https://github.com/zakk4223/hyprRiver
 # TODO https://github.com/zakk4223/hyprWorkspaceLayouts
 # TODO https://github.com/ArtsyMacaw/wlogout
+# TODO temporary command (nix-shell) with fuzzel
 
 let lock = "${pkgs.hyprlock}/bin/hyprlock";
 
@@ -425,7 +426,6 @@ in {
         "float, class:^(firefox).*$, title:^$"
         "float, class:^(firefox).*$, title:^(Save As)$"
         "float, class:^(blueman-manager)$"
-        "float, class:^(pavucontrol)$"
 
         "pin, class:(gcr-prompter)"
         "stayfocused, class:(gcr-prompter)"

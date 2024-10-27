@@ -1280,6 +1280,22 @@
     },
     "nixpkgs_7": {
       "locked": {
+        "lastModified": 1727802920,
+        "narHash": "sha256-HP89HZOT0ReIbI7IJZJQoJgxvB2Tn28V6XS3MNKnfLs=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "27e30d177e57d912d614c88c622dcfdb2e6e6515",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs_8": {
+      "locked": {
         "lastModified": 1725194671,
         "narHash": "sha256-tLGCFEFTB5TaOKkpfw3iYT9dnk4awTP/q4w+ROpMfuw=",
         "owner": "NixOS",
@@ -1294,7 +1310,7 @@
         "type": "github"
       }
     },
-    "nixpkgs_8": {
+    "nixpkgs_9": {
       "locked": {
         "lastModified": 1727348695,
         "narHash": "sha256-J+PeFKSDV+pHL7ukkfpVzCOO7mBSrrpJ3svwBFABbhI=",
@@ -1459,6 +1475,7 @@
         "nixvim": "nixvim",
         "nur": "nur",
         "sops-nix": "sops-nix",
+        "stackpkgs": "stackpkgs",
         "stylix": "stylix",
         "vault": "vault",
         "wezterm": "wezterm",
@@ -1507,6 +1524,24 @@
         "type": "github"
       }
     },
+    "stackpkgs": {
+      "inputs": {
+        "nixpkgs": "nixpkgs_7"
+      },
+      "locked": {
+        "lastModified": 1728317073,
+        "narHash": "sha256-J9rR4pdnSb9zLJ/J3SnC7jOCq7ZowHqU3O6l9AtWK2M=",
+        "ref": "refs/heads/main",
+        "rev": "44b4b651281fa252c66496f80ea42bad2149f11e",
+        "revCount": 33,
+        "type": "git",
+        "url": "https://code.thishorsie.rocks/ryze/stackpkgs"
+      },
+      "original": {
+        "type": "git",
+        "url": "https://code.thishorsie.rocks/ryze/stackpkgs"
+      }
+    },
     "stylix": {
       "inputs": {
         "base16": "base16",
@@ -1517,7 +1552,7 @@
         "flake-utils": "flake-utils_6",
         "gnome-shell": "gnome-shell",
         "home-manager": "home-manager_3",
-        "nixpkgs": "nixpkgs_7",
+        "nixpkgs": "nixpkgs_8",
         "systems": "systems_7",
         "tinted-foot": "tinted-foot",
         "tinted-kitty": "tinted-kitty",
@@ -1833,7 +1868,7 @@
     },
     "zen-browser": {
       "inputs": {
-        "nixpkgs": "nixpkgs_8"
+        "nixpkgs": "nixpkgs_9"
       },
       "locked": {
         "lastModified": 1727721329,

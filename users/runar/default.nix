@@ -72,7 +72,13 @@ in outputs.lib.mkFor system hostname {
           packageName = "python311";
           presets = outputs.lib.enable [ "math" "jupyter" ];
         };
+        flatpak.enable = config.isDesktop;
       };
+
+      home.packages = with pkgs.unstable;
+        ifIsDesktop [ p7zip mpv stremio guvcview obs-studio chromium ];
+
+      nixos.services.flatpak.packages = ifIsDesktop [ "hu.irl.cameractrls" ];
 
       nixos = {
         programs.zsh.enable = true;
@@ -106,21 +112,11 @@ in outputs.lib.mkFor system hostname {
         "android"
         "android-ide"
         "java"
-        "flatpak"
         "easyeffects"
+        "audiorelay"
       ];
 
-      nixos.services.flatpak.packages = [ "hu.irl.cameractrls" ];
-
-      home.packages = with pkgs.unstable;
-        ifIsDesktop [
-          p7zip
-          stremio
-          guvcview
-          obs-studio
-          chromium
-          pokemmo-installer
-        ];
+      home.packages = with pkgs.unstable; [ pokemmo-installer ];
     };
 
     rpi = {

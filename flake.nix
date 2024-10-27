@@ -54,6 +54,11 @@
 
     nix-flatpak.url = "github:gmodena/nix-flatpak";
 
+    stackpkgs = {
+      type = "git";
+      url = "https://code.thishorsie.rocks/ryze/stackpkgs";
+    };
+
     zen-browser.url = "github:MarceColl/zen-browser-flake";
 
     arkenfox = {

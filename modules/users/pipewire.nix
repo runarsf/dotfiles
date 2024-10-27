@@ -6,7 +6,7 @@ outputs.lib.mkDesktopModule' config "pipewire" (with outputs.lib; {
   lowLatency = mkEnableOption "Enable low latency mode for Pipewire";
 }) {
   nixos = {
-    environment.systemPackages = with pkgs; [ pavucontrol qpwgraph ];
+    environment.systemPackages = with pkgs; [ pwvucontrol qpwgraph helvum ];
 
     services.pipewire = {
       enable = true;
