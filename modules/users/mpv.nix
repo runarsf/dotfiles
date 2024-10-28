@@ -21,7 +21,8 @@ outputs.lib.mkDesktopModule config "mpv" {
       dynamic-crop
       youtube-upnext
 
-      skip-intro
+      smart-skip
+      smart-copy-paste
     ];
   };
 }

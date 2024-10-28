@@ -77,7 +77,7 @@ in outputs.lib.mkFor system hostname {
       };
 
       home.packages = with pkgs.unstable;
-        ifIsDesktop [ p7zip stremio guvcview obs-studio chromium ];
+        ifIsDesktop [ p7zip stremio vlc guvcview obs-studio chromium ];
 
       nixos.services.flatpak.packages = ifIsDesktop [ "hu.irl.cameractrls" ];
 

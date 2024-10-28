@@ -15,6 +15,7 @@ pkgs.stdenv.mkDerivation {
   };
   passthru.updateScript = pkgs.unstableGitUpdater { };
 
+  # TODO Copy sparse checkout files to $out/share/mpv/scripts/
   installPhase = ''
     runHook preInstall
     mkdir -p $out/share/mpv/scripts/

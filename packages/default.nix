@@ -9,4 +9,6 @@ in with pkgs; {
   polycat = callPackage ./polycat.nix { };
   creep2 = callPackage ./creep2.nix { };
   skip-intro = callPackage ./skip-intro.nix { };
+  smart-skip = callPackage ./smart-skip.nix { };
+  smart-copy-paste = callPackage ./smart-copy-paste.nix { };
 }
