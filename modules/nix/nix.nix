@@ -7,12 +7,12 @@ outputs.lib.mkFor system hostname {
       settings = {
         auto-optimise-store = true;
         warn-dirty = false;
-        experimental-features = [ "nix-command" "flakes" "repl-flake" ];
+        experimental-features = [ "nix-command" "flakes" ];
         # TODO Set this in hyprland config
         substituters = [
           "https://cache.nixos.org/"
-          "https://hyprland.cachix.org/"
-          "https://wezterm.cachix.org/"
+          "https://hyprland.cachix.org"
+          "https://wezterm.cachix.org"
         ];
         trusted-public-keys = [
           "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="

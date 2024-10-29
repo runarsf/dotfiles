@@ -62,6 +62,7 @@ in outputs.lib.mkFor system hostname {
         "zed"
         "pipewire"
         "mpv"
+        "stremio"
       ] // {
         stylix = {
           enable = true;
@@ -79,15 +80,9 @@ in outputs.lib.mkFor system hostname {
       home.packages = with pkgs.unstable;
         ifIsDesktop [
           p7zip
-          vlc
           guvcview
           obs-studio
           chromium
-          (stremio.overrideAttrs (oldAttrs: {
-            postInstall = oldAttrs.postInstall + ''
-              sed -i 's|/usr/bin/mpv|${outputs.lib.getExe config.programs.mpv.package}|g' $out/opt/stremio/server.js
-            '';
-          }))
         ];
 
       nixos.services.flatpak.packages = ifIsDesktop [ "hu.irl.cameractrls" ];

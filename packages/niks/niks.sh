@@ -4,6 +4,8 @@ set -o nounset
 set -o errexit
 set -o pipefail
 
+# TODO add -- --accept-flake-config by default
+
 nh "${@}"
 
 bin="$(basename "${0}")"

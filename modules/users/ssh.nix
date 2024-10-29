@@ -23,7 +23,6 @@ outputs.lib.mkModule' config "ssh" {
 
   nixos = {
     programs.ssh.startAgent = true;
-    users.users."${name}".openssh.authorizedKeys.keys =
-      outputs.lib.mkIf (config.modules.ssh.publicKeys != [ ]) config.modules.ssh.publicKeys;
+    users.users."${name}".openssh.authorizedKeys.keys = config.modules.ssh.publicKeys;
   };
 }

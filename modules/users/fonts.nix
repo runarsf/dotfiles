@@ -52,7 +52,7 @@ in outputs.lib.mkDesktopModule config "fonts" {
     # Unicode table
     noto-fonts
     noto-fonts-emoji
-    noto-fonts-cjk
+    noto-fonts-cjk-sans
     noto-fonts-extra
     powerline-fonts
 
