@@ -44,7 +44,6 @@ outputs.lib.mkFor system hostname {
   systems = {
     linux = {
       modules = outputs.lib.enable [
-        "firefox"
         "discord"
         "fonts"
         "vscode"
