@@ -1,5 +1,7 @@
 { outputs, config, pkgs, name, ... }:
 
+# FIXME For some reason, every other build stylix themes are light / dark themed...?
+
 let
   stylix-config = {
     enable = true;

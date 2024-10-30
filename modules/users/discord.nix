@@ -12,6 +12,7 @@ let
   } (builtins.readFile ./discord-krisp-patcher.py);
 
 in outputs.lib.mkDesktopModule config "discord" {
+  # NOTE https://github.com/NixOS/nixpkgs/issues/195512
   home.activation.krispPatch = config.lib.dag.entryAfter [ "writeBoundary" ] ''
     run ${pkgs.findutils}/bin/find -L ${config.home.homeDirectory}/.config/discord -name 'discord_krisp.node' -exec ${discordPatcher}/bin/discord-krisp-patcher {} +
   '';
