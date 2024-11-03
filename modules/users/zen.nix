@@ -1,14 +1,16 @@
 { config, pkgs, inputs, outputs, name, ... }:
 
+# TODO https://github.com/NixOS/nixpkgs/issues/327982
+
 let
   zenBrowserPkg = inputs.zen-browser.packages."${pkgs.system}".default;
 
   updatedZenBrowser = zenBrowserPkg.overrideAttrs (oldAttrs: rec {
-    version = "1.0.1-a.12";
+    version = "1.0.1-a.17";
     src = builtins.fetchTarball {
       url =
         "https://github.com/zen-browser/desktop/releases/download/${version}/zen.linux-generic.tar.bz2";
-      sha256 = "sha256:0qs92h0vvw6qdcnpb076qr3dxw6hjyzzznb98dfp224z628vjm1i";
+      sha256 = "sha256:1n1cq0j8hifvwanqs3wsy5q69w04h397q09adxmdbydm6m8xn5k0";
     };
   });
 
@@ -28,72 +30,13 @@ in outputs.lib.mkDesktopModule config "zen" {
 
   home.packages = [ updatedZenBrowser ];
 
-  home.file.".zen/${name}/chrome/userChrome.css".text = ''
+  home.file.".zen/${name}/chrome/userChrome.css".text = outputs.lib.trace "Zen: If using 'Bookmark Toolbar Tweaks', enable [uc.bookmarks.transparent]." ''
     /* Not compatible with 'Allow Toolbar Theming'.
      * If using 'Bookmark Toolbar Tweaks', enable [uc.bookmarks.transparent].
      */
 
     :root {
-      --zen-themed-toolbar-bg: transparent !important;
-      /* --zen-colors-tertiary: transparent !important; */
-    }
-
-    .browserSidebarContainer {
-      background: var(--zen-colors-tertiary) !important;
-    }
-
-    /*#main-window {
-      background: var(--bg) !important;
-    }*/
-
-    /*current tab
-    tab.tabbrowser-tab[selected="true"] stack.tab-stack vbox.tab-background {
-      background: #FFFFFF22 !important;
-    }*/
-
-    /*hover tab
-    tab.tabbrowser-tab:hover stack.tab-stack vbox.tab-background {
-      background: #FFFFFF22 !important;
-    }*/
-
-    /*hibernated
-    tab.tabbrowser-tab stack.tab-stack vbox.tab-background {
-      background: transparent !important;
-    }*/
-
-    /*bookmarks
-    toolbar:not(:hover) {
-      background: transparent !important;
-    }*/
-
-    /*idk*/
-    /*#nav-bar {
-      background: transparent  !important;
-    }*/
-
-    /*idk but keep
-    #navigator-toolbox {
-      background: transparent !important;
-      border: none !important;
-    }*/
-
-    /*urlbar*/
-    #urlbar-background {
-      background: #00000030 !important;
-    }
-
-    /* Suggestions dropdown */
-    #urlbar:is([open]) hbox#urlbar-background {
-      background: var(--tabpanel-background-color) !important;
-      border: 1px solid var(--sidebar-border-color) !important;
-      border-radius: var(--zen-border-radius) !important;
-    }
-
-    /* Little contextual buttons at left of urlbar */
-    #urlbar box#identity-box box,
-    #urlbar box#identity-box box:hover,
-    #urlbar box#identity-box box:active {
-      opacity: 0.8;
+      --zen-main-browser-background: transparent !important;
     }
   '';
 }

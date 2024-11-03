@@ -1,4 +1,4 @@
-#! /usr/bin/env cached-nix-shell
+#! /usr/bin/env nix-shell
 #! nix-shell -i bash -p nix-output-monitor nvd nh
 set -o nounset
 set -o errexit

@@ -74,6 +74,7 @@ outputs.lib.mkDesktopModule config "waybar" {
             children-class = "child";
             transition-left-to-right = false;
           };
+          # TODO seconds on hover
           modules = [
             "clock#time"
             "clock#date"

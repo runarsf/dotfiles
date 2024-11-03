@@ -5,7 +5,7 @@ outputs.lib.mkDesktopModule config "python-ide" {
     [
       (if (outputs.lib.isWayland config) then
         (builtins.trace
-          "For Wayland support in PyCharm, add '-Dawt.toolkit.name=WLToolkit' to [Help > Edit Custom VM Options...]"
+          "PyCharm: For Wayland support, add '-Dawt.toolkit.name=WLToolkit' to [Help > Edit Custom VM Options...]"
           unstable.jetbrains.pycharm-professional)
       else
         unstable.jetbrains.pycharm-professional)
