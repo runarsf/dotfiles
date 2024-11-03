@@ -30,13 +30,16 @@ in outputs.lib.mkDesktopModule config "zen" {
 
   home.packages = [ updatedZenBrowser ];
 
-  home.file.".zen/${name}/chrome/userChrome.css".text = outputs.lib.trace "Zen: If using 'Bookmark Toolbar Tweaks', enable [uc.bookmarks.transparent]." ''
+  home.file.".zen/${name}/chrome/userChrome.css".text = outputs.lib.trace "If using 'Bookmark Toolbar Tweaks', enable [uc.bookmarks.transparent]." ''
     /* Not compatible with 'Allow Toolbar Theming'.
-     * If using 'Bookmark Toolbar Tweaks', enable [uc.bookmarks.transparent].
      */
 
     :root {
       --zen-main-browser-background: transparent !important;
+    }
+
+    #navigator-toolbox[zen-has-hover=true] #TabsToolbar {
+      background: var(--zen-colors-tertiary) !important;
     }
   '';
 }
