@@ -1,14 +1,38 @@
 # NixOS Configuration ❄️
 
-## Installation / initial build
+## Initial setup
 
-```nix
-# First, make sure your hostname matches the one in the config, and /etc/nixos/hardware-configuration.nix is copied to ./hosts/${HOST}/hardware-configuration.nix
-sudo nixos-rebuild --flake .# --accept-flake-config switch
+1. Install [NixOS](https://nixos.org/download.html) (or Nix).
+  > [!CAUTION]
+  > Make sure to set the correct user- and hostname.
 
-# Afterwards, start a new shell and verify that all substituters are in use
-nix --extra-experimental-features nix-command show-config | egrep "^substituters"
-```
+1. Put your SSH key with access to the sops-protected vault and your GitHub account on your host (`~/.ssh/id_nix`),\
+  and add it to the ssh agent
+    ```bash
+    eval $(ssh-agent)
+    ssh-add ~/.ssh/id_nix
+    ```
+
+1. Clone this repository (to path matching [`$FLAKE`](./modules/users/development/nix.nix#L5))
+    ```bash
+    git clone git@github.com:runarsf/dotfiles.git ~/.config/nixos
+    cd ~/.config/nixos
+    ```
+
+1. Copy `hardware-configuration.nix` to the host configuration
+    ```bash
+    cp /etc/nixos/hardware-configuration.nix ./hosts/${HOST}/hardware-configuration.nix
+    ```
+
+1. Build and switch
+    ```bash
+    # NB! If your hostname doesn't match the configured one, temporarily change it in the shell
+    HOST=myhostname
+
+    ./packages/niks/niks.sh os switch --ask --hostname ${HOST} -- --accept-flake-config
+    ```
+
+1. You should now be able to log in with the same username and the password set in the config ()
 
 
 ## Useful tools and references
