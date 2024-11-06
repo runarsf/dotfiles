@@ -98,6 +98,18 @@ outputs.lib.mkFor system hostname {
   };
 
   hosts = {
+    boiler = {
+      isDesktop = true;
+
+      modules = outputs.lib.enable [
+        "steam"
+        "ffxiv"
+        "fun"
+      ] // {
+        python.packages = with pkgs.python311Packages; [ manim ];
+      };
+    };
+
     toaster = {
       isDesktop = true;
 

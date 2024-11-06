@@ -99,6 +99,12 @@
           users = [ "runar" ];
         };
 
+        boiler = lib.mkHost {
+          system = "x86_64-linux";
+          hostname = "boiler";
+          users = [ "thomas" ];
+        };
+
         toaster = lib.mkHost {
           system = "x86_64-linux";
           hostname = "toaster";
@@ -122,6 +128,12 @@
         };
 
         thomas = lib.mkUser { username = "thomas"; };
+
+        "thomas@boiler" = lib.mkUser {
+          username = "thomas";
+          system = "x86_64-linux";
+          hostname = "boiler";
+        };
 
         "thomas@toaster" = lib.mkUser {
           username = "thomas";
