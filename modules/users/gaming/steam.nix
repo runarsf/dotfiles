@@ -3,7 +3,7 @@
 # Sunshine: https://github.com/LongerHV/nixos-configuration/blob/master/modules/nixos/sunshine.nix
 
 outputs.lib.mkDesktopModule config "steam" {
-  home.packages = with pkgs; [ protontricks winetricks ];
+  home.packages = with pkgs; [ protontricks winetricks gamescope ];
 
   nixos.programs.steam = {
     enable = true;
