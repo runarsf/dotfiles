@@ -1,4 +1,4 @@
-{ config, inputs, outputs, system, hostname, name, pkgs, ... }:
+{ config, inputs, osConfig, outputs, system, hostname, name, pkgs, ... }:
 
 outputs.lib.mkFor system hostname {
   common = {
@@ -107,6 +107,30 @@ outputs.lib.mkFor system hostname {
         "fun"
       ] // {
         python.packages = with pkgs.python311Packages; [ manim ];
+      };
+
+      nixos = {
+        # NVIDIA settings
+        hardware.graphics = {
+          enable = true;
+        };
+
+        services.xserver.videoDrivers = ["nvidia"];
+
+        hardware.nvidia = {
+          modesetting.enable = true;
+
+          powerManagement = {
+            enable = false;
+            finegrained = false;
+          };
+
+          open = false;
+
+          nvidiaSettings = true;
+
+          package = osConfig.boot.kernelPackages.nvidiaPackages.production;
+        };
       };
     };
 
