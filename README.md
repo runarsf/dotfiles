@@ -2,7 +2,7 @@
 
 ## Initial setup
 
-1. Install [NixOS](https://nixos.org/download.html) (or Nix).
+1. Install [NixOS](https://nixos.org/download.html) (or Nix)
   > [!CAUTION]
   > Make sure to set the correct user- and hostname.
 
@@ -29,10 +29,14 @@
     # NB! If your hostname doesn't match the configured one, temporarily change it in the shell
     HOST=myhostname
 
-    ./packages/niks/niks.sh os switch --ask --hostname ${HOST} -- --accept-flake-config
+    ./packages/niks/niks.sh os switch --ask --hostname ${HOST} . -- --accept-flake-config --extra-experimental-features 'flakes nix-command'
     ```
 
-1. You should now be able to log in with the same username and the password set in the config ()
+1. You should now be able to log in with the same username and the password set in the config (`changeme`)
+  After logging in, make sure to change your password
+    ```bash
+    passwd
+    ```
 
 
 ## Useful tools and references

@@ -7,7 +7,14 @@
 # TODO https://github.com/ArtsyMacaw/wlogout
 # TODO temporary command (nix-shell) with fuzzel
 
-let lock = "${pkgs.hyprlock}/bin/hyprlock";
+let
+  lock = "${pkgs.hyprlock}/bin/hyprlock";
+  hypr-snap = pkgs.writers.writePython3 "hypr-snap" {
+    flakeIgnore = [ "E305" "E501" "E227" "E302" "E225" ];
+  } (builtins.readFile ./bin/hypr-snap.py);
+  hypr-gamemode = pkgs.writers.writePython3 "hypr-gamemode" {
+    flakeIgnore = [ "E305" "E501" "E227" "E302" "E225" "E731" ];
+  } (builtins.readFile ./bin/hypr-gamemode.py);
 
 in {
   imports = [
@@ -142,8 +149,9 @@ in {
         "${pkgs.unstable.pyprland}/bin/pypr"
         "${pkgs.sway-audio-idle-inhibit}/bin/sway-audio-idle-inhibit"
         "${pkgs.swaynotificationcenter}/bin/swaync"
-        "${pkgs.wl-clipboard}/bin/wl-paste -t text -w ${pkgs.xclip}/bin/xclip -selection clipboard"
+        # "${pkgs.wl-clipboard}/bin/wl-paste -t text -w ${pkgs.xclip}/bin/xclip -selection clipboard"
         # "${./. + /bin/clipsync} watch with-notifications"
+        "${hypr-gamemode}"
         "${./. + /bin/monocle.sh}"
       ];
       exec = [
@@ -155,6 +163,12 @@ in {
         border_size = 1;
         "col.active_border" = "rgba(717585FF) rgba(707480FF) 90deg";
         "col.inactive_border" = "rgba(616977FF) rgba(636973FF) 90deg";
+
+        snap = {
+          enabled = true;
+          window_gap = 30;
+          monitor_gap = 30;
+        };
 
         layout = "master";
         resize_on_border = false;
@@ -201,7 +215,7 @@ in {
           ignore_opacity = true;
           vibrancy = 1;
           brightness = 1;
-          xray = true;
+          # xray = true;
           noise = 3.0e-2;
           contrast = 1;
         };
@@ -332,11 +346,7 @@ in {
         ", XF86MonBrightnessUp, exec, ${pkgs.brightnessctl}/bin/brightnessctl set 5%+"
         ", XF86MonBrightnessDown, exec, ${pkgs.brightnessctl}/bin/brightnessctl set 5%-"
       ];
-      bindr = let
-        hypr-snap = pkgs.writers.writePython3 "hypr-snap" {
-          flakeIgnore = [ "E305" "E501" "E227" "E302" "E225" ];
-        } (builtins.readFile ./bin/hypr-snap.py);
-      in [
+      bindr = [
         "${mod} CTRL, right, exec, ${hypr-snap}"
         "${mod} CTRL, left, exec, ${hypr-snap}"
         "${mod} CTRL, up, exec, ${hypr-snap}"
