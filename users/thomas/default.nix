@@ -125,16 +125,16 @@ outputs.lib.mkFor system hostname {
 
           nvidiaSettings = true;
 
-          package = osConfig.boot.kernelPackages.nvidiaPackages.production;
+          package = osConfig.boot.kernelPackages.nvidiaPackages.stable;
         };
 
         security.pam.loginLimits = [
-          { domain = "*"; item = "nofile"; type = "-"; value = "32768"; }
-          { domain = "*"; item = "memlock"; type = "-"; value = "32768"; }
+          { domain = "*"; item = "nofile"; type = "-"; value = "262144"; }
+          { domain = "*"; item = "memlock"; type = "-"; value = "262144"; }
         ];
-        boot.kernel.sysctl = { "fs.file-max" = 32768; };
+        boot.kernel.sysctl = { "fs.file-max" = 262144; };
         systemd = {
-          user.extraConfig = "DefaultLimitNOFILE=32768";
+          user.extraConfig = "DefaultLimitNOFILE=262144";
         };
       };
     };
