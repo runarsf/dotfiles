@@ -56,6 +56,8 @@ in {
     };
     hardware.graphics = {
       enable = true;
+      driSupport = true;
+      driSupport32Bit = true;
       package =
         inputs.hyprland.inputs.nixpkgs.legacyPackages.${pkgs.stdenv.hostPlatform.system}.mesa.drivers;
 
