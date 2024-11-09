@@ -111,10 +111,6 @@ outputs.lib.mkFor system hostname {
 
       nixos = {
         # NVIDIA settings
-        hardware.graphics = {
-          enable = true;
-        };
-
         services.xserver.videoDrivers = ["nvidia"];
 
         hardware.nvidia = {
@@ -130,6 +126,15 @@ outputs.lib.mkFor system hostname {
           nvidiaSettings = true;
 
           package = osConfig.boot.kernelPackages.nvidiaPackages.production;
+        };
+
+        security.pam.loginLimits = [
+          { domain = "*"; item = "nofile"; type = "-"; value = "32768"; }
+          { domain = "*"; item = "memlock"; type = "-"; value = "32768"; }
+        ];
+        boot.kernel.sysctl = { "fs.file-max" = 32768; };
+        systemd = {
+          user.extraConfig = "DefaultLimitNOFILE=32768";
         };
       };
     };
