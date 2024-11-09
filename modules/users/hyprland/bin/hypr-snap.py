@@ -13,7 +13,7 @@ def hyprctl(command: str, args: list[str] = ["-j"]) -> str|dict:
         sock.connect(socket_path)
 
         if args:
-            command = f"{''.join(args)}/{command}"
+            command = f"{' '.join(args)}/{command}"
         sock.sendall(command.encode('utf-8'))
 
         res = sock.recv(8192).decode('utf-8')

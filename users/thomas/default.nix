@@ -147,7 +147,6 @@ outputs.lib.mkFor system hostname {
         "android"
         "android-ide"
         "steam"
-        "ffxiv"
         "fun"
       ] // {
         python.packages = with pkgs.python311Packages; [ manim ];

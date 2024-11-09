@@ -78,12 +78,7 @@ in outputs.lib.mkFor system hostname {
       };
 
       home.packages = with pkgs.unstable;
-        ifIsDesktop [
-          p7zip
-          guvcview
-          obs-studio
-          chromium
-        ];
+        ifIsDesktop [ p7zip guvcview obs-studio chromium protonvpn-gui ];
 
       nixos.services.flatpak.packages = ifIsDesktop [ "hu.irl.cameractrls" ];
 
@@ -115,6 +110,7 @@ in outputs.lib.mkFor system hostname {
       isDesktop = true;
 
       modules = outputs.lib.enable [
+        "steam"
         "ctf"
         "android"
         "android-ide"
@@ -124,6 +120,21 @@ in outputs.lib.mkFor system hostname {
       ];
 
       home.packages = with pkgs.unstable; [ pokemmo-installer ];
+
+      xdg.desktopEntries."steam-handler" = {
+        type = "Application";
+        name = "Steam Handler";
+        mimeType = [ "x-scheme-handler/steam" ];
+        exec = "${
+            pkgs.writeShellScript "steam-handler" ''
+              #!/run/current-system/sw/bin/bash
+              set -o errexit
+              set -o nounset
+
+              notify-send "Steam trynna open $1"
+            ''
+          } %u";
+      };
     };
 
     rpi = {
