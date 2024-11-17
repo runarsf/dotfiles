@@ -111,10 +111,6 @@ outputs.lib.mkFor system hostname {
 
       nixos = {
         # NVIDIA settings
-        hardware.graphics = {
-          enable = true;
-        };
-
         services.xserver.videoDrivers = ["nvidia"];
 
         hardware.nvidia = {
@@ -129,9 +125,44 @@ outputs.lib.mkFor system hostname {
 
           nvidiaSettings = true;
 
-          package = osConfig.boot.kernelPackages.nvidiaPackages.production;
+          package = osConfig.boot.kernelPackages.nvidiaPackages.stable;
+        };
+
+        security.pam.loginLimits = [
+          { domain = "*"; item = "nofile"; type = "-"; value = "262144"; }
+          { domain = "*"; item = "memlock"; type = "-"; value = "262144"; }
+        ];
+        boot.kernel.sysctl = { "fs.file-max" = 262144; };
+        systemd = {
+          user.extraConfig = "DefaultLimitNOFILE=262144";
         };
       };
+
+      wayland.windowManager.hyprland.settings.env = [
+        "GDK_BACKEND,wayland,x11"
+        "SDL_VIDEODRIVER,wayland,x11"
+        "CLUTTER_BACKEND,wayland"
+        "MOZ_ENABLE_WAYLAND,1"
+        "MOZ_DISABLE_RDD_SANDBOX,1"
+        "_JAVA_AWT_WM_NONREPARENTING=1"
+        "QT_AUTO_SCREEN_SCALE_FACTOR,1"
+        "QT_QPA_PLATFORM,wayland"
+        "LIBVA_DRIVER_NAME,nvidia"
+        "GBM_BACKEND,nvidia-drm"
+        "__GLX_VENDOR_LIBRARY_NAME,nvidia"
+        "WLR_NO_HARDWARE_CURSORS,1"
+        "__NV_PRIME_RENDER_OFFLOAD,1"
+        "__VK_LAYER_NV_optimus,NVIDIA_only"
+        "PROTON_ENABLE_NGX_UPDATER,1"
+        "NVD_BACKEND,direct"
+        "__GL_GSYNC_ALLOWED,1"
+        "__GL_VRR_ALLOWED,1"
+        "WLR_DRM_NO_ATOMIC,1"
+        "WLR_USE_LIBINPUT,1"
+        "XWAYLAND_NO_GLAMOR,1" # with this you'll need to use gamescope for gaming
+        "__GL_MaxFramesAllowed,1"
+        "WLR_RENDERER_ALLOW_SOFTWARE,1"
+      ];
     };
 
     toaster = {
@@ -142,7 +173,6 @@ outputs.lib.mkFor system hostname {
         "android"
         "android-ide"
         "steam"
-        "ffxiv"
         "fun"
       ] // {
         python.packages = with pkgs.python311Packages; [ manim ];

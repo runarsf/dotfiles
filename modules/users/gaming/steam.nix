@@ -4,13 +4,19 @@
 
 # TODO: https://journix.dev/posts/gaming-on-nixos/
 outputs.lib.mkDesktopModule config "steam" {
-  home.packages = with pkgs; [ protontricks winetricks gamescope ];
+  home = {
+    packages = with pkgs; [ protontricks winetricks gamescope protonup-qt protonup mangohud ];
+    sessionVariables = {
+      STEAM_EXTRA_COMPAT_TOOLS_PATHS = "${config.home.homeDirectory}/.steam/root/compatibilitytools.d";
+    };
+  };
 
   nixos.programs = {
     steam = {
       enable = true;
       remotePlay.openFirewall = true;
       localNetworkGameTransfers.openFirewall = true;
+      gamescopeSession.enable = true;
     };
     gamemode = {
       enable = true;

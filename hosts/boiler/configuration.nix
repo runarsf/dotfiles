@@ -16,4 +16,6 @@ _:
   services.xserver.desktopManager.gnome.enable = true;
 
   system.stateVersion = "24.05";
+
+  boot.kernelParams = [ "modset=1" "fbdev=1" ];
 }
