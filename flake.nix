@@ -3,6 +3,7 @@
   # NOTE https://github.com/symphorien/nix-du
   # TODO https://nixos.wiki/wiki/Storage_optimization
   # TODO Check based things in https://github.com/Misterio77/nix-starter-configs
+  # TODO https://github.com/llem00n/brofile
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";

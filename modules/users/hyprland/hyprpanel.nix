@@ -7,6 +7,8 @@
 # nix repl
 # :p builtins.fromJSON (builtins.readFile ./options.json)
 
+# TODO  Workspace numbering like this https://preview.redd.it/yabai-made-some-minor-tweaks-but-otherwise-been-rocking-v0-fxcau0rvek0e1.png?width=3548&format=png&auto=webp&s=82d702c8d958a3b2436157970103f4d3e36f13e4
+
 let
   background = "#01010c";
   card = "#0C0F15";
@@ -100,12 +102,12 @@ let
     "theme.bar.buttons.borderColor" = border;
     "theme.bar.buttons.text" = "#f8f8ff";
     "theme.bar.buttons.icon" = "#f8f8ff";
-    "theme.bar.buttons.workspaces.hover" = "#7cb5e0";
+    "theme.bar.buttons.workspaces.hover" = "#AAC7FF";
     "theme.bar.buttons.workspaces.numbered_active_underline_color" = "#e4e4fc";
-    "theme.bar.buttons.workspaces.active" = "#a7c4d9";
+    "theme.bar.buttons.workspaces.active" = "#AAC7FF";
     "theme.bar.buttons.workspaces.occupied" = "#e4e4fc";
     "theme.bar.buttons.workspaces.available" = "#c0bfbc";
-    "theme.bar.buttons.workspaces.numbered_active_highlight_padding" = "0.25em";
+    "theme.bar.buttons.workspaces.numbered_active_highlight_padding" = "0.4em";
     "theme.bar.buttons.workspaces.numbered_active_highlight_border" = "0.25em";
     "theme.bar.buttons.workspaces.fontSize" = "1em";
     "theme.bar.buttons.padding_x" = "0.7rem";
