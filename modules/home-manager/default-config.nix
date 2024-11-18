@@ -18,6 +18,8 @@ mkFor system hostname {
       };
 
       packages = with pkgs; [ niks ];
+
+      enableNixpkgsReleaseCheck = false;
     };
 
     programs = {

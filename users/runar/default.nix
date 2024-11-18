@@ -14,6 +14,7 @@ in outputs.lib.mkFor system hostname {
 
     defaultTerminal = "wezterm";
     defaultBrowser = "zen";
+    avatar = ./avatar.jpg;
 
     modules = outputs.lib.enable [
       "neovim"
@@ -59,7 +60,6 @@ in outputs.lib.mkFor system hostname {
         "wezterm"
         "bluetooth"
         "zen"
-        "zed"
         "pipewire"
         "mpv"
         "stremio"
@@ -110,7 +110,6 @@ in outputs.lib.mkFor system hostname {
       isDesktop = true;
 
       modules = outputs.lib.enable [
-        "steam"
         "ctf"
         "android"
         "android-ide"

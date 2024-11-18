@@ -1,10 +1,6 @@
 { config, inputs, outputs, pkgs, system, ... }:
 
-# TODO wallpaper reload script, listen to monitor change
-# TODO https://github.com/CMurtagh-LGTM/grab-workspace
-# TODO https://github.com/zakk4223/hyprRiver
-# TODO https://github.com/zakk4223/hyprWorkspaceLayouts
-# TODO https://github.com/ArtsyMacaw/wlogout
+# TODO https://wiki.hyprland.org/Useful-Utilities/Systemd-start/
 # TODO temporary command (nix-shell) with fuzzel
 
 let
@@ -22,14 +18,21 @@ in {
     ./hypridle.nix
     ./hyprlock.nix
     ./hyprpaper.nix
+    ./hyprpanel.nix
   ];
   # TODO Move defaultTerminal somewhere else
 } // outputs.lib.mkDesktopModule config "hyprland" {
-  modules.wayland.enable = true;
-  modules.waybar.enable = true;
-  modules.fuzzel.enable = true;
+  modules = outputs.lib.enable [
+    "wayland"
+    "fuzzel"
+    "hyprpanel"
+    "hypridle"
+    "hyprlock"
+    "hyprpaper"
+    # "waybar"
+  ];
+  services = outputs.lib.enable [ "kanshi" ]; # swaync
   programs.jq.enable = true;
-  services = outputs.lib.enable [ "kanshi" "swaync" ];
 
   xdg.portal = {
     enable = true;
@@ -68,7 +71,7 @@ in {
   home.packages = with pkgs; [
     master.nwg-displays
     wlr-randr
-    polkit_gnome
+    # polkit_gnome
     libnotify
     brightnessctl
     xwaylandvideobridge
@@ -82,6 +85,9 @@ in {
     sway-audio-idle-inhibit
     seahorse
     ffmpeg
+    hyprpicker
+    unstable.hyprsunset
+    unstable.hyprpolkitagent
 
     # For clipsync
     (pkgs.clipnotify.overrideAttrs (oldAttrs: {
@@ -149,7 +155,8 @@ in {
         # "${pkgs.wl-clip-persist}/bin/wl-clip-persist --clipboard both"
         "${pkgs.unstable.pyprland}/bin/pypr"
         "${pkgs.sway-audio-idle-inhibit}/bin/sway-audio-idle-inhibit"
-        "${pkgs.swaynotificationcenter}/bin/swaync"
+        # "${pkgs.swaynotificationcenter}/bin/swaync"
+        "systemctl --user start hyprpolkitagent"
         # "${pkgs.wl-clipboard}/bin/wl-paste -t text -w ${pkgs.xclip}/bin/xclip -selection clipboard"
         # "${./. + /bin/clipsync} watch with-notifications"
         "${hypr-gamemode}"
@@ -165,11 +172,11 @@ in {
         "col.active_border" = "rgba(717585FF) rgba(707480FF) 90deg";
         "col.inactive_border" = "rgba(616977FF) rgba(636973FF) 90deg";
 
-        snap = {
-          enabled = true;
-          window_gap = 30;
-          monitor_gap = 30;
-        };
+        # snap = {
+        #   enabled = true;
+        #   window_gap = 30;
+        #   monitor_gap = 30;
+        # };
 
         layout = "master";
         resize_on_border = false;
@@ -221,13 +228,15 @@ in {
           contrast = 1;
         };
 
-        drop_shadow = true;
-        shadow_range = 32;
-        shadow_render_power = 3;
-        shadow_ignore_window = true;
-        shadow_scale = 1;
-        "col.shadow" = "rgba(00000055)";
-        "col.shadow_inactive" = "rgba(00000028)";
+        shadow = {
+          enabled = true;
+          range = 32;
+          render_power = 3;
+          ignore_window = true;
+          scale = 1;
+          color = "rgba(00000055)";
+          color_inactive = "rgba(00000028)";
+        };
 
         layerrule = [ "blur,wofi" "blur,launcher" ];
       };
@@ -287,7 +296,7 @@ in {
           ALT CTRL, P, exec, (${pkgs.killall}/bin/killall -SIGINT wf-recorder && (${pkgs.wl-clipboard}/bin/wl-copy < /tmp/screenrecord.mp4; ${pkgs.nemo}/bin/nemo /tmp/screenrecord.mp4)) || (set -euo pipefail; GEOMETRY="$(${pkgs.slurp}/bin/slurp)" && ${pkgs.wf-recorder}/bin/wf-recorder -f /tmp/screenrecord.mp4 -y -g "''${GEOMETRY}")''
         ''
           ALT CTRL, P, exec, (${pkgs.killall}/bin/killall -SIGINT wf-recorder && (${pkgs.wl-clipboard}/bin/wl-copy < /tmp/screenrecord.mp4; ${pkgs.nemo}/bin/nemo /tmp/screenrecord.mp4)) || (set -euo pipefail; GEOMETRY="$(${pkgs.slurp}/bin/slurp)" && ${pkgs.wf-recorder}/bin/wf-recorder -f /tmp/screenrecord.mp4 -y -a -g "''${GEOMETRY}")''
-        "${mod} SHIFT, N, exec, ${pkgs.swaynotificationcenter}/bin/swaync-client -t"
+        # "${mod} SHIFT, N, exec, ${pkgs.swaynotificationcenter}/bin/swaync-client -t"
 
         ''
           ${mod} SHIFT, S, exec, hyprctl keyword decoration:screen_shader "${config.home.homeDirectory}/.config/hypr/shaders/$(find "${config.home.homeDirectory}/.config/hypr/shaders" -name *.frag | xargs -n1 basename | fuzzel --dmenu)"''
@@ -312,7 +321,7 @@ in {
         "${mod}, TAB, workspace, previous"
 
         "${mod} SHIFT, R, exec, hyprctl reload"
-        "${mod}, C, exec, ${pkgs.hyprpicker}/bin/hyprpicker | tr -d '\\n' | ${pkgs.wl-clipboard}/bin/wl-copy"
+        "${mod}, C, exec, ${pkgs.hyprpicker}/bin/hyprpicker -a | tr -d '\\n' | ${pkgs.wl-clipboard}/bin/wl-copy"
 
         "${mod} SHIFT, C, exec, ${./. + /bin/hypr-gamemode}"
         ''

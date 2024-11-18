@@ -48,6 +48,7 @@
       url = "github:hyprwm/hyprland-plugins";
       inputs.hyprland.follows = "hyprland";
     };
+    hyprpanel.url = "github:Jas-SinghFSU/HyprPanel";
 
     nix-flatpak.url = "github:gmodena/nix-flatpak";
 

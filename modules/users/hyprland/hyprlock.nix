@@ -1,6 +1,6 @@
-{ pkgs, ... }:
+{ config, pkgs, outputs, ... }:
 
-{
+outputs.lib.mkDesktopModule config "hyprlock" {
   nixos.security.pam.services.hyprlock = { };
 
   programs.hyprlock = {

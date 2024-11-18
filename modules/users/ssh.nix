@@ -13,16 +13,15 @@ outputs.lib.mkModule' config "ssh" {
 
   # NOTE https://github.com/nix-community/home-manager/issues/322#issuecomment-1856128020
   # TODO Put public keys in .ssh
-  home.file = {
-    ".ssh/config" = {
-      target = ".ssh/config_source";
-      onChange =
-        "cat ~/.ssh/config_source > ~/.ssh/config && chmod 400 ~/.ssh/config";
-    };
+  home.file.".ssh/config" = {
+    target = ".ssh/config_source";
+    onChange =
+      "cat ~/.ssh/config_source > ~/.ssh/config && chmod 400 ~/.ssh/config";
   };
 
   nixos = {
     programs.ssh.startAgent = true;
-    users.users."${name}".openssh.authorizedKeys.keys = config.modules.ssh.publicKeys;
+    users.users."${name}".openssh.authorizedKeys.keys =
+      config.modules.ssh.publicKeys;
   };
 }

@@ -9,6 +9,7 @@ outputs.lib.mkFor system hostname {
 
     defaultTerminal = "wezterm";
     defaultBrowser = "zen";
+    avatar = ./avatar.jpg;
 
     modules = outputs.lib.enable [
       "neovim"
@@ -47,7 +48,6 @@ outputs.lib.mkFor system hostname {
         "discord"
         "fonts"
         "vscode"
-        "zed"
         "hyprland"
         "kitty"
         "c"

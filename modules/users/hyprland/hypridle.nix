@@ -1,10 +1,10 @@
-{ pkgs, ... }:
+{ config, pkgs, outputs, ... }:
 
 let
   lockCmd = "${pkgs.hyprlock}/bin/hyprlock";
 
 in
-{
+outputs.lib.mkDesktopModule config "hypridle" {
   services.hypridle = {
     enable = true;
     settings = {
