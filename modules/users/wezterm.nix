@@ -1,10 +1,15 @@
 { config, pkgs, inputs, outputs, ... }:
 
-# TODO Make scratchpad be in a multiplexed domain
-#  https://wezfurlong.org/wezterm/config/lua/config/default_domain.html
-#  https://wezfurlong.org/wezterm/config/lua/config/default_mux_server_domain.html
+let
+  wezterm = inputs.wezterm.packages.${pkgs.system}.default;
+  toLua = x:
+    if builtins.match ''
+      .*
+      .*'' x != null then
+      outputs.lib.trim x
+    else
+      "'${x}'";
 
-let wezterm = inputs.wezterm.packages.${pkgs.system}.default;
 in outputs.lib.mkDesktopModule' config "wezterm" {
   exe = outputs.lib.mkOption {
     default = outputs.lib.getExe config.programs.wezterm.package;
@@ -27,6 +32,13 @@ in outputs.lib.mkDesktopModule' config "wezterm" {
   fonts = outputs.lib.mkOption {
     type = outputs.lib.types.listOf outputs.lib.types.str;
     default = [
+      # ''
+      # {
+      #   family = 'JetBrains Mono',
+      #   weight = 'Medium',
+      #   harfbuzz_features = { 'calt', 'clig', 'liga', 'ss20', 'cv02', 'cv03', 'cv04', 'cv05', 'cv06', 'cv07', 'cv11', 'cv14', 'cv15', 'cv16', 'cv17' },
+      # }
+      # ''
       "scientifica"
       "CozetteHiDpi"
       "TamzenForPowerline"
@@ -52,58 +64,97 @@ in outputs.lib.mkDesktopModule' config "wezterm" {
     enable = true;
     package = wezterm;
     # https://wezfurlong.org/wezterm/config/lua/config/index.html
-    extraConfig = ''
+    extraConfig = let
+      tab = ''
+        'index',
+        { 'process', padding = 0, },
+        'ResetAttributes',
+        'cwd',
+      '';
+    in ''
       local wezterm = require 'wezterm'
       local smart_splits = wezterm.plugin.require('https://github.com/mrjones2014/smart-splits.nvim')
+      local tabline = wezterm.plugin.require("https://github.com/michaelbrusegard/tabline.wez")
       local config = wezterm.config_builder()
 
+      tabline.setup({
+        options = {
+          icons_enabled = true,
+          theme = 'Ayu Dark (Gogh)',
+          color_overrides = {
+            normal_mode = {
+              c = { bg = 'none' },
+              x = { bg = 'none' },
+              tabs = { bg = 'none' },
+            },
+          },
+          section_separators = {
+            left = wezterm.nerdfonts.ple_right_half_circle_thick,
+            right = wezterm.nerdfonts.ple_left_half_circle_thick,
+          },
+          component_separators = {
+            left = wezterm.nerdfonts.ple_right_half_circle_thin,
+            right = wezterm.nerdfonts.ple_left_half_circle_thin,
+          },
+          tab_separators = {
+            left = wezterm.nerdfonts.ple_right_half_circle_thick,
+            right = wezterm.nerdfonts.ple_left_half_circle_thick,
+          },
+        },
+        sections = {
+          tabline_a = { 'mode' },
+          tabline_b = { 'workspace' },
+          tabline_c = { ' ' },
+          tab_active = {
+            ${tab}
+            { 'zoomed', padding = 0 },
+          },
+          tab_inactive = {
+            ${tab}
+          },
+          tabline_x = { 'battery' },
+          tabline_y = { 'datetime' },
+          tabline_z = { 'hostname' },
+        },
+        extensions = { },
+      })
+
+      tabline.apply_to_config(config)
+
+      smart_splits.apply_to_config(config, {
+        direction_keys = { 'LeftArrow', 'DownArrow', 'UpArrow', 'RightArrow' },
+        modifiers = {
+          move = 'SHIFT',
+          resize = 'SHIFT|ALT',
+        },
+      })
+
       -- config.color_scheme = 'Ayu Dark (Gogh)'
+      -- config.colors = {
+      --   background = 'none',
+      -- }
       config.font = wezterm.font_with_fallback({
         ${
           builtins.concatStringsSep ",\n  "
-          (map (font: "'${font}'") config.modules.wezterm.fonts)
+          (map toLua config.modules.wezterm.fonts)
         }
       })
       config.font_size = 14.0
       config.warn_about_missing_glyphs = false
       config.default_cursor_style = "SteadyBar"
       config.window_decorations = "NONE"
-      config.tab_bar_at_bottom = true
-      config.hide_tab_bar_if_only_one_tab = true
-      config.use_fancy_tab_bar = false
-      config.show_new_tab_button_in_tab_bar = false
-      -- config.alternate_buffer_wheel_scroll_speed = 1
-      config.colors = {
-        tab_bar = {
-          background = 'none',
-          active_tab = {
-            bg_color = 'none',
-            fg_color = 'none',
-          },
-          inactive_tab = {
-            bg_color = 'none',
-            fg_color = 'none',
-          },
-          inactive_tab_hover = {
-            bg_color = 'none',
-            fg_color = 'none',
-          },
-          new_tab = {
-            bg_color = 'none',
-            fg_color = 'none',
-          },
-          new_tab_hover = {
-            bg_color = 'none',
-            fg_color = 'none',
-          },
-        },
-      }
       config.window_padding = {
-        left = 2,
+        left = 0,
         right = 0,
-        top = 2,
+        top = 0,
         bottom = 0,
       }
+
+      -- config.tab_bar_at_bottom = true
+      -- config.hide_tab_bar_if_only_one_tab = true
+      -- config.use_fancy_tab_bar = false
+      -- config.show_new_tab_button_in_tab_bar = false
+      -- config.alternate_buffer_wheel_scroll_speed = 1
 
       config.set_environment_variables = {
         TERMINFO_DIRS = '${config.home.profileDirectory}/share/terminfo',
@@ -134,52 +185,6 @@ in outputs.lib.mkDesktopModule' config "wezterm" {
         'X11 dwm',
         'Wayland',
       }
-
-      local RIGHT_HALF_CIRCLE = wezterm.nerdfonts.ple_right_half_circle_thick
-      local LEFT_HALF_CIRCLE = wezterm.nerdfonts.ple_left_half_circle_thick
-
-      function tab_title(tab_info)
-        local title = tab_info.tab_title
-        if title and #title > 0 then
-          return title
-        end
-        return tab_info.active_pane.title
-      end
-
-      wezterm.on(
-        'format-tab-title',
-        function(tab, tabs, panes, config, hover, max_width)
-          local edge_background = 'none'
-          local background = '#272C32'
-          local foreground = 'none'
-
-          if tab.is_active or hover then
-            background = '#CD9446'
-            foreground = 'none'
-          end
-
-          local edge_foreground = background
-
-          local title = tab_title(tab)
-
-          title = wezterm.truncate_right(title, max_width - 3)
-
-          local bar = {
-            { Background = { Color = edge_background } },
-            { Foreground = { Color = edge_foreground } },
-            { Text = LEFT_HALF_CIRCLE },
-            { Background = { Color = background } },
-            { Foreground = { Color = foreground } },
-            { Text = title },
-            { Background = { Color = edge_background } },
-            { Foreground = { Color = edge_foreground } },
-            { Text = RIGHT_HALF_CIRCLE },
-            { Text = " " },
-          }
-
-          return bar
-        end
-      )
 
       config.leader = { key = 'a', mods = 'CTRL', timeout_milliseconds = 1000 }
       config.keys = {
@@ -223,60 +228,12 @@ in outputs.lib.mkDesktopModule' config "wezterm" {
           mods = 'ALT',
           action = wezterm.action.PasteFrom("Clipboard"),
         },
-        -- {
-        --   key = 'LeftArrow',
-        --   mods = 'SHIFT',
-        --   action = wezterm.action.ActivatePaneDirection("Left"),
-        -- },
-        -- {
-        --   key = 'RightArrow',
-        --   mods = 'SHIFT',
-        --   action = wezterm.action.ActivatePaneDirection("Right"),
-        -- },
-        -- {
-        --   key = 'UpArrow',
-        --   mods = 'SHIFT',
-        --   action = wezterm.action.ActivatePaneDirection("Up"),
-        -- },
-        -- {
-        --   key = 'DownArrow',
-        --   mods = 'SHIFT',
-        --   action = wezterm.action.ActivatePaneDirection("Down"),
-        -- },
-        -- {
-        --   key = 'LeftArrow',
-        --   mods = 'SHIFT|ALT',
-        --   action = wezterm.action.AdjustPaneSize { 'Left', 5 },
-        -- },
-        -- {
-        --   key = 'RightArrow',
-        --   mods = 'SHIFT|ALT',
-        --   action = wezterm.action.AdjustPaneSize { 'Right', 5 },
-        -- },
-        -- {
-        --   key = 'UpArrow',
-        --   mods = 'SHIFT|ALT',
-        --   action = wezterm.action.AdjustPaneSize { 'Up', 5 },
-        -- },
-        -- {
-        --   key = 'DownArrow',
-        --   mods = 'SHIFT|ALT',
-        --   action = wezterm.action.AdjustPaneSize { 'Down', 5 },
-        -- },
         {
           key = 'T',
           mods = 'CTRL|SHIFT',
           action = wezterm.action.SpawnCommandInNewTab { cwd = wezterm.home_dir },
         }
       }
-
-      smart_splits.apply_to_config(config, {
-        direction_keys = { 'LeftArrow', 'DownArrow', 'UpArrow', 'RightArrow' },
-        modifiers = {
-          move = 'SHIFT',
-          resize = 'SHIFT|ALT',
-        },
-      })
 
       return config
     '';

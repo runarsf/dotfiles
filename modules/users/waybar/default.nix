@@ -27,7 +27,8 @@ outputs.lib.mkDesktopModule config "waybar" {
         margin = "10 10 0 10";
         reload_style_on_change = true;
 
-        modules-left = [ "custom/logo" "hyprland/workspaces" "tray" "custom/layout" ];
+        modules-left =
+          [ "custom/logo" "hyprland/workspaces" "tray" "custom/layout" ];
         modules-center = [ "hyprland/window" ];
         modules-right = [
           "group/media"
@@ -75,10 +76,7 @@ outputs.lib.mkDesktopModule config "waybar" {
             transition-left-to-right = false;
           };
           # TODO seconds on hover
-          modules = [
-            "clock#time"
-            "clock#date"
-          ];
+          modules = [ "clock#time" "clock#date" ];
         };
         clock = {
           tooltip-format = "<tt><small>{calendar}</small></tt>";
@@ -105,12 +103,8 @@ outputs.lib.mkDesktopModule config "waybar" {
           };
           interval = 1;
         };
-        "clock#time" = clock // {
-          format = "${sep} {:%H:%M}";
-        };
-        "clock#date" = clock // {
-          format = "${sep} {:%d/%m/%Y}";
-        };
+        "clock#time" = clock // { format = "${sep} {:%H:%M}"; };
+        "clock#date" = clock // { format = "${sep} {:%d/%m/%Y}"; };
 
         "group/cpu" = {
           orientation = "inherit";
@@ -124,12 +118,16 @@ outputs.lib.mkDesktopModule config "waybar" {
         cpu = {
           # 
           format = "${sep}{usage: >3}%";
-          on-click = "${pkgs.kitty}/bin/kitty btop";
+          on-click = config.modules.${config.defaultTerminal}.exec {
+            command = [ "start" "--" "btop" ];
+          };
         };
 
         memory = {
           format = "󰧑${sep}{: >3}%";
-          on-click = "${pkgs.kitty}/bin/kitty btop";
+          on-click = config.modules.${config.defaultTerminal}.exec {
+            command = [ "start" "--" "btop" ];
+          };
         };
 
         backlight = {
@@ -200,10 +198,7 @@ outputs.lib.mkDesktopModule config "waybar" {
             children-class = "child";
             transition-left-to-right = false;
           };
-          modules = [
-            "custom/media#icon"
-            "custom/media#info"
-          ];
+          modules = [ "custom/media#icon" "custom/media#info" ];
         };
         media = {
           format-icons = {
@@ -219,12 +214,8 @@ outputs.lib.mkDesktopModule config "waybar" {
           interval = 10;
           exec = "${./. + /bin/music.sh}";
         };
-        "custom/media#icon" = media // {
-          format = "{icon}";
-        };
-        "custom/media#info" = media // {
-          format-alt = "{}";
-        };
+        "custom/media#icon" = media // { format = "{icon}"; };
+        "custom/media#info" = media // { format-alt = "{}"; };
       };
     };
   };

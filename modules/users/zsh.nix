@@ -1,9 +1,4 @@
-{
-  config,
-  outputs,
-  pkgs,
-  ...
-}:
+{ config, outputs, pkgs, ... }:
 
 outputs.lib.mkModule config "zsh" {
   modules.starship.enable = true;
@@ -52,9 +47,10 @@ outputs.lib.mkModule config "zsh" {
         nh = "niks";
       };
     };
+    # FIXME abbrs don't work
     initExtraFirst = ''
       AUTOPAIR_INHIBIT_INIT=1
-      AUTOPAIR_SPC_WIDGET="abbr-expand-and-insert"
+      # AUTOPAIR_SPC_WIDGET="abbr-expand-and-insert"
       AUTO_NOTIFY_THRESHOLD=20
       AUTO_NOTIFY_EXPIRE_TIME=20000
     '';

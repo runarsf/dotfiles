@@ -60,7 +60,7 @@ let
   settings = {
     user = {
       stylix = stylix-config // {
-        targets = outputs.lib.disable [ "vscode" "hyprland" "kitty" "waybar" ];
+        targets = outputs.lib.disable [ "vscode" "hyprland" "kitty" "waybar" "hyprlock" ];
       };
 
       # This needs to always be set for the Stylix system configuation to be valid,
@@ -142,14 +142,14 @@ in {
         settings.system-wide;
     })
     (outputs.lib.mkIf (!config.modules.stylix.system-wide) settings.user)
-    {
-      programs.hyprlock.settings.background.path =
-        builtins.toString config.modules.wallpaper;
+    ({
+      # programs.hyprlock.settings.background.path =
+      #   builtins.toString config.modules.wallpaper;
 
       services.hyprpaper.settings = {
         preload = [ "${config.modules.wallpaper}" ];
         wallpaper = [ ", ${config.modules.wallpaper}" ];
       };
-    }
+    })
   ]);
 }

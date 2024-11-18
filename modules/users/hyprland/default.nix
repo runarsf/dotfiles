@@ -228,13 +228,15 @@ in {
           contrast = 1;
         };
 
-        drop_shadow = true;
-        shadow_range = 32;
-        shadow_render_power = 3;
-        shadow_ignore_window = true;
-        shadow_scale = 1;
-        "col.shadow" = "rgba(00000055)";
-        "col.shadow_inactive" = "rgba(00000028)";
+        shadow = {
+          enabled = true;
+          range = 32;
+          render_power = 3;
+          ignore_window = true;
+          scale = 1;
+          color = "rgba(00000055)";
+          color_inactive = "rgba(00000028)";
+        };
 
         layerrule = [ "blur,wofi" "blur,launcher" ];
       };

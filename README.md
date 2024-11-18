@@ -32,10 +32,12 @@
     ./packages/niks/niks.sh os switch --ask --hostname ${HOST} . -- --accept-flake-config --extra-experimental-features 'flakes nix-command'
     ```
 
-1. You should now be able to log in with the same username and the password set in the config (`changeme`)
-  After logging in, make sure to change your password
+1. You should now be able to log in with the same username and the password set in the config (`changeme`).\
+  After logging in, make sure to change your password, and check that all the substituters are applied correctly.
     ```bash
     passwd
+
+    nix config show | egrep "^substituters"
     ```
 
 
