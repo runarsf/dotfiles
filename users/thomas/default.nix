@@ -105,6 +105,7 @@ outputs.lib.mkFor system hostname {
         "steam"
         "ffxiv"
         "fun"
+        "reaper"
       ] // {
         python.packages = with pkgs.python311Packages; [ manim ];
       };
@@ -163,6 +164,8 @@ outputs.lib.mkFor system hostname {
         "__GL_MaxFramesAllowed,1"
         "WLR_RENDERER_ALLOW_SOFTWARE,1"
       ];
+
+      xdg.portal.extraPortals = with pkgs; [ xdg-desktop-portal-gnome ];
     };
 
     toaster = {
