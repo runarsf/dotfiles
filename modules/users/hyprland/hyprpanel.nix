@@ -1,5 +1,12 @@
 { config, pkgs, inputs, outputs, ... }:
 
+# cd ~/.cache/ags/hyprpanel
+
+# diff <(cat options_source.json | jq) <(cat options.json | jq)
+
+# nix repl
+# :p builtins.fromJSON (builtins.readFile ./options.json)
+
 let
   background = "#01010c";
   card = "#0C0F15";
@@ -107,6 +114,8 @@ let
     "theme.bar.buttons.y_margins" = "0";
     "theme.bar.border_radius" = "0.4em";
     "theme.bar.margin_top" = "0.5em";
+    "theme.bar.menus.background" = background;
+    "theme.bar.menus.cards" = background;
     "theme.bar.menus.menu.bluetooth.background.color" = background;
     "theme.bar.menus.menu.bluetooth.card.color" = card;
     "theme.bar.menus.menu.bluetooth.border.color" = border;
@@ -122,6 +131,8 @@ let
     "theme.bar.menus.menu.clock.background.color" = background;
     "theme.bar.menus.menu.clock.card.color" = card;
     "theme.bar.menus.menu.clock.border.color" = border;
+    "theme.notification.background" = background;
+    "theme.notification.border" = border;
     "theme.bar.menus.menu.notifications.card" = card;
     "theme.bar.menus.menu.notifications.background" = background;
     "theme.bar.menus.menu.notifications.border" = border;
@@ -141,8 +152,6 @@ in outputs.lib.mkDesktopModule config "hyprpanel" {
     gpu-screen-recorder-gtk
   ];
 
-  # cd ~/.local/cache/ags/hyprpanel; nix repl
-  # :p builtins.fromJSON (builtins.readFile ./options.json)
   home.file = {
     ".local/cache/ags/hyprpanel/options.json" = {
       target = ".local/cache/ags/hyprpanel/options_source.json";

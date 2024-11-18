@@ -143,8 +143,9 @@ in {
     })
     (outputs.lib.mkIf (!config.modules.stylix.system-wide) settings.user)
     ({
-      # programs.hyprlock.settings.background.path =
-      #   builtins.toString config.modules.wallpaper;
+      # FIXME Stylix supports hyprlock now, but is too dumb to apply it correctly
+      programs.hyprlock.settings.background.path =
+        builtins.toString config.modules.wallpaper;
 
       services.hyprpaper.settings = {
         preload = [ "${config.modules.wallpaper}" ];
