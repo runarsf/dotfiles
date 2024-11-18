@@ -52,6 +52,11 @@
 
     nix-flatpak.url = "github:gmodena/nix-flatpak";
 
+    openconnect-sso = {
+      url = "github:ThinkChaos/openconnect-sso/fix/nix-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     stackpkgs = {
       type = "git";
       url = "https://code.thishorsie.rocks/ryze/stackpkgs";

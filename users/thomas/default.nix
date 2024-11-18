@@ -74,6 +74,9 @@ outputs.lib.mkFor system hostname {
         };
       };
 
+      home.packages = with pkgs.unstable;
+        ifIsDesktop [ inputs.openconnect-sso.packages.${system}.default ];
+
       nixos = {
         programs.zsh.enable = true;
         users.users."${name}" = {
@@ -101,18 +104,13 @@ outputs.lib.mkFor system hostname {
     boiler = {
       isDesktop = true;
 
-      modules = outputs.lib.enable [
-        "steam"
-        "ffxiv"
-        "fun"
-        "reaper"
-      ] // {
+      modules = outputs.lib.enable [ "steam" "ffxiv" "fun" "reaper" ] // {
         python.packages = with pkgs.python311Packages; [ manim ];
       };
 
       nixos = {
         # NVIDIA settings
-        services.xserver.videoDrivers = ["nvidia"];
+        services.xserver.videoDrivers = [ "nvidia" ];
 
         hardware.nvidia = {
           modesetting.enable = true;
@@ -130,13 +128,21 @@ outputs.lib.mkFor system hostname {
         };
 
         security.pam.loginLimits = [
-          { domain = "*"; item = "nofile"; type = "-"; value = "262144"; }
-          { domain = "*"; item = "memlock"; type = "-"; value = "262144"; }
+          {
+            domain = "*";
+            item = "nofile";
+            type = "-";
+            value = "262144";
+          }
+          {
+            domain = "*";
+            item = "memlock";
+            type = "-";
+            value = "262144";
+          }
         ];
         boot.kernel.sysctl = { "fs.file-max" = 262144; };
-        systemd = {
-          user.extraConfig = "DefaultLimitNOFILE=262144";
-        };
+        systemd = { user.extraConfig = "DefaultLimitNOFILE=262144"; };
       };
 
       wayland.windowManager.hyprland.settings.env = [
@@ -171,15 +177,10 @@ outputs.lib.mkFor system hostname {
     toaster = {
       isDesktop = true;
 
-      modules = outputs.lib.enable [
-        "ctf"
-        "android"
-        "android-ide"
-        "steam"
-        "fun"
-      ] // {
-        python.packages = with pkgs.python311Packages; [ manim ];
-      };
+      modules =
+        outputs.lib.enable [ "ctf" "android" "android-ide" "steam" "fun" ] // {
+          python.packages = with pkgs.python311Packages; [ manim ];
+        };
     };
   };
 }

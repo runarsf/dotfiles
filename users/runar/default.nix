@@ -78,7 +78,14 @@ in outputs.lib.mkFor system hostname {
       };
 
       home.packages = with pkgs.unstable;
-        ifIsDesktop [ p7zip guvcview obs-studio chromium protonvpn-gui ];
+        ifIsDesktop [
+          p7zip
+          guvcview
+          obs-studio
+          chromium
+          protonvpn-gui
+          inputs.openconnect-sso.packages.${system}.default
+        ];
 
       nixos.services.flatpak.packages = ifIsDesktop [ "hu.irl.cameractrls" ];
 
@@ -120,20 +127,30 @@ in outputs.lib.mkFor system hostname {
 
       home.packages = with pkgs.unstable; [ pokemmo-installer ];
 
-      xdg.desktopEntries."steam-handler" = {
-        type = "Application";
-        name = "Steam Handler";
-        mimeType = [ "x-scheme-handler/steam" ];
-        exec = "${
-            pkgs.writeShellScript "steam-handler" ''
-              #!/run/current-system/sw/bin/bash
-              set -o errexit
-              set -o nounset
+      # nixpkgs.overlays = [
+      #   (import "${
+      #       builtins.fetchTarball {
+      #         url =
+      #           "https://github.com/vlaci/openconnect-sso/archive/master.tar.gz";
+      #         sha256 = "sha256:08cqd40p9vld1liyl6qrsdrilzc709scyfghfzmmja3m1m7nym94";
+      #       }
+      #     }/overlay.nix")
+      # ];
 
-              notify-send "Steam trynna open $1"
-            ''
-          } %u";
-      };
+      # xdg.desktopEntries."steam-handler" = {
+      #   type = "Application";
+      #   name = "Steam Handler";
+      #   mimeType = [ "x-scheme-handler/steam" ];
+      #   exec = "${
+      #       pkgs.writeShellScript "steam-handler" ''
+      #         #!/run/current-system/sw/bin/bash
+      #         set -o errexit
+      #         set -o nounset
+
+      #         notify-send "Steam trynna open $1"
+      #       ''
+      #     } %u";
+      # };
     };
 
     rpi = {
