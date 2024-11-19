@@ -1,6 +1,10 @@
 { config, inputs, osConfig, outputs, system, hostname, name, pkgs, ... }:
 
-outputs.lib.mkFor system hostname {
+let
+  ifIsDesktop = outputs.lib.optionals
+    config.isDesktop; # (outputs.lib.isDesktop config hostname);
+
+in outputs.lib.mkFor system hostname {
   common = {
     imports = outputs.lib.concatImports { path = ../../modules/users; }
       ++ outputs.lib.concatImports { path = ./config; } ++ [{
