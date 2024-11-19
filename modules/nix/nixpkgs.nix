@@ -11,6 +11,7 @@
       (_: prev: {
         master = import inputs.nixpkgs-master { inherit (prev) system config overlays; };
         unstable = import inputs.nixpkgs-unstable { inherit (prev) system config overlays; };
+        stable = import inputs.nixpkgs-stable { inherit (prev) system config overlays; };
         nur = import inputs.nur {
           pkgs = prev;
           nurpkgs = import inputs.nixpkgs { inherit (prev) system config overlays; };
