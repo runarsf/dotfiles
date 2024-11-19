@@ -8,7 +8,7 @@ outputs.lib.mkDesktopModule config "japanese" {
   ];
   i18n.inputMethod = {
     enabled = "fcitx5";
-    fcitx5.addons = with pkgs; [ fcitx5-configtool fcitx5-mozc fcitx5-gtk ];
+    fcitx5.addons = with pkgs.stable; [ fcitx5-configtool fcitx5-mozc fcitx5-gtk ];
   };
   gtk = {
     gtk2.extraConfig = ''gtk-im-module="fcitx"'';
