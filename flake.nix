@@ -73,6 +73,11 @@
 
     stylix.url = "github:danth/stylix";
 
+    spicetify-nix = {
+      url = "github:Gerg-L/spicetify-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     nixos-hardware.url = "github:nixos/nixos-hardware";
 
     nixvim.url = "github:runarsf/nixvim";

@@ -118,6 +118,7 @@ outputs.lib.mkDesktopModule config "waybar" {
         cpu = {
           # 
           format = "${sep}{usage: >3}%";
+          # FIXME You shouldn't need to provide "start" in this, just btop
           on-click = config.modules.${config.defaultTerminal}.exec {
             command = [ "start" "--" "btop" ];
           };

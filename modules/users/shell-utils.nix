@@ -1,10 +1,4 @@
-{
-  pkgs,
-  inputs,
-  outputs,
-  config,
-  ...
-}:
+{ pkgs, inputs, outputs, config, ... }:
 
 outputs.lib.mkEnabledModule config "shell-utils" {
   programs.fzf.enable = true;
@@ -53,6 +47,7 @@ outputs.lib.mkEnabledModule config "shell-utils" {
       eza
       tldr
       yq
+      bc
       jq
       fx
       ncdu
@@ -70,8 +65,18 @@ outputs.lib.mkEnabledModule config "shell-utils" {
       watchexec
     ];
 
+    file.".bcrc".text = ''
+      define pow(a, b) {
+        if (scale(b) == 0) {
+          return a ^ b;
+        }
+        return e(b*l(a));
+      }
+    '';
+
     shellAliases = {
-      ls = "EZA_ICON_SPACING=2 ${pkgs.eza}/bin/eza -l -F -g -a --group-directories-first --no-time --git";
+      ls =
+        "EZA_ICON_SPACING=2 ${pkgs.eza}/bin/eza -l -F -g -a --group-directories-first --no-time --git";
       grep = "grep --color=always";
       cat = "${pkgs.bat}/bin/bat";
     };

@@ -11,11 +11,8 @@ let
       "'${x}'";
 
 in outputs.lib.mkDesktopModule' config "wezterm" {
-  exe = outputs.lib.mkOption {
-    default = outputs.lib.getExe config.programs.wezterm.package;
-    type = outputs.lib.types.str;
-    readOnly = true;
-  };
+  # FIXME This should be a generic way to start a program, not requiring "start" to be provided
+  #  Maybe "exec 'btop'" and "exec' { command = [ 'btop' ], ... }"
   exec = outputs.lib.mkOption {
     type = outputs.lib.types.functionTo outputs.lib.types.str;
     default = { class ? null, command ? [ "start" ] }:
@@ -26,7 +23,7 @@ in outputs.lib.mkDesktopModule' config "wezterm" {
           "${builtins.head command} --class ${class} ${
             builtins.concatStringsSep " " (builtins.tail command)
           }";
-      in "${config.modules.wezterm.exe} ${args}";
+      in "${outputs.lib.getExe config.programs.wezterm.package} ${args}";
     readOnly = true;
   };
   fonts = outputs.lib.mkOption {

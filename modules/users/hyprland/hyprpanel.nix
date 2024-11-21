@@ -7,20 +7,28 @@
 # nix repl
 # :p builtins.fromJSON (builtins.readFile ./options.json)
 
-# TODO  Workspace numbering like this https://preview.redd.it/yabai-made-some-minor-tweaks-but-otherwise-been-rocking-v0-fxcau0rvek0e1.png?width=3548&format=png&auto=webp&s=82d702c8d958a3b2436157970103f4d3e36f13e4
+# TODO Workspace numbering like this https://preview.redd.it/yabai-made-some-minor-tweaks-but-otherwise-been-rocking-v0-fxcau0rvek0e1.png?width=3548&format=png&auto=webp&s=82d702c8d958a3b2436157970103f4d3e36f13e4
+# TODO Add nwg-displays as tile on panel
 
 let
   background = "#01010c";
   card = "#0C0F15";
   border = "#434343";
+  icons = [([ "class:zen.*" "󰈹" "Zen" ])];
   options = builtins.toJSON {
     "bar.battery.hideLabelWhenFull" = true;
     "bar.bluetooth.rightClick" = "${pkgs.blueman}/bin/blueman-manager";
     "bar.clock.format" = " %a %d. %b  %H:%M ";
     "bar.clock.showIcon" = false;
-    "bar.customModules.cpu.leftClick" = "${pkgs.btop}/bin/btop";
+    "bar.customModules.cpu.leftClick" =
+      config.modules.${config.defaultTerminal}.exec {
+        command = [ "start" "--" "${pkgs.btop}/bin/btop" ];
+      };
     "bar.customModules.hyprsunset.label" = false;
-    "bar.customModules.ram.leftClick" = "${pkgs.btop}/bin/btop";
+    "bar.customModules.ram.leftClick" =
+      config.modules.${config.defaultTerminal}.exec {
+        command = [ "start" "--" "${pkgs.btop}/bin/btop" ];
+      };
     "bar.launcher.autoDetectIcon" = true;
     "bar.launcher.icon" = "";
     "bar.launcher.rightClick" = "${pkgs.fuzzel}/bin/fuzzel";
@@ -30,9 +38,9 @@ let
         middle = [ "media" ];
         right = [
           "volume"
+          "bluetooth"
           "hyprsunset"
           "network"
-          "bluetooth"
           "cpu"
           "ram"
           "battery"
@@ -55,7 +63,17 @@ let
       "${pkgs.wireplumber}/bin/wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-";
     "bar.volume.scrollUp" =
       "${pkgs.wireplumber}/bin/wpctl set-volume -l 1.5 @DEFAULT_AUDIO_SINK@ 5%+";
-    "bar.windowtitle.custom_title" = false;
+    "bar.windowtitle.custom_title" = true;
+    "bar.workspaces.applicationIconMap" = builtins.listToAttrs (map (item: {
+      name = builtins.elemAt item 0;
+      value = builtins.elemAt item 1;
+    }) icons);
+    "bar.windowtitle.title_map" = map (item:
+      let
+        pattern = builtins.elemAt item 0
+          |> builtins.split ":"
+          |> outputs.lib.lists.last;
+      in [ pattern (builtins.elemAt item 1) (builtins.elemAt item 2) ]) icons;
     "bar.workspaces.applicationIconFallback" = "";
     "bar.workspaces.hideUnoccupied" = false;
     "bar.workspaces.ignored" = "-.+";
@@ -102,12 +120,14 @@ let
     "theme.bar.buttons.borderColor" = border;
     "theme.bar.buttons.text" = "#f8f8ff";
     "theme.bar.buttons.icon" = "#f8f8ff";
+    "theme.bar.menus.menu.systray.dropdownmenu.background" = background;
+    "theme.bar.menus.menu.systray.dropdownmenu.divider" = border;
     "theme.bar.buttons.workspaces.hover" = "#AAC7FF";
     "theme.bar.buttons.workspaces.numbered_active_underline_color" = "#e4e4fc";
     "theme.bar.buttons.workspaces.active" = "#AAC7FF";
     "theme.bar.buttons.workspaces.occupied" = "#e4e4fc";
     "theme.bar.buttons.workspaces.available" = "#c0bfbc";
-    "theme.bar.buttons.workspaces.numbered_active_highlight_padding" = "0.4em";
+    "theme.bar.buttons.workspaces.numbered_active_highlight_padding" = "0.2em";
     "theme.bar.buttons.workspaces.numbered_active_highlight_border" = "0.25em";
     "theme.bar.buttons.workspaces.fontSize" = "1em";
     "theme.bar.buttons.padding_x" = "0.7rem";

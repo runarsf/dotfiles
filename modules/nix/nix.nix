@@ -7,7 +7,7 @@ outputs.lib.mkFor system hostname {
       settings = {
         auto-optimise-store = true;
         warn-dirty = false;
-        experimental-features = [ "nix-command" "flakes" ];
+        experimental-features = [ "nix-command" "flakes" "pipe-operators" ];
         # TODO Set this in hyprland config
         substituters = [
           "https://cache.nixos.org/"

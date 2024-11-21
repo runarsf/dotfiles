@@ -277,7 +277,9 @@ in {
       # ];
       binds = { allow_workspace_cycles = true; };
       bind = [
-        "${mod}, Return, exec, ${config.modules.${config.defaultTerminal}.exe}"
+        "${mod}, Return, exec, ${
+          config.modules.${config.defaultTerminal}.exec { }
+        }"
         "${mod}, Q, killactive"
         "${mod} SHIFT, E, exit"
         "${mod}, E, exec, ${pkgs.nemo}/bin/nemo"

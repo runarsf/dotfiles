@@ -60,7 +60,7 @@ let
   settings = {
     user = {
       stylix = stylix-config // {
-        targets = outputs.lib.disable [ "vscode" "hyprland" "kitty" "waybar" "hyprlock" ];
+        targets = outputs.lib.disable [ "vscode" "hyprland" "kitty" "waybar" "hyprlock" "spicetify" ];
       };
 
       # This needs to always be set for the Stylix system configuation to be valid,
