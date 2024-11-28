@@ -79,7 +79,8 @@ in outputs.lib.mkFor system hostname {
       };
 
       home.packages = with pkgs.unstable;
-        ifIsDesktop [ inputs.openconnect-sso.packages.${system}.default ];
+        ifIsDesktop
+        [ inputs.openconnect-sso.packages."${pkgs.system}".default ];
 
       nixos = {
         programs.zsh.enable = true;

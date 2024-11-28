@@ -7,6 +7,7 @@
 # nix repl
 # :p builtins.fromJSON (builtins.readFile ./options.json)
 
+# TODO Idle inhibit
 # TODO Workspace numbering like this https://preview.redd.it/yabai-made-some-minor-tweaks-but-otherwise-been-rocking-v0-fxcau0rvek0e1.png?width=3548&format=png&auto=webp&s=82d702c8d958a3b2436157970103f4d3e36f13e4
 # TODO Add nwg-displays as tile on panel
 
@@ -70,12 +71,13 @@ let
     }) icons);
     "bar.windowtitle.title_map" = map (item:
       let
-        pattern = builtins.elemAt item 0
+        pattern = item
+          |> builtins.head
           |> builtins.split ":"
           |> outputs.lib.lists.last;
       in [ pattern (builtins.elemAt item 1) (builtins.elemAt item 2) ]) icons;
     "bar.workspaces.applicationIconFallback" = "";
-    "bar.workspaces.hideUnoccupied" = false;
+    "bar.workspaces.hideUnoccupied" = true;
     "bar.workspaces.ignored" = "-.+";
     "bar.workspaces.monitorSpecific" = true;
     "bar.workspaces.numbered_active_indicator" = "highlight";
@@ -189,6 +191,6 @@ in outputs.lib.mkDesktopModule config "hyprpanel" {
     };
   };
 
-  wayland.windowManager.hyprland.settings.exec =
-    [ "${pkgs.hyprpanel}/bin/hyprpanel -q; ${pkgs.hyprpanel}/bin/hyprpanel" ];
+  wayland.windowManager.hyprland.settings.exec-once =
+    [ "${pkgs.hyprpanel}/bin/hyprpanel" ];
 }

@@ -145,17 +145,16 @@ in {
       enable = true;
       variables = [ "--all" ];
     };
-    package =
-      inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
-    plugins = with inputs.hyprland-plugins.packages.${system};
-      [ borders-plus-plus ];
+    package = inputs.hyprland.packages."${pkgs.system}".hyprland;
+    plugins = with inputs; [
+      hyprland-plugins.packages."${pkgs.system}".borders-plus-plus
+      hypr-dynamic-cursors.packages."${pkgs.system}".hypr-dynamic-cursors
+    ];
     settings = {
       source = [ "${config.home.homeDirectory}/.config/hypr/monitors.conf" ];
       exec-once = [
-        # "${pkgs.wl-clip-persist}/bin/wl-clip-persist --clipboard both"
         "${pkgs.unstable.pyprland}/bin/pypr"
         "${pkgs.sway-audio-idle-inhibit}/bin/sway-audio-idle-inhibit"
-        # "${pkgs.swaynotificationcenter}/bin/swaync"
         "systemctl --user start hyprpolkitagent"
         # "${pkgs.wl-clipboard}/bin/wl-paste -t text -w ${pkgs.xclip}/bin/xclip -selection clipboard"
         # "${./. + /bin/clipsync} watch with-notifications"
@@ -165,6 +164,12 @@ in {
       exec = [
         "${pkgs.swww}/bin/swww kill; ${pkgs.swww}/bin/swww query || ${pkgs.swww}/bin/swww init"
       ];
+      plugin = {
+        dynamic-cursors = {
+          enabled = true;
+          mode = "tilt";
+        };
+      };
       general = {
         gaps_in = 5;
         gaps_out = 20;
@@ -435,14 +440,6 @@ in {
         # "noborder, class:(discord), title:^((?! - Discord).)*$"
         # "size 565 317, class:(discord), title:^((?! - Discord).)*$"
         # "move onscreen 100%-0, class:discord, title:^((?! - Discord).)*$"
-
-        # WebCord has initialClass '[ID] WebCord - #channel'
-        # WebCord popout has initialClass 'vc name'
-        # "float, class:(WebCord), title:^((?!WebCord - ).)*$"
-        # "pin, class:(WebCord), title:^((?!WebCord - ).)*$"
-        # "noborder, class:(WebCord), title:^((?!WebCord - ).)*$"
-        # "size 565 317, class:(WebCord), title:^((?!WebCord - ).)*$"
-        # "move onscreen 100%-0, class:(WebCord), title:^((?!WebCord - ).)*$"
 
         "float, class:^(firefox).*$, title:^(Opening)(.*)$"
         "float, class:^(firefox).*$, title:^$"

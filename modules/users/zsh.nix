@@ -32,7 +32,7 @@ outputs.lib.mkModule config "zsh" {
         "nix-community/nix-zsh-completions"
         "MichaelAquilina/zsh-auto-notify"
         "jimhester/per-directory-history"
-        "Sam-programs/zsh-calc"
+        # "Sam-programs/zsh-calc"
         "Tarrasch/zsh-functional"
         "zshzoo/magic-enter"
         "getantidote/use-omz"

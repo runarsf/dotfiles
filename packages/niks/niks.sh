@@ -4,7 +4,9 @@ set -o nounset
 set -o errexit
 set -o pipefail
 
-# TODO add -- --accept-flake-config by default
+if ! printf '%s\n' "${@}" | grep -Fxq -- '--'; then
+  set -- "${@}" "--" "--accept-flake-config"
+fi
 
 nh "${@}"
 

@@ -84,10 +84,10 @@ in outputs.lib.mkFor system hostname {
           obs-studio
           chromium
           protonvpn-gui
-          inputs.openconnect-sso.packages.${system}.default
+          inputs.openconnect-sso.packages."${pkgs.system}".default
+          cameractrls
+          cameractrls-gtk4
         ];
-
-      nixos.services.flatpak.packages = ifIsDesktop [ "hu.irl.cameractrls" ];
 
       nixos = {
         programs.zsh.enable = true;
