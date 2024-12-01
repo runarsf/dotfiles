@@ -63,6 +63,7 @@ def gamemode(event: str) -> None:
         hyprctl("keyword general:border_size 1")
         hyprctl("keyword general:allow_tearing true")
         hyprctl("keyword decoration:rounding 0")
+        hyprctl("keyword plugin:dynamic-cursors:enabled false")
     except ValueError:
         # Workspace 10 is empty
         if hyprctl("getoption animations:enabled", ["-j"])["int"] == 1:

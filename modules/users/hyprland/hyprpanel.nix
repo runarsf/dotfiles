@@ -191,6 +191,6 @@ in outputs.lib.mkDesktopModule config "hyprpanel" {
     };
   };
 
-  wayland.windowManager.hyprland.settings.exec-once =
-    [ "${pkgs.hyprpanel}/bin/hyprpanel" ];
+  wayland.windowManager.hyprland.settings.exec =
+    [ ''pgrep -x "hyprpanel" || ${pkgs.hyprpanel}/bin/hyprpanel '' ];
 }
