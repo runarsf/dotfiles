@@ -61,6 +61,7 @@ in outputs.lib.mkDesktopModule' config "wezterm" {
     enable = true;
     package = wezterm;
     # https://wezfurlong.org/wezterm/config/lua/config/index.html
+    # FIXME Pane navigation doesn't work correctly
     extraConfig = let
       tab = ''
         'index',
