@@ -1,4 +1,5 @@
 import os
+import sys
 import json
 import socket
 from typing import Callable
@@ -45,7 +46,7 @@ def hyprlisten(filter: list[str] = [], callback: Callable = lambda x: print(x, e
                 callback(line)
 
 
-def gamemode(event: str) -> None:
+def detect_gamemode(event: str) -> None:
     workspaces = hyprctl("workspaces", ["-j"])
 
     try:
@@ -55,21 +56,44 @@ def gamemode(event: str) -> None:
         if ws10['windows'] <= 0:
             raise ValueError
 
-        hyprctl("keyword animations:enabled 0")
-        hyprctl("keyword decoration:drop_shadow 0")
-        hyprctl("keyword decoration:blur:enabled 0")
-        hyprctl("keyword general:gaps_in 0")
-        hyprctl("keyword general:gaps_out 0")
-        hyprctl("keyword general:border_size 1")
-        hyprctl("keyword general:allow_tearing true")
-        hyprctl("keyword decoration:rounding 0")
-        hyprctl("keyword plugin:dynamic-cursors:enabled false")
+        disable_effects()
     except ValueError:
         # Workspace 10 is empty
-        if hyprctl("getoption animations:enabled", ["-j"])["int"] == 1:
+        if has_effects():
             return
 
-        hyprctl("reload")
+        restore_effects()
 
 
-hyprlisten(["openwindow", "closewindow"], gamemode)
+def has_effects() -> bool:
+    return hyprctl("getoption animations:enabled", ["-j"])["int"] == 1
+
+
+def disable_effects() -> None:
+    hyprctl("keyword animations:enabled 0")
+    hyprctl("keyword decoration:drop_shadow 0")
+    hyprctl("keyword decoration:blur:enabled 0")
+    hyprctl("keyword general:gaps_in 0")
+    hyprctl("keyword general:gaps_out 0")
+    hyprctl("keyword general:border_size 1")
+    hyprctl("keyword general:allow_tearing true")
+    hyprctl("keyword decoration:rounding 0")
+    hyprctl("keyword plugin:dynamic-cursors:enabled false")
+
+
+def restore_effects() -> None:
+    hyprctl("reload")
+
+
+def toggle_effects() -> None:
+    if has_effects():
+        disable_effects()
+    else:
+        restore_effects()
+
+
+if __name__ == "__main__":
+    if len(sys.argv) > 1 and sys.argv[1] == "toggle":
+        toggle_effects()
+    else:
+        hyprlisten(["openwindow", "closewindow"], detect_gamemode)

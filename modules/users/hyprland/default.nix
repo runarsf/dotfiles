@@ -19,8 +19,8 @@ in {
     ./hyprlock.nix
     ./hyprpaper.nix
     ./hyprpanel.nix
+    ./pyprland.nix
   ];
-  # TODO Move defaultTerminal somewhere else
 } // outputs.lib.mkDesktopModule config "hyprland" {
   modules = outputs.lib.enable [
     "wayland"
@@ -29,6 +29,7 @@ in {
     "hypridle"
     "hyprlock"
     "hyprpaper"
+    "pyprland"
     # "waybar"
   ];
   services = outputs.lib.enable [ "kanshi" ]; # swaync
@@ -36,11 +37,10 @@ in {
 
   xdg.portal = {
     enable = true;
-    configPackages =
-      [ inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland ];
+    configPackages = [ inputs.hyprland.packages.${pkgs.system}.hyprland ];
     extraPortals = with pkgs;
       [
-        # inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland
+        # inputs.hyprland.packages.${pkgs.system}.xdg-desktop-portal-hyprland
         xdg-desktop-portal-gtk
       ];
   };
@@ -51,27 +51,25 @@ in {
 
       hyprland = {
         enable = true;
-        package =
-          inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
+        package = inputs.hyprland.packages.${pkgs.system}.hyprland;
         portalPackage =
-          inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
+          inputs.hyprland.packages.${pkgs.system}.xdg-desktop-portal-hyprland;
       };
     };
     hardware.graphics = {
       enable = true;
       package =
-        inputs.hyprland.inputs.nixpkgs.legacyPackages.${pkgs.stdenv.hostPlatform.system}.mesa.drivers;
+        inputs.hyprland.inputs.nixpkgs.legacyPackages.${pkgs.system}.mesa.drivers;
 
       enable32Bit = true;
       package32 =
-        inputs.hyprland.inputs.nixpkgs.legacyPackages.${pkgs.stdenv.hostPlatform.system}.pkgsi686Linux.mesa.drivers;
+        inputs.hyprland.inputs.nixpkgs.legacyPackages.${pkgs.system}.pkgsi686Linux.mesa.drivers;
     };
   };
 
   home.packages = with pkgs; [
     master.nwg-displays
     wlr-randr
-    # polkit_gnome
     libnotify
     brightnessctl
     xwaylandvideobridge
@@ -82,7 +80,6 @@ in {
     wev
     swww
     unstable.waypaper
-    sway-audio-idle-inhibit
     seahorse
     ffmpeg
     hyprpicker
@@ -110,59 +107,33 @@ in {
 
   xdg.configFile."swaync/config.json".text = builtins.toJSON { scripts = { }; };
 
-  xdg.configFile."hypr/pyprland.json".text = builtins.toJSON {
-    pyprland.plugins = [ "scratchpads" ];
-    scratchpads = {
-      term = {
-        command = config.modules.${config.defaultTerminal}.exec {
-          class = "scratchpad";
-          command = [ "connect" "scratchpad" ];
-        };
-        lazy = true;
-        hide = false;
-      };
-      math = {
-        command = config.modules.${config.defaultTerminal}.exec {
-          class = "math-scratchpad";
-          command = [ (outputs.lib.getExe pkgs.xonsh) ];
-        };
-        lazy = true;
-        hide = false;
-      };
-    };
-  };
-
   xdg.configFile."hypr/shaders" = {
     source = ./shaders;
     recursive = true;
   };
 
   # Log rules: watch -n 0.1 "cat "/tmp/hypr/$(echo $HYPRLAND_INSTANCE_SIGNATURE)/hyprland.log" | grep -v "efresh" | grep "rule" | tail -n 40"
-  wayland.windowManager.hyprland = let mod = "SUPER";
-  in {
+  wayland.windowManager.hyprland = {
     enable = true;
     systemd = {
       enable = true;
       variables = [ "--all" ];
     };
-    package = inputs.hyprland.packages."${pkgs.system}".hyprland;
-    plugins = with inputs; [
-      hyprland-plugins.packages."${pkgs.system}".borders-plus-plus
-      hypr-dynamic-cursors.packages."${pkgs.system}".hypr-dynamic-cursors
+    package = inputs.hyprland.packages.${pkgs.system}.hyprland;
+    plugins = with inputs.hyprland-plugins.packages.${pkgs.system}; [
+      borders-plus-plus
+      inputs.hypr-dynamic-cursors.packages.${pkgs.system}.hypr-dynamic-cursors
     ];
     settings = {
-      source = [ "${config.home.homeDirectory}/.config/hypr/monitors.conf" ];
+      source = [
+        "${config.home.homeDirectory}/.config/hypr/monitors.conf"
+        "${config.home.homeDirectory}/.config/hypr/workspaces.conf"
+      ];
       exec-once = [
-        "${pkgs.unstable.pyprland}/bin/pypr"
         "${pkgs.sway-audio-idle-inhibit}/bin/sway-audio-idle-inhibit"
         "systemctl --user start hyprpolkitagent"
-        # "${pkgs.wl-clipboard}/bin/wl-paste -t text -w ${pkgs.xclip}/bin/xclip -selection clipboard"
-        # "${./. + /bin/clipsync} watch with-notifications"
         "${hypr-gamemode}"
-        "${./. + /bin/monocle.sh}"
-      ];
-      exec = [
-        "${pkgs.swww}/bin/swww kill; ${pkgs.swww}/bin/swww query || ${pkgs.swww}/bin/swww init"
+        # "${./. + /bin/monocle.sh}"
       ];
       plugin = {
         dynamic-cursors = {
@@ -269,7 +240,6 @@ in {
         allow_small_split = true;
         always_center_master = true;
       };
-      gestures = { workspace_swipe = false; };
       misc = {
         disable_hyprland_logo = true;
         enable_swallow = true;
@@ -277,24 +247,20 @@ in {
         animate_manual_resizes = true;
         animate_mouse_windowdragging = true;
       };
-      # monitor = [
-      #   ", preferred, auto, 1, bitdepth, 10"
-      # ];
       binds = { allow_workspace_cycles = true; };
       bind = [
-        "${mod}, Return, exec, ${
+        "SUPER, Return, exec, ${
           config.modules.${config.defaultTerminal}.exec { }
         }"
-        "${mod}, Q, killactive"
-        "${mod} SHIFT, E, exit"
-        "${mod}, E, exec, ${pkgs.nemo}/bin/nemo"
-        "${mod}, K, exec, ${pkgs.seahorse}/bin/seahorse"
-        "${mod} SHIFT, F, togglefloating"
-        "${mod} ALT, F, workspaceopt, allfloat"
-        "${mod}, F, fullscreen, 0"
-        "${mod}, space, fullscreen, 1"
-        "${mod}, D, exec, ${config.programs.fuzzel.package}/bin/fuzzel"
-        "${mod}, A, exec, ${./. + /bin/hypr-pin}"
+        "SUPER, Q, killactive"
+        "SUPER SHIFT, E, exit"
+        "SUPER, E, exec, ${pkgs.nemo}/bin/nemo"
+        "SUPER SHIFT, F, togglefloating"
+        "SUPER ALT, F, workspaceopt, allfloat"
+        "SUPER, F, fullscreen, 0"
+        "SUPER, space, fullscreen, 1"
+        "SUPER, D, exec, ${config.programs.fuzzel.package}/bin/fuzzel"
+        "SUPER, A, exec, ${./. + /bin/hypr-pin}"
         ''
           ALT, P, exec, ${pkgs.grim}/bin/grim -g "$(${pkgs.slurp}/bin/slurp)" - | ${pkgs.imagemagick}/bin/convert - -shave 1x1 PNG:- | ${pkgs.wl-clipboard}/bin/wl-copy''
         ''
@@ -303,53 +269,49 @@ in {
           ALT CTRL, P, exec, (${pkgs.killall}/bin/killall -SIGINT wf-recorder && (${pkgs.wl-clipboard}/bin/wl-copy < /tmp/screenrecord.mp4; ${pkgs.nemo}/bin/nemo /tmp/screenrecord.mp4)) || (set -euo pipefail; GEOMETRY="$(${pkgs.slurp}/bin/slurp)" && ${pkgs.wf-recorder}/bin/wf-recorder -f /tmp/screenrecord.mp4 -y -g "''${GEOMETRY}")''
         ''
           ALT CTRL, P, exec, (${pkgs.killall}/bin/killall -SIGINT wf-recorder && (${pkgs.wl-clipboard}/bin/wl-copy < /tmp/screenrecord.mp4; ${pkgs.nemo}/bin/nemo /tmp/screenrecord.mp4)) || (set -euo pipefail; GEOMETRY="$(${pkgs.slurp}/bin/slurp)" && ${pkgs.wf-recorder}/bin/wf-recorder -f /tmp/screenrecord.mp4 -y -a -g "''${GEOMETRY}")''
-        # "${mod} SHIFT, N, exec, ${pkgs.swaynotificationcenter}/bin/swaync-client -t"
 
         ''
-          ${mod} SHIFT, S, exec, hyprctl keyword decoration:screen_shader "${config.home.homeDirectory}/.config/hypr/shaders/$(find "${config.home.homeDirectory}/.config/hypr/shaders" -name *.frag | xargs -n1 basename | fuzzel --dmenu)"''
-        "${mod} CTRL SHIFT, S, exec, hyprctl keyword decoration:screen_shader '[[EMPTY]]'"
-        "${mod}, left, exec, ${./. + /bin/movefocus.sh} l"
-        "${mod}, right, exec, ${./. + /bin/movefocus.sh} r"
-        "${mod}, up, exec, ${./. + /bin/movefocus.sh} u"
-        "${mod}, down, exec, ${./. + /bin/movefocus.sh} d"
+          SUPER SHIFT, S, exec, hyprctl keyword decoration:screen_shader "${config.home.homeDirectory}/.config/hypr/shaders/$(find "${config.home.homeDirectory}/.config/hypr/shaders" -name *.frag | xargs -n1 basename | fuzzel --dmenu)"''
+        "SUPER CTRL SHIFT, S, exec, hyprctl keyword decoration:screen_shader '[[EMPTY]]'"
 
-        "${mod} SHIFT, TAB, centerwindow"
-        "${mod} SHIFT, Return, layoutmsg, swapwithmaster"
-        "${mod} SHIFT, space, layoutmsg, orientationcycle left center"
-        "${mod}, bar, layoutmsg, orientationcycle left right"
-        "${mod}, bar, layoutmsg, swapsplit"
-        "${mod}, O, pseudo"
-        "${mod}, B, exec, hyprctl keyword general:layout master"
-        "${mod} SHIFT, B, exec, hyprctl keyword general:layout dwindle"
+        "SUPER, left, exec, ${./. + /bin/movefocus.sh} l"
+        "SUPER, right, exec, ${./. + /bin/movefocus.sh} r"
+        "SUPER, up, exec, ${./. + /bin/movefocus.sh} u"
+        "SUPER, down, exec, ${./. + /bin/movefocus.sh} d"
 
-        "${mod}, X, exec, ${lock}"
-        "${mod}, L, exec, ${lock}"
-        # "${mod}, TAB, exec, ${./. + /bin/hypr-ws} previous"
-        "${mod}, TAB, workspace, previous"
+        # TODO Layout selector with fuzzel / cycle
+        "SUPER SHIFT, TAB, centerwindow"
+        "SUPER SHIFT, Return, layoutmsg, swapwithmaster"
+        "SUPER SHIFT, space, layoutmsg, orientationcycle left center"
+        "SUPER, bar, layoutmsg, orientationcycle left right"
+        "SUPER, bar, layoutmsg, swapsplit"
+        "SUPER, O, pseudo"
+        "SUPER, B, exec, hyprctl keyword general:layout master"
+        "SUPER SHIFT, B, exec, hyprctl keyword general:layout dwindle"
 
-        "${mod} SHIFT, R, exec, hyprctl reload"
-        "${mod}, C, exec, ${pkgs.hyprpicker}/bin/hyprpicker -a | tr -d '\\n' | ${pkgs.wl-clipboard}/bin/wl-copy"
+        "SUPER, X, exec, ${lock}"
+        "SUPER, L, exec, ${lock}"
+        # "SUPER, TAB, exec, ${./. + /bin/hypr-ws} previous"
+        "SUPER, TAB, workspace, previous"
 
-        "${mod} SHIFT, C, exec, ${./. + /bin/hypr-gamemode}"
-        ''
-          ${mod}, V, exec, ${pkgs.wl-clipboard}/bin/wl-paste -t text -w bash -c '[ "$(${pkgs.xclip}/bin/xclip -selection clipboard -o)" = "$(${pkgs.wl-clipboard}/bin/wl-paste -n)" ] || [ "$(${pkgs.wl-clipboard}/bin/wl-paste -l | grep image)" = "" ] && ${pkgs.xclip}/bin/xclip -selection clipboard' ''
+        "SUPER SHIFT, R, exec, hyprctl reload"
+        "SUPER, C, exec, ${pkgs.hyprpicker}/bin/hyprpicker -a | tr -d '\\n' | ${pkgs.wl-clipboard}/bin/wl-copy"
 
-        "${mod}, mouse_down, workspace, e+1"
-        "${mod}, mouse_up, workspace, e-1"
+        "SUPER SHIFT, C, exec, ${hypr-gamemode} toggle"
 
-        "${mod}, N, exec, ${pkgs.pyprland}/bin/pypr toggle term"
-        "${mod}, P, exec, ${pkgs.pyprland}/bin/pypr toggle math"
+        "SUPER, mouse_down, workspace, e+1"
+        "SUPER, mouse_up, workspace, e-1"
       ];
       binde = [
-        "${mod} CTRL, right, resizeactive, 50 0"
-        "${mod} CTRL, left, resizeactive, -50 0"
-        "${mod} CTRL, up, resizeactive, 0 -50"
-        "${mod} CTRL, down, resizeactive, 0 50"
+        "SUPER CTRL, right, resizeactive, 50 0"
+        "SUPER CTRL, left, resizeactive, -50 0"
+        "SUPER CTRL, up, resizeactive, 0 -50"
+        "SUPER CTRL, down, resizeactive, 0 50"
 
-        "${mod} SHIFT, right, movewindow, r"
-        "${mod} SHIFT, left, movewindow, l"
-        "${mod} SHIFT, up, movewindow, u"
-        "${mod} SHIFT, down, movewindow, d"
+        "SUPER SHIFT, right, movewindow, r"
+        "SUPER SHIFT, left, movewindow, l"
+        "SUPER SHIFT, up, movewindow, u"
+        "SUPER SHIFT, down, movewindow, d"
 
         ", XF86AudioRaiseVolume, exec, ${pkgs.wireplumber}/bin/wpctl set-volume -l 2.0 @DEFAULT_SINK@ 5%+"
         ", XF86AudioLowerVolume, exec, ${pkgs.wireplumber}/bin/wpctl set-volume -l 2.0 @DEFAULT_SINK@ 5%-"
@@ -364,24 +326,24 @@ in {
         ", XF86MonBrightnessDown, exec, ${pkgs.brightnessctl}/bin/brightnessctl set 5%-"
       ];
       bindr = [
-        "${mod} CTRL, right, exec, ${hypr-snap}"
-        "${mod} CTRL, left, exec, ${hypr-snap}"
-        "${mod} CTRL, up, exec, ${hypr-snap}"
-        "${mod} CTRL, down, exec, ${hypr-snap}"
+        "SUPER CTRL, right, exec, ${hypr-snap}"
+        "SUPER CTRL, left, exec, ${hypr-snap}"
+        "SUPER CTRL, up, exec, ${hypr-snap}"
+        "SUPER CTRL, down, exec, ${hypr-snap}"
 
-        "${mod} SHIFT, right, exec, ${hypr-snap}"
-        "${mod} SHIFT, left, exec, ${hypr-snap}"
-        "${mod} SHIFT, up, exec, ${hypr-snap}"
-        "${mod} SHIFT, down, exec, ${hypr-snap}"
+        "SUPER SHIFT, right, exec, ${hypr-snap}"
+        "SUPER SHIFT, left, exec, ${hypr-snap}"
+        "SUPER SHIFT, up, exec, ${hypr-snap}"
+        "SUPER SHIFT, down, exec, ${hypr-snap}"
 
-        "${mod}, mouse:272, exec, ${hypr-snap}"
-        "${mod}, mouse:273, exec, ${hypr-snap}"
+        "SUPER, mouse:272, exec, ${hypr-snap}"
+        "SUPER, mouse:273, exec, ${hypr-snap}"
       ];
       bindm = [
-        "${mod}, mouse:272, movewindow"
-        "${mod} SHIFT, mouse:272, movewindow"
-        "${mod}, mouse:273, resizewindow"
-        "${mod} SHIFT, mouse:273, resizewindow"
+        "SUPER, mouse:272, movewindow"
+        "SUPER SHIFT, mouse:272, movewindow"
+        "SUPER, mouse:273, resizewindow"
+        "SUPER SHIFT, mouse:273, resizewindow"
       ];
       windowrulev2 = [
         "opacity 0.0 override, class:^(xwaylandvideobridge)$"
@@ -392,46 +354,41 @@ in {
 
         "float, class:^(.*)(scratchpad)$"
         "workspace special silent, class:^(.*)(scratchpad)$"
-        "size 60% 65%, class:^(scratchpad)$"
-        "size 50% 55%, class:^(math-scratchpad)$"
+        "size 60% 65%, class:^(.*)(scratchpad)$"
         "center, class:^(.*)(scratchpad)$"
 
         "noborder, fullscreen:1"
 
-        "opacity 0.8 0.8, class:^(scratchpad)$"
         "opacity 0.8 0.8, class:^(kitty)$"
         "opacity 0.8 0.8, class:^(org.wezfurlong.wezterm)$"
-        # "opacity 0.8 override,title:^(.*)(New Tab)(.*)$"
-        # "opacity 0.8 override,title:^(Mozilla Firefox)(.*)$"
-        # "opacity 0.8 override,title:^(🦊 — Mozilla Firefox)$"
 
         "noinitialfocus,class:^jetbrains-(?!toolbox),floating:1"
 
+        # Games
         "noinitialfocus, class:^(steam)$"
         "stayfocused, title:^()$,class:^(steam)$"
         "minsize 1 1, title:^()$,class:^(steam)$"
-
-        "workspace 2 silent, class:^(WebCord)$"
-        "workspace 2 silent, class:^(Discord)$"
-        "workspace 2 silent, class:^(vesktop)$"
         "workspace 4 silent, class:^(steam)$"
         "workspace 4 silent, class:^(steamwebhelper)$"
-        "workspace 7 silent, class:^(easyeffects)$"
-        "workspace 7, class:^(Carla2)$"
-        "workspace 7, class:^(helvum)$"
-        "workspace 7, class:^(qpwgraph)$"
-        "workspace 10, class:^(osu!)$"
-        "workspace 10, class:^(steam_app_)(.*)$"
+        # "workspace 10, class:^(osu!)$"
+        # "workspace 10, class:^(steam_app_)(.*)$"
         "fullscreen, class:^steam_app\\d+$"
         "monitor 1, class:^steam_app_\\d+$"
         "workspace 10, class:^steam_app_\\d+$"
 
-        "float, class:(org.kde.polkit-kde-authentication-agent-1)"
+        "workspace 2 silent, class:^(discord)$"
+        "workspace 2 silent, class:^(vesktop)$"
+
         "float, class:(seahorse)"
+
+        # Firefox
         "float, class:^(firefox)(.*)$, title:(Picture-in-Picture)"
         "workspace 2, class:^(firefox)(.*)$, title:(Picture-in-Picture)"
         "dimaround, class:^(firefox)(.*)$, title:(Picture-in-Picture)"
         "keepaspectratio, class:^(firefox)(.*)$, title:(Picture-in-Picture)"
+        "float, class:^(firefox).*$, title:^(Opening)(.*)$"
+        "float, class:^(firefox).*$, title:^$"
+        "float, class:^(firefox).*$, title:^(Save As)$"
 
         # Discord has initialClass ' - Discord'
         # Discord popout has initialClass 'Discord Popout'
@@ -441,9 +398,6 @@ in {
         # "size 565 317, class:(discord), title:^((?! - Discord).)*$"
         # "move onscreen 100%-0, class:discord, title:^((?! - Discord).)*$"
 
-        "float, class:^(firefox).*$, title:^(Opening)(.*)$"
-        "float, class:^(firefox).*$, title:^$"
-        "float, class:^(firefox).*$, title:^(Save As)$"
         "float, class:^(blueman-manager)$"
 
         "pin, class:(gcr-prompter)"
@@ -453,19 +407,19 @@ in {
     };
     extraConfig = ''
       # Passthrough mode (e.g. for VNC)
-      bind=${mod} SHIFT,P,submap,passthrough
+      bind=SUPER SHIFT,P,submap,passthrough
       submap=passthrough
-      bind=${mod} SHIFT,P,submap,reset
+      bind=SUPER SHIFT,P,submap,reset
       submap=reset
 
       # binds $mod + [shift +] {1..10} to [move to] workspace {1..10}
       ${builtins.concatStringsSep "\n" (builtins.genList (x:
         let ws = let c = (x + 1) / 10; in builtins.toString (x + 1 - (c * 10));
         in ''
-          bind = ${mod}, ${ws}, exec, hyprctl dispatch focusworkspaceoncurrentmonitor ${
+          bind = SUPER, ${ws}, exec, hyprctl dispatch focusworkspaceoncurrentmonitor ${
             toString (x + 1)
           }
-          bind = ${mod} SHIFT, ${ws}, movetoworkspacesilent, ${toString (x + 1)}
+          bind = SUPER SHIFT, ${ws}, movetoworkspacesilent, ${toString (x + 1)}
         '') 10)}
     '';
   };

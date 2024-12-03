@@ -58,14 +58,14 @@ let
   };
 
   settings = {
-    user = {
+    user = rec {
       stylix = stylix-config // {
         targets = outputs.lib.disable [ "vscode" "hyprland" "kitty" "waybar" "hyprlock" "spicetify" ];
       };
 
       # This needs to always be set for the Stylix system configuation to be valid,
       # even if Stylix is disabled system-wide
-      nixos.stylix.image = config.modules.wallpaper;
+      nixos.stylix.image = stylix.image;
 
       gtk = {
         enable = true;
@@ -83,26 +83,26 @@ let
         "${pkgs.gsettings-desktop-schemas}/share/gsettings-schemas/${pkgs.gsettings-desktop-schemas.name}"
       ];
 
-      systemd.user.services.rm-gtk = {
-        Unit = {
-          Description = "Remove GTK files built by Home Manager";
-          PartOf = [ "home-manager-${name}.target" ];
-        };
+      # systemd.user.services.rm-gtk = {
+      #   Unit = {
+      #     Description = "Remove GTK files built by Home Manager";
+      #     PartOf = [ "home-manager-${name}.target" ];
+      #   };
 
-        Service.ExecStart = builtins.toString (pkgs.writeShellScript "rm-gtk" ''
-          #!/run/current-system/sw/bin/bash
-          set -o errexit
-          set -o nounset
+      #   Service.ExecStart = builtins.toString (pkgs.writeShellScript "rm-gtk" ''
+      #     #!/run/current-system/sw/bin/bash
+      #     set -o errexit
+      #     set -o nounset
 
-          printf "Removing GTK files built by Home Manager\n"
+      #     printf "Removing GTK files built by Home Manager\n"
 
-          rm -rf ~/.config/gtk-3.0
-          rm -rf ~/.config/gtk-4.0
-          rm -f .gtkrc-2.0
-        '');
+      #     rm -rf ~/.config/gtk-3.0
+      #     rm -rf ~/.config/gtk-4.0
+      #     rm -f .gtkrc-2.0
+      #   '');
 
-        Install.WantedBy = [ "default.target" ];
-      };
+      #   Install.WantedBy = [ "default.target" ];
+      # };
     };
 
     system-wide = {

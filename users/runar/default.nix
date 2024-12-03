@@ -66,6 +66,7 @@ in outputs.lib.mkFor system hostname {
       ] // {
         stylix = {
           enable = true;
+          # TODO Make system wide
           system-wide = false;
           theme = "ayu-dark";
         };
