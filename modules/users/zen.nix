@@ -3,20 +3,35 @@
 # TODO Waiting for zen to be merged to nixpkgs https://github.com/NixOS/nixpkgs/issues/327982
 
 let
-  version = "1.0.1-a.22";
-  sha256 = "sha256:065rl1fhg79bkj1qy960qcid7wr7vd7j3wsf7bbr69b4rgmqqv3z";
+  hashes = {
+    "twilight" = "sha256:03jk6v5ax0x38s7l9ra3l2i7wqfzs4mcq673jp2d0wa8xsqw8z4h";
+    "1.0.1-a.22" =
+      "sha256:065rl1fhg79bkj1qy960qcid7wr7vd7j3wsf7bbr69b4rgmqqv3z";
+  };
 
-in outputs.lib.mkDesktopModule config "zen" {
+in outputs.lib.mkDesktopModule' config "zen" (with outputs.lib; {
+  version = mkOption {
+    type = types.str;
+    default = "1.0.1-a.22";
+  };
+  sha256 = mkOption {
+    type = types.str;
+    default = if hashes ? "${config.modules.zen.version}" then
+      hashes.${config.modules.zen.version}
+    else
+      outputs.lib.fakeSha256;
+  };
+}) {
   nixpkgs.overlays = [
     (_: prev: {
       zen-browser =
         inputs.zen-browser.packages."${pkgs.system}".default.overrideAttrs
         (oldAttrs: {
-          inherit version;
+          version = config.modules.zen.version;
           src = builtins.fetchTarball {
-            inherit sha256;
+            sha256 = config.modules.zen.sha256;
             url =
-              "https://github.com/zen-browser/desktop/releases/download/${version}/zen.linux-generic.tar.bz2";
+              "https://github.com/zen-browser/desktop/releases/download/${config.modules.zen.version}/zen.linux-generic.tar.bz2";
           };
         });
     })

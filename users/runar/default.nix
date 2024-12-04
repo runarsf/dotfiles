@@ -59,7 +59,6 @@ in outputs.lib.mkFor system hostname {
         "sops-fonts"
         "wezterm"
         "bluetooth"
-        "zen"
         "pipewire"
         "mpv"
         "stremio"
@@ -70,6 +69,10 @@ in outputs.lib.mkFor system hostname {
           # TODO Make system wide
           system-wide = false;
           theme = "ayu-dark";
+        };
+        zen = {
+          enable = true;
+          version = "twilight";
         };
         python = {
           enable = true;
