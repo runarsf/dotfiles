@@ -19,6 +19,8 @@ in outputs.lib.mkDesktopModule' config "zen" (with outputs.lib; {
     default = if hashes ? "${config.modules.zen.version}" then
       hashes.${config.modules.zen.version}
     else
+      outputs.lib.trace
+      "Undefined sha256 for provided Zen version, using blank hash"
       outputs.lib.fakeSha256;
   };
 }) {
