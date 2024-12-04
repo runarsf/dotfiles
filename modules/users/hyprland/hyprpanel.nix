@@ -7,9 +7,9 @@
 # nix repl
 # :p builtins.fromJSON (builtins.readFile ./options.json)
 
-# TODO Idle inhibit
 # TODO Workspace numbering like this https://preview.redd.it/yabai-made-some-minor-tweaks-but-otherwise-been-rocking-v0-fxcau0rvek0e1.png?width=3548&format=png&auto=webp&s=82d702c8d958a3b2436157970103f4d3e36f13e4
 # TODO Add nwg-displays as tile on panel
+# TODO Blinking css for low battery, override installPhase and cat new.css >> old.css https://github.com/Jas-SinghFSU/HyprPanel/blob/master/nix/default.nix#L44-L54
 
 let
   background = "#01010c";
@@ -30,6 +30,7 @@ let
       config.modules.${config.defaultTerminal}.exec {
         command = [ "start" "--" "${pkgs.btop}/bin/btop" ];
       };
+    "bar.customModules.hypridle.label" = false;
     "bar.launcher.autoDetectIcon" = true;
     "bar.launcher.icon" = "";
     "bar.launcher.rightClick" = "${pkgs.fuzzel}/bin/fuzzel";
@@ -40,6 +41,7 @@ let
         right = [
           "volume"
           "bluetooth"
+          "hypridle"
           "hyprsunset"
           "network"
           "cpu"
@@ -172,6 +174,14 @@ in outputs.lib.mkDesktopModule config "hyprpanel" {
 
   home.packages = with pkgs; [
     hyprpanel
+    # (hyprpanel.overrideAttrs (oldAttrs: {
+    #   installPhase = oldAttrs.installPhase + ''
+    #     runHook postInstall
+    #   '';
+    #   postInstall = ''
+    #     echo HELLO WORLDLDLDLDLLDLDOIQJWEJDOIQJWDOIJQWD
+    #   '';
+    # }))
     gpu-screen-recorder
     gpu-screen-recorder-gtk
   ];

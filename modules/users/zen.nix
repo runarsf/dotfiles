@@ -39,19 +39,20 @@ in outputs.lib.mkDesktopModule config "zen" {
 
   home.packages = [ pkgs.zen-browser ];
 
-  home.file.".zen/${name}/chrome/userChrome.css".text = ''
-    :root {
-      --zen-main-browser-background: transparent !important;
-    }
-
-    .browserContainer {
-      background: var(--zen-colors-tertiary);
-    }
-
-    /* Opaque tab sidebar
-    #navigator-toolbox[zen-has-hover=true] #TabsToolbar {
-      background: var(--zen-colors-tertiary) !important;
-    }
-    */
-  '';
+  # home.file.".zen/${name}/chrome/userChrome.css".text = ''
+  #   :root {
+  #     --zen-main-browser-background: transparent !important;
+  #   }
+  #
+  #   .browserContainer {
+  #     background: #FAFAFA50;
+  #     /* background: var(--zen-colors-tertiary); */
+  #   }
+  #
+  #   /* Opaque tab sidebar
+  #   #navigator-toolbox[zen-has-hover=true] #TabsToolbar {
+  #     background: var(--zen-colors-tertiary) !important;
+  #   }
+  #   */
+  # '';
 }

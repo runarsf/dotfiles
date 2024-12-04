@@ -65,6 +65,7 @@ in outputs.lib.mkFor system hostname {
         "japanese"
         "pipewire"
         "mpv"
+        "camera"
       ] // {
         stylix = {
           enable = true;

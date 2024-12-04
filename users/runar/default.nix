@@ -63,6 +63,7 @@ in outputs.lib.mkFor system hostname {
         "pipewire"
         "mpv"
         "stremio"
+        "camera"
       ] // {
         stylix = {
           enable = true;
@@ -86,8 +87,6 @@ in outputs.lib.mkFor system hostname {
           chromium
           protonvpn-gui
           inputs.openconnect-sso.packages."${pkgs.system}".default
-          cameractrls
-          cameractrls-gtk4
         ];
 
       nixos = {
