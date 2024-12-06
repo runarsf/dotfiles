@@ -23,6 +23,29 @@ let
     ];
   } (builtins.readFile ./resize_bdf.py);
 in outputs.lib.mkDesktopModule config "fonts" {
+  nixpkgs.overlays = [
+    (_: prev: {
+      scientifica-hidpi = pkgs.scientifica.overrideAttrs (oldAttrs:
+        let base = "$out/share/fonts/misc/";
+        in {
+          installPhase = oldAttrs.installPhase + ''
+            find "$out/share/fonts" -type f \( -name '*.ttf' -o -name '*.otb' \) -delete
+            mv ${base}/scientifica-11.bdf ${base}/scientificaItalic-11.bdf ${base}/scientificaBold-11.bdf .
+            ${resizebdf}/bin/resizebdf ./scientifica-11.bdf ${base}/scientifica-11.bdf 2
+            ${resizebdf}/bin/resizebdf ./scientificaItalic-11.bdf ${base}/scientificaItalic-11.bdf 2
+            ${resizebdf}/bin/resizebdf ./scientificaBold-11.bdf ${base}/scientificaBold-11.bdf 2
+          '';
+        });
+      creep2-hidpi = pkgs.creep2.overrideAttrs (oldAttrs:
+        let base = "$out/share/fonts/misc/";
+        in {
+          installPhase = oldAttrs.installPhase + ''
+            mv ${base}/creep2-11.bdf .
+            ${resizebdf}/bin/resizebdf ./creep2-11.bdf ${base}/creep2-11.bdf 2
+          '';
+        });
+    })
+  ];
   nixos = {
     fonts.fontconfig = {
       enable = true;
@@ -59,29 +82,12 @@ in outputs.lib.mkDesktopModule config "fonts" {
     # Bitmap fonts
     cozette
     undefined-medium
-    (scientifica.overrideAttrs (oldAttrs:
-      let base = "$out/share/fonts/misc/";
-      in {
-        installPhase = oldAttrs.installPhase + ''
-          find "$out/share/fonts" -type f \( -name '*.ttf' -o -name '*.otb' \) -delete
-          mv ${base}/scientifica-11.bdf ${base}/scientificaItalic-11.bdf ${base}/scientificaBold-11.bdf .
-          ${resizebdf}/bin/resizebdf ./scientifica-11.bdf ${base}/scientifica-11.bdf 2
-          ${resizebdf}/bin/resizebdf ./scientificaItalic-11.bdf ${base}/scientificaItalic-11.bdf 2
-          ${resizebdf}/bin/resizebdf ./scientificaBold-11.bdf ${base}/scientificaBold-11.bdf 2
-        '';
-      }))
+    scientifica-hidpi
     zpix-pixel-font
     termsyn
     terminus_font
     monocraft
-    (creep2.overrideAttrs (oldAttrs:
-      let base = "$out/share/fonts/misc/";
-      in {
-        installPhase = oldAttrs.installPhase + ''
-          mv ${base}/creep2-11.bdf .
-          ${resizebdf}/bin/resizebdf ./creep2-11.bdf ${base}/creep2-11.bdf 2
-        '';
-      }))
+    creep2-hidpi
     (nofontsdir tamzen)
     (nofontsdir proggyfonts)
     (nofontsdir unifont)

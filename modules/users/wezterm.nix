@@ -35,6 +35,7 @@ in outputs.lib.mkDesktopModule' config "wezterm" (with outputs.lib; {
     type = types.listOf types.str;
     default = let
       bitmap = [
+        # TODO Use fonts from packages directly
         "scientifica"
         "CozetteHiDpi"
         "TamzenForPowerline"
