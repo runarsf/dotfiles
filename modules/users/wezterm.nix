@@ -10,11 +10,11 @@ let
     else
       "'${x}'";
 
-in outputs.lib.mkDesktopModule' config "wezterm" {
+in outputs.lib.mkDesktopModule' config "wezterm" (with outputs.lib; {
   # FIXME This should be a generic way to start a program, not requiring "start" to be provided
   #  Maybe "exec 'btop'" and "exec' { command = [ 'btop' ], ... }"
-  exec = outputs.lib.mkOption {
-    type = outputs.lib.types.functionTo outputs.lib.types.str;
+  exec = mkOption {
+    type = types.functionTo types.str;
     default = { class ? null, command ? [ "start" ] }:
       let
         args = if class == null then
@@ -23,28 +23,38 @@ in outputs.lib.mkDesktopModule' config "wezterm" {
           "${builtins.head command} --class ${class} ${
             builtins.concatStringsSep " " (builtins.tail command)
           }";
-      in "${outputs.lib.getExe config.programs.wezterm.package} ${args}";
+      in "${getExe config.programs.wezterm.package} ${args}";
     readOnly = true;
   };
-  fonts = outputs.lib.mkOption {
-    type = outputs.lib.types.listOf outputs.lib.types.str;
-    default = [
-      # ''
-      # {
-      #   family = 'JetBrains Mono',
-      #   weight = 'Medium',
-      #   harfbuzz_features = { 'calt', 'clig', 'liga', 'ss20', 'cv02', 'cv03', 'cv04', 'cv05', 'cv06', 'cv07', 'cv11', 'cv14', 'cv15', 'cv16', 'cv17' },
-      # }
-      # ''
-      "scientifica"
-      "CozetteHiDpi"
-      "TamzenForPowerline"
-      "Unifont"
-      "Unifont Upper"
-      "CaskaydiaCove NFM"
-    ];
+  # TODO Does this belong under somewhere else?
+  bitmap = mkOption {
+    type = types.bool;
+    default = false;
   };
-} {
+  fonts = mkOption {
+    type = types.listOf types.str;
+    default = let
+      bitmap = [
+        "scientifica"
+        "CozetteHiDpi"
+        "TamzenForPowerline"
+        "Unifont"
+        "Unifont Upper"
+      ];
+      vector = [
+        ''
+          {
+            family = 'JetBrains Mono',
+            weight = 'Medium',
+            harfbuzz_features = { 'calt', 'clig', 'liga', 'ss20', 'cv02', 'cv03', 'cv04', 'cv05', 'cv06', 'cv07', 'cv11', 'cv14', 'cv15', 'cv16', 'cv17' },
+          }
+        ''
+        "JetBrainsMono Nerd Font"
+      ];
+    in (if config.modules.wezterm.bitmap then bitmap else vector)
+    ++ [ "CaskaydiaCove NFM" ];
+  };
+}) {
   home.shellAliases.ssh = outputs.lib.mkIf (config.defaultTerminal == "wezterm")
     "TERM=xterm-256color ssh";
 
