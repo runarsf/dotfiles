@@ -8,19 +8,19 @@ mkFor system hostname {
       username = mkDefault name;
       stateVersion = mkDefault stateVersion;
 
-      sessionVariables = rec {
+      sessionVariables = {
         XDG_CACHE_HOME = "${config.home.homeDirectory}/.local/cache";
         XDG_CONFIG_HOME = "${config.home.homeDirectory}/.config";
         XDG_BIN_HOME = "${config.home.homeDirectory}/.local/bin";
         XDG_DATA_HOME = "${config.home.homeDirectory}/.local/share";
-
-        PATH = "${XDG_BIN_HOME}:\${PATH}";
       };
 
       packages = with pkgs; [ niks ];
 
       enableNixpkgsReleaseCheck = false;
     };
+
+    PATH = [ config.home.sessionVariables.XDG_BIN_HOME ];
 
     programs = {
       vim.enable = mkDefault true;

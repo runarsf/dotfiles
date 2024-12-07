@@ -1,24 +1,29 @@
 { config, outputs, ... }:
 
 {
-  options = {
-    defaultTerminal = outputs.lib.mkOption {
+  options = with outputs.lib; {
+    defaultTerminal = mkOption {
       default =
         if (config.isDesktop) then (throw "defaultTerminal not set") else null;
-      type = outputs.lib.types.nullOr outputs.lib.types.str;
+      type = types.nullOr types.str;
     };
-    defaultBrowser = outputs.lib.mkOption {
+    defaultBrowser = mkOption {
       default =
         if (config.isDesktop) then (throw "defaultBrowser not set") else null;
-      type = outputs.lib.types.nullOr outputs.lib.types.str;
+      type = types.nullOr types.str;
     };
     # TODO find a better place for this
-    avatar = outputs.lib.mkOption {
-      type = outputs.lib.types.path;
+    avatar = mkOption {
+      type = types.path;
+    };
+    PATH = mkOption {
+      default = [];
+      type = types.listOf types.str;
     };
   };
 
   config = outputs.lib.deepMerge [
+    { home.sessionVariables.PATH = outputs.lib.concatStringsSep ":" (config.PATH ++ [ "\${PATH}" ]); }
     (outputs.lib.mkIf (config.isDesktop && config.defaultTerminal != null) {
       home.sessionVariables.TERMINAL = config.defaultTerminal;
 
@@ -29,3 +34,4 @@
     })
   ];
 }
+
