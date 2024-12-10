@@ -4,6 +4,7 @@ rec {
   mkModuleWithOptions = { config, name, moduleConfig, default ? false
     , extraOptions ? { }, extraCondition ? true }:
     let
+      # TODO Support name being a list instead of splitting on .?
       namePathList = outputs.lib.splitString "." name;
 
       modulePath = [ "modules" ] ++ namePathList;

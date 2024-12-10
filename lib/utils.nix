@@ -5,26 +5,16 @@ let
     builtins.replaceStrings [ " " ] [ "-" ] (outputs.lib.toLower name);
 
 in rec {
-  # TODO Support name paths from list
-  enable = elems:
-    builtins.listToAttrs (map (name: {
-      inherit name;
-      value.enable = true;
-    }) elems);
+  fill = elems: value:
+    outputs.lib.foldl' (acc: elem:
+      acc // outputs.lib.setAttrByPath (outputs.lib.splitString "." elem) value)
+    { } elems;
 
-  disable = elems:
-    builtins.listToAttrs (map (name: {
-      name = name;
-      value.enable = false;
-    }) elems);
+  enable = elems: fill elems { enable = true; };
+
+  disable = elems: fill elems { enable = false; };
 
   enableIf = cond: elems: if cond then (enable elems) else (disable elems);
 
   print = ret: builtins.trace ret ret;
-
-  fill = attr: value: elems:
-    builtins.listToAttrs (map (name: {
-      name = name;
-      value."${attr}" = value;
-    }) elems);
 }

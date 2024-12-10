@@ -1,6 +1,7 @@
 { config, pkgs, inputs, outputs, name, ... }:
 
 # TODO Waiting for zen to be merged to nixpkgs https://github.com/NixOS/nixpkgs/issues/327982
+# TODO ??? Is there a way to use "this.zversion" instead of "config.modules.zen.version"
 
 let
   hashes = {

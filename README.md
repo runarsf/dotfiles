@@ -3,8 +3,7 @@
 ## Initial setup
 
 1. Install [NixOS](https://nixos.org/download.html) (or Nix)
-  > [!CAUTION]
-  > Make sure to set the correct user- and hostname.
+    > **NB!** Make sure user- `$USER` and hostname `$HOST` match the configuration.
 
 1. Put your SSH key with access to the sops-protected vault and your GitHub account on your host (`~/.ssh/id_nix`),\
   and add it to the ssh agent
@@ -44,6 +43,14 @@
 - [Home Manager Option search](https://home-manager-options.extranix.com/)
 - [Nix package version search](https://lazamar.co.uk/nix-versions)
 - Jump into the build of a derivation: `nix-shell -E 'with import <nixpkgs> {  }; callPackage ./default.nix {  }'`
+- Test an expression: `nix eval -f test.nix f`\
+    <kbd>test.nix</kbd>
+    ```
+    { lib ? import <nixpkgs/lib> }:
 
+    {
+      f = builtins.trace "Hello World!" true;
+    }
+    ```
 
 > Core library functions are shamelessly stolen from [![avatar](https://images.weserv.nl/?url=avatars.githubusercontent.com/u/39416660?v=4&h=20&w=20&fit=cover&mask=circle&maxage=7d) `imatpot/dotfiles`](https://github.com/imatpot/dotfiles)

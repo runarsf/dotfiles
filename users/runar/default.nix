@@ -126,6 +126,7 @@ in outputs.lib.mkFor system hostname {
         "java"
         "easyeffects"
         "audiorelay"
+        "dev.rust"
       ];
 
       home.packages = with pkgs.unstable; [ pokemmo-installer ];

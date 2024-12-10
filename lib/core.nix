@@ -91,4 +91,11 @@ rec {
         myFiles;
 
     in if filterDefault then filteredFiles else myFiles;
+
+  # https://discourse.nixos.org/t/does-nix-lang-have-structural-pattern-matching/29522/3
+  match = let if_let = v: p: if extlib.attrsets.matchAttrs p v then v else null;
+  in v: l:
+  builtins.elemAt
+  (extlib.lists.findFirst (x: (if_let v (builtins.elemAt x 0)) != null) null l)
+  1;
 }
