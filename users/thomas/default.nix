@@ -113,7 +113,14 @@ in outputs.lib.mkFor system hostname {
     boiler = {
       isDesktop = true;
 
-      modules = outputs.lib.enable [ "steam" "ffxiv" "fun" "reaper" "haskell" "rust" ] // {
+      modules = outputs.lib.enable [
+        "steam"
+        "ffxiv"
+        "fun"
+        "reaper"
+        "haskell"
+        "dev.rust"
+      ] // {
         python.packages = with pkgs.python311Packages; [ manim ];
       };
 
@@ -186,10 +193,17 @@ in outputs.lib.mkFor system hostname {
     toaster = {
       isDesktop = true;
 
-      modules =
-        outputs.lib.enable [ "ctf" "android" "android-ide" "steam" "fun" "haskell" "rust" ] // {
-          python.packages = with pkgs.python311Packages; [ manim ];
-        };
+      modules = outputs.lib.enable [
+        "ctf"
+        "android"
+        "android-ide"
+        "steam"
+        "fun"
+        "haskell"
+        "rust"
+      ] // {
+        python.packages = with pkgs.python311Packages; [ manim ];
+      };
     };
   };
 }
