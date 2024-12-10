@@ -5,4 +5,6 @@ outputs.lib.mkModule config "dev.rust" {
     cargo
     rustc
   ];
+
+  PATH = [ "${config.home.homeDirectory}/.cargo/bin" ];
 }
