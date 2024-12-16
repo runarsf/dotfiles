@@ -30,6 +30,7 @@ in {
     "hyprlock"
     "hyprpaper"
     "pyprland"
+    # "ulauncher"
     # "waybar"
   ];
   services = outputs.lib.enable [ "kanshi" ]; # swaync

@@ -8,12 +8,15 @@ let
     "twilight" = "sha256:03jk6v5ax0x38s7l9ra3l2i7wqfzs4mcq673jp2d0wa8xsqw8z4h";
     "1.0.1-a.22" =
       "sha256:065rl1fhg79bkj1qy960qcid7wr7vd7j3wsf7bbr69b4rgmqqv3z";
+    "1.0.2-b.0" = "sha256:02x4w2fq80s1za05s0gg9r2drr845bln80h5hbwhvp1gxq9jf0g2";
+    "1.0.2-b.1" = "sha256:1bjwcar919hp2drlnirfx8a7nhcglm4kwymknzqxdxxj7x8zi4zr";
+    "1.0.2-b.2" = "sha256:0wmq21z5ncwaa989iimb0kvk6y5mk67izzj78m0hy67m0h9a3n6w";
   };
 
 in outputs.lib.mkDesktopModule' config "zen" (with outputs.lib; {
   version = mkOption {
     type = types.str;
-    default = "1.0.1-a.22";
+    default = "1.0.2-b.2";
   };
   sha256 = mkOption {
     type = types.str;
@@ -57,6 +60,7 @@ in outputs.lib.mkDesktopModule' config "zen" (with outputs.lib; {
 
   home.packages = [ pkgs.zen-browser ];
 
+  home.file.".zen/${name}/chrome/userChrome.css".text = builtins.readFile ./zenUserChrome.css;
   # home.file.".zen/${name}/chrome/userChrome.css".text = ''
   #   :root {
   #     --zen-main-browser-background: transparent !important;

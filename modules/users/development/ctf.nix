@@ -39,7 +39,7 @@ outputs.lib.mkModule config "ctf" {
         socat
         unstable.steghide
         metasploit
-        pwntools
+        # pwntools # this collides with moreutils, which we need for sponge
         exiftool
         binwalk
 

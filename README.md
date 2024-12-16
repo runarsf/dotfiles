@@ -38,10 +38,14 @@
     ```
 
 
-## Useful tools and references
+## Useful tools and resources
 
-- [Home Manager Option search](https://home-manager-options.extranix.com/)
-- [Nix package version search](https://lazamar.co.uk/nix-versions)
+- [NixOS Package Search](https://search.nixos.org/packages)
+- [NixOS Options Search](https://search.nixos.org/options)
+- [Home Manager Option Search](https://home-manager-options.extranix.com/)
+- [Noogle](https://noogle.dev/)
+- [Nix Package Version Search](https://lazamar.co.uk/nix-versions)
+- Prefetch hash (prepend `sha256:`): `nix-prefetch-url --unpack $url`
 - Jump into the build of a derivation: `nix-shell -E 'with import <nixpkgs> {  }; callPackage ./default.nix {  }'`
 - Test an expression: `nix eval -f test.nix f`\
     <kbd>test.nix</kbd>

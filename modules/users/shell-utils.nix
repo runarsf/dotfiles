@@ -3,36 +3,6 @@
 outputs.lib.mkEnabledModule config "shell-utils" {
   programs.fzf.enable = true;
 
-  nixos = {
-    programs.nix-ld.enable = true;
-    programs.nix-ld.libraries = with pkgs; [
-      ell
-      moreutils
-      xorg.libpthreadstubs
-      fuse
-      xorg.libX11
-      fontconfig
-      freetype
-      expat
-      libdrm
-      xorg.libxcb
-      alsa-lib
-      e2fsprogs
-      libgpg-error
-      nss
-      sane-backends
-      nspr
-      zlib
-      libglvnd
-      qt5.qtbase
-      qt5.qtsvg
-      qt5.qtdeclarative
-      qt5.qtwayland
-      qt6.qt5compat
-      stdenv.cc.cc
-    ];
-  };
-
   home = {
     packages = with pkgs; [
       inputs.alien.packages.${system}.nix-alien
@@ -46,10 +16,11 @@ outputs.lib.mkEnabledModule config "shell-utils" {
       dig
       eza
       tldr
-      yq
       bc
+      yq
       jq
       fx
+      moreutils
       ncdu
       killall
       inotify-tools
@@ -80,5 +51,35 @@ outputs.lib.mkEnabledModule config "shell-utils" {
       grep = "grep --color=always";
       cat = "${pkgs.bat}/bin/bat";
     };
+  };
+
+  nixos = {
+    programs.nix-ld.enable = true;
+    programs.nix-ld.libraries = with pkgs; [
+      ell
+      moreutils
+      xorg.libpthreadstubs
+      fuse
+      xorg.libX11
+      fontconfig
+      freetype
+      expat
+      libdrm
+      xorg.libxcb
+      alsa-lib
+      e2fsprogs
+      libgpg-error
+      nss
+      sane-backends
+      nspr
+      zlib
+      libglvnd
+      qt5.qtbase
+      qt5.qtsvg
+      qt5.qtdeclarative
+      qt5.qtwayland
+      qt6.qt5compat
+      stdenv.cc.cc
+    ];
   };
 }

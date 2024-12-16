@@ -30,6 +30,7 @@ rec {
 
   mkModule = config: name: moduleConfig: mkModule' config name { } moduleConfig;
 
+  # TODO Should "enabled" be able to be set in a different way of providing enabled functions?
   mkEnabledModule' = config: name: extraOptions: moduleConfig:
     mkModuleWithOptions {
       inherit config name extraOptions moduleConfig;
