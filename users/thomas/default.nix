@@ -200,7 +200,7 @@ in outputs.lib.mkFor system hostname {
         "steam"
         "fun"
         "haskell"
-        "rust"
+        "dev.rust"
       ] // {
         python.packages = with pkgs.python311Packages; [ manim ];
       };
