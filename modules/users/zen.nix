@@ -11,12 +11,13 @@ let
     "1.0.2-b.0" = "sha256:02x4w2fq80s1za05s0gg9r2drr845bln80h5hbwhvp1gxq9jf0g2";
     "1.0.2-b.1" = "sha256:1bjwcar919hp2drlnirfx8a7nhcglm4kwymknzqxdxxj7x8zi4zr";
     "1.0.2-b.2" = "sha256:0wmq21z5ncwaa989iimb0kvk6y5mk67izzj78m0hy67m0h9a3n6w";
+    "1.0.2-b.3" = "sha256:1kv44fkql60rjgqcqsfdhbi4zr8bi91fkswlsk5d6mwj8nw1clmj";
   };
 
 in outputs.lib.mkDesktopModule' config "zen" (with outputs.lib; {
   version = mkOption {
     type = types.str;
-    default = "1.0.2-b.2";
+    default = "1.0.2-b.3";
   };
   sha256 = mkOption {
     type = types.str;
