@@ -121,7 +121,7 @@ in outputs.lib.mkFor system hostname {
         dev = {
           rust.enable = true;
           haskell.enable = true;
-          python.packages = [ "manim" ];
+          python.packages = with pkgs.python311Packages; [ manim ];
         };
       };
 
@@ -202,7 +202,7 @@ in outputs.lib.mkFor system hostname {
           };
           haskell.enable = true;
           rust.enable = true;
-          python.packages = [ "manim" ];
+          python.packages = with pkgs.python311Packages; [ manim ];
         };
       };
     };
