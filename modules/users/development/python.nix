@@ -1,12 +1,12 @@
 { config, outputs, pkgs, ... }:
 
 let
-  self = config.modules.python;
+  self = config.modules.dev.python;
   packagesFrom = pythonVersion:
     outputs.lib.getAttr "${pythonVersion}Packages" pkgs;
 
-in outputs.lib.mkModule' config "python" (with outputs.lib; {
-  # TODO Make ide an option here instead of in python-ide.nix
+in outputs.lib.mkModule' config "dev.python" (with outputs.lib; {
+  ide = outputs.lib.mkEnableOption "Enable Python IDE";
   packageName = mkOption {
     type = types.enum [ "python311" "python312" ];
     description = "The package name of the python version to use";
@@ -21,7 +21,7 @@ in outputs.lib.mkModule' config "python" (with outputs.lib; {
     jupyter.enable = mkEnableOption "Enable jupyter-related packages";
   };
 }) {
-  modules.python.packages = with packagesFrom self.packageName;
+  modules.dev.python.packages = with packagesFrom self.packageName;
     [
       pip
       pydantic
@@ -31,7 +31,6 @@ in outputs.lib.mkModule' config "python" (with outputs.lib; {
       debugpy
       mypy # Required comment for formatting :⁾
     ] ++ outputs.lib.optionals self.presets.math.enable [
-      plotly
       pandas
       pyglet
       scipy
@@ -50,7 +49,9 @@ in outputs.lib.mkModule' config "python" (with outputs.lib; {
       jupyter-client
       jupyter-core
       notebook
-    ];
+    ]
+    ++ outputs.lib.optionals (config.isDesktop && config.modules.dev.python.ide)
+    [ jetbrains.pycharm-professional ];
 
   home.packages = with pkgs; [
     poetry

@@ -54,8 +54,6 @@ in outputs.lib.mkFor system hostname {
         "vscode"
         "hyprland"
         "kitty"
-        "c"
-        "c-ide"
         "writing"
         "spotify"
         "sops-fonts"
@@ -75,14 +73,20 @@ in outputs.lib.mkFor system hostname {
           enable = true;
           bitmap = true;
         };
-        python = {
-          enable = true;
-          packageName = "python311";
-          presets = outputs.lib.enable [ "math" "jupyter" ];
+        dev = {
+          c = {
+            enable = true;
+            ide = true;
+          };
+          python = {
+            enable = true;
+            packageName = "python311";
+            presets = outputs.lib.enable [ "math" "jupyter" ];
+          };
         };
       };
 
-      home.packages = with pkgs.unstable;
+      home.packages = with pkgs;
         ifIsDesktop
         [ inputs.openconnect-sso.packages."${pkgs.system}".default ];
 
@@ -113,15 +117,12 @@ in outputs.lib.mkFor system hostname {
     boiler = {
       isDesktop = true;
 
-      modules = outputs.lib.enable [
-        "steam"
-        "ffxiv"
-        "fun"
-        "reaper"
-        "haskell"
-        "dev.rust"
-      ] // {
-        python.packages = with pkgs.python311Packages; [ manim ];
+      modules = outputs.lib.enable [ "steam" "ffxiv" "fun" "reaper" ] // {
+        dev = {
+          rust.enable = true;
+          haskell.enable = true;
+          python.packages = [ "manim" ];
+        };
       };
 
       nixos = {
@@ -193,16 +194,16 @@ in outputs.lib.mkFor system hostname {
     toaster = {
       isDesktop = true;
 
-      modules = outputs.lib.enable [
-        "ctf"
-        "android"
-        "android-ide"
-        "steam"
-        "fun"
-        "haskell"
-        "dev.rust"
-      ] // {
-        python.packages = with pkgs.python311Packages; [ manim ];
+      modules = outputs.lib.enable [ "ctf" "steam" "fun" ] // {
+        dev = {
+          android = {
+            enable = true;
+            ide = true;
+          };
+          haskell.enable = true;
+          rust.enable = true;
+          python.packages = [ "manim" ];
+        };
       };
     };
   };

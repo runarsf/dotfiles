@@ -1,7 +1,6 @@
 { config, pkgs, inputs, outputs, ... }:
 
 let
-  wezterm = inputs.wezterm.packages.${pkgs.system}.default;
   toLua = x:
     if builtins.match ''
       .*
@@ -67,18 +66,16 @@ in outputs.lib.mkDesktopModule' config "wezterm" (with outputs.lib; {
     };
   };
 
-  home.packages = [ wezterm ];
+  # home.packages = [ pkgs.unstable.wezterm ];
   programs.wezterm = {
     enable = true;
-    package = wezterm;
+    package = pkgs.unstable.wezterm;
     # https://wezfurlong.org/wezterm/config/lua/config/index.html
     # FIXME Pane navigation doesn't work correctly
     extraConfig = let
       tab = ''
-        'index',
-        { 'process', padding = 0, },
-        'ResetAttributes',
-        'cwd',
+        { 'index', padding = { left = 1, right = 0, }, },
+        'process',
       '';
     in ''
       local wezterm = require 'wezterm'
@@ -88,15 +85,8 @@ in outputs.lib.mkDesktopModule' config "wezterm" (with outputs.lib; {
 
       tabline.setup({
         options = {
-          icons_enabled = true,
+          icons_enabled = false,
           theme = 'Ayu Dark (Gogh)',
-          color_overrides = {
-            normal_mode = {
-              c = { bg = 'none' },
-              x = { bg = 'none' },
-              tabs = { bg = 'none' },
-            },
-          },
           section_separators = {
             left = wezterm.nerdfonts.ple_right_half_circle_thick,
             right = wezterm.nerdfonts.ple_left_half_circle_thick,
@@ -111,19 +101,19 @@ in outputs.lib.mkDesktopModule' config "wezterm" (with outputs.lib; {
           },
         },
         sections = {
-          tabline_a = { 'mode' },
-          tabline_b = { 'workspace' },
+          tabline_a = { 'hostname' },
+          tabline_b = { },
           tabline_c = { ' ' },
           tab_active = {
             ${tab}
-            { 'zoomed', padding = 0 },
+            'zoomed',
           },
           tab_inactive = {
             ${tab}
           },
           tabline_x = { 'battery' },
           tabline_y = { 'datetime' },
-          tabline_z = { 'hostname' },
+          tabline_z = { },
         },
         extensions = { },
       })
@@ -236,6 +226,46 @@ in outputs.lib.mkDesktopModule' config "wezterm" (with outputs.lib; {
           key = 'v',
           mods = 'ALT',
           action = wezterm.action.PasteFrom("Clipboard"),
+        },
+        {
+          key = 'LeftArrow',
+          mods = 'SHIFT',
+          action = wezterm.action.ActivatePaneDirection("Left"),
+        },
+        {
+          key = 'RightArrow',
+          mods = 'SHIFT',
+          action = wezterm.action.ActivatePaneDirection("Right"),
+        },
+        {
+          key = 'UpArrow',
+          mods = 'SHIFT',
+          action = wezterm.action.ActivatePaneDirection("Up"),
+        },
+        {
+          key = 'DownArrow',
+          mods = 'SHIFT',
+          action = wezterm.action.ActivatePaneDirection("Down"),
+        },
+        {
+          key = 'LeftArrow',
+          mods = 'SHIFT|ALT',
+          action = wezterm.action.AdjustPaneSize { 'Left', 5 },
+        },
+        {
+          key = 'RightArrow',
+          mods = 'SHIFT|ALT',
+          action = wezterm.action.AdjustPaneSize { 'Right', 5 },
+        },
+        {
+          key = 'UpArrow',
+          mods = 'SHIFT|ALT',
+          action = wezterm.action.AdjustPaneSize { 'Up', 5 },
+        },
+        {
+          key = 'DownArrow',
+          mods = 'SHIFT|ALT',
+          action = wezterm.action.AdjustPaneSize { 'Down', 5 },
         },
         {
           key = 'T',

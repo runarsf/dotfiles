@@ -37,13 +37,15 @@ outputs.lib.mkDesktopModule' config "pipewire" (with outputs.lib; {
       };
     };
 
-    hardware.pulseaudio.enable = false;
+    services.pulseaudio = {
+      enable = false;
+
+      # Prevent Spotify from muting when another audio source is running
+      extraConfig = "unload-module module-role-cork";
+    };
     security.rtkit.enable = true;
 
     # Fix for pipewire-pulse breaking recently
     systemd.user.services.pipewire-pulse.path = [ pkgs.pulseaudio ];
-
-    # Prevent Spotify from muting when another audio source is running
-    hardware.pulseaudio.extraConfig = "unload-module module-role-cork";
   };
 }

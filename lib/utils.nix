@@ -14,6 +14,8 @@ rec {
 
   print = ret: builtins.trace ret ret;
 
+  # TODO mkDesktopOption 
+
   # TODO If it starts with slash, die. Should also handle /home/username
   # TODO Should support both xdg.configFile and home.file
   # TODO Refactor to use this function

@@ -1,6 +1,8 @@
 { pkgs, name, outputs, config, ... }:
 
-outputs.lib.mkModule config "android" {
+outputs.lib.mkModule' config "dev.android" {
+  ide = outputs.lib.mkEnableOption "Enable Android IDE";
+} {
   nixos = {
     programs.adb.enable = true;
     users.users."${name}".extraGroups = [ "adbusers" "plugdev" "kvm" ];
@@ -8,13 +10,15 @@ outputs.lib.mkModule config "android" {
     environment.systemPackages = with pkgs; [ android-tools ];
   };
 
-  home.packages = with pkgs.unstable; [
-    flutter
-    graphite2
-    gtk3
-    android-tools
-    scrcpy
-  ];
+  home.packages = with pkgs;
+    [
+      flutter
+      graphite2
+      gtk3
+      android-tools
+      scrcpy
+    ] ++ outputs.lib.optionals
+    (config.isDesktop && config.modules.dev.android.ide) [ android-studio ];
 
   nixpkgs.config.android_sdk.accept_license = true;
 

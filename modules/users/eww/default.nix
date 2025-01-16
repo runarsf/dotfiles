@@ -18,12 +18,12 @@ outputs.lib.mkDesktopModule config "eww" {
 
   home.packages = with pkgs; [
     ddcutil
-    master.eww
+    eww
   ];
   # programs.eww = {
   #   enable = true;
   #   configDir = ./.;
-  #   package = pkgs.master.eww;
+  #   package = pkgs.eww;
   # };
   # wayland.windowManager.hyprland.settings.exec = [ "${config.home.homeDirectory}/.config/eww/launch-eww.sh" ];
 }

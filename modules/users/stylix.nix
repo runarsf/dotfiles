@@ -19,7 +19,7 @@ let
 
     fonts = {
       monospace = {
-        package = pkgs.nerdfonts.override { fonts = [ "CascadiaMono" ]; };
+        package = pkgs.nerd-fonts.caskaydia-cove;
         name = "Cascadia Mono NF";
       };
 

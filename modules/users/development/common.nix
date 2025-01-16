@@ -7,10 +7,8 @@
     };
 
     packages = with pkgs; [
-      # unstable.zed-editor
       gnumake
       just
-      ngrok
     ];
   };
 }

@@ -69,7 +69,7 @@ in {
   };
 
   home.packages = with pkgs; [
-    master.nwg-displays
+    nwg-displays
     wlr-randr
     libnotify
     brightnessctl
@@ -239,7 +239,6 @@ in {
       master = {
         new_status = "slave";
         allow_small_split = true;
-        always_center_master = true;
       };
       misc = {
         disable_hyprland_logo = true;

@@ -1,8 +1,8 @@
 { config, outputs, pkgs, ... }:
 
-outputs.lib.mkModule config "haskell" {
-  home.packages = with pkgs; [
-    ghc
-    cabal-install
+outputs.lib.mkModule config "dev.haskell" {
+  home.packages = [
+    (pkgs.haskellPackages.ghcWithPackages
+      (pkgs: with pkgs; [ stack cabal-install ]))
   ];
 }

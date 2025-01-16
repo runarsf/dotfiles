@@ -17,7 +17,7 @@ in outputs.lib.mkDesktopModule config "discord" {
     run ${pkgs.findutils}/bin/find -L ${config.home.homeDirectory}/.config/discord -name 'discord_krisp.node' -exec ${discordPatcher}/bin/discord-krisp-patcher {} \;
   '';
 
-  home.packages = with pkgs.master;
+  home.packages = with pkgs;
     if (outputs.lib.isWayland config) then [
       discord-wayland
       vesktop

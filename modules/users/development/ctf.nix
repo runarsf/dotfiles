@@ -58,8 +58,11 @@ outputs.lib.mkModule config "ctf" {
         burpsuite
 
         # inputs.binsider.packages.${pkgs.system}.default
-      ] ++ outputs.lib.optionals config.modules.android.enable
-      (with pkgs; [ frida-tools unstable.jadx apktool ]);
+      ] ++ outputs.lib.optionals config.modules.dev.android.enable [
+        frida-tools
+        unstable.jadx
+        apktool
+      ];
 
     file.".local/bin/nc-respond".source = let
       script = pkgs.writeShellApplication {

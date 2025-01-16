@@ -23,7 +23,6 @@ in outputs.lib.mkFor system hostname {
       "git"
       "gpg"
       "keychain"
-      "javascript"
       "nix"
       "yazi"
       "fun"
@@ -52,8 +51,6 @@ in outputs.lib.mkFor system hostname {
         "vscode"
         "hyprland"
         "kitty"
-        "c"
-        "c-ide"
         "writing"
         "spotify"
         "sops-fonts"
@@ -74,11 +71,6 @@ in outputs.lib.mkFor system hostname {
           enable = true;
           bitmap = true;
         };
-        python = {
-          enable = true;
-          packageName = "python311";
-          presets = outputs.lib.enable [ "math" "jupyter" ];
-        };
         flatpak.enable = config.isDesktop;
       };
 
@@ -88,7 +80,8 @@ in outputs.lib.mkFor system hostname {
           guvcview
           obs-studio
           chromium
-          protonvpn-gui
+          scrcpy
+          qtscrcpy
           inputs.openconnect-sso.packages."${pkgs.system}".default
         ];
 
@@ -119,17 +112,28 @@ in outputs.lib.mkFor system hostname {
     runix = {
       isDesktop = true;
 
-      modules = outputs.lib.enable [
-        "ctf"
-        "android"
-        "android-ide"
-        "java"
-        "easyeffects"
-        "audiorelay"
-        "dev.rust"
-      ];
+      # FIXME Using dev.go and dev.go.ide in lib.enable breaks and neither get enabled
+      modules = outputs.lib.enable [ "ctf" "easyeffects" "audiorelay" ] // {
+        dev = {
+          java.enable = true;
+          haskell.enable = true;
+          c.enable = true;
+          python = {
+            enable = true;
+            packageName = "python311";
+          };
+          rust = {
+            enable = true;
+            ide = true;
+          };
+          go = {
+            enable = true;
+            ide = true;
+          };
+        };
+      };
 
-      home.packages = with pkgs.unstable; [ pokemmo-installer ];
+      home.packages = with pkgs.unstable; [ pokemmo-installer moonlight-qt ];
 
       # nixpkgs.overlays = [
       #   (import "${

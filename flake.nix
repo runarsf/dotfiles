@@ -7,9 +7,7 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-24.05";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixpkgs-unstable";
-    nixpkgs-master.url = "github:nixos/nixpkgs/master";
     nur.url = "github:nix-community/nur";
 
     nix-darwin = {
@@ -34,11 +32,6 @@
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
-    nixpkgs-wayland = {
-      url = "github:nix-community/nixpkgs-wayland";
-      inputs.nixpkgs.follows = "nixpkgs-unstable";
-    };
-
     wezterm.url = "github:wez/wezterm?dir=nix";
 
     hyprland = {
@@ -54,7 +47,10 @@
       url = "github:VirtCode/hypr-dynamic-cursors";
       inputs.hyprland.follows = "hyprland";
     };
-    hyprpanel.url = "github:Jas-SinghFSU/HyprPanel";
+    hyprpanel = {
+      url = "github:Jas-SinghFSU/HyprPanel";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     nix-flatpak.url = "github:gmodena/nix-flatpak";
 
@@ -68,7 +64,10 @@
       url = "https://code.thishorsie.rocks/ryze/stackpkgs";
     };
 
-    zen-browser.url = "github:MarceColl/zen-browser-flake";
+    zen-browser = {
+      url = "github:youwen5/zen-browser-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     arkenfox = {
       url = "github:dwarfmaster/arkenfox-nixos";

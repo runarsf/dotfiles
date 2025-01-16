@@ -62,66 +62,59 @@ in outputs.lib.mkDesktopModule config "fonts" {
 
   fonts.fontconfig.enable = true;
 
-  home.packages = with pkgs.unstable; [
-    fontpreview
+  home.packages = with pkgs;
+    [
+      fontpreview
 
-    # Writing
-    libertine
-    atkinson-hyperlegible
-    montserrat
-    roboto
-    ia-writer-duospace
+      # Writing
+      libertine
+      atkinson-hyperlegible
+      montserrat
+      roboto
+      ia-writer-duospace
 
-    # Unicode table
-    noto-fonts
-    noto-fonts-emoji
-    noto-fonts-cjk-sans
-    noto-fonts-extra
-    powerline-fonts
+      # Unicode table
+      noto-fonts
+      noto-fonts-emoji
+      noto-fonts-cjk-sans
+      noto-fonts-extra
+      powerline-fonts
 
-    # Bitmap fonts
-    cozette
-    undefined-medium
-    scientifica-hidpi
-    zpix-pixel-font
-    termsyn
-    terminus_font
-    monocraft
-    creep2-hidpi
-    (nofontsdir tamzen)
-    (nofontsdir proggyfonts)
-    (nofontsdir unifont)
-    (nofontsdir unifont_upper)
-    (nofontsdir gohufont)
-    (nofontsdir spleen)
+      # Bitmap fonts
+      cozette
+      undefined-medium
+      scientifica-hidpi
+      zpix-pixel-font
+      termsyn
+      terminus_font
+      monocraft
+      creep2-hidpi
+      (nofontsdir tamzen)
+      (nofontsdir proggyfonts)
+      (nofontsdir unifont)
+      (nofontsdir unifont_upper)
+      (nofontsdir gohufont)
+      (nofontsdir spleen)
 
-    # Coding
-    jetbrains-mono
-    sudo-font
-    cascadia-code
-    maple-mono-NF
-    mplus-outline-fonts.githubRelease
-
-    # https://github.com/NixOS/nixpkgs/blob/nixpkgs-unstable/pkgs/data/fonts/nerdfonts/shas.nix
-    (nerdfonts.override {
-      fonts = [
-        "CascadiaCode"
-        "CascadiaMono"
-        "ComicShannsMono"
-        "JetBrainsMono"
-        "Monaspace"
-        "UbuntuMono"
-        "CommitMono"
-        "IBMPlexMono"
-        "FiraCode"
-        "Hasklig"
-        "Gohu"
-        "iA-Writer"
-        "Lilex"
-        "Noto"
-        "Terminus"
-        "Agave"
-      ];
-    })
-  ];
+      # Coding
+      jetbrains-mono
+      sudo-font
+      cascadia-code
+      maple-mono-NF
+      mplus-outline-fonts.githubRelease
+    ] ++ (with pkgs.nerd-fonts; [
+      caskaydia-cove
+      caskaydia-mono
+      comic-shanns-mono
+      jetbrains-mono
+      monaspace
+      ubuntu
+      ubuntu-mono
+      commit-mono
+      im-writing
+      fira-code
+      gohufont
+      lilex
+      noto
+    ]);
 }

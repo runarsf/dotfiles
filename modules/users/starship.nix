@@ -13,6 +13,7 @@ outputs.lib.mkModule config "starship" {
         "( $shlvl)"
         "( $cmd_duration)"
         "( $package)"
+        "( $direnv)"
         "(- $aws$gcloud$openstack)"
         "($jobs)"
         " )"

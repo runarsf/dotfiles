@@ -1,7 +1,7 @@
 { outputs, pkgs, config, ... }:
 
-outputs.lib.mkModule config "javascript" {
-  home.packages = with pkgs.unstable; [
+outputs.lib.mkModule config "dev.javascript" {
+  home.packages = with pkgs; [
     nodejs
   ];
 }
