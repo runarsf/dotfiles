@@ -194,7 +194,7 @@ in outputs.lib.mkFor system hostname {
     toaster = {
       isDesktop = true;
 
-      modules = outputs.lib.enable [ "ctf" "steam" "fun" ] // {
+      modules = outputs.lib.enable [ "ctf" "steam" "fun" "docker" ] // {
         dev = {
           android = {
             enable = true;

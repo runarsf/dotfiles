@@ -7,8 +7,6 @@ outputs.lib.mkModule config "podman" {
         enable = true;
         dockerCompat = false;
 
-        package = pkgs.unstable.podman;
-
         defaultNetwork.settings.dns_enabled = true;
       };
 
@@ -17,6 +15,6 @@ outputs.lib.mkModule config "podman" {
       oci-containers.backend = "podman";
     };
 
-    environment.systemPackages = with pkgs.unstable; [ podman-compose ];
+    environment.systemPackages = with pkgs; [ podman-compose ];
   };
 }

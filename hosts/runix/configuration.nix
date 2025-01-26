@@ -8,12 +8,8 @@
     ../../modules/linux/systemd-boot.nix
     ../../modules/linux/thunderbolt.nix
     ../../modules/linux/network.nix
-    # ../../modules/linux/greeter.nix
-    # ../../modules/linux/docker.nix
     ../../modules/linux/firewall.nix
     ../../modules/linux/printing.nix
-    # ../../modules/linux/stylix.nix
-    # ../../modules/linux/virtualisation.nix
   ];
 
   # TODO Make this user config

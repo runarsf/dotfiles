@@ -57,6 +57,7 @@ in outputs.lib.mkFor system hostname {
         "bluetooth"
         "pipewire"
         "mpv"
+        "docker"
         "stremio"
         "camera"
         "zen"
@@ -82,6 +83,7 @@ in outputs.lib.mkFor system hostname {
           chromium
           scrcpy
           qtscrcpy
+          # openconnect-sso --server vpn.ntnu.no
           inputs.openconnect-sso.packages."${pkgs.system}".default
         ];
 
@@ -113,7 +115,7 @@ in outputs.lib.mkFor system hostname {
       isDesktop = true;
 
       # FIXME Using dev.go and dev.go.ide in lib.enable breaks and neither get enabled
-      modules = outputs.lib.enable [ "ctf" "easyeffects" "audiorelay" ] // {
+      modules = outputs.lib.enable [ "ctf" "audiorelay" "kvm" ] // {
         dev = {
           java.enable = true;
           haskell.enable = true;

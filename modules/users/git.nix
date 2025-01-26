@@ -14,6 +14,12 @@ outputs.lib.mkModule config "git" {
     userEmail = outputs.lib.mkDefault (throw "programs.git.userEmail is not set");
     userName = outputs.lib.mkDefault (throw "programs.git.userName is not set");
 
+    extraConfig = {
+      init = {
+        defaultBranch = "main";
+      };
+    };
+
     aliases = rec {
       aliases = "config --get-regexp alias";
 

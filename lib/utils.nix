@@ -1,14 +1,14 @@
 { outputs, ... }:
 
 rec {
-  fill = elems: value:
+  fill = value: elems:
     outputs.lib.foldl' (acc: elem:
       acc // outputs.lib.setAttrByPath (outputs.lib.splitString "." elem) value)
     { } elems;
 
-  enable = elems: fill elems { enable = true; };
+  enable = elems: fill { enable = true; } elems;
 
-  disable = elems: fill elems { enable = false; };
+  disable = elems: fill { enable = false; } elems;
 
   enableIf = cond: elems: if cond then (enable elems) else (disable elems);
 

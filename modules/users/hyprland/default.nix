@@ -21,7 +21,9 @@ in {
     ./hyprpanel.nix
     ./pyprland.nix
   ];
-} // outputs.lib.mkDesktopModule config "hyprland" {
+} // outputs.lib.mkDesktopModule' config "hyprland" {
+  animations = outputs.lib.mkEnableOption "Enable funky animations";
+} {
   modules = outputs.lib.enable [
     "wayland"
     "fuzzel"
@@ -121,10 +123,10 @@ in {
       variables = [ "--all" ];
     };
     package = inputs.hyprland.packages.${pkgs.system}.hyprland;
-    plugins = with inputs.hyprland-plugins.packages.${pkgs.system}; [
-      borders-plus-plus
-      inputs.hypr-dynamic-cursors.packages.${pkgs.system}.hypr-dynamic-cursors
-    ];
+    plugins = with inputs.hyprland-plugins.packages.${pkgs.system};
+      [ borders-plus-plus ] ++ outputs.lib.optionals (config.modules.hyprland.animations) [
+        inputs.hypr-dynamic-cursors.packages.${pkgs.system}.hypr-dynamic-cursors
+      ];
     settings = {
       source = [
         "${config.home.homeDirectory}/.config/hypr/monitors.conf"
@@ -136,7 +138,7 @@ in {
         "${hypr-gamemode}"
         # "${./. + /bin/monocle.sh}"
       ];
-      plugin = {
+      plugin = outputs.lib.mkIf (config.modules.hyprland.animations) {
         dynamic-cursors = {
           enabled = true;
           mode = "tilt";

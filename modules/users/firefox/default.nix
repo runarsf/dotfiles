@@ -394,6 +394,8 @@
         "mozilla.widget.use-argb-visuals" = true;
 
         "widget.gtk.rounded-bottom-corners.enabled" = true;
+
+        "browser.aboutConfig.showWarning" = false;
       };
       # extensions = builtins.attrValues {
       #   inherit (pkgs.ff-addons)

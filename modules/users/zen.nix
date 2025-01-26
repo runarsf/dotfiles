@@ -1,66 +1,57 @@
 { config, pkgs, inputs, outputs, name, ... }:
 
-# TODO Waiting for zen to be merged to nixpkgs https://github.com/NixOS/nixpkgs/issues/327982
-# TODO ??? Is there a way to use "this.zversion" instead of "config.modules.zen.version"
+# about:config
+#   browser.tabs.groups.enabled
+#   tab.groups.add-arrow
+#   tab.groups.background
+#   tab.groups.borders
 
-# let
-#   hashes = {
-#     "twilight" = null;
-#     "1.0.1-a.22" =
-#       "sha256:065rl1fhg79bkj1qy960qcid7wr7vd7j3wsf7bbr69b4rgmqqv3z";
-#     "1.0.2-b.0" = "sha256:02x4w2fq80s1za05s0gg9r2drr845bln80h5hbwhvp1gxq9jf0g2";
-#     "1.0.2-b.1" = "sha256:1bjwcar919hp2drlnirfx8a7nhcglm4kwymknzqxdxxj7x8zi4zr";
-#     "1.0.2-b.2" = "sha256:0wmq21z5ncwaa989iimb0kvk6y5mk67izzj78m0hy67m0h9a3n6w";
-#     "1.0.2-b.3" = "sha256:1kv44fkql60rjgqcqsfdhbi4zr8bi91fkswlsk5d6mwj8nw1clmj";
-#     "1.0.2-b.4" = "sha256:0vqzins5g4xx6niylzjq071vyk4djpn6a7rh1ymbx83ns0xb4lb5";
-#     "1.6b" = "sha256:099mjcs3avw2r0b4ikp5qq35qj2farx62zhz9dw10gp6qijcz7pd";
-#   };
-# in
+let
+  zenStyles = {
+    transparency = ''
+      :root {
+        --zen-main-browser-background: transparent !important;
+      }
+    '';
+    fixBookmarksBar = ''
+      #zen-appcontent-navbar-container:not(:has(#PersonalToolbar[collapsed="false"])) {
+        height: var(--zen-element-separation) !important;
 
-outputs.lib.mkDesktopModule config "zen"
-  # (with outputs.lib; {
-  # version = mkOption {
-  #   type = types.str;
-  #   default = hashes
-  #     |> attrNames
-  #     |> filter (v: v != "twilight")
-  #     |> naturalSort
-  #     |> last;
-  # };
-  # sha256 = mkOption {
-  #   type = types.str;
-  #   default = if hashes ? "${config.modules.zen.version}"
-  #   && hashes.${config.modules.zen.version} != null then
-  #     hashes.${config.modules.zen.version}
-  #   else
-  #     outputs.lib.trace
-  #     "Undefined sha256 for provided Zen version, using blank hash"
-  #     outputs.lib.fakeSha256;
-  # };
-  # })
-{
+        .titlebar-buttonbox-container {
+          display: none !important;
+        }
+      }
+    '';
+    hideWorkspaces = ''
+      #zen-current-workspace-indicator,
+      #zen-workspaces-button {
+        display: none !important;
+      }
+    '';
+    advancedTabGroups = builtins.readFile "${pkgs.fetchgit {
+      url = "https://github.com/Anoms12/Advanced-Tab-Groups.git";
+      rev = "0dea07986100b26d24f2004794f110404723ab58";
+      sha256 = "sha256-Vs0MjUjJC6xh3hB+VGK9dKxD0CRipMN2VE0IBNbP84g=";
+      sparseCheckout = [ "tab-group.css" ];
+    }}/tab-group.css";
+  };
+
+in outputs.lib.mkDesktopModule config "zen" {
   nixpkgs.overlays = [
     (_: prev: {
       zen-browser = inputs.zen-browser.packages.${pkgs.system}.default;
     })
-    # (_: prev: {
-    #   zen-browser =
-    #     inputs.zen-browser.packages."${pkgs.system}".default.overrideAttrs
-    #     (oldAttrs: {
-    #       version = config.modules.zen.version;
-    #       src = builtins.fetchTarball {
-    #         sha256 = config.modules.zen.sha256;
-    #         url = with outputs.lib; let
-    #           system = pkgs.system
-    #             |> splitString "-"
-    #             |> reverseList
-    #             |> concatStringsSep "-";
-    #           in
-    #           "https://github.com/zen-browser/desktop/releases/download/${config.modules.zen.version}/zen.${system}.tar.bz2";
-    #       };
-    #     });
-    # })
   ];
+
+  home.packages = with pkgs; [ zen-browser ];
+
+  home.file.".zen/${name}/chrome/userChrome.css".text =
+    builtins.concatStringsSep "\n" (with zenStyles; [
+      transparency
+      fixBookmarksBar
+      hideWorkspaces
+      advancedTabGroups
+    ]);
 
   xdg.mimeApps = outputs.lib.mkIf (config.defaultBrowser == "zen") {
     enable = true;
@@ -76,25 +67,4 @@ outputs.lib.mkDesktopModule config "zen"
       "x-scheme-handler/unknown" = entries;
     };
   };
-
-  home.packages = [ pkgs.zen-browser ];
-
-  home.file.".zen/${name}/chrome/userChrome.css".text =
-    builtins.readFile ./zenUserChrome.css;
-  # home.file.".zen/${name}/chrome/userChrome.css".text = ''
-  #   :root {
-  #     --zen-main-browser-background: transparent !important;
-  #   }
-  #
-  #   .browserContainer {
-  #     background: #FAFAFA50;
-  #     /* background: var(--zen-colors-tertiary); */
-  #   }
-  #
-  #   /* Opaque tab sidebar
-  #   #navigator-toolbox[zen-has-hover=true] #TabsToolbar {
-  #     background: var(--zen-colors-tertiary) !important;
-  #   }
-  #   */
-  # '';
 }
