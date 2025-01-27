@@ -26,7 +26,6 @@ in {
 
   programs.hyprpanel = {
     enable = true;
-    systemd.enable = true;
     hyprland.enable = false;
     overwrite.enable = true;
     overlay.enable = true;
@@ -192,5 +191,5 @@ in {
   };
 
   wayland.windowManager.hyprland.settings.exec =
-    [ ''pgrep -x "hyprpanel" || ${pkgs.hyprpanel}/bin/hyprpanel '' ];
+    [ ''pgrep "hyprpanel" || (${pkgs.hyprpanel}/bin/hyprpanel --quit; ${pkgs.hyprpanel}/bin/hyprpanel) '' ];
 }

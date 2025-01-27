@@ -7,10 +7,14 @@
 #   tab.groups.borders
 
 let
-  zenStyles = {
+  # TODO Make these options for the module
+  userChrome = {
     transparency = ''
       :root {
         --zen-main-browser-background: transparent !important;
+      }
+      #tabbrowser-tabpanels .browserStack {
+        background: var(--zen-colors-tertiary, var(--toolbar-bgcolor));
       }
     '';
     fixBookmarksBar = ''
@@ -28,12 +32,27 @@ let
         display: none !important;
       }
     '';
-    advancedTabGroups = builtins.readFile "${pkgs.fetchgit {
-      url = "https://github.com/Anoms12/Advanced-Tab-Groups.git";
-      rev = "0dea07986100b26d24f2004794f110404723ab58";
-      sha256 = "sha256-Vs0MjUjJC6xh3hB+VGK9dKxD0CRipMN2VE0IBNbP84g=";
-      sparseCheckout = [ "tab-group.css" ];
-    }}/tab-group.css";
+    advancedTabGroups = builtins.readFile "${
+        pkgs.fetchgit {
+          url = "https://github.com/Anoms12/Advanced-Tab-Groups.git";
+          rev = "0dea07986100b26d24f2004794f110404723ab58";
+          sha256 = "sha256-Vs0MjUjJC6xh3hB+VGK9dKxD0CRipMN2VE0IBNbP84g=";
+          sparseCheckout = [ "tab-group.css" ];
+        }
+      }/tab-group.css";
+  };
+  userContent = {
+    fixWhiteFlash = ''
+      @namespace url("http://www.w3.org/1999/xhtml");
+
+      @-moz-document url("about:home"),
+      url("about:blank"),
+      url("about:newtab") {
+        body {
+          background-color: var(--zen-colors-tertiary, var(--toolbar-bgcolor)) !important;
+        }
+      }
+    '';
   };
 
 in outputs.lib.mkDesktopModule config "zen" {
@@ -45,13 +64,18 @@ in outputs.lib.mkDesktopModule config "zen" {
 
   home.packages = with pkgs; [ zen-browser ];
 
-  home.file.".zen/${name}/chrome/userChrome.css".text =
-    builtins.concatStringsSep "\n" (with zenStyles; [
-      transparency
-      fixBookmarksBar
-      hideWorkspaces
-      advancedTabGroups
-    ]);
+  home.file = {
+    ".zen/${name}/chrome/userChrome.css".text = builtins.concatStringsSep "\n"
+      (with userChrome; [
+        transparency
+        fixBookmarksBar
+        advancedTabGroups
+      ]);
+    ".zen/${name}/chrome/userContent.css".text = builtins.concatStringsSep "\n"
+      (with userContent; [
+        fixWhiteFlash
+      ]);
+  };
 
   xdg.mimeApps = outputs.lib.mkIf (config.defaultBrowser == "zen") {
     enable = true;
