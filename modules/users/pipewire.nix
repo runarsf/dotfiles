@@ -6,14 +6,18 @@ outputs.lib.mkDesktopModule' config "pipewire" (with outputs.lib; {
   lowLatency = mkEnableOption "Enable low latency mode for Pipewire";
 }) {
   nixos = {
-    environment.systemPackages = with pkgs; [ pwvucontrol qpwgraph ];
+    environment.systemPackages = with pkgs; [
+      pwvucontrol
+      pavucontrol
+      qpwgraph
+    ];
 
     services.pipewire = {
       enable = true;
       audio.enable = true;
+      pulse.enable = true;
       alsa.enable = true;
       alsa.support32Bit = true;
-      pulse.enable = true;
       wireplumber = {
         enable = true;
         extraConfig = {
@@ -29,37 +33,71 @@ outputs.lib.mkDesktopModule' config "pipewire" (with outputs.lib; {
               };
             }];
           };
-        };
-      };
-
-      extraConfig.pipewire = {
-        # "90-sample-rates" = {
-        #   context.properties = outputs.lib.mkDefault {
-        #     default.clock.allowed-rates = [ 44100 48000 96000 ];
-        #     default.clock.quantum = 32;
-        #     default.clock.min-quantum = 32;
-        #     default.clock.max-quantum = 1024;
-        #     link.max-buffers = 64;
-        #   };
-        # };
-        "92-low-latency" = outputs.lib.mkIf config.modules.pipewire.lowLatency {
-          context.properties = {
-            default.clock.rate = 48000;
-            default.clock.quantum = 32;
-            default.clock.min-quantum = 32;
-            default.clock.max-quantum = 32;
+          "bluetooth-enhancements" = {
+            "monitor.bluez.properties" = {
+              "bluez5.enable-sbc-xq" = true;
+              "bluez5.enable-msbc" = true;
+              "bluez5.enable-hw-volume" = true;
+              "bluez5.roles" = [ "hsp_hs" "hsp_ag" "hfp_hf" "hfp_ag" ];
+            };
+          };
+          # Meant to fix crackling on shitty hw
+          "50-alsa-config" = {
+            "monitor.alsa.rules" = [{
+              "matches" = [{ "node.name" = "~alsa_output.*"; }];
+              "actions" = {
+                "update-props" = {
+                  "api.alsa.period-size" = 1024;
+                  "api.alsa.headroom" = 8192;
+                };
+              };
+            }];
           };
         };
       };
+
+      extraConfig = {
+        pipewire = {
+          # "90-sample-rates" = {
+          #   context.properties = outputs.lib.mkDefault {
+          #     default.clock.allowed-rates = [ 44100 48000 96000 ];
+          #     default.clock.quantum = 32;
+          #     default.clock.min-quantum = 32;
+          #     default.clock.max-quantum = 1024;
+          #     link.max-buffers = 64;
+          #   };
+          # };
+          "92-low-latency" =
+            outputs.lib.mkIf config.modules.pipewire.lowLatency {
+              context.properties = {
+                default.clock.rate = 48000;
+                default.clock.quantum = 32;
+                default.clock.min-quantum = 32;
+                default.clock.max-quantum = 32;
+              };
+            };
+        };
+        pipewire-pulse."92-low-latency" =
+          outputs.lib.mkIf config.modules.pipewire.lowLatency {
+            context.modules = [{
+              name = "libpipewire-module-protocol-pulse";
+              args = {
+                pulse.min.req = "32/48000";
+                pulse.default.req = "32/48000";
+                pulse.max.req = "32/48000";
+                pulse.min.quantum = "32/48000";
+                pulse.max.quantum = "32/48000";
+              };
+            }];
+            stream.properties = {
+              node.latency = "32/48000";
+              resample.quality = 1;
+            };
+          };
+      };
     };
 
-    services.pulseaudio = {
-      enable = false;
-
-      # Prevent Spotify from muting when another audio source is running
-      extraConfig = "unload-module module-role-cork";
-    };
-
+    services.pulseaudio.enable = false;
     security.rtkit.enable = true;
 
     # Fix for pipewire-pulse breaking recently
