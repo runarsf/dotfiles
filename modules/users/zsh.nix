@@ -52,7 +52,6 @@ outputs.lib.mkModule config "zsh" {
           nh = "niks";
         };
       };
-      # FIXME abbrs don't work
       initExtraFirst = ''
         AUTOPAIR_INHIBIT_INIT=1
         # AUTOPAIR_SPC_WIDGET="abbr-expand-and-insert"
@@ -111,6 +110,7 @@ outputs.lib.mkModule config "zsh" {
           $EDITOR "$1"
           mv "$1.bak" "$1"
         }
+        alias docker-compose='docker compose'
 
         bindkey '^G' per-directory-history-toggle-history
         bindkey -M vicmd '^G' per-directory-history-toggle-history

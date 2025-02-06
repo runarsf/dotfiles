@@ -135,17 +135,11 @@ in outputs.lib.mkFor system hostname {
         };
       };
 
-      home.packages = with pkgs.unstable; [ pokemmo-installer moonlight-qt ];
-
-      # nixpkgs.overlays = [
-      #   (import "${
-      #       builtins.fetchTarball {
-      #         url =
-      #           "https://github.com/vlaci/openconnect-sso/archive/master.tar.gz";
-      #         sha256 = "sha256:08cqd40p9vld1liyl6qrsdrilzc709scyfghfzmmja3m1m7nym94";
-      #       }
-      #     }/overlay.nix")
-      # ];
+      home.packages = with pkgs.unstable; [
+        pokemmo-installer
+        moonlight-qt
+        postman
+      ];
 
       # xdg.desktopEntries."steam-handler" = {
       #   type = "Application";
@@ -156,7 +150,6 @@ in outputs.lib.mkFor system hostname {
       #         #!/run/current-system/sw/bin/bash
       #         set -o errexit
       #         set -o nounset
-
       #         notify-send "Steam trynna open $1"
       #       ''
       #     } %u";
