@@ -16,6 +16,9 @@ let
       #tabbrowser-tabpanels .browserStack {
         background: var(--zen-colors-tertiary, var(--toolbar-bgcolor));
       }
+      [zen-compact-mode="true"] #nav-bar {
+        background: var(--zen-dialog-background) !important;
+      }
     '';
     fixBookmarksBar = ''
       #zen-appcontent-navbar-container:not(:has(#PersonalToolbar[collapsed="false"])) {

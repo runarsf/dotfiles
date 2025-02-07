@@ -115,7 +115,7 @@ in outputs.lib.mkFor system hostname {
       isDesktop = true;
 
       # FIXME Using dev.go and dev.go.ide in lib.enable breaks and neither get enabled
-      modules = outputs.lib.enable [ "ctf" "audiorelay" "kvm" ] // {
+      modules = outputs.lib.enable [ "ctf" "audiorelay" "kvm" "easyeffects" ] // {
         dev = {
           java.enable = true;
           haskell.enable = true;
@@ -139,6 +139,7 @@ in outputs.lib.mkFor system hostname {
         pokemmo-installer
         moonlight-qt
         postman
+        warp-terminal
       ];
 
       # xdg.desktopEntries."steam-handler" = {
