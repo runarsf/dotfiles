@@ -1,81 +1,98 @@
-{ config, inputs, outputs, system, hostname, name, pkgs, ... }:
+{
+  config,
+  inputs,
+  outputs,
+  system,
+  hostname,
+  name,
+  pkgs,
+  ...
+}:
 
 let
-  ifIsDesktop = outputs.lib.optionals
-    config.isDesktop; # (outputs.lib.isDesktop config hostname);
+  ifIsDesktop = outputs.lib.optionals config.isDesktop; # (outputs.lib.isDesktop config hostname);
 
-in outputs.lib.mkFor system hostname {
+in
+outputs.lib.mkFor system hostname {
   common = {
     # TODO Make this apply to all users
-    imports = outputs.lib.concatImports { path = ../../modules/users; }
-      ++ outputs.lib.concatImports { path = ./config; } ++ [{
-        _module.args.keys = [ "${config.home.homeDirectory}/.ssh/id_nix" ];
-      }];
+    imports =
+      outputs.lib.concatImports { path = ../../modules/users; }
+      ++ outputs.lib.concatImports { path = ./config; };
 
     defaultTerminal = "wezterm";
     defaultBrowser = "zen";
     avatar = ./avatar.jpg;
 
-    modules = outputs.lib.enable [
-      "neovim"
-      "zsh"
-      "xonsh"
-      "git"
-      "gpg"
-      "keychain"
-      "nix"
-      "yazi"
-      "fun"
-    ] // {
-      wallpaper = ./wallpaper.jpg;
-      sops = {
-        enable = true;
-        privateKeys = [ "id_priv" "id_ntnu" ];
+    modules =
+      outputs.lib.enable [
+        "neovim"
+        "zsh"
+        "xonsh"
+        "git"
+        "gpg"
+        "keychain"
+        "nix"
+        "yazi"
+        "fun"
+      ]
+      // {
+        wallpaper = ./wallpaper.jpg;
+        sops = {
+          enable = true;
+          ageKeys = [ "${config.home.homeDirectory}/.ssh/id_nix" ];
+          privateKeys = [
+            "id_priv"
+            "id_ntnu"
+          ];
+        };
+        ssh = {
+          enable = true;
+          publicKeys = {
+            id_nix = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGwThBXxJMvEDSf/WUlXtgvs+R5TTZwILnAvCp5Zl02Z nix";
+            id_priv = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBT5zQFdVRooe5SfFZ2gKpruHF7FTw1OycTczRrLsR+M i@runar.ch";
+            id_ntnu = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO6Y4kk5hFzs/B6vze9u9RPG9d+vVM5EIRIOug4OnJBk runarsfr@stud.ntnu.no";
+          };
+        };
       };
-      ssh = {
-        enable = true;
-        publicKeys = [
-          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGwThBXxJMvEDSf/WUlXtgvs+R5TTZwILnAvCp5Zl02Z nix"
-          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBT5zQFdVRooe5SfFZ2gKpruHF7FTw1OycTczRrLsR+M i@runar.ch"
-          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO6Y4kk5hFzs/B6vze9u9RPG9d+vVM5EIRIOug4OnJBk runarsfr@stud.ntnu.no"
-        ];
-      };
-    };
   };
 
   systems = {
     linux = {
-      modules = outputs.lib.enable [
-        "discord"
-        "fonts"
-        "vscode"
-        "hyprland"
-        "kitty"
-        "writing"
-        "spotify"
-        "sops-fonts"
-        "bluetooth"
-        "pipewire"
-        "mpv"
-        "docker"
-        "stremio"
-        "camera"
-        "zen"
-      ] // {
-        stylix = {
-          enable = true;
-          # TODO Make system wide
-          system-wide = false;
-          theme = "ayu-dark";
+      modules =
+        outputs.lib.enable [
+          "discord"
+          "fonts"
+          "vscode"
+          "hyprland"
+          "kitty"
+          "writing"
+          "spotify"
+          "sops-fonts"
+          "bluetooth"
+          "pipewire"
+          "mpv"
+          "docker"
+          "stremio"
+          "camera"
+          "zen"
+        ]
+        // {
+          stylix = {
+            enable = true;
+            # TODO Make system wide
+            system-wide = false;
+            theme = "ayu-dark";
+          };
+          wezterm = {
+            enable = true;
+            bitmap = true;
+          };
+          flatpak.enable = config.isDesktop;
         };
-        wezterm = {
-          enable = true;
-          bitmap = true;
-        };
-        flatpak.enable = config.isDesktop;
-      };
 
-      home.packages = with pkgs.unstable;
+      home.packages =
+        with pkgs.unstable;
         ifIsDesktop [
           p7zip
           guvcview
@@ -115,31 +132,38 @@ in outputs.lib.mkFor system hostname {
       isDesktop = true;
 
       # FIXME Using dev.go and dev.go.ide in lib.enable breaks and neither get enabled
-      modules = outputs.lib.enable [ "ctf" "audiorelay" "kvm" "easyeffects" ] // {
-        dev = {
-          java.enable = true;
-          haskell.enable = true;
-          c.enable = true;
-          python = {
-            enable = true;
-            packageName = "python311";
-          };
-          rust = {
-            enable = true;
-            ide = true;
-          };
-          go = {
-            enable = true;
-            ide = true;
+      modules =
+        outputs.lib.enable [
+          "ctf"
+          "audiorelay"
+          "kvm"
+          "easyeffects"
+        ]
+        // {
+          dev = {
+            java.enable = true;
+            haskell.enable = true;
+            c.enable = true;
+            python = {
+              enable = true;
+              packageName = "python311";
+            };
+            rust = {
+              enable = true;
+              ide = true;
+            };
+            go = {
+              enable = true;
+              ide = true;
+            };
           };
         };
-      };
 
       home.packages = with pkgs.unstable; [
         pokemmo-installer
         moonlight-qt
         postman
-        warp-terminal
+        telegram-desktop
       ];
 
       # xdg.desktopEntries."steam-handler" = {
@@ -160,14 +184,19 @@ in outputs.lib.mkFor system hostname {
     rpi = {
       isDesktop = false;
 
-      modules = outputs.lib.enable [ "sops" "podman" ] // {
-        services.gonic.enable = true;
-        nginx = {
-          enable = true;
-          domains = [ "runar.ch" ];
-          email = "ssl@runar.ch";
+      modules =
+        outputs.lib.enable [
+          "sops"
+          "podman"
+        ]
+        // {
+          services.gonic.enable = true;
+          nginx = {
+            enable = true;
+            domains = [ "runar.ch" ];
+            email = "ssl@runar.ch";
+          };
         };
-      };
     };
   };
 }

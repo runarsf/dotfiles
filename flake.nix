@@ -156,6 +156,6 @@
         };
       };
 
-      formatter = lib.forEachSystem systems (pkgs: pkgs.nixfmt);
+      formatter = lib.forEachSystem systems (pkgs: pkgs.nixfmt-rfc-style);
     };
 }

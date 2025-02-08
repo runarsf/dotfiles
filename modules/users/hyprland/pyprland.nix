@@ -7,7 +7,7 @@ outputs.lib.mkDesktopModule config "pyprland" {
       term = {
         command = config.modules.${config.defaultTerminal}.exec {
           class = "scratchpad";
-          command = [ "connect" "scratchpad" ];
+          # command = [ "connect" "scratchpad" ];
         };
         lazy = true;
         hide = false;

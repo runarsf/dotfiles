@@ -1,6 +1,10 @@
 { config, outputs, pkgs, ... }:
 
 outputs.lib.mkModule config "zsh" {
+  nixos.programs.command-not-found.enable = false;
+  programs.command-not-found.enable = false;
+  programs.nix-index.enable = false;
+
   modules.starship.enable = true;
 
   home = {
@@ -37,11 +41,17 @@ outputs.lib.mkModule config "zsh" {
           "nix-community/nix-zsh-completions"
           "MichaelAquilina/zsh-auto-notify"
           "jimhester/per-directory-history"
-          # "Sam-programs/zsh-calc"
           "Tarrasch/zsh-functional"
           "zshzoo/magic-enter"
+          "MichaelAquilina/zsh-you-should-use"
+          # "arzzen/calc.plugin.zsh"
+
           "getantidote/use-omz"
           "ohmyzsh/ohmyzsh path:lib"
+          "ohmyzsh/ohmyzsh path:plugins/extract"
+          "ohmyzsh/ohmyzsh path:plugins/gitfast"
+          "ohmyzsh/ohmyzsh path:plugins/dotenv"
+          "ohmyzsh/ohmyzsh path:plugins/fancy-ctrl-z"
           "ohmyzsh/ohmyzsh path:plugins/extract"
         ];
       };
@@ -67,6 +77,13 @@ outputs.lib.mkModule config "zsh" {
         zstyle ':completion:*' special-dirs last
         zstyle ':completion:*' squeeze-slashes true
         zstyle ':completion:*' complete-options true
+
+        zstyle ':completion:*:default' file-patterns \
+          '*.(#i)nix:nix-files' \
+          '*.(#i)lock:lock-files' \
+          '%p:all-files'
+
+        zstyle ':completion:*:default' group-order nix-files lock-files all-files
 
         unsetopt correct \
                  prompt_cr \

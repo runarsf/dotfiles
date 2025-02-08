@@ -10,7 +10,7 @@ outputs.lib.mkModule config "nix" {
   home = {
     packages = with pkgs; [
       nil
-      nixfmt
+      nixfmt-rfc-style
       cached-nix-shell
       deadnix
       statix

@@ -1,40 +1,18 @@
-{
-  config,
-  outputs,
-  inputs,
-  name,
-  ...
-}:
+{ config, outputs, inputs, name, ... }:
 
 let
   toKeyPath = key: "${config.home.homeDirectory}/.ssh/${key}";
-
-in
-{
-  options = {
-    modules.sops.privateKeys = outputs.lib.mkOption {
-      default = [ ];
-      type = outputs.lib.types.listOf outputs.lib.types.str;
-      description = "List of private key names";
+  privateKeyDestinations =
+    map (key: toKeyPath key) config.modules.sops.privateKeys;
+  secretFiles = builtins.listToAttrs (map (key: {
+    name = key;
+    value = outputs.lib.mkSecretFile {
+      source = "${inputs.vault}/${name}/keys/${key}";
+      destination = toKeyPath key;
     };
-  };
+  }) config.modules.sops.privateKeys);
 
-  config =
-    let
-      privateKeyDestinations = map (key: toKeyPath key) config.modules.sops.privateKeys;
-      secretFiles = builtins.listToAttrs (
-        map (key: {
-          name = key;
-          value = outputs.lib.mkSecretFile {
-            source = "${inputs.vault}/${name}/keys/${key}";
-            destination = toKeyPath key;
-          };
-        }) config.modules.sops.privateKeys
-      );
-
-    in
-    outputs.lib.mkIf (config.modules.sops.privateKeys != [ ]) {
-      programs.ssh.matchBlocks."".identityFile = privateKeyDestinations;
-      sops.secrets = secretFiles;
-    };
+in outputs.lib.mkIf (config.modules.sops.privateKeys != [ ]) {
+  programs.ssh.matchBlocks."".identityFile = privateKeyDestinations;
+  sops.secrets = secretFiles;
 }

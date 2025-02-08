@@ -1,23 +1,9 @@
-{
-  outputs,
-  config,
-  keys ? [ ],
-  ...
-}:
+{ outputs, config, ... }:
 
-{
-  imports = [
-    ./ssh.nix
-    ./gpg.nix
-  ];
-}
-// outputs.lib.mkModule config "keychain" {
+outputs.lib.mkModule config "keychain" {
   programs.keychain = {
     enable = true;
-    agents = [
-      "ssh"
-      "gpg"
-    ];
-    inherit keys;
+    agents = [ "ssh" "gpg" ];
+    keys = config.modules.sops.privateKeyNames;
   };
 }

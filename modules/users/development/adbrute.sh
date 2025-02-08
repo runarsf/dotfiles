@@ -21,7 +21,7 @@ while IFS= read -r port; do
     break
   fi
 
-printf 'Trying %s:%s...\n' "${IP}" "${port}"
+  printf 'Trying %s:%s...\n' "${IP}" "${port}"
 
   if timeout 2.5s adb connect "${IP}:${port}"; then
     break

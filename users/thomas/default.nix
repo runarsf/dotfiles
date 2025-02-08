@@ -1,44 +1,59 @@
-{ config, inputs, osConfig, outputs, system, hostname, name, pkgs, ... }:
+{
+  config,
+  inputs,
+  osConfig,
+  outputs,
+  system,
+  hostname,
+  name,
+  pkgs,
+  ...
+}:
 
 let
-  ifIsDesktop = outputs.lib.optionals
-    config.isDesktop; # (outputs.lib.isDesktop config hostname);
+  ifIsDesktop = outputs.lib.optionals config.isDesktop; # (outputs.lib.isDesktop config hostname);
 
-in outputs.lib.mkFor system hostname {
+in
+outputs.lib.mkFor system hostname {
   common = {
-    imports = outputs.lib.concatImports { path = ../../modules/users; }
-      ++ outputs.lib.concatImports { path = ./config; } ++ [{
-        _module.args.keys = [ "${config.home.homeDirectory}/.ssh/id_nix" ];
-      }];
+    imports =
+      outputs.lib.concatImports { path = ../../modules/users; }
+      ++ outputs.lib.concatImports { path = ./config; };
 
     defaultTerminal = "wezterm";
     defaultBrowser = "zen";
     avatar = ./avatar.jpg;
 
-    modules = outputs.lib.enable [
-      "neovim"
-      "zsh"
-      "xonsh"
-      "git"
-      "gpg"
-      "keychain"
-      "nix"
-      "yazi"
-    ] // {
-      wallpaper = ./wallpaper.jpg;
-      sops = {
-        enable = true;
-        privateKeys = [ "id_priv" "id_ntnu" ];
+    modules =
+      outputs.lib.enable [
+        "neovim"
+        "zsh"
+        "xonsh"
+        "git"
+        "gpg"
+        "keychain"
+        "nix"
+        "yazi"
+      ]
+      // {
+        wallpaper = ./wallpaper.jpg;
+        sops = {
+          enable = true;
+          ageKeys = [ "${config.home.homeDirectory}/.ssh/id_nix" ];
+          privateKeys = [
+            "id_priv"
+            "id_ntnu"
+          ];
+        };
+        ssh = {
+          enable = true;
+          publicKeys = {
+            id_nix = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFw8lBpuv2bWKYxxXeeG6pZ7Ut2GCtjuEbuvVEp9DmeY nix";
+            id_priv = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL8glmBsdfxRsQxzZrljQynBF09jljQD4KIH33Kcx9Hw thoesp@protonmail.com";
+            id_ntnu = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBYghkkwi+HG+q91Xhcdc+Ac8wYdIo8BzUZKUPa2/00f thomes@stud.ntnu.no";
+          };
+        };
       };
-      ssh = {
-        enable = true;
-        publicKeys = [
-          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBYghkkwi+HG+q91Xhcdc+Ac8wYdIo8BzUZKUPa2/00f thomes@stud.ntnu.no"
-          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL8glmBsdfxRsQxzZrljQynBF09jljQD4KIH33Kcx9Hw thoesp@protonmail.com"
-          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFw8lBpuv2bWKYxxXeeG6pZ7Ut2GCtjuEbuvVEp9DmeY nix"
-        ];
-      };
-    };
 
     programs.git = {
       userName = "Thomas Espervik";
@@ -48,47 +63,50 @@ in outputs.lib.mkFor system hostname {
 
   systems = {
     linux = {
-      modules = outputs.lib.enable [
-        "discord"
-        "fonts"
-        "vscode"
-        "hyprland"
-        "kitty"
-        "writing"
-        "spotify"
-        "sops-fonts"
-        "bluetooth"
-        "zen"
-        "japanese"
-        "pipewire"
-        "mpv"
-        "camera"
-      ] // {
-        stylix = {
-          enable = true;
-          system-wide = false;
-          theme = "ayu-dark";
-        };
-        wezterm = {
-          enable = true;
-          bitmap = true;
-        };
-        dev = {
-          c = {
+      modules =
+        outputs.lib.enable [
+          "discord"
+          "fonts"
+          "vscode"
+          "hyprland"
+          "kitty"
+          "writing"
+          "spotify"
+          "sops-fonts"
+          "bluetooth"
+          "zen"
+          "japanese"
+          "pipewire"
+          "mpv"
+          "camera"
+        ]
+        // {
+          stylix = {
             enable = true;
-            ide = true;
+            system-wide = false;
+            theme = "ayu-dark";
           };
-          python = {
+          wezterm = {
             enable = true;
-            packageName = "python311";
-            presets = outputs.lib.enable [ "math" "jupyter" ];
+            bitmap = true;
+          };
+          dev = {
+            c = {
+              enable = true;
+              ide = true;
+            };
+            python = {
+              enable = true;
+              packageName = "python311";
+              presets = outputs.lib.enable [
+                "math"
+                "jupyter"
+              ];
+            };
           };
         };
-      };
 
-      home.packages = with pkgs;
-        ifIsDesktop
-        [ inputs.openconnect-sso.packages."${pkgs.system}".default ];
+      home.packages = with pkgs; ifIsDesktop [ inputs.openconnect-sso.packages."${pkgs.system}".default ];
 
       nixos = {
         programs.zsh.enable = true;
@@ -117,13 +135,20 @@ in outputs.lib.mkFor system hostname {
     boiler = {
       isDesktop = true;
 
-      modules = outputs.lib.enable [ "steam" "ffxiv" "fun" "reaper" ] // {
-        dev = {
-          rust.enable = true;
-          haskell.enable = true;
-          python.packages = with pkgs.python311Packages; [ manim ];
+      modules =
+        outputs.lib.enable [
+          "steam"
+          "ffxiv"
+          "fun"
+          "reaper"
+        ]
+        // {
+          dev = {
+            rust.enable = true;
+            haskell.enable = true;
+            python.packages = with pkgs.python311Packages; [ manim ];
+          };
         };
-      };
 
       nixos = {
         # NVIDIA settings
@@ -158,8 +183,12 @@ in outputs.lib.mkFor system hostname {
             value = "262144";
           }
         ];
-        boot.kernel.sysctl = { "fs.file-max" = 262144; };
-        systemd = { user.extraConfig = "DefaultLimitNOFILE=262144"; };
+        boot.kernel.sysctl = {
+          "fs.file-max" = 262144;
+        };
+        systemd = {
+          user.extraConfig = "DefaultLimitNOFILE=262144";
+        };
       };
 
       wayland.windowManager.hyprland.settings.env = [
@@ -194,17 +223,24 @@ in outputs.lib.mkFor system hostname {
     toaster = {
       isDesktop = true;
 
-      modules = outputs.lib.enable [ "ctf" "steam" "fun" "docker" ] // {
-        dev = {
-          android = {
-            enable = true;
-            ide = true;
+      modules =
+        outputs.lib.enable [
+          "ctf"
+          "steam"
+          "fun"
+          "docker"
+        ]
+        // {
+          dev = {
+            android = {
+              enable = true;
+              ide = true;
+            };
+            haskell.enable = true;
+            rust.enable = true;
+            python.packages = with pkgs.python311Packages; [ manim ];
           };
-          haskell.enable = true;
-          rust.enable = true;
-          python.packages = with pkgs.python311Packages; [ manim ];
         };
-      };
     };
   };
 }

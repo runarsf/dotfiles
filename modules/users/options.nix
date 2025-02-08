@@ -2,6 +2,10 @@
 
 {
   options = with outputs.lib; {
+    isDesktop = mkOption {
+      default = config.home.sessionVariables ? NIXOS_OZONE_WL;
+      type = types.bool;
+    };
     defaultTerminal = mkOption {
       default =
         if (config.isDesktop) then (throw "defaultTerminal not set") else null;
@@ -12,7 +16,6 @@
         if (config.isDesktop) then (throw "defaultBrowser not set") else null;
       type = types.nullOr types.str;
     };
-    # TODO find a better place for this
     avatar = mkOption {
       type = types.path;
     };
