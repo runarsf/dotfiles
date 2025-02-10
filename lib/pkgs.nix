@@ -12,6 +12,7 @@ in rec {
   forEachSystem = systems: fn:
     outputs.lib.genAttrs systems (system: fn (pkgsForSystem system));
 
+  # TODO Use this instead of manually?
   addPatches = pkg: patches:
     pkg.overrideAttrs
     (prevAttrs: { patches = (prevAttrs.patches or [ ]) ++ patches; });

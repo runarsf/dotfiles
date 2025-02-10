@@ -3,16 +3,16 @@
 ## Initial setup
 
 1. Install [NixOS](https://nixos.org/download.html) (or Nix)
-    > **NB!** Make sure user- `$USER` and hostname `$HOST` match the configuration.
+    > **NB!** Make sure `$USER`- and `$HOST`name match the configuration.
 
-1. Put your SSH key with access to the sops-protected vault and your GitHub account on your host (`~/.ssh/id_nix`),\
+1. Put your SSH key with access to the sops-protected vault and authentication access to your GitHub account on your host (`~/.ssh/id_nix`),\
   and add it to the ssh agent
     ```bash
     eval $(ssh-agent)
     ssh-add ~/.ssh/id_nix
     ```
 
-1. Clone this repository (to path matching [`$FLAKE`](./modules/users/development/nix.nix#L5))
+1. Clone this repository (to path matching [`$FLAKE`](./modules/users/development/nix.nix))
     ```bash
     git clone git@github.com:runarsf/dotfiles.git ~/.config/nixos
     cd ~/.config/nixos
@@ -30,7 +30,7 @@
     ```
 
 1. You should now be able to log in with the same username and the password set in the config (`changeme`).\
-  After logging in, make sure to change your password, and check that all the substituters are applied correctly.
+  After logging in, make sure to change your password, and check that all the [substituters](./modules/nix/nix.nix) are applied correctly.
     ```bash
     passwd
 
@@ -47,14 +47,15 @@
 - [Nix Package Version Search](https://lazamar.co.uk/nix-versions)
 - Prefetch hash (prepend `sha256:`): `nix-prefetch-url --unpack $url`
 - Jump into the build of a derivation: `nix-shell -E 'with import <nixpkgs> {  }; callPackage ./default.nix {  }'`
-- Test an expression: `nix eval -f test.nix f`\
+- Test an expression: `nix eval -f test.nix fn`\
     <kbd>test.nix</kbd>
     ```
     { lib ? import <nixpkgs/lib> }:
 
     {
-      f = builtins.trace "Hello World!" true;
+      fn = builtins.trace "Hello World!" true;
     }
     ```
+
 
 > Core library functions are shamelessly stolen from [![avatar](https://images.weserv.nl/?url=avatars.githubusercontent.com/u/39416660?v=4&h=20&w=20&fit=cover&mask=circle&maxage=7d) `imatpot/dotfiles`](https://github.com/imatpot/dotfiles)
