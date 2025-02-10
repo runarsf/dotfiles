@@ -1,7 +1,12 @@
-{ config, pkgs, outputs, ... }:
+{
+  config,
+  pkgs,
+  outputs,
+  ...
+}:
 
 outputs.lib.mkModule config "qmk" {
-  home.packages = with pkgs.unstable; [
+  home.packages = with pkgs; [
     qmk
   ];
 
@@ -12,6 +17,7 @@ outputs.lib.mkModule config "qmk" {
         text = builtins.readFile ./qmk.rules;
         destination = "/etc/udev/rules.d/50-qmk.rules";
       };
-    in [ qmk-rules ];
+    in
+    [ qmk-rules ];
   nixos.services.udev.extraRules = builtins.readFile ./qmk.rules;
 }

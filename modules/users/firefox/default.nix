@@ -336,14 +336,13 @@
         "gfx.webrender.all" = true;
         "browser.tabs.tabClipWidth" = 83;
 
-        "browser.urlbar.suggest.bestmatch" = true;
         "browser.urlbar.suggest.bookmark" = true;
         "browser.urlbar.suggest.history" = true;
         "browser.urlbar.suggest.calculator" = true;
         "browser.urlbar.unitConversion.enabled" = true;
         "browser.urlbar.suggest.engines" = false;
         "browser.urlbar.suggest.openpage" = false;
-        "browser.urlbar.suggest.remotetab" = false;
+        "browser.urlbar.suggest.remotetab" = true;
         "browser.urlbar.suggest.topsites" = false;
 
         # "keyword.enabled" = true;
