@@ -141,6 +141,7 @@ outputs.lib.mkFor system hostname {
           "ffxiv"
           "fun"
           "reaper"
+          "qmk"
         ]
         // {
           dev = {
