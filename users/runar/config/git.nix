@@ -6,20 +6,5 @@
   programs.git = {
     userName = "Runar Fredagsvik";
     userEmail = "i@runar.ch";
-
-    extraConfig = {
-      "includeIf \"gitdir:~/Development/edu/\"" = {
-        path = builtins.toString (
-          pkgs.writeText ".gitconfig-ntnu" ''
-            [core]
-              sshCommand = ssh -i ~/.ssh/id_work
-
-            [user]
-              name = Runar Fredagsvik
-              email = runarsfr@stud.ntnu.no
-          ''
-        );
-      };
-    };
   };
 }

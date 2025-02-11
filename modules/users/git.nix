@@ -20,6 +20,22 @@ outputs.lib.mkModule config "git" {
       };
     };
 
+    # TODO Make this an option: modules.git.pathConfig
+    # extraConfig = {
+    #   "includeIf \"gitdir:~/Development/edu/\"" = {
+    #     path = builtins.toString (
+    #       pkgs.writeText ".gitconfig-ntnu" ''
+    #         [core]
+    #           sshCommand = ssh -i ~/.ssh/id_ntnu
+
+    #         [user]
+    #           name = Runar Fredagsvik
+    #           email = runarsfr@stud.ntnu.no
+    #       ''
+    #     );
+    #   };
+    # };
+
     aliases = rec {
       aliases = "config --get-regexp alias";
 
