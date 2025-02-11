@@ -17,23 +17,17 @@
     {
       enable = true;
       enabledExtensions = with spicePkgs.extensions; [
-        adblock
         hidePodcasts
-        popupLyrics
-        groupSession
-        powerBar
-        goToSong
-        phraseToPlaylist
+        fullAppDisplayMod
         songStats
         betterGenres
-        #  playNext
-        #  addToQueueTop
         oneko
         sectionMarker
-        beautifulLyrics
-        shuffle # shuffle+ (special characters are sanitized out of extension names)
+        shuffle
+        lastfm
       ];
-      theme = spicePkgs.themes.text;
+      # theme = spicePkgs.themes.text;
+      theme = spicePkgs.themes.lucid;
       enabledCustomApps = with spicePkgs.apps; [ newReleases ];
       #  colorScheme = "spotify";
     };

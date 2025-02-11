@@ -1,6 +1,23 @@
-{ config, outputs, pkgs, ... }:
+{
+  config,
+  outputs,
+  pkgs,
+  ...
+}:
 
 outputs.lib.mkModule config "zsh" {
+  nixpkgs.overlays = [
+    (_: prev: {
+      stderred = prev.stderred.overrideAttrs {
+        src = pkgs.fetchFromGitHub {
+          owner = "sickill";
+          repo = "stderred";
+          rev = "97a51c97f757d3a23efc90b15bf95d5af632c8f8";
+          sha256 = "sha256-aXpn1H5SvpP5XufBaoiI38S+jUXOH+f65ntvbYkLrrQ=";
+        };
+      };
+    })
+  ];
   nixos.programs.command-not-found.enable = false;
   programs.command-not-found.enable = false;
   programs.nix-index.enable = false;
@@ -8,7 +25,10 @@ outputs.lib.mkModule config "zsh" {
   modules.starship.enable = true;
 
   home = {
-    packages = with pkgs; [ libnotify libqalculate ];
+    packages = with pkgs; [
+      libnotify
+      libqalculate
+    ];
     shellAliases = {
       develop = outputs.lib.mkForce "nix develop --command zsh";
     };
@@ -78,12 +98,12 @@ outputs.lib.mkModule config "zsh" {
         zstyle ':completion:*' squeeze-slashes true
         zstyle ':completion:*' complete-options true
 
-        zstyle ':completion:*:default' file-patterns \
-          '*.(#i)nix:nix-files' \
-          '*.(#i)lock:lock-files' \
-          '%p:all-files'
-
-        zstyle ':completion:*:default' group-order nix-files lock-files all-files
+        # TODO Make nix-files autocomplete before lock-files
+        # zstyle ':completion:*:default' file-patterns \
+        #   '*.(#i)nix:nix-files' \
+        #   '*.(#i)lock:lock-files' \
+        #   '%p:all-files'
+        # zstyle ':completion:*:default' group-order nix-files lock-files all-files
 
         unsetopt correct \
                  prompt_cr \
@@ -100,6 +120,10 @@ outputs.lib.mkModule config "zsh" {
         typeset -A ZSH_HIGHLIGHT_REGEXP
         ZSH_HIGHLIGHT_REGEXP+=('[0-9]' fg=cyan)
         ZSH_HIGHLIGHT_HIGHLIGHTERS+=(main regexp)
+
+        # https://unix.stackexchange.com/a/26776
+        # https://unix.stackexchange.com/a/53587
+        export LD_PRELOAD="${pkgs.stderred}/lib/libstderred.so''${LD_PRELOAD:+:$LD_PRELOAD}"
 
         wim () { set -eu; ''${EDITOR:-vim} "$(which ''${1:?No file selected...})" ''${@:2}; set +eu }
         ? () {

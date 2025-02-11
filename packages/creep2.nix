@@ -13,7 +13,9 @@ pkgs.stdenv.mkDerivation {
   buildPhase = "true";
 
   installPhase = ''
+    runHook preInstall
     install -Dm644 -t $out/share/fonts/misc/ $src/*.bdf
+    runHook postInstall
   '';
 
   meta = with pkgs.lib; {
