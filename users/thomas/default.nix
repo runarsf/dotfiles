@@ -142,6 +142,7 @@ outputs.lib.mkFor system hostname {
           "fun"
           "reaper"
           "qmk"
+          "easyeffects"
         ]
         // {
           dev = {
