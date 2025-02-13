@@ -5,7 +5,8 @@ let
     outputs.lib.mkUser {
       inherit username;
       inherit (args) system hostname stateVersion;
-      osConfig = config;
+      # osConfig = config;
+      osConfig = null;
     }) users;
 
   nixosConfigs = builtins.map (user: user.config.nixos) userConfigs;

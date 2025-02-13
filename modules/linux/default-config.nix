@@ -1,14 +1,28 @@
-{ outputs, pkgs, hostname, stateVersion, ... }:
+{
+  outputs,
+  pkgs,
+  hostname,
+  stateVersion,
+  ...
+}:
 
 with outputs.lib;
 
 {
-  imports = [ ./user-nixos-configs.nix ];
+  imports = [
+    ./user-nixos-configs.nix
+  ];
 
   system.stateVersion = mkDefault stateVersion;
   networking.hostName = mkDefault hostname;
 
-  environment.systemPackages = with pkgs; [ vim git wget curl niks ];
+  environment.systemPackages = with pkgs; [
+    vim
+    git
+    wget
+    curl
+    niks
+  ];
 
   nix.gc = {
     automatic = mkDefault true;

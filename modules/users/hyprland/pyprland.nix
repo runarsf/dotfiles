@@ -1,22 +1,31 @@
-{ config, pkgs, outputs, ... }:
+{
+  config,
+  pkgs,
+  outputs,
+  ...
+}:
 
 outputs.lib.mkDesktopModule config "pyprland" {
   xdg.configFile."hypr/pyprland.json".text = builtins.toJSON {
     pyprland.plugins = [ "scratchpads" ];
     scratchpads = {
       term = {
-        command = config.modules.${config.defaultTerminal}.exec {
-          class = "scratchpad";
-          # command = [ "connect" "scratchpad" ];
-        };
+        command =
+          "uwsm -- "
+          + config.modules.${config.defaultTerminal}.exec {
+            class = "scratchpad";
+            # command = [ "connect" "scratchpad" ];
+          };
         lazy = true;
         hide = false;
       };
       math = {
-        command = config.modules.${config.defaultTerminal}.exec {
-          class = "math-scratchpad";
-          command = [ (outputs.lib.getExe pkgs.xonsh) ];
-        };
+        command =
+          "uwsm -- "
+          + config.modules.${config.defaultTerminal}.exec {
+            class = "math-scratchpad";
+            command = [ (outputs.lib.getExe pkgs.xonsh) ];
+          };
         lazy = true;
         hide = false;
       };

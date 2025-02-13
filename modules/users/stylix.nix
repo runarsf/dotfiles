@@ -1,6 +1,13 @@
-{ outputs, config, pkgs, name, ... }:
+{
+  outputs,
+  config,
+  pkgs,
+  name,
+  ...
+}:
 
 # FIXME For some reason, every other build stylix themes are light / dark themed...?
+# TODO Refactor for home manager integration https://stylix.danth.me/options/nixos.html#stylixhomemanagerintegrationautoimport
 
 let
   stylix-config = {
@@ -9,7 +16,9 @@ let
     polarity = "dark";
     image = config.modules.wallpaper;
 
-    targets = outputs.lib.disable [ "nixvim" ];
+    targets = outputs.lib.disable [ "nixvim" ] // {
+      qt.platform = "qtct";
+    };
 
     cursor = {
       package = pkgs.bibata-cursors;
@@ -53,15 +62,24 @@ let
       popups = 1.0;
     };
 
-    base16Scheme =
-      "${pkgs.base16-schemes}/share/themes/${config.modules.stylix.theme}.yaml";
+    base16Scheme = "${pkgs.base16-schemes}/share/themes/${config.modules.stylix.theme}.yaml";
   };
 
   settings = {
     user = rec {
-      stylix = stylix-config // {
-        targets = outputs.lib.disable [ "vscode" "hyprland" "kitty" "waybar" "hyprlock" "spicetify" ];
-      };
+      stylix = outputs.lib.deepMerge [
+        stylix-config
+        {
+          targets = outputs.lib.disable [
+            "vscode"
+            "hyprland"
+            "kitty"
+            "waybar"
+            "hyprlock"
+            "spicetify"
+          ];
+        }
+      ];
 
       # This needs to always be set for the Stylix system configuation to be valid,
       # even if Stylix is disabled system-wide
@@ -106,11 +124,17 @@ let
     };
 
     system-wide = {
-      stylix = stylix-config // { targets = outputs.lib.disable [ "grub" ]; };
+      stylix = outputs.lib.deepMerge [
+        stylix-config
+        {
+          targets = outputs.lib.disable [ "grub" ];
+        }
+      ];
     };
   };
 
-in {
+in
+{
   options = {
     modules = {
       wallpaper = outputs.lib.mkOption {
@@ -121,8 +145,7 @@ in {
 
       stylix = {
         enable = outputs.lib.mkEnableOption "Enable Stylix";
-        system-wide = outputs.lib.mkEnableOption
-          "Enable Stylix system-wide. This will install Stylix for all users.";
+        system-wide = outputs.lib.mkEnableOption "Enable Stylix system-wide. This will install Stylix for all users.";
 
         # https://github.com/tinted-theming/schemes
         theme = outputs.lib.mkOption {
@@ -134,23 +157,22 @@ in {
     };
   };
 
-  config = outputs.lib.mkIf config.modules.stylix.enable (outputs.lib.mkMerge [
-    # TODO Is there not user-config that we still want on the system-wide version
-    (outputs.lib.mkIf config.modules.stylix.system-wide {
-      nixos = outputs.lib.trace
-        "info: Enabling Stylix system-wide. This will override the configs of all users with ${name}'s config."
-        settings.system-wide;
-    })
-    (outputs.lib.mkIf (!config.modules.stylix.system-wide) settings.user)
-    ({
-      # FIXME Stylix supports hyprlock now, but is too dumb to apply it correctly
-      programs.hyprlock.settings.background.path =
-        builtins.toString config.modules.wallpaper;
+  config = outputs.lib.mkIf config.modules.stylix.enable (
+    outputs.lib.mkMerge [
+      # TODO Is there not user-config that we still want on the system-wide version
+      (outputs.lib.mkIf config.modules.stylix.system-wide {
+        nixos = outputs.lib.trace "info: Enabling Stylix system-wide. This will override the configs of all users with ${name}'s config." settings.system-wide;
+      })
+      (outputs.lib.mkIf (!config.modules.stylix.system-wide) settings.user)
+      ({
+        # FIXME Stylix supports hyprlock now, but is too dumb to apply it correctly
+        programs.hyprlock.settings.background.path = builtins.toString config.modules.wallpaper;
 
-      services.hyprpaper.settings = {
-        preload = [ "${config.modules.wallpaper}" ];
-        wallpaper = [ ", ${config.modules.wallpaper}" ];
-      };
-    })
-  ]);
+        services.hyprpaper.settings = {
+          preload = [ "${config.modules.wallpaper}" ];
+          wallpaper = [ ", ${config.modules.wallpaper}" ];
+        };
+      })
+    ]
+  );
 }

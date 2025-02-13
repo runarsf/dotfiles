@@ -6,7 +6,8 @@ let
       inherit username;
       inherit (args) system hostname;
       stateVersion = outputs.lib.defaultStateVersion;
-      osConfig = config;
+      # osConfig = config;
+      osConfig = null;
     }) users;
 
   macosConfigs = builtins.map (user: user.config.macos) userConfigs;

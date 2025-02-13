@@ -1,5 +1,7 @@
 { config, outputs, pkgs, ... }:
 
+# TODO https://github.com/JackHack96/EasyEffects-Presets
+
 # let configPath = ../. + builtins.toPath "/easyeffects";
 let configPath = ./config;
 
