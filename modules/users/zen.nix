@@ -110,7 +110,7 @@ let
       }
     '';
     fixBookmarksBar = ''
-      #zen-appcontent-navbar-container:not(:has(#PersonalToolbar[collapsed="false"])) {
+      :root[zen-single-toolbar="true"]:not([customizing]) #zen-appcontent-navbar-container:not(:has(#PersonalToolbar[collapsed="false"])) {
         height: var(--zen-element-separation) !important;
 
         .titlebar-buttonbox-container {
