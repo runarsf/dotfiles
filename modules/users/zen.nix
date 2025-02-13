@@ -7,6 +7,8 @@
   ...
 }:
 
+# TODO Zen Mods
+
 let
   # https://github.com/nix-community/home-manager/blob/release-24.05/modules/programs/firefox.nix#L57-L61
   userPrefValue =
@@ -26,6 +28,26 @@ let
     "tab.groups.background" = true;
     "tab.groups.borders" = true;
     "zen.urlbar.replace-newtab" = false;
+
+    # Zen Context Menu
+    "uc.hidecontext.screenshot" = true;
+    "uc.hidecontext.unloadactions" = true;
+    "uc.hidecontext.selectalltabs" = true;
+    "uc.hidecontext.image" = true;
+    "uc.hidecontext.printselection" = true;
+    "uc.hidecontext.search" = true;
+    "uc.hidecontext.searchinpriv" = true;
+    "uc.hidecontext.closetab" = true;
+    "uc.hidecontext.movetaboptions" = true;
+    "uc.hidecontext.newtab" = true;
+    "uc.hidecontext.mutetab" = true;
+    "uc.hidecontext.menubar" = true;
+
+    # Private Mode Highlighting
+    "uc.private-browsing-top-bar.highlighting-style" = "";
+
+    # Better Find Bar
+    "theme.better_find_bar.transparent_background" = true;
 
     # UI
     "ui.osk.enabled" = true;

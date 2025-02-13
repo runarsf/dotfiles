@@ -152,6 +152,7 @@ outputs.lib.mkModule config "zsh" {
           mv "$1.bak" "$1"
         }
         alias docker-compose='docker compose'
+        alias dkcUf='docker compose up -d --force-recreate'
 
         bindkey '^G' per-directory-history-toggle-history
         bindkey -M vicmd '^G' per-directory-history-toggle-history
