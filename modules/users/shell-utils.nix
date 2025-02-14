@@ -1,5 +1,10 @@
-{ pkgs, inputs, outputs, config, ... }:
-
+{
+  pkgs,
+  inputs,
+  outputs,
+  config,
+  ...
+}:
 outputs.lib.mkEnabledModule config "shell-utils" {
   programs.fzf.enable = true;
 
@@ -46,8 +51,7 @@ outputs.lib.mkEnabledModule config "shell-utils" {
     '';
 
     shellAliases = {
-      ls =
-        "EZA_ICON_SPACING=2 ${pkgs.eza}/bin/eza -l -F -g -a --group-directories-first --no-time --git";
+      ls = "EZA_ICON_SPACING=2 ${pkgs.eza}/bin/eza -l -F -g -a --group-directories-first --no-time --git";
       grep = "grep --color=always";
       cat = "${pkgs.bat}/bin/bat";
     };

@@ -1,7 +1,5 @@
-{ lib, ... }:
-
+{lib, ...}:
 # English (UK) display language, Norwegian (Bokmål) locale.
-
 {
   time.timeZone = lib.mkDefault "Europe/Oslo";
   i18n.defaultLocale = lib.mkDefault "en_GB.UTF-8";

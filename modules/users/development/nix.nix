@@ -1,5 +1,9 @@
-{ config, pkgs, outputs, ... }:
-
+{
+  config,
+  pkgs,
+  outputs,
+  ...
+}:
 outputs.lib.mkModule config "nix" {
   home.sessionVariables = {
     FLAKE = "${config.home.homeDirectory}/.config/nixos";
@@ -11,6 +15,7 @@ outputs.lib.mkModule config "nix" {
     packages = with pkgs; [
       nil
       nixfmt-rfc-style
+      alejandra
       cached-nix-shell
       deadnix
       statix

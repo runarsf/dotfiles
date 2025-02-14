@@ -1,28 +1,31 @@
-{ config, lib, outputs, pkgs, ... }:
-
+{
+  config,
+  lib,
+  outputs,
+  pkgs,
+  ...
+}:
 # Intended to be used alongside another keyboard layout
-
 outputs.lib.mkDesktopModule config "japanese" {
   wayland.windowManager.hyprland.settings.exec-once = [
     "/run/current-system/systemd/bin/systemctl --user start xdg-autostart-if-no-desktop-manager.target"
   ];
   i18n.inputMethod = {
     enabled = "fcitx5";
-    fcitx5.addons = with pkgs; [ fcitx5-configtool fcitx5-mozc fcitx5-gtk ];
+    fcitx5.addons = with pkgs; [fcitx5-configtool fcitx5-mozc fcitx5-gtk];
   };
   gtk = {
     gtk2.extraConfig = ''gtk-im-module="fcitx"'';
-    gtk3.extraConfig = { gtk-im-module = "fcitx"; };
-    gtk4.extraConfig = { gtk-im-module = "fcitx"; };
+    gtk3.extraConfig = {gtk-im-module = "fcitx";};
+    gtk4.extraConfig = {gtk-im-module = "fcitx";};
   };
   dconf.settings."org/gnome/settings-daemon/plugins/xsettings" = {
     overrides = "{'Gtk/IMModule':<'fcitx'>}";
   };
-  home.sessionVariables = { XMODIFIERS = "@im=fcitx"; };
+  home.sessionVariables = {XMODIFIERS = "@im=fcitx";};
   xdg.configFile."fcitx5/profile" = {
     target = "fcitx5/profile_source";
-    onChange =
-      "cat ${config.xdg.configHome}/fcitx5/profile_source > ${config.xdg.configHome}/fcitx5/profile";
+    onChange = "cat ${config.xdg.configHome}/fcitx5/profile_source > ${config.xdg.configHome}/fcitx5/profile";
     text = ''
       [Groups/0]
       # Group Name

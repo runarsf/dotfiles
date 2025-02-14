@@ -5,10 +5,8 @@
   name,
   ...
 }:
-
 # FIXME For some reason, every other build stylix themes are light / dark themed...?
 # TODO Refactor for home manager integration https://stylix.danth.me/options/nixos.html#stylixhomemanagerintegrationautoimport
-
 let
   stylix-config = {
     enable = true;
@@ -16,9 +14,11 @@ let
     polarity = "dark";
     image = config.modules.wallpaper;
 
-    targets = outputs.lib.disable [ "nixvim" ] // {
-      qt.platform = "qtct";
-    };
+    targets =
+      outputs.lib.disable ["nixvim"]
+      // {
+        qt.platform = "qtct";
+      };
 
     cursor = {
       package = pkgs.bibata-cursors;
@@ -127,14 +127,12 @@ let
       stylix = outputs.lib.deepMerge [
         stylix-config
         {
-          targets = outputs.lib.disable [ "grub" ];
+          targets = outputs.lib.disable ["grub"];
         }
       ];
     };
   };
-
-in
-{
+in {
   options = {
     modules = {
       wallpaper = outputs.lib.mkOption {
@@ -164,15 +162,15 @@ in
         nixos = outputs.lib.trace "info: Enabling Stylix system-wide. This will override the configs of all users with ${name}'s config." settings.system-wide;
       })
       (outputs.lib.mkIf (!config.modules.stylix.system-wide) settings.user)
-      ({
+      {
         # FIXME Stylix supports hyprlock now, but is too dumb to apply it correctly
         programs.hyprlock.settings.background.path = builtins.toString config.modules.wallpaper;
 
         services.hyprpaper.settings = {
-          preload = [ "${config.modules.wallpaper}" ];
-          wallpaper = [ ", ${config.modules.wallpaper}" ];
+          preload = ["${config.modules.wallpaper}"];
+          wallpaper = [", ${config.modules.wallpaper}"];
         };
-      })
+      }
     ]
   );
 }

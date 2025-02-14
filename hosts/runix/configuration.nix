@@ -1,6 +1,4 @@
-{ inputs, ... }:
-
-{
+{inputs, ...}: {
   # TODO Make most of these modules user-based
   imports = [
     inputs.nixos-hardware.nixosModules.lenovo-thinkpad-t480s

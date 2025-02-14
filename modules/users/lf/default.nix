@@ -1,5 +1,9 @@
-{ outputs, config, pkgs, ... }:
-
+{
+  outputs,
+  config,
+  pkgs,
+  ...
+}:
 outputs.lib.mkModule config "lf" {
   xdg.configFile."lf/icons".source = ./lficons;
 
@@ -64,10 +68,8 @@ outputs.lib.mkModule config "lf" {
       gtr = "cd ~/.local/share/Trash/files";
 
       dd = "trash";
-      tr =
-        "$ ${pkgs.trashy}/bin/trash list | ${pkgs.fzf}/bin/fzf --multi | awk '{$1=$1;print}' | rev | cut -d ' ' -f1 | rev | xargs ${pkgs.trashy}/bin/trash restore --match=exact --force";
-      td =
-        "$ ${pkgs.trashy}/bin/trash list | ${pkgs.fzf}/bin/fzf --multi | awk '{$1=$1;print}' | rev | cut -d ' ' -f1 | rev | xargs ${pkgs.trashy}/bin/trash empty --match=exact --force";
+      tr = "$ ${pkgs.trashy}/bin/trash list | ${pkgs.fzf}/bin/fzf --multi | awk '{$1=$1;print}' | rev | cut -d ' ' -f1 | rev | xargs ${pkgs.trashy}/bin/trash restore --match=exact --force";
+      td = "$ ${pkgs.trashy}/bin/trash list | ${pkgs.fzf}/bin/fzf --multi | awk '{$1=$1;print}' | rev | cut -d ' ' -f1 | rev | xargs ${pkgs.trashy}/bin/trash empty --match=exact --force";
 
       e = ''$$EDITOR "$f"'';
       V = ''$''${pkgs.bat}/bin/bat --paging=always "$f"'';

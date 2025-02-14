@@ -4,9 +4,8 @@
   outputs,
   ...
 }:
-
 outputs.lib.mkModule config "yazi" {
-  home.packages = with pkgs; [ exiftool ];
+  home.packages = with pkgs; [exiftool];
   home.shellAliases."fm" = ''${config.programs.yazi.package}/bin/yazi --cwd-file /tmp/yazi.dir "$@" && cd "$(\cat /tmp/yazi.dir)"'';
 
   xdg.configFile = {

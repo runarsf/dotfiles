@@ -1,5 +1,11 @@
-{ config, pkgs, inputs, outputs, name, ... }:
-
+{
+  config,
+  pkgs,
+  inputs,
+  outputs,
+  name,
+  ...
+}:
 # Useful tools
 #   https://binary.ninja/
 #   https://en.wikipedia.org/wiki/List_of_file_signatures
@@ -9,7 +15,6 @@
 #   https://www.dcode.fr/tools-list
 #   https://pequalsnp-team.github.io/cheatsheet/steganography-101
 #   https://webhook.site/
-
 # {
 # TODO https://github.com/redcode-labs/RedNix/issues/10
 # $ nixos-container start rednix
@@ -25,7 +30,7 @@ outputs.lib.mkModule config "ctf" {
       enable = true;
       package = pkgs.wireshark;
     };
-    users.users."${name}".extraGroups = [ "wireshark" ];
+    users.users."${name}".extraGroups = ["wireshark"];
   };
 
   home = {
@@ -58,7 +63,8 @@ outputs.lib.mkModule config "ctf" {
         burpsuite
 
         # inputs.binsider.packages.${pkgs.system}.default
-      ] ++ outputs.lib.optionals config.modules.dev.android.enable [
+      ]
+      ++ outputs.lib.optionals config.modules.dev.android.enable [
         frida-tools
         unstable.jadx
         apktool
@@ -67,7 +73,7 @@ outputs.lib.mkModule config "ctf" {
     file.".local/bin/nc-respond".source = let
       script = pkgs.writeShellApplication {
         name = "nc-respond";
-        runtimeInputs = with pkgs; [ coreutils ];
+        runtimeInputs = with pkgs; [coreutils];
         text = builtins.readFile ./nc-respond.sh;
       };
     in "${script}/bin/nc-respond";

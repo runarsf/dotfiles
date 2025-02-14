@@ -4,7 +4,6 @@
   pkgs,
   ...
 }:
-
 outputs.lib.mkModule config "zsh" {
   nixpkgs.overlays = [
     (_: prev: {
@@ -34,7 +33,7 @@ outputs.lib.mkModule config "zsh" {
     };
   };
 
-  nixos.environment.pathsToLink = [ "/share/zsh" ];
+  nixos.environment.pathsToLink = ["/share/zsh"];
 
   programs = {
     zoxide.enable = true;
@@ -128,7 +127,7 @@ outputs.lib.mkModule config "zsh" {
 
         wim () { set -eu; ''${EDITOR:-vim} "$(which ''${1:?No file selected...})" ''${@:2}; set +eu }
         ? () {
-          ${pkgs.krabby}/bin/krabby random | tail -n+2
+          ${pkgs.krabby}/bin/krabby random --no-title
         }
         magic-enter-cmd () {
           printf ' ?\n'

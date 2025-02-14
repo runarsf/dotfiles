@@ -1,6 +1,4 @@
-{ config, ... }:
-
-{
+{config, ...}: {
   programs.ssh.matchBlocks = {
     skyhigh = {
       hostname = "10.212.173.1";

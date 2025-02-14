@@ -7,10 +7,8 @@
   cert,
   key,
   ...
-}:
-
-{
-  imports = [ inputs.sops-nix.nixosModules.sops ];
+}: {
+  imports = [inputs.sops-nix.nixosModules.sops];
 
   services.nginx = {
     enable = true;
@@ -24,13 +22,13 @@
     80
     443
   ];
-  users.groups.acmereceivers.members = [ "nginx" ];
+  users.groups.acmereceivers.members = ["nginx"];
   # systemd.user.services.nginx.Unit.After = [ "sops-nix.service" ];
 
   security.acme = {
     defaults = {
       renewInterval = "*-*-* 00,12:00:00";
-      reloadServices = [ "nginx" ];
+      reloadServices = ["nginx"];
     };
     acceptTerms = true;
     defaults.email = email;
@@ -39,12 +37,13 @@
         name = domain;
         value = {
           domain = "*.${domain}";
-          extraDomainNames = [ domain ];
+          extraDomainNames = [domain];
           group = "acmereceivers";
           dnsProvider = "cloudflare";
           credentialsFile = config.sops.templates."acme-credentials".path;
         };
-      }) domains
+      })
+      domains
     );
   };
 
@@ -63,7 +62,7 @@
   # puts it in $XDG_RUNTIME_DIR/secrets.d/age-keys.txt,
   # and points age.keyFile to the generated age key.
   # TODO Don't hardcode
-  sops.age.sshKeyPaths = [ "/home/runar/.ssh/nix" ];
+  sops.age.sshKeyPaths = ["/home/runar/.ssh/nix"];
 
   sops = {
     defaultSopsFile = "${inputs.vault}/secrets.yaml";
@@ -79,7 +78,7 @@
     apiTokenFile = config.sops.templates."cloudflare-dyndns".path;
   };
 
-  sops.secrets.cloudflare_token = { };
+  sops.secrets.cloudflare_token = {};
   sops.templates."acme-credentials".content = ''
     CLOUDFLARE_DNS_API_TOKEN=${config.sops.placeholder.cloudflare_token}
   '';

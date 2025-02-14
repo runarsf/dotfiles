@@ -89,73 +89,75 @@
     };
   };
 
-  outputs = inputs:
-    let systems = [ "x86_64-linux" "aarch64-linux" ];
-
-    in rec {
-      lib = import ./lib {
-        inherit inputs;
-        inherit (inputs.self) outputs;
-      };
-
-      nixosConfigurations = {
-        # TODO Should isDesktop be an option to mkHost?
-        runix = lib.mkHost {
-          system = "x86_64-linux";
-          # TODO graphical = true;
-          hostname = "runix";
-          users = [ "runar" ];
-        };
-
-        rpi = lib.mkHost {
-          system = "aarch64-linux";
-          hostname = "rpi";
-          users = [ "runar" ];
-        };
-
-        boiler = lib.mkHost {
-          system = "x86_64-linux";
-          hostname = "boiler";
-          users = [ "thomas" ];
-        };
-
-        toaster = lib.mkHost {
-          system = "x86_64-linux";
-          hostname = "toaster";
-          users = [ "thomas" ];
-        };
-      };
-
-      homeConfigurations = {
-        runar = lib.mkUser { username = "runar"; };
-
-        "runar@runix" = lib.mkUser {
-          username = "runar";
-          system = "x86_64-linux";
-          hostname = "runix";
-        };
-
-        "runar@rpi" = lib.mkUser {
-          username = "runar";
-          system = "aarch64-linux";
-          hostname = "rpi";
-        };
-
-        thomas = lib.mkUser { username = "thomas"; };
-
-        "thomas@boiler" = lib.mkUser {
-          username = "thomas";
-          system = "x86_64-linux";
-          hostname = "boiler";
-        };
-
-        "thomas@toaster" = lib.mkUser {
-          username = "thomas";
-          system = "x86_64-linux";
-          hostname = "toaster";
-        };
-      };
-
-      formatter = lib.forEachSystem systems (pkgs: pkgs.nixfmt-rfc-style);
+  outputs = inputs: let
+    systems = [
+      "x86_64-linux"
+      "aarch64-linux"
+    ];
+  in rec {
+    lib = import ./lib {
+      inherit inputs;
+      inherit (inputs.self) outputs;
     };
+
+    nixosConfigurations = {
+      # TODO Should isDesktop be an option to mkHost?
+      runix = lib.mkHost {
+        system = "x86_64-linux";
+        # TODO graphical = true;
+        hostname = "runix";
+        users = ["runar"];
+      };
+
+      rpi = lib.mkHost {
+        system = "aarch64-linux";
+        hostname = "rpi";
+        users = ["runar"];
+      };
+
+      boiler = lib.mkHost {
+        system = "x86_64-linux";
+        hostname = "boiler";
+        users = ["thomas"];
+      };
+
+      toaster = lib.mkHost {
+        system = "x86_64-linux";
+        hostname = "toaster";
+        users = ["thomas"];
+      };
+    };
+
+    homeConfigurations = {
+      runar = lib.mkUser {username = "runar";};
+
+      "runar@runix" = lib.mkUser {
+        username = "runar";
+        system = "x86_64-linux";
+        hostname = "runix";
+      };
+
+      "runar@rpi" = lib.mkUser {
+        username = "runar";
+        system = "aarch64-linux";
+        hostname = "rpi";
+      };
+
+      thomas = lib.mkUser {username = "thomas";};
+
+      "thomas@boiler" = lib.mkUser {
+        username = "thomas";
+        system = "x86_64-linux";
+        hostname = "boiler";
+      };
+
+      "thomas@toaster" = lib.mkUser {
+        username = "thomas";
+        system = "x86_64-linux";
+        hostname = "toaster";
+      };
+    };
+
+    formatter = lib.forEachSystem systems (pkgs: pkgs.alejandra);
+  };
 }

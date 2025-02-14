@@ -1,6 +1,4 @@
-_:
-
-{
+_: {
   imports = [
     ../../modules/linux/locales/norwegian.nix
     ../../modules/linux/systemd-boot.nix

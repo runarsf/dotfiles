@@ -1,5 +1,10 @@
-{ config, outputs, pkgs, name, ... }:
-
+{
+  config,
+  outputs,
+  pkgs,
+  name,
+  ...
+}:
 outputs.lib.mkModule config "webdav" {
   modules.nginx.enable = true;
 
@@ -7,17 +12,17 @@ outputs.lib.mkModule config "webdav" {
     # https://nixos.wiki/wiki/Nginx#Authentication_via_PAM
     security.pam.services.nginx.setEnvironment = false;
     systemd.services.nginx.serviceConfig = {
-      SupplementaryGroups = [ "shadow" ];
+      SupplementaryGroups = ["shadow"];
     };
 
     networking.firewall = {
-      allowedTCPPorts = [ 6060 ];
-      allowedUDPPorts = [ 6060 ];
+      allowedTCPPorts = [6060];
+      allowedUDPPorts = [6060];
     };
     systemd.services.webdav = {
-      after = [ "network.target" ];
+      after = ["network.target"];
       description = "rclone webdav server";
-      wantedBy = [ "default.target" ];
+      wantedBy = ["default.target"];
 
       serviceConfig = {
         ExecStart = builtins.toString (pkgs.writeShellScript "rclone-dav" ''

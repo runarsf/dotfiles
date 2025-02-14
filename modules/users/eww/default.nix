@@ -6,7 +6,6 @@
   name,
   ...
 }:
-
 outputs.lib.mkDesktopModule config "eww" {
   # system = {
   #   boot.kernelModules = ["i2c-dev" "ddcci_backlight"];

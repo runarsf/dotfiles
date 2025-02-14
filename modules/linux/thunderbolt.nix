@@ -1,5 +1,3 @@
-_:
-
-{
+_: {
   services.hardware.bolt.enable = true;
 }

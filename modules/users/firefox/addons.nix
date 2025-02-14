@@ -3,8 +3,7 @@
   fetchurl,
   lib,
   stdenv,
-}:
-{
+}: {
   "adaptive-tab-bar-colour" = buildFirefoxXpiAddon {
     pname = "adaptive-tab-bar-colour";
     version = "2.1.4";

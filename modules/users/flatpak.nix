@@ -1,8 +1,12 @@
-{ config, inputs, outputs, ... }:
-
+{
+  config,
+  inputs,
+  outputs,
+  ...
+}:
 outputs.lib.mkModule config "flatpak" {
   nixos = {
-    imports = [ inputs.nix-flatpak.nixosModules.nix-flatpak ];
+    imports = [inputs.nix-flatpak.nixosModules.nix-flatpak];
     services.flatpak = {
       enable = true;
       update = {

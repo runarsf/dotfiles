@@ -1,11 +1,14 @@
-{ config, pkgs, outputs, ... }:
-
+{
+  config,
+  pkgs,
+  outputs,
+  ...
+}:
 # Sunshine: https://github.com/LongerHV/nixos-configuration/blob/master/modules/nixos/sunshine.nix
-
 # TODO: https://journix.dev/posts/gaming-on-nixos/
 outputs.lib.mkDesktopModule config "steam" {
   home = {
-    packages = with pkgs; [ protontricks winetricks gamescope protonup-qt protonup mangohud ];
+    packages = with pkgs; [protontricks winetricks gamescope protonup-qt protonup mangohud];
     sessionVariables = {
       STEAM_EXTRA_COMPAT_TOOLS_PATHS = "${config.home.homeDirectory}/.steam/root/compatibilitytools.d";
     };

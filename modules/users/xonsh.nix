@@ -4,18 +4,14 @@
   outputs,
   ...
 }:
-
 # TODO Cachix for xonsh-xontribs https://github.com/drmikecrowe/nur-packages?tab=readme-ov-file#cachix-public-keys
-
 # https://github.com/oh-my-xonsh/xontrib-default-command
 # https://pypi.org/project/xontrib-brace-expansion/
 # https://github.com/anki-code/xontrib-pipeliner
-
 # Redirect output of python command to file
 #   >>> echo @(__import__('inspect').getsource($PROMPT_FIELDS['gitstatus'])) >> FILE
 # Inspect function
 #   >>> __import__('inspect').getsource($PROMPT_FIELDS['gitstatus'])
-
 outputs.lib.mkModule config "xonsh" {
   nixos.programs.xonsh = with pkgs.nur.repos.xonsh-xontribs; {
     enable = true;
@@ -83,47 +79,47 @@ outputs.lib.mkModule config "xonsh" {
                   abbrevs[alias] = aliases[alias]
     '';
     /*
-      config = ''
-          from os.path import (realpath as _realpath, join as _join)
-          from shutil import which as _which
-          from xonsh.platform import ON_LINUX as _ON_LINUX
+    config = ''
+        from os.path import (realpath as _realpath, join as _join)
+        from shutil import which as _which
+        from xonsh.platform import ON_LINUX as _ON_LINUX
 
-          # Helper function to join paths and get full path.
-          path = lambda *arg: _realpath(_join(*arg))
+        # Helper function to join paths and get full path.
+        path = lambda *arg: _realpath(_join(*arg))
 
-          # Aliases {{{
-          # aliases['ls'] = ['ls', '-l', '-A', '-F', '-h']
-          # if $(ls --version 2>/dev/null).strip():
-          #     aliases['ls'].append('--color=auto')
-          # if _which('exa') is not None:
-          #     aliases['ls'] = ['exa', '--group-directories-first', '--git', '--long', '--all']
-          aliases['ls'] = ['${pkgs.eza}/bin/eza', '-l', '-F', '-g', '-a', '--group-directories-first', '--no-time', '--git']
+        # Aliases {{{
+        # aliases['ls'] = ['ls', '-l', '-A', '-F', '-h']
+        # if $(ls --version 2>/dev/null).strip():
+        #     aliases['ls'].append('--color=auto')
+        # if _which('exa') is not None:
+        #     aliases['ls'] = ['exa', '--group-directories-first', '--git', '--long', '--all']
+        aliases['ls'] = ['${pkgs.eza}/bin/eza', '-l', '-F', '-g', '-a', '--group-directories-first', '--no-time', '--git']
 
-          aliases['dk'] = ['docker']
-          aliases['dkc'] = aliases['dk'] + ['compose']
-          aliases['dkcl'] = aliases['dkc'] + ['logs']
-          aliases['dkcL'] = aliases['dkcl'] + ['-f']
-          aliases['dkcb'] = aliases['dkc'] + ['build']
-          aliases['dkcB'] = aliases['dkcb'] + ['--no-cache']
-          aliases['dkcd'] = aliases['dkc'] + ['down']
-          aliases['dkcu'] = aliases['dkc'] + ['up']
-          aliases['dkcU'] = aliases['dkcu'] + ['-d']
-          aliases['dkcUf'] = aliases['dkcU'] + ['--force-recreate', '--remove-orphans']
-          aliases['dkx']   = lambda args: $[docker exec -it @(args) sh]
+        aliases['dk'] = ['docker']
+        aliases['dkc'] = aliases['dk'] + ['compose']
+        aliases['dkcl'] = aliases['dkc'] + ['logs']
+        aliases['dkcL'] = aliases['dkcl'] + ['-f']
+        aliases['dkcb'] = aliases['dkc'] + ['build']
+        aliases['dkcB'] = aliases['dkcb'] + ['--no-cache']
+        aliases['dkcd'] = aliases['dkc'] + ['down']
+        aliases['dkcu'] = aliases['dkc'] + ['up']
+        aliases['dkcU'] = aliases['dkcu'] + ['-d']
+        aliases['dkcUf'] = aliases['dkcU'] + ['--force-recreate', '--remove-orphans']
+        aliases['dkx']   = lambda args: $[docker exec -it @(args) sh]
 
-          @aliases.register(".")
-          @aliases.register("..")
-          @aliases.register("...")
-          @aliases.register("....")
-          def _supercomma():
-              cd @("../" * len($__ALIAS_NAME))
+        @aliases.register(".")
+        @aliases.register("..")
+        @aliases.register("...")
+        @aliases.register("....")
+        def _supercomma():
+            cd @("../" * len($__ALIAS_NAME))
 
-          aliases |= {
-              '-': 'cd -',
-              '..': 'cd ..',
-          }
-          # }}}
-      '';
+        aliases |= {
+            '-': 'cd -',
+            '..': 'cd ..',
+        }
+        # }}}
+    '';
     */
   };
 }

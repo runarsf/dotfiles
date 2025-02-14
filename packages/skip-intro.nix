@@ -1,19 +1,18 @@
-{ pkgs ? import <nixpkgs> { } }:
-
+{pkgs ? import <nixpkgs> {}}:
 pkgs.stdenv.mkDerivation {
   pname = "skip-intro";
   version = "1.0.0";
   scriptName = "skip-intro.lua";
 
-  nativeBuildInputs = with pkgs; [ git ];
+  nativeBuildInputs = with pkgs; [git];
 
   src = pkgs.fetchgit {
     url = "https://github.com/rui-ddc/skip-intro.git";
     rev = "3a7d2e95d5adfa761e1a25097022403f3b8a0cba";
     sha256 = "sha256-1rxwPiYIj4oxy8piRpiJeWU4b8vCnLCOvxt7uoru5xc=";
-    sparseCheckout = [ "skip-intro.lua" ];
+    sparseCheckout = ["skip-intro.lua"];
   };
-  passthru.updateScript = pkgs.unstableGitUpdater { };
+  passthru.updateScript = pkgs.unstableGitUpdater {};
 
   # TODO Copy sparse checkout files to $out/share/mpv/scripts/
   installPhase = ''

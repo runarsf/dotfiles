@@ -1,5 +1,8 @@
-{ config, outputs, ... }:
-
+{
+  config,
+  outputs,
+  ...
+}:
 outputs.lib.mkDesktopModule config "redshift" {
   services.redshift = {
     enable = true;

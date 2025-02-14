@@ -1,9 +1,13 @@
-{ config, pkgs, outputs, ... }:
-
+{
+  config,
+  pkgs,
+  outputs,
+  ...
+}:
 outputs.lib.mkModule config "tmux" {
   programs.tmux = {
     enable = true;
-    plugins = with pkgs.tmuxPlugins; [ catppuccin extrakto resurrect mode-indicator yank sensible ];
+    plugins = with pkgs.tmuxPlugins; [catppuccin extrakto resurrect mode-indicator yank sensible];
     clock24 = true;
     # FIXME Plugins don't get properly configured because this is added to the end of the config file
     extraConfig = ''

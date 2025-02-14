@@ -1,6 +1,4 @@
-{ outputs, ... }:
-
-{
+{outputs, ...}: {
   main = {
     "0000".enable = true;
     "0100" = {

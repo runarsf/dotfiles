@@ -1,6 +1,4 @@
-_:
-
-{
+_: {
   programs.hyfetch = {
     enable = true;
     settings = {

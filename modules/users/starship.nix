@@ -1,5 +1,8 @@
-{ outputs, config, ... }:
-
+{
+  outputs,
+  config,
+  ...
+}:
 outputs.lib.mkModule config "starship" {
   programs.starship = {
     enable = true;

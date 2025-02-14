@@ -1,7 +1,14 @@
-{ config, inputs, outputs, pkgs, name, system, hostname, ... }:
-
+{
+  config,
+  inputs,
+  outputs,
+  pkgs,
+  name,
+  system,
+  hostname,
+  ...
+}:
 # This is a module that utilizes the shared sops secrets in the vault.
-
 outputs.lib.mkDesktopModule config "sops-fonts" {
   sops.secrets = {
     monolisa = {
@@ -24,10 +31,11 @@ outputs.lib.mkDesktopModule config "sops-fonts" {
   systemd.user.services.sops-fonts = {
     Unit = {
       Description = "Fonts with stupid licenses";
-      PartOf = [ "home-manager-${name}.service" ];
+      PartOf = ["home-manager-${name}.service"];
     };
-    Install.WantedBy = [ "default.target" ];
-    Service.ExecStart = builtins.toString
+    Install.WantedBy = ["default.target"];
+    Service.ExecStart =
+      builtins.toString
       (pkgs.writeShellScript "install-fonts" ''
         #!/run/current-system/sw/bin/bash
         set -o errexit

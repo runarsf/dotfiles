@@ -1,6 +1,8 @@
-{ pkgs, outputs, ... }:
-
 {
+  pkgs,
+  outputs,
+  ...
+}: {
   home = {
     sessionVariables = {
       CHROME_EXECUTABLE = "${pkgs.chromium}/bin/chromium";

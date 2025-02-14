@@ -1,5 +1,9 @@
-{ config, pkgs, outputs, ... }:
-
+{
+  config,
+  pkgs,
+  outputs,
+  ...
+}:
 outputs.lib.mkDesktopModule config "ffxiv" {
-  home.packages = with pkgs; [ xivlauncher ];
+  home.packages = with pkgs; [xivlauncher];
 }

@@ -1,7 +1,9 @@
-flake@{ inputs, outputs, ... }:
-
-let nixpkgsConfig = (import ../modules/nix/nixpkgs.nix flake).nixpkgs;
-
+flake @ {
+  inputs,
+  outputs,
+  ...
+}: let
+  nixpkgsConfig = (import ../modules/nix/nixpkgs.nix flake).nixpkgs;
 in rec {
   pkgsForSystem = system:
     import inputs.nixpkgs {
@@ -15,5 +17,5 @@ in rec {
   # TODO Use this instead of manually?
   addPatches = pkg: patches:
     pkg.overrideAttrs
-    (prevAttrs: { patches = (prevAttrs.patches or [ ]) ++ patches; });
+    (prevAttrs: {patches = (prevAttrs.patches or []) ++ patches;});
 }

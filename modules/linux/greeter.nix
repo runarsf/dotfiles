@@ -1,12 +1,15 @@
-{ inputs, pkgs, outputs, lib, ... }:
-
-let
+{
+  inputs,
+  pkgs,
+  outputs,
+  lib,
+  ...
+}: let
   # TODO Turn into list
   hyprland-session = "${inputs.hyprland.packages.${pkgs.system}.hyprland}/share/wayland-sessions";
   gnome-session = "${pkgs.gnome.gnome-session}/share/gnome-session";
-
 in {
-  environment.systemPackages = with pkgs; [ greetd.tuigreet ];
+  environment.systemPackages = with pkgs; [greetd.tuigreet];
 
   services.greetd = {
     enable = true;

@@ -4,12 +4,11 @@
   outputs,
   ...
 }:
-
 outputs.lib.mkModule config "wayland" {
   # TODO Does this belong here?
   nixos.services.libinput.enable = true;
 
-  home.packages = with pkgs; [ xorg.xeyes ];
+  home.packages = with pkgs; [xorg.xeyes];
 
   # https://discourse.nixos.org/t/home-manager-and-the-mimeapps-list-file-on-plasma-kde-desktops/37694/7
   xdg = {

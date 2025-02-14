@@ -1,9 +1,13 @@
-{ config, pkgs, outputs, osConfig, ... }:
-
+{
+  config,
+  pkgs,
+  outputs,
+  osConfig,
+  ...
+}:
 # TODO mkServiceModule that lets you define domain
-
 outputs.lib.mkModule' config "nginx" {
-  email = outputs.lib.mkOption { type = outputs.lib.types.str; };
+  email = outputs.lib.mkOption {type = outputs.lib.types.str;};
   domains = outputs.lib.mkOption {
     type = outputs.lib.types.listOf outputs.lib.types.str;
   };
@@ -11,7 +15,7 @@ outputs.lib.mkModule' config "nginx" {
   nixos = {
     # TODO Migrate to hm sops-nix when templates are supported https://github.com/Mic92/sops-nix/issues/423
     sops = {
-      secrets.cloudflare_token = { };
+      secrets.cloudflare_token = {};
       templates."acme-credentials".content = ''
         CLOUDFLARE_DNS_API_TOKEN=${osConfig.sops.placeholder.cloudflare_token}
       '';
@@ -19,12 +23,12 @@ outputs.lib.mkModule' config "nginx" {
         CLOUDFLARE_API_TOKEN=${osConfig.sops.placeholder.cloudflare_token}
       '';
     };
-    systemd.services.nginx.serviceConfig.ReadWritePaths = [ "/var/spool/nginx/logs/" ];
+    systemd.services.nginx.serviceConfig.ReadWritePaths = ["/var/spool/nginx/logs/"];
 
     services.nginx = {
       enable = true;
       # https://github.com/NixOS/nixpkgs/blob/nixos-unstable/pkgs/servers/http/nginx/modules.nix
-      additionalModules = with pkgs.nginxModules; [ pam dav ];
+      additionalModules = with pkgs.nginxModules; [pam dav];
       recommendedGzipSettings = true;
       recommendedOptimisation = true;
       recommendedProxySettings = true;
@@ -34,7 +38,8 @@ outputs.lib.mkModule' config "nginx" {
 
       # https://nixos.wiki/wiki/Nginx#Using_realIP_when_behind_CloudFlare_or_other_CDN
       commonHttpConfig = let
-        realIpsFromList = outputs.lib.strings.concatMapStringsSep "\n"
+        realIpsFromList =
+          outputs.lib.strings.concatMapStringsSep "\n"
           (x: "set_real_ip_from  ${x};");
         fileToList = x:
           outputs.lib.strings.splitString "\n" (builtins.readFile x);
@@ -53,26 +58,27 @@ outputs.lib.mkModule' config "nginx" {
       '';
     };
 
-    networking.firewall.allowedTCPPorts = [ 80 443 ];
-    users.groups.acmereceivers.members = [ "nginx" ];
+    networking.firewall.allowedTCPPorts = [80 443];
+    users.groups.acmereceivers.members = ["nginx"];
 
     security.acme = {
       defaults = {
         renewInterval = "*-*-* 00,12:00:00";
-        reloadServices = [ "nginx" ];
+        reloadServices = ["nginx"];
       };
       acceptTerms = true;
       defaults.email = config.modules.nginx.email;
       certs = builtins.listToAttrs (map (domain: {
-        name = domain;
-        value = {
-          domain = "*.${domain}";
-          extraDomainNames = [ domain ];
-          group = "acmereceivers";
-          dnsProvider = "cloudflare";
-          credentialsFile = osConfig.sops.templates."acme-credentials".path;
-        };
-      }) config.modules.nginx.domains);
+          name = domain;
+          value = {
+            domain = "*.${domain}";
+            extraDomainNames = [domain];
+            group = "acmereceivers";
+            dnsProvider = "cloudflare";
+            credentialsFile = osConfig.sops.templates."acme-credentials".path;
+          };
+        })
+        config.modules.nginx.domains);
     };
 
     services.nginx.virtualHosts = {
@@ -80,14 +86,15 @@ outputs.lib.mkModule' config "nginx" {
         forceSSL = true;
         sslCertificate = "/var/lib/acme/${builtins.head config.modules.nginx.cert}/cert.pem";
         sslCertificateKey = "/var/lib/acme/${builtins.head config.modules.nginx.cert}/key.pem";
-        locations."/" = { return = "418"; };
+        locations."/" = {return = "418";};
       };
     };
 
     services.cloudflare-dyndns = {
       enable = true;
       proxied = true;
-      domains = builtins.concatMap (domain: [ "*.${domain}" domain ])
+      domains =
+        builtins.concatMap (domain: ["*.${domain}" domain])
         config.modules.nginx.domains;
       apiTokenFile = osConfig.sops.templates."cloudflare-dyndns".path;
     };

@@ -1,5 +1,9 @@
-{ config, outputs, pkgs, ... }:
-
+{
+  config,
+  outputs,
+  pkgs,
+  ...
+}:
 outputs.lib.mkModule config "podman" {
   nixos = {
     virtualisation = {
@@ -15,6 +19,6 @@ outputs.lib.mkModule config "podman" {
       oci-containers.backend = "podman";
     };
 
-    environment.systemPackages = with pkgs; [ podman-compose ];
+    environment.systemPackages = with pkgs; [podman-compose];
   };
 }

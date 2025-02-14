@@ -1,9 +1,11 @@
-{ config, pkgs, outputs, ... }:
-
+{
+  config,
+  pkgs,
+  outputs,
+  ...
+}:
 # env GTK_DEBUG=interactive waybar
-
 # TODO If media widget is empty, don't show the group itself
-
 outputs.lib.mkDesktopModule config "waybar" {
   home.packages = with pkgs; [
     upower
@@ -18,7 +20,8 @@ outputs.lib.mkDesktopModule config "waybar" {
     package = pkgs.unstable.waybar;
     systemd.enable = true;
     style = builtins.readFile ./style.css;
-    settings = let sep = "&#8201;";
+    settings = let
+      sep = "&#8201;";
     in {
       mainBar = rec {
         height = 30;
@@ -27,9 +30,8 @@ outputs.lib.mkDesktopModule config "waybar" {
         margin = "10 10 0 10";
         reload_style_on_change = true;
 
-        modules-left =
-          [ "custom/logo" "hyprland/workspaces" "tray" "custom/layout" ];
-        modules-center = [ "hyprland/window" ];
+        modules-left = ["custom/logo" "hyprland/workspaces" "tray" "custom/layout"];
+        modules-center = ["hyprland/window"];
         modules-right = [
           "group/media"
           "idle_inhibitor"
@@ -56,7 +58,7 @@ outputs.lib.mkDesktopModule config "waybar" {
 
         "hyprland/window" = {
           format = "{}";
-          rewrite = { "(.*) — Mozilla Firefox" = "󰈹 $1"; };
+          rewrite = {"(.*) — Mozilla Firefox" = "󰈹 $1";};
           separate-outputs = true;
         };
 
@@ -76,7 +78,7 @@ outputs.lib.mkDesktopModule config "waybar" {
             transition-left-to-right = false;
           };
           # TODO seconds on hover
-          modules = [ "clock#time" "clock#date" ];
+          modules = ["clock#time" "clock#date"];
         };
         clock = {
           tooltip-format = "<tt><small>{calendar}</small></tt>";
@@ -103,12 +105,12 @@ outputs.lib.mkDesktopModule config "waybar" {
           };
           interval = 1;
         };
-        "clock#time" = clock // { format = "${sep} {:%H:%M}"; };
-        "clock#date" = clock // { format = "${sep} {:%d/%m/%Y}"; };
+        "clock#time" = clock // {format = "${sep} {:%H:%M}";};
+        "clock#date" = clock // {format = "${sep} {:%d/%m/%Y}";};
 
         "group/cpu" = {
           orientation = "inherit";
-          modules = [ "custom/polycat" "cpu" ];
+          modules = ["custom/polycat" "cpu"];
         };
         "custom/polycat" = {
           format = "<span font='polycat 16'>{}</span>";
@@ -120,22 +122,21 @@ outputs.lib.mkDesktopModule config "waybar" {
           format = "${sep}{usage: >3}%";
           # FIXME You shouldn't need to provide "start" in this, just btop
           on-click = config.modules.${config.defaultTerminal}.exec {
-            command = [ "start" "--" "btop" ];
+            command = ["start" "--" "btop"];
           };
         };
 
         memory = {
           format = "󰧑${sep}{: >3}%";
           on-click = config.modules.${config.defaultTerminal}.exec {
-            command = [ "start" "--" "btop" ];
+            command = ["start" "--" "btop"];
           };
         };
 
         backlight = {
           format = "{icon}${sep}";
           tooltip = "{percent: >3}%";
-          format-icons =
-            [ "" "" "" "" "" "" "" "" "" "" "" "" "" ];
+          format-icons = ["" "" "" "" "" "" "" "" "" "" "" "" ""];
         };
         battery = {
           states = {
@@ -145,7 +146,7 @@ outputs.lib.mkDesktopModule config "waybar" {
           };
           format = "{icon}${sep}{capacity: >3}%";
           format-full = "";
-          format-icons = [ "" "" "" "" "" ];
+          format-icons = ["" "" "" "" ""];
         };
         network = {
           format = "⚠${sep} Disabled";
@@ -166,12 +167,10 @@ outputs.lib.mkDesktopModule config "waybar" {
             phone = "";
             portable = "";
             car = "";
-            default = [ "" "" ];
+            default = ["" ""];
           };
-          on-click =
-            "${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_SINK@ toggle";
-          on-click-right =
-            "${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_SOURCE@ toggle";
+          on-click = "${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_SINK@ toggle";
+          on-click-right = "${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_SOURCE@ toggle";
           on-click-middle = "${pkgs.pavucontrol}/bin/pavucontrol";
         };
         "custom/notifs" = {
@@ -199,7 +198,7 @@ outputs.lib.mkDesktopModule config "waybar" {
             children-class = "child";
             transition-left-to-right = false;
           };
-          modules = [ "custom/media#icon" "custom/media#info" ];
+          modules = ["custom/media#icon" "custom/media#info"];
         };
         media = {
           format-icons = {
@@ -215,8 +214,8 @@ outputs.lib.mkDesktopModule config "waybar" {
           interval = 10;
           exec = "${./. + /bin/music.sh}";
         };
-        "custom/media#icon" = media // { format = "{icon}"; };
-        "custom/media#info" = media // { format-alt = "{}"; };
+        "custom/media#icon" = media // {format = "{icon}";};
+        "custom/media#info" = media // {format-alt = "{}";};
       };
     };
   };

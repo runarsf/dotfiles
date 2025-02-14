@@ -1,5 +1,8 @@
-{ config, outputs, ... }:
-
+{
+  config,
+  outputs,
+  ...
+}:
 outputs.lib.mkDesktopModule config "dunst" {
   services.dunst = {
     enable = true;
@@ -44,7 +47,7 @@ outputs.lib.mkDesktopModule config "dunst" {
         "startup_notification" = "false";
         "force_xinerama" = "false";
       };
-      experimental = { "per_monitor_dpi" = "false"; };
+      experimental = {"per_monitor_dpi" = "false";};
       "urgency_low" = {
         timeout = "4";
         background = "#141c21";

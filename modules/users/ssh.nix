@@ -1,8 +1,12 @@
-{ config, outputs, name, ... }:
-
+{
+  config,
+  outputs,
+  name,
+  ...
+}:
 outputs.lib.mkModule' config "ssh" (with outputs.lib; {
   publicKeys = mkOption {
-    default = [ ];
+    default = [];
     type = types.attrsOf types.str;
     description = "List of public key strings";
   };
@@ -13,19 +17,21 @@ outputs.lib.mkModule' config "ssh" (with outputs.lib; {
 
   # NOTE https://github.com/nix-community/home-manager/issues/322#issuecomment-1856128020
   # File permissions: https://superuser.com/a/215506
-  home.file = {
-    ".ssh/config" = {
-      target = ".ssh/config_source";
-      onChange =
-        "cat ~/.ssh/config_source > ~/.ssh/config && chmod 600 ~/.ssh/config";
-    };
-  } // builtins.listToAttrs (outputs.lib.mapAttrsToList (name: value: {
-    name = ".ssh/${name}.pub";
-    value = {
-      text = value;
-      # onChange = "chmod 644 ~/.ssh/${name}.pub";
-    };
-  }) config.modules.ssh.publicKeys);
+  home.file =
+    {
+      ".ssh/config" = {
+        target = ".ssh/config_source";
+        onChange = "cat ~/.ssh/config_source > ~/.ssh/config && chmod 600 ~/.ssh/config";
+      };
+    }
+    // builtins.listToAttrs (outputs.lib.mapAttrsToList (name: value: {
+        name = ".ssh/${name}.pub";
+        value = {
+          text = value;
+          # onChange = "chmod 644 ~/.ssh/${name}.pub";
+        };
+      })
+      config.modules.ssh.publicKeys);
 
   nixos = {
     programs.ssh.startAgent = true;

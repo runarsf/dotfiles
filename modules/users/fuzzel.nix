@@ -1,5 +1,8 @@
-{ config, outputs, ... }:
-
+{
+  config,
+  outputs,
+  ...
+}:
 outputs.lib.mkDesktopModule config "fuzzel" {
   programs.fuzzel = {
     enable = true;
@@ -16,7 +19,7 @@ outputs.lib.mkDesktopModule config "fuzzel" {
         vertical-pad = 5;
         inner-pad = 5;
         image-size-ratio = 0.25;
-        dpi-aware="no";
+        dpi-aware = "no";
       };
       border = {
         width = 0;

@@ -1,5 +1,8 @@
-{ config, outputs, ... }:
-
+{
+  config,
+  outputs,
+  ...
+}:
 # TODO hyprpaper
 outputs.lib.mkDesktopModule config "hyprpaper" {
   services.hyprpaper = {

@@ -1,6 +1,4 @@
-{ inputs, ... }:
-
-{
+{inputs, ...}: {
   nixpkgs = {
     config = {
       allowUnfree = true;
@@ -20,11 +18,11 @@
         nur = import inputs.nur {
           pkgs = prev;
           nurpkgs =
-            import inputs.nixpkgs { inherit (prev) system config overlays; };
+            import inputs.nixpkgs {inherit (prev) system config overlays;};
         };
       })
 
-      (_: prev: import ../../packages { pkgs = prev.pkgs; })
+      (_: prev: import ../../packages {pkgs = prev.pkgs;})
     ];
   };
 }

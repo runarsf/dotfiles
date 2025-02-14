@@ -1,5 +1,8 @@
-{ config, outputs, ... }:
-
+{
+  config,
+  outputs,
+  ...
+}:
 outputs.lib.mkDesktopModule config "trayer" {
   services.trayer = {
     enable = true;

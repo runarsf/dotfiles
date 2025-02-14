@@ -1,9 +1,13 @@
-{ config, pkgs, outputs, ... }:
-
+{
+  config,
+  pkgs,
+  outputs,
+  ...
+}:
 outputs.lib.mkModule config "fun" {
   home = {
-    packages = with pkgs; [ gay blahaj krabby cowsay ];
+    packages = with pkgs; [gay blahaj krabby cowsay];
 
-    shellAliases = { sl = "ls | rev"; };
+    shellAliases = {sl = "ls | rev";};
   };
 }

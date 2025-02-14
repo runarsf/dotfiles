@@ -1,5 +1,9 @@
-{ config, pkgs, outputs, ... }:
-
+{
+  config,
+  pkgs,
+  outputs,
+  ...
+}:
 outputs.lib.mkDesktopModule config "bluetooth" {
   services.blueman-applet.enable = true;
 
@@ -9,6 +13,6 @@ outputs.lib.mkDesktopModule config "bluetooth" {
       powerOnBoot = true;
     };
     services.blueman.enable = true;
-    environment.systemPackages = with pkgs; [ blueberry ];
+    environment.systemPackages = with pkgs; [blueberry];
   };
 }

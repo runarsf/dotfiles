@@ -6,18 +6,14 @@
   name,
   ...
 }:
-
 # TODO Zen Mods
-
 let
   # https://github.com/nix-community/home-manager/blob/release-24.05/modules/programs/firefox.nix#L57-L61
-  userPrefValue =
-    pref:
+  userPrefValue = pref:
     builtins.toJSON (
-      if builtins.isBool pref || builtins.isInt pref || builtins.isString pref then
-        pref
-      else
-        builtins.toJSON pref
+      if builtins.isBool pref || builtins.isInt pref || builtins.isString pref
+      then pref
+      else builtins.toJSON pref
     );
 
   # TODO Make these options for the module
@@ -129,7 +125,7 @@ let
         url = "https://github.com/Anoms12/Advanced-Tab-Groups.git";
         rev = "0dea07986100b26d24f2004794f110404723ab58";
         sha256 = "sha256-Vs0MjUjJC6xh3hB+VGK9dKxD0CRipMN2VE0IBNbP84g=";
-        sparseCheckout = [ "tab-group.css" ];
+        sparseCheckout = ["tab-group.css"];
       }
     }/tab-group.css";
   };
@@ -146,54 +142,49 @@ let
       }
     '';
   };
-
 in
-outputs.lib.mkDesktopModule config "zen" {
-  nixpkgs.overlays = [
-    (_: prev: {
-      zen-browser = inputs.zen-browser.packages.${pkgs.system}.default;
-      # zen-browser = inputs.zen-browser.packages.${pkgs.system}.default.overrideAttrs (oldAttrs: rec {
-      #   version = "1.7.6b";
-      #   src = pkgs.fetchurl {
-      #     hash = "sha256-InhljDorCxmXD9OCagF2RUNU9Lq8hIhz6/TqR7TSZG4=";
-      #     url = "https://github.com/zen-browser/desktop/releases/download/${version}/zen.linux-x86_64.tar.xz";
-      #   };
-      # });
-    })
-  ];
+  outputs.lib.mkDesktopModule config "zen" {
+    nixpkgs.overlays = [
+      (_: prev: {
+        zen-browser = inputs.zen-browser.packages.${pkgs.system}.default;
+        # zen-browser = inputs.zen-browser.packages.${pkgs.system}.default.overrideAttrs (oldAttrs: rec {
+        #   version = "1.7.6b";
+        #   src = pkgs.fetchurl {
+        #     hash = "sha256-InhljDorCxmXD9OCagF2RUNU9Lq8hIhz6/TqR7TSZG4=";
+        #     url = "https://github.com/zen-browser/desktop/releases/download/${version}/zen.linux-x86_64.tar.xz";
+        #   };
+        # });
+      })
+    ];
 
-  home.packages = with pkgs; [ zen-browser ];
+    home.packages = with pkgs; [zen-browser];
 
-  home.file = {
-    ".zen/${name}/chrome/userChrome.css".text = builtins.concatStringsSep "\n" (
-      with userChrome;
-      [
-        transparency
-        fixBookmarksBar
-        advancedTabGroups
-      ]
-    );
-    ".zen/${name}/chrome/userContent.css".text = builtins.concatStringsSep "\n" (
-      with userContent;
-      [
-        fixWhiteFlash
-      ]
-    );
-    ".zen/${name}/user.js".text = builtins.concatStringsSep "\n" (
-      outputs.lib.mapAttrsToList (key: value: ''user_pref("${key}", ${userPrefValue value});'') prefs
-    );
-  };
+    home.file = {
+      ".zen/${name}/chrome/userChrome.css".text = builtins.concatStringsSep "\n" (
+        with userChrome; [
+          transparency
+          fixBookmarksBar
+          advancedTabGroups
+        ]
+      );
+      ".zen/${name}/chrome/userContent.css".text = builtins.concatStringsSep "\n" (
+        with userContent; [
+          fixWhiteFlash
+        ]
+      );
+      ".zen/${name}/user.js".text = builtins.concatStringsSep "\n" (
+        outputs.lib.mapAttrsToList (key: value: ''user_pref("${key}", ${userPrefValue value});'') prefs
+      );
+    };
 
-  xdg.mimeApps = outputs.lib.mkIf (config.defaultBrowser == "zen") {
-    enable = true;
-    defaultApplications =
-      let
+    xdg.mimeApps = outputs.lib.mkIf (config.defaultBrowser == "zen") {
+      enable = true;
+      defaultApplications = let
         entries = [
           "${pkgs.zen-browser}/share/applications/zen.desktop"
           "zen.desktop"
         ];
-      in
-      {
+      in {
         "default-web-browser" = entries;
         "text/html" = entries;
         "x-scheme-handler/http" = entries;
@@ -201,5 +192,5 @@ outputs.lib.mkDesktopModule config "zen" {
         "x-scheme-handler/about" = entries;
         "x-scheme-handler/unknown" = entries;
       };
-  };
-}
+    };
+  }

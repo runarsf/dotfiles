@@ -4,13 +4,12 @@
   outputs,
   ...
 }:
-
 {
-  imports = [ ./fonts.nix ];
+  imports = [./fonts.nix];
 }
 // outputs.lib.mkDesktopModule config "writing" {
   # FIXME This needs to be added to lib/default-values.nix because the sets don't get merged
-  nixpkgs.config.permittedInsecurePackages = [ "electron-25.9.0" ];
+  nixpkgs.config.permittedInsecurePackages = ["electron-25.9.0"];
 
   programs.zathura = {
     enable = true;

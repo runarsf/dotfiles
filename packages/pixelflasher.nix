@@ -1,13 +1,14 @@
-{ lib
-, stdenv
-, android-tools
-, cacert
-, fetchFromGitHub
-, makeDesktopItem
-, makeWrapper
-, pyinstaller
-, python311
-, substituteAll
+{
+  lib,
+  stdenv,
+  android-tools,
+  cacert,
+  fetchFromGitHub,
+  makeDesktopItem,
+  makeWrapper,
+  pyinstaller,
+  python311,
+  substituteAll,
 }:
 stdenv.mkDerivation (finalAttrs: {
   pname = "PixelFlasher";
@@ -28,7 +29,7 @@ stdenv.mkDerivation (finalAttrs: {
   ];
 
   buildPhase = ''
-    # https://github.com/pyinstaller/pyinstaller/issues/1684#issuecomment-590288201 
+    # https://github.com/pyinstaller/pyinstaller/issues/1684#issuecomment-590288201
     sed -i 's/hiddenimports=\[\]/hiddenimports=\["_cffi_backend"\]/' build-on-*.spec
 
     # we set the default android-tools path for convenience
@@ -50,7 +51,7 @@ stdenv.mkDerivation (finalAttrs: {
       --set REQUESTS_CA_BUNDLE "${cacert}/etc/ssl/certs/ca-bundle.crt"
   '';
 
-  nativeBuildInputs = [ makeWrapper ];
+  nativeBuildInputs = [makeWrapper];
 
   buildInputs = with python311.pkgs; [
     android-tools
@@ -80,7 +81,7 @@ stdenv.mkDerivation (finalAttrs: {
     exec = finalAttrs.pname;
     icon = finalAttrs.pname;
     desktopName = finalAttrs.pname;
-    categories = [ "Utility" ];
+    categories = ["Utility"];
     genericName = finalAttrs.meta.description;
     noDisplay = false;
     startupNotify = true;
@@ -92,7 +93,7 @@ stdenv.mkDerivation (finalAttrs: {
     description = "Pixel™ phone flashing GUI utility with features";
     homepage = "https://github.com/badabing2005/PixelFlasher";
     license = lib.licenses.gpl3Only;
-    maintainers = with lib.maintainers; [ ];
+    maintainers = with lib.maintainers; [];
     mainProgram = "PixelFlasher";
     platforms = lib.platforms.all;
   };

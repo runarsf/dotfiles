@@ -1,19 +1,18 @@
-{ pkgs ? import <nixpkgs> { } }:
-
+{pkgs ? import <nixpkgs> {}}:
 pkgs.stdenv.mkDerivation {
   pname = "copy-paste-url";
   version = "latest";
   scriptName = "copy-paste-url.lua";
 
-  nativeBuildInputs = with pkgs; [ git ];
+  nativeBuildInputs = with pkgs; [git];
 
   src = pkgs.fetchgit {
     url = "https://github.com/elhirchek/copy-paste-url.git";
     rev = "";
     sha256 = "";
-    sparseCheckout = [ "copy-paste-url.lua" ];
+    sparseCheckout = ["copy-paste-url.lua"];
   };
-  passthru.updateScript = pkgs.unstableGitUpdater { };
+  passthru.updateScript = pkgs.unstableGitUpdater {};
 
   installPhase = ''
     runHook preInstall

@@ -1,5 +1,9 @@
-{ config, outputs, name, ... }:
-
+{
+  config,
+  outputs,
+  name,
+  ...
+}:
 outputs.lib.mkDesktopModule config "virtualbox" {
   nixos = {
     virtualisation.virtualbox = {
@@ -12,6 +16,6 @@ outputs.lib.mkDesktopModule config "virtualbox" {
         dragAndDrop = true;
       };
     };
-    users.extraGroups.vboxusers.members = [ name ];
+    users.extraGroups.vboxusers.members = [name];
   };
 }

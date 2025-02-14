@@ -4,9 +4,7 @@
   pkgs,
   inputs,
   ...
-}:
-
-{
+}: {
   # https://github.com/lucernae/nixos-pi
   imports = [
     inputs.nixos-hardware.nixosModules.raspberry-pi-4
@@ -32,14 +30,14 @@
   # !!! Needed for the virtual console to work on the RPi 3, as the default of 16M doesn't seem to be enough.
   # If X.org behaves weirdly (I only saw the cursor) then try increasing this to 256M.
   # On a Raspberry Pi 4 with 4 GB, you should either disable this parameter or increase to at least 64M if you want the USB ports to work.
-  boot.kernelParams = [ "cma=256M" ];
+  boot.kernelParams = ["cma=256M"];
 
   # Settings above are the bare minimum
   # All settings below are customized depending on your needs
 
   nixpkgs.overlays = [
     (final: super: {
-      makeModulesClosure = x: super.makeModulesClosure (x // { allowMissing = true; });
+      makeModulesClosure = x: super.makeModulesClosure (x // {allowMissing = true;});
     })
   ];
 
@@ -75,7 +73,7 @@
   # WiFi
   hardware = {
     enableRedistributableFirmware = true;
-    firmware = [ pkgs.wireless-regdb ];
+    firmware = [pkgs.wireless-regdb];
   };
 
   # Networking
@@ -100,7 +98,7 @@
 
     # Enabling WIFI
     wireless.enable = true;
-    wireless.interfaces = [ "wlan0" ];
+    wireless.interfaces = ["wlan0"];
     # If you want to connect also via WIFI to your router
     wireless.networks."Bern".psk = "gagatondra";
     # You can set default nameservers
@@ -143,12 +141,12 @@
     nat = {
       enable = true;
       externalInterface = "eth0";
-      internalInterfaces = [ "wg0" ];
+      internalInterfaces = ["wg0"];
     };
 
     firewall = {
       enable = true;
-      allowedUDPPorts = [ 51820 ];
+      allowedUDPPorts = [51820];
     };
 
     # wireguard.interfaces = {

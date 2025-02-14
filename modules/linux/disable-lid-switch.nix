@@ -1,6 +1,4 @@
-_:
-
-{
+_: {
   services.logind = {
     lidSwitch = "ignore";
     lidSwitchDocked = "ignore";

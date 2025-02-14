@@ -1,5 +1,9 @@
-{ outputs, pkgs, config, ... }:
-
+{
+  outputs,
+  pkgs,
+  config,
+  ...
+}:
 outputs.lib.mkModule' config "dev.java" {
   ide = outputs.lib.mkEnableOption "Enable Java IDE";
 } {
@@ -10,6 +14,5 @@ outputs.lib.mkModule' config "dev.java" {
 
   home.packages = with pkgs;
     outputs.lib.optionals (config.isDesktop && config.modules.dev.java.ide)
-    [ jetbrains.idea-ultimate ];
+    [jetbrains.idea-ultimate];
 }
-

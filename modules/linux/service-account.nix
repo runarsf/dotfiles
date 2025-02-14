@@ -1,6 +1,4 @@
-{ pkgs, ... }:
-
-{
+{pkgs, ...}: {
   users = {
     groups.ops.gid = 420;
     users.ops = {
@@ -12,7 +10,7 @@
       createHome = true;
       linger = true;
       shell = pkgs.bash;
-      extraGroups = [ "networkmanager" "podman" "docker" "libvirtd" ];
+      extraGroups = ["networkmanager" "podman" "docker" "libvirtd"];
     };
   };
 }

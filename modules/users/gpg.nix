@@ -1,5 +1,9 @@
-{ config, pkgs, outputs, ... }:
-
+{
+  config,
+  pkgs,
+  outputs,
+  ...
+}:
 outputs.lib.mkModule config "gpg" {
   nixos = {
     services.pcscd.enable = true;
@@ -13,6 +17,6 @@ outputs.lib.mkModule config "gpg" {
       # else
       #   true;
     };
-    environment.systemPackages = with pkgs; [ pinentry pinentry-curses ];
+    environment.systemPackages = with pkgs; [pinentry pinentry-curses];
   };
 }

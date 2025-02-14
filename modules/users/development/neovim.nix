@@ -1,5 +1,10 @@
-{ config, pkgs, inputs, outputs, ... }:
-
+{
+  config,
+  pkgs,
+  inputs,
+  outputs,
+  ...
+}:
 outputs.lib.mkModule config "neovim" {
   nixpkgs.overlays = [
     (_: prev: {
@@ -10,7 +15,7 @@ outputs.lib.mkModule config "neovim" {
   home = let
     nvim = "${pkgs.neovim}/bin/nvim";
   in {
-    packages = with pkgs; [ neovim ];
+    packages = with pkgs; [neovim];
     sessionVariables = {
       EDITOR = "${nvim}";
       GIT_EDITOR = "${nvim}";

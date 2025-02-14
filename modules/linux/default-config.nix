@@ -5,10 +5,7 @@
   stateVersion,
   ...
 }:
-
-with outputs.lib;
-
-{
+with outputs.lib; {
   imports = [
     ./user-nixos-configs.nix
   ];

@@ -5,9 +5,8 @@
   outputs,
   ...
 }:
-
 outputs.lib.mkDesktopModule config "audiorelay" {
-  nixpkgs.overlays = [ inputs.stackpkgs.overlays.default ];
+  nixpkgs.overlays = [inputs.stackpkgs.overlays.default];
 
   nixos = {
     networking.firewall = {
@@ -15,7 +14,7 @@ outputs.lib.mkDesktopModule config "audiorelay" {
         59100
         59200
       ];
-      allowedTCPPorts = [ 59100 ];
+      allowedTCPPorts = [59100];
     };
     # https://docs.audiorelay.net/instructions/linux/stream-audio-from-your-linux-pc-to-your-phone
     services.pulseaudio.extraConfig = ''
@@ -23,5 +22,5 @@ outputs.lib.mkDesktopModule config "audiorelay" {
     '';
   };
 
-  home.packages = with pkgs; [ stackpkgs.audiorelay ];
+  home.packages = with pkgs; [stackpkgs.audiorelay];
 }

@@ -1,7 +1,11 @@
 # Modules shared across NixOS, Darwin, and standalone Home Configurations
-
-{ inputs, outputs, system, hostname, ... }:
-
+{
+  inputs,
+  outputs,
+  system,
+  hostname,
+  ...
+}:
 outputs.lib.mkFor system hostname {
   common = {
     imports = [
@@ -13,5 +17,5 @@ outputs.lib.mkFor system hostname {
     # TODO Put isDesktop here
   };
 
-  systems.darwin.imports = [ inputs.mac-app-util.homeManagerModules.default ];
+  systems.darwin.imports = [inputs.mac-app-util.homeManagerModules.default];
 }

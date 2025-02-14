@@ -1,8 +1,9 @@
 # from https://github.com/rafaelsgirao/nixos-config/blob/1e238cca0f0ba0e696c607d7bd075853922408d3/packages/pyinstaller/default.nix
-{ python3
-, fetchPypi
-, lib
-, zlib
+{
+  python3,
+  fetchPypi,
+  lib,
+  zlib,
 }:
 python3.pkgs.buildPythonPackage rec {
   pname = "pyinstaller";

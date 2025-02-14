@@ -1,10 +1,9 @@
-{ pkgs ? import <nixpkgs> {} }:
-
+{pkgs ? import <nixpkgs> {}}:
 pkgs.stdenv.mkDerivation {
   pname = "polycat";
   version = "1.2.0";
 
-  nativeBuildInputs = with pkgs; [ cmake git ];
+  nativeBuildInputs = with pkgs; [cmake git];
 
   src = pkgs.fetchgit {
     url = "https://github.com/2IMT/polycat.git";

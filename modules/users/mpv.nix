@@ -1,11 +1,16 @@
-{ config, pkgs, outputs, ... }:
-
+{
+  config,
+  pkgs,
+  outputs,
+  ...
+}:
 outputs.lib.mkDesktopModule config "mpv" {
   programs.mpv = {
     enable = true;
 
     # https://github.com/mpv-player/mpv/wiki/User-Scripts
-    scripts = with pkgs; with mpvScripts; [
+    scripts = with pkgs;
+    with mpvScripts; [
       uosc
 
       mpris
