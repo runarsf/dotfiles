@@ -9,7 +9,14 @@ outputs.lib.mkModule config "nix" {
     FLAKE = "${config.home.homeDirectory}/.config/nixos";
   };
 
-  programs.nix-index-database.comma.enable = true;
+  programs = {
+    nix-index-database.comma.enable = true;
+    direnv = {
+      enable = true;
+      nix-direnv.enable = true;
+      config.global.hide_env_diff = true;
+    };
+  };
 
   home = {
     packages = with pkgs; [

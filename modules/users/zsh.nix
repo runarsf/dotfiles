@@ -38,10 +38,6 @@ outputs.lib.mkModule config "zsh" {
   programs = {
     zoxide.enable = true;
     fzf.enable = true;
-    direnv = {
-      enable = true;
-      nix-direnv.enable = true;
-    };
 
     zsh = {
       enable = true;
