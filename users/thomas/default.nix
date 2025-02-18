@@ -165,7 +165,7 @@ in
 
             nvidiaSettings = true;
 
-            package = osConfig.boot.kernelPackages.nvidiaPackages.stable;
+            package = pkgs.linuxPackages.nvidiaPackages.stable;
           };
 
           security.pam.loginLimits = [
@@ -202,21 +202,19 @@ in
           "LIBVA_DRIVER_NAME,nvidia"
           "GBM_BACKEND,nvidia-drm"
           "__GLX_VENDOR_LIBRARY_NAME,nvidia"
-          "WLR_NO_HARDWARE_CURSORS,1"
+          # "WLR_NO_HARDWARE_CURSORS,1"
           "__NV_PRIME_RENDER_OFFLOAD,1"
           "__VK_LAYER_NV_optimus,NVIDIA_only"
           "PROTON_ENABLE_NGX_UPDATER,1"
           "NVD_BACKEND,direct"
           "__GL_GSYNC_ALLOWED,1"
           "__GL_VRR_ALLOWED,1"
-          "WLR_DRM_NO_ATOMIC,1"
+          # "WLR_DRM_NO_ATOMIC,1"
           "WLR_USE_LIBINPUT,1"
-          "XWAYLAND_NO_GLAMOR,1" # with this you'll need to use gamescope for gaming
+          # "XWAYLAND_NO_GLAMOR,1" # with this you'll need to use gamescope for gaming
           "__GL_MaxFramesAllowed,1"
-          "WLR_RENDERER_ALLOW_SOFTWARE,1"
+          # "WLR_RENDERER_ALLOW_SOFTWARE,1"
         ];
-
-        xdg.portal.extraPortals = with pkgs; [xdg-desktop-portal-gnome];
       };
 
       toaster = {

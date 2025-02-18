@@ -14,26 +14,36 @@ outputs.lib.mkDesktopModule config "steam" {
     };
   };
 
-  nixos.programs = {
-    steam = {
-      enable = true;
-      remotePlay.openFirewall = true;
-      localNetworkGameTransfers.openFirewall = true;
-      gamescopeSession.enable = true;
-    };
-    gamemode = {
-      enable = true;
-      enableRenice = true;
-      settings = {
-        general = {
-          softrealtime = "auto";
-          renice = 10;
-        };
-        custom = {
-          start = "notify-send -a 'Gamemode' 'Optimizations activated'";
-          end = "notify-send -a 'Gamemode' 'Optimizations deactivated'";
+  nixos = {
+    programs = {
+      steam = {
+        enable = true;
+        remotePlay.openFirewall = true;
+        localNetworkGameTransfers.openFirewall = true;
+        gamescopeSession.enable = true;
+      };
+      gamemode = {
+        enable = true;
+        enableRenice = true;
+        settings = {
+          general = {
+            softrealtime = "auto";
+            renice = 10;
+          };
+          custom = {
+            start = "notify-send -a 'Gamemode' 'Optimizations activated'";
+            end = "notify-send -a 'Gamemode' 'Optimizations deactivated'";
+          };
         };
       };
     };
+
+    services.udev.extraRules = ''
+      # Disable DualSense Touchpad acting as mouse
+      # USB
+      ATTRS{name}=="DualSense Wireless Controller Touchpad", ENV{LIBINPUT_IGNORE_DEVICE}="1"
+      # Bluetooth
+      ATTRS{name}=="Wireless Controller Touchpad", ENV{LIBINPUT_IGNORE_DEVICE}="1"
+    '';
   };
 }
