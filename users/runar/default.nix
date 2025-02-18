@@ -134,6 +134,7 @@ in
             "audiorelay"
             "kvm"
             "easyeffects"
+            "emulation"
           ]
           // {
             dev = {
@@ -160,7 +161,8 @@ in
           moonlight-qt
           postman
           telegram-desktop
-          solc
+          code-cursor
+          zed-editor
         ];
 
         # xdg.desktopEntries."steam-handler" = {

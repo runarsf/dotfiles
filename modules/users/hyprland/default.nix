@@ -8,6 +8,10 @@
 }:
 # TODO https://wiki.hyprland.org/Useful-Utilities/Systemd-start/
 # TODO temporary command (nix-shell) with fuzzel
+# TODO Better switching of layouts (master, centered master, dwindle, pseudo) https://wiki.hyprland.org/Configuring/Master-Layout/#workspace-rules
+# TODO See if smart_resizing negates the need for a resizing script
+# TODO refactor master layout config
+# TODO Scratchpad with tags https://wiki.hyprland.org/Configuring/Window-Rules/#tags
 let
   lock = "${pkgs.hyprlock}/bin/hyprlock";
   hypr-snap = pkgs.writers.writePython3 "hypr-snap" {
@@ -248,6 +252,7 @@ in
         master = {
           new_status = "slave";
           allow_small_split = true;
+          smart_resizing = false;
         };
         misc = {
           disable_hyprland_logo = true;
@@ -355,41 +360,51 @@ in
           "noblur, class:^(xwaylandvideobridge)$"
           "nofocus, class:^(xwaylandvideobridge)$"
 
-          "float, class:^(.*)(scratchpad)$"
-          "workspace special silent, class:^(.*)(scratchpad)$"
-          "size 60% 65%, class:^(.*)(scratchpad)$"
-          "center, class:^(.*)(scratchpad)$"
+          "pin, class:(pinentry-)(.*)"
+          "stayfocused, class:(pinentry-)(.*)"
+          "pin, class:(gcr-prompter)"
+          "stayfocused, class:(gcr-prompter)"
+
+          "float, class:(.*)(scratchpad)"
+          "workspace special silent, class:(.*)(scratchpad)"
+          "size 60% 65%, class:(.*)(scratchpad)"
+          "center, class:(.*)(scratchpad)"
+          "opacity 0.8 0.8, class:(.*)(scratchpad)"
 
           "noborder, fullscreen:1"
 
-          "opacity 0.8 0.8, class:^(kitty)$"
-          "opacity 0.8 0.8, class:^(org.wezfurlong.wezterm)$"
+          "opacity 0.8 0.8, class:kitty"
+          "opacity 0.8 0.8, class:org.wezfurlong.wezterm"
 
           "noinitialfocus,class:^jetbrains-(?!toolbox),floating:1"
 
           # Games
-          "noinitialfocus, class:^(steam)$"
-          "stayfocused, title:^()$,class:^(steam)$"
-          "minsize 1 1, title:^()$,class:^(steam)$"
-          "workspace 4 silent, class:^(steam)$"
-          "workspace 4 silent, class:^(steamwebhelper)$"
-          # "workspace 10, class:^(osu!)$"
-          # "workspace 10, class:^(steam_app_)(.*)$"
-          "fullscreen, class:^steam_app\\d+$"
-          "monitor 1, class:^steam_app_\\d+$"
-          "workspace 10, class:^steam_app_\\d+$"
+          "noinitialfocus, class:steam"
+          "stayfocused, title:^()$,class:steam"
+          "minsize 1 1, title:^()$,class:steam"
+          "workspace 4 silent, class:steam"
+          "workspace 4 silent, class:steamwebhelper"
+          "workspace 10, class:osu!"
+          "fullscreen, class:steam_app\\d+"
+          "monitor 1, class:steam_app_\\d+"
+          "workspace 10, class:steam_app_\\d+"
 
-          "workspace 2 silent, class:^(discord)$"
-          "workspace 2 silent, class:^(vesktop)$"
+          "workspace 2 silent, class:(discord)"
+          "workspace 2 silent, class:(vesktop)"
 
-          # Firefox
-          "float, class:^(firefox)(.*)$, title:(Picture-in-Picture)"
-          "workspace 2, class:^(firefox)(.*)$, title:(Picture-in-Picture)"
-          "dimaround, class:^(firefox)(.*)$, title:(Picture-in-Picture)"
-          "keepaspectratio, class:^(firefox)(.*)$, title:(Picture-in-Picture)"
-          "float, class:^(firefox).*$, title:^(Opening)(.*)$"
-          "float, class:^(firefox).*$, title:^$"
-          "float, class:^(firefox).*$, title:^(Save As)$"
+          "float, class:(firefox)(.*), title:(Picture-in-Picture)"
+          "workspace 2, class:(firefox)(.*), title:(Picture-in-Picture)"
+          "dimaround, class:(firefox)(.*), title:(Picture-in-Picture)"
+          "keepaspectratio, class:(firefox)(.*), title:(Picture-in-Picture)"
+          "float, class:(firefox).*, title:(Opening)(.*)"
+          "float, class:(firefox).*, title:(Save As)(.*)"
+
+          "float, class:zen, title:(Picture-in-Picture)"
+          "workspace 2, class:zen, title:(Picture-in-Picture)"
+          "dimaround, class:zen, title:(Picture-in-Picture)"
+          "keepaspectratio, class:zen, title:(Picture-in-Picture)"
+          "float, class:zen, title:(Opening)(.*)"
+          "float, class:zen, title:(Save As)(.*)"
 
           # Discord has initialClass ' - Discord'
           # Discord popout has initialClass 'Discord Popout'
@@ -398,12 +413,6 @@ in
           # "noborder, class:(discord), title:^((?! - Discord).)*$"
           # "size 565 317, class:(discord), title:^((?! - Discord).)*$"
           # "move onscreen 100%-0, class:discord, title:^((?! - Discord).)*$"
-
-          "float, class:^(blueman-manager)$"
-
-          "pin, class:(gcr-prompter)"
-          "stayfocused, class:(gcr-prompter)"
-          "stayfocused, class:^(pinentry-)"
         ];
       };
       extraConfig = ''

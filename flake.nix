@@ -83,6 +83,11 @@
 
     nixvim.url = "github:runarsf/nixvim";
 
+    melonds = {
+      url = "github:melonDS-emu/melonDS";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     vault = {
       url = "git+ssh://git@github.com/runarsf/vault";
       flake = false;

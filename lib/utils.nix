@@ -14,6 +14,12 @@ rec {
 
   print = ret: builtins.trace ret ret;
 
+  anything = outputs.lib.types.mkOptionType {
+    name = "anything";
+    description = "Anything!";
+    check = val: true;
+  };
+
   # TODO mkDesktopOption 
 
   # TODO If it starts with slash, die. Should also handle /home/username
