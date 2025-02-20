@@ -161,7 +161,6 @@ in
           moonlight-qt
           postman
           telegram-desktop
-          code-cursor
           zed-editor
         ];
 
