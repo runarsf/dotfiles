@@ -60,6 +60,8 @@ let
     "devtools.debugger.remote-enabled" = true;
     "devtools.chrome.enabled" = true;
 
+    "browser.tabs.insertAfterCurrent" = true;
+    "browser.tabs.insertAfterCurrentExceptPinned" = true;
     "browser.toolbars.bookmarks.visibility" = "newtab";
     "browser.translations.automaticallyPopup" = false;
 
