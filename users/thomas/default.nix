@@ -56,6 +56,11 @@ in
         userName = "Thomas Espervik";
         userEmail = "thoesp@protonmail.com";
       };
+
+      wayland.windowManager.hyprland.settings.bind = [
+        ", Pause, pass, (discord)"
+        "CTRL SHIFT, M, pass, (discord)"
+      ];
     };
 
     systems = {
