@@ -37,13 +37,15 @@ outputs.lib.mkDesktopModule config "steam" {
         };
       };
     };
-
-    services.udev.extraRules = ''
-      # Disable DualSense Touchpad acting as mouse
-      # USB
-      ATTRS{name}=="DualSense Wireless Controller Touchpad", ENV{LIBINPUT_IGNORE_DEVICE}="1"
-      # Bluetooth
-      ATTRS{name}=="Wireless Controller Touchpad", ENV{LIBINPUT_IGNORE_DEVICE}="1"
-    '';
+    services.udev = {
+      packages = let
+        dualsense-rules = pkgs.writeTextFile {
+          name = "60-dualsense.rules";
+          text = builtins.readFile ./dualsense.rules;
+          destination = "/etc/udev/rules.d/60-dualsense.rules";
+        };
+      in [dualsense-rules];
+      extraRules = builtins.readFile ./dualsense.rules;
+    };
   };
 }
