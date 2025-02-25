@@ -32,5 +32,7 @@
     poppler_utils
     sc-im
     anki
+    plantuml
+    graphviz
   ];
 }

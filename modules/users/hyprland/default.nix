@@ -70,6 +70,7 @@ in
       unstable.hyprsunset
       unstable.hyprpolkitagent
       wl-clipboard
+      libsForQt5.qt5.qtwayland
     ];
 
     # xdg.portal = {

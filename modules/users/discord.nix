@@ -23,7 +23,7 @@ in
       run ${pkgs.findutils}/bin/find -L ${config.home.homeDirectory}/.config/discord -name 'discord_krisp.node' -exec ${discordPatcher}/bin/discord-krisp-patcher {} \;
     '';
 
-    home.packages = with pkgs; [
+    home.packages = with pkgs.unstable; [
       (discord.override {
         withOpenASAR = true;
         withVencord = true;

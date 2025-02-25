@@ -15,6 +15,9 @@
         unstable = import inputs.nixpkgs-unstable {
           inherit (prev) system config overlays;
         };
+        master = import inputs.nixpkgs-master {
+          inherit (prev) system config overlays;
+        };
         nur = import inputs.nur {
           pkgs = prev;
           nurpkgs =

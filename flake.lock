@@ -1371,6 +1371,22 @@
     },
     "nixpkgs-master": {
       "locked": {
+        "lastModified": 1740428283,
+        "narHash": "sha256-/UoZBbDhTtz6qXeZUi8FVbgiKbd3IXWTvNNvx+PZDWc=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "6950511009bde3a7f55c7ecc5405b03a06519b86",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "master",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs-master_2": {
+      "locked": {
         "lastModified": 1740052675,
         "narHash": "sha256-MMHetkmEeIu1VC1Sk9mT8UR4TNZkXnvor+EhOQv1x3s=",
         "owner": "nixos",
@@ -1568,7 +1584,7 @@
         "nixd": "nixd",
         "nixfmt": "nixfmt",
         "nixpkgs": "nixpkgs_8",
-        "nixpkgs-master": "nixpkgs-master",
+        "nixpkgs-master": "nixpkgs-master_2",
         "nixvim": "nixvim_2",
         "nypkgs": "nypkgs"
       },
@@ -1801,6 +1817,7 @@
         "nix-index-database": "nix-index-database_2",
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs_5",
+        "nixpkgs-master": "nixpkgs-master",
         "nixpkgs-unstable": "nixpkgs-unstable",
         "nixvim": "nixvim",
         "nur": "nur",
@@ -2295,11 +2312,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1739222645,
-        "narHash": "sha256-6FsTAjrO0TN5+gVxx3hmWqEJWs1sJ1p3E8DKWHdlN6M=",
+        "lastModified": 1740442108,
+        "narHash": "sha256-TfLmlndhcaGBzYMkv3QFrcwXJwony5apCBOWErKQov8=",
         "owner": "youwen5",
         "repo": "zen-browser-flake",
-        "rev": "7e60ade066a54797b376ebaf554bc2efa255ff8a",
+        "rev": "4d82cf9b46b099c81758bd3fa2b5ce617db05532",
         "type": "github"
       },
       "original": {
