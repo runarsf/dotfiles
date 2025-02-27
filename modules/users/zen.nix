@@ -76,6 +76,7 @@ let
     "browser.urlbar.suggest.openpage" = false;
     "browser.urlbar.suggest.remotetab" = true;
     "browser.urlbar.suggest.topsites" = false;
+    "browser.urlbar.autoFill.adaptiveHistory.enabled" = true;
 
     "browser.search.isUS" = false;
 

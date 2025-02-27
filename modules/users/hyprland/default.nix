@@ -165,17 +165,6 @@ in
           layout = "master";
           resize_on_border = false;
         };
-        # hyprctl -j devices | jq -r '.mice | .[] | .name'
-        device = outputs.lib.mkDefault [
-          {
-            name = "logitech-mx-ergo-1";
-            sensitivity = "0.6";
-          }
-          {
-            name = "logitech-usb-receiver";
-            sensitivity = "-0.4";
-          }
-        ];
         input = {
           kb_layout = "no";
           kb_options = "ctrl:nocaps";

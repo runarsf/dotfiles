@@ -5,7 +5,10 @@
   ...
 }:
 outputs.lib.mkDesktopModule config "logitech" {
-  nixos.hardware.logitech.wireless.enable = true;
+  nixos = {
+    hardware.logitech.wireless.enable = true;
+    services.ratbagd.enable = true;
+  };
 
-  home.packages = with pkgs; [solaar];
+  home.packages = with pkgs; [solaar piper];
 }

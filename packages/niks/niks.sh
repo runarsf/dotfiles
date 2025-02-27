@@ -44,11 +44,11 @@ while test "${#}" -gt "0"; do
         generations="$(sudo nix-env --list-generations --profile /nix/var/nix/profiles/system | wc -l)"
         if test "${generations}" -ge "10"; then
           if confirm "${YELLOW}You currently have ${RED}${generations} generations${YELLOW}, want to clean up now?"; then
-            "${0}" clean all --keep=3
+            nh clean all --keep=3
           else
             printf '\nAlright :⁽ Consider cleaning up by running:\n'
             printf '  $ %s clean all --keep=3\n\n' "${BIN}"
-	  fi
+          fi
         fi
       fi;;
     home::switch)
@@ -56,7 +56,7 @@ while test "${#}" -gt "0"; do
       generations="$(home-manager generations | wc -l)"
       if test "${generations}" -ge "10"; then
         if confirm "${YELLOW}You currently have ${RED}${generations} generations${YELLOW}, want to clean up now?"; then
-          "${0}" clean user --keep=3
+          nh clean user --keep=3
         else
           printf '\nAlright :⁽ Consider cleaning up by running:\n'
           printf '  $ %s clean user --keep=3\n\n' "${BIN}"
