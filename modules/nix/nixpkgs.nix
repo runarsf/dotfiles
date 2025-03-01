@@ -25,7 +25,11 @@
         };
       })
 
-      (_: prev: import ../../packages {pkgs = prev.pkgs;})
+      (_: prev:
+        import ../../packages {
+          inherit (prev) pkgs;
+          inherit inputs;
+        })
     ];
   };
 }

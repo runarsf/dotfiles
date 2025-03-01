@@ -138,14 +138,20 @@ outputs.lib.mkModule config "zsh" {
         zd () { set -e; cd "$("${config.programs.zoxide.package}/bin/zoxide" query "$PWD" "$@")"; set +e }
         electron-wayland () { "''${1:?No program specificed...}" --enable-features=UseOzonePlatform,WaylandWindowDecorations --platform-hint=auto --ozone-platform=wayland "''${@:2}" }
         tmpvim () {
+          revert () {
+            mv "$1.bak" "$1"
+          }
+
           if test ! -f "''${1:?No file specified...}"; then
             printf "File doesn't exist...\n"
+            return 1
           fi
+
+          trap "revert "$@"" EXIT
 
           mv "$1" "$1.bak"
           cat "$1.bak" > "$1"
           $EDITOR "$1"
-          mv "$1.bak" "$1"
         }
         alias docker-compose='docker compose'
         alias dkcUf='docker compose up -d --force-recreate'

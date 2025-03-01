@@ -55,6 +55,8 @@ let
     "layout.css.light-dark.enabled" = true;
     "layout.css.backdrop-filter.enabled" = true;
     "layout.css.has-selector.enabled" = true;
+    "browser.tabs.hoverPreview.enabled" = true;
+    "browser.tabs.hoverPreview.showThumbnails" = true;
 
     "devtools.toolbox.selectedTool" = "webconsole";
     "devtools.debugger.remote-enabled" = true;
@@ -76,7 +78,7 @@ let
     "browser.urlbar.suggest.openpage" = false;
     "browser.urlbar.suggest.remotetab" = true;
     "browser.urlbar.suggest.topsites" = false;
-    "browser.urlbar.autoFill.adaptiveHistory.enabled" = true;
+    "browser.urlbar.autoFill.adaptiveHistory.enabled" = false;
 
     "browser.search.isUS" = false;
 

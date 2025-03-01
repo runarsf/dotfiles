@@ -6,12 +6,10 @@
   system,
   ...
 }:
-# TODO https://wiki.hyprland.org/Useful-Utilities/Systemd-start/
 # TODO temporary command (nix-shell) with fuzzel
 # TODO Better switching of layouts (master, centered master, dwindle, pseudo) https://wiki.hyprland.org/Configuring/Master-Layout/#workspace-rules
 # TODO See if smart_resizing negates the need for a resizing script
 # TODO refactor master layout config
-# TODO Scratchpad with tags https://wiki.hyprland.org/Configuring/Window-Rules/#tags
 let
   lock = "${pkgs.hyprlock}/bin/hyprlock";
   hypr-snap = pkgs.writers.writePython3 "hypr-snap" {
@@ -33,11 +31,22 @@ let
       "E731"
     ];
   } (builtins.readFile ./bin/hypr-gamemode.py);
+  hypr-move = "${pkgs.writeShellApplication {
+    name = "hypr-move";
+    runtimeInputs = with pkgs; [jq];
+    text = builtins.readFile ./bin/move.sh;
+  }}/bin/hypr-move";
 in
   {
     imports = [
       # inputs.hyprland.nixosModules.default
       inputs.hyprland.homeManagerModules.default
+      (import ./binds.nix {
+        # TODO Possible to pass self instead of all args?
+        inherit config outputs pkgs hypr-gamemode lock hypr-snap hypr-move;
+      })
+      ./rules.nix
+
       ./hypridle.nix
       ./hyprlock.nix
       ./hyprpaper.nix
@@ -73,16 +82,6 @@ in
       libsForQt5.qt5.qtwayland
     ];
 
-    # xdg.portal = {
-    #   enable = true;
-    #   # TODO Use pkgs.stdenv.hostPlatform.system instead?
-    #   configPackages = [ inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland ];
-    #   extraPortals = with pkgs; [
-    #     inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland
-    #     # xdg-desktop-portal-gtk
-    #   ];
-    # };
-
     nixos = {
       programs = {
         xwayland.enable = true;
@@ -114,10 +113,10 @@ in
 
     xdg.configFile = {
       "swaync/config.json".text = builtins.toJSON {scripts = {};};
-      "hypr/shaders" = {
-        source = ./shaders;
-        recursive = true;
-      };
+      # "hypr/shaders" = {
+      #   source = ./shaders;
+      #   recursive = true;
+      # };
     };
 
     # Log rules: watch -n 0.1 "cat "/tmp/hypr/$(echo $HYPRLAND_INSTANCE_SIGNATURE)/hyprland.log" | grep -v "efresh" | grep "rule" | tail -n 40"
@@ -127,8 +126,11 @@ in
       package = null;
       portalPackage = null;
       plugins = with inputs.hyprland-plugins.packages.${pkgs.stdenv.hostPlatform.system};
-        [borders-plus-plus]
-        ++ outputs.lib.optionals (config.modules.hyprland.animations) [
+        [
+          borders-plus-plus
+          pkgs.hypr-workspace-layouts
+        ]
+        ++ outputs.lib.optionals config.modules.hyprland.animations [
           inputs.hypr-dynamic-cursors.packages.${pkgs.stdenv.hostPlatform.system}.hypr-dynamic-cursors
         ];
       settings = {
@@ -137,14 +139,17 @@ in
           "${config.home.homeDirectory}/.config/hypr/workspaces.conf"
         ];
         exec-once = [
-          "${pkgs.sway-audio-idle-inhibit}/bin/sway-audio-idle-inhibit"
-          "${pkgs.xwaylandvideobridge}/bin/xwaylandvideobridge"
+          "${outputs.lib.getExe pkgs.sway-audio-idle-inhibit}"
+          "${outputs.lib.getExe pkgs.xwaylandvideobridge}"
+          "${outputs.lib.getExe pkgs.networkmanagerapplet}"
           "systemctl --user start hyprpolkitagent"
           "${hypr-gamemode}"
-          # "${./. + /bin/monocle.sh}"
         ];
-        plugin = outputs.lib.mkIf (config.modules.hyprland.animations) {
-          dynamic-cursors = {
+        plugin = {
+          wslayout = {
+            default_layout = "master";
+          };
+          dynamic-cursors = outputs.lib.mkIf config.modules.hyprland.animations {
             enabled = true;
             mode = "tilt";
           };
@@ -162,7 +167,7 @@ in
           #   monitor_gap = 30;
           # };
 
-          layout = "master";
+          layout = "workspacelayout";
           resize_on_border = false;
         };
         input = {
@@ -187,8 +192,25 @@ in
         xwayland = {
           force_zero_scaling = true;
         };
+        master = {
+          new_status = "slave";
+          allow_small_split = true;
+          smart_resizing = false;
+        };
+        dwindle = {
+          pseudotile = true;
+          force_split = 2;
+        };
+        misc = {
+          disable_hyprland_logo = true;
+          force_default_wallpaper = 0;
+          enable_swallow = true;
+          swallow_regex = "^(Alacritty|kitty|org.wezfurlong.wezterm)$";
+          animate_manual_resizes = config.modules.hyprland.animations;
+          animate_mouse_windowdragging = config.modules.hyprland.animations;
+        };
         decoration = {
-          rounding = 5;
+          rounding = 7;
 
           blur = {
             enabled = true;
@@ -198,7 +220,7 @@ in
             ignore_opacity = true;
             vibrancy = 1;
             brightness = 1;
-            # xray = true;
+            xray = !config.modules.hyprland.animations;
             noise = 3.0e-2;
             contrast = 1;
           };
@@ -235,198 +257,6 @@ in
             "workspaces, 1, 6, default"
           ];
         };
-        dwindle = {
-          pseudotile = true;
-          force_split = 2;
-        };
-        master = {
-          new_status = "slave";
-          allow_small_split = true;
-          smart_resizing = false;
-        };
-        misc = {
-          disable_hyprland_logo = true;
-          enable_swallow = true;
-          swallow_regex = "^(Alacritty|kitty|org.wezfurlong.wezterm)$";
-          animate_manual_resizes = true;
-          animate_mouse_windowdragging = true;
-        };
-        binds = {
-          allow_workspace_cycles = true;
-        };
-        bind = [
-          "SUPER, Return, exec, uwsm app -- ${config.modules.${config.defaultTerminal}.exec {}}"
-          "SUPER, Q, killactive"
-          "SUPER SHIFT, E, exit"
-          "SUPER, E, exec, uwsm app -- ${pkgs.nemo}/bin/nemo"
-          "SUPER SHIFT, F, togglefloating"
-          "SUPER ALT, F, workspaceopt, allfloat"
-          "SUPER, F, fullscreen, 0"
-          "SUPER, space, fullscreen, 1"
-          ''SUPER, D, exec, ${config.programs.fuzzel.package}/bin/fuzzel --launch-prefix="uwsm app -- "''
-          "SUPER, A, exec, ${./. + /bin/hypr-pin}"
-          ''ALT, P, exec, ${pkgs.grim}/bin/grim -g "$(${pkgs.slurp}/bin/slurp)" - | ${pkgs.imagemagick}/bin/convert - -shave 1x1 PNG:- | ${pkgs.wl-clipboard}/bin/wl-copy''
-          ''ALT SHIFT, P, exec, ${pkgs.grim}/bin/grim -g "$(${pkgs.slurp}/bin/slurp)" - | ${pkgs.imagemagick}/bin/convert - -shave 1x1 PNG:- | ${pkgs.swappy}/bin/swappy -f -''
-          # ''ALT CTRL, P, exec, (${pkgs.killall}/bin/killall -SIGINT wf-recorder && (${pkgs.wl-clipboard}/bin/wl-copy < /tmp/screenrecord.mp4; ${pkgs.nemo}/bin/nemo /tmp/screenrecord.mp4)) || (set -euo pipefail; GEOMETRY="$(${pkgs.slurp}/bin/slurp)" && ${pkgs.wf-recorder}/bin/wf-recorder -f /tmp/screenrecord.mp4 -y -g "''${GEOMETRY}")''
-          # ''ALT CTRL, P, exec, (${pkgs.killall}/bin/killall -SIGINT wf-recorder && (${pkgs.wl-clipboard}/bin/wl-copy < /tmp/screenrecord.mp4; ${pkgs.nemo}/bin/nemo /tmp/screenrecord.mp4)) || (set -euo pipefail; GEOMETRY="$(${pkgs.slurp}/bin/slurp)" && ${pkgs.wf-recorder}/bin/wf-recorder -f /tmp/screenrecord.mp4 -y -a -g "''${GEOMETRY}")''
-
-          ''SUPER SHIFT, S, exec, hyprctl keyword decoration:screen_shader "${config.home.homeDirectory}/.config/hypr/shaders/$(find "${config.home.homeDirectory}/.config/hypr/shaders" -name *.frag | xargs -n1 basename | fuzzel --dmenu)"''
-          "SUPER CTRL SHIFT, S, exec, hyprctl keyword decoration:screen_shader '[[EMPTY]]'"
-
-          "SUPER, left, exec, ${./. + /bin/movefocus.sh} l"
-          "SUPER, right, exec, ${./. + /bin/movefocus.sh} r"
-          "SUPER, up, exec, ${./. + /bin/movefocus.sh} u"
-          "SUPER, down, exec, ${./. + /bin/movefocus.sh} d"
-
-          "SUPER SHIFT, TAB, centerwindow"
-          "SUPER SHIFT, Return, layoutmsg, swapwithmaster"
-          "SUPER SHIFT, space, layoutmsg, orientationcycle left center"
-          "SUPER, bar, layoutmsg, orientationcycle left right"
-          "SUPER, bar, layoutmsg, swapsplit"
-          "SUPER, O, pseudo"
-          "SUPER, B, exec, hyprctl keyword general:layout master"
-          "SUPER SHIFT, B, exec, hyprctl keyword general:layout dwindle"
-
-          "SUPER, X, exec, ${lock}"
-          "SUPER, L, exec, ${lock}"
-          "SUPER, TAB, workspace, previous"
-
-          "SUPER SHIFT, R, exec, hyprctl reload"
-          "SUPER, C, exec, ${pkgs.hyprpicker}/bin/hyprpicker -a | tr -d '\\n' | ${pkgs.wl-clipboard}/bin/wl-copy"
-
-          "SUPER SHIFT, C, exec, ${hypr-gamemode} toggle"
-
-          "SUPER, mouse_down, workspace, e+1"
-          "SUPER, mouse_up, workspace, e-1"
-        ];
-        binde = [
-          "SUPER CTRL, right, resizeactive, 50 0"
-          "SUPER CTRL, left, resizeactive, -50 0"
-          "SUPER CTRL, up, resizeactive, 0 -50"
-          "SUPER CTRL, down, resizeactive, 0 50"
-
-          "SUPER SHIFT, right, movewindow, r"
-          "SUPER SHIFT, left, movewindow, l"
-          "SUPER SHIFT, up, movewindow, u"
-          "SUPER SHIFT, down, movewindow, d"
-
-          ", XF86AudioRaiseVolume, exec, ${pkgs.wireplumber}/bin/wpctl set-volume -l 2.0 @DEFAULT_SINK@ 5%+"
-          ", XF86AudioLowerVolume, exec, ${pkgs.wireplumber}/bin/wpctl set-volume -l 2.0 @DEFAULT_SINK@ 5%-"
-          ", XF86AudioMute, exec, ${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_SINK@ toggle"
-          ", XF86AudioMicMute, exec, ${pkgs.wireplumber}/bin/wpctl set-mute @DEFAULT_SOURCE@ toggle"
-          ", XF86AudioPause, exec, ${pkgs.playerctl}/bin/playerctl play-pause"
-          ", XF86AudioPlay, exec, ${pkgs.playerctl}/bin/playerctl play-pause"
-          "SHIFT, XF86AudioMute, exec, ${pkgs.playerctl}/bin/playerctl play-pause"
-          ", XF86AudioNext, exec, ${pkgs.playerctl}/bin/playerctl next"
-          ", XF86AudioPrev, exec, ${pkgs.playerctl}/bin/playerctl previous"
-          ", XF86MonBrightnessUp, exec, ${pkgs.brightnessctl}/bin/brightnessctl set 5%+"
-          ", XF86MonBrightnessDown, exec, ${pkgs.brightnessctl}/bin/brightnessctl set 5%-"
-        ];
-        bindr = [
-          "SUPER CTRL, right, exec, ${hypr-snap}"
-          "SUPER CTRL, left, exec, ${hypr-snap}"
-          "SUPER CTRL, up, exec, ${hypr-snap}"
-          "SUPER CTRL, down, exec, ${hypr-snap}"
-
-          "SUPER SHIFT, right, exec, ${hypr-snap}"
-          "SUPER SHIFT, left, exec, ${hypr-snap}"
-          "SUPER SHIFT, up, exec, ${hypr-snap}"
-          "SUPER SHIFT, down, exec, ${hypr-snap}"
-
-          "SUPER, mouse:272, exec, ${hypr-snap}"
-          "SUPER, mouse:273, exec, ${hypr-snap}"
-        ];
-        bindm = [
-          "SUPER, mouse:272, movewindow"
-          "SUPER SHIFT, mouse:272, movewindow"
-          "SUPER, mouse:273, resizewindow"
-          "SUPER SHIFT, mouse:273, resizewindow"
-        ];
-        windowrulev2 = [
-          "opacity 0.0 override, class:^(xwaylandvideobridge)$"
-          "noanim, class:^(xwaylandvideobridge)$"
-          "noinitialfocus, class:^(xwaylandvideobridge)$"
-          "maxsize 1 1, class:^(xwaylandvideobridge)$"
-          "noblur, class:^(xwaylandvideobridge)$"
-          "nofocus, class:^(xwaylandvideobridge)$"
-
-          "pin, class:(pinentry-)(.*)"
-          "stayfocused, class:(pinentry-)(.*)"
-          "pin, class:(gcr-prompter)"
-          "stayfocused, class:(gcr-prompter)"
-
-          "float, class:(.*)(scratchpad)"
-          "workspace special silent, class:(.*)(scratchpad)"
-          "size 60% 65%, class:(.*)(scratchpad)"
-          "center, class:(.*)(scratchpad)"
-          "opacity 0.8 0.8, class:(.*)(scratchpad)"
-
-          "noborder, fullscreen:1"
-
-          "opacity 0.8 0.8, class:kitty"
-          "opacity 0.8 0.8, class:org.wezfurlong.wezterm"
-
-          "noinitialfocus,class:^jetbrains-(?!toolbox),floating:1"
-
-          # Games
-          "noinitialfocus, class:steam"
-          "stayfocused, title:^()$,class:steam"
-          "minsize 1 1, title:^()$,class:steam"
-          "workspace 4 silent, class:steam"
-          "workspace 4 silent, class:steamwebhelper"
-          "workspace 10, class:osu!"
-          "fullscreen, class:steam_app\\d+"
-          "monitor 1, class:steam_app_\\d+"
-          "workspace 10, class:steam_app_\\d+"
-
-          "workspace 2 silent, class:(discord)"
-          "workspace 2 silent, class:(vesktop)"
-
-          "float, class:(firefox)(.*), title:(Picture-in-Picture)"
-          "workspace 2, class:(firefox)(.*), title:(Picture-in-Picture)"
-          "dimaround, class:(firefox)(.*), title:(Picture-in-Picture)"
-          "keepaspectratio, class:(firefox)(.*), title:(Picture-in-Picture)"
-          "float, class:(firefox).*, title:(Opening)(.*)"
-          "float, class:(firefox).*, title:(Save As)(.*)"
-
-          "float, class:zen, title:(Picture-in-Picture)"
-          "workspace 2, class:zen, title:(Picture-in-Picture)"
-          "dimaround, class:zen, title:(Picture-in-Picture)"
-          "keepaspectratio, class:zen, title:(Picture-in-Picture)"
-          "float, class:zen, title:(Opening)(.*)"
-          "float, class:zen, title:(Save As)(.*)"
-
-          # Discord has initialClass ' - Discord'
-          # Discord popout has initialClass 'Discord Popout'
-          # "float, class:(discord), title:^((?! - Discord).)*$"
-          # "pin, class:(discord), title:^((?! - Discord).)*$"
-          # "noborder, class:(discord), title:^((?! - Discord).)*$"
-          # "size 565 317, class:(discord), title:^((?! - Discord).)*$"
-          # "move onscreen 100%-0, class:discord, title:^((?! - Discord).)*$"
-        ];
       };
-      extraConfig = ''
-        # Passthrough mode (e.g. for VNC)
-        bind=SUPER SHIFT,P,submap,passthrough
-        submap=passthrough
-        bind=SUPER SHIFT,P,submap,reset
-        submap=reset
-
-        # binds $mod + [shift +] {1..10} to [move to] workspace {1..10}
-        ${builtins.concatStringsSep "\n" (
-          builtins.genList (
-            x: let
-              ws = let
-                c = (x + 1) / 10;
-              in
-                builtins.toString (x + 1 - (c * 10));
-            in ''
-              bind = SUPER, ${ws}, exec, hyprctl dispatch focusworkspaceoncurrentmonitor ${toString (x + 1)}
-              bind = SUPER SHIFT, ${ws}, movetoworkspacesilent, ${toString (x + 1)}
-            ''
-          )
-          10
-        )}
-      '';
     };
   }

@@ -60,6 +60,10 @@ in
           sensitivity = "0.6";
         }
         {
+          name = "logitech-pro-x-2";
+          sensitivity = "-0.4";
+        }
+        {
           name = "logitech-pro-x-2-1";
           sensitivity = "-0.4";
         }
