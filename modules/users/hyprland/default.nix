@@ -5,7 +5,7 @@
   pkgs,
   system,
   ...
-}:
+} @ self:
 # TODO temporary command (nix-shell) with fuzzel
 # TODO Better switching of layouts (master, centered master, dwindle, pseudo) https://wiki.hyprland.org/Configuring/Master-Layout/#workspace-rules
 # TODO See if smart_resizing negates the need for a resizing script
@@ -31,27 +31,26 @@ let
       "E731"
     ];
   } (builtins.readFile ./bin/hypr-gamemode.py);
-  hypr-move = "${pkgs.writeShellApplication {
-    name = "hypr-move";
-    runtimeInputs = with pkgs; [jq];
-    text = builtins.readFile ./bin/move.sh;
-  }}/bin/hypr-move";
+  hypr-move = "${pkgs.writers.writeNuBin "hypr-move" (builtins.readFile ./bin/move.nu)}/bin/hypr-move";
+  hypr-scratch-group = "${pkgs.writers.writeNuBin "hypr-scratch-group" (builtins.readFile ./bin/scratch-group.nu)}/bin/hypr-scratch-group";
 in
   {
     imports = [
       # inputs.hyprland.nixosModules.default
       inputs.hyprland.homeManagerModules.default
-      (import ./binds.nix {
-        # TODO Possible to pass self instead of all args?
-        inherit config outputs pkgs hypr-gamemode lock hypr-snap hypr-move;
-      })
+      (
+        import ./binds.nix
+        (self // {inherit hypr-gamemode lock hypr-snap hypr-move;})
+      )
       ./rules.nix
 
+      (
+        import ./pyprland.nix (self // {inherit hypr-scratch-group;})
+      )
       ./hypridle.nix
       ./hyprlock.nix
       ./hyprpaper.nix
       ./hyprpanel.nix
-      ./pyprland.nix
     ];
   }
   // outputs.lib.mkDesktopModule' config "hyprland"

@@ -14,7 +14,6 @@
 outputs.lib.mkModule config "nushell" {
   home.packages = with pkgs.nushellPlugins; [
     net
-    regex
     query
     gstat
     formats

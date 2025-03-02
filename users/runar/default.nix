@@ -25,6 +25,7 @@ in
         outputs.lib.enable [
           "neovim"
           "zsh"
+          "nushell"
           "xonsh"
           "git"
           "gpg"

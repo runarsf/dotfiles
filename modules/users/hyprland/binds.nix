@@ -68,10 +68,10 @@
         "SUPER CTRL, up, resizeactive, 0 -50"
         "SUPER CTRL, down, resizeactive, 0 50"
 
-        "SUPER SHIFT, right, exec, ${hypr-move} window r"
-        "SUPER SHIFT, left, exec, ${hypr-move} window l"
-        "SUPER SHIFT, up, exec, ${hypr-move} window u"
-        "SUPER SHIFT, down, exec, ${hypr-move} window d"
+        "SUPER SHIFT, right, exec, ${hypr-move} move r"
+        "SUPER SHIFT, left, exec, ${hypr-move} move l"
+        "SUPER SHIFT, up, exec, ${hypr-move} move u"
+        "SUPER SHIFT, down, exec, ${hypr-move} move d"
 
         ", XF86AudioRaiseVolume, exec, ${wpctl} set-volume -l 2.0 @DEFAULT_SINK@ 5%+"
         ", XF86AudioLowerVolume, exec, ${wpctl} set-volume -l 2.0 @DEFAULT_SINK@ 5%-"

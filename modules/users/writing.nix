@@ -24,15 +24,16 @@
 
   nixpkgs.config.zathura.useMupdf = false;
 
-  home.packages = with pkgs.unstable; [
-    obsidian
+  home.packages = with pkgs; [
+    unstable.obsidian
+    unstable.typst
     libreoffice-fresh
-    typst
     pandoc
     poppler_utils
     sc-im
     anki
     plantuml
     graphviz
+    octaveFull
   ];
 }

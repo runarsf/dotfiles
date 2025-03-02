@@ -2,9 +2,14 @@
   config,
   pkgs,
   outputs,
+hypr-scratch-group,
   ...
 }:
 outputs.lib.mkDesktopModule config "pyprland" {
+  home.packages = with pkgs; [
+    octaveFull
+  ];
+
   xdg.configFile."hypr/pyprland.json".text = builtins.toJSON {
     pyprland.plugins = ["toggle_special" "magnify"];
     # pyprland.plugins = ["scratchpads"];
@@ -32,7 +37,10 @@ outputs.lib.mkDesktopModule config "pyprland" {
   wayland.windowManager.hyprland.settings = let
     pypr = outputs.lib.getExe pkgs.pyprland;
   in {
-    exec-once = ["${outputs.lib.getExe pkgs.pyprland}"];
+    exec-once = [
+      "${outputs.lib.getExe pkgs.pyprland}"
+      "hyprctl dispatch workspace special:scratchpad"
+    ];
     bind = [
       # "SUPER, N, exec, ${pypr} toggle term"
       # "SUPER, P, exec, ${pypr} toggle math"
@@ -43,11 +51,17 @@ outputs.lib.mkDesktopModule config "pyprland" {
       "SUPER SHIFT, N, exec, ${pypr} toggle_special scratchpad"
     ];
     workspace = [
-      "special:scratchpad, on-created-empty:[size 1050 675] uwsm app -- ${
-        config.modules.${config.defaultTerminal}.exec {
-          # command = [ "connect" "scratchpad" ];
-        }
-      }"
+      ''special:scratchpad, on-created-empty:${hypr-scratch-group} "wezterm start --class=scratch --" "scratch" "wezterm start -- octave-cli"''
+      # "special:scratchpad, on-created-empty:[size 1050 675] uwsm app -- ${
+      #   config.modules.${config.defaultTerminal}.exec {
+      #     # command = [ "connect" "scratchpad" ];
+      #   }
+      # }"
+      # "special:scratchpad, on-created-empty:[size 22 70; move 75 70] uwsm app -- ${
+      #   config.modules.${config.defaultTerminal}.exec {
+      #     command = ["start" "--" "${outputs.lib.getExe' pkgs.octave "octave"}"];
+      #   }
+      # }"
       "special:scratchpad, gapsout:50"
     ];
     windowrulev2 = [
