@@ -21,26 +21,28 @@ outputs.lib.mkModule config "nushell" {
 
   programs.nushell = {
     enable = true;
-    shellAliases = config.home.shellAliases;
-    extraConfig = ''
-      $env.config = {
-        show_banner: false
-        ls: {
-          clickable_links: false
-        }
-        rm: {
-          always_trash: true
-        }
-        table: {
-          mode: light
-        }
-        completions: {
-          algorithm: "fuzzy"
-        }
-        filesize: {
-          metric: true
-        }
-      }
-    '';
+    environmentVariables = {
+      HELLO = "WORLD";
+    };
+    # extraConfig = ''
+    #   $env.config = {
+    #     show_banner: false
+    #     ls: {
+    #       clickable_links: false
+    #     }
+    #     rm: {
+    #       always_trash: true
+    #     }
+    #     table: {
+    #       mode: light
+    #     }
+    #     completions: {
+    #       algorithm: "fuzzy"
+    #     }
+    #     filesize: {
+    #       metric: true
+    #     }
+    #   }
+    # '';
   };
 }

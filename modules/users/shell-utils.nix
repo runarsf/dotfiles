@@ -54,6 +54,9 @@ outputs.lib.mkEnabledModule config "shell-utils" {
       ls = "EZA_ICON_SPACING=2 ${pkgs.eza}/bin/eza -l -F -g -a --group-directories-first --no-time --git";
       grep = "grep --color=always";
       cat = "${pkgs.bat}/bin/bat";
+      develop = outputs.lib.mkForce "nix develop --command zsh";
+      docker-compose = "docker compose";
+      dkcUf = "docker compose up -d --force-recreate";
     };
   };
 

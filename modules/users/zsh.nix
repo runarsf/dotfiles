@@ -23,15 +23,10 @@ outputs.lib.mkModule config "zsh" {
 
   modules.starship.enable = true;
 
-  home = {
-    packages = with pkgs; [
-      libnotify
-      libqalculate
-    ];
-    shellAliases = {
-      develop = outputs.lib.mkForce "nix develop --command zsh";
-    };
-  };
+  home.packages = with pkgs; [
+    libnotify
+    libqalculate
+  ];
 
   nixos.environment.pathsToLink = ["/share/zsh"];
 
@@ -153,8 +148,6 @@ outputs.lib.mkModule config "zsh" {
           cat "$1.bak" > "$1"
           $EDITOR "$1"
         }
-        alias docker-compose='docker compose'
-        alias dkcUf='docker compose up -d --force-recreate'
 
         bindkey '^G' per-directory-history-toggle-history
         bindkey -M vicmd '^G' per-directory-history-toggle-history
