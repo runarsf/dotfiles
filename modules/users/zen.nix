@@ -17,6 +17,7 @@ let
     );
 
   # TODO Make these options for the module
+  # TODO Somehow use arkenfox
   prefs = {
     # Zen
     "browser.tabs.groups.enabled" = true;

@@ -2,7 +2,7 @@
   config,
   pkgs,
   outputs,
-hypr-scratch-group,
+  hypr-scratch-group,
   ...
 }:
 outputs.lib.mkDesktopModule config "pyprland" {
@@ -39,7 +39,6 @@ outputs.lib.mkDesktopModule config "pyprland" {
   in {
     exec-once = [
       "${outputs.lib.getExe pkgs.pyprland}"
-      "hyprctl dispatch workspace special:scratchpad"
     ];
     bind = [
       # "SUPER, N, exec, ${pypr} toggle term"
@@ -51,7 +50,7 @@ outputs.lib.mkDesktopModule config "pyprland" {
       "SUPER SHIFT, N, exec, ${pypr} toggle_special scratchpad"
     ];
     workspace = [
-      ''special:scratchpad, on-created-empty:${hypr-scratch-group} "wezterm start --class=scratch --" "scratch" "wezterm start -- octave-cli"''
+      # ''special:scratchpad, on-created-empty:${hypr-scratch-group} "wezterm start --class=scratch --" "scratch" "wezterm start -- octave-cli"''
       # "special:scratchpad, on-created-empty:[size 1050 675] uwsm app -- ${
       #   config.modules.${config.defaultTerminal}.exec {
       #     # command = [ "connect" "scratchpad" ];
@@ -62,10 +61,10 @@ outputs.lib.mkDesktopModule config "pyprland" {
       #     command = ["start" "--" "${outputs.lib.getExe' pkgs.octave "octave"}"];
       #   }
       # }"
-      "special:scratchpad, gapsout:50"
+      # "special:scratchpad, gapsout:50"
     ];
-    windowrulev2 = [
-      "float, onworkspace:name:special:scratchpad"
-    ];
+    # windowrulev2 = [
+    #   "float, onworkspace:name:special:scratchpad"
+    # ];
   };
 }

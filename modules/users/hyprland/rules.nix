@@ -1,5 +1,8 @@
 _: {
   wayland.windowManager.hyprland.settings.windowrulev2 = [
+    # TODO When monocle, remove gaps
+    #  https://wiki.hyprland.org/Configuring/Workspace-Rules/#smart-gaps
+
     "opacity 0.0 override, class:^(xwaylandvideobridge)$"
     "noanim, class:^(xwaylandvideobridge)$"
     "noinitialfocus, class:^(xwaylandvideobridge)$"
@@ -12,11 +15,11 @@ _: {
     "pin, class:(gcr-prompter)"
     "stayfocused, class:(gcr-prompter)"
 
-    "float, class:(.*)(scratchpad)"
-    "workspace special silent, class:(.*)(scratchpad)"
-    "size 60% 65%, class:(.*)(scratchpad)"
-    "center, class:(.*)(scratchpad)"
-    "opacity 0.8 0.8, class:(.*)(scratchpad)"
+    # "float, class:(.*)(scratchpad)"
+    # "workspace special silent, class:(.*)(scratchpad)"
+    # "size 60% 65%, class:(.*)(scratchpad)"
+    # "center, class:(.*)(scratchpad)"
+    # "opacity 0.8 0.8, class:(.*)(scratchpad)"
 
     "noborder, fullscreen:1"
 

@@ -3,6 +3,7 @@
   outputs,
   pkgs,
   hypr-gamemode,
+  hypr-workspace,
   lock,
   hypr-snap,
   hypr-move,
@@ -16,7 +17,7 @@
       bind = [
         "SUPER, Return, exec, uwsm app -- ${config.modules.${config.defaultTerminal}.exec {}}"
         "SUPER, Q, killactive"
-        "SUPER SHIFT, E, exit"
+        ''SUPER SHIFT, E, exec, loginctl terminate-user ""''
         "SUPER, E, exec, uwsm app -- ${getExe pkgs.nemo}"
         "SUPER SHIFT, F, togglefloating"
         "SUPER ALT, F, workspaceopt, allfloat"
@@ -122,7 +123,7 @@
             in
               builtins.toString (x + 1 - (c * 10));
           in ''
-            bind = SUPER, ${ws}, exec, hyprctl dispatch focusworkspaceoncurrentmonitor ${toString (x + 1)}
+            bind = SUPER, ${ws}, exec, ${hypr-workspace} ${toString (x + 1)}
             bind = SUPER SHIFT, ${ws}, movetoworkspacesilent, ${toString (x + 1)}
           ''
         )

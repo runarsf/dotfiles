@@ -17,7 +17,7 @@ def main [
   let clients: table = hyprctl -j clients | from json
   let address: string = $clients | where class == $class and workspace.name == $"special:($workspace)" | first | get address
 
-  mut cmdbuf: list = [
+  mut cmdbuf: list<string> = [
     $"dispatch focuswindow address:($address)",
     "dispatch togglegroup"
   ]

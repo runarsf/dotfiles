@@ -32,6 +32,7 @@ let
     ];
   } (builtins.readFile ./bin/hypr-gamemode.py);
   hypr-move = "${pkgs.writers.writeNuBin "hypr-move" (builtins.readFile ./bin/move.nu)}/bin/hypr-move";
+  hypr-workspace = "${pkgs.writers.writeNuBin "hypr-workspace" (builtins.readFile ./bin/workspace.nu)}/bin/hypr-workspace";
   hypr-scratch-group = "${pkgs.writers.writeNuBin "hypr-scratch-group" (builtins.readFile ./bin/scratch-group.nu)}/bin/hypr-scratch-group";
 in
   {
@@ -40,7 +41,7 @@ in
       inputs.hyprland.homeManagerModules.default
       (
         import ./binds.nix
-        (self // {inherit hypr-gamemode lock hypr-snap hypr-move;})
+        (self // {inherit hypr-gamemode lock hypr-snap hypr-workspace hypr-move;})
       )
       ./rules.nix
 
@@ -127,7 +128,7 @@ in
       plugins = with inputs.hyprland-plugins.packages.${pkgs.stdenv.hostPlatform.system};
         [
           borders-plus-plus
-          pkgs.hypr-workspace-layouts
+          # pkgs.hypr-workspace-layouts
         ]
         ++ outputs.lib.optionals config.modules.hyprland.animations [
           inputs.hypr-dynamic-cursors.packages.${pkgs.stdenv.hostPlatform.system}.hypr-dynamic-cursors

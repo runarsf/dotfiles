@@ -1589,11 +1589,11 @@
         "nypkgs": "nypkgs"
       },
       "locked": {
-        "lastModified": 1740062458,
-        "narHash": "sha256-MqFNmZTZghGmfU0fiq2ZEP2Va6lytfozuxaleyB002k=",
+        "lastModified": 1741273642,
+        "narHash": "sha256-w/dwiG5lczTKfe7ehpIlkqJFpp+GUwsket7XFtfLir0=",
         "owner": "runarsf",
         "repo": "nixvim",
-        "rev": "8b130a93df7d49164ff38f101b1a239a6fa341b7",
+        "rev": "d0c4f783e7d4e7681536838ec1eafcb2f5d9e07f",
         "type": "github"
       },
       "original": {

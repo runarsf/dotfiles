@@ -54,29 +54,36 @@ in
           };
         };
 
-      # hyprctl -j devices | jq -r '.mice | .[] | .name'
-      wayland.windowManager.hyprland.settings.device = outputs.lib.mkDefault [
-        {
-          name = "logitech-mx-ergo-1";
-          sensitivity = "0.6";
-        }
-        {
-          name = "logitech-pro-x-2";
-          sensitivity = "-0.4";
-        }
-        {
-          name = "logitech-pro-x-2-1";
-          sensitivity = "-0.4";
-        }
-        {
-          name = "logitech-pro-x-2-2";
-          sensitivity = "-0.4";
-        }
-        {
-          name = "logitech-usb-receiver";
-          sensitivity = "-0.4";
-        }
-      ];
+      wayland.windowManager.hyprland.settings = {
+        workspace = [
+          "2, monitor:eDP-1"
+          "10, monitor:DP-2"
+          "10, monitor:DP-3"
+        ];
+        # hyprctl -j devices | jq -r '.mice | .[] | .name'
+        device = outputs.lib.mkDefault [
+          {
+            name = "logitech-mx-ergo-1";
+            sensitivity = "0.6";
+          }
+          {
+            name = "logitech-pro-x-2";
+            sensitivity = "-0.4";
+          }
+          {
+            name = "logitech-pro-x-2-1";
+            sensitivity = "-0.4";
+          }
+          {
+            name = "logitech-pro-x-2-2";
+            sensitivity = "-0.4";
+          }
+          {
+            name = "logitech-usb-receiver";
+            sensitivity = "-0.4";
+          }
+        ];
+      };
     };
 
     systems = {
