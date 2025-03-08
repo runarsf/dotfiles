@@ -222,17 +222,14 @@ in
           ];
 
           workspace = let
-            primary = ["4" "10"];
-            secondary = ["1" "2"];
-          in
-            (builtins.concatMap (ws: [
-                "${ws}, monitor:DP-1"
-              ])
-              primary)
-            ++ (builtins.concatMap (ws: [
-                "${ws}, monitor:HDMI-A-1"
-              ])
-              secondary);
+            primary = "monitor:DP-1";
+            secondary = "monitor:HDMI-A-1";
+          in [
+            "4, ${primary}"
+            "10, ${primary}"
+            "1, ${secondary}"
+            "2, ${secondary}"
+          ];
         };
       };
 

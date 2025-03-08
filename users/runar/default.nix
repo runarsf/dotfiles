@@ -55,18 +55,13 @@ in
 
       wayland.windowManager.hyprland.settings = {
         workspace = let
-          primary = ["1" "0"];
-          secondary = ["2"];
-        in
-          (builtins.concatMap (ws: [
-              "${ws}, monitor:DP-2"
-              "${ws}, monitor:DP-3"
-            ])
-            primary)
-          ++ (builtins.concatMap (ws: [
-              "${ws}, monitor:eDP-1"
-            ])
-            secondary);
+          primary = "monitor:DP-2;DP-3";
+          secondary = "monitor:eDP-1";
+        in [
+          "1, ${primary}"
+          "10, ${primary}"
+          "2, ${secondary}"
+        ];
         # hyprctl -j devices | jq -r '.mice | .[] | .name'
         device = outputs.lib.mkDefault [
           {
