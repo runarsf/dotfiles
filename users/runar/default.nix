@@ -26,7 +26,6 @@ in
           "neovim"
           "zsh"
           "nushell"
-          "xonsh"
           "git"
           "gpg"
           "keychain"

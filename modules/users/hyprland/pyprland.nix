@@ -50,7 +50,7 @@ outputs.lib.mkDesktopModule config "pyprland" {
       "SUPER SHIFT, N, exec, ${pypr} toggle_special scratchpad"
     ];
     workspace = [
-      # ''special:scratchpad, on-created-empty:${hypr-scratch-group} "wezterm start --class=scratch --" "scratch" "wezterm start -- octave-cli"''
+      ''special:scratchpad, on-created-empty:${hypr-scratch-group} "wezterm start --class=scratch --" "scratch" "wezterm start -- octave-cli"''
       # "special:scratchpad, on-created-empty:[size 1050 675] uwsm app -- ${
       #   config.modules.${config.defaultTerminal}.exec {
       #     # command = [ "connect" "scratchpad" ];
@@ -63,8 +63,8 @@ outputs.lib.mkDesktopModule config "pyprland" {
       # }"
       # "special:scratchpad, gapsout:50"
     ];
-    # windowrulev2 = [
-    #   "float, onworkspace:name:special:scratchpad"
-    # ];
+    windowrulev2 = [
+      "float, onworkspace:name:special:scratchpad"
+    ];
   };
 }

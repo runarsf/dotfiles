@@ -66,6 +66,7 @@ in {
           command = [ "start" "--" "${pkgs.btop}/bin/btop" ];
         };
       bar.customModules.hypridle.label = false;
+      bar.customModules.hypridle.rightClick = "${outputs.lib.getExe pkgs.mpv} --no-audio https://roundrobin3.videostreamingwowza.com/visdeurbel2/visdeurbel2.stream/playlist.m3u8";
       bar.launcher.autoDetectIcon = true;
       bar.launcher.icon = "";
       bar.launcher.rightClick = "${pkgs.fuzzel}/bin/fuzzel";
@@ -98,6 +99,7 @@ in {
       hyprpanel.restartCommand =
         "${pkgs.hyprpanel}/bin/hyprpanel -q; ${pkgs.hyprpanel}/bin/hyprpanel";
       # menus.bluetooth.showBattery = true;
+      menus.power.lowBatteryNotification = true;
       menus.clock.time.military = true;
       menus.clock.weather.enabled = false;
       menus.dashboard.directories.enabled = false;
@@ -138,6 +140,7 @@ in {
     };
 
     override = {
+      notifications.ignore = [ "spotify" ];
       bar.workspaces.applicationIconMap = builtins.listToAttrs (map (item: {
         name = builtins.elemAt item 0;
         value = builtins.elemAt item 1;

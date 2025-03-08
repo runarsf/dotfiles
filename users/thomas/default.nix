@@ -25,7 +25,6 @@ in
         outputs.lib.enable [
           "neovim"
           "zsh"
-          "xonsh"
           "git"
           "gpg"
           "keychain"

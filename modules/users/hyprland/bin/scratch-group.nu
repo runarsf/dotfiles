@@ -8,9 +8,9 @@ def main [
   --width (-w): int = 1050,
   --height (-h): int = 675,
   --workspace (-W): string = "scratchpad",
-  --sleep (-s): duration = 1500ms,
+  --sleep (-s): duration = 2000ms,
 ] {
-  hyprctl dispatch exec $"[size ($width) ($height)] ($terminal)" o> /dev/null
+  hyprctl --batch $"dispatch workspace special:($workspace); dispatch exec [size ($width) ($height)] ($terminal)" o> /dev/null
 
   sleep $sleep
 

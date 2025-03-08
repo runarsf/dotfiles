@@ -1,6 +1,5 @@
 {
   config,
-  pkgs,
   outputs,
   ...
 }:
@@ -10,9 +9,8 @@ outputs.lib.mkDesktopModule config "bluetooth" {
   nixos = {
     hardware.bluetooth = {
       enable = true;
-      powerOnBoot = true;
+      powerOnBoot = false;
     };
     services.blueman.enable = true;
-    environment.systemPackages = with pkgs; [blueberry];
   };
 }

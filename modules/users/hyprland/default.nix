@@ -124,10 +124,12 @@ in
       enable = true;
       systemd.enable = false;
       package = null;
+      xwayland.enable = true;
       portalPackage = null;
       plugins = with inputs.hyprland-plugins.packages.${pkgs.stdenv.hostPlatform.system};
         [
           borders-plus-plus
+          hyprwinwrap
           # pkgs.hypr-workspace-layouts
         ]
         ++ outputs.lib.optionals config.modules.hyprland.animations [
@@ -140,7 +142,7 @@ in
         ];
         exec-once = [
           "${outputs.lib.getExe pkgs.sway-audio-idle-inhibit}"
-          "${outputs.lib.getExe pkgs.xwaylandvideobridge}"
+          "${outputs.lib.getExe pkgs.kdePackages.xwaylandvideobridge}"
           "${outputs.lib.getExe pkgs.networkmanagerapplet}"
           "systemctl --user start hyprpolkitagent"
           "${hypr-gamemode}"
@@ -148,6 +150,9 @@ in
         plugin = {
           wslayout = {
             default_layout = "master";
+          };
+          hyprwinwrap = {
+            class = "mpv";
           };
           dynamic-cursors = outputs.lib.mkIf config.modules.hyprland.animations {
             enabled = true;

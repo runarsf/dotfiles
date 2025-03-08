@@ -113,8 +113,8 @@ outputs.lib.mkModule config "zsh" {
 
         # https://unix.stackexchange.com/a/26776
         # https://unix.stackexchange.com/a/53587
-        export STDERRED_BLACKLIST="^(niks|nix|nh|ssh|gitui|vim|neovim|just|yazi)$"
-        export LD_PRELOAD="${pkgs.stderred}/lib/libstderred.so''${LD_PRELOAD:+:$LD_PRELOAD}"
+        # export STDERRED_BLACKLIST="^(niks|nix|nh|ssh|gitui|vim|neovim|just|yazi)$"
+        # export LD_PRELOAD="${pkgs.stderred}/lib/libstderred.so''${LD_PRELOAD:+:$LD_PRELOAD}"
 
         wim () { set -eu; ''${EDITOR:-vim} "$(which ''${1:?No file selected...})" ''${@:2}; set +eu }
         ? () {
