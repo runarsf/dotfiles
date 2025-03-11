@@ -24,7 +24,7 @@
       lastfm
     ];
     enabledCustomApps = with spicePkgs.apps; [newReleases];
-    theme = spicePkgs.themes.text;
+    theme = spicePkgs.themes.lucid;
     colorScheme = "custom";
     customColorScheme = let
       c = hex: builtins.substring 1 (builtins.stringLength hex - 1) hex;
