@@ -21,10 +21,10 @@ in
       enable = true;
       agents = ["ssh" "gpg"];
       keys = config.modules.sops.privateKeyNames;
-      enableBashIntegration = false;
-      enableFishIntegration = false;
-      enableNushellIntegration = false;
-      enableZshIntegration = false;
+      # enableBashIntegration = false;
+      # enableFishIntegration = false;
+      # enableNushellIntegration = false;
+      # enableZshIntegration = false;
     };
 
     wayland.windowManager.hyprland.settings.exec-once = [''eval "$(SHELL=bash ${shellCommand})"''];
