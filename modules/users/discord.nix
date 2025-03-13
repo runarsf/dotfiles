@@ -33,28 +33,43 @@ in
 
     xdg.configFile = {
       "Vencord/themes/SettingsModal.theme.css".source = pkgs.fetchurl {
-        url = "https://raw.githubusercontent.com/mwittrien/BetterDiscordAddons/d5b8dd17692e1f30edf94170e4be0f030fbc9bc5/Themes/SettingsModal/SettingsModal.css";
-        sha256 = "sha256-F0v8VvYrHCbmfDjKxlxliwJul6LOChL9iBvoORIYog0=";
+        url = "https://raw.githubusercontent.com/mwittrien/BetterDiscordAddons/477ca52e19a38cbd8fe29b9c537afaee54224fbf/Themes/SettingsModal/SettingsModal.theme.css";
+        sha256 = "sha256-ib6y+L5uD+y27THA4OwrIKulgC3otrwZidGRtFdIHWc=";
+      };
+      "Vencord/themes/midnight-refresh.theme.css".source = pkgs.fetchurl {
+        url = "https://raw.githubusercontent.com/refact0r/midnight-discord/3a51cd37870915a8e2385bd63e40b30f382e7957/themes/midnight-refresh.theme.css";
+        sha256 = "sha256-TwIXNkjIc+tghRtfaB46u5aEaxUYsIyPoWASBFJMD5c=";
       };
       "Vencord/themes/midnight.theme.css".source = pkgs.fetchurl {
-        url = "https://raw.githubusercontent.com/refact0r/midnight-discord/bc6c15487eb6a416b0914d8e5b48af47f7608ffe/midnight.css";
-        sha256 = "sha256-6UgSgsn6Kb5w2V1VdHMxipQ5c1W5Zm8Jbx9GefK89oo=";
+        url = "https://raw.githubusercontent.com/refact0r/midnight-discord/3a51cd37870915a8e2385bd63e40b30f382e7957/midnight.theme.css";
+        sha256 = "sha256-O33tuRKGgsuiEkpSRtVY+Wq9+gKNWNUbYLspQ6uPnII=";
       };
       "Vencord/themes/system24.theme.css".source = pkgs.fetchurl {
-        url = "https://raw.githubusercontent.com/refact0r/system24/main/theme/system24.theme.css";
-        sha256 = "sha256-WJYNWeo1DdgOh7cFne6QSEHQagqapFznqWfeoCsqM+8=";
+        url = "https://raw.githubusercontent.com/refact0r/system24/a6e86edf00144f2fe740b3592494cdd9ea2c3f66/theme/system24.theme.css";
+        sha256 = "sha256-gpHaLfWBOJjt/P+nvs69I6H8ceUVTetMrHCJKdJxHzc=";
       };
-      "Vencord/themes/CustomFonts.theme.css".source = builtins.toString (
-        pkgs.writeText "CustomFonts.theme.css" ''
-          *:not([class*="hljs"]):not(code),
-          code {
-            font-family:  'Monocraft', 'Operator Mono Lig' !important;
-          }
+      "Vencord/themes/GitHub-Dark.theme.css".source = pkgs.fetchurl {
+        url = "https://raw.githubusercontent.com/moistp1ckle/GitHub_Dark/615b99a421fe40940a592fce0e3dbc47ef585ab4/GitHub-Dark.theme.css";
+        sha256 = "sha256-hG72egC4MywZg1U2gxSwKwE0S0qo+TDLWiuP3CV/G1w=";
+      };
+      "Vencord/themes/RadialStatus.theme.css".source = pkgs.fetchurl {
+        url = "https://raw.githubusercontent.com/DiscordStyles/RadialStatus/8444d415c44d7019708eb0a577b085141725a2df/RadialStatus.theme.css";
+        sha256 = "sha256-R8dxgZovZe92n5lNNyxBTOxhuQduyszj+nrx3kafAJ4=";
+      };
+      # https://betterdiscord.app/theme/Solana
+      "Vencord/themes/BitmapFont.theme.css".text = ''
+        /**
+         * @name BitmapFont
+         * @description Use the Monocraft font
+         */
+        *:not([class*="hljs"]):not(code),
+        code {
+          font-family: 'Monocraft', 'Operator Mono Lig' !important;
+        }
 
-          /* code {
-            font-family: 'Operator Mono Lig' !important;
-          } */
-        ''
-      );
+        /* code {
+          font-family: 'Operator Mono Lig' !important;
+        } */
+      '';
     };
   }

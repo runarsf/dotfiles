@@ -28,6 +28,8 @@ _: {
 
     "noinitialfocus,class:^jetbrains-(?!toolbox),floating:1"
 
+    # "plugin:chromakey, class:code"
+
     # Games
     "noinitialfocus, class:steam"
     "stayfocused, title:^()$,class:steam"

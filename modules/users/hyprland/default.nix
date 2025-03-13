@@ -10,6 +10,7 @@
 # TODO Better switching of layouts (master, centered master, dwindle, pseudo) https://wiki.hyprland.org/Configuring/Master-Layout/#workspace-rules
 # TODO See if smart_resizing negates the need for a resizing script
 # TODO refactor master layout config
+# TODO Make a fisdeurbel nushell script that re-runs the stream if it dies
 let
   lock = "${pkgs.hyprlock}/bin/hyprlock";
   hypr-snap = pkgs.writers.writePython3 "hypr-snap" {
@@ -124,12 +125,13 @@ in
       enable = true;
       systemd.enable = false;
       package = null;
-      xwayland.enable = true;
       portalPackage = null;
       plugins = with inputs.hyprland-plugins.packages.${pkgs.stdenv.hostPlatform.system};
         [
           borders-plus-plus
           hyprwinwrap
+          # inputs.hyprchroma.packages.${pkgs.stdenv.hostPlatform.system}.Hypr-DarkWindow
+          # pkgs.hyprscroller # NOTE Doesn't work with git :(
           # pkgs.hypr-workspace-layouts
         ]
         ++ outputs.lib.optionals config.modules.hyprland.animations [
@@ -147,6 +149,7 @@ in
           "systemctl --user start hyprpolkitagent"
           "${hypr-gamemode}"
         ];
+        # chromakey_background = "1,4,9";
         plugin = {
           wslayout = {
             default_layout = "master";
@@ -210,6 +213,9 @@ in
           disable_hyprland_logo = true;
           force_default_wallpaper = 0;
           enable_swallow = true;
+          key_press_enables_dpms = true;
+          render_unfocused_fps = 30;
+          new_window_takes_over_fullscreen = 1;
           swallow_regex = "^(Alacritty|kitty|org.wezfurlong.wezterm)$";
           animate_manual_resizes = config.modules.hyprland.animations;
           animate_mouse_windowdragging = config.modules.hyprland.animations;

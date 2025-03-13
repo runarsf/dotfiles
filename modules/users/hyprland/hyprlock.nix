@@ -12,6 +12,10 @@ outputs.lib.mkDesktopModule config "hyprlock" {
     package = pkgs.unstable.hyprlock;
 
     settings = {
+      general = {
+        grace = 300;
+      };
+
       background = {
         color = "rgba(25, 20, 20, 1.0)";
 

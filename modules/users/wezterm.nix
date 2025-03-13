@@ -5,6 +5,7 @@
   outputs,
   ...
 }: let
+  cfg = config.modules.wezterm;
   toLua = x:
     if
       builtins.match ''
@@ -16,19 +17,29 @@
     else "'${x}'";
 in
   outputs.lib.mkDesktopModule' config "wezterm" (with outputs.lib; {
-    # FIXME This should be a generic way to start a program, not requiring "start" to be provided
-    #  Maybe "exec 'btop'" and "exec' { command = [ 'btop' ], ... }"
     exec = mkOption {
+      type = types.functionTo types.str;
+      default = cmd: let
+        command = if builtins.isString cmd then outputs.lib.splitString " " cmd else cmd;
+      in cfg.exec' {
+        inherit command;
+      };
+    };
+    # TODO Make a generic way that to connect the terminal to socket,
+    # shouldn't crash if the exec' function doesn't support it.
+    # Maybe exec'.extraOptions.socket=unix
+    exec' = mkOption {
       type = types.functionTo types.str;
       default = {
         class ? null,
-        command ? ["start"],
+        command ? [],
       }: let
+        cmd = ["start" "--"] ++ command;
         args =
           if class == null
-          then "${builtins.concatStringsSep " " command}"
-          else "${builtins.head command} --class ${class} ${
-            builtins.concatStringsSep " " (builtins.tail command)
+          then "${builtins.concatStringsSep " " cmd}"
+          else "${builtins.head cmd} --class=${class} ${
+            builtins.concatStringsSep " " (builtins.tail cmd)
           }";
       in "${getExe config.programs.wezterm.package} ${args}";
       readOnly = true;
@@ -61,16 +72,20 @@ in
         ];
       in
         (
-          if config.modules.wezterm.bitmap
+          if cfg.bitmap
           then bitmap
           else vector
         )
         ++ ["CaskaydiaCove NFM"];
     };
-  }) {
+  }) rec {
     home.shellAliases.ssh =
       outputs.lib.mkIf (config.defaultTerminal == "wezterm")
       "TERM=xterm-256color ssh";
+
+    programs.nushell.shellAliases = {
+      inherit (home.shellAliases) ssh;
+    };
 
     nixos = {
       environment.systemPackages = with pkgs; [egl-wayland];
@@ -149,7 +164,7 @@ in
         config.font = wezterm.font_with_fallback({
           ${
           builtins.concatStringsSep ",\n  "
-          (map toLua config.modules.wezterm.fonts)
+          (map toLua cfg.fonts)
         }
         })
         config.font_size = 14.0

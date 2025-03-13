@@ -12,6 +12,7 @@ outputs.lib.mkModule config "wayland" {
 
   # https://discourse.nixos.org/t/home-manager-and-the-mimeapps-list-file-on-plasma-kde-desktops/37694/7
   xdg = {
+    # https://github.com/Vladimir-csp/uwsm?tab=readme-ov-file#4-environments-and-shell-profile
     configFile = {
       # "environment.d/20-user-environment.conf" # https://www.freedesktop.org/software/systemd/man/latest/environment.d.html
       "uwsm/env".text = ''

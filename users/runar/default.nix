@@ -55,7 +55,7 @@ in
 
       wayland.windowManager.hyprland.settings = {
         workspace = let
-          primary = "monitor:DP-2;DP-3";
+          primary = "monitor:DP-2;DP-3;DP-4";
           secondary = "monitor:eDP-1";
         in [
           "1, ${primary}"

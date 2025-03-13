@@ -5,7 +5,7 @@
   outputs,
   ...
 }:
-outputs.lib.mkModule config "neovim" {
+outputs.lib.mkModule config "neovim" rec {
   nixpkgs.overlays = [
     (_: prev: {
       neovim = inputs.nixvim.packages.${prev.system}.default;
@@ -25,5 +25,9 @@ outputs.lib.mkModule config "neovim" {
       MANWIDTH = 999;
     };
     shellAliases.vim = "${nvim}";
+  };
+
+  programs.nushell.shellAliases = {
+    inherit (home.shellAliases) vim; 
   };
 }

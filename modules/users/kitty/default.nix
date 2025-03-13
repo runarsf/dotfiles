@@ -50,10 +50,14 @@ in
       }: "${config.modules.kitty.exe} --class ${class} ${command}";
       readOnly = true;
     };
-  } {
+  } rec {
     home.shellAliases.ssh =
       outputs.lib.mkIf (config.defaultTerminal == "kitty")
       "TERM=xterm-256color ssh";
+
+    programs.nushell.shellAliases = {
+      inherit (home.shellAliases) ssh;
+    };
 
     xdg.configFile."kitty/relative_resize.py" = {
       source = ./relative_resize.py;
@@ -171,11 +175,12 @@ in
         map alt+v paste_from_clipboard
 
         ${builtins.concatStringsSep "\n" (builtins.genList (x: let
-          tab = let c = (x + 1) / 10; in builtins.toString (x + 1 - (c * 10));
-        in ''
-          map ${mod}+${tab} goto_tab ${toString (x + 1)}
-          map ${chord}>${tab} goto_tab ${toString (x + 1)}
-        '') 10)}
+            tab = let c = (x + 1) / 10; in builtins.toString (x + 1 - (c * 10));
+          in ''
+            map ${mod}+${tab} goto_tab ${toString (x + 1)}
+            map ${chord}>${tab} goto_tab ${toString (x + 1)}
+          '')
+          10)}
       '';
     };
   }

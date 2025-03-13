@@ -22,7 +22,7 @@ def main [
     "dispatch togglegroup"
   ]
   for $tab in $tabbed {
-    $cmdbuf = $cmdbuf | append $"dispatch exec ($tab)"
+    $cmdbuf ++= [ $"dispatch exec ($tab)" ]
   }
 
   # TODO Force focus to scratchpad while doing operations?

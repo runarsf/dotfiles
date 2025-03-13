@@ -57,14 +57,10 @@ in {
       bar.clock.format = " %a %d. %b  %H:%M ";
       bar.clock.showIcon = false;
       bar.customModules.cpu.leftClick =
-        config.modules.${config.defaultTerminal}.exec {
-          command = [ "start" "--" "${pkgs.btop}/bin/btop" ];
-        }; # FIXME This is not how to start a program lol
+        config.modules.${config.defaultTerminal}.exec "${outputs.lib.getExe pkgs.btop}";
       bar.customModules.hyprsunset.label = false;
       bar.customModules.ram.leftClick =
-        config.modules.${config.defaultTerminal}.exec {
-          command = [ "start" "--" "${pkgs.btop}/bin/btop" ];
-        };
+        config.modules.${config.defaultTerminal}.exec "${outputs.lib.getExe pkgs.btop}";
       bar.customModules.hypridle.label = false;
       bar.customModules.hypridle.rightClick = "${outputs.lib.getExe pkgs.mpv} --no-audio https://roundrobin3.videostreamingwowza.com/visdeurbel2/visdeurbel2.stream/playlist.m3u8";
       bar.launcher.autoDetectIcon = true;
@@ -119,7 +115,7 @@ in {
       menus.volume.raiseMaximumVolume = true;
       notifications.showActionsOnHover = false;
       tear = true;
-      terminal = config.modules.${config.defaultTerminal}.exec { };
+      terminal = config.modules.${config.defaultTerminal}.exec [];
       theme.bar.floating = true;
       theme.bar.buttons.borderSize = "1px";
       theme.bar.buttons.enableBorders = true;

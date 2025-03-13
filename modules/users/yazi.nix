@@ -6,7 +6,8 @@
 }:
 outputs.lib.mkModule config "yazi" {
   home.packages = with pkgs; [exiftool];
-  home.shellAliases."fm" = ''${config.programs.yazi.package}/bin/yazi --cwd-file /tmp/yazi.dir "$@" && cd "$(\cat /tmp/yazi.dir)"'';
+  # NOTE This only works for posix compliant shells, not nushell
+  # home.shellAliases."fm" = ''${config.programs.yazi.package}/bin/yazi --cwd-file /tmp/yazi.dir "$@" && cd "$(\cat /tmp/yazi.dir)"'';
 
   xdg.configFile = {
     "yazi/init.lua".text = ''

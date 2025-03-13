@@ -170,7 +170,7 @@ in
         with userChrome; [
           transparency
           fixBookmarksBar
-          advancedTabGroups
+          # advancedTabGroups
         ]
       );
       ".zen/${name}/chrome/userContent.css".text = builtins.concatStringsSep "\n" (

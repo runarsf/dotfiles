@@ -46,6 +46,10 @@
       url = "github:VirtCode/hypr-dynamic-cursors";
       inputs.hyprland.follows = "hyprland";
     };
+    hyprchroma = {
+      url = "github:alexhulbert/Hyprchroma";
+      inputs.hyprland.follows = "hyprland";
+    };
     hyprpanel = {
       url = "github:Jas-SinghFSU/HyprPanel";
       inputs.nixpkgs.follows = "nixpkgs";

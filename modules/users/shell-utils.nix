@@ -5,7 +5,7 @@
   config,
   ...
 }:
-outputs.lib.mkEnabledModule config "shell-utils" {
+outputs.lib.mkEnabledModule config "shell-utils" rec {
   programs.fzf.enable = true;
 
   home = {
@@ -58,6 +58,10 @@ outputs.lib.mkEnabledModule config "shell-utils" {
       docker-compose = "docker compose";
       dkcUf = "docker compose up -d --force-recreate";
     };
+  };
+
+  programs.nushell.shellAliases = {
+    inherit (home.shellAliases) docker-compose dkcUf develop;
   };
 
   nixos = {

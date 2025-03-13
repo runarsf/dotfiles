@@ -13,15 +13,17 @@ def main [target: string] {
 
   if $target in ($monitorRules | get workspaceString) {
     let toMonitor: string = $monitorRules | where workspaceString == $target | get monitor | first
-    $cmdbuf = $cmdbuf | append $"focusmonitor ($toMonitor)"
-    $cmdbuf = $cmdbuf | append $"focusworkspaceoncurrentmonitor ($target)"
+    $cmdbuf ++= [
+      $"focusmonitor ($toMonitor)"
+      $"focusworkspaceoncurrentmonitor ($target)"
+    ]
   } else {
     let visibleWorkspaces: list<string> = $monitors | get activeWorkspace.name
 
     if $target in $visibleWorkspaces {
-      $cmdbuf = $cmdbuf | append $"workspace ($target)"
+      $cmdbuf ++= [ $"workspace ($target)" ]
     } else {
-      $cmdbuf = $cmdbuf | append $"focusworkspaceoncurrentmonitor ($target)"
+      $cmdbuf ++= [ $"focusworkspaceoncurrentmonitor ($target)" ]
     }
   }
 

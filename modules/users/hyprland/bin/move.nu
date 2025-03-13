@@ -1,6 +1,8 @@
 #! /usr/bin/env cached-nix-shell
 #! nix-shell -i nu -p nushell
 
+# TODO Should move to other workspace if you're on an empty one, same for special workspaces and floating windows
+
 def main [action: string, dir: string] {
   # Get active workspace (activeworkspace doesn't include special workspaces)
   let window: table = hyprctl -j activewindow | from json
