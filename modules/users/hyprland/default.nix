@@ -175,7 +175,8 @@ in
           #   monitor_gap = 30;
           # };
 
-          layout = "workspacelayout";
+          # layout = "workspacelayout";
+          layout = "master";
           resize_on_border = false;
         };
         input = {

@@ -17,13 +17,21 @@
     else "'${x}'";
 in
   outputs.lib.mkDesktopModule' config "wezterm" (with outputs.lib; {
+    package = mkOption {
+      type = types.package;
+      default = pkgs.unstable.wezterm; # inputs.wezterm.packages.${pkgs.stdenv.hostPlatform.system}.default;
+    };
     exec = mkOption {
       type = types.functionTo types.str;
       default = cmd: let
-        command = if builtins.isString cmd then outputs.lib.splitString " " cmd else cmd;
-      in cfg.exec' {
-        inherit command;
-      };
+        command =
+          if builtins.isString cmd
+          then outputs.lib.splitString " " cmd
+          else cmd;
+      in
+        cfg.exec' {
+          inherit command;
+        };
     };
     # TODO Make a generic way that to connect the terminal to socket,
     # shouldn't crash if the exec' function doesn't support it.
@@ -95,10 +103,10 @@ in
       };
     };
 
-    # home.packages = [ pkgs.unstable.wezterm ];
+    home.packages = [cfg.package];
     programs.wezterm = {
       enable = true;
-      package = pkgs.unstable.wezterm;
+      package = cfg.package;
       # https://wezfurlong.org/wezterm/config/lua/config/index.html
       # FIXME Pane navigation doesn't work correctly
       extraConfig = let
@@ -183,6 +191,8 @@ in
         -- config.use_fancy_tab_bar = false
         -- config.show_new_tab_button_in_tab_bar = false
         -- config.alternate_buffer_wheel_scroll_speed = 1
+
+        config.check_for_updates = false
 
         config.set_environment_variables = {
           TERMINFO_DIRS = '${config.home.profileDirectory}/share/terminfo',
