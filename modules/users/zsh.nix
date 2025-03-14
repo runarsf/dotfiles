@@ -153,8 +153,6 @@ outputs.lib.mkModule config "zsh" {
         bindkey -M vicmd '^G' per-directory-history-toggle-history
 
         autopair-init
-
-         ?
       '';
       prezto = {
         enable = true;

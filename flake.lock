@@ -1731,11 +1731,11 @@
         "nypkgs": "nypkgs"
       },
       "locked": {
-        "lastModified": 1741273642,
-        "narHash": "sha256-w/dwiG5lczTKfe7ehpIlkqJFpp+GUwsket7XFtfLir0=",
+        "lastModified": 1741958343,
+        "narHash": "sha256-HkHp9usJSRT6stEYFaxew3F1lwdNPUSq5mmWlzNrvDc=",
         "owner": "runarsf",
         "repo": "nixvim",
-        "rev": "d0c4f783e7d4e7681536838ec1eafcb2f5d9e07f",
+        "rev": "9ca3f4cf2bb362e1afd57f68a11b81f7c6ea57f9",
         "type": "github"
       },
       "original": {
