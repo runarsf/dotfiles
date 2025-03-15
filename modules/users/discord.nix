@@ -44,18 +44,27 @@ in
         url = "https://raw.githubusercontent.com/refact0r/midnight-discord/3a51cd37870915a8e2385bd63e40b30f382e7957/midnight.theme.css";
         sha256 = "sha256-O33tuRKGgsuiEkpSRtVY+Wq9+gKNWNUbYLspQ6uPnII=";
       };
-      "Vencord/themes/system24.theme.css".source = pkgs.fetchurl {
-        url = "https://raw.githubusercontent.com/refact0r/system24/a6e86edf00144f2fe740b3592494cdd9ea2c3f66/theme/system24.theme.css";
-        sha256 = "sha256-gpHaLfWBOJjt/P+nvs69I6H8ceUVTetMrHCJKdJxHzc=";
-      };
-      "Vencord/themes/GitHub-Dark.theme.css".source = pkgs.fetchurl {
-        url = "https://raw.githubusercontent.com/moistp1ckle/GitHub_Dark/615b99a421fe40940a592fce0e3dbc47ef585ab4/GitHub-Dark.theme.css";
-        sha256 = "sha256-hG72egC4MywZg1U2gxSwKwE0S0qo+TDLWiuP3CV/G1w=";
-      };
-      "Vencord/themes/RadialStatus.theme.css".source = pkgs.fetchurl {
-        url = "https://raw.githubusercontent.com/DiscordStyles/RadialStatus/8444d415c44d7019708eb0a577b085141725a2df/RadialStatus.theme.css";
-        sha256 = "sha256-R8dxgZovZe92n5lNNyxBTOxhuQduyszj+nrx3kafAJ4=";
-      };
+      "Vencord/themes/system24.theme.css".source = let
+        hash = "a6e86edf00144f2fe740b3592494cdd9ea2c3f66";
+      in
+        pkgs.fetchurl {
+          url = "https://raw.githubusercontent.com/refact0r/system24/${hash}/theme/system24.theme.css";
+          sha256 = "sha256-gpHaLfWBOJjt/P+nvs69I6H8ceUVTetMrHCJKdJxHzc=";
+        };
+      "Vencord/themes/GitHub-Dark.theme.css".source = let
+        hash = "615b99a421fe40940a592fce0e3dbc47ef585ab4";
+      in
+        pkgs.fetchurl {
+          url = "https://raw.githubusercontent.com/moistp1ckle/GitHub_Dark/${hash}/source.css";
+          sha256 = "sha256-/m/PN4AZGdEotqBcKQTkRSdSpI7iiL0s/CeAA3hmwx0=";
+        };
+      "Vencord/themes/RadialStatus.theme.css".source = let
+        hash = "8444d415c44d7019708eb0a577b085141725a2df";
+      in
+        pkgs.fetchurl {
+          url = "https://raw.githubusercontent.com/DiscordStyles/RadialStatus/${hash}/RadialStatus.theme.css";
+          sha256 = "sha256-R8dxgZovZe92n5lNNyxBTOxhuQduyszj+nrx3kafAJ4=";
+        };
       # https://betterdiscord.app/theme/Solana
       "Vencord/themes/BitmapFont.theme.css".text = ''
         /**
