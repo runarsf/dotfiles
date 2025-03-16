@@ -25,6 +25,7 @@ in
         outputs.lib.enable [
           "neovim"
           "zsh"
+          "nushell"
           "git"
           "gpg"
           "keychain"
@@ -148,27 +149,48 @@ in
             dev = {
               rust.enable = true;
               haskell.enable = true;
-              python.packages = with pkgs.python311Packages; [manim];
+              # python.packages = with pkgs.python311Packages; [manim];
             };
           };
 
         nixos = {
-          # NVIDIA settings
-          services.xserver.videoDrivers = ["nvidia"];
-
-          hardware.nvidia = {
-            modesetting.enable = true;
-
-            powerManagement = {
-              enable = false;
-              finegrained = false;
+          environment.systemPackages = with pkgs; [ amdgpu_top corectrl];
+          hardware = {
+            amdgpu = {
+              initrd.enable = true;
+              amdvlk = {
+                enable = true;
+                support32Bit.enable = true;
+              };
+            };
+            graphics = {
+              enable = true;
+              enable32Bit = true;
+              package = with pkgs.unstable; mesa.drivers;
+              # extraPackages = with pkgs.unstable; [ amdvlk mesa.drivers ];
             };
 
-            open = false;
 
-            nvidiaSettings = true;
+            bluetooth.powerOnBoot = true;
+          };
 
-            package = pkgs.linuxPackages.nvidiaPackages.beta;
+          services.xserver.videoDrivers = [ "modesetting" ];
+
+          # systemd.tmpfiles.rules = [
+          #   "L+    /opt/rocm/hip   -    -    -     -    ${pkgs.rocmPackages.clr}"
+          # ];
+
+          boot = {
+            kernelPackages = pkgs.linuxPackages_latest;
+            # kernelParams = [
+            #   "radeon.si_support=0"
+            #   "amdgpu.si_support=1"
+            #   "amdgpu.dc=1"
+            # ];
+
+            kernel.sysctl = {
+              "fs.file-max" = 262144;
+            };
           };
 
           security.pam.loginLimits = [
@@ -185,9 +207,6 @@ in
               value = "262144";
             }
           ];
-          boot.kernel.sysctl = {
-            "fs.file-max" = 262144;
-          };
           systemd = {
             user.extraConfig = "DefaultLimitNOFILE=262144";
           };
@@ -203,12 +222,12 @@ in
             "_JAVA_AWT_WM_NONREPARENTING=1"
             "QT_AUTO_SCREEN_SCALE_FACTOR,1"
             "QT_QPA_PLATFORM,wayland"
-            "LIBVA_DRIVER_NAME,nvidia"
-            "GBM_BACKEND,nvidia-drm"
-            "__GLX_VENDOR_LIBRARY_NAME,nvidia"
+            # "LIBVA_DRIVER_NAME,nvidia"
+            # "GBM_BACKEND,nvidia-drm"
+            # "__GLX_VENDOR_LIBRARY_NAME,nvidia"
             "WLR_NO_HARDWARE_CURSORS,1"
             "__NV_PRIME_RENDER_OFFLOAD,1"
-            "__VK_LAYER_NV_optimus,NVIDIA_only"
+            # "__VK_LAYER_NV_optimus,NVIDIA_only"
             "PROTON_ENABLE_NGX_UPDATER,1"
             "NVD_BACKEND,direct"
             "__GL_GSYNC_ALLOWED,0"
@@ -251,7 +270,7 @@ in
               };
               haskell.enable = true;
               rust.enable = true;
-              python.packages = with pkgs.python311Packages; [manim];
+              # python.packages = with pkgs.python311Packages; [manim];
             };
           };
       };
