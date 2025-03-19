@@ -217,6 +217,7 @@ in
           key_press_enables_dpms = true;
           render_unfocused_fps = 30;
           new_window_takes_over_fullscreen = 1;
+          allow_session_lock_restore = 1;
           swallow_regex = "^(Alacritty|kitty|org.wezfurlong.wezterm)$";
           animate_manual_resizes = config.modules.hyprland.animations;
           animate_mouse_windowdragging = config.modules.hyprland.animations;

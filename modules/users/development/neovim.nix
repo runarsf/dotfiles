@@ -28,6 +28,6 @@ outputs.lib.mkModule config "neovim" rec {
   };
 
   programs.nushell.shellAliases = {
-    inherit (home.shellAliases) vim; 
+    inherit (home.shellAliases) vim;
   };
 }
