@@ -6,6 +6,8 @@
 }:
 # TODO https://github.com/JackHack96/EasyEffects-Presets
 # let configPath = ../. + builtins.toPath "/easyeffects";
+
+# NOTE Make sure your headphones are set as default, *not* easyeffects
 let
   configPath = ./config;
 in
