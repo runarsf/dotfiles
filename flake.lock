@@ -1601,11 +1601,11 @@
         "nypkgs": "nypkgs"
       },
       "locked": {
-        "lastModified": 1742434407,
-        "narHash": "sha256-jPoJNdyF0EDWyiy3kvuR72xrRAJOa7VfYNiKamIyUyw=",
+        "lastModified": 1742516485,
+        "narHash": "sha256-UBsSnjbw04Fe0+W+fR10InFOy5oNDuio6ou8ijysuOk=",
         "owner": "runarsf",
         "repo": "nixvim",
-        "rev": "adf4fd5605e2e5d92fc83c423134f88b808bd3b3",
+        "rev": "5bfdcc0fb6c4415239b5fa40283fd996e01f467e",
         "type": "github"
       },
       "original": {
@@ -2406,11 +2406,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1741838758,
-        "narHash": "sha256-nGTC/y9e+1+QIVCzIbiSpPiXM2HfS8YwIDCp52CcOQ4=",
+        "lastModified": 1742616341,
+        "narHash": "sha256-4/jpVPcN5VKomVhC/4KG0wU1KPxoDi1zVmu+GuuP6PU=",
         "owner": "youwen5",
         "repo": "zen-browser-flake",
-        "rev": "03a7fc89bc48344aed00e01b409c1d6ffc4c52ce",
+        "rev": "33f2c77de9b296992436dc9e17c3580c727511a7",
         "type": "github"
       },
       "original": {
