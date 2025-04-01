@@ -59,6 +59,7 @@ in
 
       wayland.windowManager.hyprland.settings.bind = [
         ",Pause,exec,/nix/store/di3glqanq4y9fxwxmpmypaw3rvlkdwf1-wireplumber-0.5.8/bin/wpctl set-mute @DEFAULT_SOURCE@ toggle"
+        "SUPER,P,exec,hyprctl keyword monitor DP-1,disable"
       ];
     };
 
@@ -182,6 +183,7 @@ in
 
           boot = {
             kernelPackages = pkgs.linuxPackages_latest;
+            initrd.kernelModules = [ "amdgpu" ];
             # kernelParams = [
             #   "radeon.si_support=0"
             #   "amdgpu.si_support=1"
@@ -238,6 +240,11 @@ in
             # "XWAYLAND_NO_GLAMOR,1" # with this you'll need to use gamescope for gaming
             "__GL_MaxFramesAllowed,1"
             # "WLR_RENDERER_ALLOW_SOFTWARE,1"
+          ];
+
+          windowrulev2 = [
+            "workspace 5, class:XIVLauncher.Core"
+            "workspace 5, class:Ffxiv_dx11.exe"
           ];
 
           workspace = let
