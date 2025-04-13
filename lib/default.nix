@@ -9,6 +9,7 @@ in
       nixpkgs.lib
       nix-darwin.lib
       home-manager.lib
+      nixlib.lib
 
       core
 

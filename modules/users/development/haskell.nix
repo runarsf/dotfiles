@@ -24,4 +24,11 @@ outputs.lib.mkModule config "dev.haskell" {
     (pkgs.haskellPackages.ghcWithPackages
       (pkgs: with pkgs; [stack cabal-install]))
   ];
+
+  home.shellAliases = {
+    "sb" = "stack build";
+    "se" = "stack build && stack exec";
+    "sc" = "stack clean";
+    "st" = "stack test";
+  };
 }

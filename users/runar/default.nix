@@ -174,7 +174,6 @@ in
           // {
             dev = {
               java.enable = true;
-              haskell.enable = true;
               c.enable = true;
               python = {
                 enable = true;

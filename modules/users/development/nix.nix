@@ -5,6 +5,7 @@
   ...
 }:
 outputs.lib.mkModule config "nix" {
+  # TODO nix dev alias to nix develop --command zsh
   home.sessionVariables = {
     FLAKE = "${config.home.homeDirectory}/.config/nixos";
   };

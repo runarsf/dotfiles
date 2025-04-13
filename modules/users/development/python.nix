@@ -32,7 +32,7 @@ in
         requests
         pygobject3
         debugpy
-        mypy # Required comment for formatting :⁾
+        mypy
       ]
       ++ outputs.lib.optionals self.presets.math.enable [
         pandas

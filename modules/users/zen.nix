@@ -25,6 +25,7 @@ let
     "tab.groups.background" = true;
     "tab.groups.borders" = true;
     "zen.urlbar.replace-newtab" = false;
+    "zen.widget.linux.transparency" = true;
 
     # Zen Context Menu
     "uc.hidecontext.screenshot" = true;
@@ -100,17 +101,14 @@ let
     "browser.aboutConfig.showWarning" = false;
   };
   userChrome = {
-    transparency = ''
-      :root {
-        --zen-main-browser-background: transparent !important;
-      }
-      #tabbrowser-tabpanels .browserStack {
-        background: var(--zen-colors-tertiary, var(--toolbar-bgcolor));
-      }
-      [zen-compact-mode="true"] #nav-bar {
-        background: var(--zen-dialog-background) !important;
-      }
-    '';
+    # transparency = ''
+    #   :root {
+    #     --zen-themed-toolbar-bg-transparent: transparent !important;
+    #   }
+    #   #tabbrowser-tabpanels .browserStack {
+    #     background: var(--zen-colors-tertiary, var(--toolbar-bgcolor));
+    #   }
+    # '';
     fixBookmarksBar = ''
       :root[zen-single-toolbar="true"]:not([customizing]) #zen-appcontent-navbar-container:not(:has(#PersonalToolbar[collapsed="false"])) {
         height: var(--zen-element-separation) !important;
@@ -168,9 +166,7 @@ in
     home.file = {
       ".zen/${name}/chrome/userChrome.css".text = builtins.concatStringsSep "\n" (
         with userChrome; [
-          transparency
           fixBookmarksBar
-          # advancedTabGroups
         ]
       );
       ".zen/${name}/chrome/userContent.css".text = builtins.concatStringsSep "\n" (

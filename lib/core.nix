@@ -47,7 +47,7 @@
   in
     deepMerge values;
 
-  # Concatinatinates all file paths in a given directory into one list.
+  # Concatinates all file paths in a given directory into one list.
   # It recurses through subdirectories. If it detects a default.nix, only that
   # file will be considered.
   concatImports = {
@@ -112,16 +112,4 @@
       if filterDefault
       then filteredFiles
       else myFiles;
-
-  # https://discourse.nixos.org/t/does-nix-lang-have-structural-pattern-matching/29522/3
-  match = let
-    if_let = v: p:
-      if extlib.attrsets.matchAttrs p v
-      then v
-      else null;
-  in
-    v: l:
-      builtins.elemAt
-      (extlib.lists.findFirst (x: (if_let v (builtins.elemAt x 0)) != null) null l)
-      1;
 }

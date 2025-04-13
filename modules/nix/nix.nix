@@ -3,6 +3,7 @@
   pkgs,
   system,
   hostname,
+  users,
   ...
 }:
 outputs.lib.mkFor system hostname {
@@ -26,6 +27,11 @@ outputs.lib.mkFor system hostname {
           "wezterm.cachix.org-1:kAbhjYUC9qvblTE+s7S+kl5XM1zVa4skO+E/1IDWdH0="
           "cache.thalheim.io-1:R7msbosLEZKrxk/lKxf9BTjOOH7Ax3H0Qj0/6wiHOgc="
         ];
+
+        # if you want this to work with home-manager-only setups, you need to
+        # manually add the user to the trusted-users list in /etc/nix/nix.conf
+        # since home-manager itself cannot touch system files...
+        trusted-users = users;
       };
     };
   };

@@ -1,8 +1,6 @@
 {
-  # NOTE https://github.com/astro/deadnix
   # NOTE https://github.com/symphorien/nix-du
   # TODO https://nixos.wiki/wiki/Storage_optimization
-  # TODO Check based things in https://github.com/Misterio77/nix-starter-configs
   # TODO https://github.com/llem00n/brofile
 
   inputs = {
@@ -10,6 +8,9 @@
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     nixpkgs-master.url = "github:nixos/nixpkgs/master";
     nur.url = "github:nix-community/nur";
+
+    flakeUtils.url = "github:numtide/flake-utils";
+    treefmtNix.url = "github:numtide/treefmt-nix";
 
     nix-darwin = {
       url = "github:lnl7/nix-darwin";
@@ -19,6 +20,11 @@
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
+    };
+
+    nixlib = {
+      url = "git+ssh://git@github.com/runarsf/nixlib";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     alien.url = "github:thiagokokada/nix-alien";
@@ -101,75 +107,83 @@
     };
   };
 
-  outputs = inputs: let
-    systems = [
-      "x86_64-linux"
-      "aarch64-linux"
-    ];
-  in rec {
-    lib = import ./lib {
-      inherit inputs;
-      inherit (inputs.self) outputs;
+  outputs =
+    inputs@{ self, ... }:
+    let
+      treefmtEval = inputs.flakeUtils.eachDefaultSystem (
+        pkgs: inputs.treefmtNix.lib.evalModule pkgs ./treefmt.nix
+      );
+    in
+    rec {
+      lib = import ./lib {
+        inherit inputs;
+        inherit (inputs.self) outputs;
+      };
+
+      nixosConfigurations = {
+        # TODO Should isDesktop be an option to mkHost?
+        runix = lib.mkHost {
+          system = "x86_64-linux";
+          # TODO graphical = true;
+          hostname = "runix";
+          users = [ "runar" ];
+        };
+
+        rpi = lib.mkHost {
+          system = "aarch64-linux";
+          hostname = "rpi";
+          users = [ "runar" ];
+        };
+
+        boiler = lib.mkHost {
+          system = "x86_64-linux";
+          hostname = "boiler";
+          users = [ "thomas" ];
+        };
+
+        toaster = lib.mkHost {
+          system = "x86_64-linux";
+          hostname = "toaster";
+          users = [ "thomas" ];
+        };
+      };
+
+      homeConfigurations = {
+        runar = lib.mkUser { username = "runar"; };
+
+        "runar@runix" = lib.mkUser {
+          username = "runar";
+          system = "x86_64-linux";
+          hostname = "runix";
+        };
+
+        "runar@rpi" = lib.mkUser {
+          username = "runar";
+          system = "aarch64-linux";
+          hostname = "rpi";
+        };
+
+        thomas = lib.mkUser { username = "thomas"; };
+
+        "thomas@boiler" = lib.mkUser {
+          username = "thomas";
+          system = "x86_64-linux";
+          hostname = "boiler";
+        };
+
+        "thomas@toaster" = lib.mkUser {
+          username = "thomas";
+          system = "x86_64-linux";
+          hostname = "toaster";
+        };
+      };
+
+      formatter = inputs.flakeUtils.eachDefaultSystem (
+        pkgs: treefmtEval.${pkgs.system}.config.build.wrapper
+      );
+
+      checks = inputs.flakeUtils.eachDefaultSystem (pkgs: {
+        formatting = treefmtEval.${pkgs.system}.config.build.check self;
+      });
     };
-
-    nixosConfigurations = {
-      # TODO Should isDesktop be an option to mkHost?
-      runix = lib.mkHost {
-        system = "x86_64-linux";
-        # TODO graphical = true;
-        hostname = "runix";
-        users = ["runar"];
-      };
-
-      rpi = lib.mkHost {
-        system = "aarch64-linux";
-        hostname = "rpi";
-        users = ["runar"];
-      };
-
-      boiler = lib.mkHost {
-        system = "x86_64-linux";
-        hostname = "boiler";
-        users = ["thomas"];
-      };
-
-      toaster = lib.mkHost {
-        system = "x86_64-linux";
-        hostname = "toaster";
-        users = ["thomas"];
-      };
-    };
-
-    homeConfigurations = {
-      runar = lib.mkUser {username = "runar";};
-
-      "runar@runix" = lib.mkUser {
-        username = "runar";
-        system = "x86_64-linux";
-        hostname = "runix";
-      };
-
-      "runar@rpi" = lib.mkUser {
-        username = "runar";
-        system = "aarch64-linux";
-        hostname = "rpi";
-      };
-
-      thomas = lib.mkUser {username = "thomas";};
-
-      "thomas@boiler" = lib.mkUser {
-        username = "thomas";
-        system = "x86_64-linux";
-        hostname = "boiler";
-      };
-
-      "thomas@toaster" = lib.mkUser {
-        username = "thomas";
-        system = "x86_64-linux";
-        hostname = "toaster";
-      };
-    };
-
-    formatter = lib.forEachSystem systems (pkgs: pkgs.alejandra);
-  };
 }

@@ -157,14 +157,6 @@ in
 
         tabline.apply_to_config(config)
 
-        smart_splits.apply_to_config(config, {
-          direction_keys = { 'LeftArrow', 'DownArrow', 'UpArrow', 'RightArrow' },
-          modifiers = {
-            move = 'SHIFT',
-            resize = 'SHIFT|ALT',
-          },
-        })
-
         -- config.color_scheme = 'Ayu Dark (Gogh)'
         -- config.colors = {
         --   background = 'none',
@@ -266,52 +258,60 @@ in
             mods = 'ALT',
             action = wezterm.action.PasteFrom("Clipboard"),
           },
-          {
-            key = 'LeftArrow',
-            mods = 'SHIFT',
-            action = wezterm.action.ActivatePaneDirection("Left"),
-          },
-          {
-            key = 'RightArrow',
-            mods = 'SHIFT',
-            action = wezterm.action.ActivatePaneDirection("Right"),
-          },
-          {
-            key = 'UpArrow',
-            mods = 'SHIFT',
-            action = wezterm.action.ActivatePaneDirection("Up"),
-          },
-          {
-            key = 'DownArrow',
-            mods = 'SHIFT',
-            action = wezterm.action.ActivatePaneDirection("Down"),
-          },
-          {
-            key = 'LeftArrow',
-            mods = 'SHIFT|ALT',
-            action = wezterm.action.AdjustPaneSize { 'Left', 5 },
-          },
-          {
-            key = 'RightArrow',
-            mods = 'SHIFT|ALT',
-            action = wezterm.action.AdjustPaneSize { 'Right', 5 },
-          },
-          {
-            key = 'UpArrow',
-            mods = 'SHIFT|ALT',
-            action = wezterm.action.AdjustPaneSize { 'Up', 5 },
-          },
-          {
-            key = 'DownArrow',
-            mods = 'SHIFT|ALT',
-            action = wezterm.action.AdjustPaneSize { 'Down', 5 },
-          },
+          -- {
+          --   key = 'LeftArrow',
+          --   mods = 'SHIFT',
+          --   action = wezterm.action.ActivatePaneDirection("Left"),
+          -- },
+          -- {
+          --   key = 'RightArrow',
+          --   mods = 'SHIFT',
+          --   action = wezterm.action.ActivatePaneDirection("Right"),
+          -- },
+          -- {
+          --   key = 'UpArrow',
+          --   mods = 'SHIFT',
+          --   action = wezterm.action.ActivatePaneDirection("Up"),
+          -- },
+          -- {
+          --   key = 'DownArrow',
+          --   mods = 'SHIFT',
+          --   action = wezterm.action.ActivatePaneDirection("Down"),
+          -- },
+          -- {
+          --   key = 'LeftArrow',
+          --   mods = 'SHIFT|ALT',
+          --   action = wezterm.action.AdjustPaneSize { 'Left', 5 },
+          -- },
+          -- {
+          --   key = 'RightArrow',
+          --   mods = 'SHIFT|ALT',
+          --   action = wezterm.action.AdjustPaneSize { 'Right', 5 },
+          -- },
+          -- {
+          --   key = 'UpArrow',
+          --   mods = 'SHIFT|ALT',
+          --   action = wezterm.action.AdjustPaneSize { 'Up', 5 },
+          -- },
+          -- {
+          --   key = 'DownArrow',
+          --   mods = 'SHIFT|ALT',
+          --   action = wezterm.action.AdjustPaneSize { 'Down', 5 },
+          -- },
           {
             key = 'T',
             mods = 'CTRL|SHIFT',
             action = wezterm.action.SpawnCommandInNewTab { cwd = wezterm.home_dir },
           }
         }
+
+        smart_splits.apply_to_config(config, {
+          direction_keys = { 'LeftArrow', 'DownArrow', 'UpArrow', 'RightArrow' },
+          modifiers = {
+            move = 'SHIFT',
+            resize = 'SHIFT|ALT',
+          },
+        })
 
         return config
       '';
