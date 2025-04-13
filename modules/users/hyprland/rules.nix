@@ -40,6 +40,7 @@ _: {
     "fullscreen, class:steam_app\\d+"
     "monitor 1, class:steam_app_\\d+"
     "workspace 10, class:steam_app_\\d+"
+    "workspace 10, class:gamescope"
 
     "workspace 2 silent, class:(discord)"
     "workspace 2 silent, class:(vesktop)"
