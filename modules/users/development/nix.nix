@@ -2,6 +2,7 @@
   config,
   pkgs,
   outputs,
+  inputs,
   ...
 }:
 outputs.lib.mkModule config "nix" {
@@ -19,11 +20,16 @@ outputs.lib.mkModule config "nix" {
     };
   };
 
+  nixpkgs.overlays = [
+    (_: _: {
+      alejandra = inputs.alejandra.packages.${pkgs.stdenv.hostPlatform.system}.default;
+    })
+  ];
+
   home = {
     packages = with pkgs; [
-      nil
-      nixfmt-rfc-style
       alejandra
+      nixd
       cached-nix-shell
       deadnix
       statix

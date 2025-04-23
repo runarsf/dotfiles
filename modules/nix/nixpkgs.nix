@@ -1,11 +1,12 @@
-{inputs, ...}: {
+{ inputs, ... }:
+{
   nixpkgs = {
     config = {
       allowUnfree = true;
       allowUnfreePredicate = _: true;
       permittedInsecurePackages = [
         "electron-25.9.0"
-        # TODO I have no clue where this one is reuiqred
+        # TODO I have no clue where this one is required
         "dotnet-sdk-6.0.428"
         "dotnet-sdk-7.0.410"
       ];
@@ -20,16 +21,18 @@
         };
         nur = import inputs.nur {
           pkgs = prev;
-          nurpkgs =
-            import inputs.nixpkgs {inherit (prev) system config overlays;};
+          nurpkgs = import inputs.nixpkgs { inherit (prev) system config overlays; };
         };
+        alejandra = inputs.alejandra.packages.${pkgs.stdenv.hostPlatform.system}.default;
       })
 
-      (_: prev:
+      (
+        _: prev:
         import ../../packages {
           inherit (prev) pkgs;
           inherit inputs;
-        })
+        }
+      )
     ];
   };
 }

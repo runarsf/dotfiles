@@ -5,7 +5,7 @@
   config,
   ...
 }:
-outputs.lib.mkEnabledModule config "shell-utils" rec {
+outputs.lib.mkModule' config "shell-utils" true rec {
   programs.fzf.enable = true;
 
   home = {
@@ -51,12 +51,13 @@ outputs.lib.mkEnabledModule config "shell-utils" rec {
     '';
 
     shellAliases = {
-      ls = "EZA_ICON_SPACING=2 ${pkgs.eza}/bin/eza -l -F -g -a --group-directories-first --no-time --git";
+      ls = "EZA_ICON_SPACING=2 ${outputs.lib.getExe pkgs.eza} -l -F -g -a --group-directories-first --no-time --git";
       grep = "grep --color=always";
-      cat = "${pkgs.bat}/bin/bat";
+      cat = "${outputs.lib.getExe pkgs.bat}";
       develop = outputs.lib.mkForce "nix develop --command zsh";
       docker-compose = "docker compose";
       dkcUf = "docker compose up -d --force-recreate";
+      tree = "${outputs.lib.getExe pkgs.eza} --tree";
     };
   };
 

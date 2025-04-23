@@ -111,7 +111,7 @@ in
         jetbrains-mono
         sudo-font
         cascadia-code
-        maple-mono-NF
+        # maple-mono.NF
         mplus-outline-fonts.githubRelease
       ]
       ++ (with pkgs.nerd-fonts; [

@@ -14,8 +14,8 @@ in
     common = {
       # TODO Make this apply to all users
       imports =
-        outputs.lib.concatImports {path = ../../modules/users;}
-        ++ outputs.lib.concatImports {path = ./config;};
+        outputs.lib.concatPaths {paths = ../../modules/users;}
+        ++ outputs.lib.concatPaths {paths = ./config;};
 
       defaultTerminal = "wezterm";
       defaultBrowser = "zen";

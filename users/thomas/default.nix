@@ -14,8 +14,8 @@ in
   outputs.lib.mkFor system hostname {
     common = {
       imports =
-        outputs.lib.concatImports {path = ../../modules/users;}
-        ++ outputs.lib.concatImports {path = ./config;};
+        outputs.lib.concatPaths {paths = ../../modules/users;}
+        ++ outputs.lib.concatPaths {paths = ./config;};
 
       defaultTerminal = "wezterm";
       defaultBrowser = "zen";
@@ -155,7 +155,7 @@ in
           };
 
         nixos = {
-          environment.systemPackages = with pkgs; [ amdgpu_top corectrl];
+          environment.systemPackages = with pkgs; [amdgpu_top corectrl];
           hardware = {
             amdgpu = {
               initrd.enable = true;
@@ -167,15 +167,14 @@ in
             graphics = {
               enable = true;
               enable32Bit = true;
-              package = with pkgs.unstable; mesa.drivers;
-              # extraPackages = with pkgs.unstable; [ amdvlk mesa.drivers ];
+              package = with pkgs.unstable; mesa;
+              # extraPackages = with pkgs.unstable; [ amdvlk mesa ];
             };
-
 
             bluetooth.powerOnBoot = true;
           };
 
-          services.xserver.videoDrivers = [ "modesetting" ];
+          services.xserver.videoDrivers = ["modesetting"];
 
           # systemd.tmpfiles.rules = [
           #   "L+    /opt/rocm/hip   -    -    -     -    ${pkgs.rocmPackages.clr}"
@@ -183,7 +182,7 @@ in
 
           boot = {
             kernelPackages = pkgs.linuxPackages_latest;
-            initrd.kernelModules = [ "amdgpu" ];
+            initrd.kernelModules = ["amdgpu"];
             # kernelParams = [
             #   "radeon.si_support=0"
             #   "amdgpu.si_support=1"

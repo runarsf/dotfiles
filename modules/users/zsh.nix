@@ -17,9 +17,6 @@ outputs.lib.mkModule config "zsh" {
       };
     })
   ];
-  nixos.programs.command-not-found.enable = false;
-  programs.command-not-found.enable = false;
-  programs.nix-index.enable = false;
 
   modules.starship.enable = true;
 
@@ -30,7 +27,10 @@ outputs.lib.mkModule config "zsh" {
 
   nixos.environment.pathsToLink = ["/share/zsh"];
 
+  nixos.programs.command-not-found.enable = false;
   programs = {
+    command-not-found.enable = false;
+    nix-index.enable = false;
     zoxide.enable = true;
     fzf.enable = true;
 
@@ -50,7 +50,7 @@ outputs.lib.mkModule config "zsh" {
           "z-shell/zsh-diff-so-fancy"
           "nix-community/nix-zsh-completions"
           "MichaelAquilina/zsh-auto-notify"
-          "jimhester/per-directory-history"
+          # "jimhester/per-directory-history"
           "Tarrasch/zsh-functional"
           "zshzoo/magic-enter"
           "MichaelAquilina/zsh-you-should-use"
@@ -63,6 +63,7 @@ outputs.lib.mkModule config "zsh" {
           "ohmyzsh/ohmyzsh path:plugins/dotenv"
           "ohmyzsh/ohmyzsh path:plugins/fancy-ctrl-z"
           "ohmyzsh/ohmyzsh path:plugins/extract"
+          "ohmyzsh/ohmyzsh path:plugins/per-directory-history"
         ];
       };
       zsh-abbr = {
@@ -72,88 +73,93 @@ outputs.lib.mkModule config "zsh" {
           nh = "niks";
         };
       };
-      initExtraFirst = ''
-        AUTOPAIR_INHIBIT_INIT=1
-        # AUTOPAIR_SPC_WIDGET="abbr-expand-and-insert"
-        AUTO_NOTIFY_THRESHOLD=20
-        AUTO_NOTIFY_EXPIRE_TIME=20000
-      '';
-      initExtraBeforeCompInit = ''
-        autoload -Uz vcs_info
-        vcs_info 'prompt'
-      '';
-      initExtra = ''
-        zstyle ':completion:*' special-dirs ..
-        zstyle ':completion:*' special-dirs last
-        zstyle ':completion:*' squeeze-slashes true
-        zstyle ':completion:*' complete-options true
+      initContent =
+        outputs.lib.mkBefore ''
+          AUTOPAIR_INHIBIT_INIT=1
+          # AUTOPAIR_SPC_WIDGET="abbr-expand-and-insert"
+          AUTO_NOTIFY_THRESHOLD=20
+          AUTO_NOTIFY_EXPIRE_TIME=20000
+        ''
+        // outputs.lib.mkOrder 550
+        /*
+        before compinit
+        */
+        ''
+          autoload -Uz vcs_info
+          vcs_info 'prompt'
+        ''
+        // outputs.lib.mkAfter ''
+          zstyle ':completion:*' special-dirs ..
+          zstyle ':completion:*' special-dirs last
+          zstyle ':completion:*' squeeze-slashes true
+          zstyle ':completion:*' complete-options true
 
-        # TODO Make nix-files autocomplete before lock-files
-        # zstyle ':completion:*:default' file-patterns \
-        #   '*.(#i)nix:nix-files' \
-        #   '*.(#i)lock:lock-files' \
-        #   '%p:all-files'
-        # zstyle ':completion:*:default' group-order nix-files lock-files all-files
+          # TODO Make nix-files autocomplete before lock-files
+          # zstyle ':completion:*:default' file-patterns \
+          #   '*.(#i)nix:nix-files' \
+          #   '*.(#i)lock:lock-files' \
+          #   '%p:all-files'
+          # zstyle ':completion:*:default' group-order nix-files lock-files all-files
 
-        unsetopt correct \
-                 prompt_cr \
-                 prompt_sp
+          unsetopt correct \
+                   prompt_cr \
+                   prompt_sp
 
-        setopt histignorealldups \
-               sharehistory \
-               menucomplete \
-               autoparamslash \
-               nonomatch
+          setopt histignorealldups \
+                 sharehistory \
+                 menucomplete \
+                 autoparamslash \
+                 nonomatch
 
-        _comp_options+=(globdots)
+          _comp_options+=(globdots)
 
-        typeset -A ZSH_HIGHLIGHT_REGEXP
-        ZSH_HIGHLIGHT_REGEXP+=('[0-9]' fg=cyan)
-        ZSH_HIGHLIGHT_HIGHLIGHTERS+=(main regexp)
+          typeset -A ZSH_HIGHLIGHT_REGEXP
+          ZSH_HIGHLIGHT_REGEXP+=('[0-9]' fg=cyan)
+          ZSH_HIGHLIGHT_HIGHLIGHTERS+=(main regexp)
 
-        # https://unix.stackexchange.com/a/26776
-        # https://unix.stackexchange.com/a/53587
-        # export STDERRED_BLACKLIST="^(niks|nix|nh|ssh|gitui|vim|neovim|just|yazi)$"
-        # export LD_PRELOAD="${pkgs.stderred}/lib/libstderred.so''${LD_PRELOAD:+:$LD_PRELOAD}"
+          # https://unix.stackexchange.com/a/26776
+          # https://unix.stackexchange.com/a/53587
+          # export STDERRED_BLACKLIST="^(niks|nix|nh|ssh|gitui|vim|neovim|just|yazi)$"
+          # export LD_PRELOAD="${pkgs.stderred}/lib/libstderred.so''${LD_PRELOAD:+:$LD_PRELOAD}"
 
-        wim () { set -eu; ''${EDITOR:-vim} "$(which ''${1:?No file selected...})" ''${@:2}; set +eu }
-        ? () {
-          ${pkgs.krabby}/bin/krabby random --no-title
-        }
-        magic-enter-cmd () {
-          printf ' ?\n'
-        }
-
-        __git_files () {
-          _wanted files expl 'local files' _files
-        }
-
-        ze () { "$EDITOR" "$("${config.programs.zoxide.package}/bin/zoxide" query "$@")" }
-        zcode () { "${config.programs.vscode.package}/bin/code" "$("${config.programs.zoxide.package}/bin/zoxide" query "$@")" }
-        zd () { set -e; cd "$("${config.programs.zoxide.package}/bin/zoxide" query "$PWD" "$@")"; set +e }
-        electron-wayland () { "''${1:?No program specificed...}" --enable-features=UseOzonePlatform,WaylandWindowDecorations --platform-hint=auto --ozone-platform=wayland "''${@:2}" }
-        tmpvim () {
-          revert () {
-            mv "$1.bak" "$1"
+          wim () { set -eu; ''${EDITOR:-vim} "$(which ''${1:?No file selected...})" ''${@:2}; set +eu }
+          ? () {
+            ${pkgs.krabby}/bin/krabby random --no-title
+          }
+          magic-enter-cmd () {
+            printf ' ?\n'
           }
 
-          if test ! -f "''${1:?No file specified...}"; then
-            printf "File doesn't exist...\n"
-            return 1
-          fi
+          __git_files () {
+            _wanted files expl 'local files' _files
+          }
 
-          trap "revert "$@"" EXIT
+          ze () { "$EDITOR" "$("${config.programs.zoxide.package}/bin/zoxide" query "$@")" }
+          zcode () { "${config.programs.vscode.package}/bin/code" "$("${config.programs.zoxide.package}/bin/zoxide" query "$@")" }
+          zd () { set -e; cd "$("${config.programs.zoxide.package}/bin/zoxide" query "$PWD" "$@")"; set +e }
+          electron-wayland () { "''${1:?No program specificed...}" --enable-features=UseOzonePlatform,WaylandWindowDecorations --platform-hint=auto --ozone-platform=wayland "''${@:2}" }
+          tmpvim () {
+            revert () {
+              mv "$1.bak" "$1"
+            }
 
-          mv "$1" "$1.bak"
-          cat "$1.bak" > "$1"
-          $EDITOR "$1"
-        }
+            if test ! -f "''${1:?No file specified...}"; then
+              printf "File doesn't exist...\n"
+              return 1
+            fi
 
-        bindkey '^G' per-directory-history-toggle-history
-        bindkey -M vicmd '^G' per-directory-history-toggle-history
+            trap "revert "$@"" EXIT
 
-        autopair-init
-      '';
+            mv "$1" "$1.bak"
+            cat "$1.bak" > "$1"
+            $EDITOR "$1"
+          }
+
+          bindkey '^G' per-directory-history-toggle-history
+          bindkey -M vicmd '^G' per-directory-history-toggle-history
+
+          autopair-init
+        '';
       prezto = {
         enable = true;
         caseSensitive = false;

@@ -1,92 +1,51 @@
 {outputs, ...}: rec {
-  mkModuleWithOptions = {
-    config,
-    name,
-    moduleConfig,
-    default ? false,
-    extraOptions ? {},
-    extraCondition ? true,
-  }: let
-    namePathList = outputs.lib.splitString "." name;
-
-    modulePath = ["modules"] ++ namePathList;
-    enableOptionPath = modulePath ++ ["enable"];
-
-    moduleOptions =
-      {
-        enable = outputs.lib.mkOption {
-          inherit default;
-          type = outputs.lib.types.bool;
-          description = "Enable [${name}] module";
-        };
-      }
-      // extraOptions;
-  in {
-    options = outputs.lib.setAttrByPath modulePath moduleOptions;
-
-    config =
-      outputs.lib.mkIf
-      (outputs.lib.getAttrFromPath enableOptionPath config && extraCondition)
-      moduleConfig;
-  };
-
-  mkModule' = config: name: extraOptions: moduleConfig:
-    mkModuleWithOptions {inherit config name extraOptions moduleConfig;};
-
-  mkModule = config: name: moduleConfig: mkModule' config name {} moduleConfig;
-
-  # TODO Should "enabled" be able to be set in a different way of providing enabled functions?
-  mkEnabledModule' = config: name: extraOptions: moduleConfig:
-    mkModuleWithOptions {
-      inherit config name extraOptions moduleConfig;
-      default = true;
-    };
-
-  mkEnabledModule = config: name: moduleConfig:
-    mkEnabledModule' config name {} moduleConfig;
-
-  mkDesktopModule' = config: name: extraOptions: moduleConfig:
-    mkModuleWithOptions {
-      inherit config name extraOptions moduleConfig;
-      extraCondition = config.isDesktop;
+  mkDesktopModule' = config: name: default: moduleConfig:
+    outputs.lib.mkModuleWithOptions {
+      inherit config name default moduleConfig;
+      extraCondition = x: x && config.isDesktop;
     };
 
   mkDesktopModule = config: name: moduleConfig:
-    mkDesktopModule' config name {} moduleConfig;
+    mkDesktopModule' config name false moduleConfig;
 
-  mkServiceModule' = config: name: extraOptions: moduleConfig: let
-    serviceName = "services.${name}";
-    namePathList = outputs.lib.splitString "." serviceName;
-    modulePath = ["modules"] ++ namePathList;
+  mkServiceModule' = config: name: default: moduleConfig: let
+    serviceName = ["services"] ++ outputs.lib.lists.toList name;
+    domain =
+      outputs.lib.getAttrFromPath (["modules"] ++ serviceName ++ ["domain"]) config;
   in
-    mkModuleWithOptions {
-      inherit config moduleConfig;
+    outputs.lib.mkModuleWithOptions {
+      inherit config default;
       name = serviceName;
       # Defines overrides for nginx-related properties
-      extraOptions = let
-        domain =
-          outputs.lib.getAttrFromPath (modulePath ++ ["domain"]) config;
-      in
-        {
-          domain = outputs.lib.mkOption {
-            default = builtins.head config.modules.nginx.domains;
-            type = outputs.lib.types.str;
-            description = "Domain for [${name}] service";
-          };
-          cert = outputs.lib.mkOption {
-            default = "/var/lib/acme/${domain}/cert.pem";
-            type = outputs.lib.types.str;
-            description = "Certificate for [${name}] service";
-          };
-          key = outputs.lib.mkOption {
-            default = "/var/lib/acme/${domain}/key.pem";
-            type = outputs.lib.types.str;
-            description = "Certificate for [${name}] service";
-          };
-        }
-        // extraOptions;
+      moduleConfig = {
+        options' =
+          {
+            domain = outputs.lib.mkOption {
+              default = builtins.head config.modules.nginx.domains;
+              type = outputs.lib.types.str;
+              description = "Domain for [${name}] service";
+            };
+            cert = outputs.lib.mkOption {
+              default = "/var/lib/acme/${domain}/cert.pem";
+              type = outputs.lib.types.str;
+              description = "Certificate for [${name}] service";
+            };
+            key = outputs.lib.mkOption {
+              default = "/var/lib/acme/${domain}/key.pem";
+              type = outputs.lib.types.str;
+              description = "Certificate for [${name}] service";
+            };
+          }
+          // moduleConfig.options' or {};
+        options = moduleConfig.options or {};
+
+        config =
+          if (moduleConfig ? options || moduleConfig ? options')
+          then moduleConfig.config or (throw "Missing toplevel config attribute")
+          else moduleConfig.config or moduleConfig;
+      };
     };
 
   mkServiceModule = config: name: moduleConfig:
-    mkServiceModule' config name {} moduleConfig;
+    mkServiceModule' config name false moduleConfig;
 }

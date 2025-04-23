@@ -6,7 +6,6 @@
   ...
 }:
 # NOTE You can use pw-top to see pipewire latency, useful for easyeffects
-
 # TODO Make this a nu script
 # If pipewire suddenly stops working, run the following commands:
 # You might have to reboot with your sound devices disconnected afterwards.
@@ -18,11 +17,13 @@
 #  $ systemctl --user restart pipewire-pulse.service
 #  $ systemctl --user restart pipewire-pulse.socket
 #  $ systemctl --user restart easyeffects.service
-outputs.lib.mkDesktopModule' config "pipewire"
-  (with outputs.lib; {
-    lowLatency = mkEnableOption "Enable low latency mode for Pipewire";
-  })
-  {
+outputs.lib.mkDesktopModule config "pipewire"
+{
+  options' = {
+    lowLatency = outputs.lib.mkEnableOption "Enable low latency mode for Pipewire";
+  };
+
+  config = {
     home.packages = [
       (pkgs.writeShellApplication {
         name = "fix-pipewire";
@@ -50,7 +51,7 @@ outputs.lib.mkDesktopModule' config "pipewire"
         qpwgraph
       ];
 
-      users.users."${name}".extraGroups = [ "pipewire" ];
+      users.users."${name}".extraGroups = ["pipewire"];
 
       services.pipewire = {
         enable = true;
@@ -147,6 +148,7 @@ outputs.lib.mkDesktopModule' config "pipewire"
       security.rtkit.enable = true;
 
       # Fix for pipewire-pulse breaking recently
-      systemd.user.services.pipewire-pulse.path = [ pkgs.pulseaudio ];
+      systemd.user.services.pipewire-pulse.path = [pkgs.pulseaudio];
     };
-  }
+  };
+}

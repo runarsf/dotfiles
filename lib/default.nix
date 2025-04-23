@@ -1,11 +1,11 @@
 flake @ {inputs, ...}: let
   core = import ./core.nix {
     inherit inputs;
-    extlib = with inputs; nixpkgs.lib // nix-darwin.lib // home-manager.lib;
+    extlib = with inputs; nixpkgs.lib // nix-darwin.lib // home-manager.lib // nixlib.lib;
   };
 in
   with inputs;
-    core.deepMerge [
+    nixlib.lib.deepMerge [
       nixpkgs.lib
       nix-darwin.lib
       home-manager.lib

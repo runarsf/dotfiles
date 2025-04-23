@@ -9,8 +9,8 @@
     nixpkgs-master.url = "github:nixos/nixpkgs/master";
     nur.url = "github:nix-community/nur";
 
-    flakeUtils.url = "github:numtide/flake-utils";
-    treefmtNix.url = "github:numtide/treefmt-nix";
+    flake-utils.url = "github:numtide/flake-utils";
+    treefmt-nix.url = "github:numtide/treefmt-nix";
 
     nix-darwin = {
       url = "github:lnl7/nix-darwin";
@@ -65,6 +65,11 @@
 
     nix-flatpak.url = "github:gmodena/nix-flatpak";
 
+    alejandra = {
+      url = "github:kamadorueda/alejandra/4.0.0";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     openconnect-sso = {
       url = "github:ThinkChaos/openconnect-sso/fix/nix-flake";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -110,7 +115,7 @@
   outputs =
     inputs@{ self, ... }:
     let
-      treefmtEval = inputs.flakeUtils.eachDefaultSystem (
+      treefmtEval = inputs.flake-utils.eachDefaultSystem (
         pkgs: inputs.treefmtNix.lib.evalModule pkgs ./treefmt.nix
       );
     in
@@ -178,11 +183,11 @@
         };
       };
 
-      formatter = inputs.flakeUtils.eachDefaultSystem (
+      formatter = inputs.flake-utils.eachDefaultSystem (
         pkgs: treefmtEval.${pkgs.system}.config.build.wrapper
       );
 
-      checks = inputs.flakeUtils.eachDefaultSystem (pkgs: {
+      checks = inputs.flake-utils.eachDefaultSystem (pkgs: {
         formatting = treefmtEval.${pkgs.system}.config.build.check self;
       });
     };

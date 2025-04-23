@@ -5,11 +5,13 @@
   config,
   ...
 }:
-outputs.lib.mkModule' config "dev.android"
-  {
+outputs.lib.mkModule config ["dev" "android"]
+{
+  options' = {
     ide = outputs.lib.mkEnableOption "Enable Android IDE";
-  }
-  {
+  };
+
+  config = {
     nixos = {
       programs.adb.enable = true;
       users.users."${name}".extraGroups = [
@@ -17,12 +19,11 @@ outputs.lib.mkModule' config "dev.android"
         "plugdev"
         "kvm"
       ];
-      services.udev.packages = with pkgs; [ android-udev-rules ];
-      environment.systemPackages = with pkgs; [ android-tools ];
+      services.udev.packages = with pkgs; [android-udev-rules];
+      environment.systemPackages = with pkgs; [android-tools];
     };
 
-    home.packages =
-      with pkgs;
+    home.packages = with pkgs;
       [
         flutter
         graphite2
@@ -42,7 +43,8 @@ outputs.lib.mkModule' config "dev.android"
           }
         )
       ]
-      ++ outputs.lib.optionals (config.isDesktop && config.modules.dev.android.ide) [ android-studio ];
+      ++ outputs.lib.optionals (config.isDesktop && config.modules.dev.android.ide) [android-studio];
 
     nixpkgs.config.android_sdk.accept_license = true;
-  }
+  };
+}
