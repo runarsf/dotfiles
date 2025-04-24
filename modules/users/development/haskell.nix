@@ -4,7 +4,7 @@
   pkgs,
   ...
 }:
-outputs.lib.mkModule config "dev.haskell" {
+outputs.lib.mkModule config [ "dev" "haskell" ] {
   PATH = ["${config.home.homeDirectory}/.local/bin"];
 
   # TODO Add user info

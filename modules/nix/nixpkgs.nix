@@ -23,7 +23,7 @@
           pkgs = prev;
           nurpkgs = import inputs.nixpkgs { inherit (prev) system config overlays; };
         };
-        alejandra = inputs.alejandra.packages.${pkgs.stdenv.hostPlatform.system}.default;
+        alejandra = inputs.alejandra.packages.${prev.pkgs.stdenv.hostPlatform.system}.default;
       })
 
       (
