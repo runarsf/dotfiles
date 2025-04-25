@@ -1610,11 +1610,11 @@
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1745425560,
-        "narHash": "sha256-AQf/1kp6DLM5bjUhJWIEv0flTuNuuweyCe0WDsIZKdc=",
+        "lastModified": 1745601293,
+        "narHash": "sha256-dcrHD02qJPcVb1jnLMgUUuv7MgNxNt5WkCjTVyEGYiE=",
         "ref": "refs/heads/main",
-        "rev": "1d05113a5972c5cf08a0f66050977fb63f8e10ba",
-        "revCount": 43,
+        "rev": "14725944fc63b16084f2adcbb852c408f9eb13b1",
+        "revCount": 44,
         "type": "git",
         "url": "ssh://git@github.com/runarsf/nixlib"
       },

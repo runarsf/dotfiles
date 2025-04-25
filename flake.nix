@@ -112,83 +112,80 @@
     };
   };
 
-  outputs =
-    inputs@{ self, ... }:
-    let
-      treefmtEval = inputs.flake-utils.eachDefaultSystem (
-        pkgs: inputs.treefmtNix.lib.evalModule pkgs ./treefmt.nix
-      );
-    in
-    rec {
-      lib = import ./lib {
-        inherit inputs;
-        inherit (inputs.self) outputs;
-      };
-
-      nixosConfigurations = {
-        # TODO Should isDesktop be an option to mkHost?
-        runix = lib.mkHost {
-          system = "x86_64-linux";
-          # TODO graphical = true;
-          hostname = "runix";
-          users = [ "runar" ];
-        };
-
-        rpi = lib.mkHost {
-          system = "aarch64-linux";
-          hostname = "rpi";
-          users = [ "runar" ];
-        };
-
-        boiler = lib.mkHost {
-          system = "x86_64-linux";
-          hostname = "boiler";
-          users = [ "thomas" ];
-        };
-
-        toaster = lib.mkHost {
-          system = "x86_64-linux";
-          hostname = "toaster";
-          users = [ "thomas" ];
-        };
-      };
-
-      homeConfigurations = {
-        runar = lib.mkUser { username = "runar"; };
-
-        "runar@runix" = lib.mkUser {
-          username = "runar";
-          system = "x86_64-linux";
-          hostname = "runix";
-        };
-
-        "runar@rpi" = lib.mkUser {
-          username = "runar";
-          system = "aarch64-linux";
-          hostname = "rpi";
-        };
-
-        thomas = lib.mkUser { username = "thomas"; };
-
-        "thomas@boiler" = lib.mkUser {
-          username = "thomas";
-          system = "x86_64-linux";
-          hostname = "boiler";
-        };
-
-        "thomas@toaster" = lib.mkUser {
-          username = "thomas";
-          system = "x86_64-linux";
-          hostname = "toaster";
-        };
-      };
-
-      formatter = inputs.flake-utils.eachDefaultSystem (
-        pkgs: treefmtEval.${pkgs.system}.config.build.wrapper
-      );
-
-      checks = inputs.flake-utils.eachDefaultSystem (pkgs: {
-        formatting = treefmtEval.${pkgs.system}.config.build.check self;
-      });
+  outputs = inputs @ {self, ...}: let
+    treefmtEval = inputs.flake-utils.eachDefaultSystem (
+      pkgs: inputs.treefmtNix.lib.evalModule pkgs ./treefmt.nix
+    );
+  in rec {
+    lib = import ./lib {
+      inherit inputs;
+      inherit (inputs.self) outputs;
     };
+
+    nixosConfigurations = {
+      # TODO Should isDesktop be an option to mkHost?
+      runix = lib.mkHost {
+        system = "x86_64-linux";
+        # TODO graphical = true;
+        hostname = "runix";
+        users = ["runar"];
+      };
+
+      rpi = lib.mkHost {
+        system = "aarch64-linux";
+        hostname = "rpi";
+        users = ["runar"];
+      };
+
+      boiler = lib.mkHost {
+        system = "x86_64-linux";
+        hostname = "boiler";
+        users = ["thomas"];
+      };
+
+      toaster = lib.mkHost {
+        system = "x86_64-linux";
+        hostname = "toaster";
+        users = ["thomas"];
+      };
+    };
+
+    homeConfigurations = {
+      runar = lib.mkUser {username = "runar";};
+
+      "runar@runix" = lib.mkUser {
+        username = "runar";
+        system = "x86_64-linux";
+        hostname = "runix";
+      };
+
+      "runar@rpi" = lib.mkUser {
+        username = "runar";
+        system = "aarch64-linux";
+        hostname = "rpi";
+      };
+
+      thomas = lib.mkUser {username = "thomas";};
+
+      "thomas@boiler" = lib.mkUser {
+        username = "thomas";
+        system = "x86_64-linux";
+        hostname = "boiler";
+      };
+
+      "thomas@toaster" = lib.mkUser {
+        username = "thomas";
+        system = "x86_64-linux";
+        hostname = "toaster";
+      };
+    };
+
+    formatter = inputs.flake-utils.eachDefaultSystem (
+      pkgs: treefmtEval.${pkgs.system}.config.build.wrapper
+    );
+
+    checks = inputs.flake-utils.eachDefaultSystem (pkgs: {
+      formatting = treefmtEval.${pkgs.system}.config.build.check self;
+    });
+  };
 }

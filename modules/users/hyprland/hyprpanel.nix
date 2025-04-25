@@ -34,6 +34,8 @@ in
       overwrite.enable = true;
       overlay.enable = true;
 
+      # See the following for available options: https://github.com/Jas-SinghFSU/HyprPanel/blob/master/nix/module.nix
+      # Anything else has to be set in `override`.
       settings = rec {
         tear = true;
         terminal = config.modules.${config.defaultTerminal}.exec [];
@@ -169,15 +171,16 @@ in
         theme = {
           name = "monochrome";
           bar = {
+            menus.monochrome = true;
             transparent = true;
             floating = true;
             # outer_spacing = "0";
             # border_radius = "0.4em";
             # margin_top = "0.5em";
             buttons = {
+              enableBorders = true;
               y_margins = "0";
               borderSize = "1px";
-              enableBorders = false; # FIXME Waiting for https://github.com/Jas-SinghFSU/HyprPanel/issues/886
               monochrome = true;
               style = "default";
               workspaces = {
@@ -190,98 +193,53 @@ in
             };
           };
           font = {
-            name = "CaskaydiaCove NF";
+            name = "CaskaydiaCove Nerd Font Propo";
             size = "16px";
           };
         };
+
+        wallpaper.enable = false;
       };
 
       # FIXME https://github.com/Jas-SinghFSU/HyprPanel/issues/886
-      # override = let
-      #   background = "#01010c";
-      #   card = "#0C0F15";
-      #   border = "#434343";
-      # in {
-      #   bar = {
-      #     windowtitle.title_map =
-      #       map (
-      #         item: let
-      #           pattern = item |> builtins.head |> builtins.split ":" |> outputs.lib.lists.last;
-      #         in [
-      #           pattern
-      #           (builtins.elemAt item 1)
-      #           (builtins.elemAt item 2)
-      #         ]
-      #       )
-      #       icons;
-      #     buttons = {
-      #       background = background;
-      #       borderColor = border;
-      #       text = "#f8f8ff";
-      #       icon = "#f8f8ff";
-      #       workspaces = {
-      #         hover = "#AAC7FF";
-      #         numbered_active_underline_color = "#e4e4fc";
-      #         active = "#AAC7FF";
-      #         occupied = "#e4e4fc";
-      #         available = "#c0bfbc";
-      #       };
-      #     };
-      #   };
-      #   notification = {
-      #     background = background;
-      #     border = border;
-      #   };
-      #   menus = {
-      #     # background = background;
-      #     # cards = background;
-      #     menu = {
-      #       systray.dropdownmenu = {
-      #         background = background;
-      #         divider = border;
-      #       };
-      #       bluetooth = {
-      #         background.color = background;
-      #         card.color = card;
-      #         border.color = border;
-      #       };
-      #       volume = {
-      #         border.color = border;
-      #         card.color = card;
-      #         background.color = background;
-      #       };
-      #       network = {
-      #         card.color = card;
-      #         background.color = background;
-      #         border.color = border;
-      #       };
-      #       battery = {
-      #         border.color = border;
-      #         card.color = card;
-      #         background.color = background;
-      #       };
-      #       clock = {
-      #         background.color = background;
-      #         card.color = card;
-      #         border.color = border;
-      #       };
-      #       notifications = {
-      #         card = card;
-      #         background = background;
-      #         border = border;
-      #       };
-      #       media = {
-      #         background.color = background;
-      #         border.color = border;
-      #       };
-      #       dashboard = {
-      #         border.color = border;
-      #         background.color = background;
-      #         card.color = card;
-      #       };
-      #     };
-      #   };
-      # };
+      override = let
+        background = "#01010c";
+        text = "#f8f8ff";
+        dimtext = "#565B66";
+        feinttext = "#131721";
+        cards = "#0C0F15";
+        border = "#434343";
+      in
+        outputs.lib.attrs.flattenAttrs {
+          theme = {
+            bar = {
+              buttons = {
+                inherit background text;
+                borderColor = border;
+                # icon = text;
+                workspaces = {
+                  hover = "#AAC7FF";
+                  numbered_active_underline_color = "#e4e4fc";
+                  active = "#AAC7FF";
+                  occupied = "#e4e4fc";
+                  available = "#c0bfbc";
+                };
+              };
+              menus = {
+                inherit background text cards dimtext feinttext;
+                border.color = border;
+                label = text;
+              };
+            };
+            notification = {
+              inherit background border;
+            };
+            systray.dropdownmenu.divider = border;
+          };
+          bar.windowtitle.title_map =
+            map (item: (item |> builtins.head |> builtins.split ":" |> outputs.lib.lists.last |> outputs.lib.singleton) ++ builtins.tail item)
+            icons;
+        };
     };
 
     wayland.windowManager.hyprland.settings.exec = [
