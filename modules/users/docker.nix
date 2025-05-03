@@ -23,14 +23,15 @@ outputs.lib.mkModule config "docker" {
         };
       };
 
-      oci-containers.backend =
-        outputs.lib.mkIf (!config.nixos.virtualisation.podman.enable) "docker";
+      oci-containers.backend = outputs.lib.mkIf (!config.nixos.virtualisation.podman.enable) "docker";
     };
 
-    networking.firewall.trustedInterfaces = ["docker0"];
+    networking.firewall.trustedInterfaces = [ "docker0" ];
 
-    users.users."${name}".extraGroups = ["docker"];
+    users.users."${name}".extraGroups = [ "docker" ];
 
-    environment.systemPackages = with pkgs.unstable; [podman-compose];
+    environment.systemPackages = with pkgs.unstable; [ podman-compose ];
   };
+
+  home.sessionVariables.COMPOSE_BAKE = "true";
 }

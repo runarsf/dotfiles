@@ -124,7 +124,7 @@ outputs.lib.mkModule config "zsh" {
 
           wim () { set -eu; ''${EDITOR:-vim} "$(which ''${1:?No file selected...})" ''${@:2}; set +eu }
           ? () {
-            ${pkgs.krabby}/bin/krabby random --no-title
+            ${outputs.lib.getExe pkgs.krabby} random --no-title
           }
           magic-enter-cmd () {
             printf ' ?\n'
@@ -134,9 +134,9 @@ outputs.lib.mkModule config "zsh" {
             _wanted files expl 'local files' _files
           }
 
-          ze () { "$EDITOR" "$("${config.programs.zoxide.package}/bin/zoxide" query "$@")" }
-          zcode () { "${config.programs.vscode.package}/bin/code" "$("${config.programs.zoxide.package}/bin/zoxide" query "$@")" }
-          zd () { set -e; cd "$("${config.programs.zoxide.package}/bin/zoxide" query "$PWD" "$@")"; set +e }
+          ze () { "$EDITOR" "$("${outputs.lib.getExe config.programs.zoxide.package}" query "$@")" }
+          zcode () { "${outputs.lib.getExe config.programs.vscode.package}" "$("${outputs.lib.getExe config.programs.zoxide.package}" query "$@")" }
+          zd () { set -e; cd "$("${outputs.lib.getExe config.programs.zoxide.package}" query "$PWD" "$@")"; set +e }
           electron-wayland () { "''${1:?No program specificed...}" --enable-features=UseOzonePlatform,WaylandWindowDecorations --platform-hint=auto --ozone-platform=wayland "''${@:2}" }
           tmpvim () {
             revert () {

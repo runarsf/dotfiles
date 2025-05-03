@@ -226,9 +226,9 @@ in
                 };
               };
               menus = {
-                inherit background text cards dimtext feinttext;
+                inherit background cards text; # dimtext feinttext;
                 border.color = border;
-                label = text;
+                # label = text;
               };
             };
             notification = {
