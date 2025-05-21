@@ -11,7 +11,8 @@ outputs.lib.mkDesktopModule config "japanese" {
     "/run/current-system/systemd/bin/systemctl --user start xdg-autostart-if-no-desktop-manager.target"
   ];
   i18n.inputMethod = {
-    enabled = "fcitx5";
+    enable = true;
+    type = "fcitx5";
     fcitx5.addons = with pkgs; [fcitx5-configtool fcitx5-mozc fcitx5-gtk];
   };
   gtk = {
