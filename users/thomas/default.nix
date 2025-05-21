@@ -148,11 +148,20 @@ in
           ]
           // {
             dev = {
-              rust.enable = true;
+              rust = {
+                enable = true;
+                ide = true;
+              };
               haskell.enable = true;
+              java.enable = true;
               # python.packages = with pkgs.python311Packages; [manim];
             };
           };
+
+        home.packages = with pkgs.unstable; [
+          dolphin-emu-primehack
+          code-cursor
+        ];
 
         nixos = {
           environment.systemPackages = with pkgs; [amdgpu_top corectrl];
