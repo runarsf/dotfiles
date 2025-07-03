@@ -289,5 +289,13 @@ in
             };
           };
       };
+
+      # TEMP sommerjobb :⁾
+      airfryer = {
+        isDesktop = true;
+        modules = outputs.lib.enable [ "docker" ];
+        home.packages = with pkgs; [ solaar ];
+        nixos.hardware.bluetooth.powerOnBoot = true;
+      };
     };
   }

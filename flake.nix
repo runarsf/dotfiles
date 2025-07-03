@@ -148,6 +148,13 @@
         hostname = "toaster";
         users = ["thomas"];
       };
+
+      # TEMP sommerjobb :⁾
+      airfryer = lib.mkHost {
+        system = "x86_64-linux";
+        hostname = "airfryer";
+        users = ["thomas"];
+      };
     };
 
     homeConfigurations = {
@@ -177,6 +184,13 @@
         username = "thomas";
         system = "x86_64-linux";
         hostname = "toaster";
+      };
+
+      # TEMP sommerjobb :⁾
+      "thomas@airfryer" = lib.mkUser {
+        username = "thomas";
+        system = "x86_64-linux";
+        hostname = "airfryer";
       };
     };
 
