@@ -25,11 +25,12 @@ outputs.lib.mkModule config ["dev" "android"]
 
     home.packages = with pkgs;
       [
-        flutter
         graphite2
         gtk3
         android-tools
         scrcpy
+        qtscrcpy
+        fvm
         (
           pkgs.writeShellApplication {
             name = "adbrute";

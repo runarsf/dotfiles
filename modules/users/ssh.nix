@@ -6,7 +6,7 @@
 }:
 outputs.lib.mkModule config "ssh" {
   options' = with outputs.lib; {
-    publicKeys = mkOption {
+    keys = mkOption {
       default = [];
       type = types.attrsOf types.str;
       description = "List of public key strings";
@@ -14,7 +14,7 @@ outputs.lib.mkModule config "ssh" {
   };
 
   config = {
-    services.ssh-agent.enable = true;
+    # services.ssh-agent.enable = true;
     programs.ssh.addKeysToAgent = "yes";
     # TODO users.extraUsers.root.openssh.authorizedKeys.keys
 
@@ -31,15 +31,15 @@ outputs.lib.mkModule config "ssh" {
           name = ".ssh/${name}.pub";
           value = {
             text = value;
-            # onChange = "chmod 644 ~/.ssh/${name}.pub";
+            onChange = "chmod 644 ~/.ssh/${name}.pub";
           };
         })
-        config.modules.ssh.publicKeys);
+        config.modules.ssh.keys);
 
     nixos = {
       programs.ssh.startAgent = true;
       users.users."${name}".openssh.authorizedKeys.keys =
-        config.modules.ssh.publicKeys.attrValues;
+        config.modules.ssh.keys.attrValues;
     };
   };
 }

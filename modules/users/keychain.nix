@@ -20,6 +20,7 @@ in
     programs.keychain = {
       enable = true;
       agents = ["ssh" "gpg"];
+      enableZshIntegration = false;
       keys = config.modules.sops.privateKeyNames;
       # enableBashIntegration = false;
       # enableFishIntegration = false;
