@@ -115,8 +115,7 @@ outputs.lib.mkFor system hostname {
         // {
           stylix = {
             enable = true;
-            # TODO Make system wide
-            system-wide = false;
+            system-wide = true;
             theme = "ayu-dark";
           };
           wezterm = {

@@ -23,7 +23,7 @@
     };
 
     nixlib = {
-      url = "git+ssh://git@github.com/runarsf/nixlib";
+      url = "github:runarsf/nixlib";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
