@@ -312,7 +312,7 @@ in
             android.enable = true;
             python.packages = with pkgs.python311Packages; [ requests python-dotenv fastapi ];
           };
-          ssh.publicKeys.id_kantega = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINOIVIx57mcF9p3JOQgSeQBFL8D3pUQhar+ejnDahFI/ thomas.espervik@kantega.no";
+          ssh.keys.id_kantega = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINOIVIx57mcF9p3JOQgSeQBFL8D3pUQhar+ejnDahFI/ thomas.espervik@kantega.no";
         };
         home.packages = with pkgs; [ terraform ];
       };
