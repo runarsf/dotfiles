@@ -25,7 +25,7 @@ outputs.lib.mkModule config "zsh" {
     libqalculate
   ];
 
-  nixos.environment.pathsToLink = ["/share/zsh"];
+  nixos.environment.pathsToLink = [ "/share/zsh" ];
 
   nixos.programs.command-not-found.enable = false;
   programs = {
@@ -50,7 +50,6 @@ outputs.lib.mkModule config "zsh" {
           "z-shell/zsh-diff-so-fancy"
           "nix-community/nix-zsh-completions"
           "MichaelAquilina/zsh-auto-notify"
-          # "jimhester/per-directory-history"
           "Tarrasch/zsh-functional"
           "zshzoo/magic-enter"
           "MichaelAquilina/zsh-you-should-use"
@@ -58,6 +57,7 @@ outputs.lib.mkModule config "zsh" {
 
           "getantidote/use-omz"
           "ohmyzsh/ohmyzsh path:lib"
+          "ohmyzsh/ohmyzsh path:plugins/ssh-agent"
           "ohmyzsh/ohmyzsh path:plugins/extract"
           "ohmyzsh/ohmyzsh path:plugins/gitfast"
           "ohmyzsh/ohmyzsh path:plugins/dotenv"
@@ -74,98 +74,107 @@ outputs.lib.mkModule config "zsh" {
         };
       };
       initContent =
-        outputs.lib.mkBefore ''
-          AUTOPAIR_INHIBIT_INIT=1
-          # AUTOPAIR_SPC_WIDGET="abbr-expand-and-insert"
-          AUTO_NOTIFY_THRESHOLD=20
-          AUTO_NOTIFY_EXPIRE_TIME=20000
-        ''
-        // outputs.lib.mkOrder 550
-        /*
-        before compinit
-        */
-        ''
-          autoload -Uz vcs_info
-          vcs_info 'prompt'
-        ''
-        // outputs.lib.mkAfter ''
-          zstyle ':completion:*' special-dirs ..
-          zstyle ':completion:*' special-dirs last
-          zstyle ':completion:*' squeeze-slashes true
-          zstyle ':completion:*' complete-options true
+        let
+          zshConfigEarlyInit = outputs.lib.mkOrder 500 ''
+            AUTOPAIR_INHIBIT_INIT=1
+            AUTOPAIR_SPC_WIDGET="abbr-expand-and-insert"
+            AUTO_NOTIFY_THRESHOLD=20
+            AUTO_NOTIFY_EXPIRE_TIME=20000
+            zstyle :omz:plugins:ssh-agent identities ${
+              config.modules.ssh.keys |> builtins.attrNames |> builtins.concatStringsSep " "
+            }
+            zstyle :omz:plugins:ssh-agent lazy yes
+            zstyle :omz:plugins:ssh-agent agent-forwarding yes
+            zstyle :omz:plugins:ssh-agent quiet yes
+          '';
+          zshConfigBeforeCompInit = outputs.lib.mkOrder 550 ''
+            autoload -Uz vcs_info
+            vcs_info 'prompt'
+          '';
+          zshConfig = outputs.lib.mkOrder 1000 ''
+            zstyle ':completion:*' special-dirs ..
+            zstyle ':completion:*' special-dirs last
+            zstyle ':completion:*' squeeze-slashes true
+            zstyle ':completion:*' complete-options true
 
-          # TODO Make nix-files autocomplete before lock-files
-          # zstyle ':completion:*:default' file-patterns \
-          #   '*.(#i)nix:nix-files' \
-          #   '*.(#i)lock:lock-files' \
-          #   '%p:all-files'
-          # zstyle ':completion:*:default' group-order nix-files lock-files all-files
+            # TODO Make nix-files autocomplete before lock-files
+            # zstyle ':completion:*:default' file-patterns \
+            #   '*.(#i)nix:nix-files' \
+            #   '*.(#i)lock:lock-files' \
+            #   '%p:all-files'
+            # zstyle ':completion:*:default' group-order nix-files lock-files all-files
 
-          unsetopt correct \
-                   prompt_cr \
-                   prompt_sp
+            unsetopt correct \
+                     prompt_cr \
+                     prompt_sp
 
-          setopt histignorealldups \
-                 sharehistory \
-                 menucomplete \
-                 autoparamslash \
-                 nonomatch
+            setopt histignorealldups \
+                   sharehistory \
+                   menucomplete \
+                   autoparamslash \
+                   nonomatch
 
-          _comp_options+=(globdots)
+            _comp_options+=(globdots)
 
-          typeset -A ZSH_HIGHLIGHT_REGEXP
-          ZSH_HIGHLIGHT_REGEXP+=('[0-9]' fg=cyan)
-          ZSH_HIGHLIGHT_HIGHLIGHTERS+=(main regexp)
+            typeset -A ZSH_HIGHLIGHT_REGEXP
+            ZSH_HIGHLIGHT_REGEXP+=('[0-9]' fg=cyan)
+            ZSH_HIGHLIGHT_HIGHLIGHTERS+=(main regexp)
 
-          # https://unix.stackexchange.com/a/26776
-          # https://unix.stackexchange.com/a/53587
-          # export STDERRED_BLACKLIST="^(niks|nix|nh|ssh|gitui|vim|neovim|just|yazi)$"
-          # export LD_PRELOAD="${pkgs.stderred}/lib/libstderred.so''${LD_PRELOAD:+:$LD_PRELOAD}"
+            # https://unix.stackexchange.com/a/26776
+            # https://unix.stackexchange.com/a/53587
+            # export STDERRED_BLACKLIST="^(niks|nix|nh|ssh|gitui|vim|neovim|just|yazi)$"
+            # export LD_PRELOAD="${pkgs.stderred}/lib/libstderred.so''${LD_PRELOAD:+:$LD_PRELOAD}"
 
-          wim () { set -eu; ''${EDITOR:-vim} "$(which ''${1:?No file selected...})" ''${@:2}; set +eu }
-          ? () {
-            ${outputs.lib.getExe pkgs.krabby} random --no-title
-          }
-          magic-enter-cmd () {
-            printf ' ?\n'
-          }
-
-          __git_files () {
-            _wanted files expl 'local files' _files
-          }
-
-          ze () { "$EDITOR" "$("${outputs.lib.getExe config.programs.zoxide.package}" query "$@")" }
-          zcode () { "${outputs.lib.getExe config.programs.vscode.package}" "$("${outputs.lib.getExe config.programs.zoxide.package}" query "$@")" }
-          zd () { set -e; cd "$("${outputs.lib.getExe config.programs.zoxide.package}" query "$PWD" "$@")"; set +e }
-          electron-wayland () { "''${1:?No program specificed...}" --enable-features=UseOzonePlatform,WaylandWindowDecorations --platform-hint=auto --ozone-platform=wayland "''${@:2}" }
-          tmpvim () {
-            revert () {
-              mv "$1.bak" "$1"
+            wim () { set -eu; ''${EDITOR:-vim} "$(which ''${1:?No file selected...})" ''${@:2}; set +eu }
+            ? () {
+              ${outputs.lib.getExe pkgs.krabby} random --no-title
+            }
+            magic-enter-cmd () {
+              printf ' ?\n'
             }
 
-            if test ! -f "''${1:?No file specified...}"; then
-              printf "File doesn't exist...\n"
-              return 1
-            fi
+            __git_files () {
+              _wanted files expl 'local files' _files
+            }
 
-            trap "revert "$@"" EXIT
+            ze () { "$EDITOR" "$("${outputs.lib.getExe config.programs.zoxide.package}" query "$@")" }
+            zcode () { "${outputs.lib.getExe config.programs.vscode.package}" "$("${outputs.lib.getExe config.programs.zoxide.package}" query "$@")" }
+            zd () { set -e; cd "$("${outputs.lib.getExe config.programs.zoxide.package}" query "$PWD" "$@")"; set +e }
+            electron-wayland () { "''${1:?No program specificed...}" --enable-features=UseOzonePlatform,WaylandWindowDecorations --platform-hint=auto --ozone-platform=wayland "''${@:2}" }
+            tmpvim () {
+              revert () {
+                mv "$1.bak" "$1"
+              }
 
-            mv "$1" "$1.bak"
-            cat "$1.bak" > "$1"
-            $EDITOR "$1"
-          }
+              if test ! -f "''${1:?No file specified...}"; then
+                printf "File doesn't exist...\n"
+                return 1
+              fi
 
-          bindkey '^G' per-directory-history-toggle-history
-          bindkey -M vicmd '^G' per-directory-history-toggle-history
+              trap "revert "$@"" EXIT
 
-          autopair-init
-        '';
+              mv "$1" "$1.bak"
+              cat "$1.bak" > "$1"
+              $EDITOR "$1"
+            }
+
+            bindkey '^G' per-directory-history-toggle-history
+            bindkey -M vicmd '^G' per-directory-history-toggle-history
+
+            autopair-init
+          '';
+        in
+        outputs.lib.mkMerge [
+          zshConfigEarlyInit
+          zshConfigBeforeCompInit
+          zshConfig
+        ];
       prezto = {
         enable = true;
         caseSensitive = false;
         terminal.autoTitle = true;
-        editor.dotExpansion = true;
         editor.promptContext = true;
+        ssh.identities = builtins.attrNames config.modules.ssh.keys;
         utility.safeOps = false;
         pmodules = [
           "ssh"

@@ -19,6 +19,10 @@ let
   icons = [
     # [ "class:zen.*" "󰈹" "Zen" ]
     ["class:dev.zed.Zed" "" "Zed"]
+    ["class:cursor" "󰨞" "Code"]
+    ["class:Emulator" "" "Android Emulator"]
+    ["class:jetbrains-studio" "󰀴" "Android Studio"]
+    ["class:xwaylandvideobridge" "" ""]
   ];
 in
   {

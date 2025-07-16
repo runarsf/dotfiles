@@ -4,10 +4,7 @@
   pkgs,
   ...
 }:
-{
-  imports = [./fonts.nix];
-}
-// outputs.lib.mkDesktopModule config "alacritty" {
+outputs.lib.mkDesktopModule config "alacritty" {
   # https://alacritty.org/config-alacritty.html
   programs.alacritty = {
     enable = true;

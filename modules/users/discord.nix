@@ -25,10 +25,11 @@ in
 
     home.packages = with pkgs; [
       vesktop
-      (discord.override {
-        withOpenASAR = true;
-        withVencord = true;
-      })
+      discord
+      # (discord-ptb.override {
+      #   withOpenASAR = true;
+      #   withVencord = true;
+      # })
     ];
 
     xdg.configFile = {

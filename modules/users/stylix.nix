@@ -5,8 +5,6 @@
   name,
   ...
 }:
-# FIXME For some reason, every other build stylix themes are light / dark themed...?
-# TODO Refactor for home manager integration https://stylix.danth.me/options/nixos.html#stylixhomemanagerintegrationautoimport
 let
   stylix-config = {
     enable = true;
@@ -14,11 +12,9 @@ let
     polarity = "dark";
     image = config.modules.wallpaper;
 
-    targets =
-      outputs.lib.disable ["nixvim"]
-      // {
-        qt.platform = "qtct";
-      };
+    targets = outputs.lib.disable [ "nixvim" ] // {
+      # qt.platform = "qtct";
+    };
 
     cursor = {
       package = pkgs.bibata-cursors;
@@ -66,6 +62,16 @@ let
   };
 
   settings = {
+    global = rec {
+      # FIXME Stylix supports hyprlock now, but is too dumb to apply it correctly
+      programs.hyprlock.settings.background.path = builtins.toString config.modules.wallpaper;
+
+      services.hyprpaper.settings = {
+        preload = [ "${config.modules.wallpaper}" ];
+        wallpaper = [ ", ${config.modules.wallpaper}" ];
+      };
+    };
+
     user = rec {
       stylix = outputs.lib.deepMerge [
         stylix-config
@@ -100,39 +106,19 @@ let
         "${pkgs.gtk3}/share/gsettings-schemas/${pkgs.gtk3.name}"
         "${pkgs.gsettings-desktop-schemas}/share/gsettings-schemas/${pkgs.gsettings-desktop-schemas.name}"
       ];
-
-      # systemd.user.services.rm-gtk = {
-      #   Unit = {
-      #     Description = "Remove GTK files built by Home Manager";
-      #     PartOf = [ "home-manager-${name}.target" ];
-      #   };
-
-      #   Service.ExecStart = builtins.toString (pkgs.writeShellScript "rm-gtk" ''
-      #     #!/run/current-system/sw/bin/bash
-      #     set -o errexit
-      #     set -o nounset
-
-      #     printf "Removing GTK files built by Home Manager\n"
-
-      #     rm -rf ~/.config/gtk-3.0
-      #     rm -rf ~/.config/gtk-4.0
-      #     rm -f .gtkrc-2.0
-      #   '');
-
-      #   Install.WantedBy = [ "default.target" ];
-      # };
     };
 
     system-wide = {
       stylix = outputs.lib.deepMerge [
         stylix-config
         {
-          targets = outputs.lib.disable ["grub"];
+          targets = outputs.lib.disable [ "grub" ];
         }
       ];
     };
   };
-in {
+in
+{
   options = {
     modules = {
       wallpaper = outputs.lib.mkOption {
@@ -157,20 +143,11 @@ in {
 
   config = outputs.lib.mkIf config.modules.stylix.enable (
     outputs.lib.mkMerge [
-      # TODO Is there not user-config that we still want on the system-wide version
       (outputs.lib.mkIf config.modules.stylix.system-wide {
         nixos = outputs.lib.trace "info: Enabling Stylix system-wide. This will override the configs of all users with ${name}'s config." settings.system-wide;
       })
       (outputs.lib.mkIf (!config.modules.stylix.system-wide) settings.user)
-      {
-        # FIXME Stylix supports hyprlock now, but is too dumb to apply it correctly
-        programs.hyprlock.settings.background.path = builtins.toString config.modules.wallpaper;
-
-        services.hyprpaper.settings = {
-          preload = ["${config.modules.wallpaper}"];
-          wallpaper = [", ${config.modules.wallpaper}"];
-        };
-      }
+      settings.global
     ]
   );
 }

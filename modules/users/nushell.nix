@@ -17,7 +17,7 @@ outputs.lib.mkModule config "nushell" {
   # https://github.com/fdncred/nu_plugin_regex
   home.packages = with pkgs.unstable;
   with nushellPlugins; [
-    net
+    # net
     query
     gstat
     formats

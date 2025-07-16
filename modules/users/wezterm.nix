@@ -115,12 +115,20 @@ in
           tab = ''
             { 'index', padding = { left = 1, right = 0, }, },
             'process',
+            zoomed,
           '';
-        in ''
+        in /* lua */ ''
           local wezterm = require 'wezterm'
           local smart_splits = wezterm.plugin.require('https://github.com/mrjones2014/smart-splits.nvim')
           local tabline = wezterm.plugin.require("https://github.com/michaelbrusegard/tabline.wez")
           local config = wezterm.config_builder()
+
+          local function zoomed(tab)
+            if tab.active_pane.is_zoomed then
+              return wezterm.nerdfonts.md_fullscreen_exit .. ' '
+            end
+            return ""
+          end
 
           tabline.setup({
             options = {
@@ -145,7 +153,6 @@ in
               tabline_c = { ' ' },
               tab_active = {
                 ${tab}
-                'zoomed',
               },
               tab_inactive = {
                 ${tab}
@@ -159,10 +166,10 @@ in
 
           tabline.apply_to_config(config)
 
-          -- config.color_scheme = 'Ayu Dark (Gogh)'
-          -- config.colors = {
-          --   background = 'none',
-          -- }
+          config.animation_fps = 120
+          config.max_fps = 120
+          config.cursor_blink_ease_in = 'Constant'
+          config.cursor_blink_ease_out = 'Constant'
           config.font = wezterm.font_with_fallback({
             ${
             builtins.concatStringsSep ",\n  "
@@ -186,14 +193,35 @@ in
           -- config.show_new_tab_button_in_tab_bar = false
           -- config.alternate_buffer_wheel_scroll_speed = 1
 
+          -- Returns a bool based on whether the host operating system's
+          -- appearance is light or dark.
+          function is_dark()
+            -- wezterm.gui is not always available, depending on what
+            -- environment wezterm is operating in. Just return true
+            -- if it's not defined.
+            if wezterm.gui then
+              -- Some systems report appearance like "Dark High Contrast"
+              -- so let's just look for the string "Dark" and if we find
+              -- it assume appearance is dark.
+              return wezterm.gui.get_appearance():find("Dark")
+            end
+            return true
+          end
+
+          -- if is_dark() then
+          --  config.color_scheme = 'Ayu Dark (Gogh)'
+          -- else
+          --  config.color_scheme = 'Ayu Light (Gogh)'
+          -- end
+
           config.check_for_updates = false
 
           config.set_environment_variables = {
             TERMINFO_DIRS = '${config.home.profileDirectory}/share/terminfo',
             WSLENV = 'TERMINFO_DIRS',
-            -- PATH = "${config.home.profileDirectory}/bin:''${PATH}"
           }
           config.term = 'wezterm'
+          config.use_dead_keys = false
 
           config.unix_domains = {
             {
@@ -236,9 +264,36 @@ in
               action = wezterm.action.SplitVertical { domain = 'CurrentPaneDomain' },
             },
             {
+              key = 'a',
+              mods = 'LEADER',
+              action = wezterm.action.AttachDomain 'unix',
+            },
+            {
               key = 'd',
               mods = 'LEADER',
               action = wezterm.action.DetachDomain('CurrentPaneDomain'),
+            },
+            {
+              key = 'r',
+              mods = 'LEADER',
+              action = wezterm.action.PromptInputLine {
+                description = 'Enter new name for session',
+                action = wezterm.action_callback(
+                  function(window, pane, line)
+                    if line then
+                      wezterm.mux.rename_workspace(
+                        window:mux_window():get_workspace(),
+                        line
+                      )
+                    end
+                  end
+                ),
+              },
+            },
+            {
+              key = 'l',
+              mods = 'LEADER',
+              action = wezterm.action.ShowLauncherArgs { flags = 'WORKSPACES' },
             },
             {
               key = 'LeftArrow',
@@ -260,46 +315,6 @@ in
               mods = 'ALT',
               action = wezterm.action.PasteFrom("Clipboard"),
             },
-            -- {
-            --   key = 'LeftArrow',
-            --   mods = 'SHIFT',
-            --   action = wezterm.action.ActivatePaneDirection("Left"),
-            -- },
-            -- {
-            --   key = 'RightArrow',
-            --   mods = 'SHIFT',
-            --   action = wezterm.action.ActivatePaneDirection("Right"),
-            -- },
-            -- {
-            --   key = 'UpArrow',
-            --   mods = 'SHIFT',
-            --   action = wezterm.action.ActivatePaneDirection("Up"),
-            -- },
-            -- {
-            --   key = 'DownArrow',
-            --   mods = 'SHIFT',
-            --   action = wezterm.action.ActivatePaneDirection("Down"),
-            -- },
-            -- {
-            --   key = 'LeftArrow',
-            --   mods = 'SHIFT|ALT',
-            --   action = wezterm.action.AdjustPaneSize { 'Left', 5 },
-            -- },
-            -- {
-            --   key = 'RightArrow',
-            --   mods = 'SHIFT|ALT',
-            --   action = wezterm.action.AdjustPaneSize { 'Right', 5 },
-            -- },
-            -- {
-            --   key = 'UpArrow',
-            --   mods = 'SHIFT|ALT',
-            --   action = wezterm.action.AdjustPaneSize { 'Up', 5 },
-            -- },
-            -- {
-            --   key = 'DownArrow',
-            --   mods = 'SHIFT|ALT',
-            --   action = wezterm.action.AdjustPaneSize { 'Down', 5 },
-            -- },
             {
               key = 'T',
               mods = 'CTRL|SHIFT',

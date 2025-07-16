@@ -14,9 +14,8 @@ outputs.lib.mkModule config "git" {
     userName = outputs.lib.mkDefault (throw "programs.git.userName is not set");
 
     extraConfig = {
-      init = {
-        defaultBranch = "main";
-      };
+      init.defaultBranch = "main";
+      push.autoSetupRemote = true;
     };
 
     # TODO Make this an option: modules.git.pathConfig
