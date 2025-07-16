@@ -293,9 +293,28 @@ in
       # TEMP sommerjobb :⁾
       airfryer = {
         isDesktop = true;
-        modules = outputs.lib.enable [ "docker" ];
-        home.packages = with pkgs; [ solaar ];
-        nixos.hardware.bluetooth.powerOnBoot = true;
+        nixos = {
+          hardware.bluetooth.powerOnBoot = true;
+          services = {
+            avahi = {
+              enable = true;
+              nssmdns4 = true;
+              openFirewall = true;
+            };
+            printing = {
+              enable = true;
+              drivers = with pkgs; [ epson-escpr ];
+            };
+          };
+        };
+        modules = outputs.lib.enable [ "docker" ] // {
+          dev = {
+            android.enable = true;
+            python.packages = with pkgs.python311Packages; [ requests python-dotenv fastapi ];
+          };
+          ssh.publicKeys.id_kantega = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINOIVIx57mcF9p3JOQgSeQBFL8D3pUQhar+ejnDahFI/ thomas.espervik@kantega.no";
+        };
+        home.packages = with pkgs; [ terraform ];
       };
     };
   }
