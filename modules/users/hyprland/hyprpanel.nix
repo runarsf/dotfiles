@@ -17,24 +17,38 @@ let
   inherit (outputs.lib) getExe getExe';
 
   icons = [
-    # [ "class:zen.*" "󰈹" "Zen" ]
-    ["class:dev.zed.Zed" "" "Zed"]
-    ["class:cursor" "󰨞" "Code"]
-    ["class:Emulator" "" "Android Emulator"]
-    ["class:jetbrains-studio" "󰀴" "Android Studio"]
-    ["class:xwaylandvideobridge" "" ""]
+    [
+      "class:dev.zed.Zed"
+      ""
+      "Zed"
+    ]
+    [
+      "class:cursor"
+      "󰨞"
+      "Code"
+    ]
+    [
+      "class:Emulator"
+      ""
+      "Android Emulator"
+    ]
+    [
+      "class:jetbrains-studio"
+      "󰀴"
+      "Android Studio"
+    ]
+    [ # FIXME This just makes the icon invisible
+      "class:xwaylandvideobridge"
+      ""
+      ""
+    ]
   ];
 in
-  {
-    imports = [
-      inputs.hyprpanel.homeManagerModules.hyprpanel
-    ];
-  }
-  // outputs.lib.mkDesktopModule config "hyprpanel" {
-    nixpkgs.overlays = [inputs.hyprpanel.overlay];
-
-    programs.hyprpanel = {
-      enable = true;
+outputs.lib.mkDesktopModule config "hyprpanel" {
+  programs.hyprpanel = {
+    enable = true;
+    package = inputs.hyprpanel.packages.${pkgs.system}.default;
+    settings = {
       overwrite.enable = true;
       overlay.enable = true;
 
@@ -42,7 +56,7 @@ in
       # Anything else has to be set in `override`.
       settings = rec {
         tear = true;
-        terminal = config.modules.${config.defaultTerminal}.exec [];
+        terminal = config.modules.${config.defaultTerminal}.exec [ ];
         notifications.showActionsOnHover = false;
 
         layout = {
@@ -53,7 +67,7 @@ in
                 "workspaces"
                 "windowtitle"
               ];
-              middle = ["media"];
+              middle = [ "media" ];
               right = [
                 "volume"
                 "bluetooth"
@@ -67,11 +81,9 @@ in
                 "notifications"
               ];
             };
-            "0" =
-              layout."bar.layouts"."*"
-              // {
-                left = layout."bar.layouts"."*".left ++ ["systray"];
-              };
+            "0" = layout."bar.layouts"."*" // {
+              left = layout."bar.layouts"."*".left ++ [ "systray" ];
+            };
           };
         };
 
@@ -118,25 +130,25 @@ in
               map (item: {
                 name = builtins.elemAt item 0;
                 value = builtins.elemAt item 1;
-              })
-              icons
+              }) icons
             );
           };
-          customModules = let
-            btop = config.modules.${config.defaultTerminal}.exec "${getExe pkgs.btop}";
-          in {
-            cpu.leftClick = btop;
-            ram.leftClick = btop;
-            # FIXME labels not hidden???
-            hyprsunset.label = false;
-            hypridle = {
-              label = false;
-              rightClick = "${getExe pkgs.mpv} --no-audio https://roundrobin3.videostreamingwowza.com/visdeurbel2/visdeurbel2.stream/playlist.m3u8";
+          customModules =
+            let
+              btop = config.modules.${config.defaultTerminal}.exec "${getExe pkgs.btop}";
+            in
+            {
+              cpu.leftClick = btop;
+              ram.leftClick = btop;
+              hyprsunset.label = false;
+              hypridle = {
+                label = false;
+                rightClick = "${getExe pkgs.mpv} --no-audio https://roundrobin3.videostreamingwowza.com/visdeurbel2/visdeurbel2.stream/playlist.m3u8";
+              };
             };
-          };
         };
 
-        notifications.ignore = ["spotify"];
+        notifications.ignore = [ "spotify" ];
 
         menus = {
           clock = {
@@ -206,14 +218,15 @@ in
       };
 
       # FIXME https://github.com/Jas-SinghFSU/HyprPanel/issues/886
-      override = let
-        background = "#01010c";
-        text = "#f8f8ff";
-        dimtext = "#565B66";
-        feinttext = "#131721";
-        cards = "#0C0F15";
-        border = "#434343";
-      in
+      override =
+        let
+          background = "#01010c";
+          text = "#f8f8ff";
+          dimtext = "#565B66";
+          feinttext = "#131721";
+          cards = "#0C0F15";
+          border = "#434343";
+        in
         outputs.lib.attrs.flattenAttrs {
           theme = {
             bar = {
@@ -240,13 +253,16 @@ in
             };
             systray.dropdownmenu.divider = border;
           };
-          bar.windowtitle.title_map =
-            map (item: (item |> builtins.head |> builtins.split ":" |> outputs.lib.lists.last |> outputs.lib.singleton) ++ builtins.tail item)
-            icons;
+          bar.windowtitle.title_map = map (
+            item:
+            (item |> builtins.head |> builtins.split ":" |> outputs.lib.lists.last |> outputs.lib.singleton)
+            ++ builtins.tail item
+          ) icons;
         };
     };
+  };
 
-    wayland.windowManager.hyprland.settings.exec = [
-      ''pgrep "hyprpanel" || (${getExe pkgs.hyprpanel} q; ${getExe pkgs.hyprpanel})''
-    ];
-  }
+  wayland.windowManager.hyprland.settings.exec = [
+    ''pgrep "hyprpanel" || (${getExe pkgs.hyprpanel} q; ${getExe pkgs.hyprpanel})''
+  ];
+}
