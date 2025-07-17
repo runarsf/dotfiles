@@ -85,7 +85,7 @@ in
           // {
             stylix = {
               enable = true;
-              system-wide = false;
+              system-wide = true;
               theme = "ayu-dark";
             };
             wezterm = {
