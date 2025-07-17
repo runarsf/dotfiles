@@ -90,7 +90,7 @@
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
-    stylix.url = "github:danth/stylix";
+    stylix.url = "github:nix-community/stylix";
 
     spicetify-nix = {
       url = "github:Gerg-L/spicetify-nix";
