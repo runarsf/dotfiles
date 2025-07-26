@@ -111,6 +111,7 @@ outputs.lib.mkFor system hostname {
           "camera"
           "zen"
           "logitech"
+          "ghostty"
         ]
         // {
           stylix = {

@@ -146,7 +146,7 @@ in
       (outputs.lib.mkIf config.modules.stylix.system-wide {
         nixos = outputs.lib.trace "info: Enabling Stylix system-wide. This will override the configs of all users with ${name}'s config." settings.system-wide;
       })
-      (outputs.lib.mkIf (!config.modules.stylix.system-wide) settings.user)
+      settings.user
       settings.global
     ]
   );
