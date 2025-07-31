@@ -60,7 +60,6 @@ in
       home.packages = with pkgs; [
         matugen
       ];
-      programs.pywal.enable = true;
 
       programs.hyprpanel = {
         enable = true;
