@@ -24,7 +24,10 @@ outputs.lib.mkModule config "neovim" rec {
       MANPAGER = "${nvim} +Man!";
       MANWIDTH = 999;
     };
-    shellAliases.vim = "${nvim}";
+    shellAliases = {
+      vim = "${nvim}";
+      nv = "nix run path:${config.home.homeDirectory}/Development/lazyvim --";
+    };
   };
 
   programs.nushell.shellAliases = {

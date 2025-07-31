@@ -58,10 +58,6 @@
       url = "github:alexhulbert/Hyprchroma";
       inputs.hyprland.follows = "hyprland";
     };
-    hyprpanel = {
-      url = "github:Jas-SinghFSU/HyprPanel";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
 
     nix-flatpak.url = "github:gmodena/nix-flatpak";
 

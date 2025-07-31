@@ -8,7 +8,7 @@ outputs.lib.mkDesktopModule config "fuzzel" {
     enable = true;
     settings = {
       main = {
-        font = outputs.lib.mkForce "CaskaydiaCove NF:weight=normal:size=16";
+        # font = outputs.lib.mkForce "CaskaydiaCove NF:weight=normal:size=16";
         prompt = "' »  '";
         show-actions = true;
         list-executables-in-path = true;
