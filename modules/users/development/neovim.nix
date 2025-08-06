@@ -26,7 +26,7 @@ outputs.lib.mkModule config "neovim" rec {
     };
     shellAliases = {
       vim = "${nvim}";
-      nv = "nix run path:${config.home.homeDirectory}/Development/lazyvim --";
+      nv = "nix run path:${config.home.homeDirectory}/Development/nixvim --";
     };
   };
 

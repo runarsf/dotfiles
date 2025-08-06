@@ -41,10 +41,10 @@ outputs.lib.mkModule config "fastfetch" {
           type = "editor";
           key = " Editor";
         }
-        {
-          type = "packages";
-          key = " Packages";
-        }
+        # {
+        #   type = "packages";
+        #   key = " Packages";
+        # }
         {
           type = "uptime";
           key = "󰥔 Uptime";
