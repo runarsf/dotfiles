@@ -162,6 +162,8 @@ outputs.lib.mkModule config "zsh" {
             bindkey -M vicmd '^G' per-directory-history-toggle-history
 
             autopair-init
+
+            ${if config.modules.fastfetch.enable then outputs.lib.getExe pkgs.fastfetch else ""}
           '';
         in
         outputs.lib.mkMerge [
