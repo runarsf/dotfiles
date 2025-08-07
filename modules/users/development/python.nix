@@ -34,7 +34,6 @@ in
           python-pam
           requests
           pygobject3
-          debugpy
           mypy
         ]
         ++ outputs.lib.optionals self.presets.math.enable [
