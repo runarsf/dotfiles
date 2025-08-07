@@ -32,6 +32,7 @@ in
           "nix"
           "yazi"
           "fun"
+          "fastfetch"
         ]
         // {
           wallpaper = ./wallpaper.jpg;
@@ -109,6 +110,7 @@ in
             "zen"
             "logitech"
             "ghostty"
+            "localsend"
           ]
           // {
             stylix = {
@@ -141,7 +143,6 @@ in
             qtscrcpy
             # openconnect-sso --server vpn.ntnu.no
             inputs.openconnect-sso.packages."${pkgs.system}".default
-            warp-terminal
           ];
 
         nixos = {

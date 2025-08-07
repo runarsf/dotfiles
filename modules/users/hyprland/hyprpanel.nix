@@ -71,7 +71,8 @@ in
               ignore = ["spotify"];
             };
             bar = {
-              autoHide = "fullscreen";
+              # Also hids when in "monocle" mode
+              # autoHide = "fullscreen";
               layouts = let
                 layout = {
                   left = [
