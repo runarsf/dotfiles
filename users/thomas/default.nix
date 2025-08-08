@@ -77,10 +77,10 @@ in
             "sops-fonts"
             "bluetooth"
             "zen"
-            "japanese"
             "pipewire"
             "mpv"
             "camera"
+            "fastfetch"
           ]
           // {
             stylix = {
@@ -110,6 +110,15 @@ in
 
         home.packages = with pkgs; ifIsDesktop [inputs.openconnect-sso.packages."${pkgs.system}".default];
 
+        programs.fastfetch.settings.logo = {
+          source = outputs.lib.mkForce <| builtins.toFile "logo.txt" ''
+             ／|_
+            ($2o o$1 /
+             |.   ~.
+             じしf_,)ノ
+          '';
+          padding.top = outputs.lib.mkForce 1;
+        };
         nixos = {
           programs.zsh.enable = true;
           users.users."${name}" = {
@@ -139,6 +148,7 @@ in
 
         modules =
           outputs.lib.enable [
+            "japanese"
             "steam"
             "ffxiv"
             "fun"
@@ -272,6 +282,7 @@ in
 
         modules =
           outputs.lib.enable [
+            "japanese"
             "ctf"
             "steam"
             "fun"
@@ -314,7 +325,7 @@ in
           };
           ssh.keys.id_kantega = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINOIVIx57mcF9p3JOQgSeQBFL8D3pUQhar+ejnDahFI/ thomas.espervik@kantega.no";
         };
-        home.packages = with pkgs; [ terraform ];
+        home.packages = with pkgs; [ terraform typstPackages.fontawesome ];
       };
     };
   }
