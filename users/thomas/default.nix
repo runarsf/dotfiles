@@ -300,32 +300,5 @@ in
             };
           };
       };
-
-      # TEMP sommerjobb :⁾
-      airfryer = {
-        isDesktop = true;
-        nixos = {
-          hardware.bluetooth.powerOnBoot = true;
-          services = {
-            avahi = {
-              enable = true;
-              nssmdns4 = true;
-              openFirewall = true;
-            };
-            printing = {
-              enable = true;
-              drivers = with pkgs; [ epson-escpr ];
-            };
-          };
-        };
-        modules = outputs.lib.enable [ "docker" ] // {
-          dev = {
-            android.enable = true;
-            python.packages = with pkgs.python311Packages; [ requests python-dotenv fastapi ];
-          };
-          ssh.keys.id_kantega = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINOIVIx57mcF9p3JOQgSeQBFL8D3pUQhar+ejnDahFI/ thomas.espervik@kantega.no";
-        };
-        home.packages = with pkgs; [ terraform typstPackages.fontawesome ];
-      };
     };
   }
