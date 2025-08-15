@@ -171,6 +171,7 @@ in
         home.packages = with pkgs.unstable; [
           dolphin-emu-primehack
           code-cursor
+          r2modman
         ];
 
         nixos = {
