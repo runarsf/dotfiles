@@ -147,6 +147,7 @@ in
         terminus_font
         monocraft
         creep2-hidpi
+        departure-mono
         (nofontsdir tamzen)
         (nofontsdir proggyfonts)
         (nofontsdir unifont)
@@ -174,6 +175,7 @@ in
         fira-code
         gohufont
         lilex
+        departure-mono
         noto
       ]);
   }

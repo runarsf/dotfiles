@@ -45,6 +45,7 @@
 - [Home Manager Option Search](https://home-manager-options.extranix.com/)
 - [Noogle](https://noogle.dev/)
 - [Nix Package Version Search](https://lazamar.co.uk/nix-versions)
+- `sudo nix-store --verify --check-contents --repair`
 - [Stuck because binary cache is down](https://discourse.nixos.org/t/i-seem-to-be-stuck-because-a-binary-cache-is-down/23641/3)\
     `sudo nixos-rebuild test --flake .# --accept-flake-config --option build-use-substitutes false`
 - Prefetch hash (prepend `sha256:`): `nix-prefetch-url --unpack $url`

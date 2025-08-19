@@ -6,17 +6,6 @@
   ...
 }:
 # NOTE You can use pw-top to see pipewire latency, useful for easyeffects
-# TODO Make this a nu script
-# If pipewire suddenly stops working, run the following commands:
-# You might have to reboot with your sound devices disconnected afterwards.
-#  $ killall -9 pipewire
-#  $ killall easyeffects
-#  $ pkill hyprpanel
-#  $ systemctl --user restart pipewire.service
-#  $ systemctl --user restart pipewire.socket
-#  $ systemctl --user restart pipewire-pulse.service
-#  $ systemctl --user restart pipewire-pulse.socket
-#  $ systemctl --user restart easyeffects.service
 outputs.lib.mkDesktopModule config "pipewire"
 {
   options' = {

@@ -21,12 +21,6 @@ outputs.lib.mkModule config "nix" {
     };
   };
 
-  nixpkgs.overlays = [
-    (_: _: {
-      alejandra = inputs.alejandra.packages.${pkgs.stdenv.hostPlatform.system}.default;
-    })
-  ];
-
   home = {
     packages = with pkgs; [
       alejandra

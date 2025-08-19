@@ -39,8 +39,6 @@
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
-    wezterm.url = "github:wez/wezterm?dir=nix";
-
     hyprland = {
       type = "git";
       url = "https://github.com/hyprwm/Hyprland";
@@ -54,17 +52,8 @@
       url = "github:VirtCode/hypr-dynamic-cursors";
       inputs.hyprland.follows = "hyprland";
     };
-    hyprchroma = {
-      url = "github:alexhulbert/Hyprchroma";
-      inputs.hyprland.follows = "hyprland";
-    };
 
     nix-flatpak.url = "github:gmodena/nix-flatpak";
-
-    alejandra = {
-      url = "github:kamadorueda/alejandra/4.0.0";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
 
     openconnect-sso = {
       url = "github:ThinkChaos/openconnect-sso/fix/nix-flake";

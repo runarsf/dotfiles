@@ -102,6 +102,7 @@ in
             "spotify"
             "sops-fonts"
             "bluetooth"
+            "mullvad"
             "pipewire"
             "mpv"
             "docker"
@@ -211,6 +212,7 @@ in
             "kvm"
             "easyeffects"
             "emulation"
+            "iac"
           ]
           // {
             dev = {

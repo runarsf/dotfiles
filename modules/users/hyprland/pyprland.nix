@@ -56,7 +56,7 @@ outputs.lib.mkDesktopModule config "pyprland" {
       ];
       workspace = [
         # ''special:scratchpad, on-created-empty:${hypr-scratch-group} "wezterm start --class=scratch --" "scratch" "wezterm start -- octave-cli"''
-        "special:scratchpad, on-created-empty:[size 1050 675] uwsm app -- ${
+        "special:scratchpad, on-created-empty:[size 1080 704] uwsm app -- ${
           config.modules.${config.defaultTerminal}.exec []
         }"
         # "special:scratchpad, on-created-empty:[size 22 70; move 75 70] uwsm app -- ${

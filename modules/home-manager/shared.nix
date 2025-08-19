@@ -10,7 +10,7 @@ outputs.lib.mkFor system hostname {
   common = {
     imports = [
       # inputs.sops-nix.homeManagerModules.sops
-      inputs.nix-index-database.hmModules.nix-index
+      inputs.nix-index-database.homeModules.nix-index
       ../nix/nixpkgs.nix
       ./system-config-support.nix
     ];
