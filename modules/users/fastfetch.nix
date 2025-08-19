@@ -9,7 +9,7 @@ outputs.lib.mkModule config "fastfetch" {
 
     settings = {
       logo = {
-        source = builtins.toFile "logo.txt" ''
+        source = outputs.lib.mkDefault <| builtins.toFile "logo.txt" ''
            $2..$1^____/
           `-. ___ )
             ||  ||

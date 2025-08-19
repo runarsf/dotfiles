@@ -23,11 +23,9 @@ outputs.lib.mkDesktopModule config "japanese" {
   dconf.settings."org/gnome/settings-daemon/plugins/xsettings" = {
     overrides = "{'Gtk/IMModule':<'fcitx'>}";
   };
-  home.sessionVariables = {XMODIFIERS = "@im=fcitx";};
-  xdg.configFile."fcitx5/profile" = {
-    target = "fcitx5/profile_source";
-    onChange = "cat ${config.xdg.configHome}/fcitx5/profile_source > ${config.xdg.configHome}/fcitx5/profile";
-    text = ''
+  home = {
+    sessionVariables = {XMODIFIERS = "@im=fcitx";};
+    file.".config/fcitx5/profile".text = ''
       [Groups/0]
       # Group Name
       Name=Default
@@ -52,6 +50,7 @@ outputs.lib.mkDesktopModule config "japanese" {
       0=Default
     '';
   };
+
   # nixos = {
   #   environment.systemPackages = with pkgs; [ fcitx5-mozc ];
   #   services.xserver.desktopManager.runXdgAutostartIfNone = true;
