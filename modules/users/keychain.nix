@@ -19,8 +19,10 @@ in
   outputs.lib.mkModule config "keychain" {
     programs.keychain = {
       enable = true;
-      agents = ["ssh" "gpg"];
-      enableZshIntegration = false;
+      # enableZshIntegration = false;
+      # enableBashIntegration = false;
+      # enableNushellIntegration = false;
+      # enableFishIntegration = false;
       keys = config.modules.sops.privateKeyNames;
       # enableBashIntegration = false;
       # enableFishIntegration = false;

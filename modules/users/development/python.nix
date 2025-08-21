@@ -57,7 +57,7 @@ in
           jupyter-core
           notebook
         ]
-        ++ outputs.lib.optionals (config.isDesktop && config.modules.dev.python.ide)
+        ++ outputs.lib.optionals (config.isDesktop && self.ide)
         [jetbrains.pycharm-professional];
 
       home.packages = with pkgs; [

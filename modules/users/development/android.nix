@@ -4,48 +4,41 @@
   outputs,
   config,
   ...
-}:
-outputs.lib.mkModule config ["dev" "android"]
-{
-  options' = {
-    ide = outputs.lib.mkEnableOption "Enable Android IDE";
-  };
-
-  config = {
-    nixos = {
-      programs.adb.enable = true;
-      users.users."${name}".extraGroups = [
-        "adbusers"
-        "plugdev"
-        "kvm"
-      ];
-      services.udev.packages = with pkgs; [android-udev-rules];
-      environment.systemPackages = with pkgs; [android-tools];
+}: let
+  self = config.modules.dev.android;
+in
+  outputs.lib.mkModule config ["dev" "android"]
+  {
+    options' = {
+      ide = outputs.lib.mkEnableOption "Enable Android IDE";
     };
 
-    home.packages = with pkgs;
-      [
-        graphite2
-        gtk3
-        android-tools
-        scrcpy
-        qtscrcpy
-        fvm
-        (
-          pkgs.writeShellApplication {
-            name = "adbrute";
-            runtimeInputs = with pkgs; [
-              android-tools
-              inetutils
-              gnused
-              nmap
-            ];
-            text = builtins.readFile ./adbrute.sh;
-          }
-        )
-      ]
-      ++ outputs.lib.optionals (config.isDesktop && config.modules.dev.android.ide) [android-studio];
+    config = {
+      nixos = {
+        programs.adb.enable = true;
+        users.users."${name}".extraGroups = [
+          "adbusers"
+          "plugdev"
+          "kvm"
+        ];
+        services.udev.packages = with pkgs; [android-udev-rules];
+        environment.systemPackages = with pkgs; [android-tools];
+      };
 
-    nixpkgs.config.android_sdk.accept_license = true;
-  };
-}
+      home.packages = with pkgs;
+        [
+          fvm
+          scrcpy
+          qtscrcpy
+
+          # graphite2
+          # gtk3
+        ]
+        ++ outputs.lib.optionals (config.isDesktop && self.ide) [
+          android-studio
+          jetbrains.idea-ultimate
+        ];
+
+      nixpkgs.config.android_sdk.accept_license = true;
+    };
+  }

@@ -140,8 +140,6 @@ in
             guvcview
             obs-studio
             chromium
-            scrcpy
-            qtscrcpy
             # openconnect-sso --server vpn.ntnu.no
             inputs.openconnect-sso.packages."${pkgs.system}".default
           ];
@@ -218,6 +216,7 @@ in
             dev = {
               java.enable = true;
               c.enable = true;
+              graphics.enable = true;
               python = {
                 enable = true;
                 packageName = "python311";

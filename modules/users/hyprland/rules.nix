@@ -1,6 +1,11 @@
 _: {
+  # TODO: Make a utility function that can create multiple rules for one class
+  # mkRules ["class:kitty, title:kitty" "class:wezterm"] [
+  #   "pin"
+  #   "noblur"
+  # ]
   wayland.windowManager.hyprland.settings.windowrulev2 = [
-    # TODO When monocle, remove gaps
+    # TODO When monocle, remove gaps (or make obvious monocle is active at least)
     #  https://wiki.hyprland.org/Configuring/Workspace-Rules/#smart-gaps
 
     "opacity 0.0 override, class:^(xwaylandvideobridge)$"
@@ -47,7 +52,7 @@ _: {
 
     "float, class:(firefox)(.*), title:(Picture-in-Picture)"
     "workspace 2, class:(firefox)(.*), title:(Picture-in-Picture)"
-    "dimaround, class:(firefox)(.*), title:(Picture-in-Picture)"
+    # "dimaround, class:(firefox)(.*), title:(Picture-in-Picture)"
     "keepaspectratio, class:(firefox)(.*), title:(Picture-in-Picture)"
     "float, class:(firefox).*, title:(Opening)(.*)"
     "float, class:(firefox).*, title:(Save As)(.*)"
@@ -58,6 +63,10 @@ _: {
     "keepaspectratio, class:zen, title:(Picture-in-Picture)"
     "float, class:zen, title:(Opening)(.*)"
     "float, class:zen, title:(Save As)(.*)"
+
+    "pin, class:ssh-askpass"
+    "stayfocused, class:ssh-askpass"
+    "dimaround, class:ssh-askpass"
 
     # Discord has initialClass ' - Discord'
     # Discord popout has initialClass 'Discord Popout'
