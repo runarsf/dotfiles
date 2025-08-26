@@ -121,12 +121,12 @@ outputs.lib.mkDesktopModule config "waybar" {
           # 
           format = "${sep}{usage: >3}%";
           # FIXME You shouldn't need to provide "start" in this, just btop
-          on-click = config.modules.${config.defaultTerminal}.exec "${outputs.lib.getExe pkgs.btop}";
+          on-click = config.modules.terminal.exec "${outputs.lib.getExe pkgs.btop}";
         };
 
         memory = {
           format = "󰧑${sep}{: >3}%";
-          on-click = config.modules.${config.defaultTerminal}.exec "${outputs.lib.getExe pkgs.btop}";
+          on-click = config.modules.terminal.exec "${outputs.lib.getExe pkgs.btop}";
         };
 
         backlight = {

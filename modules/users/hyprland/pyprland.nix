@@ -19,7 +19,7 @@ outputs.lib.mkDesktopModule config "pyprland" {
     # scratchpads = {
     #   # TODO uwsm start --
     #   term = {
-    command = config.modules.${config.defaultTerminal}.exec' {
+    command = config.modules.terminal.exec' {
       class = "scratchpad";
       command = [ "${outputs.lib.getExe pkgs.nushell}" ];
     };
@@ -57,7 +57,7 @@ outputs.lib.mkDesktopModule config "pyprland" {
       workspace = [
         # ''special:scratchpad, on-created-empty:${hypr-scratch-group} "wezterm start --class=scratch --" "scratch" "wezterm start -- octave-cli"''
         "special:scratchpad, on-created-empty:[size 1310 836] uwsm app -- ${
-          config.modules.${config.defaultTerminal}.exec []
+          config.modules.terminal.exec []
         }"
         # "special:scratchpad, on-created-empty:[size 22 70; move 75 70] uwsm app -- ${
         #   config.modules.${config.defaultTerminal}.exec {

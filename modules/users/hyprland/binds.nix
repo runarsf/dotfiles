@@ -15,7 +15,7 @@
         allow_workspace_cycles = true;
       };
       bind = [
-        "SUPER, Return, exec, uwsm app -- ${config.modules.${config.defaultTerminal}.exec []}"
+        "SUPER, Return, exec, uwsm app -- ${config.modules.terminal.exec []}"
         "SUPER, Q, killactive"
         ''SUPER SHIFT, E, exec, loginctl terminate-user ""''
         "SUPER, E, exec, uwsm app -- ${getExe pkgs.nemo}"

@@ -149,7 +149,7 @@ in
                 );
               };
               customModules = let
-                btop = config.modules.${config.defaultTerminal}.exec "${getExe pkgs.btop}";
+                btop = config.modules.terminal.exec "${getExe pkgs.btop}";
               in {
                 cpu.leftClick = btop;
                 ram.leftClick = btop;
@@ -170,7 +170,7 @@ in
 
             tear = true;
             wallpaper.enable = false;
-            terminal = config.modules.${config.defaultTerminal}.exec [];
+            terminal = config.modules.terminal.exec [];
             notifications = {
               showActionsOnHover = false;
             };

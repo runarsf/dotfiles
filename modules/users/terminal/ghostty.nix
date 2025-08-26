@@ -2,36 +2,13 @@
   config,
   outputs,
   ...
-}: let
-  cfg = config.modules.ghostty;
-in
+}:
   outputs.lib.mkDesktopModule config "ghostty" {
     options' = with outputs.lib; {
-      # TODO: This one should be defined on modules.terminal.exec instead, and use modules.ghostty.exec'
       exec = mkOption {
         type = types.functionTo types.str;
         readOnly = true;
-        default = arg: let
-          args =
-            if !isList arg
-            then [arg]
-            else arg;
-        in
-          cfg.exec'
-          <| {
-            command = args |> filter isString;
-          }
-          // (args
-            |> filter isAttrs
-            |> deepMerge);
-      };
-      exec' = mkOption {
-        type = types.functionTo types.str;
-        readOnly = true;
-        default = {
-          command ? [],
-          class ? null,
-        }: let
+        default = {command ? [], ...}: let
           cmd = [(getExe config.programs.ghostty.package)] ++ optionals (length command > 0) (["-e"] ++ command);
         in
           concatStringsSep " " cmd;

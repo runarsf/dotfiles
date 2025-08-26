@@ -111,12 +111,14 @@ in
         home.packages = with pkgs; ifIsDesktop [inputs.openconnect-sso.packages."${pkgs.system}".default];
 
         programs.fastfetch.settings.logo = {
-          source = outputs.lib.mkForce <| builtins.toFile "logo.txt" ''
-             ／|_
-            ($2o o$1 /
-             |.   ~.
-             じしf_,)ノ
-          '';
+          source =
+            outputs.lib.mkForce
+            <| builtins.toFile "logo.txt" ''
+               ／|_
+              ($2o o$1 /
+               |.   ~.
+               じしf_,)ノ
+            '';
           padding.top = outputs.lib.mkForce 1;
         };
         nixos = {
