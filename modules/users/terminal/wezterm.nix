@@ -39,8 +39,8 @@ in
             [(getExe config.programs.wezterm.package)]
             ++ (
               if class == null
-              then [startCommand command]
-              else [(head startCommand) "--class=${class}" (tail startCommand) command]
+              then startCommand ++ command
+              else [(head startCommand) "--class=${class}"] ++ tail startCommand ++ command
             );
         in
           concatStringsSep " " cmd;
