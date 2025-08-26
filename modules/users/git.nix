@@ -8,7 +8,8 @@ outputs.lib.mkModule config "git" {
   programs.git = {
     enable = true;
 
-    diff-so-fancy.enable = true;
+    # diff-so-fancy.enable = true;
+    delta.enable = true;
 
     userEmail = outputs.lib.mkDefault (throw "programs.git.userEmail is not set");
     userName = outputs.lib.mkDefault (throw "programs.git.userName is not set");

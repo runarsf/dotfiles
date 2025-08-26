@@ -17,7 +17,7 @@ in
         outputs.lib.concatPaths {paths = ../../modules/users;}
         ++ outputs.lib.concatPaths {paths = ./config;};
 
-      defaultTerminal = "wezterm";
+      defaultTerminal = "ghostty";
       defaultBrowser = "zen";
       avatar = ./avatar.jpg;
 
@@ -242,6 +242,7 @@ in
           postman
           telegram-desktop
           zed-editor
+          openstackclient
         ];
 
         # xdg.desktopEntries."steam-handler" = {

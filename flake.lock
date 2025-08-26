@@ -3274,11 +3274,11 @@
         "treefmt-nix": "treefmt-nix_8"
       },
       "locked": {
-        "lastModified": 1755676487,
-        "narHash": "sha256-EPpWG0/7VSmkAZfYblod3gdilQXQEsNV8mlmE0x2D1g=",
+        "lastModified": 1756129229,
+        "narHash": "sha256-TZED99Rly0ONqRX3TWzVLkmfdUQkXswafDbD/COI5wY=",
         "owner": "runarsf",
         "repo": "nixvim",
-        "rev": "c0476fc753a6114f31d06e63c879ba8e609d5d98",
+        "rev": "ee64b0b48973dc80ca7c96e3dde84722c8119cb6",
         "type": "github"
       },
       "original": {

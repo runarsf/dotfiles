@@ -39,6 +39,7 @@ outputs.lib.mkDesktopModule config "wezterm" {
         cfg.exec' {
           inherit command;
         };
+        readOnly = true;
     };
     # TODO Make a generic way that to connect the terminal to socket,
     # shouldn't crash if the exec' function doesn't support it.
@@ -121,13 +122,6 @@ outputs.lib.mkDesktopModule config "wezterm" {
       # https://wezfurlong.org/wezterm/config/lua/config/index.html
       # FIXME Pane navigation doesn't work correctly
       extraConfig =
-        let
-          tab = ''
-            { 'index', padding = { left = 1, right = 0, }, },
-            'process',
-            zoomed,
-          '';
-        in
         # lua
         ''
           local wezterm = require 'wezterm'
@@ -159,17 +153,23 @@ outputs.lib.mkDesktopModule config "wezterm" {
               },
             },
             sections = {
-              tabline_a = { 'hostname' },
+              tabline_a = { { 'hostname', padding = { left = 1, right = 0, }, }, },
               tabline_b = { },
               tabline_c = { ' ' },
               tab_active = {
-                ${tab}
+                { 'index', padding = { left = 1, right = 0, }, },
+                'cwd',
+                zoomed,
               },
               tab_inactive = {
-                ${tab}
+                { 'index', padding = { left = 1, right = 0, }, },
+                { 'cwd', padding = { left = 1, right = 0, }, },
+                ':',
+                { 'process', padding = { left = 0, right = 1, }, },
+                zoomed,
               },
-              tabline_x = { 'battery' },
-              tabline_y = { 'datetime' },
+              tabline_x = { ' ' },
+              tabline_y = { { 'datetime', padding = { left = 0, right = 1, }, }, },
               tabline_z = { },
             },
             extensions = { },

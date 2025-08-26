@@ -83,6 +83,7 @@ let
             "waybar"
             "hyprlock"
             "spicetify"
+            "ghostty"
           ];
         }
       ];

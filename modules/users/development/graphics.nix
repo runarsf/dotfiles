@@ -13,5 +13,7 @@ outputs.lib.mkModule config ["dev" "graphics"]
     glm
   ];
 
-  modules.dev.python.packages = ["glad2"];
+  modules.dev.python.packages = with pkgs.python311Packages; [
+    glad
+  ];
 }
