@@ -239,10 +239,10 @@ in
         home.packages = with pkgs.unstable; [
           pokemmo-installer
           moonlight-qt
-          postman
           telegram-desktop
-          zed-editor
           openstackclient
+          bitwarden-cli
+          bitwarden-desktop
         ];
 
         # xdg.desktopEntries."steam-handler" = {
