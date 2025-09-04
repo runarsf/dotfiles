@@ -37,15 +37,5 @@ outputs.lib.mkDesktopModule config "steam" {
         };
       };
     };
-    services.udev = {
-      packages = let
-        dualsense-rules = pkgs.writeTextFile {
-          name = "60-dualsense.rules";
-          text = builtins.readFile ./dualsense.rules;
-          destination = "/etc/udev/rules.d/60-dualsense.rules";
-        };
-      in [dualsense-rules];
-      extraRules = builtins.readFile ./dualsense.rules;
-    };
   };
 }
