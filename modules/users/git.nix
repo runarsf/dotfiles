@@ -41,6 +41,10 @@ outputs.lib.mkModule config "git" {
       quick = "!fn() { git add -A && git commit --allow-empty -m \"$*\" && git push; }; fn";
       again = "!fn() { git add -A && git commit --amend --no-edit --gpg-sign; }; fn";
 
+      poop =
+        # bash
+        ''!fn() { git push && { ${outputs.lib.getExe' pkgs.mplayer "mplayer"} "https://www.myinstants.com/media/sounds/fart-with-reverb.mp3" >/dev/null 2>&1; } || { ${outputs.lib.getExe' pkgs.mplayer "mplayer"} "https://www.myinstants.com/media/sounds/fart-meme-sound_qo90QRs.mp3" >/dev/null 2>&1; }; }; fn'';
+
       unstage = "reset --";
       discard = "!git reset --hard && git clean -df";
 
