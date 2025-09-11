@@ -17,12 +17,14 @@ outputs.lib.mkFor system hostname {
         # TODO Set this in hyprland config
         substituters = [
           "https://cache.nixos.org/"
+          "https://nix-community.cachix.org"
           "https://hyprland.cachix.org"
           "https://wezterm.cachix.org"
           # "https://cache.thalheim.io"
         ];
         trusted-public-keys = [
           "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+          "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
           "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
           "wezterm.cachix.org-1:kAbhjYUC9qvblTE+s7S+kl5XM1zVa4skO+E/1IDWdH0="
           # "cache.thalheim.io-1:R7msbosLEZKrxk/lKxf9BTjOOH7Ax3H0Qj0/6wiHOgc="
