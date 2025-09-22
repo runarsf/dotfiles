@@ -152,6 +152,7 @@ in
           outputs.lib.enable [
             "japanese"
             "steam"
+            "gaming"
             "ffxiv"
             "fun"
             "reaper"
@@ -171,6 +172,7 @@ in
           };
 
         home.packages = with pkgs.unstable; [
+          prismlauncher
           dolphin-emu-primehack
           code-cursor
           r2modman
