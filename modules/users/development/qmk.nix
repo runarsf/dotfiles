@@ -21,7 +21,7 @@ outputs.lib.mkModule config "qmk" {
           destination = "/etc/udev/rules.d/50-qmk.rules";
         };
       in [qmk-rules];
-      extraRules = builtins.readFile ./qmk.rules;
     };
   };
+  modules.udev.extraRules = [ ./qmk.rules ];
 }

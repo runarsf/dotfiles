@@ -8,7 +8,7 @@
       default = config.home.sessionVariables ? NIXOS_OZONE_WL;
       type = types.bool;
     };
-   defaultBrowser = mkOption {
+    defaultBrowser = mkOption {
       default =
         if (config.isDesktop)
         then (throw "defaultBrowser not set")
@@ -22,12 +22,21 @@
       default = [];
       type = types.listOf types.str;
     };
+    modules.udev.extraRules = mkOption {
+      default = [];
+      type = types.listOf <| types.either types.path types.str;
+        apply = rules:
+        with builtins; let
+          paths = rules |> filter isPath |> map readFile;
+          strings = rules |> filter isString;
+        in
+          [ paths strings ] |> outputs.lib.flatten |> builtins.concatStringsSep "\n";
+    };
   };
 
-  config = outputs.lib.deepMerge [
-    {home.sessionVariables.PATH = outputs.lib.concatStringsSep ":" (config.PATH ++ ["\${PATH}"]);}
-    (outputs.lib.mkIf (config.isDesktop && config.defaultBrowser != null) {
-      modules."${config.defaultBrowser}".enable = true;
-    })
-  ];
+  config = {
+    home.sessionVariables.PATH = outputs.lib.concatStringsSep ":" (config.PATH ++ ["\${PATH}"]);
+    modules."${config.defaultBrowser}".enable = config.isDesktop && config.defaultBrowser != null;
+    nixos.services.udev.extraRules = config.modules.udev.extraRules;
+  };
 }

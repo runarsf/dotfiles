@@ -21,14 +21,6 @@ outputs.lib.mkDesktopModule config "gaming" {
         game-devices-udev-rules
         steam
       ];
-
-      extraRules =
-        [
-          ./dualsense.rules
-          ./8bitdo.rules
-        ]
-        |> map builtins.readFile
-        |> builtins.concatStringsSep "\n";
     };
 
     environment.sessionVariables = {
@@ -42,4 +34,6 @@ outputs.lib.mkDesktopModule config "gaming" {
         + "/gamecontrollerdb.txt";
     };
   };
+
+  modules.udev.extraRules = [ ./dualsense.rules ./8bitdo.rules ];
 }
