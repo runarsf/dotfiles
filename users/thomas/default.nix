@@ -26,7 +26,6 @@ in
           "neovim"
           "zsh"
           "nushell"
-          "git"
           "gpg"
           "keychain"
           "nix"
@@ -52,11 +51,6 @@ in
           };
         };
 
-      programs.git = {
-        userName = "Thomas Espervik";
-        userEmail = "thoesp@protonmail.com";
-      };
-
       wayland.windowManager.hyprland.settings.bind = [
         ",Pause,exec,/nix/store/di3glqanq4y9fxwxmpmypaw3rvlkdwf1-wireplumber-0.5.8/bin/wpctl set-mute @DEFAULT_SOURCE@ toggle"
         "SUPER,P,exec,hyprctl keyword monitor DP-1,disable"
@@ -73,7 +67,6 @@ in
             "hyprland"
             "kitty"
             "writing"
-            "spotify"
             "sops-fonts"
             "bluetooth"
             "zen"
@@ -83,6 +76,10 @@ in
             "fastfetch"
           ]
           // {
+            spotify = {
+              enable = true;
+              spicetify = true;
+            };
             stylix = {
               enable = true;
               system-wide = true;

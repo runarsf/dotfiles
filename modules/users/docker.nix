@@ -12,10 +12,11 @@ outputs.lib.mkModule config "docker" {
         enable = true;
         enableOnBoot = true;
 
-        rootless = {
-          enable = true;
-          setSocketVariable = true;
-        };
+        # TODO: Allow rootless to run on port 80 and 443
+        # rootless = {
+        #   enable = true;
+        #   setSocketVariable = true;
+        # };
 
         autoPrune = {
           enable = true;
@@ -23,14 +24,14 @@ outputs.lib.mkModule config "docker" {
         };
       };
 
-      oci-containers.backend = outputs.lib.mkIf (!config.nixos.virtualisation.podman.enable) "docker";
+      oci-containers.backend = outputs.lib.mkDefault "docker";
     };
 
     networking.firewall.trustedInterfaces = [ "docker0" ];
 
     users.users."${name}".extraGroups = [ "docker" ];
 
-    environment.systemPackages = with pkgs.unstable; [ podman-compose ];
+    environment.systemPackages = with pkgs; [ docker-buildx ];
   };
 
   home.sessionVariables.COMPOSE_BAKE = "true";

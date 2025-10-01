@@ -156,7 +156,7 @@ in
                 hyprsunset.label = false;
                 hypridle = {
                   label = false;
-                  rightClick = "${getExe pkgs.mpv} --no-audio https://roundrobin3.videostreamingwowza.com/visdeurbel2/visdeurbel2.stream/playlist.m3u8";
+                  # rightClick = "${getExe pkgs.mpv} --no-audio https://roundrobin3.videostreamingwowza.com/visdeurbel2/visdeurbel2.stream/playlist.m3u8";
                 };
               };
               windowtitle.title_map =

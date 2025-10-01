@@ -168,7 +168,6 @@ in
             config.warn_about_missing_glyphs = false
             config.default_cursor_style = "SteadyBar"
             config.window_decorations = "NONE"
-            config.use_resize_increments = true
             config.window_padding = {
               left = 0,
               right = 0,
@@ -336,6 +335,8 @@ in
                 resize = 'SHIFT|ALT',
               },
             })
+
+            config.use_resize_increments = true
 
             return config
           '';

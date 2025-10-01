@@ -4,13 +4,13 @@ _: {
     emailSelector = {
       enable = true;
       extraEmails = [
-        "runarsfr@stud.ntnu.no"
+        "thomes@stud.ntnu.no"
       ];
     };
   };
 
   programs.git = {
-    userName = "Runar Fredagsvik";
-    userEmail = "i@runar.ch";
+    userName = "Thomas Espervik";
+    userEmail = "thoesp@protonmail.com";
   };
 }

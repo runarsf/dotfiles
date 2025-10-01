@@ -17,7 +17,7 @@ in
         outputs.lib.concatPaths {paths = ../../modules/users;}
         ++ outputs.lib.concatPaths {paths = ./config;};
 
-      defaultTerminal = "ghostty";
+      defaultTerminal = "wezterm";
       defaultBrowser = "zen";
       avatar = ./avatar.jpg;
 
@@ -26,7 +26,6 @@ in
           "neovim"
           "zsh"
           "nushell"
-          "git"
           "gpg"
           "keychain"
           "nix"
@@ -96,7 +95,7 @@ in
             "discord"
             "fonts"
             "vscode"
-            "hyprland"
+            "zed"
             "kitty"
             "writing"
             "spotify"
@@ -106,14 +105,18 @@ in
             "pipewire"
             "mpv"
             "docker"
+            "podman"
             "stremio"
             "camera"
             "zen"
             "logitech"
-            "ghostty"
             "localsend"
           ]
           // {
+            hyprland = {
+              enable = true;
+              animations = true;
+            };
             stylix = {
               enable = true;
               system-wide = true;
@@ -131,8 +134,11 @@ in
           sha256 = "sha256-oM1dYwzNn574TDVulQwmProIMmCNpHs72f6xIGdvEJM=";
         };
 
-        home.packages = with pkgs.unstable;
-          ifIsDesktop [
+        home.packages = with pkgs;
+          [
+            pass
+          ]
+          ++ ifIsDesktop [
             code-cursor
             windsurf
             vlc
@@ -211,11 +217,15 @@ in
             "easyeffects"
             "emulation"
             "iac"
+            "gaming"
           ]
           // {
             dev = {
               java.enable = true;
-              c.enable = true;
+              c = {
+                enable = true;
+                ide = true;
+              };
               graphics.enable = true;
               python = {
                 enable = true;
@@ -258,6 +268,10 @@ in
         #       ''
         #     } %u";
         # };
+
+        nixos = {
+          hardware.opengl.enable = true;
+        };
       };
 
       rpi = {

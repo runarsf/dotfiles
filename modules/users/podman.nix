@@ -16,7 +16,7 @@ outputs.lib.mkModule config "podman" {
 
       # systemd unit name: podman-<service>
       # journalctl -u podman-<service>.service
-      oci-containers.backend = "podman";
+      oci-containers.backend = outputs.lib.mkForce "podman";
     };
 
     environment.systemPackages = with pkgs; [podman-compose];
