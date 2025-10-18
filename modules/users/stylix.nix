@@ -4,17 +4,18 @@
   pkgs,
   name,
   ...
-}:
-let
+}: let
   stylix-config = {
     enable = true;
 
     polarity = "dark";
     image = config.modules.wallpaper;
 
-    targets = outputs.lib.disable [ "nixvim" ] // {
-      # qt.platform = "qtct";
-    };
+    targets =
+      outputs.lib.disable ["nixvim"]
+      // {
+        # qt.platform = "qtct";
+      };
 
     cursor = {
       package = pkgs.bibata-cursors;
@@ -67,8 +68,8 @@ let
       programs.hyprlock.settings.background.path = builtins.toString config.modules.wallpaper;
 
       services.hyprpaper.settings = {
-        preload = [ "${config.modules.wallpaper}" ];
-        wallpaper = [ ", ${config.modules.wallpaper}" ];
+        preload = ["${config.modules.wallpaper}"];
+        wallpaper = [", ${config.modules.wallpaper}"];
       };
     };
 
@@ -84,6 +85,7 @@ let
             "hyprlock"
             "spicetify"
             "ghostty"
+            "zed"
           ];
         }
       ];
@@ -113,13 +115,12 @@ let
       stylix = outputs.lib.deepMerge [
         stylix-config
         {
-          targets = outputs.lib.disable [ "grub" ];
+          targets = outputs.lib.disable ["grub"];
         }
       ];
     };
   };
-in
-{
+in {
   options = {
     modules = {
       wallpaper = outputs.lib.mkOption {

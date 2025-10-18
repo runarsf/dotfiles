@@ -1,6 +1,7 @@
 {
   config,
   pkgs,
+  inputs,
   outputs,
   ...
 }: let
@@ -101,8 +102,8 @@ in
       home.packages = [config.programs.wezterm.package];
       programs.wezterm = {
         enable = true;
+        package = inputs.wezterm.packages.${pkgs.stdenv.hostPlatform.system}.default;
         # https://wezfurlong.org/wezterm/config/lua/config/index.html
-        # FIXME Pane navigation doesn't work correctly
         extraConfig =
           # lua
           ''

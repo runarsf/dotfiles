@@ -9,6 +9,7 @@
         # TODO I have no clue where this one is required
         "dotnet-sdk-6.0.428"
         "dotnet-sdk-7.0.410"
+        "qtwebengine-5.15.19"
       ];
     };
     overlays = [

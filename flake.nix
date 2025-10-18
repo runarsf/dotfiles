@@ -53,6 +53,11 @@
       inputs.hyprland.follows = "hyprland";
     };
 
+    wezterm = {
+      url = "github:wez/wezterm?dir=nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     nix-flatpak.url = "github:gmodena/nix-flatpak";
 
     openconnect-sso = {

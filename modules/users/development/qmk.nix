@@ -5,11 +5,24 @@
   ...
 }:
 outputs.lib.mkModule config "qmk" {
-  home.packages = with pkgs; [
-    qmk
-    keymapp
-  ];
+  nixos = {
+    hardware.keyboard = {
+      zsa.enable = true;
+      qmk.enable = true;
+    };
+    services.udev.packages = with pkgs; [
+      qmk-udev-rules
+      qmk
+      via
+      vial
+    ];
+    environment.systemPackages = with pkgs; [
+      qmk
+      via
+      vial
+      python313Packages.appdirs
+    ];
+  };
 
-  nixos.hardware.keyboard.zsa.enable = true;
-  modules.udev.extraRules = [ ./qmk.rules ];
+  # modules.udev.extraRules = [./qmk.rules];
 }

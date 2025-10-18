@@ -218,6 +218,8 @@ in
             "emulation"
             "iac"
             "gaming"
+            "steam"
+            "qmk"
           ]
           // {
             dev = {
@@ -245,6 +247,8 @@ in
               };
             };
           };
+
+        programs.element-desktop.enable = true;
 
         home.packages = with pkgs.unstable; [
           pokemmo-installer

@@ -5,7 +5,7 @@
   ...
 }:
 outputs.lib.mkDesktopModule config "stremio" {
-  home.packages = with pkgs.unstable; [
+  home.packages = with pkgs; [
     (
       if config.modules.mpv.enable
       then
