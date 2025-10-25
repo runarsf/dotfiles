@@ -39,7 +39,7 @@ outputs.lib.mkModule config "ssh" {
     nixos = {
       # programs.ssh.startAgent = true;
       users.users."${name}".openssh.authorizedKeys.keys =
-        config.modules.ssh.keys.attrValues;
+        builtins.attrValues config.modules.ssh.keys;
     };
   };
 }

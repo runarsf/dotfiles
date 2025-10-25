@@ -102,7 +102,6 @@ outputs.lib.mkFor system hostname {
           "mullvad"
           "pipewire"
           "mpv"
-          "docker"
           "podman"
           "stremio"
           "camera"
@@ -284,6 +283,8 @@ outputs.lib.mkFor system hostname {
         outputs.lib.enable [
           "podman"
           "tmux"
+          ["services" "immich"]
+          ["services" "stremio"]
         ]
         // {
           nginx = {
