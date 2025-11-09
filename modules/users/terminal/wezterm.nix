@@ -102,7 +102,7 @@ in
       home.packages = [config.programs.wezterm.package];
       programs.wezterm = {
         enable = true;
-        package = inputs.wezterm.packages.${pkgs.stdenv.hostPlatform.system}.default;
+        package = pkgs.wezterm;
         # https://wezfurlong.org/wezterm/config/lua/config/index.html
         extraConfig =
           # lua

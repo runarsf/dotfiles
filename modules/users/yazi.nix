@@ -126,7 +126,7 @@ outputs.lib.mkModule config "yazi" {
               "d"
               "r"
             ];
-            run = "shell '${pkgs.xdragon}/bin/dragon -x -i -T \"$1\"' --confirm";
+            run = "shell '${pkgs.dragon-drop}/bin/dragon-drop -x -i -T \"$1\"' --confirm";
             desc = "Drag-and-drop the hovered file";
           }
           {
