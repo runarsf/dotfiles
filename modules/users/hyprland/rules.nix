@@ -8,13 +8,6 @@ _: {
     # TODO When monocle, remove gaps (or make obvious monocle is active at least)
     #  https://wiki.hyprland.org/Configuring/Workspace-Rules/#smart-gaps
 
-    "opacity 0.0 override, class:^(xwaylandvideobridge)$"
-    "noanim, class:^(xwaylandvideobridge)$"
-    "noinitialfocus, class:^(xwaylandvideobridge)$"
-    "maxsize 1 1, class:^(xwaylandvideobridge)$"
-    "noblur, class:^(xwaylandvideobridge)$"
-    "nofocus, class:^(xwaylandvideobridge)$"
-
     "pin, class:(pinentry-)(.*)"
     "stayfocused, class:(pinentry-)(.*)"
     "pin, class:(gcr-prompter)"

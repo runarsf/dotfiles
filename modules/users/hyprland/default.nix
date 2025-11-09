@@ -152,7 +152,6 @@ in
           ];
           exec-once = [
             "${outputs.lib.getExe pkgs.sway-audio-idle-inhibit}"
-            "${outputs.lib.getExe pkgs.kdePackages.xwaylandvideobridge}"
             "${outputs.lib.getExe pkgs.networkmanagerapplet}"
             "systemctl --user start hyprpolkitagent"
             "${hypr-gamemode}"
