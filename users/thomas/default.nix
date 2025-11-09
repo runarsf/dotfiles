@@ -149,12 +149,12 @@ in
           outputs.lib.enable [
             "japanese"
             "steam"
-            "gaming"
             "ffxiv"
             "fun"
             "reaper"
             "qmk"
             "easyeffects"
+            "zed"
           ]
           // {
             dev = {
@@ -168,10 +168,8 @@ in
             };
           };
 
-        home.packages = with pkgs.unstable; [
+        home.packages = with pkgs; [
           prismlauncher
-          dolphin-emu-primehack
-          code-cursor
           r2modman
         ];
 
@@ -180,10 +178,6 @@ in
           hardware = {
             amdgpu = {
               initrd.enable = true;
-              amdvlk = {
-                enable = true;
-                support32Bit.enable = true;
-              };
             };
             graphics = {
               enable = true;
