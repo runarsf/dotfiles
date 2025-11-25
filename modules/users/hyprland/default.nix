@@ -259,8 +259,8 @@ in
             };
 
             layerrule = [
-              "blur,wofi"
-              "blur,launcher"
+              "blur on, match:namespace wofi"
+              "blur on, match:namespace launcher"
             ];
           };
           animations = {

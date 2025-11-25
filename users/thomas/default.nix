@@ -256,9 +256,9 @@ in
             # "WLR_RENDERER_ALLOW_SOFTWARE,1"
           ];
 
-          windowrulev2 = [
-            "workspace 5, class:XIVLauncher.Core"
-            "workspace 5, class:Ffxiv_dx11.exe"
+          windowrule = [
+            "workspace 5, match:class XIVLauncher.Core"
+            "workspace 5, match:class Ffxiv_dx11.exe"
           ];
 
           workspace = let
