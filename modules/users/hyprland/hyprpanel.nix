@@ -43,12 +43,6 @@ let
       "󰀴"
       "Android Studio"
     ]
-    [
-      # FIXME This just makes the icon invisible
-      "class:xwaylandvideobridge"
-      ""
-      ""
-    ]
   ];
 in
   outputs.lib.mkDesktopModule config "hyprpanel" {

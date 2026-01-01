@@ -26,7 +26,7 @@ outputs.lib.mkDesktopModule config "writing" {
     unstable.typst
     libreoffice-fresh
     pandoc
-    poppler_utils
+    poppler-utils
     sc-im
     anki
     plantuml

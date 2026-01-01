@@ -53,11 +53,6 @@
       inputs.hyprland.follows = "hyprland";
     };
 
-    wezterm = {
-      url = "github:wez/wezterm?dir=nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     nix-flatpak.url = "github:gmodena/nix-flatpak";
 
     openconnect-sso = {
@@ -124,6 +119,12 @@
         users = ["runar"];
       };
 
+      anuc = lib.mkHost {
+        system = "x86_64-linux";
+        hostname = "anuc";
+        users = ["runar"];
+      };
+
       rpi = lib.mkHost {
         system = "aarch64-linux";
         hostname = "rpi";
@@ -141,13 +142,6 @@
         hostname = "toaster";
         users = ["thomas"];
       };
-
-      # TEMP sommerjobb :⁾
-      airfryer = lib.mkHost {
-        system = "x86_64-linux";
-        hostname = "airfryer";
-        users = ["thomas"];
-      };
     };
 
     homeConfigurations = {
@@ -157,6 +151,12 @@
         username = "runar";
         system = "x86_64-linux";
         hostname = "runix";
+      };
+
+      "runar@anuc" = lib.mkUser {
+        username = "runar";
+        system = "x86-64-linux";
+        hostname = "anuc";
       };
 
       "runar@rpi" = lib.mkUser {
@@ -177,13 +177,6 @@
         username = "thomas";
         system = "x86_64-linux";
         hostname = "toaster";
-      };
-
-      # TEMP sommerjobb :⁾
-      "thomas@airfryer" = lib.mkUser {
-        username = "thomas";
-        system = "x86_64-linux";
-        hostname = "airfryer";
       };
     };
 

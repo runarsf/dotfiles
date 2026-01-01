@@ -15,7 +15,10 @@ outputs.lib.mkModule config "ssh" {
 
   config = {
     # services.ssh-agent.enable = true;
-    programs.ssh.addKeysToAgent = "yes";
+    programs.ssh = {
+      enableDefaultConfig = false;
+      matchBlocks."*".addKeysToAgent = "yes";
+    };
     # TODO users.extraUsers.root.openssh.authorizedKeys.keys
 
     # NOTE https://github.com/nix-community/home-manager/issues/322#issuecomment-1856128020
@@ -39,7 +42,7 @@ outputs.lib.mkModule config "ssh" {
     nixos = {
       # programs.ssh.startAgent = true;
       users.users."${name}".openssh.authorizedKeys.keys =
-        config.modules.ssh.keys.attrValues;
+        builtins.attrValues config.modules.ssh.keys;
     };
   };
 }

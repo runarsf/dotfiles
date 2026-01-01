@@ -17,6 +17,6 @@ outputs.lib.mkModule config "gpg" {
       # else
       #   true;
     };
-    environment.systemPackages = with pkgs; [pinentry pinentry-curses];
+    environment.systemPackages = with pkgs; [pinentry-gnome3 pinentry-curses];
   };
 }

@@ -9,8 +9,8 @@ _: {
     };
   };
 
-  programs.git = {
-    userName = "Thomas Espervik";
-    userEmail = "thoesp@protonmail.com";
+  programs.git.settings = {
+    user.name = "Thomas Espervik";
+    user.email = "thoesp@protonmail.com";
   };
 }

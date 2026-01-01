@@ -149,12 +149,12 @@ in
           outputs.lib.enable [
             "japanese"
             "steam"
-            "gaming"
             "ffxiv"
             "fun"
             "reaper"
             "qmk"
             "easyeffects"
+            "zed"
           ]
           // {
             dev = {
@@ -170,8 +170,6 @@ in
 
         home.packages = with pkgs; [
           prismlauncher
-          dolphin-emu-primehack
-          code-cursor
           r2modman
         ];
 
@@ -180,10 +178,6 @@ in
           hardware = {
             amdgpu = {
               initrd.enable = true;
-              amdvlk = {
-                enable = true;
-                support32Bit.enable = true;
-              };
             };
             graphics = {
               enable = true;
@@ -262,9 +256,9 @@ in
             # "WLR_RENDERER_ALLOW_SOFTWARE,1"
           ];
 
-          windowrulev2 = [
-            "workspace 5, class:XIVLauncher.Core"
-            "workspace 5, class:Ffxiv_dx11.exe"
+          windowrule = [
+            "workspace 5, match:class XIVLauncher.Core"
+            "workspace 5, match:class Ffxiv_dx11.exe"
           ];
 
           workspace = let

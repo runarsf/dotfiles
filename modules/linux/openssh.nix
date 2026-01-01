@@ -1,5 +1,5 @@
 _: {
-  networking.firewall = {
+  services.openssh = {
     enable = true;
   };
 }
