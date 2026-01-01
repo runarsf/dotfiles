@@ -9,6 +9,9 @@
     nixpkgs-master.url = "github:nixos/nixpkgs/master";
     nur.url = "github:nix-community/nur";
 
+    # https://github.com/NixOS/nixpkgs/issues/437992#issuecomment-3380880457
+    nixpkgs-stremio.url = "github:nixos/nixpkgs/25845a52fee515073b0bcf8503ed0f2f78ce89a5";
+
     flake-utils.url = "github:numtide/flake-utils";
     treefmt-nix.url = "github:numtide/treefmt-nix";
 
