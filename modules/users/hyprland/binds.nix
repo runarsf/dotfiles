@@ -18,7 +18,7 @@
         "SUPER, Return, exec, uwsm app -- ${config.modules.terminal.exec []}"
         "SUPER, Q, killactive"
         ''SUPER SHIFT, E, exec, loginctl terminate-user ""''
-        "SUPER, E, exec, uwsm app -- ${getExe pkgs.nemo}"
+        "SUPER, E, exec, uwsm app -- ${getExe pkgs.nautilus}"
         "SUPER SHIFT, F, togglefloating"
         "SUPER ALT, F, workspaceopt, allfloat"
         "SUPER, F, fullscreen, 0"

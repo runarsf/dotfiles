@@ -114,7 +114,7 @@ in
                 showIcon = false;
               };
               media = {
-                middleClick = getExe pkgs.unstable.easyeffects;
+                middleClick = getExe pkgs.easyeffects;
                 rightClick = getExe pkgs.pwvucontrol;
                 show_active_only = true;
               };

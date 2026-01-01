@@ -168,7 +168,7 @@ in
             };
           };
 
-        home.packages = with pkgs.unstable; [
+        home.packages = with pkgs; [
           prismlauncher
           dolphin-emu-primehack
           code-cursor
@@ -188,8 +188,8 @@ in
             graphics = {
               enable = true;
               enable32Bit = true;
-              package = with pkgs.unstable; mesa;
-              # extraPackages = with pkgs.unstable; [ amdvlk mesa ];
+              package = with pkgs; mesa;
+              # extraPackages = with pkgs; [ amdvlk mesa ];
             };
 
             bluetooth.powerOnBoot = true;

@@ -27,6 +27,7 @@ outputs.lib.mkModule' config "shell-utils" true rec {
       fx
       moreutils
       ncdu
+      dysk
       killall
       inotify-tools
       libnotify

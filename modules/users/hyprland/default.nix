@@ -152,19 +152,19 @@ in
           ];
           exec-once = [
             "${outputs.lib.getExe pkgs.sway-audio-idle-inhibit}"
-            "${outputs.lib.getExe pkgs.kdePackages.xwaylandvideobridge}"
             "${outputs.lib.getExe pkgs.networkmanagerapplet}"
             "systemctl --user start hyprpolkitagent"
             "${hypr-gamemode}"
           ];
           # chromakey_background = "1,4,9";
           plugin = {
-            wslayout = {
-              default_layout = "master";
-            };
-            hyprwinwrap = {
-              class = "mpv";
-            };
+            # wslayout = {
+            #   default_layout = "master";
+            # };
+            # visdeurbel
+            # hyprwinwrap = {
+            #   class = "mpv";
+            # };
             dynamic-cursors = outputs.lib.mkIf config.modules.hyprland.animations {
               enabled = true;
               mode = "tilt";
@@ -183,8 +183,8 @@ in
             #   monitor_gap = 30;
             # };
 
-            # layout = "workspacelayout";
             layout = "master";
+            # layout = "workspacelayout";
             resize_on_border = false;
           };
           input = {
@@ -223,6 +223,7 @@ in
           };
           misc = {
             disable_hyprland_logo = true;
+            enable_anr_dialog = false;
             force_default_wallpaper = 0;
             enable_swallow = true;
             key_press_enables_dpms = true;

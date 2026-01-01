@@ -13,10 +13,7 @@ let
   configPath = ./config;
 in
   outputs.lib.mkDesktopModule config "easyeffects" {
-    services.easyeffects = {
-      enable = true;
-      package = pkgs.unstable.easyeffects;
-    };
+    services.easyeffects.enable = true;
 
     # https://www.reddit.com/r/oratory1990/wiki/index/list_of_presets/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
     xdg.configFile."easyeffects/" = outputs.lib.mkIf (builtins.pathExists configPath) {

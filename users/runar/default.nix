@@ -146,6 +146,8 @@ in
             guvcview
             obs-studio
             chromium
+            feishin
+            audacity
             # openconnect-sso --server vpn.ntnu.no
             inputs.openconnect-sso.packages."${pkgs.system}".default
           ];
@@ -232,6 +234,7 @@ in
               python = {
                 enable = true;
                 packageName = "python311";
+                presets.jupyter.enable = true;
               };
               rust = {
                 enable = true;
@@ -250,7 +253,7 @@ in
 
         programs.element-desktop.enable = true;
 
-        home.packages = with pkgs.unstable; [
+        home.packages = with pkgs; [
           pokemmo-installer
           moonlight-qt
           telegram-desktop

@@ -8,10 +8,12 @@ outputs.lib.mkDesktopModule config "zed" {
   programs = {
     zed-editor = {
       enable = true;
-      package = pkgs.unstable.zed-editor;
+      package = pkgs.master.zed-editor;
     };
-    television = {
-      enable = true;
-    };
+    television.enable = true;
   };
+
+  home.packages = with pkgs; [
+    ansifilter
+  ];
 }

@@ -8,7 +8,6 @@ outputs.lib.mkDesktopModule config "alacritty" {
   # https://alacritty.org/config-alacritty.html
   programs.alacritty = {
     enable = true;
-    package = pkgs.unstable.alacritty;
     settings = {
       window.dynamic_padding = true;
       font = {

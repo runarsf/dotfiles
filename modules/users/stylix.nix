@@ -80,6 +80,7 @@
           targets = outputs.lib.disable [
             "vscode"
             "hyprland"
+            # "hyprpanel"
             "kitty"
             "waybar"
             "hyprlock"
