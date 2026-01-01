@@ -21,7 +21,6 @@ in
           "plugdev"
           "kvm"
         ];
-        services.udev.packages = with pkgs; [android-udev-rules];
         environment.systemPackages = with pkgs; [android-tools];
       };
 

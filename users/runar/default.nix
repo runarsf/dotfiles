@@ -17,7 +17,7 @@ outputs.lib.mkFor system hostname {
 
     # TODO: Refactor implementation
     defaultTerminal = "wezterm";
-    # defaultBrowser = "zen";
+    defaultBrowser = "zen";
     avatar = ./avatar.jpg;
 
     modules =
@@ -137,7 +137,6 @@ outputs.lib.mkFor system hostname {
         ]
         ++ outputs.lib.optionals config.isDesktop [
           code-cursor
-          windsurf
           vlc
           p7zip
           guvcview
@@ -215,13 +214,13 @@ outputs.lib.mkFor system hostname {
           "kvm"
           "easyeffects"
           "emulation"
-          "iac"
           "gaming"
           "steam"
           "qmk"
         ]
         // {
           dev = {
+            iac.enable = true;
             java.enable = true;
             c = {
               enable = true;
@@ -231,46 +230,6 @@ outputs.lib.mkFor system hostname {
             python = {
               enable = true;
               packageName = "python311";
-            };
-            rust = {
-              enable = true;
-              ide = true;
-            };
-            go = {
-              enable = true;
-              ide = true;
-            };
-            android = {
-              enable = true;
-              ide = true;
-            };
-          };
-        };
-      # FIXME Using dev.go and dev.go.ide in lib.enable breaks and neither get enabled
-      modules =
-        outputs.lib.enable [
-          "ctf"
-          "audiorelay"
-          "kvm"
-          "easyeffects"
-          "emulation"
-          "iac"
-          "gaming"
-          "steam"
-          "qmk"
-        ]
-        // {
-          dev = {
-            java.enable = true;
-            c = {
-              enable = true;
-              ide = true;
-            };
-            graphics.enable = true;
-            python = {
-              enable = true;
-              packageName = "python311";
-              presets.jupyter.enable = true;
             };
             rust = {
               enable = true;
@@ -289,13 +248,9 @@ outputs.lib.mkFor system hostname {
 
       programs.element-desktop.enable = true;
 
-      home.packages = with pkgs.unstable; [
+      home.packages = with pkgs; [
         pokemmo-installer
-        moonlight-qt
         telegram-desktop
-        openstackclient
-        bitwarden-cli
-        bitwarden-desktop
       ];
 
       # xdg.desktopEntries."steam-handler" = {
