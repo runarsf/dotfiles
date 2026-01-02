@@ -37,13 +37,14 @@ in
             enable = true;
             ageKeys = ["${config.home.homeDirectory}/.ssh/id_nix"];
             privateKeys = [
-              "id_priv"
+              # "id_priv"
             ];
           };
           ssh = {
             enable = true;
             keys = {
-              id_nix = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJFuposVT3zCdJsOE36vhz0N5gVYj5rom+gu4/qnKBLa majus";
+              id_nix = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDOLOJZh9s8msIwJvG8utSJ0R2OlrLOzY7YXGQS2HVj1 nix";
+              id_priv = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJFuposVT3zCdJsOE36vhz0N5gVYj5rom+gu4/qnKBLa majus";
             };
           };
         };
@@ -59,8 +60,6 @@ in
             "fonts"
             "vscode"
             "hyprland"
-            "kitty"
-            "writing"
             "sops-fonts"
             "bluetooth"
             "gaming"
@@ -86,7 +85,7 @@ in
             };
           };
 
-        home.packages = with pkgs; ifIsDesktop [inputs.openconnect-sso.packages."${pkgs.system}".default];
+        # home.packages = with pkgs; ifIsDesktop [inputs.openconnect-sso.packages."${pkgs.system}".default];
 
         programs.fastfetch.settings.logo = {
           source =
@@ -135,8 +134,10 @@ in
             "zed"
             "logitech"
             "wootility"
-            "javascript"
           ]
+          // {
+            dev.javascript.enable = true;
+          };
 
         home.packages = with pkgs; [
           prismlauncher

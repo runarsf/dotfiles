@@ -98,7 +98,7 @@
     };
 
     vault = {
-      url = "git+ssh://git@github.com/runarsf/vault";
+      url = "git+ssh://git@github.com/Boiing587/vault";
       flake = false;
     };
   };
@@ -150,7 +150,7 @@
         system = "x86_64-linux";
         hostname = "roomba";
         users = ["majus"];
-      }
+      };
     };
 
     homeConfigurations = {
@@ -188,13 +188,13 @@
         hostname = "toaster";
       };
 
-      majus = lib.mkUser {username = "majus"}
+      majus = lib.mkUser {username = "majus";};
 
       "majus@roomba" = lib.mkUser {
         username = "majus";
         system = "x86_64-linux";
         hostname = "roomba";
-      }
+      };
     };
 
     formatter = inputs.flake-utils.eachDefaultSystem (
