@@ -18,5 +18,7 @@ _: {
   boot.kernelParams = [
     "modset=1"
     "fbdev=1"
+    "pcie_port_pm=off"
+    "pcie_aspm.policy=performance"
   ];
 }

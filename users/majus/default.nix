@@ -1,4 +1,5 @@
 {
+  lib,
   config,
   inputs,
   osConfig,
@@ -132,16 +133,53 @@ in
             "ffxiv"
             "easyeffects"
             "zed"
+            "kitty"
             "logitech"
             "wootility"
+            "streaming"
           ]
           // {
             dev.javascript.enable = true;
           };
 
+        programs.hyprpanel.settings.bar.layouts = {
+          "0" = lib.mkForce {
+            left = [
+              "dashboard"
+              "workspaces"
+              "windowtitle"
+              "systray"
+            ];
+            middle = ["media"];
+            right = [
+              "volume"
+              "bluetooth"
+              "hypridle"
+              "network"
+              "cpu"
+              "ram"
+              "clock"
+              "notifications"
+            ];
+          };
+          "1" = {
+            left = [
+              "dashboard"
+              "workspaces"
+              "windowtitle"
+            ];
+            middle = ["media"];
+            right = [
+              "clock"
+              "notifications"
+            ];
+          };
+        };
+
         home.packages = with pkgs; [
           prismlauncher
           r2modman
+          bitwarden-desktop
         ];
 
         nixos = {
@@ -233,8 +271,8 @@ in
           ];
 
           workspace = let
-            primary = "monitor:DP-1";
-            secondary = "monitor:HDMI-A-1";
+            primary = "monitor:DP-2";
+            secondary = "monitor:DP-3";
           in [
             "4, ${primary}"
             "10, ${primary}"
