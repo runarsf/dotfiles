@@ -4844,17 +4844,17 @@
     "vault_2": {
       "flake": false,
       "locked": {
-        "lastModified": 1763389251,
-        "narHash": "sha256-GZ9bYfHplaJNWP690Qn+KmPTSz4kjzDni+FtGPivCN8=",
+        "lastModified": 1767320123,
+        "narHash": "sha256-Tj57MikawBn38M7NVSGyM+dE02paJpbcnIvq2lZDR0Q=",
         "ref": "refs/heads/main",
-        "rev": "397b27cd20271b2221594af058ed46060a930b51",
-        "revCount": 42,
+        "rev": "b52df0c602f26667cb6151833f5c0fac8d4417bd",
+        "revCount": 44,
         "type": "git",
-        "url": "ssh://git@github.com/runarsf/vault"
+        "url": "ssh://git@github.com/Boiing587/vault"
       },
       "original": {
         "type": "git",
-        "url": "ssh://git@github.com/runarsf/vault"
+        "url": "ssh://git@github.com/Boiing587/vault"
       }
     },
     "wezterm": {
