@@ -209,7 +209,6 @@ outputs.lib.mkFor system hostname {
       # FIXME Using dev.go and dev.go.ide in lib.enable breaks and neither get enabled
       modules =
         outputs.lib.enable [
-          "ctf"
           "audiorelay"
           "kvm"
           "easyeffects"
