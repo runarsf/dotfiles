@@ -177,7 +177,7 @@ in
         };
 
         home.packages = with pkgs; [
-          prismlauncher
+          modrinth-app
           r2modman
           bitwarden-desktop
         ];
