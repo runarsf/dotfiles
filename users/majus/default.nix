@@ -183,6 +183,8 @@ in
         ];
 
         nixos = {
+          services.flatpak.enable = true;
+
           environment.systemPackages = with pkgs; [amdgpu_top corectrl];
           hardware = {
             amdgpu = {
