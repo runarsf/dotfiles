@@ -101,6 +101,8 @@
       url = "git+ssh://git@github.com/runarsf/vault";
       flake = false;
     };
+
+    hytale-launcher.url = "github:JPyke3/hytale-launcher-nix";
   };
 
   outputs = inputs @ {self, ...}: let
