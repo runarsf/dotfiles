@@ -50,11 +50,6 @@ in
             };
           };
         };
-
-      wayland.windowManager.hyprland.settings.bind = [
-        ",Pause,exec,/nix/store/di3glqanq4y9fxwxmpmypaw3rvlkdwf1-wireplumber-0.5.8/bin/wpctl set-mute @DEFAULT_SOURCE@ toggle"
-        "SUPER,P,exec,hyprctl keyword monitor DP-1,disable"
-      ];
     };
 
     systems = {
@@ -150,6 +145,7 @@ in
             "japanese"
             "steam"
             "ffxiv"
+            "hytale"
             "fun"
             "reaper"
             "qmk"
@@ -166,19 +162,20 @@ in
               java.enable = true;
               # python.packages = with pkgs.python311Packages; [manim];
             };
+            udev.extraRules = [../../modules/users/gaming/dualsense.rules];
           };
 
         home.packages = with pkgs; [
           prismlauncher
+          osu-lazer-bin
+          rpcs3
           r2modman
         ];
 
         nixos = {
           environment.systemPackages = with pkgs; [amdgpu_top corectrl];
           hardware = {
-            amdgpu = {
-              initrd.enable = true;
-            };
+            amdgpu.initrd.enable = true;
             graphics = {
               enable = true;
               enable32Bit = true;
@@ -187,9 +184,13 @@ in
             };
 
             bluetooth.powerOnBoot = true;
+            opentabletdriver.enable = true;
           };
 
-          services.xserver.videoDrivers = ["modesetting"];
+          services = {
+            xserver.videoDrivers = ["modesetting"];
+            tailscale.enable = true;
+          };
 
           # systemd.tmpfiles.rules = [
           #   "L+    /opt/rocm/hip   -    -    -     -    ${pkgs.rocmPackages.clr}"
@@ -229,6 +230,11 @@ in
         };
 
         wayland.windowManager.hyprland.settings = {
+          input.tablet.left_handed = true;
+          bind = [
+            ",Pause,exec,/nix/store/di3glqanq4y9fxwxmpmypaw3rvlkdwf1-wireplumber-0.5.8/bin/wpctl set-mute @DEFAULT_SOURCE@ toggle"
+            "SUPER,P,exec,hyprctl keyword monitor DP-1,disable"
+          ];
           env = [
             "GDK_BACKEND,wayland,x11"
             "SDL_VIDEODRIVER,wayland,x11"
@@ -259,6 +265,7 @@ in
           windowrule = [
             "workspace 5, match:class XIVLauncher.Core"
             "workspace 5, match:class Ffxiv_dx11.exe"
+            "workspace 5, match:class HytaleClient"
           ];
 
           workspace = let
@@ -281,6 +288,7 @@ in
             "japanese"
             "ctf"
             "steam"
+            "gaming"
             "fun"
             "docker"
           ]
