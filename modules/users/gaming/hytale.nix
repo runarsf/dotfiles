@@ -6,5 +6,5 @@
   ...
 }:
 outputs.lib.mkDesktopModule config "hytale" {
-  home.packages = [inputs.hytale-launcher.packages.${pkgs.system}.default];
+  home.packages = [inputs.hytale-launcher.packages.${pkgs.stdenv.hostPlatform.system}.default];
 }

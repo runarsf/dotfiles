@@ -35,7 +35,7 @@ outputs.lib.mkDesktopModule config "sops-fonts" {
     };
     Install.WantedBy = ["default.target"];
     Service.ExecStart =
-      builtins.toString
+      toString
       (pkgs.writeShellScript "install-fonts" ''
         #!/run/current-system/sw/bin/bash
         set -o errexit

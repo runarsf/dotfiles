@@ -69,7 +69,6 @@ in
     config = {
       modules = outputs.lib.enable [
         "wayland"
-        "fuzzel"
         "hypridle"
         "hyprlock"
         "pyprland"

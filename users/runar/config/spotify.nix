@@ -5,7 +5,7 @@
   ...
 }: {
   programs.spicetify = {
-    theme = outputs.lib.mkForce inputs.spicetify-nix.legacyPackages.${pkgs.system}.themes.text;
+    theme = outputs.lib.mkForce inputs.spicetify-nix.legacyPackages.${pkgs.stdenv.hostPlatform.system}.themes.text;
     colorScheme = "custom";
     customColorScheme = let
       c = hex: builtins.substring 1 (builtins.stringLength hex - 1) hex;

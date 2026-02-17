@@ -42,7 +42,7 @@
   #   })
   # ];
 
-  # home.packages = with pkgs; [ inputs.firefox-nightly.packages.${pkgs.system}.firefox-nightly-bin ];
+  # home.packages = with pkgs; [ inputs.firefox-nightly.packages.${pkgs.stdenv.hostPlatform.system}.firefox-nightly-bin ];
 
   programs.firefox = {
     enable = true;

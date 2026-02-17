@@ -24,7 +24,6 @@ in {
         "SUPER ALT, F, workspaceopt, allfloat"
         "SUPER, F, fullscreen, 0"
         "SUPER, space, fullscreen, 1"
-        "SUPER, D, exec, ${runOnce ''${getExe config.programs.fuzzel.package} --launch-prefix="uwsm app -- "''}"
         "SUPER, A, exec, ${./. + /bin/hypr-pin}"
         "ALT, P, exec, ${run ''${getExe pkgs.grim} -g "$(${getExe pkgs.slurp})" - | ${getExe' pkgs.imagemagick "convert"} - -shave 1x1 PNG:- | ${getExe' pkgs.wl-clipboard "wl-copy"}''}"
         "ALT SHIFT, P, exec, ${run ''${getExe pkgs.grim} -g "$(${getExe pkgs.slurp})" - | ${getExe' pkgs.imagemagick "convert"} - -shave 1x1 PNG:- | ${getExe pkgs.swappy} -f -''}"

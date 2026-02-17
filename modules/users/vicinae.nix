@@ -5,7 +5,7 @@
   pkgs,
   ...
 }: let
-  inherit (outputs.lib) run runOnce toggle getExe';
+  inherit (outputs.lib) run getExe';
 in
   {
     imports = [
@@ -54,7 +54,7 @@ in
     ];
 
     wayland.windowManager.hyprland.settings = {
-      bind = [''SUPER, R, exec, ${run "vicinae toggle"}''];
+      bind = [''SUPER, D, exec, ${run "vicinae toggle"}''];
       layerrule = [
         {
           name = "vicinae-blur";

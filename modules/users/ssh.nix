@@ -13,7 +13,7 @@ outputs.lib.mkModule config "ssh" {
     };
     signingKey = mkOption {
       default = null;
-      type = types.str;
+      type = types.nullOr types.str;
       description = "SSH key used for signing";
     };
   };
