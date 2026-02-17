@@ -105,7 +105,7 @@ in
             };
           };
 
-        home.packages = with pkgs; ifIsDesktop [inputs.openconnect-sso.packages."${pkgs.system}".default];
+        home.packages = with pkgs; ifIsDesktop [inputs.openconnect-sso.packages."${pkgs.stdenv.hostPlatform.system}".default];
 
         programs.fastfetch.settings.logo = {
           source =

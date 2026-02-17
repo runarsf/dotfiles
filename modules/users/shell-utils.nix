@@ -10,7 +10,7 @@ outputs.lib.mkModule' config "shell-utils" true rec {
 
   home = {
     packages = with pkgs; [
-      inputs.alien.packages.${system}.nix-alien
+      inputs.alien.packages.${pkgs.stdenv.hostPlatform.system}.nix-alien
       bat
       sad
       socat
@@ -29,6 +29,7 @@ outputs.lib.mkModule' config "shell-utils" true rec {
       ncdu
       dysk
       killall
+      pass
       inotify-tools
       libnotify
       libsixel

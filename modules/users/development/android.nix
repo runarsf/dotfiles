@@ -15,7 +15,6 @@ in
 
     config = {
       nixos = {
-        programs.adb.enable = true;
         users.users."${name}".extraGroups = [
           "adbusers"
           "plugdev"
@@ -34,8 +33,7 @@ in
           # gtk3
         ]
         ++ outputs.lib.optionals (config.isDesktop && self.ide) [
-          android-studio
-          jetbrains.idea-ultimate
+          unstable.android-studio
         ];
 
       nixpkgs.config.android_sdk.accept_license = true;

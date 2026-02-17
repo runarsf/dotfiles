@@ -26,16 +26,6 @@
         };
       })
 
-      (_: prev: {
-        inherit
-          (import inputs.nixpkgs-stremio {
-            inherit (prev) config;
-            system = prev.stdenv.hostPlatform.system;
-          })
-          stremio
-          ;
-      })
-
       (
         _: prev:
         import ../../packages {

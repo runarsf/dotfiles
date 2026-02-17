@@ -11,6 +11,11 @@ outputs.lib.mkModule config "ssh" {
       type = types.attrsOf types.str;
       description = "List of public key strings";
     };
+    signingKey = mkOption {
+      default = null;
+      type = types.str;
+      description = "SSH key used for signing";
+    };
   };
 
   config = {

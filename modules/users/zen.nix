@@ -150,7 +150,7 @@ in
   outputs.lib.mkDesktopModule config "zen" {
     nixpkgs.overlays = [
       (_: prev: {
-        zen-browser = inputs.zen-browser.packages.${pkgs.system}.default;
+        zen-browser = inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default;
         # zen-browser = inputs.zen-browser.packages.${pkgs.system}.default.overrideAttrs (oldAttrs: rec {
         #   version = "1.7.6b";
         #   src = pkgs.fetchurl {

@@ -32,7 +32,7 @@ outputs.lib.mkFor system hostname {
         "fastfetch"
       ]
       // {
-        wallpaper = ./wallpaper.jpg;
+        wallpaper = ./wallpapers/jars.jpg;
         sops = {
           enable = true;
           ageKeys = ["${config.home.homeDirectory}/.ssh/id_nix"];
@@ -43,6 +43,7 @@ outputs.lib.mkFor system hostname {
         };
         ssh = {
           enable = true;
+          signingKey = "id_priv";
           keys = {
             id_nix = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGwThBXxJMvEDSf/WUlXtgvs+R5TTZwILnAvCp5Zl02Z nix";
             id_priv = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBT5zQFdVRooe5SfFZ2gKpruHF7FTw1OycTczRrLsR+M i@runar.ch";
@@ -94,25 +95,25 @@ outputs.lib.mkFor system hostname {
           "fonts"
           "vscode"
           "zed"
-          "kitty"
           "writing"
           "spotify"
           "sops-fonts"
           "bluetooth"
-          "mullvad"
           "pipewire"
-          "mpv"
           "podman"
-          "stremio"
+          "mpv"
+          # "stremio"
           "camera"
           "zen"
           "logitech"
           "localsend"
+          "noctalia"
+          "vicinae"
         ]
         // {
           hyprland = {
             enable = true;
-            animations = true;
+            animations = false;
           };
           stylix = {
             enable = true;
@@ -126,26 +127,14 @@ outputs.lib.mkFor system hostname {
           flatpak.enable = config.isDesktop;
         };
 
-      home.file.".local/share/warp-terminal/themes/ayu_dark.yaml".source = pkgs.fetchurl {
-        url = "https://raw.githubusercontent.com/wkei/ayu-warp/805f9c58b9b62a7362d97bf0bb6c9f5c9da51e4b/themes/ayu_dark.yaml";
-        sha256 = "sha256-oM1dYwzNn574TDVulQwmProIMmCNpHs72f6xIGdvEJM=";
-      };
-
       home.packages = with pkgs;
-        [
-          pass
-        ]
-        ++ outputs.lib.optionals config.isDesktop [
-          code-cursor
-          vlc
-          p7zip
-          guvcview
+        outputs.lib.optionals config.isDesktop [
           obs-studio
           chromium
           feishin
-          audacity
+          fluffychat
           # openconnect-sso --server vpn.ntnu.no
-          inputs.openconnect-sso.packages."${pkgs.system}".default
+          inputs.openconnect-sso.packages."${pkgs.stdenv.hostPlatform.system}".default
         ];
 
       nixos = {
@@ -173,7 +162,7 @@ outputs.lib.mkFor system hostname {
           cheese # photo booth
           eog # image viewer
           epiphany # web browser
-          gedit # text editor
+          # gedit # text editor
           simple-scan # document scanner
           totem # video player
           yelp # help viewer
@@ -212,32 +201,15 @@ outputs.lib.mkFor system hostname {
           "audiorelay"
           "kvm"
           "easyeffects"
-          "emulation"
-          "gaming"
-          "steam"
           "qmk"
         ]
         // {
           dev = {
-            iac.enable = true;
-            java.enable = true;
-            c = {
-              enable = true;
-              ide = true;
-            };
-            graphics.enable = true;
             python = {
               enable = true;
               packageName = "python311";
             };
-            rust = {
-              enable = true;
-              ide = true;
-            };
-            go = {
-              enable = true;
-              ide = true;
-            };
+            go.enable = true;
             android = {
               enable = true;
               ide = true;
@@ -265,10 +237,6 @@ outputs.lib.mkFor system hostname {
       #       ''
       #     } %u";
       # };
-
-      nixos = {
-        hardware.opengl.enable = true;
-      };
     };
 
     anuc = {
@@ -293,10 +261,6 @@ outputs.lib.mkFor system hostname {
 
     rpi = {
       isDesktop = false;
-
-      modules = outputs.lib.enable [
-        "podman"
-      ];
     };
   };
 }

@@ -4,34 +4,30 @@
   pkgs,
   hypr-gamemode,
   hypr-workspace,
-  lock,
   hypr-snap,
   hypr-move,
   ...
-}: {
+}: let
+  inherit (outputs.lib) run runOnce toggle;
+in {
   wayland.windowManager.hyprland = with outputs.lib; {
     settings = {
       binds = {
         allow_workspace_cycles = true;
       };
       bind = [
-        "SUPER, Return, exec, uwsm app -- ${config.modules.terminal.exec []}"
+        "SUPER, Return, exec, ${run <| config.modules.terminal.exec []}"
         "SUPER, Q, killactive"
         ''SUPER SHIFT, E, exec, loginctl terminate-user ""''
-        "SUPER, E, exec, uwsm app -- ${getExe pkgs.nautilus}"
+        "SUPER, E, exec, ${run <| getExe pkgs.nautilus}"
         "SUPER SHIFT, F, togglefloating"
         "SUPER ALT, F, workspaceopt, allfloat"
         "SUPER, F, fullscreen, 0"
         "SUPER, space, fullscreen, 1"
-        ''SUPER, D, exec, ${getExe config.programs.fuzzel.package} --launch-prefix="uwsm app -- "''
+        "SUPER, D, exec, ${runOnce ''${getExe config.programs.fuzzel.package} --launch-prefix="uwsm app -- "''}"
         "SUPER, A, exec, ${./. + /bin/hypr-pin}"
-        ''ALT, P, exec, ${getExe pkgs.grim} -g "$(${getExe pkgs.slurp})" - | ${getExe' pkgs.imagemagick "convert"} - -shave 1x1 PNG:- | ${getExe' pkgs.wl-clipboard "wl-copy"}''
-        ''ALT SHIFT, P, exec, ${getExe pkgs.grim} -g "$(${getExe pkgs.slurp})" - | ${getExe' pkgs.imagemagick "convert"} - -shave 1x1 PNG:- | ${getExe pkgs.swappy} -f -''
-        # ''ALT CTRL, P, exec, (${pkgs.killall}/bin/killall -SIGINT wf-recorder && (${pkgs.wl-clipboard}/bin/wl-copy < /tmp/screenrecord.mp4; ${pkgs.nemo}/bin/nemo /tmp/screenrecord.mp4)) || (set -euo pipefail; GEOMETRY="$(${pkgs.slurp}/bin/slurp)" && ${pkgs.wf-recorder}/bin/wf-recorder -f /tmp/screenrecord.mp4 -y -g "''${GEOMETRY}")''
-        # ''ALT CTRL, P, exec, (${pkgs.killall}/bin/killall -SIGINT wf-recorder && (${pkgs.wl-clipboard}/bin/wl-copy < /tmp/screenrecord.mp4; ${pkgs.nemo}/bin/nemo /tmp/screenrecord.mp4)) || (set -euo pipefail; GEOMETRY="$(${pkgs.slurp}/bin/slurp)" && ${pkgs.wf-recorder}/bin/wf-recorder -f /tmp/screenrecord.mp4 -y -a -g "''${GEOMETRY}")''
-
-        # ''SUPER SHIFT, S, exec, hyprctl keyword decoration:screen_shader "${config.home.homeDirectory}/.config/hypr/shaders/$(find "${config.home.homeDirectory}/.config/hypr/shaders" -name *.frag | xargs -n1 basename | ${getExe config.programs.fuzzel.package} --dmenu)"''
-        # "SUPER CTRL SHIFT, S, exec, hyprctl keyword decoration:screen_shader '[[EMPTY]]'"
+        "ALT, P, exec, ${run ''${getExe pkgs.grim} -g "$(${getExe pkgs.slurp})" - | ${getExe' pkgs.imagemagick "convert"} - -shave 1x1 PNG:- | ${getExe' pkgs.wl-clipboard "wl-copy"}''}"
+        "ALT SHIFT, P, exec, ${run ''${getExe pkgs.grim} -g "$(${getExe pkgs.slurp})" - | ${getExe' pkgs.imagemagick "convert"} - -shave 1x1 PNG:- | ${getExe pkgs.swappy} -f -''}"
 
         "SUPER, left, exec, ${hypr-move} focus l"
         "SUPER, right, exec, ${hypr-move} focus r"
@@ -47,11 +43,10 @@
         # "SUPER, B, exec, hyprctl keyword general:layout master"
         # "SUPER SHIFT, B, exec, hyprctl keyword general:layout dwindle"
 
-        "SUPER, X, exec, ${lock}"
-        "SUPER, L, exec, ${lock}"
+        "SUPER, X, exec, ${runOnce <| getExe pkgs.hyprlock}"
+        "SUPER, L, exec, ${runOnce <| getExe pkgs.hyprlock}"
         "SUPER, TAB, workspace, previous_per_monitor"
 
-        ''SUPER SHIFT, R, exec, notify-send --expire-time=1500 "Reloading Hyprland" "$(hyprctl reload; pypr reload)"''
         "SUPER, C, exec, ${getExe pkgs.hyprpicker} -a | tr -d '\\n' | ${getExe' pkgs.wl-clipboard "wl-copy"}"
 
         "SUPER SHIFT, C, exec, ${hypr-gamemode} toggle"
@@ -121,7 +116,7 @@
             ws = let
               c = (x + 1) / 10;
             in
-              builtins.toString (x + 1 - (c * 10));
+              toString (x + 1 - (c * 10));
           in ''
             bind = SUPER, ${ws}, exec, ${hypr-workspace} ${toString (x + 1)}
             bind = SUPER SHIFT, ${ws}, movetoworkspacesilent, ${toString (x + 1)}

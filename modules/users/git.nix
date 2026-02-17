@@ -36,6 +36,12 @@ in
           user.email = outputs.lib.mkDefault (throw "programs.git.settings.user.email is not set");
           user.name = outputs.lib.mkDefault (throw "programs.git.settings.user.name is not set");
 
+          signing = outputs.lib.optionalAttrs (config.modules.ssh.signingKey != null) {
+            format = "ssh";
+            signByDefault = true;
+            key = "${config.home.homeDirectory}/.ssh/${config.modules.ssh.signingKey}.pub";
+          };
+
           alias = let
             mkGitFn = body:
             # bash
@@ -64,7 +70,6 @@ in
 
             purge = mkGitFn "git delete-all-branches; git fetch --prune; git reset --hard origin/main; git clean -df;";
           };
-
         };
 
         # TODO Make this an option: modules.git.pathConfig
@@ -82,7 +87,6 @@ in
         #     );
         #   };
         # };
-
       };
 
       programs.gitui.enable = true;

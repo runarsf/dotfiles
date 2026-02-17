@@ -22,8 +22,8 @@ outputs.lib.mkDesktopModule config "writing" {
   nixpkgs.config.zathura.useMupdf = false;
 
   home.packages = with pkgs; [
-    unstable.obsidian
-    unstable.typst
+    obsidian
+    typst
     libreoffice-fresh
     pandoc
     poppler-utils

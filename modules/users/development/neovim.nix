@@ -8,7 +8,7 @@
 outputs.lib.mkModule config "neovim" rec {
   nixpkgs.overlays = [
     (_: prev: {
-      neovim = inputs.nixvim.packages.${prev.system}.default;
+      neovim = inputs.nixvim.packages.${prev.stdenv.hostPlatform.system}.default;
     })
   ];
 

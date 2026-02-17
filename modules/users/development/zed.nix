@@ -6,10 +6,7 @@
 }:
 outputs.lib.mkDesktopModule config "zed" {
   programs = {
-    zed-editor = {
-      enable = true;
-      package = pkgs.master.zed-editor;
-    };
+    zed-editor.enable = true;
     television.enable = true;
   };
 

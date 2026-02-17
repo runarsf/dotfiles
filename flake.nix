@@ -9,9 +9,6 @@
     nixpkgs-master.url = "github:nixos/nixpkgs/master";
     nur.url = "github:nix-community/nur";
 
-    # https://github.com/NixOS/nixpkgs/issues/437992#issuecomment-3380880457
-    nixpkgs-stremio.url = "github:nixos/nixpkgs/25845a52fee515073b0bcf8503ed0f2f78ce89a5";
-
     flake-utils.url = "github:numtide/flake-utils";
     treefmt-nix.url = "github:numtide/treefmt-nix";
 
@@ -42,11 +39,7 @@
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
-    hyprland = {
-      type = "git";
-      url = "https://github.com/hyprwm/Hyprland";
-      submodules = true;
-    };
+    hyprland.url = "github:hyprwm/Hyprland";
     hyprland-plugins = {
       url = "github:hyprwm/hyprland-plugins";
       inputs.hyprland.follows = "hyprland";
@@ -82,6 +75,29 @@
       url = "github:nix-community/stylix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    dms = {
+      url = "github:AvengeMedia/DankMaterialShell";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    dgop = {
+      url = "github:AvengeMedia/dgop";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    noctalia = {
+      url = "github:noctalia-dev/noctalia-shell";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    ambxst = {
+      url = "github:Axenide/Ambxst";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    vicinae.url = "github:vicinaehq/vicinae";
+    vicinae-extensions = {
+      url = "github:vicinaehq/extensions";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    awww.url = "git+https://codeberg.org/LGFae/awww";
 
     spicetify-nix = {
       url = "github:Gerg-L/spicetify-nix";
@@ -184,11 +200,11 @@
     };
 
     formatter = inputs.flake-utils.eachDefaultSystem (
-      pkgs: treefmtEval.${pkgs.system}.config.build.wrapper
+      pkgs: treefmtEval.${pkgs.stdenv.hostPlatform.system}.config.build.wrapper
     );
 
     checks = inputs.flake-utils.eachDefaultSystem (pkgs: {
-      formatting = treefmtEval.${pkgs.system}.config.build.check self;
+      formatting = treefmtEval.${pkgs.stdenv.hostPlatform.system}.config.build.check self;
     });
   };
 }

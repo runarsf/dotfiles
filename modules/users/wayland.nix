@@ -5,9 +5,6 @@
   ...
 }:
 outputs.lib.mkModule config "wayland" {
-  # TODO Does this belong here?
-  nixos.services.libinput.enable = true;
-
   home.packages = with pkgs; [xorg.xeyes];
 
   # https://discourse.nixos.org/t/home-manager-and-the-mimeapps-list-file-on-plasma-kde-desktops/37694/7
@@ -18,7 +15,7 @@ outputs.lib.mkModule config "wayland" {
       "uwsm/env".text = ''
         export NIXOS_OZONE_WL=1
         export MOZ_ENABLE_WAYLAND=1
-      '';
+      '' + "\n" + builtins.readFile "${config.home.sessionVariablesPackage}/etc/profile.d/hm-session-vars.sh";
     };
 
     # Don't generate config at the usual place.
