@@ -8,6 +8,12 @@ outputs.lib.mkModule config ["containers" "solidtime"] {
   sops = {
     secrets = {
       solidtime_db_password = {};
+      solidtime_app_key = {};
+      solidtime_private_key = {};
+      solidtime_public_key = {};
+      solidtime_super_admins = {};
+      solidtime_mail_user = {};
+      solidtime_mail_password = {};
     };
     templates."solidtime-db-env".content = ''
       PGPASSWORD=${config.sops.placeholder.solidtime_db_password}

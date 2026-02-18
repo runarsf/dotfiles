@@ -17,7 +17,7 @@ outputs.lib.mkFor system hostname {
 
     # TODO: Refactor implementation
     defaultTerminal = "wezterm";
-    defaultBrowser = "zen";
+    # defaultBrowser = "zen";
     avatar = ./avatar.jpg;
 
     modules =
