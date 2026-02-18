@@ -40,6 +40,7 @@ in
           ${config.sops.placeholder.cloudflare_token}
         '';
       };
+
       nixos = {
         # systemd.services.nginx.serviceConfig.ReadWritePaths = ["/var/spool/nginx/logs/"];
 
@@ -74,6 +75,17 @@ in
             ${realIpsFromList cfipv6}
             real_ip_header CF-Connecting-IP;
           '';
+
+          appendHttpConfig = ''
+            limit_req_zone $binary_remote_addr zone=mylimit:10m rate=10r/s;
+          '';
+
+          virtualHosts."_" = {
+            forceSSL = true;
+            sslCertificate = cfg.cert;
+            sslCertificateKey = cfg.key;
+            locations."/" = {return = "418";};
+          };
         };
 
         networking.firewall.allowedTCPPorts = [80 443];
@@ -97,15 +109,6 @@ in
               };
             })
             cfg.domains);
-        };
-
-        services.nginx.virtualHosts = {
-          "_" = {
-            forceSSL = true;
-            sslCertificate = cfg.cert;
-            sslCertificateKey = cfg.key;
-            locations."/" = {return = "418";};
-          };
         };
 
         services.cloudflare-dyndns = {

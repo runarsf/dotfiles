@@ -11,7 +11,7 @@ flake @ {
     hostname ? null,
     system ? outputs.lib.defaultSystem,
     stateVersion ? outputs.lib.defaultStateVersion,
-    osConfig ? null,
+    # osConfig ? null,
     ...
   }:
     outputs.lib.homeManagerConfiguration {
@@ -23,9 +23,7 @@ flake @ {
         // {
           # https://nixos.wiki/wiki/Nix_Language_Quirks#Default_values_are_not_bound_in_.40_syntax
           inherit system hostname stateVersion;
-
-          # NOTE https://github.com/imatpot/dotfiles/commit/bc72621c353166667a4d8ecb3f5454d9f5c6de5f
-          osConfig = null;
+          # inherit osConfig;
 
           # Actual name required by submodules. This makes sure everything is
           # interopable across NixOS & non-NixOS systems.

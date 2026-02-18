@@ -102,7 +102,7 @@ outputs.lib.mkFor system hostname {
           "mullvad"
           "pipewire"
           "mpv"
-          "podman"
+          ["dev" "podman"]
           "stremio"
           "camera"
           "zen"
@@ -164,6 +164,7 @@ outputs.lib.mkFor system hostname {
             "libvirtd"
             "input"
             "i2c"
+            "blahaj"
           ];
         };
         # https://discourse.nixos.org/t/howto-disable-most-gnome-default-applications-and-what-they-are/13505/14
@@ -279,27 +280,9 @@ outputs.lib.mkFor system hostname {
       # TODO: Maybe mkDefault this for all hosts and mkForce for desktops, see TODO in flake.nix
       isDesktop = false;
 
-      modules =
-        outputs.lib.enable [
-          "podman"
-          "tmux"
-          ["services" "immich"]
-          ["services" "stremio"]
-        ]
-        // {
-          nginx = {
-            enable = true;
-            domains = ["runar.ch"];
-            email = "ssl@runar.ch";
-          };
-        };
-    };
-
-    rpi = {
-      isDesktop = false;
-
       modules = outputs.lib.enable [
-        "podman"
+        "tmux"
+        "docker"
       ];
     };
   };

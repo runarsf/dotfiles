@@ -1,7 +1,7 @@
 args @ {
   outputs,
   users,
-  config,
+  # config,
   ...
 }: let
   userConfigs = builtins.map (username:
@@ -10,7 +10,6 @@ args @ {
       inherit (args) system hostname;
       stateVersion = outputs.lib.defaultStateVersion;
       # osConfig = config;
-      osConfig = null;
     })
   users;
 

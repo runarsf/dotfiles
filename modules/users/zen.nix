@@ -179,7 +179,7 @@ in
       );
     };
 
-    xdg.mimeApps = outputs.lib.mkIf (config.defaultBrowser == "zen") {
+    xdg.mimeApps = { # outputs.lib.mkIf (config.defaultBrowser == "zen") {
       enable = true;
       defaultApplications = let
         entries = [

@@ -10,9 +10,10 @@
     map (key: toKeyPath key) config.modules.sops.privateKeys;
   secretFiles = builtins.listToAttrs (map (key: {
       name = key;
-      value = outputs.lib.mkSecretFile {
-        source = "${inputs.vault}/${name}/keys/${key}";
-        destination = toKeyPath key;
+      value = {
+        sopsFile = "${inputs.vault}/${name}/keys/${key}";
+        path = toKeyPath key;
+        format = "binary";
       };
     })
     config.modules.sops.privateKeys);

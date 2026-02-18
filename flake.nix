@@ -2,6 +2,7 @@
   # NOTE https://github.com/symphorien/nix-du
   # TODO https://nixos.wiki/wiki/Storage_optimization
   # TODO https://github.com/llem00n/brofile
+  # TODO Why do some of these follow nixpkgs-unstable, should they not follow nixpkgs?
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
@@ -117,6 +118,7 @@
 
     nixosConfigurations = {
       # TODO Should isDesktop be an option to mkHost?
+      # TODO Automatically create <user>@<host> from host.users
       runix = lib.mkHost {
         system = "x86_64-linux";
         # TODO graphical = true;
@@ -127,7 +129,7 @@
       anuc = lib.mkHost {
         system = "x86_64-linux";
         hostname = "anuc";
-        users = ["runar"];
+        users = ["runar" "blahaj"];
       };
 
       rpi = lib.mkHost {
