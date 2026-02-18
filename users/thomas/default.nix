@@ -69,8 +69,18 @@ in
             "mpv"
             "camera"
             "fastfetch"
+            "vicinae"
+            "noctalia"
+            "flatpak"
           ]
           // {
+            matrix = {
+              enable = true;
+              clients = outputs.lib.enable [
+                "element"
+                "commet"
+              ];
+            };
             spotify = {
               enable = true;
               spicetify = true;
@@ -94,7 +104,7 @@ in
                 packageName = "python311";
                 presets = outputs.lib.enable [
                   "math"
-                  "jupyter"
+                  # "jupyter"
                 ];
               };
             };
