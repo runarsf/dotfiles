@@ -12,12 +12,11 @@ outputs.lib.mkDesktopModule config "waybar" {
     polycat
     playerctl
     gobject-introspection
-    unstable.hyprland-autoname-workspaces
+    hyprland-autoname-workspaces
   ];
 
   programs.waybar = {
     enable = true;
-    package = pkgs.unstable.waybar;
     systemd.enable = true;
     style = builtins.readFile ./style.css;
     settings = let

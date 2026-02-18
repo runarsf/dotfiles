@@ -62,7 +62,7 @@ outputs.lib.mkModule config "ctf" {
         wget
         burpsuite
 
-        # inputs.binsider.packages.${pkgs.system}.default
+        # inputs.binsider.packages.${pkgs.stdenv.hostPlatform.system}.default
       ]
       ++ outputs.lib.optionals config.modules.dev.android.enable [
         frida-tools

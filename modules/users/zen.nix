@@ -150,8 +150,8 @@ in
   outputs.lib.mkDesktopModule config "zen" {
     nixpkgs.overlays = [
       (_: prev: {
-        zen-browser = inputs.zen-browser.packages.${pkgs.system}.default;
-        # zen-browser = inputs.zen-browser.packages.${pkgs.system}.default.overrideAttrs (oldAttrs: rec {
+        zen-browser = inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default;
+        # zen-browser = inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default.overrideAttrs (oldAttrs: rec {
         #   version = "1.7.6b";
         #   src = pkgs.fetchurl {
         #     hash = "sha256-InhljDorCxmXD9OCagF2RUNU9Lq8hIhz6/TqR7TSZG4=";

@@ -9,8 +9,8 @@ _: {
     };
   };
 
-  programs.git = {
-    userName = "Runar Fredagsvik";
-    userEmail = "i@runar.ch";
+  programs.git.settings = {
+    user.name = "Runar Fredagsvik";
+    user.email = "i@runar.ch";
   };
 }

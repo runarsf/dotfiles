@@ -4,7 +4,7 @@
   pkgs,
   ...
 }: let
-  self = config.modules.dev.python;
+  cfg = config.modules.dev.python;
   packagesFrom = pythonVersion:
     outputs.lib.getAttr "${pythonVersion}Packages" pkgs;
 in
@@ -27,16 +27,14 @@ in
     };
 
     config = {
-      modules.dev.python.packages = with packagesFrom self.packageName;
+      modules.dev.python.packages = with packagesFrom cfg.packageName;
         [
-          pip
-          pydantic
-          python-pam
+          # pydantic
           requests
-          pygobject3
-          mypy
+          # pygobject3
+          # mypy
         ]
-        ++ outputs.lib.optionals self.presets.math.enable [
+        ++ outputs.lib.optionals cfg.presets.math.enable [
           pandas
           pyglet
           scipy
@@ -49,7 +47,7 @@ in
           llvmlite
           matplotlib
         ]
-        ++ outputs.lib.optionals self.presets.jupyter.enable [
+        ++ outputs.lib.optionals cfg.presets.jupyter.enable [
           ipykernel
           jupyterlab
           nbformat
@@ -57,23 +55,23 @@ in
           jupyter-core
           notebook
         ]
-        ++ outputs.lib.optionals (config.isDesktop && self.ide)
+        ++ outputs.lib.optionals (config.isDesktop && cfg.ide)
         [jetbrains.pycharm-professional];
 
       home.packages = with pkgs; [
-        poetry
+        # poetry
         stdenv.cc.cc.lib
-        taglib
-        openssl
-        libxml2
-        libxslt
-        libzip
-        zlib
+        # taglib
+        # openssl
+        # libxml2
+        # libxslt
+        # libzip
+        # zlib
         ruff
 
         (let
-          python = outputs.lib.getAttr self.packageName pkgs;
-        in (python.withPackages (ps: self.packages)))
+          python = outputs.lib.getAttr cfg.packageName pkgs;
+        in (python.withPackages (ps: cfg.packages)))
 
         # This uses strings to define packages
         # (python311.withPackages (ps:
@@ -81,7 +79,7 @@ in
         #     let pkgPath = outputs.lib.splitString "." pkg;
         #     in outputs.lib.getAttrFromPath pkgPath ps))
         #   (builtins.filter (pkg: outputs.lib.isString pkg)
-        #     self.packages)))
+        #     cfg.packages)))
       ];
     };
   }

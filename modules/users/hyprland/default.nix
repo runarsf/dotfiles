@@ -6,6 +6,7 @@
   system,
   ...
 } @ self:
+# https://github.com/fufexan/dotfiles/tree/main/system/programs/hyprland
 # TODO temporary command (nix-shell) with fuzzel
 # TODO Better switching of layouts (master, centered master, dwindle, pseudo) https://wiki.hyprland.org/Configuring/Master-Layout/#workspace-rules
 # TODO See if smart_resizing negates the need for a resizing script
@@ -13,7 +14,6 @@
 # TODO Make a fisdeurbel nushell script that re-runs the stream if it dies
 # TODO https://gitlab.com/magus/hyprslidr
 let
-  lock = "${pkgs.hyprlock}/bin/hyprlock";
   hypr-snap = pkgs.writers.writePython3 "hypr-snap" {
     flakeIgnore = [
       "E305"
@@ -46,7 +46,6 @@ in
         // {
           inherit
             hypr-gamemode
-            lock
             hypr-snap
             hypr-workspace
             hypr-move
@@ -70,11 +69,8 @@ in
     config = {
       modules = outputs.lib.enable [
         "wayland"
-        "fuzzel"
-        "hyprpanel"
         "hypridle"
         "hyprlock"
-        "hyprpaper"
         "pyprland"
         # "ulauncher"
         # "waybar"
@@ -85,13 +81,19 @@ in
       home.packages = with pkgs; [
         nwg-displays
         nemo
-        unstable.hyprsunset
-        unstable.hyprpolkitagent
+        hyprsunset
+        hyprpolkitagent
         wl-clipboard
         libsForQt5.qt5.qtwayland
       ];
+      wayland.systemd.target = "graphical.target";
 
       nixos = {
+        nix.settings = {
+          substituters = ["https://hyprland.cachix.org"];
+          trusted-substituters = ["https://hyprland.cachix.org"];
+          trusted-public-keys = ["hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="];
+        };
         programs = {
           xwayland.enable = true;
           uwsm.enable = true;
@@ -131,13 +133,18 @@ in
       # Log rules: watch -n 0.1 "cat "/tmp/hypr/$(echo $HYPRLAND_INSTANCE_SIGNATURE)/hyprland.log" | grep -v "efresh" | grep "rule" | tail -n 40"
       wayland.windowManager.hyprland = {
         enable = true;
-        systemd.enable = false;
+        systemd = {
+          # https://wiki.nixos.org/wiki/UWSM#If_using_the_Hyprland_Home_Manager_Module
+          enable = false;
+          variables = ["--all"];
+        };
         package = null;
         portalPackage = null;
         plugins = with inputs.hyprland-plugins.packages.${pkgs.stdenv.hostPlatform.system};
           [
             borders-plus-plus
-            hyprwinwrap
+            hyprscrolling
+            # hyprwinwrap
             # inputs.hyprchroma.packages.${pkgs.stdenv.hostPlatform.system}.Hypr-DarkWindow
             # pkgs.hyprscroller # NOTE Doesn't work with git :(
             # pkgs.hypr-workspace-layouts
@@ -151,20 +158,13 @@ in
             "${config.home.homeDirectory}/.config/hypr/workspaces.conf"
           ];
           exec-once = [
+            "uwsm finalize"
             "${outputs.lib.getExe pkgs.sway-audio-idle-inhibit}"
-            "${outputs.lib.getExe pkgs.kdePackages.xwaylandvideobridge}"
             "${outputs.lib.getExe pkgs.networkmanagerapplet}"
             "systemctl --user start hyprpolkitagent"
             "${hypr-gamemode}"
           ];
-          # chromakey_background = "1,4,9";
           plugin = {
-            wslayout = {
-              default_layout = "master";
-            };
-            hyprwinwrap = {
-              class = "mpv";
-            };
             dynamic-cursors = outputs.lib.mkIf config.modules.hyprland.animations {
               enabled = true;
               mode = "tilt";
@@ -183,8 +183,8 @@ in
             #   monitor_gap = 30;
             # };
 
-            # layout = "workspacelayout";
             layout = "master";
+            # layout = "workspacelayout";
             resize_on_border = false;
           };
           input = {
@@ -223,11 +223,11 @@ in
           };
           misc = {
             disable_hyprland_logo = true;
+            enable_anr_dialog = false;
             force_default_wallpaper = 0;
             enable_swallow = true;
             key_press_enables_dpms = true;
             render_unfocused_fps = 30;
-            new_window_takes_over_fullscreen = 1;
             allow_session_lock_restore = 1;
             swallow_regex = "^(Alacritty|kitty|org.wezfurlong.wezterm|com.mitchellh.ghostty)$";
             animate_manual_resizes = config.modules.hyprland.animations;
@@ -260,8 +260,8 @@ in
             };
 
             layerrule = [
-              "blur,wofi"
-              "blur,launcher"
+              "blur on, match:namespace wofi"
+              "blur on, match:namespace launcher"
             ];
           };
           animations = {

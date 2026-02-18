@@ -8,6 +8,11 @@ flake @ {
     ../modules/nix/nixpkgs.nix
     ../modules/nix/legacy-consistency.nix
     ../modules/home-manager/submodule.nix
+
+    inputs.stylix.nixosModules.stylix
+    inputs.sops-nix.nixosModules.sops
+    inputs.dms.nixosModules.dank-material-shell
+    inputs.ambxst.nixosModules.default
   ];
 in rec {
   mkHost = args @ {
@@ -46,9 +51,6 @@ in rec {
           ../hosts/${hostname}/configuration.nix
           ../hosts/${hostname}/hardware-configuration.nix
           ../modules/linux/default-config.nix
-
-          inputs.stylix.nixosModules.stylix
-          inputs.sops-nix.nixosModules.sops
         ];
     };
 

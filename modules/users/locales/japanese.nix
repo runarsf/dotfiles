@@ -31,7 +31,7 @@ outputs.lib.mkDesktopModule config "japanese" {
           };
         }; 
       };
-      addons = with pkgs; [fcitx5-configtool fcitx5-mozc fcitx5-gtk];
+      addons = with pkgs; [qt6Packages.fcitx5-configtool fcitx5-mozc fcitx5-gtk];
       # waylandFrontend = true;
     };
   };

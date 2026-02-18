@@ -11,11 +11,10 @@
     polarity = "dark";
     image = config.modules.wallpaper;
 
-    targets =
-      outputs.lib.disable ["nixvim"]
-      // {
-        # qt.platform = "qtct";
-      };
+    targets = outputs.lib.disable [
+      "nixvim"
+      "spicetify"
+    ];
 
     cursor = {
       package = pkgs.bibata-cursors;
@@ -47,7 +46,7 @@
       };
 
       emoji = {
-        package = pkgs.noto-fonts-emoji;
+        package = pkgs.noto-fonts-color-emoji;
         name = "Noto Color Emoji";
       };
     };
@@ -63,14 +62,9 @@
   };
 
   settings = {
-    global = rec {
+    global = {
       # FIXME Stylix supports hyprlock now, but is too dumb to apply it correctly
-      programs.hyprlock.settings.background.path = builtins.toString config.modules.wallpaper;
-
-      services.hyprpaper.settings = {
-        preload = ["${config.modules.wallpaper}"];
-        wallpaper = [", ${config.modules.wallpaper}"];
-      };
+      programs.hyprlock.settings.background.path = toString config.modules.wallpaper;
     };
 
     user = rec {
@@ -78,14 +72,16 @@
         stylix-config
         {
           targets = outputs.lib.disable [
-            "vscode"
             "hyprland"
+            "hyprpanel"
+            "hyprlock"
+            "hyprpaper"
+            "vscode"
             "kitty"
             "waybar"
-            "hyprlock"
-            "spicetify"
             "ghostty"
             "zed"
+            "zen-browser"
           ];
         }
       ];

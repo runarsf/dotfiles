@@ -10,7 +10,7 @@ outputs.lib.mkModule config "lf" {
   programs.lf = {
     enable = true;
     commands = {
-      dragon-out = ''%${pkgs.xdragon}/bin/xdragon -a -x "$fx"'';
+      dragon-out = ''%${pkgs.dragon-drop}/bin/dragon-drop -a -x "$fx"'';
       mkdir = ''
         %{{
           mkdir -p "$@"

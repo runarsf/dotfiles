@@ -15,14 +15,14 @@ outputs.lib.mkModule config "nushell" {
   # https://crates.io/crates/nu_plugin_hashes
   # https://github.com/FMotalleb/nu_plugin_port_extension
   # https://github.com/fdncred/nu_plugin_regex
-  home.packages = with pkgs.unstable;
+  home.packages = with pkgs;
   with nushellPlugins; [
     # net
     query
     gstat
     formats
     polars
-    highlight
+    # highlight
 
     carapace
     carapace-bridge
@@ -82,7 +82,7 @@ outputs.lib.mkModule config "nushell" {
       if not ($carapace_cache | path exists) {
         mkdir $carapace_cache
       }
-      ${outputs.lib.getExe pkgs.unstable.carapace} _carapace nushell | save --force $"($carapace_cache)/init.nu"
+      ${outputs.lib.getExe pkgs.carapace} _carapace nushell | save --force $"($carapace_cache)/init.nu"
     '';
   };
 }

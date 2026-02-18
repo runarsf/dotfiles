@@ -8,7 +8,7 @@
 # TODO: https://journix.dev/posts/gaming-on-nixos/
 outputs.lib.mkDesktopModule config "steam" {
   home = {
-    packages = with pkgs; [protontricks winetricks gamescope protonup-qt protonup mangohud];
+    packages = with pkgs; [protontricks winetricks gamescope protonup-qt protonup-ng mangohud];
     sessionVariables = {
       STEAM_EXTRA_COMPAT_TOOLS_PATHS = "${config.home.homeDirectory}/.steam/root/compatibilitytools.d";
     };

@@ -40,11 +40,7 @@
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
-    hyprland = {
-      type = "git";
-      url = "https://github.com/hyprwm/Hyprland";
-      submodules = true;
-    };
+    hyprland.url = "github:hyprwm/Hyprland";
     hyprland-plugins = {
       url = "github:hyprwm/hyprland-plugins";
       inputs.hyprland.follows = "hyprland";
@@ -52,11 +48,6 @@
     hypr-dynamic-cursors = {
       url = "github:VirtCode/hypr-dynamic-cursors";
       inputs.hyprland.follows = "hyprland";
-    };
-
-    wezterm = {
-      url = "github:wez/wezterm?dir=nix";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     nix-flatpak.url = "github:gmodena/nix-flatpak";
@@ -86,6 +77,29 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    dms = {
+      url = "github:AvengeMedia/DankMaterialShell";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    dgop = {
+      url = "github:AvengeMedia/dgop";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    noctalia = {
+      url = "github:noctalia-dev/noctalia-shell";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    ambxst = {
+      url = "github:Axenide/Ambxst";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    vicinae.url = "github:vicinaehq/vicinae";
+    vicinae-extensions = {
+      url = "github:vicinaehq/extensions";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    awww.url = "git+https://codeberg.org/LGFae/awww";
+
     spicetify-nix = {
       url = "github:Gerg-L/spicetify-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -104,6 +118,8 @@
       url = "git+ssh://git@github.com/runarsf/vault";
       flake = false;
     };
+
+    hytale-launcher.url = "github:JPyke3/hytale-launcher-nix";
   };
 
   outputs = inputs @ {self, ...}: let
@@ -188,11 +204,11 @@
     };
 
     formatter = inputs.flake-utils.eachDefaultSystem (
-      pkgs: treefmtEval.${pkgs.system}.config.build.wrapper
+      pkgs: treefmtEval.${pkgs.stdenv.hostPlatform.system}.config.build.wrapper
     );
 
     checks = inputs.flake-utils.eachDefaultSystem (pkgs: {
-      formatting = treefmtEval.${pkgs.system}.config.build.check self;
+      formatting = treefmtEval.${pkgs.stdenv.hostPlatform.system}.config.build.check self;
     });
   };
 }

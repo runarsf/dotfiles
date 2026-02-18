@@ -50,11 +50,6 @@ in
             };
           };
         };
-
-      wayland.windowManager.hyprland.settings.bind = [
-        ",Pause,exec,/nix/store/di3glqanq4y9fxwxmpmypaw3rvlkdwf1-wireplumber-0.5.8/bin/wpctl set-mute @DEFAULT_SOURCE@ toggle"
-        "SUPER,P,exec,hyprctl keyword monitor DP-1,disable"
-      ];
     };
 
     systems = {
@@ -74,8 +69,18 @@ in
             "mpv"
             "camera"
             "fastfetch"
+            "vicinae"
+            "noctalia"
+            "flatpak"
           ]
           // {
+            matrix = {
+              enable = true;
+              clients = outputs.lib.enable [
+                "element"
+                "commet"
+              ];
+            };
             spotify = {
               enable = true;
               spicetify = true;
@@ -99,13 +104,13 @@ in
                 packageName = "python311";
                 presets = outputs.lib.enable [
                   "math"
-                  "jupyter"
+                  # "jupyter"
                 ];
               };
             };
           };
 
-        home.packages = with pkgs; ifIsDesktop [inputs.openconnect-sso.packages."${pkgs.system}".default];
+        home.packages = with pkgs; ifIsDesktop [inputs.openconnect-sso.packages."${pkgs.stdenv.hostPlatform.system}".default];
 
         programs.fastfetch.settings.logo = {
           source =
@@ -149,12 +154,13 @@ in
           outputs.lib.enable [
             "japanese"
             "steam"
-            "gaming"
             "ffxiv"
+            "hytale"
             "fun"
             "reaper"
             "qmk"
             "easyeffects"
+            "zed"
           ]
           // {
             dev = {
@@ -166,36 +172,35 @@ in
               java.enable = true;
               # python.packages = with pkgs.python311Packages; [manim];
             };
+            udev.extraRules = [../../modules/users/gaming/dualsense.rules];
           };
 
-        home.packages = with pkgs.unstable; [
+        home.packages = with pkgs; [
           prismlauncher
-          dolphin-emu-primehack
-          code-cursor
+          osu-lazer-bin
+          rpcs3
           r2modman
         ];
 
         nixos = {
           environment.systemPackages = with pkgs; [amdgpu_top corectrl];
           hardware = {
-            amdgpu = {
-              initrd.enable = true;
-              amdvlk = {
-                enable = true;
-                support32Bit.enable = true;
-              };
-            };
+            amdgpu.initrd.enable = true;
             graphics = {
               enable = true;
               enable32Bit = true;
-              package = with pkgs.unstable; mesa;
-              # extraPackages = with pkgs.unstable; [ amdvlk mesa ];
+              package = with pkgs; mesa;
+              # extraPackages = with pkgs; [ amdvlk mesa ];
             };
 
             bluetooth.powerOnBoot = true;
+            opentabletdriver.enable = true;
           };
 
-          services.xserver.videoDrivers = ["modesetting"];
+          services = {
+            xserver.videoDrivers = ["modesetting"];
+            tailscale.enable = true;
+          };
 
           # systemd.tmpfiles.rules = [
           #   "L+    /opt/rocm/hip   -    -    -     -    ${pkgs.rocmPackages.clr}"
@@ -235,6 +240,11 @@ in
         };
 
         wayland.windowManager.hyprland.settings = {
+          input.tablet.left_handed = true;
+          bind = [
+            ",Pause,exec,/nix/store/di3glqanq4y9fxwxmpmypaw3rvlkdwf1-wireplumber-0.5.8/bin/wpctl set-mute @DEFAULT_SOURCE@ toggle"
+            "SUPER,P,exec,hyprctl keyword monitor DP-1,disable"
+          ];
           env = [
             "GDK_BACKEND,wayland,x11"
             "SDL_VIDEODRIVER,wayland,x11"
@@ -262,9 +272,10 @@ in
             # "WLR_RENDERER_ALLOW_SOFTWARE,1"
           ];
 
-          windowrulev2 = [
-            "workspace 5, class:XIVLauncher.Core"
-            "workspace 5, class:Ffxiv_dx11.exe"
+          windowrule = [
+            "workspace 5, match:class XIVLauncher.Core"
+            "workspace 5, match:class Ffxiv_dx11.exe"
+            "workspace 5, match:class HytaleClient"
           ];
 
           workspace = let
@@ -287,6 +298,7 @@ in
             "japanese"
             "ctf"
             "steam"
+            "gaming"
             "fun"
             "docker"
           ]

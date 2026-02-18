@@ -19,7 +19,7 @@ in
       home.packages = with pkgs; outputs.lib.optionals (!cfg.spicetify) [spotify];
 
       programs.spicetify = let
-        spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.system};
+        spicePkgs = inputs.spicetify-nix.legacyPackages.${pkgs.stdenv.hostPlatform.system};
       in {
         enable = cfg.spicetify;
         enabledExtensions = with spicePkgs.extensions; [

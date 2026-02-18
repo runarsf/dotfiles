@@ -11,11 +11,19 @@ outputs.lib.mkModule config "ssh" {
       type = types.attrsOf types.str;
       description = "List of public key strings";
     };
+    signingKey = mkOption {
+      default = null;
+      type = types.nullOr types.str;
+      description = "SSH key used for signing";
+    };
   };
 
   config = {
     # services.ssh-agent.enable = true;
-    programs.ssh.addKeysToAgent = "yes";
+    programs.ssh = {
+      enableDefaultConfig = false;
+      matchBlocks."*".addKeysToAgent = "yes";
+    };
     # TODO users.extraUsers.root.openssh.authorizedKeys.keys
 
     # NOTE https://github.com/nix-community/home-manager/issues/322#issuecomment-1856128020

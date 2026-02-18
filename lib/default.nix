@@ -21,6 +21,7 @@ in
           ./users.nix
           ./utils.nix
           ./modules.nix
+          ./wm.nix
         ]
         flake)
     ]

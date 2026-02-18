@@ -7,16 +7,16 @@
 outputs.lib.mkModule config "qmk" {
   nixos = {
     hardware.keyboard = {
-      zsa.enable = true;
+      # zsa.enable = true;
       qmk.enable = true;
     };
-    services.udev.packages = with pkgs; [
+    services.udev.packages = with pkgs.master; [
       qmk-udev-rules
       qmk
       via
       vial
     ];
-    environment.systemPackages = with pkgs; [
+    environment.systemPackages = with pkgs.master; [
       qmk
       via
       vial

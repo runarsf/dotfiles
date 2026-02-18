@@ -3,13 +3,19 @@
   outputs,
   ...
 }:
-# TODO hyprpaper
 outputs.lib.mkDesktopModule config "hyprpaper" {
   services.hyprpaper = {
     enable = true;
+
     settings = {
-      ipc = "on";
       splash = false;
+      wallpaper = [
+        {
+          monitor = "";
+          path = "${config.modules.wallpaper}";
+          fit_mode = "cover";
+        }
+      ];
     };
   };
 }

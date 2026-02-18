@@ -22,6 +22,7 @@
       default = [];
       type = types.listOf types.str;
     };
+    # NOTE: You may have to run 'sudo udevadm control --reload-rules && sudo udevadm trigger'
     modules.udev.extraRules = mkOption {
       default = [];
       type = types.listOf <| types.either types.path types.str;
