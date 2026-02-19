@@ -110,6 +110,13 @@ outputs.lib.mkFor system hostname {
           "vicinae"
         ]
         // {
+          matrix = {
+            enable = true;
+            clients = outputs.lib.enable [
+              "element"
+              "commet"
+            ];
+          };
           hyprland = {
             enable = true;
             animations = false;
