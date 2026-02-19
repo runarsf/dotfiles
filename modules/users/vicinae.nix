@@ -45,6 +45,9 @@ in
         nix
         power-profile
         awww-switcher
+        it-tools
+        ssh
+        color-converter
       ];
     };
 
