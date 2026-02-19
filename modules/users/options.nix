@@ -8,13 +8,13 @@
       default = config.home.sessionVariables ? NIXOS_OZONE_WL;
       type = types.bool;
     };
-    defaultBrowser = mkOption {
-      default =
-        if (config.isDesktop)
-        then (throw "defaultBrowser not set")
-        else null;
-      type = types.nullOr types.str;
-    };
+    # defaultBrowser = mkOption {
+    #   default =
+    #     if (config.isDesktop)
+    #     then (throw "defaultBrowser not set")
+    #     else null;
+    #   type = types.nullOr types.str;
+    # };
     avatar = mkOption {
       type = types.path;
     };
@@ -37,7 +37,7 @@
 
   config = {
     home.sessionVariables.PATH = outputs.lib.concatStringsSep ":" (config.PATH ++ ["\${PATH}"]);
-    modules."${config.defaultBrowser}".enable = config.isDesktop && config.defaultBrowser != null;
+    # modules."${config.defaultBrowser}".enable = config.isDesktop && config.defaultBrowser != null;
     nixos.services.udev.extraRules = config.modules.udev.extraRules;
   };
 }

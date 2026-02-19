@@ -148,9 +148,7 @@ in
               }
 
               ze () { "$EDITOR" "$("${outputs.lib.getExe config.programs.zoxide.package}" query "$@")" }
-              zcode () { "${outputs.lib.getExe config.programs.vscode.package}" "$("${outputs.lib.getExe config.programs.zoxide.package}" query "$@")" }
               zd () { set -e; cd "$("${outputs.lib.getExe config.programs.zoxide.package}" query "$PWD" "$@")"; set +e }
-              electron-wayland () { "''${1:?No program specificed...}" --enable-features=UseOzonePlatform,WaylandWindowDecorations --platform-hint=auto --ozone-platform=wayland "''${@:2}" }
               tmpvim () {
                 revert () {
                   mv "$1.bak" "$1"

@@ -45,7 +45,7 @@ in
           ];
         };
 
-        services.nginx.virtualHosts = outputs.lib.mkIf config.modules.nginx.enable {
+        services.nginx.virtualHosts = {
           "fm.${self.domain}" = {
             forceSSL = true;
             sslCertificate = self.cert;

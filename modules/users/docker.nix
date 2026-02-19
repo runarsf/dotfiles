@@ -23,15 +23,13 @@ outputs.lib.mkModule config "docker" {
           dates = "03:30";
         };
       };
-
-      oci-containers.backend = outputs.lib.mkDefault "docker";
     };
 
-    networking.firewall.trustedInterfaces = [ "docker0" ];
+    networking.firewall.trustedInterfaces = ["docker0"];
 
-    users.users."${name}".extraGroups = [ "docker" ];
+    users.users."${name}".extraGroups = ["docker"];
 
-    environment.systemPackages = with pkgs; [ docker-buildx ];
+    environment.systemPackages = with pkgs; [docker-buildx];
   };
 
   home.sessionVariables.COMPOSE_BAKE = "true";

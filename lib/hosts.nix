@@ -12,7 +12,6 @@ flake @ {
     inputs.stylix.nixosModules.stylix
     inputs.sops-nix.nixosModules.sops
     inputs.dms.nixosModules.dank-material-shell
-    inputs.ambxst.nixosModules.default
   ];
 in rec {
   mkHost = args @ {

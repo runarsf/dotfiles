@@ -17,7 +17,6 @@ in
           ./conditionals.nix
           ./hosts.nix
           ./pkgs.nix
-          ./secrets.nix
           ./state.nix
           ./users.nix
           ./utils.nix

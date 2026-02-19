@@ -1,40 +1,58 @@
 {
   config,
   outputs,
+  name,
   ...
-}: let
-  container = "jellyfin";
-  base = "${config.home.homeDirectory}/data/containers/${container}";
-in
-  outputs.lib.mkServiceModule config "${container}" {
-    config = {
-      nixos = {
-        system.userActivationScripts."${container}".text = ''
-          mkdir -p ${base}/config \
-                   ${base}/series \
-                   ${base}/movies \
-                   ${base}/music
-        '';
+}:
+outputs.lib.mkModule config ["containers" "jellyfin"] {
+  services.podman.containers = {
+    "jellyfin" = outputs.lib.mkContainer config {
+      image = "docker.io/jellyfin/jellyfin:latest";
+      # user = config.nixos.users.users."${name}".uid;
+      # group = config.nixos.users.groups."${name}".gid;
+      ports = [
+        "8096:8096" # http
+        # "8920:8920" # https
+        "7359:7359/udp" # client discovery
+        "1900:1900/udp" # DLNA service discovery
+      ];
+      volumes = with config.modules.containers.dirs; [
+        "${containers}/jellyfin/data:/config"
+        "jellyfin-cache:/cache:Z"
+        "${media}/series:/data/tvshows"
+        "${media}/movies:/data/movies"
+        "${media}/music:/data/music"
+      ];
+      environment = {
+        # PUID = config.nixos.users.users."${name}".uid;
+        # PGID = config.nixos.users.groups."${name}".gid;
+        # UMASK = "002";
 
-        virtualisation.oci-containers.containers = {
-          "${container}" = {
-            image = "lscr.io/linuxserver/jellyfin:latest";
-            extraOptions = ["--pull=newer"];
-            ports = ["8096:8096" "8920:8920" "7359:7359/udp" "1900:1900/udp"];
-            environment = {
-              PUID = "1000";
-              PGID = "1000";
-              TZ = "Europe/Oslo";
-              JELLYFIN_PublishedServerUrl = "0.0.0.0";
-            };
-            volumes = [
-              "${base}/config:/config"
-              "${base}/series:/data/tvshows"
-              "${base}/movies:/data/movies"
-              "${base}/music:/data/music"
-            ];
-          };
+        TZ = "Europe/Oslo";
+        JELLYFIN_PublishedServerUrl = "https://jellyfin.${config.modules.nginx.domain}";
+      };
+    };
+  };
+
+  nixos = {
+    networking.firewall.allowedUDPPorts = [
+      7359
+      1900
+    ];
+
+    services.nginx.virtualHosts = {
+      "jellyfin.${config.modules.nginx.domain}" = {
+        forceSSL = true;
+        sslCertificate = config.modules.nginx.cert;
+        sslCertificateKey = config.modules.nginx.key;
+        extraConfig = ''
+          client_max_body_size 2G;
+        '';
+        locations."/" = {
+          proxyPass = "http://0.0.0.0:8096";
+          proxyWebsockets = true;
         };
       };
     };
-  }
+  };
+}

@@ -3,7 +3,7 @@ with outputs.lib; {
   isLinux = hasSuffix "linux";
   isDarwin = hasSuffix "darwin";
 
-  isWayland = config: config.home.sessionVariables ? NIXOS_OZONE_WL;
+  # isWayland = config: config.home.sessionVariables ? NIXOS_OZONE_WL;
   # isDesktop = osConfig: hostname: isWayland osConfig || outputs.nixosConfigurations."${hostname}".config.services.xserver.enable;
   # isDesktop' = hmConfig: hmConfig.isDesktop || isWayland hmConfig; #  || (hmConfig.nixos ? services && hmConfig.nixos.services.xserver.enable);
 

@@ -1,24 +1,23 @@
 {
   config,
   outputs,
-  pkgs,
   ...
 }:
-outputs.lib.mkModule config "podman" {
+outputs.lib.mkModule' config "podman" (config.modules.dev.podman.enable || config.modules.containers.enable) {
+  services.podman.enable = true;
+
   nixos = {
+    # Allow podman to bind to ports below 1024.
+    # Surprisingly, this is also needed to bind to ports *inside* containers.
+    boot.kernel.sysctl."net.ipv4.ip_unprivileged_port_start" = 0;
+
     virtualisation = {
       podman = {
         enable = true;
-        dockerCompat = false;
 
+        autoPrune.enable = true;
         defaultNetwork.settings.dns_enabled = true;
       };
-
-      # systemd unit name: podman-<service>
-      # journalctl -u podman-<service>.service
-      oci-containers.backend = outputs.lib.mkForce "podman";
     };
-
-    environment.systemPackages = with pkgs; [podman-compose];
   };
 }

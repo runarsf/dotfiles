@@ -17,7 +17,7 @@ outputs.lib.mkFor system hostname {
 
     # TODO: Refactor implementation
     defaultTerminal = "wezterm";
-    defaultBrowser = "zen";
+    # defaultBrowser = "zen";
     avatar = ./avatar.jpg;
 
     modules =
@@ -100,9 +100,8 @@ outputs.lib.mkFor system hostname {
           "sops-fonts"
           "bluetooth"
           "pipewire"
-          "podman"
           "mpv"
-          # "stremio"
+          ["dev" "podman"]
           "camera"
           "zen"
           "logitech"
@@ -154,6 +153,7 @@ outputs.lib.mkFor system hostname {
             "libvirtd"
             "input"
             "i2c"
+            "blahaj"
           ];
         };
         # https://discourse.nixos.org/t/howto-disable-most-gnome-default-applications-and-what-they-are/13505/14
@@ -243,20 +243,10 @@ outputs.lib.mkFor system hostname {
       # TODO: Maybe mkDefault this for all hosts and mkForce for desktops, see TODO in flake.nix
       isDesktop = false;
 
-      modules =
-        outputs.lib.enable [
-          "podman"
-          "tmux"
-          ["services" "immich"]
-          ["services" "stremio"]
-        ]
-        // {
-          nginx = {
-            enable = true;
-            domains = ["runar.ch"];
-            email = "ssl@runar.ch";
-          };
-        };
+      modules = outputs.lib.enable [
+        "tmux"
+        "docker"
+      ];
     };
 
     rpi = {

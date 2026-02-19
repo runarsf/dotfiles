@@ -4,6 +4,7 @@
   ...
 }: {
   options = with outputs.lib; {
+    # TODO: Refactor this. It should be an option under the terminal's module itself, and just allow one to be enabled at a time
     defaultTerminal = mkOption {
       type = types.nullOr types.str;
       default =
@@ -43,7 +44,5 @@
       |> outputs.lib.splitString " "
       |> builtins.head
       |> builtins.baseNameOf;
-
-    modules."${config.defaultTerminal}".enable = true;
   };
 }

@@ -48,4 +48,38 @@
 
   mkServiceModule = config: name: moduleConfig:
     mkServiceModule' config name false moduleConfig;
+
+  mkContainer = config: containerConfig:
+    outputs.lib.deepMerge [
+      {
+        extraPodmanArgs = [
+          "--pull=newer"
+          "--group-add=keep-groups"
+          # ''--gidmap="+g102000:@2000"''
+        ];
+        autoUpdate = "registry";
+        userNS = outputs.lib.mkDefault "keep-id";
+        network = "pasta";
+        # user = config.nixos.users.users."${name}".uid;
+        # group = config.nixos.users.groups."${name}".gid;
+        # userNS = ''keep-id:uid=${builtins.toString config.nixos.users.users."${name}".uid},gid=${builtins.toString config.nixos.users.groups."${name}".gid}'';
+        # environment = {
+        # PUID = config.nixos.users.users."${config.home.username}".uid;
+        # PGID = config.nixos.users.groups."${config.home.username}".gid;
+        # UMASK = "002";
+        # };
+      }
+      containerConfig
+    ];
+  # // (containerConfig
+  #   // outputs.lib.optionals ((containerConfig.environmentFiles or null) != null) {
+  #     environmentFiles =
+  #       map (
+  #         item:
+  #           if builtins.isString item
+  #           then config.sops.templates."${item}".path
+  #           else item
+  #       )
+  #       containerConfig.environmentFiles;
+  #   });
 }

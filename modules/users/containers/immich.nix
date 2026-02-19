@@ -5,7 +5,7 @@
 }: let
   cfg = config.modules.services.immich;
   base = "${config.home.homeDirectory}/data/containers/immich";
-  media = "${config.home.homeDirectory}/data/media/photos";
+  media = "${config.home.homeDirectory}/data/media";
 in
   outputs.lib.mkModule config ["services" "immich"] rec {
     sops = {
@@ -27,10 +27,8 @@ in
     nixos = {
       system.userActivationScripts."immich".text = ''
         mkdir -p "${base}/db" \
-                 "${media}"
+                 "${media}/photos"
       '';
-
-      networking.firewall.allowedTCPPorts = [2283];
 
       virtualisation.oci-containers.containers = {
         "immich_server" = {
@@ -39,7 +37,7 @@ in
           extraOptions = ["--pull=newer"];
           ports = ["2283:2283"];
           volumes = [
-            "${media}:/data"
+            "${media}/photos:/data"
             "/etc/localtime:/etc/localtime:ro"
           ];
           environmentFiles = [
@@ -85,7 +83,7 @@ in
         };
       };
 
-      services.nginx.virtualHosts = outputs.lib.mkIf config.modules.nginx.enable {
+      services.nginx.virtualHosts = {
         "photos.${config.modules.nginx.domain}" = {
           forceSSL = true;
           sslCertificate = config.modules.nginx.cert;

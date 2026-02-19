@@ -5111,11 +5111,11 @@
     "vault_2": {
       "flake": false,
       "locked": {
-        "lastModified": 1767547146,
-        "narHash": "sha256-ZLV6n6cTSBvElxeuqiuXO+1T45NjNh5Y9yUGa86yVhY=",
+        "lastModified": 1771438743,
+        "narHash": "sha256-SZypaXlztREbFZmBJ2w/D2Qfw1uR91BT1KvLzqQOAvM=",
         "ref": "refs/heads/main",
-        "rev": "3120e70603022f7b33b64337085de88fb6ca6d4a",
-        "revCount": 43,
+        "rev": "1788c71aa5edfd86fa12d4996e789f349ea6f3c6",
+        "revCount": 44,
         "type": "git",
         "url": "ssh://git@github.com/runarsf/vault"
       },
