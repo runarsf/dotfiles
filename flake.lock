@@ -447,11 +447,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1769696720,
-        "narHash": "sha256-CxTvTx7WYKj9usa1uZDUmCqS9+W0QoIeTGDlkhHLVho=",
+        "lastModified": 1771340270,
+        "narHash": "sha256-rzyqTCp+B4T6UW7mKkUtPA4dk+cwsuGxIkstqG9dIUo=",
         "owner": "AvengeMedia",
         "repo": "dgop",
-        "rev": "3f96465aacac7f4f304bacf154f57fc0077ad26d",
+        "rev": "eae53d4cfd9da4e898d2c50dac645d0ef46b57c4",
         "type": "github"
       },
       "original": {
@@ -468,16 +468,36 @@
         "quickshell": "quickshell_2"
       },
       "locked": {
-        "lastModified": 1770144297,
-        "narHash": "sha256-t1yP9G5wh//Zil6yOIMlsGYTnHI5bcHv1NmkoBq4pdE=",
+        "lastModified": 1771546861,
+        "narHash": "sha256-rTBvwn54XmP2oP64RHKTJ+Ym1q+ChJ5vRAirNHhpHD4=",
         "owner": "AvengeMedia",
         "repo": "DankMaterialShell",
-        "rev": "f59aeb27826082cb0331e6f3f29fa5308f12fc4b",
+        "rev": "d18f93497855e9fdf7f2f6a5f5f900a9250f085d",
         "type": "github"
       },
       "original": {
         "owner": "AvengeMedia",
         "repo": "DankMaterialShell",
+        "type": "github"
+      }
+    },
+    "dms-plugin-registry": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1771514208,
+        "narHash": "sha256-gnqPDPZcg2Hno2SUiKC0hT2Lkkr/n352+cYrFb3q0K0=",
+        "owner": "AvengeMedia",
+        "repo": "dms-plugin-registry",
+        "rev": "9febf3743e7f3014e0e3825a127b8fa5858b9ea1",
+        "type": "github"
+      },
+      "original": {
+        "owner": "AvengeMedia",
+        "repo": "dms-plugin-registry",
         "type": "github"
       }
     },
@@ -4048,6 +4068,7 @@
         "awww": "awww",
         "dgop": "dgop",
         "dms": "dms",
+        "dms-plugin-registry": "dms-plugin-registry",
         "flake-utils": "flake-utils",
         "home-manager": "home-manager",
         "hypr-dynamic-cursors": "hypr-dynamic-cursors",

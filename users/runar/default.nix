@@ -106,7 +106,7 @@ outputs.lib.mkFor system hostname {
           "zen"
           "logitech"
           "localsend"
-          "noctalia"
+          "dms"
           "vicinae"
         ]
         // {
