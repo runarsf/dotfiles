@@ -101,6 +101,8 @@
       url = "git+ssh://git@github.com/Boiing587/vault";
       flake = false;
     };
+
+    hytale-launcher.url = "github:JPyke3/hytale-launcher-nix";
   };
 
   outputs = inputs @ {self, ...}: let

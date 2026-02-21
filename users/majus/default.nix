@@ -131,6 +131,7 @@ in
             "japanese"
             "steam"
             "ffxiv"
+            "hytale"
             "easyeffects"
             "zed"
             "kitty"
