@@ -5373,11 +5373,11 @@
         "treefmt-nix": "treefmt-nix_13"
       },
       "locked": {
-        "lastModified": 1775494253,
-        "narHash": "sha256-SsEArH3MEYx51/uU+YlwiyxHBrz38Gk18IHZGJkwpfo=",
+        "lastModified": 1775495155,
+        "narHash": "sha256-Bh7n5ivnQiI9VkBQeOf00aolgc0Xhgc7QqJJ7AeiJzY=",
         "owner": "runarsf",
         "repo": "nixvim",
-        "rev": "64c8537ca5485150e590655c5e579c1ece607717",
+        "rev": "53d2f217e413a8fd94f8f967c11e005c3b91e389",
         "type": "github"
       },
       "original": {
