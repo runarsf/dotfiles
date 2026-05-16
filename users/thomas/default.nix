@@ -101,7 +101,7 @@ in
               };
               python = {
                 enable = true;
-                packageName = "python311";
+                packageName = "python313";
                 presets = outputs.lib.enable [
                   "math"
                   # "jupyter"

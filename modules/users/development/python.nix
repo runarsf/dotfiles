@@ -12,7 +12,7 @@ in
     options' = with outputs.lib; {
       ide = outputs.lib.mkEnableOption "Enable Python IDE";
       packageName = mkOption {
-        type = types.enum ["python311" "python312"];
+        type = types.enum ["python311" "python312" "python313"];
         description = "The package name of the python version to use";
         default = "python311";
       };
