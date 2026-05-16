@@ -1,3 +1,9 @@
-_: {
-  services.hardware.bolt.enable = true;
+{
+  self,
+  inputs,
+  ...
+}: {
+  flake.nixosModules.thunderbolt = _: {
+    services.hardware.bolt.enable = true;
+  };
 }

@@ -10,6 +10,10 @@
     nixpkgs-master.url = "github:nixos/nixpkgs/master";
     nur.url = "github:nix-community/nur";
 
+    flake-parts.url = "github:hercules-ci/flake-parts";
+    import-tree.url = "github:denful/import-tree";
+    wrapper-modules.url = "github:BirdeeHub/nix-wrapper-modules";
+
     flake-utils.url = "github:numtide/flake-utils";
     treefmt-nix.url = "github:numtide/treefmt-nix";
 
@@ -126,6 +130,9 @@
     };
   };
 
+  outputs = inputs: inputs.flake-parts.lib.mkFlake {inherit inputs;} (inputs.import-tree ./.);
+}
+/*
   outputs = inputs @ {self, ...}: let
     treefmtEval = inputs.flake-utils.eachDefaultSystem (
       pkgs: inputs.treefmtNix.lib.evalModule pkgs ./treefmt.nix
@@ -216,3 +223,5 @@
     });
   };
 }
+*/
+

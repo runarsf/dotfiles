@@ -1,29 +1,35 @@
 {
-  outputs,
-  pkgs,
-  hostname,
-  stateVersion,
+  self,
+  inputs,
   ...
-}:
-with outputs.lib; {
-  imports = [
-    ./user-nixos-configs.nix
-  ];
+}: {
+  flake.nixosModules.default-config = {
+    outputs,
+    pkgs,
+    hostname,
+    stateVersion,
+    ...
+  }:
+    with outputs.lib; {
+      imports = [
+        self.nixosModules.user-nixos-configs
+      ];
 
-  system.stateVersion = mkDefault stateVersion;
-  networking.hostName = mkDefault hostname;
+      system.stateVersion = mkDefault stateVersion;
+      networking.hostName = mkDefault hostname;
 
-  environment.systemPackages = with pkgs; [
-    vim
-    git
-    wget
-    curl
-    niks
-  ];
+      environment.systemPackages = with pkgs; [
+        vim
+        git
+        wget
+        curl
+        niks
+      ];
 
-  nix.gc = {
-    automatic = mkDefault true;
-    dates = mkDefault "weekly";
-    options = mkDefault "--delete-older-than 5d";
-  };
+      nix.gc = {
+        automatic = mkDefault true;
+        dates = mkDefault "weekly";
+        options = mkDefault "--delete-older-than 5d";
+      };
+    };
 }
