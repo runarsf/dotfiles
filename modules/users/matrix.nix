@@ -18,12 +18,11 @@ in
     config = {
       programs.element-desktop.enable = cfg.clients.element.enable;
 
+      home.packages = outputs.lib.optionals cfg.clients.cinny.enable [pkgs.cinny-desktop];
+
       nixos.services.flatpak = {
         packages = with outputs.lib;
-          optionals cfg.clients.cinny.enable (trace "When using Cinny, make sure you also have flatpak enabled." [
-            "in.cinny.Cinny"
-          ])
-          ++ optionals cfg.clients.commet.enable (trace "When using Commet, make sure you also have flatpak enabled." [
+          optionals cfg.clients.commet.enable (trace "When using Commet, make sure you also have flatpak enabled." [
             rec {
               appId = "chat.commet.commetapp";
               sha256 = "sha256-NBZIyGGlg9MHkXCcDwGRnJIjv3EsbAHdnp01C/B8zHQ=";
