@@ -161,18 +161,16 @@ in
             "qmk"
             "easyeffects"
             "zed"
+            "docker"
           ]
           // {
             dev = {
-              rust = {
-                enable = true;
-                ide = true;
-              };
+              rust.enable = true;
               haskell.enable = true;
               java.enable = true;
               # python.packages = with pkgs.python311Packages; [manim];
             };
-            udev.extraRules = [../../modules/users/gaming/dualsense.rules];
+            udev.extraRules = [../../modules/users/gaming/dualsense.rules ./nintendo.rules];
           };
 
         home.packages = with pkgs; [
@@ -180,6 +178,11 @@ in
           osu-lazer-bin
           rpcs3
           r2modman
+          zoom-us
+          obs-studio
+          openshot-qt
+          vesktop
+          olympus
         ];
 
         nixos = {
@@ -194,7 +197,7 @@ in
             };
 
             bluetooth.powerOnBoot = true;
-            opentabletdriver.enable = true;
+            # opentabletdriver.enable = true;
           };
 
           services = {
