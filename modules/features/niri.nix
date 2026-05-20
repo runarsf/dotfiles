@@ -30,6 +30,8 @@
 
         layout.gaps = 5;
 
+        xwayland-satellite.path = lib.getExe pkgs.xwayland-satellite;
+
         binds = {
           "Mod+Return".spawn-sh = lib.getExe pkgs.kitty;
           "Mod+Q".close-window = _: {};
