@@ -7,6 +7,7 @@
     modules = [
       self.nixosModules.runixConfiguration
       self.nixosModules.homeManager
+      {features.sops.vaultPath = inputs.vault;}
     ];
   };
 
@@ -15,18 +16,17 @@
     lib,
     ...
   }: {
-    imports = [
-      self.nixosModules.runixHardware
-      self.nixosModules.niri
-      self.nixosModules.homeManager
-      self.nixosModules.runar
+    imports = with self.nixosModules; [
+      runixHardware
+      nix
+      niri
+      homeManager
+      runar
 
       inputs.nixos-hardware.nixosModules.lenovo-thinkpad-t480s
     ];
 
     system.stateVersion = "24.05";
-
-    nix.settings.experimental-features = ["nix-command" "flakes"];
 
     environment.systemPackages = with pkgs; [
       firefox

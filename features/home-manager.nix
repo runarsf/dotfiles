@@ -12,6 +12,7 @@
       useGlobalPkgs = true;
       useUserPackages = true;
       extraSpecialArgs = {inherit self;};
+      # sharedModules = [self.homeModules.niks];
     };
   };
 }

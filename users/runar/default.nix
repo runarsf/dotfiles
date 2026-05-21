@@ -3,7 +3,15 @@
   lib',
   ...
 }: let
-  features = lib'.useFeatures self ["dms" "wezterm"];
+  features = lib'.useFeatures self [
+    "sops"
+    "hyprland"
+    "hypridle"
+    "hyprlock"
+    "dms"
+    "wezterm"
+    "niks"
+  ];
 in {
   flake.nixosModules.runar = {pkgs, ...}: {
     imports = features.nixos;
