@@ -44,7 +44,7 @@
     options = {
       features.sops.ageKeyPaths = lib.mkOption {
         type = lib.types.listOf lib.types.str;
-        default = ["${config.home.homeDirectory}/.ssh/id_ed25519"];
+        default = ["${config.home.homeDirectory}/.ssh/id_nix"];
         description = "SSH key paths to use as age keys for user sops.";
       };
     };

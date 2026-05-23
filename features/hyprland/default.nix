@@ -209,7 +209,8 @@
         kitty
       ];
 
-      home.activation.hyprlandConfigFiles = lib.hm.dag.entryAfter ["writeBoundary"] ''
+      home.activation.hyprlandConfigFiles = lib.hm.dag.entryBefore ["writeBoundary"] ''
+        mkdir -p "${config.home.homeDirectory}/.config/hypr"
         touch "${config.home.homeDirectory}/.config/hypr/monitors.conf" \
               "${config.home.homeDirectory}/.config/hypr/workspaces.conf"
       '';
