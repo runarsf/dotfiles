@@ -11,5 +11,22 @@
       "aarch64-linux"
       "aarch64-darwin"
     ];
+
+    perSystem = {system, ...}: {
+      _module.args.pkgs = import inputs.nixpkgs {
+        inherit system;
+        config.allowUnfree = true;
+        config.allowUnfreePredicate = _: true;
+
+        overlays = [
+          (_: _: {
+            master = import inputs.nixpkgs-master {
+              inherit system;
+              config.allowUnfree = true;
+            };
+          })
+        ];
+      };
+    };
   };
 }

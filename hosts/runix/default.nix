@@ -1,15 +1,25 @@
 {
   self,
   inputs,
+  withSystem,
   ...
 }: {
-  flake.nixosConfigurations.runix = inputs.nixpkgs.lib.nixosSystem {
-    modules = [
-      self.nixosModules.runixConfiguration
-      self.nixosModules.homeManager
-      {features.sops.vaultPath = inputs.vault;}
-    ];
-  };
+  flake.nixosConfigurations.runix = withSystem "x86_64-linux" (
+    {pkgs, ...}:
+      inputs.nixpkgs.lib.nixosSystem {
+        inherit pkgs;
+        modules = [
+          self.nixosModules.runixConfiguration
+          self.nixosModules.homeManager
+          {features.sops.vaultPath = inputs.vault;}
+          {
+            home-manager.users.runar = {config, ...}: {
+              features.niks.flake = "${config.home.homeDirectory}/Development/dotfiles";
+            };
+          }
+        ];
+      }
+  );
 
   flake.nixosModules.runixConfiguration = {
     pkgs,
@@ -19,6 +29,7 @@
     imports = with self.nixosModules; [
       runixHardware
       nix
+      locales
       niri
       homeManager
       runar

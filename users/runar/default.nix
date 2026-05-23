@@ -1,10 +1,14 @@
 {
   self,
+  inputs,
   lib',
   ...
 }: let
   features = lib'.useFeatures self [
     "sops"
+    "fonts"
+    "zsh"
+    "starship"
     "hyprland"
     "hypridle"
     "hyprlock"
@@ -18,7 +22,21 @@ in {
     home-manager.users.runar = self.homeModules.runar;
     users.users.runar = {
       isNormalUser = true;
-      shell = pkgs.bashInteractive;
+      shell = pkgs.zsh;
+      home = "/home/runar";
+      initialPassword = "changeme";
+      description = "Runar Fredagsvik";
+      extraGroups = [
+        "wheel"
+        "networkmanager"
+        "docker"
+        "audio"
+        "video"
+        "libvirtd"
+        "input"
+        "i2c"
+        "blahaj"
+      ];
     };
   };
 
@@ -29,13 +47,22 @@ in {
   }: {
     imports = features.home;
 
-    programs.bash.enable = true;
-    programs.bash.shellAliases.ll = "ls -l";
-
-    home.packages = with pkgs;
-      [hello]
-      ++ lib.optionals pkgs.stdenv.isLinux [television];
+    home.packages = with pkgs; lib.optionals pkgs.stdenv.isLinux [television];
 
     home.stateVersion = "24.11";
+  };
+
+  flake.homeConfigurations.runar = inputs.home-manager.lib.homeManagerConfiguration {
+    pkgs = import inputs.nixpkgs {system = "x86_64-linux";};
+    extraSpecialArgs = {inherit self;};
+    modules = [
+      self.homeModules.runar
+      {
+        home = {
+          username = "runar";
+          homeDirectory = "/home/runar";
+        };
+      }
+    ];
   };
 }

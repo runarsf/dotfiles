@@ -1,4 +1,8 @@
-{...}: {
+{
+  self,
+  inputs,
+  ...
+}: {
   flake.nixosModules.wezterm = {pkgs, ...}: {
     hardware.graphics = {
       enable = true;
@@ -10,15 +14,22 @@
   flake.homeModules.wezterm = {
     pkgs,
     lib,
-    config,
     ...
-  }: lib.mkIf pkgs.stdenv.isLinux {
-    home.shellAliases.ssh = "TERM=xterm-256color ssh";
+  }:
+    lib.mkIf pkgs.stdenv.isLinux {
+      home.shellAliases.ssh = "TERM=xterm-256color ssh";
 
-    programs.wezterm = {
-      enable = true;
-      package = pkgs.wezterm;
-      extraConfig = ''
+      programs.wezterm = {
+        enable = true;
+        package = self.packages.${pkgs.stdenv.hostPlatform.system}.wezterm;
+      };
+    };
+
+  perSystem = {pkgs, ...}: {
+    packages.wezterm = inputs.wrapper-modules.wrappers.wezterm.wrap {
+      inherit pkgs;
+
+      "wezterm.lua".content = ''
         local wezterm = require 'wezterm'
         local tabline = wezterm.plugin.require("https://github.com/michaelbrusegard/tabline.wez")
         local config = wezterm.config_builder()
@@ -101,7 +112,7 @@
         config.check_for_updates = false
 
         config.set_environment_variables = {
-          TERMINFO_DIRS = '${config.home.profileDirectory}/share/terminfo',
+          TERMINFO_DIRS = '~/.nix-profile/share/terminfo',
           WSLENV = 'TERMINFO_DIRS',
         }
         config.term = 'wezterm'

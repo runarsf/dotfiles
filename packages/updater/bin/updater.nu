@@ -52,22 +52,27 @@ def update-to-latest-release [input_name: string] {
 }
 
 def main [
-  ...inputs: string,
-  --dir (-d): directory, # override the flake directory (defaults to $NH_FLAKE)
-  --all (-a)             # run nix flake update before pinning release-locked inputs
+  ...release_inputs: string,
+  --dir (-d): string,  # override the flake directory (defaults to $NH_FLAKE)
+  --inputs,               # run nix flake update before pinning release-locked inputs
+  --fetchgit              # update git fetchers
 ] {
-    if $dir == null and "NH_FLAKE" in $env {
-        cd $env.NH_FLAKE
-    } else if $dir != null {
+    if $dir != null {
         cd $dir
     }
 
-    if $all {
+    if $inputs {
         print $"(ansi blue_bold)info:(ansi reset) updating flake inputs..."
         nix flake update
     }
 
-    for input in $inputs {
+    if $fetchgit {
+        print $"(ansi blue_bold)info:(ansi reset) updating fetchgit..."
+        let nix_files = ^fd --extension nix --type file | lines
+        ^update-nix-fetchgit --verbose ...$nix_files out+err>| lines | where not ($it =~ '^Made.*updates$') | each { print $in }
+    }
+
+    for input in $release_inputs {
         update-to-latest-release $input
     }
 }

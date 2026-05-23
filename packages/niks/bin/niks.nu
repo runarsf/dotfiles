@@ -2,6 +2,10 @@
 
 # An `nh` wrapper.
 
+def with-nix-args [body: closure] {
+  with-env { NIX_CONFIG: "extra-experimental-features = nix-command flakes pipe-operators" } $body
+}
+
 def confirm [message: string = "Continue?", --default]: nothing -> bool {
   let prompt = $"($message)(ansi reset) (if $default { '(Y/n)' } else { '(y/N)' }) "
   match (input $prompt | str trim | str downcase) {
@@ -36,61 +40,84 @@ def after-home-switch [bin: string] {
   }
 }
 
-def --wrapped main [...args: string] {
+def --wrapped main [
+  --skip-substituters (-s),
+  --quiet (-q),
+  ...args: string
+] {
   if "NH_FLAKE" in $env {
     cd $env.NH_FLAKE
   }
 
-  if ($args | any { |a| $a | str starts-with "-" }) {
-    run-external "nh" ...$args
-    return
-  }
-
   let bin = ($env.CURRENT_FILE | path basename)
-  let hostname = sys host | hostname
 
-  let command    = ($args | get 0)
-  let subcommand = ($args | get 1)
-  let rest       = ($args | skip 2)
-  let separator_idx = ($rest | enumerate | where item == "--" | get index? | first | default null)
+  let separator_idx = ($args | enumerate | where item == "--" | get index? | first | default null)
 
   let before_sep: list<string> = if $separator_idx != null {
-    $rest | first $separator_idx
+    $args | first $separator_idx
   } else {
-    $rest
+    $args
   }
 
   let after_sep: list<string> = if $separator_idx != null {
-    $rest | skip ($separator_idx + 1)
+    $args | skip ($separator_idx + 1)
   } else {
     []
   }
 
-  let substituters = (
-    nix eval --json $".#nixosConfigurations.\"($hostname)\".config.nix.settings.trusted-substituters"
-    | from json
-    | str join " "
-  )
+  let positionals = $before_sep | where { |arg| not ($arg | str starts-with "-") }
+  let command    = $positionals | get 0?
+  let subcommand = $positionals | get 1?
 
-  let public_keys = (
-    nix eval --json $".#nixosConfigurations.\"($hostname)\".config.nix.settings.trusted-public-keys"
-    | from json
-    | str join " "
-  )
+  if $command == null or $subcommand == null {
+    run-external "nh" ...$args
+    return
+  }
 
-  # Build the final argument list:
-  #   <command> <subcommand> <before-sep> -- <after-sep> --accept-flake-config
+  let flake_ref   = $positionals | get 2?
+  let config_name = if $flake_ref != null and ($flake_ref | str contains "#") {
+    $flake_ref | split row "#" | last
+  } else {
+    sys host | hostname
+  }
+
+  let extra_args = if $skip_substituters {
+    []
+  } else {
+    let settings = with-nix-args {
+      nix eval --json $".#nixosConfigurations.\"($config_name)\".config.nix.settings" --apply "s: { substituters = s.trusted-substituters; publicKeys = s.trusted-public-keys; }"
+    } | from json
+
+    let substituters = $settings.substituters | str join " "
+    let public_keys  = $settings.publicKeys   | str join " "
+
+    ["--option", "substituters", $substituters, "--option", "trusted-public-keys", $public_keys]
+  }
+
   let final_args = (
-    [$command, $subcommand]
-    | append $before_sep
+    $before_sep
     | append "--"
     | append $after_sep
     | append "--accept-flake-config"
-    | append ["--option", "substituters", $"($substituters)"]
-    | append ["--option", "trusted-public-keys", $"($public_keys)"]
+    | append $extra_args
   )
 
-  run-external "nh" ...$final_args
+  if not $quiet {
+    let formatted = $final_args | reduce -f "" { |arg, acc|
+      if ($acc | is-empty) {
+        $arg
+      } else if ($arg | str starts-with "-") {
+        $"($acc)(char newline)    ($arg)"
+      } else {
+        $"($acc) ($arg)"
+      }
+    }
+    print $"(ansi blue)info:(ansi reset) running:(char newline)$ nh ($formatted)(char newline)"
+  }
+
+  with-nix-args {
+    run-external "nh" ...$final_args
+  }
 
   match [$command, $subcommand] {
     ["os", "switch"] => { after-os-switch $bin }
