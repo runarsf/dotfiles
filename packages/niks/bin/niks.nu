@@ -43,13 +43,19 @@ def after-home-switch [bin: string] {
 def --wrapped main [
   --skip-substituters (-s),
   --quiet (-q),
+  --flake-dir (-d): string,
   ...args: string
 ] {
-  if "NH_FLAKE" in $env {
-    cd $env.NH_FLAKE
+  let dir = if $flake_dir != null {
+    $flake_dir
+  } else if "NH_FLAKE" in $env {
+    $env.NH_FLAKE
+  } else {
+    pwd
   }
+  cd $dir
 
-  let bin = ($env.CURRENT_FILE | path basename)
+  let bin = $env.CURRENT_FILE | path basename
 
   let separator_idx = ($args | enumerate | where item == "--" | get index? | first | default null)
 
@@ -116,7 +122,11 @@ def --wrapped main [
   }
 
   with-nix-args {
-    run-external "nh" ...$final_args
+    with-env {
+      NH_FLAKE: $dir
+    } {
+      run-external "nh" ...$final_args
+    }
   }
 
   match [$command, $subcommand] {

@@ -1,5 +1,11 @@
 {lib, ...}: let
-  releaseLockedInputs = ["hyprland" "dms"];
+  releaseLockedInputs = [
+    "hyprland"
+    "dms"
+    "vicinae"
+    "vicinae"
+    "nwg-displays"
+  ];
 in {
   perSystem = {pkgs, ...}: let
     inherit (builtins) readFile concatStringsSep;
@@ -7,20 +13,23 @@ in {
     inherit (pkgs) makeWrapper symlinkJoin;
     inherit (pkgs.writers) writeNuBin;
 
-    update-release = symlinkJoin {
-      name = "update-release";
-      paths = [(writeNuBin "update-release" (readFile ./bin/updater.nu))];
+    update-flake = symlinkJoin {
+      name = "update-flake";
+      paths = [(writeNuBin "update-flake" (readFile ./bin/update-flake.nu))];
       nativeBuildInputs = [makeWrapper];
       postBuild = ''
-        wrapProgram $out/bin/update-release \
+        wrapProgram $out/bin/update-flake \
           --prefix PATH : ${makeBinPath (with pkgs; [update-nix-fetchgit fd])}
       '';
     };
     lockedNu = "[" + concatStringsSep ", " (map (x: "\"${x}\"") releaseLockedInputs) + "]";
   in {
-    packages.updater = writeNuBin "flake-updater" ''
-      let dir_args = if "NH_FLAKE" in $env { ["--dir" $env.NH_FLAKE] } else { [] }
-      ^${update-release}/bin/update-release ...$dir_args --inputs --fetchgit ...${lockedNu}
-    '';
+    packages = {
+      inherit update-flake;
+      updater = writeNuBin "update-flake" ''
+        let dir_args = if "NH_FLAKE" in $env { ["--dir" $env.NH_FLAKE] } else { [] }
+        ^${update-flake}/bin/update-flake ...$dir_args --inputs --fetchgit ...${lockedNu}
+      '';
+    };
   };
 }
