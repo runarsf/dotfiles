@@ -56,6 +56,8 @@
     };
 
     nixos-hardware.url = "github:nixos/nixos-hardware";
+
+    hytale-launcher.url = "github:JPyke3/hytale-launcher-nix";
   };
 
   outputs = inputs: let
