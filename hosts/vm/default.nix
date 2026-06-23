@@ -8,47 +8,37 @@
     {pkgs, ...}:
       inputs.nixpkgs.lib.nixosSystem {
         inherit pkgs;
-        modules = [
-          self.nixosModules.vmConfiguration
-          self.nixosModules.homeManager
-          {features.sops.vaultPath = inputs.vault;}
+        modules = with self.nixosModules; [
+          vmConfiguration
+          homeManager
+          {
+            home-manager.users.runar = {config, ...}: {
+              features.niks.flake = "${config.home.homeDirectory}/shared/dotfiles";
+            };
+          }
         ];
       }
   );
 
-  flake.nixosModules.vmConfiguration = {
-    pkgs,
-    lib,
-    ...
-  }: {
+  flake.nixosModules.vmConfiguration = {pkgs, ...}: {
     imports = with self.nixosModules; [
-      vmHardware
-      nix
-      locales
+      ./hardware-configuration.nix
       homeManager
       runar
+      sshServer
     ];
 
     system.stateVersion = "25.11";
+    networking.hostName = "vm";
 
     boot.loader.grub.enable = true;
     boot.loader.grub.device = "/dev/vda";
     boot.loader.grub.useOSProber = true;
 
-    networking.hostName = "vm";
     networking.networkmanager.enable = true;
     services.xserver.enable = true;
     services.displayManager.sddm.enable = true;
     services.desktopManager.plasma6.enable = true;
-    services.pulseaudio.enable = false;
-    security.rtkit.enable = true;
-    services.pipewire = {
-      enable = true;
-      alsa.enable = true;
-      alsa.support32Bit = true;
-      pulse.enable = true;
-    };
-    programs.firefox.enable = true;
 
     environment.systemPackages = with pkgs; [
       git

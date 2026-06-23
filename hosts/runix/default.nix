@@ -8,41 +8,23 @@
     {pkgs, ...}:
       inputs.nixpkgs.lib.nixosSystem {
         inherit pkgs;
-        modules = [
-          self.nixosModules.runixConfiguration
-          self.nixosModules.homeManager
-          {features.sops.vaultPath = inputs.vault;}
-          {
-            home-manager.users.runar = {config, ...}: {
-              features.niks.flake = "${config.home.homeDirectory}/Development/dotfiles";
-            };
-          }
+        modules = with self.nixosModules; [
+          runixConfiguration
+          homeManager
         ];
       }
   );
 
-  flake.nixosModules.runixConfiguration = {
-    pkgs,
-    lib,
-    ...
-  }: {
+  flake.nixosModules.runixConfiguration = _: {
     imports = with self.nixosModules; [
-      runixHardware
-      nix
-      locales
-      niri
+      ./hardware-configuration.nix
+      inputs.nixos-hardware.nixosModules.lenovo-thinkpad-t480s
       homeManager
       runar
-
-      inputs.nixos-hardware.nixosModules.lenovo-thinkpad-t480s
     ];
 
     system.stateVersion = "24.05";
-
-    environment.systemPackages = with pkgs; [
-      firefox
-      vim
-    ];
+    networking.hostName = "runix";
 
     boot.loader.systemd-boot.enable = true;
     boot.loader.efi.canTouchEfiVariables = true;

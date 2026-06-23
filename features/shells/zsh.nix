@@ -1,0 +1,190 @@
+{
+  self,
+  inputs,
+  lib',
+  ...
+}: {
+  flake.nixosModules.zsh = {pkgs, ...}: let
+    inherit (pkgs.stdenv.hostPlatform) system;
+  in {
+    programs.zsh = {
+      enable = true;
+      package = self.packages.${system}.zsh;
+    };
+    programs.command-not-found.enable = false;
+    environment.pathsToLink = ["/share/zsh"];
+    environment.shells = [self.packages.${system}.zsh];
+  };
+
+  perSystem = {
+    pkgs,
+    lib,
+    self',
+    ...
+  }: let
+    inherit (lib) getExe concatMapAttrsStringSep concatMapStringsSep;
+    inherit (lib'.shell) mkZoxideInit mkStarshipInit greeting aliases abbrs;
+
+    aliases' =
+      (aliases pkgs)
+      // {
+        ls = "EZA_ICON_SPACING=2 ${getExe pkgs.eza} -l -F -g -a --group-directories-first --no-time --git";
+        develop = "nix develop --command zsh";
+      };
+
+    eagerPlugins = [
+      "${pkgs.zsh-autopair}/share/zsh/zsh-autopair/autopair.zsh"
+      "${pkgs.zsh-nix-shell}/share/zsh-nix-shell/nix-shell.plugin.zsh"
+      "${pkgs.nix-zsh-completions}/share/zsh/plugins/nix/init.zsh"
+      "${pkgs.zsh-abbr}/share/zsh/zsh-abbr/zsh-abbr.plugin.zsh"
+      "${pkgs.oh-my-zsh}/share/oh-my-zsh/plugins/gitfast/gitfast.plugin.zsh"
+      "${pkgs.oh-my-zsh}/share/oh-my-zsh/plugins/dotenv/dotenv.plugin.zsh"
+      "${pkgs.oh-my-zsh}/share/oh-my-zsh/plugins/fancy-ctrl-z/fancy-ctrl-z.plugin.zsh"
+      "${pkgs.oh-my-zsh}/share/oh-my-zsh/plugins/per-directory-history/per-directory-history.plugin.zsh"
+      "${pkgs.oh-my-zsh}/share/oh-my-zsh/lib/key-bindings.zsh"
+      "${pkgs.fzf}/share/fzf/completion.zsh"
+      "${pkgs.fzf}/share/fzf/key-bindings.zsh"
+      "${self'.packages.zsh-docker-aliases}/zsh-docker-aliases.plugin.zsh"
+    ];
+
+    deferredPlugins = [
+      "${pkgs.zsh-autosuggestions}/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+      "${pkgs.zsh-history-substring-search}/share/zsh-history-substring-search/zsh-history-substring-search.zsh"
+      "${pkgs.zsh-syntax-highlighting}/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+    ];
+  in {
+    packages.zsh = inputs.wrapper-modules.wrappers.zsh.wrap {
+      inherit pkgs;
+
+      zshenv.content = ''
+        AUTOPAIR_INHIBIT_INIT=1
+        AUTOPAIR_SPC_WIDGET="abbr-expand-and-insert"
+      '';
+
+      zshrc.content = ''
+        # Workaround for non-nixos machines that can't set pathsToLink
+        if (( ! ''${fpath[(I)/run/current-system/sw/share/zsh/site-functions]} )); then
+          for p in ''${(z)NIX_PROFILES}; do
+            fpath=($p/share/zsh/site-functions $p/share/zsh/''${ZSH_VERSION}/functions $fpath)
+          done
+        fi
+
+        fpath=(''${XDG_DATA_HOME:-$HOME/.local/share}/zsh/generated_man_completions $fpath)
+
+        zmodload zsh/complist \
+                 zsh/mathfunc
+        autoload -Uz compinit \
+                     vcs_info \
+                     edit-command-line \
+                     up-line-or-beginning-search \
+                     down-line-or-beginning-search
+        if [[ -n ''${ZDOTDIR:-$HOME}/.zcompdump(#qN.mh+24) ]]; then
+          compinit
+        else
+          compinit -C
+        fi
+
+        bindkey -e
+
+        source ${pkgs.zsh-defer}/share/zsh-defer/zsh-defer.plugin.zsh
+
+        if [[ ! -d ''${XDG_DATA_HOME:-$HOME/.local/share}/zsh/generated_man_completions ]]; then
+          zsh-defer ${getExe self'.packages.zsh-manpage-completion-generator}
+        fi
+
+        ${eagerPlugins |> concatMapStringsSep "\n" (p: "source ${p}")}
+
+        typeset -A ZSH_HIGHLIGHT_REGEXP
+        ZSH_HIGHLIGHT_REGEXP+=('[0-9]' fg=cyan)
+        ZSH_HIGHLIGHT_HIGHLIGHTERS+=(main regexp)
+
+        ${deferredPlugins |> concatMapStringsSep "\n" (p: "zsh-defer source ${p}")}
+        zsh-defer bindkey '^[[A' history-substring-search-up
+        zsh-defer bindkey '^[[B' history-substring-search-down
+
+        ${abbrs |> concatMapAttrsStringSep "\n" (k: v: "abbr add --quiet '${k}=${v}'")}
+        ${aliases' |> concatMapAttrsStringSep "\n" (k: v: "alias ${k}='${v}'")}
+
+        source ${mkStarshipInit pkgs "zsh"}
+        source ${mkZoxideInit pkgs "zsh"}
+
+        vcs_info 'prompt'
+
+        setopt hist_ignore_all_dups \
+               hist_expire_dups_first \
+               hist_ignore_dups \
+               hist_ignore_space \
+               share_history \
+               inc_append_history \
+               extended_history \
+               menu_complete \
+               auto_param_slash \
+               interactive_comments \
+               auto_cd \
+               auto_pushd \
+               pushd_ignore_dups \
+               pushd_silent \
+               hup \
+               long_list_jobs \
+               notify
+
+        unsetopt nomatch \
+                 beep \
+                 correct \
+                 prompt_cr \
+                 prompt_sp
+
+        zstyle ':completion:*' menu select
+        zstyle ':completion:*:default' list-colors '''
+        zstyle ':completion:*' special-dirs ..
+        zstyle ':completion:*' special-dirs last
+        zstyle ':completion:*' squeeze-slashes true
+        zstyle ':completion:*' complete-options true
+        zstyle ':completion:*' matcher-list ''' 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*' 'l:|=* r:|=*'
+        zstyle ':completion:*' completer _complete _match _approximate _prefix
+        zstyle ':completion:*:approximate:*' max-errors 1 numeric
+        zstyle -e ':completion:*:approximate:*' max-errors 'reply=($((($#PREFIX+$#SUFFIX)/3))numeric)'
+        zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#) ([0-9a-z-]#)*=01;34=0=01'
+        _comp_options+=(globdots)
+
+        magic-enter-cmd () { ${greeting pkgs} }
+        magic-enter () {
+          if [[ -z $BUFFER ]]; then
+            magic-enter-cmd
+            zle accept-line
+          else
+            zle accept-line
+          fi
+        }
+        zle -N magic-enter
+        zle -N edit-command-line
+        zle -N up-line-or-beginning-search
+        zle -N down-line-or-beginning-search
+        bindkey "^M" magic-enter
+        bindkey '^e' edit-command-line
+        bindkey '^G' per-directory-history-toggle-history
+        bindkey -M vicmd '^G' per-directory-history-toggle-history
+
+        __git_files () {
+          _wanted files expl 'local files' _files
+        }
+
+        ze () { "$EDITOR" "$(${getExe pkgs.zoxide} query "$@")" }
+        zd () { cd "$(${getExe pkgs.zoxide} query "$PWD" "$@")" }
+        wim () { set -eu; ''${EDITOR:-vim} "$(which ''${1:?No file selected...})" ''${@:2}; set +eu }
+        tmpvim () {
+          if test ! -f "''${1:?No file specified...}"; then
+            printf "File doesn't exist...\n"
+            return 1
+          fi
+          trap "mv '$1.bak' '$1'" EXIT
+          mv "$1" "$1.bak"
+          cat "$1.bak" > "$1"
+          $EDITOR "$1"
+        }
+
+        autopair-init
+      '';
+    };
+  };
+}
