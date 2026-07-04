@@ -37,3 +37,63 @@
 - how would we have machine-specific home manager modules enabled? e.g., only webcam on runar@runix
 - evaluation warning: runar profile: You have set either `nixpkgs.config` or `nixpkgs.overlays` while using `home-manager.useGlobalPkgs`. This will soon not be possible. Please remove all `nixpkgs` options when using `home-manager.useGlobalPkgs`.
 - consider whether features like wayland, dev.make, printing, etc. can be in a common module (e.g., make can be in cli or c, wayland and printing in desktop, etc.)
+
+## Hosts (separate repos)
+- [ ] `boiler` — thomas's gaming desktop
+- [ ] `toaster` — thomas's gaming desktop
+- [ ] `hsrv` — legacy server (minimal config, may just fold into `anuc` instead of porting)
+- [ ] `rpi` — Raspberry Pi host
+- [x] `anuc`, `runix` (plus new `vm`)
+
+## Users
+- [ ] `thomas` — user + home-manager config not created yet
+- [x] `runar`, `blahaj` (system user only)
+
+## Server / self-hosted services
+- [x] `containers.nix` quadlet framework, `glance` service
+- [ ] Wire `containers`/`nginx`/`fail2ban`/`teleport` into the `anuc` host — modules exist but aren't imported anywhere yet
+- [ ] Container services: `jellyfin`, `immich`, `slskd`, `wrtag`, `copyparty`, `freshrss`, `mealie`, `solidtime`, `stremio` (server variant), `wastebin`, `gonic`, `pinchflat`
+
+## Development environments
+- [ ] `neovim`
+- [ ] `vscode`
+- [ ] `rust`
+- [ ] `java`
+- [ ] `javascript`
+- [ ] `iac`
+- [ ] `python`
+- [ ] `qmk` (+ udev rules)
+- [ ] `nix` dev tooling (nixd/alejandra, distinct from the `nix.nix` feature)
+
+## Desktop apps / WM extras
+- [ ] `gpg`
+- [ ] `keychain`
+- [ ] `spotify`
+- [ ] `logitech`
+- [ ] `localsend`
+- [ ] `kvm`
+- [ ] `mullvad`
+- [ ] `signal`
+- [ ] `virtualbox`
+- [ ] `webdav`
+- [ ] `nuke` (home-manager pre-clean utility)
+- [ ] `marker` (OCR container, low priority)
+- [ ] Terminal alternatives: `alacritty`, `kitty`, `ghostty` (wezterm already ported)
+- [ ] Possibly superseded, verify before porting: `dunst`, `waybar`, `ulauncher`, `lf`, `trayer`
+- [ ] `wayle`, `ambxst` — look unfinished/abandoned in old-config; probably skip
+
+## Gaming
+- [x] `steam`, `ffxiv`, `hytale`, `minecraft`, `emulation`, `controllers`
+- [ ] Wire dualsense/8bitdo udev rules
+
+## Locales
+- [x] `norwegian`
+- [ ] `japanese`
+
+## System / linux-level modules
+- [ ] `firewall`
+- [ ] `thunderbolt`
+- [ ] `virtualisation` (libvirt/kvm at system level)
+- [ ] `legacy-consistency`
+- [ ] `service-account` (generic ops-style system user, generalize from `blahaj`)
+- [ ] `mkUser`/`mkHost` helper for default hostname + stateVersion (already noted in TODO.md)
