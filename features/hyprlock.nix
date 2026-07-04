@@ -1,9 +1,9 @@
-{ self, inputs, ... }: {
+_: {
   flake.nixosModules.hyprlock = _: {
-    security.pam.services.hyprlock = { };
+    security.pam.services.hyprlock = {};
   };
 
-  flake.homeModules.hyprlock = { ... }: {
+  flake.homeModules.hyprlock = _: {
     programs.hyprlock = {
       enable = true;
       settings = {

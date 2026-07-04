@@ -1,4 +1,4 @@
-{...}: let
+_: let
   inherit (builtins) filter;
 in {
   libExtensions = [

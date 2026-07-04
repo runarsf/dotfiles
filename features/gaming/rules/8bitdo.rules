@@ -1,0 +1,11 @@
+# https://gist.github.com/barraIhsan/783a82bcf32bed896c85d27dbb8018a5
+
+# 2.4GHz/Dongle
+KERNEL=="hidraw*", ATTRS{idVendor}=="2dc8", MODE="0660", TAG+="uaccess"
+# Bluetooth
+KERNEL=="hidraw*", KERNELS=="*2DC8:*", MODE="0660", TAG+="uaccess"
+
+# 2.4GHz/Dongle
+KERNEL=="hidraw*", ATTRS{idVendor}=="2dc8", MODE="0660", GROUP="input"
+# Bluetooth
+KERNEL=="hidraw*", KERNELS=="*2DC8:6012*", MODE="0660", GROUP="input"

@@ -30,7 +30,7 @@
     ...
   }: let
     inherit (lib) mapAttrs;
-    inherit (lib'.shell) mkZoxideInit mkStarshipInit greeting aliases abbrs;
+    inherit (lib'.shell) mkZoxideInit mkStarshipInit aliases abbrs;
   in {
     packages.fish = inputs.wrapper-modules.wrappers.fish.wrap {
       inherit pkgs;
@@ -41,7 +41,7 @@
 
       configFile.content = ''
         set fish_greeting
-        ${greeting pkgs}
+
         source ${mkStarshipInit pkgs "fish"}
         source ${mkZoxideInit pkgs "fish"}
 
@@ -67,14 +67,6 @@
         {src = humantime-fish.src;}
         {src = puffer.src;}
         {src = done.src;}
-        {
-          src = pkgs.fetchFromGitHub {
-            owner = "lewisacidic";
-            repo = "fish-kubectl-abbr";
-            rev = "161450ab83da756c400459f4ba8e8861770d930c";
-            hash = "sha256-iKNaD0E7IwiQZ+7pTrbPtrUcCJiTcVpb9ksVid1J6A0=";
-          };
-        }
         {
           src = pkgs.fetchFromGitHub {
             owner = "mattmc3";

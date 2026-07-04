@@ -1,13 +1,12 @@
-_: {
+{lib', ...}: {
   flake.homeModules.minecraft = {
     config,
-    inputs,
     lib,
     pkgs,
     ...
   }: let
     inherit (lib) mkOption toList types;
-    inherit (inputs.nixlib.lib.matching) matchStringList;
+    inherit (lib'.matching) matchStringList;
 
     cfg = config.features.minecraft;
   in {
@@ -18,7 +17,7 @@ _: {
         in
           either launchers (listOf launchers);
         default = "prism";
-        apply = x: toList x;
+        apply = toList;
       };
     };
 

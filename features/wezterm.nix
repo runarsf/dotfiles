@@ -9,19 +9,27 @@
       extraPackages = [pkgs.egl-wayland];
     };
     environment.systemPackages = [pkgs.egl-wayland];
+    nix.settings = rec {
+      substituters = ["https://wezterm.cachix.org"];
+      trusted-substituters = substituters;
+      trusted-public-keys = ["wezterm.cachix.org-1:kAbhjYUC9qvblTE+s7S+kl5XM1zVa4skO+E/1IDWdH0="];
+    };
   };
 
   flake.homeModules.wezterm = {
     pkgs,
     lib,
     ...
-  }:
-    lib.mkIf pkgs.stdenv.isLinux {
+  }: let
+    inherit (lib) mkIf;
+    inherit (pkgs.stdenv.hostPlatform) system;
+  in
+    mkIf pkgs.stdenv.isLinux {
       home.shellAliases.ssh = "TERM=xterm-256color ssh";
 
       programs.wezterm = {
         enable = true;
-        package = self.packages.${pkgs.stdenv.hostPlatform.system}.wezterm;
+        package = self.packages.${system}.wezterm;
       };
     };
 

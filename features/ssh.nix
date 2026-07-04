@@ -1,4 +1,4 @@
-{self, ...}: {
+_: {
   flake.nixosModules.ssh = {
     config,
     lib,
@@ -6,8 +6,6 @@
   }: let
     cfg = config.features.ssh;
   in {
-    imports = [self.nixosModules.primaryUser];
-
     options.features.ssh.keys = lib.mkOption {
       default = [];
       description = "Public SSH keys. Added as authorized keys for all primaryUsers. First key is the default signing key.";
@@ -25,11 +23,13 @@
       });
     };
 
+    /*
     config = lib.mkIf (cfg.keys != []) {
-      users.users = lib.genAttrs config.primaryUsers (_: {
-        openssh.authorizedKeys.keys = map (k: k.key) cfg.keys;
-      });
-    };
+        users.users = lib.genAttrs config.primaryUsers (_: {
+          openssh.authorizedKeys.keys = map (k: k.key) cfg.keys;
+        });
+      };
+    */
   };
 
   flake.homeModules.ssh = {

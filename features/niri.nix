@@ -3,14 +3,12 @@
   inputs,
   ...
 }: {
-  flake.nixosModules.niri = {
-    pkgs,
-    lib,
-    ...
-  }: {
+  flake.nixosModules.niri = {pkgs, ...}: let
+    inherit (pkgs.stdenv.hostPlatform) system;
+  in {
     programs.niri = {
       enable = true;
-      package = self.packages.${pkgs.stdenv.hostPlatform.system}.niri;
+      package = self.packages.${system}.niri;
     };
   };
 

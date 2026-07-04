@@ -1,4 +1,8 @@
-{ lib, inputs, ... }: let
+{
+  lib,
+  inputs,
+  ...
+}: let
   inherit (lib) hasSuffix;
   inherit (inputs.nixlib.lib) deepMerge;
 in {

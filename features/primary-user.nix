@@ -1,11 +1,11 @@
 _: {
-  flake.nixosModules.primaryUser = {lib, ...}: let
+  flake.nixosModules.primaryUser = {lib, config, ...}: let
     inherit (lib) types;
   in {
     options.primaryUsers = with types;
       lib.mkOption {
         type = listOf str;
-        default = throw "Set 'primaryUsers' to a list of usernames in your user module";
+        default = lib.attrNames (lib.filterAttrs (_: u: u.isNormalUser) config.users.users);
         description = "Usernames of the primary human users. Used by features to grant group memberships.";
       };
   };

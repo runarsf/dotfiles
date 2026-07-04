@@ -1,8 +1,12 @@
-{ self, inputs, ... }: {
-  flake.homeModules.hypridle = { lib, pkgs, ... }: let
+_: {
+  flake.homeModules.hypridle = {
+    lib,
+    pkgs,
+    ...
+  }: let
     hypr-brightness = pkgs.writeShellApplication {
       name = "hypr-brightness";
-      runtimeInputs = [ pkgs.brightnessctl ];
+      runtimeInputs = [pkgs.brightnessctl];
       text = ''
         case "$1" in
           off)

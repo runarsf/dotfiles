@@ -1,9 +1,9 @@
-_: {
-  flake.homeModules.hytale = {
-    inputs,
-    pkgs,
-    ...
-  }: {
-    home.packages = [inputs.hytale-launcher.packages.${pkgs.stdenv.hostPlatform.system}.default];
+{inputs, ...}: {
+  flake.homeModules.hytale = {pkgs, ...}: let
+    inherit (pkgs.stdenv.hostPlatform) system;
+  in {
+    home.packages = [
+      inputs.hytale-launcher.packages.${system}.default
+    ];
   };
 }

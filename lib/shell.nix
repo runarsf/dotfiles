@@ -14,6 +14,8 @@ _: {
           grep = "grep --color=always";
           docker-compose = "docker compose";
           dkcUf = "docker compose up -d --force-recreate";
+          ls = "EZA_ICON_SPACING=2 ${pkgs.getExe pkgs.eza} -l -F -g -a --group-directories-first --no-time --git";
+          develop = "nix develop --command $SHELL";
         };
 
         abbrs = {

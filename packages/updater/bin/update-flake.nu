@@ -54,20 +54,29 @@ def get-provider-info [original: record]: nothing -> record {
 
 # Fetches the latest release tag from the appropriate forge API.
 def fetch-latest-tag [info: record]: nothing -> string {
-    match $info.provider {
-        "github" => {
-            http get $"https://api.github.com/repos/($info.repo)/releases/latest"
-            | get tag_name
+    try {
+        match $info.provider {
+            "github" => {
+                http get $"https://api.github.com/repos/($info.repo)/releases/latest"
+                | get tag_name
+            }
+            "gitlab" => {
+                let encoded = $info.repo | str replace "/" "%2F"
+                http get $"https://($info.host)/api/v4/projects/($encoded)/releases/permalink/latest"
+                | get tag_name
+            }
+            "forgejo" => {
+                http get $"https://($info.host)/api/v1/repos/($info.repo)/releases/latest"
+                | get tag_name
+            }
         }
-        "gitlab" => {
-            let encoded = $info.repo | str replace "/" "%2F"
-            http get $"https://($info.host)/api/v4/projects/($encoded)/releases/permalink/latest"
-            | get tag_name
+    } catch { |err|
+        let msg = if ($err.msg | str contains "403") {
+            $"rate limit hit for ($info.repo) — wait or set GITHUB_TOKEN in the environment"
+        } else {
+            $err.msg
         }
-        "forgejo" => {
-            http get $"https://($info.host)/api/v1/repos/($info.repo)/releases/latest"
-            | get tag_name
-        }
+        error make { msg: $msg }
     }
 }
 
@@ -107,18 +116,29 @@ def update-to-latest-release [input_name: string] {
 }
 
 def main [
-  ...release_inputs: string,
-  --dir (-d): string,  # override the flake directory (defaults to $NH_FLAKE)
-  --inputs,               # run nix flake update before pinning release-locked inputs
-  --fetchgit              # update git fetchers
+  ...inputs: string,                  # specific inputs to update normally
+  --dir (-d): string,                 # override the flake directory
+  --release (-r): string = "",        # comma-separated inputs to pin to their latest release
+  --all (-a),                         # update all regular inputs (implied when nothing is passed)
+  --fetchgit (-f),                    # update git fetchers
 ] {
     if $dir != null {
         cd $dir
     }
 
-    if $inputs {
-        print $"(ansi blue_bold)info:(ansi reset) updating flake inputs..."
-        nix flake update
+    let release_inputs = $release | split row "," | where { |x| not ($x | is-empty) }
+    let regular_inputs = $inputs | where { |x| $x not-in $release_inputs }
+
+    let do_regular = ($regular_inputs | is-not-empty) or $all or ($release_inputs | is-empty)
+
+    if $do_regular {
+        if ($regular_inputs | is-not-empty) {
+            print $"(ansi blue_bold)info:(ansi reset) updating inputs: ($regular_inputs | str join ', ')..."
+            nix flake update ...$regular_inputs
+        } else {
+            print $"(ansi blue_bold)info:(ansi reset) updating all flake inputs..."
+            nix flake update
+        }
     }
 
     if $fetchgit {

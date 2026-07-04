@@ -9,6 +9,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    alien.url = "github:thiagokokada/nix-alien";
+    treefmt-nix.url = "github:numtide/treefmt-nix";
     import-tree.url = "github:vic/import-tree";
     flake-parts.url = "github:hercules-ci/flake-parts";
     wrapper-modules = {
@@ -24,9 +26,18 @@
       url = "github:Mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    stylix = {
+      url = "github:danth/stylix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     vault = {
       url = "git+ssh://git@github.com/runarsf/vault";
       flake = false;
+    };
+
+    nix-index-database = {
+      url = "github:nix-community/nix-index-database";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     hyprland = {
@@ -40,6 +51,24 @@
     hypr-dynamic-cursors = {
       url = "github:VirtCode/hypr-dynamic-cursors";
       inputs.hyprland.follows = "hyprland";
+    };
+    nwg-displays.url = "github:nwg-piotr/nwg-displays";
+
+    zed.url = "github:zed-industries/zed";
+
+    vicinae = {
+      url = "github:vicinaehq/vicinae";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    vicinae-extensions = {
+      url = "github:vicinaehq/extensions";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.vicinae.follows = "vicinae";
+    };
+
+    zen-browser = {
+      url = "github:youwen5/zen-browser-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     dms = {
@@ -55,14 +84,34 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    stackpkgs = {
+      type = "git";
+      url = "https://code.thishorsie.rocks/ryze/stackpkgs";
+    };
+
     nixos-hardware.url = "github:nixos/nixos-hardware";
 
     hytale-launcher.url = "github:JPyke3/hytale-launcher-nix";
   };
 
-  outputs = inputs: let
-    inherit (inputs) import-tree;
-    inherit (inputs.flake-parts.lib) mkFlake;
+  outputs = inputs @ {
+    self,
+    import-tree,
+    flake-parts,
+    ...
+  }: let
+    inherit (builtins) elem;
+    inherit (flake-parts.lib) mkFlake;
   in
-    mkFlake {inherit inputs;} (import-tree.filterNot (x: baseNameOf x == "flake.nix") ./.);
+    mkFlake {inherit inputs;} (
+      import-tree.filterNot (
+        x:
+          elem (baseNameOf x) [
+            "flake.nix"
+            "treefmt.nix"
+            "hardware-configuration.nix"
+          ]
+      )
+      ./.
+    );
 }

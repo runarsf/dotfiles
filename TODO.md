@@ -1,0 +1,39 @@
+- Fix proper font in wezterm
+- wezterm theme looks incorrect
+- rewrite hyprland scripts to nushell
+- fix commented out binds in hyprland
+- configure default terminal
+- fix hyprland switch workspace bind
+- check what new things were added to the config (sine )
+- remove display manager config from host config and unify into module
+- maybe split locales into separate display/locale module (norwegian locale with english display)
+- set default hostname and stateversion (like in modules/linux/default-config.nix, maybe a mkHost or something)
+- figure out a way to do desktop modules (hyprland shouldn't be on anuc)
+- maybe mkUser so we can add trusted-users
+- consistent way to deal with uwsm, run in dms, hyprland, vicinae, etc.
+- add user to docker group dynamically
+- create presets with common config (desktop, laptop, server, ...)
+- noctalia: avatar and font in noctalia
+- hyprland: start noctalia/dms/vicinae with hyprland
+- pipewire: add user to pipewire group in pipewire feature
+- ctf: find a better way to check if android module is enabled
+- ssh: users.extraUsers.root.openssh.authorizedKeys.keys
+- nginx: is it cleaner to have lib/nginx.nix in nginx module?
+- vault: document required secrets. either here or in vault. nginx, sops, fonts, ...
+- nginx: https://nixos.wiki/wiki/Nginx#Hardened_setup_with_TLS_and_HSTS_preloading
+- naming: rename features to modules?
+- naming: rename features/server/ to features/services/?
+- generally restructure features, is very messy
+- maybe move starship out of zsh module into a generic shell module? or maybe shell/zsh.nix, shell/nushell.nix, shell/starship.nix, etc.
+- research: https://den.denful.dev/
+- research: https://github.com/feel-co/hjem
+- the primaryUser feature is a bit whack, maybe move this somewhere else
+- less boilerplate; setting primaryUser and trusted-users for each user is a bit unfortunate (see users/runar/default.nix)
+- importing primaryUser in users/runar/default.nix is whack, can we not make it automatically be there?
+- openssh.authorizedKeys.keys in ssh.nix instead of runar/default.nix
+- look at wrapper modules and rewrite what can be https://birdeehub.github.io/nix-wrapper-modules/md/wrapper-modules.html
+- ssh: services.ssh-agent.enable
+- zsh: make sure zocixe works in zsh since zsh is no longer in home manager
+- how would we have machine-specific home manager modules enabled? e.g., only webcam on runar@runix
+- evaluation warning: runar profile: You have set either `nixpkgs.config` or `nixpkgs.overlays` while using `home-manager.useGlobalPkgs`. This will soon not be possible. Please remove all `nixpkgs` options when using `home-manager.useGlobalPkgs`.
+- consider whether features like wayland, dev.make, printing, etc. can be in a common module (e.g., make can be in cli or c, wayland and printing in desktop, etc.)

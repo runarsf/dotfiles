@@ -1,0 +1,2 @@
+# Switch 2 Pro Controller
+SUBSYSTEM=="usb", ATTR{idVendor}=="057e", ATTR{idProduct}=="2069", MODE="0666"

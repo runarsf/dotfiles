@@ -1,7 +1,7 @@
 {inputs, ...}: {
   imports = [
-    # adds home-manager options to flake-parts
     inputs.home-manager.flakeModules.home-manager
+    inputs.treefmt-nix.flakeModule
   ];
 
   config = {
@@ -12,17 +12,26 @@
       "aarch64-darwin"
     ];
 
-    perSystem = {system, ...}: {
+    perSystem = {
+      system,
+      config,
+      ...
+    }: {
+      treefmt.imports = [./treefmt.nix];
       _module.args.pkgs = import inputs.nixpkgs {
         inherit system;
         config.allowUnfree = true;
         config.allowUnfreePredicate = _: true;
 
         overlays = [
-          (_: _: {
+          (_: prev: {
             master = import inputs.nixpkgs-master {
               inherit system;
               config.allowUnfree = true;
+            };
+            nur = import inputs.nur {
+              pkgs = prev;
+              nurpkgs = import inputs.nixpkgs {inherit (prev) system config overlays;};
             };
           })
         ];

@@ -1,20 +1,25 @@
 {
-  self,
   inputs,
+  lib',
   ...
 }: {
+  flake.nixosModules.vicinae = _: {
+    nix.settings = rec {
+      substituters = ["https://vicinae.cachix.org"];
+      trusted-substituters = substituters;
+      trusted-public-keys = ["vicinae.cachix.org-1:1kDrfienkGHPYbkpNj1mWTr7Fm1+zcenzgTizIcI3oc="];
+    };
+  };
+
   flake.homeModules.vicinae = {
     config,
     lib,
     pkgs,
     ...
   }: let
-    sys = pkgs.stdenv.hostPlatform.system;
-    lua = lib.generators.mkLuaInline;
-    run = program: "uwsm app -- ${program}";
-    onStart = cmd: {
-      _args = ["hyprland.start" (lua "function() hl.exec_cmd(${builtins.toJSON cmd}) end")];
-    };
+    inherit (lib'.uwsm) run;
+    inherit (lib'.hyprland) lua onStart;
+    inherit (pkgs.stdenv.hostPlatform) system;
   in {
     imports = [inputs.vicinae.homeManagerModules.default];
 
@@ -37,7 +42,7 @@
           transitionDuration = 1;
         };
       };
-      extensions = with inputs.vicinae-extensions.packages.${sys}; [
+      extensions = with inputs.vicinae-extensions.packages.${system}; [
         bluetooth
         nix
         power-profile
@@ -48,25 +53,33 @@
       ];
     };
 
-    home.packages = [
-      inputs.awww.packages.${sys}.awww
-      pkgs.matugen
+    home.packages = with pkgs; [
+      awww
+      matugen
     ];
 
     wayland.windowManager.hyprland.settings = {
-      bind = [{
-        _args = [
-          "SUPER + D"
-          (lua "hl.dsp.exec_cmd(${builtins.toJSON (run "vicinae toggle")})")
-          {}
-        ];
-      }];
+      bind = [
+        {
+          _args = [
+            "SUPER + D"
+            (lua "hl.dsp.exec_cmd(${builtins.toJSON (run "vicinae toggle")})")
+            {}
+          ];
+        }
+      ];
       layer_rule = [
-        {match = {namespace = "vicinae";}; blur = true;}
-        {match = {namespace = "vicinae";}; no_anim = true;}
+        {
+          match = {namespace = "vicinae";};
+          blur = true;
+        }
+        {
+          match = {namespace = "vicinae";};
+          no_anim = true;
+        }
       ];
       on = [
-        (onStart (run (lib.getExe' inputs.awww.packages.${sys}.awww "awww-daemon")))
+        (onStart (run (lib.getExe' pkgs.awww "awww-daemon")))
       ];
     };
   };

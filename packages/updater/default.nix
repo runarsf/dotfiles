@@ -3,8 +3,8 @@
     "hyprland"
     "dms"
     "vicinae"
-    "vicinae"
     "nwg-displays"
+    "zed"
   ];
 in {
   perSystem = {pkgs, ...}: let
@@ -22,13 +22,22 @@ in {
           --prefix PATH : ${makeBinPath (with pkgs; [update-nix-fetchgit fd])}
       '';
     };
-    lockedNu = "[" + concatStringsSep ", " (map (x: "\"${x}\"") releaseLockedInputs) + "]";
+    lockedStr = concatStringsSep "," releaseLockedInputs;
   in {
     packages = {
       inherit update-flake;
       updater = writeNuBin "update-flake" ''
-        let dir_args = if "NH_FLAKE" in $env { ["--dir" $env.NH_FLAKE] } else { [] }
-        ^${update-flake}/bin/update-flake ...$dir_args --inputs --fetchgit ...${lockedNu}
+        def main [
+          ...inputs: string,  # specific inputs to update; empty updates all
+          --no-fetchgit,      # skip fetchgit update (runs by default)
+          --no-release,       # skip release-locked inputs
+        ] {
+          let dir_args = if "NH_FLAKE" in $env { ["--dir" $env.NH_FLAKE] } else { [] }
+          let fetchgit_args = if $no_fetchgit { [] } else { ["--fetchgit"] }
+          let all_args = if ($inputs | is-empty) { ["--all"] } else { [] }
+          let release_args = if $no_release { [] } else { ["--release" "${lockedStr}"] }
+          ^${update-flake}/bin/update-flake ...$dir_args ...$fetchgit_args ...$all_args ...$release_args ...$inputs
+        }
       '';
     };
   };

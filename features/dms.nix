@@ -3,18 +3,21 @@
     pkgs,
     lib,
     ...
-  }: {
+  }: let
+    inherit (lib) mkIf;
+    inherit (pkgs.stdenv.hostPlatform) system;
+  in {
     imports = [
       inputs.dms.homeModules.dank-material-shell
       inputs.dms-plugin-registry.modules.default
     ];
 
-    config = lib.mkIf pkgs.stdenv.isLinux {
+    config = mkIf pkgs.stdenv.isLinux {
       programs.dank-material-shell = {
         enable = true;
         systemd.enable = true;
         enableSystemMonitoring = true;
-        dgop.package = inputs.dgop.packages.${pkgs.stdenv.hostPlatform.system}.default;
+        dgop.package = inputs.dgop.packages.${system}.default;
         settings = {
           runUserMatugenTemplates = false;
           widgetBackgroundColor = "s";
@@ -25,7 +28,7 @@
           centeringMode = "geometric";
           weatherEnabled = false;
           launcherLogoMode = "os";
-          monoFontFamily = "CaskaydiaMono NF";
+          monoFontFamily = lib.mkDefault "CaskaydiaMono NF";
           launchPrefix = "uwsm app -- ";
           syncModeWithPortal = false;
           runDmsMatugenTemplates = false;
