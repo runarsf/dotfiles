@@ -55,7 +55,7 @@ def --wrapped main [
   }
   cd $dir
 
-  let bin = $env.CURRENT_FILE | path basename
+  let bin = "niks" # $env.CURRENT_FILE | path basename
 
   let separator_idx = ($args | enumerate | where item == "--" | get index? | first | default null)
 

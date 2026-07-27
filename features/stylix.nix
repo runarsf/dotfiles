@@ -64,8 +64,8 @@
         let
           cursors = {
             bibata = { package = pkgs.bibata-cursors; name = "Bibata-Modern-Classic"; };
-            wii    = { package = self.packages.${pkgs.system}.wii-cursor; name = "Wii"; };
-            osu    = { package = self.packages.${pkgs.system}.osu-cursor; name = "Osu"; };
+            wii    = { package = self.packages.${pkgs.stdenv.hostPlatform.system}.wii-cursor; name = "Wii"; };
+            osu    = { package = self.packages.${pkgs.stdenv.hostPlatform.system}.osu-cursor; name = "Osu"; };
           };
         in
         {

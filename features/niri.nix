@@ -61,15 +61,43 @@
           };
 
           layout = {
-            gaps = 5;
+            gaps = 10;
+
             background-color = "transparent";
+
+            shadow = {
+              on = _: { };
+              softness = 30;
+              spread = 5;
+              offset = _: {
+                props = {
+                  x = 0;
+                  y = 5;
+                };
+              };
+              color = "#00000064";
+            };
+            focus-ring = {
+              width = 2;
+              active-gradient = _: {
+                props = {
+                  from = "#ff5c8a";
+                  to = "#ff6a70";
+                  angle = 45;
+                  "in" = "oklch longer hue";
+                };
+              };
+              inactive-color = "#2e2e2e";
+            };
           };
 
           outputs =
             let
               vrr = {
                 "variable-refresh-rate" = _: {
-                  props = { "on-demand" = true; };
+                  props = {
+                    "on-demand" = true;
+                  };
                 };
               };
             in
@@ -82,12 +110,21 @@
                     y = 0;
                   };
                 };
-              } // vrr;
+              }
+              // vrr;
             };
 
           window-rules = [
             {
-              matches = [ { app-id = "^osu!$"; } ];
+              geometry-corner-radius = 12;
+              clip-to-geometry = true;
+            }
+            {
+              matches = [
+                { app-id = "^osu!$"; }
+                { app-id = "^steam_app_[0-9]+$"; }
+                { app-id = "^gamescope$"; }
+              ];
               variable-refresh-rate = true;
             }
           ];
