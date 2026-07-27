@@ -32,19 +32,47 @@
       lib,
       ...
     }:
+    let
+      toggle-scratchpad = pkgs.writeTextFile {
+        name = "niri-toggle-scratchpad";
+        executable = true;
+        text = ''
+          #!${pkgs.nushell}/bin/nu
+
+          let windows = (niri msg -j windows | from json)
+          let matching = ($windows | where app_id == "scratchpad")
+
+          if ($matching | is-empty) {
+            niri msg action spawn -- wezterm start --class scratchpad
+          } else {
+            let window = ($matching | first)
+            let workspaces = (niri msg -j workspaces | from json)
+            let focused = ($workspaces | where is_focused | first)
+
+            if $window.workspace_id == $focused.id {
+              let hide_ws = ($workspaces | where id != $focused.id | first)
+              ^niri msg action move-window-to-workspace --window-id $window.id --focus false $hide_ws.idx
+            } else {
+              ^niri msg action move-window-to-workspace --window-id $window.id $focused.idx
+              ^niri msg action focus-window --id $window.id
+            }
+          }
+        '';
+      };
+    in
     {
       # TODO: polkit and portal https://github.com/niri-wm/niri/wiki/Important-Software
       packages.niri = inputs.wrapper-modules.wrappers.niri.wrap {
         inherit pkgs;
 
-        extraSettings = [
-          {
-            include = [
-              { optional = true; }
-              "~/.config/niri/monitor.kdl"
-            ];
-          }
-        ];
+        # extraSettings = [
+        #   {
+        #     include = [
+        #       { optional = true; }
+        #       "~/.config/niri/monitor.kdl"
+        #     ];
+        #   }
+        # ];
         settings = {
           input = {
             keyboard = {
@@ -127,6 +155,10 @@
               ];
               variable-refresh-rate = true;
             }
+            {
+              matches = [ { app-id = "^scratchpad$"; } ];
+              open-floating = true;
+            }
           ];
 
           xwayland-satellite.path = lib.getExe pkgs.xwayland-satellite;
@@ -144,22 +176,25 @@
           };
 
           workspaces = {
-            stash = _: { };
+            # "1" = _: { };
+            # "2" = _: { };
+            # "3" = _: { };
+            # "4" = _: { };
+            # "5" = _: { };
+            # stash = _: { };
+            scratch = _: { };
           };
 
-          binds = {
+          binds = let
+            wpctl = lib.getExe' pkgs.wireplumber "wpctl";
+            playerctl = lib.getExe pkgs.playerctl;
+            brightnessctl = lib.getExe pkgs.brightnessctl;
+          in {
             "Mod+Return".spawn-sh = "wezterm";
             "Mod+Q".close-window = _: { };
             # "Mod+D".spawn-sh = "${lib.getExe self'.packages.noctalia} ipc call launcher toggle";
             "Mod+D".spawn-sh = "vicinae toggle";
-            "Mod+N".spawn = [
-              (lib.getExe' inputs.niri-scratchpad.packages.${pkgs.stdenv.hostPlatform.system}.default
-                "niri-scratchpad"
-              )
-              "create"
-              "1"
-              "--as-float"
-            ];
+            "Mod+N".spawn-sh = "${toggle-scratchpad}";
             "Mod+F".fullscreen-window = _: { };
             "Mod+Shift+F".toggle-window-floating = _: { };
             "Mod+Space".maximize-column = _: { };
@@ -173,14 +208,32 @@
             "Mod+Shift+Up".move-window-to-workspace-up = _: { };
             "Mod+Shift+Down".move-window-to-workspace-down = _: { };
 
-            "Mod+Control+Down".focus-workspace-down = _: { };
-            "Mod+Control+Up".focus-workspace-up = _: { };
+            "Mod+Next".focus-workspace-down = _: { };
+            "Mod+Prior".focus-workspace-up = _: { };
+
+            "Mod+Control+Right".set-column-width = "+3%";
+            "Mod+Control+Left".set-column-width = "-3%";
+            "Mod+Control+Down".set-window-height = "+3%";
+            "Mod+Control+Up".set-window-height = "-3%";
+
             "Mod+WheelScrollDown".focus-column-right = _: { };
             "Mod+WheelScrollUp".focus-column-left = _: { };
             "Mod+WheelScrollLeft".focus-workspace-down = _: { };
             "Mod+Shift+WheelScrollUp".focus-workspace-up = _: { };
             "Mod+WheelScrollRight".focus-workspace-up = _: { };
             "Mod+Shift+WheelScrollDown".focus-workspace-down = _: { };
+
+            "XF86AudioRaiseVolume".spawn-sh = "${wpctl} set-volume -l 2.0 @DEFAULT_SINK@ 5%+";
+            "XF86AudioLowerVolume".spawn-sh = "${wpctl} set-volume -l 2.0 @DEFAULT_SINK@ 5%-";
+            "XF86AudioMute".spawn-sh = "${wpctl} set-mute @DEFAULT_SINK@ toggle";
+            "XF86AudioMicMute".spawn-sh = "${wpctl} set-mute @DEFAULT_SOURCE@ toggle";
+            "XF86AudioPause".spawn-sh = "${playerctl} play-pause";
+            "XF86AudioPlay".spawn-sh = "${playerctl} play-pause";
+            "Shift+XF86AudioMute".spawn-sh = "${playerctl} play-pause";
+            "XF86AudioNext".spawn-sh = "${playerctl} next";
+            "XF86AudioPrev".spawn-sh = "${playerctl} previous";
+            "XF86MonBrightnessUp".spawn-sh = "${brightnessctl} set 5%+";
+            "XF86MonBrightnessDown".spawn-sh = "${brightnessctl} set 5%-";
           };
         };
       };
