@@ -52,6 +52,9 @@
       url = "github:VirtCode/hypr-dynamic-cursors";
       inputs.hyprland.follows = "hyprland";
     };
+
+    niri-scratchpad.url = "github:argosnothing/niri-scratchpad";
+
     nwg-displays.url = "github:nwg-piotr/nwg-displays";
 
     zed.url = "github:zed-industries/zed";
@@ -84,6 +87,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    nix-flatpak.url = "github:gmodena/nix-flatpak";
+
     stackpkgs = {
       type = "git";
       url = "https://code.thishorsie.rocks/ryze/stackpkgs";
@@ -94,24 +99,25 @@
     hytale-launcher.url = "github:JPyke3/hytale-launcher-nix";
   };
 
-  outputs = inputs @ {
-    self,
-    import-tree,
-    flake-parts,
-    ...
-  }: let
-    inherit (builtins) elem;
-    inherit (flake-parts.lib) mkFlake;
-  in
-    mkFlake {inherit inputs;} (
+  outputs =
+    inputs@{
+      self,
+      import-tree,
+      flake-parts,
+      ...
+    }:
+    let
+      inherit (builtins) elem;
+      inherit (flake-parts.lib) mkFlake;
+    in
+    mkFlake { inherit inputs; } (
       import-tree.filterNot (
         x:
-          elem (baseNameOf x) [
-            "flake.nix"
-            "treefmt.nix"
-            "hardware-configuration.nix"
-          ]
-      )
-      ./.
+        elem (baseNameOf x) [
+          "flake.nix"
+          "treefmt.nix"
+          "hardware-configuration.nix"
+        ]
+      ) ./.
     );
 }

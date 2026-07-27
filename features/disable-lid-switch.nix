@@ -4,7 +4,7 @@ _: {
       lidSwitch = "ignore";
       lidSwitchDocked = "ignore";
       lidSwitchExternalPower = "ignore";
-      extraConfig = "HandleLidSwitch=ignore";
+      settings.Login.HandleLidSwitch = "ignore";
     };
   };
 }

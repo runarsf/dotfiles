@@ -2,6 +2,10 @@
 
 ## Getting Started
 
+> [!NOTE]
+> Before installing, it can be beneficial to add your user to `nix.settings.trusted-users` (e.g., `/etc/nixos/configuration.nix` if you just installed), as the `nh` wrapper sets the options `extra-substituters` and `extra-trusted-public-keys`, which are silently ignored if set by non-trusted users.
+> This can significantly reduce the time needed for building.
+
 First you will need an SSH key with access to the sops-protected vault and authentication access to your GitHub account.
 Place it in `~/.ssh/id_nix`.
 
@@ -40,7 +44,6 @@ This also works on other Nix flakes.
 nix run .#update-flake -- zed
 
 # Update Zed to the latest release
-# --no-update is necessary to stop it from updating the rest of the inputs, since providing
 nix run .#update-flake -- --release zed
 ```
 

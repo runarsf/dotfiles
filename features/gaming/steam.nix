@@ -1,15 +1,26 @@
 _: {
-  flake.homeModules.steam = {
-    config,
-    pkgs,
-    ...
-  }: {
-    home = {
-      packages = with pkgs; [protontricks winetricks gamescope protonup-qt protonup-ng mangohud];
-      sessionVariables = {
-        STEAM_EXTRA_COMPAT_TOOLS_PATHS = "${config.home.homeDirectory}/.steam/root/compatibilitytools.d";
+  flake.homeModules.steam =
+    {
+      config,
+      pkgs,
+      ...
+    }:
+    {
+      home = {
+        packages = with pkgs; [
+          protontricks
+          winetricks
+          protonup-qt
+          protonup-ng
+          mangohud
+        ];
+        sessionVariables = {
+          STEAM_EXTRA_COMPAT_TOOLS_PATHS = "${config.home.homeDirectory}/.steam/root/compatibilitytools.d";
+        };
       };
     };
+
+  flake.nixosModules.steam = _: {
     programs = {
       steam = {
         enable = true;
@@ -30,6 +41,10 @@ _: {
             end = "notify-send -a 'Gamemode' 'Optimizations deactivated'";
           };
         };
+      };
+      gamescope = {
+        enable = true;
+        capSysNice = true;
       };
     };
   };

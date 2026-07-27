@@ -37,6 +37,16 @@
 - how would we have machine-specific home manager modules enabled? e.g., only webcam on runar@runix
 - evaluation warning: runar profile: You have set either `nixpkgs.config` or `nixpkgs.overlays` while using `home-manager.useGlobalPkgs`. This will soon not be possible. Please remove all `nixpkgs` options when using `home-manager.useGlobalPkgs`.
 - consider whether features like wayland, dev.make, printing, etc. can be in a common module (e.g., make can be in cli or c, wayland and printing in desktop, etc.)
+- where does one properly add allowUnfree?
+- Add user to trusted users `nix.settings.trusted-users = [ "root" "runar" ];`
+- flake udpater: make it lock with the tag name (e.g., v2.3.1) instead of the commit hash of that release
+- read uwsm warning here https://wiki.hypr.land/Configuring/Basics/Dispatchers/#cursor
+- how to configure home manager modules that should only be active on a certain host? e.g., gaming-related modules that need home manager config. how would i configure that for the modelland host
+- gitui
+- tui greeter that starts hyprland with uwsm
+- zsh not saving history
+- why doesn't opentabletdriver start automatically
+- does hyprland bind to open vicinae belong in hyprland or vicinae config? same applies for terminal
 
 ## Hosts (separate repos)
 - [ ] `boiler` — thomas's gaming desktop

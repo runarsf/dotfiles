@@ -18,30 +18,30 @@ def main [action: string, dir: string] {
     })
   }
 
-  if ($group.grouped and $dir == "l" and not $group.first) {
+  if ($group.grouped and $dir == "left" and not $group.first) {
     match $action {
-      "focus" => { hyprctl dispatch changegroupactive b },
-      "move"  => { hyprctl dispatch movegroupwindow b }
+      "focus" => { hyprctl dispatch "hl.dsp.group.prev()" },
+      "move"  => { hyprctl dispatch "hl.dsp.group.move_window({ forward = false })" }
     }
-  } else if ($group.grouped and $dir == "r" and not $group.last) {
+  } else if ($group.grouped and $dir == "right" and not $group.last) {
     match $action {
-      "focus" => { hyprctl dispatch changegroupactive f },
-      "move"  => { hyprctl dispatch movegroupwindow f }
+      "focus" => { hyprctl dispatch "hl.dsp.group.next()" },
+      "move"  => { hyprctl dispatch "hl.dsp.group.move_window({ forward = true })" }
     }
-  } else if ($monocle and $dir == "u") {
+  } else if ($monocle and $dir == "up") {
     match $action {
-      "focus" => { hyprctl dispatch cyclenext prev hist },
-      "move"  => { hyprctl dispatch swapnext prev }
+      "focus" => { hyprctl dispatch "hl.dsp.window.cycle_next({ next = false })" },
+      "move"  => { hyprctl dispatch "hl.dsp.window.swap({ next = false })" }
     }
-  } else if ($monocle and $dir == "d") {
+  } else if ($monocle and $dir == "down") {
     match $action {
-      "focus" => { hyprctl dispatch cyclenext hist },
-      "move"  => { hyprctl dispatch swapnext }
+      "focus" => { hyprctl dispatch "hl.dsp.window.cycle_next({ next = true })" },
+      "move"  => { hyprctl dispatch "hl.dsp.window.swap({ next = true })" }
     }
   } else {
     match $action {
-      "focus" => { hyprctl --batch $"dispatch movefocus ($dir); dispatch movecursortocorner 2" },
-      "move"  => { hyprctl dispatch movewindow $dir }
+      "focus" => { hyprctl --batch $"dispatch hl.dsp.focus\({ direction = \"($dir)\" }); dispatch hl.dsp.cursor.move_to_corner\({ corner = 2 })" },
+      "move"  => { hyprctl dispatch $"hl.dsp.window.move\({ direction = \"($dir)\" })" }
     }
   }
 }

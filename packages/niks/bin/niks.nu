@@ -97,7 +97,7 @@ def --wrapped main [
     let substituters = $settings.substituters | str join " "
     let public_keys  = $settings.publicKeys   | str join " "
 
-    ["--option", "substituters", $substituters, "--option", "trusted-public-keys", $public_keys]
+    ["--option", "extra-substituters", $substituters, "--option", "extra-trusted-public-keys", $public_keys]
   }
 
   let final_args = (

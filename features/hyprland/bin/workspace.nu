@@ -11,16 +11,16 @@ def main [target: string] {
   if $target in ($monitorRules | get workspaceString) {
     let toMonitor: string = $monitorRules | where workspaceString == $target | get monitor | first
     $cmdbuf ++= [
-      $"focusmonitor ($toMonitor)"
-      $"focusworkspaceoncurrentmonitor ($target)"
+      $"hl.dsp.focus\({ monitor = \"($toMonitor)\" })"
+      $"hl.dsp.focus\({ workspace = ($target), on_current_monitor = true })"
     ]
   } else {
     let visibleWorkspaces: list<string> = $monitors | get activeWorkspace.name
 
     if $target in $visibleWorkspaces {
-      $cmdbuf ++= [ $"workspace ($target)" ]
+      $cmdbuf ++= [ $"hl.dsp.focus\({ workspace = ($target) })" ]
     } else {
-      $cmdbuf ++= [ $"focusworkspaceoncurrentmonitor ($target)" ]
+      $cmdbuf ++= [ $"hl.dsp.focus\({ workspace = ($target), on_current_monitor = true })" ]
     }
   }
 
