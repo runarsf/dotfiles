@@ -1,4 +1,11 @@
-{inputs, ...}: {
+# TODO: Add `spawn-at-startup "noctalia-shell"` to niri config, but only if noctalia is enabled
+{self, inputs, ...}: {
+  flake.nixosModules.noctalia = { pkgs, ... }: {
+    environment.systemPackages = with pkgs; [
+      self.packages.${pkgs.stdenv.hostPlatform.system}.noctalia
+    ];
+  };
+
   perSystem = {
     pkgs,
     lib,

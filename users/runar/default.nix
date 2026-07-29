@@ -13,10 +13,11 @@ let
     "flatpak"
     "starship"
     "niri"
-    "hyprland"
+    # "hyprland"
     "hypridle"
     "hyprlock"
     "hyprpaper"
+    "lumux"
     {
       stylix = {
         wallpaper = ./outerwilds.jpeg;

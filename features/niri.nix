@@ -9,22 +9,17 @@
   # switch-focus-between-floating-and-tiling
   # Mod+W { toggle-column-tabbed-display; }
   # tab-indicator.place-within-column
-  flake.nixosModules.niri =
-    { pkgs, ... }:
-    let
-      inherit (pkgs.stdenv.hostPlatform) system;
-    in
-    {
-      programs.niri = {
-        enable = true;
-        package = self.packages.${system}.niri;
-      };
-
-      environment.systemPackages = with pkgs; [
-        nwg-displays
-        inputs.niri-scratchpad.packages.${pkgs.stdenv.hostPlatform.system}.default
-      ];
+  flake.nixosModules.niri = { pkgs, ... }: {
+    programs.niri = {
+      enable = true;
+      package = self.packages.${pkgs.stdenv.hostPlatform.system}.niri;
     };
+
+    environment.systemPackages = with pkgs; [
+      nwg-displays
+      inputs.niri-scratchpad.packages.${pkgs.stdenv.hostPlatform.system}.default
+    ];
+  };
 
   perSystem =
     {
@@ -33,6 +28,27 @@
       ...
     }:
     let
+      focus-or-workspace = pkgs.writeTextFile {
+        name = "niri-focus-or-workspace";
+        executable = true;
+        text = ''
+          #!${pkgs.nushell}/bin/nu
+
+          def main [direction: string] {
+            let before = try { niri msg -j focused-window | from json | get id }
+            if $before == null {
+              niri msg action $"focus-workspace-($direction)"
+              return
+            }
+            niri msg action $"focus-window-($direction)"
+            let after = (niri msg -j focused-window | from json | get id)
+            if $before == $after {
+              niri msg action $"focus-workspace-($direction)"
+            }
+          }
+        '';
+      };
+
       toggle-scratchpad = pkgs.writeTextFile {
         name = "niri-toggle-scratchpad";
         executable = true;
@@ -50,7 +66,8 @@
             let focused = ($workspaces | where is_focused | first)
 
             if $window.workspace_id == $focused.id {
-              let hide_ws = ($workspaces | where id != $focused.id | first)
+              let occupied_ids = ($windows | get workspace_id | uniq)
+              let hide_ws = ($workspaces | where {|ws| $ws.id not-in $occupied_ids} | last)
               ^niri msg action move-window-to-workspace --window-id $window.id --focus false $hide_ws.idx
             } else {
               ^niri msg action move-window-to-workspace --window-id $window.id $focused.idx
@@ -74,14 +91,18 @@
         #   }
         # ];
         settings = {
+          prefer-no-csd = _: { };
+
           input = {
             keyboard = {
               xkb.layout = "no";
+              repeat-delay = 200;
+              repeat-rate = 35;
             };
             mouse = {
               accel-profile = "flat";
             };
-            focus-follows-mouse = _: { };
+            focus-follows-mouse = _: { props = { max-scroll-amount = "0%"; }; };
             touchpad = {
               natural-scroll = _: { };
               tap = _: { };
@@ -92,6 +113,8 @@
             gaps = 10;
 
             background-color = "transparent";
+            center-focused-column = "on-overflow";
+            always-center-single-column = _: { };
 
             shadow = {
               on = _: { };
@@ -113,6 +136,14 @@
                   to = "#ff6a70";
                   angle = 45;
                   "in" = "oklch longer hue";
+                };
+              };
+              urgent-gradient = _: {
+                props = {
+                  from = "#ff2040";
+                  to = "#ff5530";
+                  angle = 45;
+                  "in" = "oklch";
                 };
               };
               inactive-color = "#2e2e2e";
@@ -185,6 +216,7 @@
             scratch = _: { };
           };
 
+          # Run `niri msg action` to see a list of commands
           binds = let
             wpctl = lib.getExe' pkgs.wireplumber "wpctl";
             playerctl = lib.getExe pkgs.playerctl;
@@ -200,16 +232,52 @@
             "Mod+Space".maximize-column = _: { };
             "Mod+Left".focus-column-left = _: { };
             "Mod+Right".focus-column-right = _: { };
-            "Mod+Down".focus-window-down = _: { };
-            "Mod+Up".focus-window-up = _: { };
+            "Mod+Down".spawn = [ "${focus-or-workspace}" "down" ];
+            "Mod+Up".spawn = [ "${focus-or-workspace}" "up" ];
+            "Mod+Shift+E".quit = _: { };
 
             "Mod+Shift+Left".move-column-left = _: { };
             "Mod+Shift+Right".move-column-right = _: { };
-            "Mod+Shift+Up".move-window-to-workspace-up = _: { };
-            "Mod+Shift+Down".move-window-to-workspace-down = _: { };
+            "Mod+Shift+Up".move-column-to-workspace-up = _: { };
+            "Mod+Shift+Down".move-column-to-workspace-down = _: { };
+            "Mod+Shift+Control+Up".move-window-to-workspace-up = _: { };
+            "Mod+Shift+Control+Down".move-window-to-workspace-down = _: { };
 
             "Mod+Next".focus-workspace-down = _: { };
             "Mod+Prior".focus-workspace-up = _: { };
+
+            "Mod+1".focus-workspace = 1;
+            "Mod+2".focus-workspace = 2;
+            "Mod+3".focus-workspace = 3;
+            "Mod+4".focus-workspace = 4;
+            "Mod+5".focus-workspace = 5;
+            "Mod+6".focus-workspace = 6;
+            "Mod+7".focus-workspace = 7;
+            "Mod+8".focus-workspace = 8;
+            "Mod+9".focus-workspace = 9;
+            "Mod+0".focus-workspace = 10;
+
+            "Mod+Shift+1".move-column-to-workspace = 1;
+            "Mod+Shift+2".move-column-to-workspace = 2;
+            "Mod+Shift+3".move-column-to-workspace = 3;
+            "Mod+Shift+4".move-column-to-workspace = 4;
+            "Mod+Shift+5".move-column-to-workspace = 5;
+            "Mod+Shift+6".move-column-to-workspace = 6;
+            "Mod+Shift+7".move-column-to-workspace = 7;
+            "Mod+Shift+8".move-column-to-workspace = 8;
+            "Mod+Shift+9".move-column-to-workspace = 9;
+            "Mod+Shift+0".move-column-to-workspace = 10;
+
+            "Mod+Shift+Control+1".move-window-to-workspace = 1;
+            "Mod+Shift+Control+2".move-window-to-workspace = 2;
+            "Mod+Shift+Control+3".move-window-to-workspace = 3;
+            "Mod+Shift+Control+4".move-window-to-workspace = 4;
+            "Mod+Shift+Control+5".move-window-to-workspace = 5;
+            "Mod+Shift+Control+6".move-window-to-workspace = 6;
+            "Mod+Shift+Control+7".move-window-to-workspace = 7;
+            "Mod+Shift+Control+8".move-window-to-workspace = 8;
+            "Mod+Shift+Control+9".move-window-to-workspace = 9;
+            "Mod+Shift+Control+0".move-window-to-workspace = 10;
 
             "Mod+Control+Right".set-column-width = "+3%";
             "Mod+Control+Left".set-column-width = "-3%";
