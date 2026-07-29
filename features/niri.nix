@@ -190,6 +190,24 @@
               matches = [ { app-id = "^scratchpad$"; } ];
               open-floating = true;
             }
+            {
+              matches = [
+                { app-id = "^steam$"; }
+                { app-id = "^steam_app_[0-9]+$"; }
+              ];
+              open-on-workspace = "gaming";
+            }
+            {
+              matches = [ { app-id = "^steam_app_[0-9]+$"; } ];
+              open-fullscreen = true;
+            }
+            {
+              matches = [
+                { app-id = "^discord$"; }
+                { app-id = "^[Ee]lement"; }
+              ];
+              open-on-workspace = "chat";
+            }
           ];
 
           xwayland-satellite.path = lib.getExe pkgs.xwayland-satellite;
@@ -207,12 +225,8 @@
           };
 
           workspaces = {
-            # "1" = _: { };
-            # "2" = _: { };
-            # "3" = _: { };
-            # "4" = _: { };
-            # "5" = _: { };
-            # stash = _: { };
+            gaming = _: { };
+            chat = _: { };
             scratch = _: { };
           };
 
@@ -243,8 +257,7 @@
             "Mod+Shift+Control+Up".move-window-to-workspace-up = _: { };
             "Mod+Shift+Control+Down".move-window-to-workspace-down = _: { };
 
-            "Mod+Next".focus-workspace-down = _: { };
-            "Mod+Prior".focus-workspace-up = _: { };
+            "Alt+P".screenshot = _: { };
 
             "Mod+1".focus-workspace = 1;
             "Mod+2".focus-workspace = 2;
