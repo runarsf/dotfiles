@@ -28,61 +28,56 @@
       ...
     }:
     let
-      focus-or-workspace = pkgs.writeTextFile {
-        name = "niri-focus-or-workspace";
-        executable = true;
-        text = ''
-          #!${pkgs.nushell}/bin/nu
-
-          def main [direction: string] {
-            let before = try { niri msg -j focused-window | from json | get id }
-            if $before == null {
-              niri msg action $"focus-workspace-($direction)"
-              return
-            }
-            niri msg action $"focus-window-($direction)"
-            let after = (niri msg -j focused-window | from json | get id)
-            if $before == $after {
-              niri msg action $"focus-workspace-($direction)"
-            }
+      focus-or-workspace = pkgs.writers.writeNu "niri-focus-or-workspace" ''
+        def main [direction: string] {
+          let before = try { niri msg -j focused-window | from json | get id }
+          if $before == null {
+            niri msg action $"focus-workspace-($direction)"
+            return
           }
-        '';
-      };
+          niri msg action $"focus-window-($direction)"
+          let after = (niri msg -j focused-window | from json | get id)
+          if $before == $after {
+            niri msg action $"focus-workspace-($direction)"
+          }
+        }
+      '';
 
-      namedWorkspaces = {
-        scratch = _: { layout.background-color = "#242424"; };
-        gaming = _: { layout.background-color = "#4a1e1e"; };
-        chat = _: { layout.background-color = "#1e3a4a"; };
-      };
-      wsOffset = builtins.length (builtins.attrNames namedWorkspaces);
+      namedWorkspaces = [
+        { name = "scratch"; value = _: { layout.background-color = "#242424"; }; }
+        { name = "gaming"; value = _: { layout.background-color = "#4a1e1e"; }; }
+        { name = "chat"; value = _: { layout.background-color = "#1e3a4a"; }; }
+      ];
+      wsOffset = builtins.length namedWorkspaces;
 
-      toggle-scratchpad = pkgs.writeTextFile {
-        name = "niri-toggle-scratchpad";
-        executable = true;
-        text = ''
-          #!${pkgs.nushell}/bin/nu
+      workspace-init = pkgs.writers.writeNu "niri-workspace-init" ''
+        ${lib.concatStringsSep "\n" (lib.imap1 (idx: ws:
+          "niri msg action move-workspace-to-index --reference ${ws.name} ${toString idx}"
+        ) namedWorkspaces)}
+        niri msg action focus-workspace ${toString (wsOffset + 1)}
+      '';
 
-          let windows = (niri msg -j windows | from json)
-          let matching = ($windows | where app_id == "scratchpad")
+      toggle-scratchpad = pkgs.writers.writeNu "niri-toggle-scratchpad" ''
+        let windows = (niri msg -j windows | from json)
+        let matching = ($windows | where app_id == "scratchpad")
 
-          if ($matching | is-empty) {
-            niri msg action spawn -- wezterm start --class scratchpad
+        if ($matching | is-empty) {
+          niri msg action spawn -- wezterm start --class scratchpad
+        } else {
+          let window = ($matching | first)
+          let workspaces = (niri msg -j workspaces | from json)
+          let focused = ($workspaces | where is_focused | first)
+
+          if $window.workspace_id == $focused.id {
+            let occupied_ids = ($windows | get workspace_id | uniq)
+            let hide_ws = ($workspaces | where {|ws| $ws.id not-in $occupied_ids} | last)
+            ^niri msg action move-window-to-workspace --window-id $window.id --focus false $hide_ws.idx
           } else {
-            let window = ($matching | first)
-            let workspaces = (niri msg -j workspaces | from json)
-            let focused = ($workspaces | where is_focused | first)
-
-            if $window.workspace_id == $focused.id {
-              let occupied_ids = ($windows | get workspace_id | uniq)
-              let hide_ws = ($workspaces | where {|ws| $ws.id not-in $occupied_ids} | last)
-              ^niri msg action move-window-to-workspace --window-id $window.id --focus false $hide_ws.idx
-            } else {
-              ^niri msg action move-window-to-workspace --window-id $window.id $focused.idx
-              ^niri msg action focus-window --id $window.id
-            }
+            ^niri msg action move-window-to-workspace --window-id $window.id $focused.idx
+            ^niri msg action focus-window --id $window.id
           }
-        '';
-      };
+        }
+      '';
     in
     {
       # TODO: polkit and portal https://github.com/niri-wm/niri/wiki/Important-Software
@@ -109,7 +104,7 @@
             mouse = {
               accel-profile = "flat";
             };
-            focus-follows-mouse = _: { props = { max-scroll-amount = "0%"; }; };
+            focus-follows-mouse = _: { props = { max-scroll-amount = "50%"; }; };
             touchpad = {
               natural-scroll = _: { };
               tap = _: { };
@@ -191,6 +186,7 @@
               matches = [
                 { app-id = "^osu!$"; }
                 { app-id = "^steam_app_[0-9]+$"; }
+                { app-id = "^valheim\\.x86_64$"; }
                 { app-id = "^gamescope$"; }
               ];
               variable-refresh-rate = true;
@@ -203,6 +199,7 @@
               matches = [
                 { app-id = "^steam$"; }
                 { app-id = "^steam_app_[0-9]+$"; }
+                { app-id = "^valheim\\.x86_64$"; }
                 { app-id = "^osu!$"; }
               ];
               open-on-workspace = "gaming";
@@ -210,6 +207,7 @@
             {
               matches = [
                 { app-id = "^steam_app_[0-9]+$"; }
+                { app-id = "^valheim\\.x86_64$"; }
                 { app-id = "^osu!$"; }
               ];
               open-fullscreen = true;
@@ -230,7 +228,7 @@
             }
           ];
 
-          "spawn-at-startup" = [ [ "niri" "msg" "action" "focus-workspace" (toString (wsOffset + 1)) ] ];
+          "spawn-at-startup" = [ [ "${workspace-init}" ] ];
 
           xwayland-satellite.path = lib.getExe pkgs.xwayland-satellite;
           layer-rules = [
@@ -246,7 +244,7 @@
             backdrop-color = "#000000";
           };
 
-          workspaces = namedWorkspaces;
+          workspaces = builtins.listToAttrs namedWorkspaces;
 
           # Run `niri msg action` to see a list of commands
           binds = let

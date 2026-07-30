@@ -47,6 +47,7 @@
 - zsh not saving history
 - why doesn't opentabletdriver start automatically
 - does hyprland bind to open vicinae belong in hyprland or vicinae config? same applies for terminal
+- rework zsh config to a more stable format
 
 ## Hosts (separate repos)
 - [ ] `boiler` — thomas's gaming desktop
