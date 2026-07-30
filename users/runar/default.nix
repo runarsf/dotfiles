@@ -100,7 +100,7 @@ in
     {
       imports = features.home;
 
-      home.packages = with pkgs; [ claude-code ] ++ lib.optionals pkgs.stdenv.isLinux [ television ];
+      home.packages = with pkgs; [ claude-code television ] ++ lib.optionals pkgs.stdenv.isLinux [ feishin ];
 
       home.stateVersion = "24.11";
     };
