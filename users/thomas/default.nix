@@ -16,6 +16,12 @@
     "hypridle"
     "hyprlock"
     "hyprpaper"
+    {
+      stylix = {
+        wallpaper = ./wallpaper.jpg;
+        cursor = "wii";
+      };
+    }
     "dms"
     "wezterm"
     "niks"
@@ -23,12 +29,14 @@
     "vicinae"
     "network"
     "cli"
+    "git"
     "docker"
     "norwegian"
     "japanese"
     "pipewire"
     "zed"
     "zen"
+    "discord"
     "steam" # TODO: put gaming and other device-specific features in respective hosts
     "controllers"
     {
@@ -89,6 +97,15 @@ in {
     home.packages = with pkgs; [television];
 
     home.stateVersion = "24.11";
+
+    programs.git = {
+      settings = {
+        user = {
+          name = "Thomas Espervik";
+          email = "thoesp@protonmail.com";
+        };
+      };
+    };
   };
 
   flake.homeConfigurations.thomas = inputs.home-manager.lib.homeManagerConfiguration {
