@@ -28,17 +28,58 @@
       ...
     }:
     let
+      focus-workspace = pkgs.writers.writeNu "niri-focus-workspace" ''
+        def main [direction: string] {
+          let excluded = [${lib.concatStringsSep " " (map (name: "\"${name}\"") excludedWorkspaces)}]
+          let workspaces = (niri msg -j workspaces | from json | sort-by idx)
+          let windows = (niri msg -j windows | from json)
+          let occupied_ids = ($windows | get workspace_id | uniq)
+
+          let current = ($workspaces | where is_focused | first)
+
+          let candidates = (if $direction == "down" {
+            $workspaces | where idx > $current.idx
+          } else {
+            $workspaces | where idx < $current.idx | reverse
+          } | where {|ws| ($ws.name == null) or (not ($ws.name in $excluded))})
+
+          let named_ids = ($workspaces | where {|ws| ($ws.name != null) and (not ($ws.name in $excluded))} | get id)
+          let any_named_occupied = ($named_ids | any {|id| $id in $occupied_ids})
+
+          let filtered = if $any_named_occupied {
+            $candidates | where {|ws|
+              let is_empty_named = ($ws.name != null) and (not ($ws.id in $occupied_ids))
+              not $is_empty_named
+            }
+          } else {
+            $candidates
+          }
+
+          let target = if not ($filtered | is-empty) {
+            $filtered | first
+          } else if not ($candidates | is-empty) {
+            $candidates | first
+          } else {
+            null
+          }
+
+          if $target != null {
+            niri msg action focus-workspace $target.idx
+          }
+        }
+      '';
+
       focus-or-workspace = pkgs.writers.writeNu "niri-focus-or-workspace" ''
         def main [direction: string] {
           let before = try { niri msg -j focused-window | from json | get id }
           if $before == null {
-            niri msg action $"focus-workspace-($direction)"
+            ^${focus-workspace} $direction
             return
           }
           niri msg action $"focus-window-($direction)"
           let after = (niri msg -j focused-window | from json | get id)
           if $before == $after {
-            niri msg action $"focus-workspace-($direction)"
+            ^${focus-workspace} $direction
           }
         }
       '';
@@ -58,6 +99,7 @@
         }
       ];
       wsOffset = builtins.length namedWorkspaces;
+      excludedWorkspaces = [ "scratch" ];
 
       workspace-init = pkgs.writers.writeNu "niri-workspace-init" ''
         ${lib.concatStringsSep "\n" (
@@ -301,10 +343,10 @@
 
               "Mod+WheelScrollDown".focus-column-right = _: { };
               "Mod+WheelScrollUp".focus-column-left = _: { };
-              "Mod+WheelScrollLeft".focus-workspace-down = _: { };
-              "Mod+Shift+WheelScrollUp".focus-workspace-up = _: { };
-              "Mod+WheelScrollRight".focus-workspace-up = _: { };
-              "Mod+Shift+WheelScrollDown".focus-workspace-down = _: { };
+              "Mod+WheelScrollLeft".spawn = [ "${focus-workspace}" "down" ];
+              "Mod+Shift+WheelScrollUp".spawn = [ "${focus-workspace}" "up" ];
+              "Mod+WheelScrollRight".spawn = [ "${focus-workspace}" "up" ];
+              "Mod+Shift+WheelScrollDown".spawn = [ "${focus-workspace}" "down" ];
 
               "XF86AudioRaiseVolume".spawn-sh = "${wpctl} set-volume -l 2.0 @DEFAULT_SINK@ 5%+";
               "XF86AudioLowerVolume".spawn-sh = "${wpctl} set-volume -l 2.0 @DEFAULT_SINK@ 5%-";
