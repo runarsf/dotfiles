@@ -13,6 +13,7 @@ _: {
           protonup-qt
           protonup-ng
           mangohud
+          r2modman
         ];
         sessionVariables = {
           STEAM_EXTRA_COMPAT_TOOLS_PATHS = "${config.home.homeDirectory}/.steam/root/compatibilitytools.d";

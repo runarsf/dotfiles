@@ -176,6 +176,7 @@
             {
               matches = [
                 { app-id = "^osu!$"; }
+                { app-id = "^r2modman$"; }
                 { app-id = "^steam_app_[0-9]+$"; }
                 { app-id = "^valheim\\.x86_64$"; }
                 { app-id = "^gamescope$"; }
@@ -192,6 +193,7 @@
                 { app-id = "^steam_app_[0-9]+$"; }
                 { app-id = "^valheim\\.x86_64$"; }
                 { app-id = "^osu!$"; }
+                { app-id = "^r2modman$"; }
               ];
               open-on-workspace = "gaming";
             }
@@ -200,6 +202,7 @@
                 { app-id = "^steam_app_[0-9]+$"; }
                 { app-id = "^valheim\\.x86_64$"; }
                 { app-id = "^osu!$"; }
+                { app-id = "^r2modman$"; }
               ];
               open-fullscreen = true;
             }
@@ -226,6 +229,7 @@
             {
               matches = [
                 { namespace = "^wallpaper$"; }
+                { namespace = "^hyprpaper$"; }
               ];
               place-within-backdrop = true;
             }
