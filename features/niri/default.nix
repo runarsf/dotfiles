@@ -28,60 +28,14 @@
       ...
     }:
     let
-      focus-workspace = pkgs.writers.writeNu "niri-focus-workspace" ''
-        def main [direction: string] {
-          let excluded = [${lib.concatStringsSep " " (map (name: "\"${name}\"") excludedWorkspaces)}]
-          let workspaces = (niri msg -j workspaces | from json | sort-by idx)
-          let windows = (niri msg -j windows | from json)
-          let occupied_ids = ($windows | get workspace_id | uniq)
-
-          let current = ($workspaces | where is_focused | first)
-
-          let candidates = (if $direction == "down" {
-            $workspaces | where idx > $current.idx
-          } else {
-            $workspaces | where idx < $current.idx | reverse
-          } | where {|ws| ($ws.name == null) or (not ($ws.name in $excluded))})
-
-          let named_ids = ($workspaces | where {|ws| ($ws.name != null) and (not ($ws.name in $excluded))} | get id)
-          let any_named_occupied = ($named_ids | any {|id| $id in $occupied_ids})
-
-          let filtered = if $any_named_occupied {
-            $candidates | where {|ws|
-              let is_empty_named = ($ws.name != null) and (not ($ws.id in $occupied_ids))
-              not $is_empty_named
-            }
-          } else {
-            $candidates
-          }
-
-          let target = if not ($filtered | is-empty) {
-            $filtered | first
-          } else if not ($candidates | is-empty) {
-            $candidates | first
-          } else {
-            null
-          }
-
-          if $target != null {
-            niri msg action focus-workspace $target.idx
-          }
-        }
+      focus-workspace = pkgs.writeShellScript "niri-focus-workspace" ''
+        export NIRI_EXCLUDED_WORKSPACES="${lib.concatStringsSep " " excludedWorkspaces}"
+        exec ${pkgs.nushell}/bin/nu ${./bin/focus-workspace.nu} "$@"
       '';
 
-      focus-or-workspace = pkgs.writers.writeNu "niri-focus-or-workspace" ''
-        def main [direction: string] {
-          let before = try { niri msg -j focused-window | from json | get id }
-          if $before == null {
-            ^${focus-workspace} $direction
-            return
-          }
-          niri msg action $"focus-window-($direction)"
-          let after = (niri msg -j focused-window | from json | get id)
-          if $before == $after {
-            ^${focus-workspace} $direction
-          }
-        }
+      focus-or-workspace = pkgs.writeShellScript "niri-focus-or-workspace" ''
+        export NIRI_FOCUS_WORKSPACE="${focus-workspace}"
+        exec ${pkgs.nushell}/bin/nu ${./bin/focus-or-workspace.nu} "$@"
       '';
 
       namedWorkspaces = [
@@ -101,31 +55,15 @@
       wsOffset = builtins.length namedWorkspaces;
       excludedWorkspaces = [ "scratch" ];
 
-      workspace-init = pkgs.writers.writeNu "niri-workspace-init" ''
-        ${lib.concatStringsSep "\n" (
-          lib.imap1 (
-            idx: ws: "niri msg action move-workspace-to-index --reference ${ws.name} ${toString idx}"
-          ) namedWorkspaces
-        )}
-        niri msg action focus-workspace ${toString (wsOffset + 1)}
+      workspace-init = pkgs.writeShellScript "niri-workspace-init" ''
+        export NIRI_NAMED_WORKSPACES="${lib.concatStringsSep " " (map (ws: ws.name) namedWorkspaces)}"
+        export NIRI_WS_OFFSET="${toString wsOffset}"
+        exec ${pkgs.nushell}/bin/nu ${./bin/workspace-init.nu}
       '';
 
       # TODO: Waiting on the following PR to hide the scratch WS: https://github.com/niri-wm/niri/pull/2997
-      toggle-scratchpad = pkgs.writers.writeNu "niri-toggle-scratchpad" ''
-        let scratchpad = (niri msg -j windows | from json | where app_id == "scratchpad" | first)
-
-        if ($scratchpad | is-empty) {
-          niri msg action spawn -- wezterm start --class scratchpad
-        } else {
-          let focused_workspace = (niri msg -j workspaces | from json | where is_focused | first)
-
-          if $scratchpad.workspace_id == $focused_workspace.id {
-            ^niri msg action move-window-to-workspace --window-id $scratchpad.id --focus false scratch
-          } else {
-            ^niri msg action move-window-to-workspace --window-id $scratchpad.id $focused_workspace.idx
-            ^niri msg action focus-window --id $scratchpad.id
-          }
-        }
+      toggle-scratchpad = pkgs.writeShellScript "niri-toggle-scratchpad" ''
+        exec ${pkgs.nushell}/bin/nu ${./bin/toggle-scratchpad.nu}
       '';
     in
     {
