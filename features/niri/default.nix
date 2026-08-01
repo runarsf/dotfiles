@@ -71,6 +71,14 @@
         exec ${pkgs.nushell}/bin/nu ${./bin/steam-game-handler.nu}
       '';
 
+      floating-sidebar = pkgs.writeShellScript "niri-floating-sidebar" ''
+        exec ${pkgs.bash}/bin/bash ${./bin/floating-sidebar.sh} "$@"
+      '';
+
+      master-stack = pkgs.writeShellScript "niri-master-stack" ''
+        exec ${pkgs.bash}/bin/bash ${./bin/master-stack.sh} "$@"
+      '';
+
       gameMatches = [
         { app-id = "^osu!$"; }
         { app-id = "^r2modman$"; }
@@ -218,6 +226,7 @@
           "spawn-at-startup" = [
             [ "${workspace-init}" ]
             [ "${steam-game-handler}" ]
+            [ "${floating-sidebar}" "listen" ]
           ];
 
           xwayland-satellite.path = lib.getExe pkgs.xwayland-satellite;
@@ -245,6 +254,11 @@
               brightnessctl = lib.getExe pkgs.brightnessctl;
             in
             {
+              "Mod+A".spawn = [ "${floating-sidebar}" "toggle" ];
+              "Mod+S".spawn = [ "${floating-sidebar}" "hide" ];
+              "Mod+I".spawn = [ "${floating-sidebar}" "flip" ];
+              "Mod+M".spawn = [ "${master-stack}" ];
+
               "Mod+Return".spawn-sh = "wezterm";
               "Mod+Q".close-window = _: { };
               # "Mod+D".spawn-sh = "${lib.getExe self'.packages.noctalia} ipc call launcher toggle";
