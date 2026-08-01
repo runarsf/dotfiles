@@ -52,7 +52,7 @@
           (self.packages.${system}.nc-respond)
           # inputs.binsider.packages.${system}.default
         ]
-        ++ optionals nixpkgs.config.android_sdk.accept_license [
+        ++ optionals pkgs.config.android_sdk.accept_license [
           frida-tools
           unstable.jadx
           apktool

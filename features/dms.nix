@@ -3,11 +3,13 @@
     {
       pkgs,
       lib,
+      config,
       ...
     }:
     let
-      inherit (lib) mkIf;
+      inherit (lib) mkIf mkEnableOption optionals;
       inherit (pkgs.stdenv.hostPlatform) system;
+      cfg = config.features.dms;
     in
     {
       imports = [
@@ -15,7 +17,13 @@
         inputs.dms-plugin-registry.modules.default
       ];
 
+      options.features.dms.aiUsage = mkEnableOption "Claude Code usage widget";
+
       config = mkIf pkgs.stdenv.isLinux {
+        home.packages = with pkgs; [
+          libinput
+        ];
+
         programs.dank-material-shell = {
           enable = true;
           systemd.enable = true;
@@ -66,8 +74,13 @@
                 screenPreferences = [ "all" ];
                 showOnLastDisplay = true;
                 leftWidgets = [
-                  { id = "launcherButton"; }
+                  # { id = "launcherButton"; }
                   { id = "workspaceSwitcher"; }
+                  {
+                    id = "spacer";
+                    size = 20;
+                  }
+                  { id = "bongoCat"; }
                   {
                     id = "spacer";
                     size = 20;
@@ -87,14 +100,18 @@
                     id = "spacer";
                     size = 20;
                   }
+                  { id = "catWidget"; }
                   { id = "cpuUsage"; }
                   { id = "memUsage"; }
+                ] ++ optionals cfg.aiUsage [
+                  { id = "claudeCodeUsage"; }
+                ] ++ [
                   { id = "battery"; }
-                  { id = "controlCenterButton"; }
                   {
                     id = "spacer";
                     size = 20;
                   }
+                  { id = "controlCenterButton"; }
                   { id = "clock"; }
                   { id = "notificationButton"; }
                 ];
@@ -114,6 +131,15 @@
             dankStickerSearch.enable = true;
             gitmojiLauncher.enable = true;
             nixMonitor.enable = true;
+            claudeCodeUsage.enable = cfg.aiUsage;
+            catWidget.enable = true;
+            bongoCat = {
+              enable = true;
+              settings = {
+                catYOffset = 2;
+                catSizePercent = 80;
+              };
+            };
           };
         };
       };

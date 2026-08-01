@@ -71,6 +71,7 @@
         {
         stylix = {
           enable = true;
+          overlays.enable = false;
           polarity = "dark";
           image = cfg.wallpaper;
           base16Scheme = "${pkgs.base16-schemes}/share/themes/${cfg.scheme}.yaml";

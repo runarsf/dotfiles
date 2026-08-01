@@ -11,8 +11,6 @@ _: {
       };
     };
 
-    nixpkgs.config.zathura.useMupdf = false;
-
     home.packages = with pkgs; [
       obsidian
       typst

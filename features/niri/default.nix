@@ -65,6 +65,17 @@
       toggle-scratchpad = pkgs.writeShellScript "niri-toggle-scratchpad" ''
         exec ${pkgs.nushell}/bin/nu ${./bin/toggle-scratchpad.nu}
       '';
+
+      steam-game-handler = pkgs.writeShellScript "niri-steam-game-handler" ''
+        export PATH="${pkgs.xdotool}/bin:$PATH"
+        exec ${pkgs.nushell}/bin/nu ${./bin/steam-game-handler.nu}
+      '';
+
+      gameMatches = [
+        { app-id = "^osu!$"; }
+        { app-id = "^r2modman$"; }
+        { app-id = "^steam_app_[0-9]+$"; }
+      ];
     in
     {
       # TODO: polkit and portal https://github.com/niri-wm/niri/wiki/Important-Software
@@ -167,20 +178,13 @@
               // vrr;
             };
 
-          # TODO: add a variable for games so we can fullscreen and move to gaming workspace without duplicating name
           window-rules = [
             {
               geometry-corner-radius = 12;
               clip-to-geometry = true;
             }
             {
-              matches = [
-                { app-id = "^osu!$"; }
-                { app-id = "^r2modman$"; }
-                { app-id = "^steam_app_[0-9]+$"; }
-                { app-id = "^valheim\\.x86_64$"; }
-                { app-id = "^gamescope$"; }
-              ];
+              matches = gameMatches ++ [ { app-id = "^gamescope$"; } ];
               variable-refresh-rate = true;
             }
             {
@@ -188,22 +192,11 @@
               open-floating = true;
             }
             {
-              matches = [
-                { app-id = "^steam$"; }
-                { app-id = "^steam_app_[0-9]+$"; }
-                { app-id = "^valheim\\.x86_64$"; }
-                { app-id = "^osu!$"; }
-                { app-id = "^r2modman$"; }
-              ];
+              matches = [ { app-id = "^steam$"; } ] ++ gameMatches;
               open-on-workspace = "gaming";
             }
             {
-              matches = [
-                { app-id = "^steam_app_[0-9]+$"; }
-                { app-id = "^valheim\\.x86_64$"; }
-                { app-id = "^osu!$"; }
-                { app-id = "^r2modman$"; }
-              ];
+              matches = gameMatches;
               open-fullscreen = true;
             }
             {
@@ -222,7 +215,10 @@
             }
           ];
 
-          "spawn-at-startup" = [ [ "${workspace-init}" ] ];
+          "spawn-at-startup" = [
+            [ "${workspace-init}" ]
+            [ "${steam-game-handler}" ]
+          ];
 
           xwayland-satellite.path = lib.getExe pkgs.xwayland-satellite;
           layer-rules = [

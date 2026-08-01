@@ -118,6 +118,7 @@
           "flake.nix"
           "treefmt.nix"
           "hardware-configuration.nix"
+          "nixpkgs.nix"
         ]
       ) ./.
     );

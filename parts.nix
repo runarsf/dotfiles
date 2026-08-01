@@ -1,4 +1,14 @@
-{inputs, ...}: {
+{inputs, lib', ...}:
+let
+  nixpkgsConfig = builtins.foldl' lib'.recursiveUpdate {} (
+    map import (
+      builtins.filter
+        (p: builtins.baseNameOf p == "nixpkgs.nix")
+        (lib'.concatPaths { paths = ./features; filterDefault = false; })
+    )
+  );
+in
+{
   imports = [
     inputs.home-manager.flakeModules.home-manager
     inputs.treefmt-nix.flakeModule
@@ -20,8 +30,10 @@
       treefmt.imports = [./treefmt.nix];
       _module.args.pkgs = import inputs.nixpkgs {
         inherit system;
-        config.allowUnfree = true;
-        config.allowUnfreePredicate = _: true;
+        config = lib'.recursiveUpdate {
+          allowUnfree = true;
+          allowUnfreePredicate = _: true;
+        } nixpkgsConfig;
 
         overlays = [
           (_: prev: {

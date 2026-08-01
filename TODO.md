@@ -35,7 +35,6 @@
 - ssh: services.ssh-agent.enable
 - zsh: make sure zocixe works in zsh since zsh is no longer in home manager
 - how would we have machine-specific home manager modules enabled? e.g., only webcam on runar@runix
-- evaluation warning: runar profile: You have set either `nixpkgs.config` or `nixpkgs.overlays` while using `home-manager.useGlobalPkgs`. This will soon not be possible. Please remove all `nixpkgs` options when using `home-manager.useGlobalPkgs`.
 - consider whether features like wayland, dev.make, printing, etc. can be in a common module (e.g., make can be in cli or c, wayland and printing in desktop, etc.)
 - where does one properly add allowUnfree?
 - Add user to trusted users `nix.settings.trusted-users = [ "root" "runar" ];`

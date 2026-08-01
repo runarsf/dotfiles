@@ -24,7 +24,11 @@ let
         cursor = "wii";
       };
     }
-    "dms"
+    {
+      dms = {
+        aiUsage = true;
+      };
+    }
     "wezterm"
     "niks"
     "nix"
@@ -40,6 +44,7 @@ let
     "controllers"
     "matrix"
     "tuigreet"
+    "writing"
   ];
 in
 {

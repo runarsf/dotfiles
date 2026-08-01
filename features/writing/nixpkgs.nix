@@ -1,0 +1,1 @@
+{ zathura.useMupdf = false; }
