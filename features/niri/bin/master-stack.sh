@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# https://gist.github.com/ahmedna126/884b524e50b43db92caaec0ca55b6976
 
 # 1. Get current column and window data
 WINDOW_DATA=$(niri msg --json windows | jq -r '.[] | select(.is_focused == true)')

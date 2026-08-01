@@ -42,7 +42,14 @@ let
     "osu" # TODO: this (and all other gaming-related modules) belongs in runix
     "steam"
     "controllers"
-    "matrix"
+    {
+      matrix = {
+        clients = [
+          "element"
+          "cinny"
+        ];
+      };
+    }
     "tuigreet"
     "writing"
   ];

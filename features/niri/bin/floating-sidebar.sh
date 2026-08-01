@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
+# https://gist.github.com/ahmedna126/884b524e50b43db92caaec0ca55b6976
 
 #=============================================================================
 # Niri Sidebar Manager

@@ -211,6 +211,7 @@
               matches = [
                 { app-id = "^discord$"; }
                 { app-id = "^element$"; }
+                { app-id = "^cinny$"; }
               ];
               open-on-workspace = "chat";
             }
