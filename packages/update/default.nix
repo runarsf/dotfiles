@@ -1,6 +1,7 @@
 {lib, ...}: let
   releaseLockedInputs = [
     "hyprland"
+    "hyprland-plugins"
     "dms"
     "vicinae"
     "nwg-displays"
@@ -26,7 +27,8 @@ in {
   in {
     packages = {
       inherit update-flake;
-      updater = writeNuBin "update-flake" ''
+      update = writeNuBin "update" ''
+        # An `update-flake` wrapper.
         def main [
           ...inputs: string,  # specific inputs to update; empty updates all
           --no-fetchgit,      # skip fetchgit update (runs by default)

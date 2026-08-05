@@ -17,13 +17,12 @@
     pkgs,
     ...
   }: let
-    inherit (lib'.uwsm) run;
     inherit (lib'.hyprland) lua onStart;
     inherit (pkgs.stdenv.hostPlatform) system;
   in {
     imports = [inputs.vicinae.homeManagerModules.default];
 
-    services.vicinae = {
+    programs.vicinae = {
       enable = true;
       systemd = {
         enable = true;
@@ -43,7 +42,7 @@
         };
       };
       extensions = with inputs.vicinae-extensions.packages.${system}; [
-        bluetooth
+        # bluetooth
         nix
         power-profile
         awww-switcher
@@ -80,7 +79,7 @@
         {
           _args = [
             "SUPER + D"
-            (lua "hl.dsp.exec_cmd(${builtins.toJSON (run "vicinae toggle")})")
+            (lua "hl.dsp.exec_cmd(${builtins.toJSON "vicinae toggle"})")
             {}
           ];
         }
@@ -96,7 +95,7 @@
         }
       ];
       on = [
-        (onStart (run (lib.getExe' pkgs.awww "awww-daemon")))
+        (onStart (lib.getExe' pkgs.awww "awww-daemon"))
       ];
     };
   };

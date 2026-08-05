@@ -98,10 +98,12 @@ def --wrapped main [
     let substituters = $settings.substituters | str join " "
     let public_keys  = $settings.publicKeys   | str join " "
     let sub_opt = if $extra { "extra-substituters" } else { "substituters" }
+    let t_sub_opt = if $extra { "extra-trusted-substituters" } else { "trusted-substituters" }
     let key_opt = if $extra { "extra-trusted-public-keys" } else { "trusted-public-keys" }
 
     [
       "--option", $sub_opt, $substituters,
+      "--option", $t_sub_opt, $substituters,
       "--option", $key_opt, $public_keys
     ]
   }

@@ -12,8 +12,14 @@ let
     "zsh"
     "flatpak"
     "starship"
+    "wayland"
     "niri"
-    # "hyprland"
+    "nushell"
+    {
+      hyprland = {
+        nvidia = true;
+      };
+    }
     "hypridle"
     "hyprlock"
     "hyprpaper"
@@ -112,7 +118,7 @@ in
     {
       imports = features.home;
 
-      home.packages = with pkgs; [ claude-code television ] ++ lib.optionals pkgs.stdenv.isLinux [ feishin ];
+      home.packages = with pkgs; [ claude-code ] ++ lib.optionals pkgs.stdenv.isLinux [ feishin me3 ];
 
       home.stateVersion = "24.11";
     };

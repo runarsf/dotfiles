@@ -41,12 +41,9 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    hyprland = {
-      url = "github:hyprwm/Hyprland";
-      # inputs.nixpkgs.follows = "nixpkgs";
-    };
+    hyprland.url = "github:hyprwm/Hyprland/275e27704a36d956fbdc28cec6399b8e298b06ca";
     hyprland-plugins = {
-      url = "github:hyprwm/hyprland-plugins";
+      url = "github:hyprwm/hyprland-plugins/v0.56.0";
       inputs.hyprland.follows = "hyprland";
     };
     hypr-dynamic-cursors = {
@@ -56,17 +53,13 @@
 
     niri-scratchpad.url = "github:argosnothing/niri-scratchpad";
 
-    nwg-displays.url = "github:nwg-piotr/nwg-displays";
+    nwg-displays.url = "github:nwg-piotr/nwg-displays/v0.4.3";
 
-    zed.url = "github:zed-industries/zed";
+    zed.url = "github:zed-industries/zed/v1.13.2";
 
-    vicinae = {
-      url = "github:vicinaehq/vicinae";
-      # inputs.nixpkgs.follows = "nixpkgs";
-    };
+    vicinae.url = "github:vicinaehq/vicinae/v0.24.0";
     vicinae-extensions = {
       url = "github:vicinaehq/extensions";
-      # inputs.nixpkgs.follows = "nixpkgs";
       inputs.vicinae.follows = "vicinae";
     };
 
@@ -76,7 +69,7 @@
     };
 
     dms = {
-      url = "github:AvengeMedia/DankMaterialShell";
+      url = "github:AvengeMedia/DankMaterialShell/v1.5.3";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     dgop = {

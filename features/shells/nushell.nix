@@ -17,7 +17,7 @@
       query
       gstat
       formats
-      polars
+      # polars
     ];
   };
 

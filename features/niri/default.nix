@@ -106,6 +106,7 @@
               xkb.layout = "no";
               repeat-delay = 200;
               repeat-rate = 35;
+              numlock = _: { };
             };
             mouse = {
               accel-profile = "flat";
@@ -125,7 +126,7 @@
             gaps = 10;
 
             background-color = "transparent";
-            center-focused-column = "on-overflow";
+            # center-focused-column = "on-overflow";
             always-center-single-column = _: { };
             # empty-workspace-above-first = _: { };
 
@@ -193,11 +194,10 @@
             }
             {
               matches = gameMatches ++ [ { app-id = "^gamescope$"; } ];
+              excludes = [
+                { app-id = "^steam_app_1245620$"; } # Elden Ring
+              ];
               variable-refresh-rate = true;
-            }
-            {
-              matches = [ { app-id = "^scratchpad$"; } ];
-              open-floating = true;
             }
             {
               matches = [ { app-id = "^steam$"; } ] ++ gameMatches;
@@ -209,6 +209,13 @@
             }
             {
               matches = [
+                { app-id = "^steam$"; }
+                { app-id = "^zen$"; }
+              ];
+              open-maximized = true;
+            }
+            {
+              matches = [
                 { app-id = "^discord$"; }
                 { app-id = "^element$"; }
                 { app-id = "^cinny$"; }
@@ -216,11 +223,8 @@
               open-on-workspace = "chat";
             }
             {
-              matches = [
-                { app-id = "^steam$"; }
-                { app-id = "^zen$"; }
-              ];
-              open-maximized = true;
+              matches = [ { app-id = "^scratchpad$"; } ];
+              open-floating = true;
             }
           ];
 
@@ -258,7 +262,7 @@
               "Mod+A".spawn = [ "${floating-sidebar}" "toggle" ];
               "Mod+S".spawn = [ "${floating-sidebar}" "hide" ];
               "Mod+I".spawn = [ "${floating-sidebar}" "flip" ];
-              "Mod+M".spawn = [ "${master-stack}" ];
+              "Mod+Shift+M".spawn = [ "${master-stack}" ];
 
               "Mod+Return".spawn-sh = "wezterm";
               "Mod+Q".close-window = _: { };

@@ -52,29 +52,56 @@ def get-provider-info [original: record]: nothing -> record {
     }
 }
 
-# Fetches the latest release tag from the appropriate forge API.
+def github-get [url: string]: nothing -> any {
+    if "GITHUB_TOKEN" in $env {
+        http get --headers {Authorization: $"Bearer ($env.GITHUB_TOKEN)"} $url
+    } else {
+        http get $url
+    }
+}
+
+# Fetches the latest release or tag from the appropriate forge API.
+# Falls back to the tags API if no releases exist.
 def fetch-latest-tag [info: record]: nothing -> string {
     try {
         match $info.provider {
             "github" => {
-                http get $"https://api.github.com/repos/($info.repo)/releases/latest"
-                | get tag_name
+                try {
+                    github-get $"https://api.github.com/repos/($info.repo)/releases/latest"
+                    | get tag_name
+                } catch {
+                    let tags = github-get $"https://api.github.com/repos/($info.repo)/tags?per_page=1"
+                    if ($tags | is-empty) { error make { msg: $"($info.repo) has no releases or tags" } }
+                    $tags | first | get name
+                }
             }
             "gitlab" => {
                 let encoded = $info.repo | str replace "/" "%2F"
-                http get $"https://($info.host)/api/v4/projects/($encoded)/releases/permalink/latest"
-                | get tag_name
+                try {
+                    http get $"https://($info.host)/api/v4/projects/($encoded)/releases/permalink/latest"
+                    | get tag_name
+                } catch {
+                    http get $"https://($info.host)/api/v4/projects/($encoded)/repository/tags?order_by=updated&sort=desc&per_page=1"
+                    | first
+                    | get name
+                }
             }
             "forgejo" => {
-                http get $"https://($info.host)/api/v1/repos/($info.repo)/releases/latest"
-                | get tag_name
+                try {
+                    http get $"https://($info.host)/api/v1/repos/($info.repo)/releases/latest"
+                    | get tag_name
+                } catch {
+                    http get $"https://($info.host)/api/v1/repos/($info.repo)/tags?limit=1"
+                    | first
+                    | get name
+                }
             }
         }
     } catch { |err|
         let msg = if ($err.msg | str contains "403") {
             $"rate limit hit for ($info.repo) — wait or set GITHUB_TOKEN in the environment"
         } else {
-            $err.msg
+            $"could not find a release or tag for ($info.repo): ($err.msg)"
         }
         error make { msg: $msg }
     }
@@ -95,31 +122,12 @@ def make-nix-url [info: record, tag: string]: nothing -> string {
     }
 }
 
-def update-to-latest-release [input_name: string] {
-    let lock = open --raw flake.lock | from json
-    let original = $lock.nodes | get $input_name | get original
-    let info = get-provider-info $original
-
-    print $"(ansi blue_bold)info:(ansi reset) fetching latest release tag for ($info.repo) \(($info.provider)\)..."
-
-    let latest_tag = fetch-latest-tag $info
-
-    if $latest_tag == null or $latest_tag == "" {
-        error make { msg: $"Could not find a latest release for ($info.repo)" }
-    }
-
-    let nix_url = make-nix-url $info $latest_tag
-    print $"(ansi blue_bold)info:(ansi reset) updating ($input_name) to ($latest_tag)..."
-
-    let extra = follows-overrides $lock.nodes $input_name $nix_url
-    nix flake lock --override-input $input_name $nix_url ...$extra
-}
 
 def main [
   ...inputs: string,                  # specific inputs to update normally
   --dir (-d): string,                 # override the flake directory
-  --release (-r): string = "",        # comma-separated inputs to pin to their latest release
   --all (-a),                         # update all regular inputs (implied when nothing is passed)
+  --release (-r): string = "",        # comma-separated inputs to pin to their latest release
   --fetchgit (-f),                    # update git fetchers
 ] {
     if $dir != null {
@@ -128,16 +136,21 @@ def main [
 
     let release_inputs = $release | split row "," | where { |x| not ($x | is-empty) }
     let regular_inputs = $inputs | where { |x| $x not-in $release_inputs }
+    let nix_token_args = if "GITHUB_TOKEN" in $env {
+        ["--extra-access-tokens" $"github.com=($env.GITHUB_TOKEN)"]
+    } else {
+        []
+    }
 
     let do_regular = ($regular_inputs | is-not-empty) or $all or ($release_inputs | is-empty)
 
     if $do_regular {
         if ($regular_inputs | is-not-empty) {
             print $"(ansi blue_bold)info:(ansi reset) updating inputs: ($regular_inputs | str join ', ')..."
-            nix flake update ...$regular_inputs
+            nix flake update ...$nix_token_args ...$regular_inputs
         } else {
             print $"(ansi blue_bold)info:(ansi reset) updating all flake inputs..."
-            nix flake update
+            nix flake update ...$nix_token_args
         }
     }
 
@@ -147,7 +160,38 @@ def main [
         ^update-nix-fetchgit --verbose ...$nix_files out+err>| lines | where not ($it =~ '^Made.*updates$') | each { print $in }
     }
 
-    for input in $release_inputs {
-        update-to-latest-release $input
+    if ($release_inputs | is-not-empty) {
+        let lock = open --raw flake.lock | from json
+        mut override_args: list<string> = []
+
+        for input in $release_inputs {
+            let original = $lock.nodes | get $input | get original
+            let info = get-provider-info $original
+            print $"(ansi blue_bold)info:(ansi reset) fetching latest release tag for ($info.provider):($info.repo)..."
+            let latest_tag = fetch-latest-tag $info
+            let nix_url = make-nix-url $info $latest_tag
+            print $"(ansi blue_bold)info:(ansi reset) pinning ($input) to ($latest_tag)..."
+
+            # Construct the base URL as it appears in flake.nix (without any tag/ref).
+            # nix skips rewriting the lock when the commit is unchanged, so --override-input
+            # won't set original.ref in that case. Updating flake.nix directly is reliable.
+            let base_url = match $original.type {
+                "github" => { $"github:($original.owner)/($original.repo)" }
+                "gitlab" => { $"gitlab:($original.owner)/($original.repo)" }
+                "git"    => { $original.url | str replace --regex '^git\+' '' | str replace --regex '\?.*$' '' }
+                _        => { "" }
+            }
+            let old_flake = open --raw flake.nix
+            let new_flake = $old_flake | str replace --regex $"\"($base_url)[^\"]*\"" $"\"($nix_url)\""
+            if $base_url == "" or $old_flake == $new_flake {
+                print $"(ansi yellow_bold)warn:(ansi reset) could not find URL for ($input) in flake.nix, falling back to --override-input"
+                let extra = follows-overrides $lock.nodes $input $nix_url
+                $override_args = ($override_args | append (["--override-input" $input $nix_url] ++ $extra))
+            } else {
+                $new_flake | save --force flake.nix
+            }
+        }
+
+        nix flake lock ...$nix_token_args ...$override_args
     }
 }

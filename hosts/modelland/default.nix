@@ -3,25 +3,28 @@
   inputs,
   withSystem,
   ...
-}:
-{
+}: {
   flake.nixosConfigurations.modelland = withSystem "x86_64-linux" (
-    { pkgs, ... }:
-    inputs.nixpkgs.lib.nixosSystem {
-      inherit pkgs;
-      modules = with self.nixosModules; [
-        modellandConfiguration
-        homeManager
-        {
-          # home-manager.users.runar = {config, ...}: {
-          # features.niks.flake = "${config.home.homeDirectory}/shared/dotfiles";
-          # };
-        }
-      ];
-    }
+    {pkgs, ...}:
+      inputs.nixpkgs.lib.nixosSystem {
+        inherit pkgs;
+        modules = with self.nixosModules; [
+          modellandConfiguration
+          homeManager
+          {
+            # home-manager.users.runar = {config, ...}: {
+            # features.niks.flake = "${config.home.homeDirectory}/shared/dotfiles";
+            # };
+          }
+        ];
+      }
   );
 
-  flake.nixosModules.modellandConfiguration = { config, pkgs, ... }: {
+  flake.nixosModules.modellandConfiguration = {
+    config,
+    pkgs,
+    ...
+  }: {
     imports = with self.nixosModules; [
       ./hardware-configuration.nix
       homeManager
@@ -38,9 +41,12 @@
     boot.kernelPackages = pkgs.linuxPackages_latest;
     time.timeZone = "Europe/Zurich";
     zramSwap.enable = true;
-    swapDevices = [ { device = "/swap/swapfile"; } ];
-    services.xserver.videoDrivers = [ "nvidia" ];
-    hardware.graphics.enable = true;
+    swapDevices = [{device = "/swap/swapfile";}];
+    services.xserver.videoDrivers = ["nvidia"];
+    hardware.graphics = {
+      enable = true;
+      enable32Bit = true;
+    };
     hardware.nvidia = {
       modesetting.enable = true;
       open = false;

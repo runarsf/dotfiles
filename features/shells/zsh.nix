@@ -95,11 +95,12 @@ let
           bindkey -e
 
           source ${pkgs.zsh-defer}/share/zsh-defer/zsh-defer.plugin.zsh
-
-          if [[ ! -d ''${XDG_DATA_HOME:-$HOME/.local/share}/zsh/generated_man_completions ]]; then
-            zsh-defer ${getExe self.packages.${system}.zsh-manpage-completion-generator}
-          fi
-
+          ''
+           
+          # if [[ ! -d ''${XDG_DATA_HOME:-$HOME/.local/share}/zsh/generated_man_completions ]]; then
+          #  zsh-defer ${getExe self.packages.${system}.zsh-manpage-completion-generator}
+          #fi
+          + ''
           source <(${getExe pkgs.carapace} _carapace zsh)
 
           ${eagerPlugins |> concatMapStringsSep "\n" (p: "source ${p}")}

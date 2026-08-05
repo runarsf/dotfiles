@@ -22,12 +22,14 @@ passwd
 
 ## Updating the Flake
 
-The `updater` package can be used to update the flake.
+The `update` package can be used to update the flake.
 It updates the flake inputs, locks the inputs defined in [`releaseLockedInputs`](./packages/updates/default.nix) to the latest release (including dependants), and updates instances of git fetchers[^fetchers] in the config.
 
 ```nix
-nix run .#updater
+nix run .#update
 ```
+
+To get around GitHub's API rate limiting, set the `GITHUB_TOKEN` environment variable before running the script. This should not be necessary if you're just updating once or twice.
 
 The only caveat of this method is that fetchers[^fetchers] cannot be used in `let...in` expressions, as `update-nix-fetchgit`[^update-nix-fetchgit] cannot handle it.
 
