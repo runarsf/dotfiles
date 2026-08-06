@@ -8,7 +8,7 @@ def with-nix-args [body: closure] {
 
 def confirm [message: string = "Continue?", --default]: nothing -> bool {
   let prompt = $"($message)(ansi reset) (if $default { '(Y/n)' } else { '(y/N)' }) "
-  match (input $prompt | str trim | str downcase) {
+  match (input $prompt | str trim | str lowercase) {
     "y" | "yes" => true,
     "n" | "no" => false,
     "" => $default,

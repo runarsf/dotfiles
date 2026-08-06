@@ -30,6 +30,16 @@ _: {
           support32Bit = true;
         };
         wireplumber.enable = true;
+        # Workaround for audio devices being devoured by wine
+        wireplumber.extraConfig."50-sot-noswitch" = {
+          "monitor.alsa.rules" = [{
+            matches = [{ "node.name" = "~alsa_output.*"; }];
+            actions.update-props = {
+              "api.acp.auto-profile" = false;
+              "api.acp.auto-port" = false;
+            };
+          }];
+        };
       };
 
       services.pulseaudio.enable = false;

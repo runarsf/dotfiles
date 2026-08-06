@@ -52,6 +52,7 @@
         niri # TODO: Only activate if niri is enabled
         wiktionary
         protondb-search
+        zed-recents
 
         # Raycast extensions: https://github.com/raycast/extensions/tree/main/extensions
         (inputs.vicinae.lib.${system}.mkRayCastExtension {
@@ -72,6 +73,7 @@
     home.packages = with pkgs; [
       awww
       matugen
+      sqlite # Needed for zed-recents
     ];
 
     wayland.windowManager.hyprland.settings = {

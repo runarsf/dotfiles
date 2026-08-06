@@ -118,7 +118,7 @@ in
     {
       imports = features.home;
 
-      home.packages = with pkgs; [ claude-code ] ++ lib.optionals pkgs.stdenv.isLinux [ feishin me3 ];
+      home.packages = with pkgs; [ claude-code ] ++ lib.optionals pkgs.stdenv.isLinux [ feishin me3 qbittorrent ];
 
       home.stateVersion = "24.11";
     };

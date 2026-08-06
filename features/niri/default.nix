@@ -200,7 +200,10 @@
               variable-refresh-rate = true;
             }
             {
-              matches = [ { app-id = "^steam$"; } ] ++ gameMatches;
+              matches = [
+                { app-id = "^steam$"; }
+                { app-id = "^net.lutris.Lutris$"; }
+              ] ++ gameMatches;
               open-on-workspace = "gaming";
             }
             {
