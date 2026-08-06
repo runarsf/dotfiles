@@ -3,12 +3,18 @@ _: {
     config,
     osConfig ? {},
     pkgs,
+    self,
     lib,
     ...
   }: let
+    inherit (pkgs.stdenv.hostPlatform) system;
+
     vaultPath = osConfig.features.sops.vaultPath or null;
   in
-    lib.mkIf (vaultPath != null) {
+    {
+      home.packages = [self.packages.${system}.scientifica-hidpi];
+    }
+    // lib.mkIf (vaultPath != null) {
       sops.secrets = {
         monolisa = {
           sopsFile = "${vaultPath}/shared/fonts/MonoLisa.zip";
