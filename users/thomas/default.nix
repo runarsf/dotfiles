@@ -94,8 +94,6 @@ in {
   flake.homeModules.thomas = {pkgs, ...}: {
     imports = features.home;
 
-    home.packages = with pkgs; [television];
-
     home.stateVersion = "24.11";
 
     programs.git = {
