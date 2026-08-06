@@ -48,13 +48,13 @@
 
 ## Hosts (separate repos)
 - [ ] `boiler` — thomas's gaming desktop
-- [ ] `toaster` — thomas's gaming desktop
+- [x] `toaster` — thomas's laptop
 - [ ] `hsrv` — legacy server (minimal config, may just fold into `anuc` instead of porting)
 - [ ] `rpi` — Raspberry Pi host
 - [x] `anuc`, `runix` (plus new `vm`)
 
 ## Users
-- [ ] `thomas` — user + home-manager config not created yet
+- [x] `thomas` — user + home-manager config not created yet
 - [x] `runar`, `blahaj` (system user only)
 
 ## Server / self-hosted services
@@ -96,7 +96,7 @@
 
 ## Locales
 - [x] `norwegian`
-- [ ] `japanese`
+- [x] `japanese`
 
 ## System / linux-level modules
 - [ ] `firewall`
