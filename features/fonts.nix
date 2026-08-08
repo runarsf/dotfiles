@@ -1,4 +1,18 @@
-_: {
+{lib', ...}: {
+  flake.nixosModules.fonts = {
+    fonts.fontconfig = {
+      enable = true;
+      hinting = {
+        style = "slight";
+        autohint = true;
+      };
+      subpixel = {
+        lcdfilter = "default";
+        rgba = "rgb";
+      };
+    };
+  };
+
   flake.homeModules.fonts = {
     config,
     osConfig ? {},
@@ -8,12 +22,69 @@ _: {
     ...
   }: let
     inherit (pkgs.stdenv.hostPlatform) system;
+    inherit (lib'.fonts) nofontsdir;
 
     vaultPath = osConfig.features.sops.vaultPath or null;
   in
     lib.mkMerge [
       {
-        home.packages = [self.packages.${system}.scientifica-hidpi];
+        fonts.fontconfig.enable = true;
+
+        home.packages = with pkgs;
+          [
+            # Writing
+            libertine
+            atkinson-hyperlegible
+            montserrat
+            roboto
+            ia-writer-duospace
+
+            # Unicode table
+            noto-fonts
+            noto-fonts-color-emoji
+            noto-fonts-cjk-sans
+            powerline-fonts
+
+            # Bitmap fonts
+            self.packages.${system}.scientifica-hidpi
+            creep
+            cozette
+            undefined-medium
+            zpix-pixel-font
+            termsyn
+            terminus_font
+            monocraft
+            departure-mono
+            (nofontsdir tamzen)
+            (nofontsdir proggyfonts)
+            (nofontsdir unifont)
+            (nofontsdir unifont_upper)
+            (nofontsdir gohufont)
+            (nofontsdir spleen)
+
+            # Coding
+            jetbrains-mono
+            sudo-font
+            cascadia-code
+            # maple-mono.NF
+            mplus-outline-fonts.githubRelease
+          ]
+          ++ (with pkgs.nerd-fonts; [
+            caskaydia-cove
+            caskaydia-mono
+            comic-shanns-mono
+            jetbrains-mono
+            monaspace
+            ubuntu
+            ubuntu-mono
+            commit-mono
+            im-writing
+            fira-code
+            gohufont
+            lilex
+            departure-mono
+            noto
+          ]);
       }
       (lib.mkIf (vaultPath != null) {
         sops.secrets = {

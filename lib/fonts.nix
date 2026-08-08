@@ -25,6 +25,14 @@ in {
           mkPythonTool pkgs "resizettf" (with pkgs.python3Packages; [fonttools]) ../packages/fonts/bin/resize_ttf.py;
         renamettf = pkgs:
           mkPythonTool pkgs "renamettf" (with pkgs.python3Packages; [fonttools]) ../packages/fonts/bin/rename_ttf.py;
+        nofontsdir = font:
+          font.overrideAttrs (oldAttrs: {
+            installPhase =
+              oldAttrs.installPhase
+              + ''
+                find "$out/share/fonts" -type f -name 'fonts.dir' -delete
+              '';
+          });
       };
     }
   ];
