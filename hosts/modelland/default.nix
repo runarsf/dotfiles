@@ -65,7 +65,6 @@
       enable = true;
       pulse.enable = true;
     };
-    programs.firefox.enable = true;
     networking.networkmanager.enable = true;
 
     environment.systemPackages = with pkgs; [

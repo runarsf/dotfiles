@@ -90,8 +90,8 @@
       )
       (kb "SUPER SHIFT" "C" (exec "${hypr-gamemode} toggle") {})
 
-      (kb "SUPER" "mouse_down" "hl.dsp.focus({ workspace = \"e+1\" })" {})
-      (kb "SUPER" "mouse_up" "hl.dsp.focus({ workspace = \"e-1\" })" {})
+      (kb "SUPER SHIFT" "mouse_down" "hl.dsp.focus({ workspace = \"e+1\" })" {})
+      (kb "SUPER SHIFT" "mouse_up" "hl.dsp.focus({ workspace = \"e-1\" })" {})
 
       (kb "SUPER" "Z" (exec "${pypr} zoom ++0.5") {})
       (kb "SUPER SHIFT" "Z" (exec "${pypr} zoom") {})
@@ -412,7 +412,7 @@
       wayland.windowManager.hyprland = {
         enable = true;
         systemd = {
-          enable = false;
+          enable = true;
           variables = ["--all"];
         };
         package = null;

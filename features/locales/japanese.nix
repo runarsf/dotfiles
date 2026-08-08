@@ -1,5 +1,6 @@
 _: {
-  flake.nixosModules.norwegian = {pkgs, ...}: {
+  flake.nixosModules.japanese = {pkgs, ...}: {
+    environment.sessionVariables.XMODIFIERS = "@im=fcitx";
     i18n.inputMethod = {
       enable = true;
       type = "fcitx5";
@@ -25,9 +26,5 @@ _: {
         # waylandFrontend = true;
       };
     };
-  };
-
-  flake.homeModules.japanese = _: {
-    home.sessionVariables = {XMODIFIERS = "@im=fcitx";};
   };
 }
