@@ -6,7 +6,24 @@
 }: let
   features = lib'.useFeatures self [
     "sops"
-    "ssh"
+    {
+      ssh = {
+        keys = [
+          {
+            name = "id_priv";
+            key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBT5zQFdVRooe5SfFZ2gKpruHF7FTw1OycTczRrLsR+M i@runar.ch";
+          }
+          {
+            name = "id_nix";
+            key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGwThBXxJMvEDSf/WUlXtgvs+R5TTZwILnAvCp5Zl02Z nix";
+          }
+          {
+            name = "id_ntnu";
+            key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO6Y4kk5hFzs/B6vze9u9RPG9d+vVM5EIRIOug4OnJBk runarsfr@stud.ntnu.no";
+          }
+        ];
+      };
+    }
     "git"
     "fonts"
     "zsh"
@@ -70,20 +87,6 @@ in {
   in {
     imports = features.nixos ++ [self.nixosModules.primaryUser];
     nix.settings.trusted-users = ["runar"];
-    features.ssh.keys = [
-      {
-        name = "id_priv";
-        key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBT5zQFdVRooe5SfFZ2gKpruHF7FTw1OycTczRrLsR+M i@runar.ch";
-      }
-      {
-        name = "id_nix";
-        key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGwThBXxJMvEDSf/WUlXtgvs+R5TTZwILnAvCp5Zl02Z nix";
-      }
-      {
-        name = "id_ntnu";
-        key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIO6Y4kk5hFzs/B6vze9u9RPG9d+vVM5EIRIOug4OnJBk runarsfr@stud.ntnu.no";
-      }
-    ];
     home-manager.users.runar = self.homeModules.runar;
     users.users.runar = {
       openssh.authorizedKeys.keys = map (k: k.key) config.features.ssh.keys;
@@ -112,6 +115,11 @@ in {
     ...
   }: {
     imports = features.home;
+
+    programs.git.settings.user = {
+      email = "git@runar.ch";
+      name = "Runar Fredagsvik";
+    };
 
     home.packages = with pkgs; [claude-code] ++ lib.optionals pkgs.stdenv.isLinux [feishin me3 qbittorrent];
 
