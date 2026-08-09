@@ -9,17 +9,37 @@
   # switch-focus-between-floating-and-tiling
   # Mod+W { toggle-column-tabbed-display; }
   # tab-indicator.place-within-column
-  flake.nixosModules.niri = { pkgs, ... }: {
-    programs.niri = {
-      enable = true;
-      package = self.packages.${pkgs.stdenv.hostPlatform.system}.niri;
-    };
+  flake.nixosModules.niri =
+    { pkgs, lib, config, ... }:
+    let
+      system = pkgs.stdenv.hostPlatform.system;
+    in
+    {
+      options.features.niri.overrides = lib.mkOption {
+        type = lib.types.attrsOf lib.types.anything;
+        default = { };
+        description = ''
+          User/host-specific overrides merged on top of the base niri `settings`
+          (see the wrapper module's `settings` option), via the wrapped package's
+          `.wrap` passthru. Lets you set e.g. `outputs` per-user without adding a
+          dedicated option for every settings key.
+        '';
+      };
 
-    environment.systemPackages = with pkgs; [
-      nwg-displays
-      inputs.niri-scratchpad.packages.${pkgs.stdenv.hostPlatform.system}.default
-    ];
-  };
+      config = {
+        programs.niri = {
+          enable = true;
+          package = self.packages.${system}.niri.wrap {
+            settings = config.features.niri.overrides;
+          };
+        };
+
+        environment.systemPackages = with pkgs; [
+          nwg-displays
+          inputs.niri-scratchpad.packages.${system}.default
+        ];
+      };
+    };
 
   perSystem =
     {
@@ -163,29 +183,6 @@
               inactive-color = "#2e2e2e";
             };
           };
-
-          outputs =
-            let
-              vrr = {
-                "variable-refresh-rate" = _: {
-                  props = {
-                    "on-demand" = true;
-                  };
-                };
-              };
-            in
-            rec {
-              "GIGA-BYTE TECHNOLOGY CO., LTD. GO27Q24G 26112F001094" = {
-                mode = "2560x1440@239.901";
-                position = _: {
-                  props = {
-                    x = 0;
-                    y = 0;
-                  };
-                };
-              }
-              // vrr;
-            };
 
           window-rules = [
             {

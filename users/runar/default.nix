@@ -30,7 +30,22 @@
     "flatpak"
     "starship"
     "wayland"
-    "niri"
+    {
+      niri = {
+        overrides.outputs."GIGA-BYTE TECHNOLOGY CO., LTD. GO27Q24G 26112F001094" = {
+          mode = "2560x1440@239.901";
+          position = _: {
+            props = {
+              x = 0;
+              y = 0;
+            };
+          };
+          "variable-refresh-rate" = _: {
+            props."on-demand" = true;
+          };
+        };
+      };
+    }
     "nushell"
     {
       hyprland = {
