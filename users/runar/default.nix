@@ -1,6 +1,5 @@
 {
   self,
-  inputs,
   lib',
   ...
 }: let
@@ -30,22 +29,7 @@
     "flatpak"
     "starship"
     "wayland"
-    {
-      niri = {
-        overrides.outputs."GIGA-BYTE TECHNOLOGY CO., LTD. GO27Q24G 26112F001094" = {
-          mode = "2560x1440@239.901";
-          position = _: {
-            props = {
-              x = 0;
-              y = 0;
-            };
-          };
-          "variable-refresh-rate" = _: {
-            props."on-demand" = true;
-          };
-        };
-      };
-    }
+    "niri"
     "nushell"
     {
       hyprland = {
@@ -78,9 +62,6 @@
     "zed"
     "zen"
     "orion"
-    "osu" # TODO: this (and all other gaming-related modules) belongs in runix
-    "steam"
-    "controllers"
     {
       matrix = {
         clients = [
@@ -141,17 +122,9 @@ in {
     home.stateVersion = "24.11";
   };
 
-  flake.homeConfigurations.runar = inputs.home-manager.lib.homeManagerConfiguration {
-    pkgs = import inputs.nixpkgs {system = "x86_64-linux";};
-    extraSpecialArgs = {inherit self;};
-    modules = [
-      self.homeModules.runar
-      {
-        home = {
-          username = "runar";
-          homeDirectory = "/home/runar";
-        };
-      }
-    ];
+  flake.homeConfigurations.runar = lib'.mkUser {
+    inherit self;
+    username = "runar";
+    homeModule = self.homeModules.runar;
   };
 }

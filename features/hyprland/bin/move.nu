@@ -1,7 +1,7 @@
 def main [action: string, dir: string] {
-  let window: table = hyprctl -j activewindow | from json
-  let workspaces: table = hyprctl -j workspaces | from json
-  let workspace: table = $workspaces | where id == $window.workspace.id | first
+  let window = hyprctl -j activewindow | from json
+  let workspaces = hyprctl -j workspaces | from json
+  let workspace = $workspaces | where id == $window.workspace.id | first
 
   let monocle: bool = $workspace | get hasfullscreen
   let group: record = {

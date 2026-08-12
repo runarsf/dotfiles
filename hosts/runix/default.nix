@@ -2,31 +2,32 @@
   self,
   inputs,
   withSystem,
+  lib',
   ...
 }: {
-  flake.nixosConfigurations.runix = withSystem "x86_64-linux" (
-    {pkgs, ...}:
-      inputs.nixpkgs.lib.nixosSystem {
-        inherit pkgs;
-        modules = with self.nixosModules; [
-          runixConfiguration
-          homeManager
-        ];
-      }
-  );
+  flake.nixosConfigurations.runix = let
+    hostFeatures = lib'.useFeatures self ["osu" "steam" "controllers"];
+  in
+    lib'.mkHost {
+      inherit self withSystem;
+      configuration = _: {
+        imports = with self.nixosModules;
+          [
+            ./hardware-configuration.nix
+            inputs.nixos-hardware.nixosModules.lenovo-thinkpad-t480s
+            host
+            homeManager
+            runar
+          ]
+          ++ hostFeatures.nixos;
 
-  flake.nixosModules.runixConfiguration = _: {
-    imports = with self.nixosModules; [
-      ./hardware-configuration.nix
-      inputs.nixos-hardware.nixosModules.lenovo-thinkpad-t480s
-      homeManager
-      runar
-    ];
+        home-manager.users.runar.imports = hostFeatures.home;
 
-    system.stateVersion = "24.05";
-    networking.hostName = "runix";
+        system.stateVersion = "24.05";
+        networking.hostName = "runix";
 
-    boot.loader.systemd-boot.enable = true;
-    boot.loader.efi.canTouchEfiVariables = true;
-  };
+        boot.loader.systemd-boot.enable = true;
+        boot.loader.efi.canTouchEfiVariables = true;
+      };
+    };
 }

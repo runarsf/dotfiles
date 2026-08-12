@@ -3,36 +3,46 @@
   lib',
   ...
 }: {
-  flake.nixosModules.hyprland = {pkgs, ...}: let
+  flake.nixosModules.hyprland = {
+    pkgs,
+    lib,
+    config,
+    ...
+  }: let
     inherit (pkgs.stdenv.hostPlatform) system;
   in {
-    nix.settings = rec {
-      substituters = ["https://hyprland.cachix.org"];
-      trusted-substituters = substituters;
-      trusted-public-keys = ["hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="];
-    };
-    programs = {
-      xwayland.enable = true;
-      hyprland = {
-        enable = true;
-        package = inputs.hyprland.packages.${system}.hyprland;
-        portalPackage = inputs.hyprland.inputs.nixpkgs.legacyPackages.${system}.xdg-desktop-portal-hyprland;
+    config = lib.mkIf (config.host.desktop or true) {
+      nix.settings = rec {
+        substituters = ["https://hyprland.cachix.org"];
+        trusted-substituters = substituters;
+        trusted-public-keys = ["hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="];
       };
-    };
-    hardware.graphics = {
-      enable = true;
-      enable32Bit = true;
-      package = inputs.hyprland.inputs.nixpkgs.legacyPackages.${system}.mesa;
-      package32 = inputs.hyprland.inputs.nixpkgs.legacyPackages.${system}.pkgsi686Linux.mesa;
+      programs = {
+        xwayland.enable = true;
+        hyprland = {
+          enable = true;
+          package = inputs.hyprland.packages.${system}.hyprland;
+          portalPackage = inputs.hyprland.inputs.nixpkgs.legacyPackages.${system}.xdg-desktop-portal-hyprland;
+        };
+      };
+      hardware.graphics = {
+        enable = true;
+        enable32Bit = true;
+        package = inputs.hyprland.inputs.nixpkgs.legacyPackages.${system}.mesa;
+        package32 = inputs.hyprland.inputs.nixpkgs.legacyPackages.${system}.pkgsi686Linux.mesa;
+      };
     };
   };
 
-  flake.homeModules.hyprland = {
-    config,
-    lib,
-    pkgs,
-    ...
-  }: let
+  flake.homeModules.hyprland = lib'.mkFeature "hyprland" {
+    wants = ["wayland"];
+    config = {
+      config,
+      lib,
+      pkgs,
+      osConfig,
+      ...
+    }: let
     inherit (lib'.hyprland) kb exec onStart;
     inherit (pkgs.stdenv.hostPlatform) system;
 
@@ -383,7 +393,7 @@
       nvidia = lib.mkEnableOption "nvidia-specific environment variables";
     };
 
-    config = {
+    config = lib.mkIf (osConfig.host.desktop or true) {
       home.packages = with pkgs; [
         hyprsunset
         qt5.qtwayland
@@ -633,5 +643,6 @@
         ];
       };
     };
+  };
   };
 }

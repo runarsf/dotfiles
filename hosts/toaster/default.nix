@@ -2,31 +2,25 @@
   self,
   inputs,
   withSystem,
+  lib',
   ...
 }: {
-  flake.nixosConfigurations.toaster = withSystem "x86_64-linux" (
-    {pkgs, ...}:
-      inputs.nixpkgs.lib.nixosSystem {
-        inherit pkgs;
-        modules = with self.nixosModules; [
-          toasterConfiguration
-          homeManager
-        ];
-      }
-  );
+  flake.nixosConfigurations.toaster = lib'.mkHost {
+    inherit self withSystem;
+    configuration = _: {
+      imports = with self.nixosModules; [
+        ./hardware-configuration.nix
+        inputs.nixos-hardware.nixosModules.lenovo-thinkpad-t490s
+        host
+        homeManager
+        thomas
+      ];
 
-  flake.nixosModules.toasterConfiguration = _: {
-    imports = with self.nixosModules; [
-      ./hardware-configuration.nix
-      inputs.nixos-hardware.nixosModules.lenovo-thinkpad-t490s
-      homeManager
-      thomas
-    ];
+      system.stateVersion = "24.05";
+      networking.hostName = "toaster";
 
-    system.stateVersion = "24.05";
-    networking.hostName = "toaster";
-
-    boot.loader.systemd-boot.enable = true;
-    boot.loader.efi.canTouchEfiVariables = true;
+      boot.loader.systemd-boot.enable = true;
+      boot.loader.efi.canTouchEfiVariables = true;
+    };
   };
 }

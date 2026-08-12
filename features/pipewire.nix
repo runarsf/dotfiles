@@ -12,7 +12,7 @@ _: {
       lowLatency = mkEnableOption "Enable low latency mode for Pipewire";
     };
 
-    config = {
+    config = lib.mkIf (config.hosts.desktop or true) {
       environment.systemPackages = with pkgs; [
         pwvucontrol
         pavucontrol
@@ -30,16 +30,6 @@ _: {
           support32Bit = true;
         };
         wireplumber.enable = true;
-        # Workaround for audio devices being devoured by wine
-        wireplumber.extraConfig."50-sot-noswitch" = {
-          "monitor.alsa.rules" = [{
-            matches = [{ "node.name" = "~alsa_output.*"; }];
-            actions.update-props = {
-              "api.acp.auto-profile" = false;
-              "api.acp.auto-port" = false;
-            };
-          }];
-        };
       };
 
       services.pulseaudio.enable = false;
@@ -48,30 +38,5 @@ _: {
       # Fix for pipewire-pulse breaking recently
       systemd.user.services.pipewire-pulse.path = [pkgs.pulseaudio];
     };
-  };
-
-  flake.homeModules.myModule = {pkgs, ...}: let
-    inherit (pkgs) writeShellApplication;
-  in {
-    home.packages = [
-      (writeShellApplication {
-        name = "fix-pipewire";
-        text = ''
-          set -o xtrace
-          set +o errexit
-
-          killall -9 pipewire
-          while killall easyeffects; do sleep 0.5; done
-          while pkill hyprpanel; do sleep 0.5; done
-          systemctl --user restart pipewire.service
-          systemctl --user restart pipewire.socket
-          systemctl --user restart pipewire-pulse.service
-          systemctl --user restart pipewire-pulse.socket
-          systemctl --user restart easyeffects.service
-
-          printf 'Pipewire-related services restarted, consider rebooting.\n'
-        '';
-      })
-    ];
   };
 }

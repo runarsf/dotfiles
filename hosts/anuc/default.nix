@@ -1,32 +1,25 @@
 {
   self,
-  inputs,
   withSystem,
+  lib',
   ...
 }: {
-  flake.nixosConfigurations.anuc = withSystem "x86_64-linux" (
-    {pkgs, ...}:
-      inputs.nixpkgs.lib.nixosSystem {
-        inherit pkgs;
-        modules = with self.nixosModules; [
-          anucConfiguration
-          homeManager
-        ];
-      }
-  );
+  flake.nixosConfigurations.anuc = lib'.mkHost {
+    inherit self withSystem;
+    configuration = {
+      pkgs,
+      lib,
+      ...
+    }: {
+      imports = with self.nixosModules; [
+        ./hardware-configuration.nix
+        host
+        homeManager
+        runar
+      ];
 
-  flake.nixosModules.anucConfiguration = {
-    pkgs,
-    lib,
-    ...
-  }: {
-    imports = with self.nixosModules; [
-      ./hardware-configuration.nix
-      homeManager
-      runar
-    ];
-
-    system.stateVersion = "25.05";
-    networking.hostName = "anuc";
+      system.stateVersion = "25.05";
+      networking.hostName = "anuc";
+    };
   };
 }

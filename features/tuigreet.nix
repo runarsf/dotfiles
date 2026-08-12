@@ -20,16 +20,18 @@
       '';
     in
     {
-      services.greetd = {
-        enable = true;
-        settings.default_session = {
-          user = "greeter";
-          command = lib.concatStringsSep " " [
-            (lib.getExe pkgs.tuigreet)
-            "--time --remember --remember-session"
-            "--sessions ${filteredSessions}"
-            "--theme 'container=black;border=darkgray;text=gray;time=darkgray;title=darkgray;greet=gray;prompt=gray;input=white;action=darkgray;button=darkgray'"
-          ];
+      config = lib.mkIf (config.host.desktop or true) {
+        services.greetd = {
+          enable = true;
+          settings.default_session = {
+            user = "greeter";
+            command = lib.concatStringsSep " " [
+              (lib.getExe pkgs.tuigreet)
+              "--time --remember --remember-session"
+              "--sessions ${filteredSessions}"
+              "--theme 'container=black;border=darkgray;text=gray;time=darkgray;title=darkgray;greet=gray;prompt=gray;input=white;action=darkgray;button=darkgray'"
+            ];
+          };
         };
       };
     };

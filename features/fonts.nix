@@ -1,16 +1,16 @@
 {lib', ...}: {
   flake.nixosModules.fonts = {
-    fonts.fontconfig = {
-      enable = true;
-      hinting = {
-        style = "slight";
-        autohint = true;
-      };
-      subpixel = {
-        lcdfilter = "default";
-        rgba = "rgb";
-      };
-    };
+    # fonts.fontconfig = {
+    #   enable = true;
+    #   hinting = {
+    #     style = "slight";
+    #     autohint = true;
+    #   };
+    #   subpixel = {
+    #     lcdfilter = "default";
+    #     rgba = "rgb";
+    #   };
+    # };
   };
 
   flake.homeModules.fonts = {
