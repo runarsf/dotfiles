@@ -4,40 +4,47 @@
   lib',
   ...
 }: {
-  flake.nixosConfigurations.vm = lib'.mkHost {
-    inherit self withSystem;
-    configuration = {pkgs, ...}: {
-      imports = with self.nixosModules; [
-        ./hardware-configuration.nix
-        host
-        homeManager
-        runar
-        sshServer
-      ];
+  flake.nixosConfigurations.vm = let
+    hostFeatures = lib'.useFeatures self [];
+  in
+    lib'.mkHost {
+      inherit self withSystem;
+      configuration = {pkgs, ...}: {
+        imports = with self.nixosModules;
+          [
+            ./hardware-configuration.nix
+            host
+            homeManager
+            runar
+            sshServer
+          ]
+          ++ hostFeatures.nixos;
 
-      system.stateVersion = "25.11";
-      networking.hostName = "vm";
+        home-manager.users.runar.imports = hostFeatures.home;
 
-      boot.loader.grub.enable = true;
-      boot.loader.grub.device = "/dev/vda";
-      boot.loader.grub.useOSProber = true;
+        system.stateVersion = "25.11";
+        networking.hostName = "vm";
 
-      networking.networkmanager.enable = true;
-      services.xserver.enable = true;
-      services.displayManager.sddm.enable = true;
-      services.desktopManager.plasma6.enable = true;
+        boot.loader.grub.enable = true;
+        boot.loader.grub.device = "/dev/vda";
+        boot.loader.grub.useOSProber = true;
 
-      environment.systemPackages = with pkgs; [
-        git
-        vim
+        networking.networkmanager.enable = true;
+        services.xserver.enable = true;
+        services.displayManager.sddm.enable = true;
+        services.desktopManager.plasma6.enable = true;
+
+        environment.systemPackages = with pkgs; [
+          git
+          vim
+        ];
+      };
+      extraModules = [
+        {
+          home-manager.users.runar = {config, ...}: {
+            features.niks.flake = "${config.home.homeDirectory}/shared/dotfiles";
+          };
+        }
       ];
     };
-    extraModules = [
-      {
-        home-manager.users.runar = {config, ...}: {
-          features.niks.flake = "${config.home.homeDirectory}/shared/dotfiles";
-        };
-      }
-    ];
-  };
 }
