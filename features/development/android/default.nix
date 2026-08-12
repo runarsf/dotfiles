@@ -10,7 +10,13 @@
       plugdev.members = config.primaryUsers;
       kvm.members = config.primaryUsers;
     };
-    environment.systemPackages = with pkgs; [android-tools];
+    environment.systemPackages = with pkgs; [
+      android-tools
+      androidenv.androidPkgs.androidsdk
+      androidenv.androidPkgs.emulator
+      androidenv.androidPkgs.ndk-bundle
+      jdk
+    ];
   };
 
   flake.homeModules.android = {
@@ -19,11 +25,17 @@
     lib,
     ...
   }: let
-    inherit (lib) mkEnableOption optionals;
+    inherit (lib) mkEnableOption mkOption optionals types;
 
     cfg = config.features.android;
   in {
-    options.features.android = {
+    options.features.android = with types; {
+      enabled = mkOption {
+        description = "If this module has been enabled (read-only, used to verify from other features)";
+        type = bool;
+        default = true;
+        readOnly = true;
+      };
       ide = mkEnableOption "Android IDE";
     };
 
