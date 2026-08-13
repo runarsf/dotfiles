@@ -23,6 +23,8 @@
     }
     "dms"
     "wezterm"
+    "yazi"
+    "fastfetch"
     "niks"
     "nix"
     "vicinae"
@@ -36,8 +38,6 @@
     "zed"
     "zen"
     "discord"
-    "steam" # TODO: put gaming and other device-specific features in respective hosts
-    "controllers"
     {
       matrix = {
         clients = ["cinny"];

@@ -6,7 +6,9 @@
   ...
 }: {
   flake.nixosConfigurations.toaster = let
-    hostFeatures = lib'.useFeatures self [];
+    hostFeatures = lib'.useFeatures self [
+      "steam"
+    ];
   in
     lib'.mkHost {
       inherit self withSystem;
