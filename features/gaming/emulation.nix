@@ -16,7 +16,7 @@
   in {
     options.features.emulation = with types; {
       consoles = mkOption {
-        type = listOf <| enum ["ds" "wii" "psp"];
+        type = listOf <| enum ["ds" "wii" "psp" "retroarch"];
         default = [];
       };
     };
@@ -27,6 +27,7 @@
           ["ds" melonds]
           ["wii" dolphin-emu]
           ["psp" ppsspp]
+          ["retroarch" retroarch-full]
         ];
 
       sops.secrets = {
