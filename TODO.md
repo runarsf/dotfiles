@@ -48,14 +48,14 @@
 - android: remove enabled option if/when wrapper functions for this are created
 
 ## Hosts (separate repos)
-- [ ] `boiler` — thomas's gaming desktop
+- [x] `boiler` — thomas's gaming desktop
 - [x] `toaster` — thomas's laptop
 - [ ] `hsrv` — legacy server (minimal config, may just fold into `anuc` instead of porting)
 - [ ] `rpi` — Raspberry Pi host
 - [x] `anuc`, `runix` (plus new `vm`)
 
 ## Users
-- [x] `thomas` — user + home-manager config not created yet
+- [x] `thomas`
 - [x] `runar`, `blahaj` (system user only)
 
 ## Server / self-hosted services
@@ -93,7 +93,7 @@
 
 ## Gaming
 - [x] `steam`, `ffxiv`, `hytale`, `minecraft`, `emulation`, `controllers`
-- [ ] Wire dualsense/8bitdo udev rules
+- [x] Wire dualsense/8bitdo udev rules
 
 ## Locales
 - [x] `norwegian`
