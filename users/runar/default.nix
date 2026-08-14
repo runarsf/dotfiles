@@ -1,6 +1,7 @@
 {
   self,
   lib',
+  inputs,
   ...
 }: let
   features = lib'.useFeatures self [
@@ -29,6 +30,7 @@
     "flatpak"
     "starship"
     "wayland"
+    "nixvim"
     "niri"
     "nushell"
     {
@@ -117,7 +119,7 @@ in {
       name = "Runar Fredagsvik";
     };
 
-    home.packages = with pkgs; [claude-code] ++ lib.optionals pkgs.stdenv.isLinux [feishin me3 qbittorrent];
+    home.packages = with pkgs; [claude-code] ++ lib.optionals pkgs.stdenv.isLinux [feishin me3 qbittorrent inputs.helium.packages.${pkgs.stdenv.hostPlatform.system}.default];
 
     home.stateVersion = "24.11";
   };

@@ -3,36 +3,38 @@
   inputs,
   lib',
   ...
-}:
-let
-  mkZshPackage =
-    {
-      pkgs,
-      system,
-      fzfTab ? true,
-    }:
-    let
-      inherit (pkgs.lib)
-        getExe
-        optional
-        makeBinPath
-        concatMapStringsSep
-        concatMapAttrsStringSep
-        ;
-      inherit (lib'.shell)
-        mkZoxideInit
-        mkStarshipInit
-        greeting
-        aliases
-        abbrs
-        ;
+}: let
+  mkZshPackage = {
+    pkgs,
+    system,
+    fzfTab ? true,
+  }: let
+    inherit
+      (pkgs.lib)
+      getExe
+      optional
+      makeBinPath
+      concatMapStringsSep
+      concatMapAttrsStringSep
+      ;
+    inherit
+      (lib'.shell)
+      mkZoxideInit
+      mkStarshipInit
+      greeting
+      aliases
+      abbrs
+      ;
 
-      aliases' = (aliases pkgs) // {
+    aliases' =
+      (aliases pkgs)
+      // {
         ls = "EZA_ICON_SPACING=2 ${getExe pkgs.eza} -l -F -g -a --group-directories-first --no-time --git";
         develop = "nix develop --command zsh";
       };
 
-      eagerPlugins = [
+    eagerPlugins =
+      [
         "${pkgs.zsh-autopair}/share/zsh/zsh-autopair/autopair.zsh"
         "${pkgs.zsh-nix-shell}/share/zsh-nix-shell/nix-shell.plugin.zsh"
         "${pkgs.nix-zsh-completions}/share/zsh/plugins/nix/init.zsh"
@@ -45,31 +47,32 @@ let
         "${pkgs.fzf}/share/fzf/key-bindings.zsh"
       ]
       ++ optional fzfTab "${pkgs.zsh-fzf-tab}/share/fzf-tab/fzf-tab.plugin.zsh"
-      ++ [ "${self.packages.${system}.zsh-docker-aliases}/zsh-docker-aliases.plugin.zsh" ];
+      ++ ["${self.packages.${system}.zsh-docker-aliases}/zsh-docker-aliases.plugin.zsh"];
 
-      deferredPlugins = [
-        "${pkgs.zsh-autosuggestions}/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
-        "${pkgs.zsh-history-substring-search}/share/zsh-history-substring-search/zsh-history-substring-search.zsh"
-        "${pkgs.zsh-syntax-highlighting}/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
-      ];
+    deferredPlugins = [
+      "${pkgs.zsh-autosuggestions}/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+      "${pkgs.zsh-history-substring-search}/share/zsh-history-substring-search/zsh-history-substring-search.zsh"
+      "${pkgs.zsh-syntax-highlighting}/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+    ];
 
-      runtimeDeps = makeBinPath (
-        [
-          pkgs.carapace
-          pkgs.zoxide
-        ]
-        ++ optional fzfTab pkgs.fzf
-      );
+    runtimeDeps = makeBinPath (
+      [
+        pkgs.carapace
+        pkgs.zoxide
+      ]
+      ++ optional fzfTab pkgs.fzf
+    );
 
-      configured = inputs.wrapper-modules.wrappers.zsh.wrap {
-        inherit pkgs;
+    configured = inputs.wrapper-modules.wrappers.zsh.wrap {
+      inherit pkgs;
 
-        zshenv.content = ''
-          AUTOPAIR_INHIBIT_INIT=1
-          AUTOPAIR_SPC_WIDGET="abbr-expand-and-insert"
-        '';
+      zshenv.content = ''
+        AUTOPAIR_INHIBIT_INIT=1
+        AUTOPAIR_SPC_WIDGET="abbr-expand-and-insert"
+      '';
 
-        zshrc.content = ''
+      zshrc.content =
+        ''
           # Workaround for non-nixos machines that can't set pathsToLink
           if (( ! ''${fpath[(I)/run/current-system/sw/share/zsh/site-functions]} )); then
             for p in ''${(z)NIX_PROFILES}; do
@@ -95,12 +98,11 @@ let
           bindkey -e
 
           source ${pkgs.zsh-defer}/share/zsh-defer/zsh-defer.plugin.zsh
-          ''
-           
-          # if [[ ! -d ''${XDG_DATA_HOME:-$HOME/.local/share}/zsh/generated_man_completions ]]; then
-          #  zsh-defer ${getExe self.packages.${system}.zsh-manpage-completion-generator}
-          #fi
-          + ''
+        ''
+        # if [[ ! -d ''${XDG_DATA_HOME:-$HOME/.local/share}/zsh/generated_man_completions ]]; then
+        #  zsh-defer ${getExe self.packages.${system}.zsh-manpage-completion-generator}
+        #fi
+        + ''
           source <(${getExe pkgs.carapace} _carapace zsh)
 
           ${eagerPlugins |> concatMapStringsSep "\n" (p: "source ${p}")}
@@ -154,16 +156,15 @@ let
           zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#) ([0-9a-z-]#)*=01;34=0=01'
           _comp_options+=(globdots)
           ${
-            if fzfTab then
-              ''
-                zstyle ':fzf-tab:*' fzf-flags '--border=rounded' '--height=~50%' '--min-height=20'
-                zstyle ':fzf-tab:*' switch-group ',' '.'
-              ''
-            else
-              ''
-                zstyle ':completion:*' menu select
-                zstyle ':completion:*:default' list-colors ''${(s.:.)LS_COLORS}
-              ''
+            if fzfTab
+            then ''
+              zstyle ':fzf-tab:*' fzf-flags '--border=rounded' '--height=~50%' '--min-height=20'
+              zstyle ':fzf-tab:*' switch-group ',' '.'
+            ''
+            else ''
+              zstyle ':completion:*' menu select
+              zstyle ':completion:*:default' list-colors ''${(s.:.)LS_COLORS}
+            ''
           }
 
           magic-enter-cmd () { ${greeting pkgs} }
@@ -201,61 +202,61 @@ let
             cat "$1.bak" > "$1"
             $EDITOR "$1"
           }
+          if command -v nvim &>/dev/null; then
+            alias vim='nvim'
+          fi
 
           autopair-init
         '';
-      };
-    in
+    };
+  in
     (pkgs.symlinkJoin {
       name = "zsh";
-      paths = [ configured ];
-      nativeBuildInputs = [ pkgs.makeWrapper ];
+      paths = [configured];
+      nativeBuildInputs = [pkgs.makeWrapper];
       postBuild = ''
         wrapProgram $out/bin/zsh --prefix PATH : "${runtimeDeps}"
       '';
     })
-    // (configured.passthru or { });
-in
-{
-  flake.nixosModules.zsh =
-    {
-      pkgs,
-      lib,
-      config,
-      ...
-    }:
-    let
-      inherit (pkgs.stdenv.hostPlatform) system;
-      cfg = config.features.zsh;
-      pkg = mkZshPackage {
-        inherit pkgs system;
-        fzfTab = cfg.fzfTab;
-      };
-    in
-    {
-      options.features.zsh.fzfTab = lib.mkEnableOption "fzf-tab completion UI" // {
+    // (configured.passthru or {});
+in {
+  flake.nixosModules.zsh = {
+    pkgs,
+    lib,
+    config,
+    ...
+  }: let
+    inherit (pkgs.stdenv.hostPlatform) system;
+    cfg = config.features.zsh;
+    pkg = mkZshPackage {
+      inherit pkgs system;
+      fzfTab = cfg.fzfTab;
+    };
+  in {
+    options.features.zsh.fzfTab =
+      lib.mkEnableOption "fzf-tab completion UI"
+      // {
         default = false;
       };
 
-      config = {
-        programs.command-not-found.enable = false;
-        environment.pathsToLink = [ "/share/zsh" ];
-        environment.shells = [ pkg ];
-        environment.systemPackages = [
+    config = {
+      programs.command-not-found.enable = false;
+      environment.pathsToLink = ["/share/zsh"];
+      environment.shells = [pkg];
+      environment.systemPackages =
+        [
           pkg
           pkgs.carapace
         ]
         ++ lib.optional cfg.fzfTab pkgs.fzf;
-      };
     };
+  };
 
-  perSystem =
-    {
-      pkgs,
-      system,
-      ...
-    }:
-    {
-      packages.zsh = mkZshPackage { inherit pkgs system; };
-    };
+  perSystem = {
+    pkgs,
+    system,
+    ...
+  }: {
+    packages.zsh = mkZshPackage {inherit pkgs system;};
+  };
 }

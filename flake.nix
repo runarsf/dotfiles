@@ -41,6 +41,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    nixvim.url = "github:runarsf/nixvim";
+
     hyprland.url = "github:hyprwm/Hyprland/275e27704a36d956fbdc28cec6399b8e298b06ca";
     hyprland-plugins = {
       url = "github:hyprwm/hyprland-plugins/v0.56.0";
@@ -91,28 +93,32 @@
     nixos-hardware.url = "github:nixos/nixos-hardware";
 
     hytale-launcher.url = "github:JPyke3/hytale-launcher-nix";
+
+    helium = {
+      url = "github:schembriaiden/helium-browser-nix-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs =
-    inputs@{
-      self,
-      import-tree,
-      flake-parts,
-      ...
-    }:
-    let
-      inherit (builtins) elem;
-      inherit (flake-parts.lib) mkFlake;
-    in
-    mkFlake { inherit inputs; } (
+  outputs = inputs @ {
+    self,
+    import-tree,
+    flake-parts,
+    ...
+  }: let
+    inherit (builtins) elem;
+    inherit (flake-parts.lib) mkFlake;
+  in
+    mkFlake {inherit inputs;} (
       import-tree.filterNot (
         x:
-        elem (baseNameOf x) [
-          "flake.nix"
-          "treefmt.nix"
-          "hardware-configuration.nix"
-          "nixpkgs.nix"
-        ]
-      ) ./.
+          elem (baseNameOf x) [
+            "flake.nix"
+            "treefmt.nix"
+            "hardware-configuration.nix"
+            "nixpkgs.nix"
+          ]
+      )
+      ./.
     );
 }
