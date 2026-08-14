@@ -24,6 +24,7 @@
     "dms"
     "wezterm"
     "yazi"
+    "nixvim"
     "fastfetch"
     "niks"
     "nix"
