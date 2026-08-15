@@ -126,7 +126,6 @@
           it-tools
           ssh
           color-converter
-          niri # TODO: Only activate if niri is enabled
           wiktionary
           protondb-search
           zed-recents

@@ -25,6 +25,7 @@
       };
     }
     "git"
+    "podman"
     "fonts"
     "zsh"
     "flatpak"
