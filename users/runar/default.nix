@@ -26,6 +26,7 @@
     }
     "git"
     "podman"
+    "discord"
     "fonts"
     "zsh"
     "flatpak"
