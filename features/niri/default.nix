@@ -274,8 +274,8 @@
             "Mod+F".fullscreen-window = _: {};
             "Mod+Shift+F".toggle-window-floating = _: {};
             "Mod+Space".maximize-column = _: {};
-            "Mod+Left".focus-column-left = _: {};
-            "Mod+Right".focus-column-right = _: {};
+            "Mod+Left".focus-column-or-monitor-left = _: {};
+            "Mod+Right".focus-column-or-monitor-right = _: {};
             "Mod+Down".spawn = [
               "${focus-or-workspace}"
               "down"
@@ -290,6 +290,8 @@
             "Mod+Shift+Right".move-column-right = _: {};
             "Mod+Shift+Up".move-column-to-workspace-up = _: {};
             "Mod+Shift+Down".move-column-to-workspace-down = _: {};
+            "Mod+Shift+Control+Left".move-workspace-to-monitor-left = _: {};
+            "Mod+Shift+Control+Right".move-workspace-to-monitor-right = _: {};
             "Mod+Shift+Control+Up".move-window-to-workspace-up = _: {};
             "Mod+Shift+Control+Down".move-window-to-workspace-down = _: {};
 
