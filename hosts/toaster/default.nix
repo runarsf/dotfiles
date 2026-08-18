@@ -30,6 +30,10 @@
 
         home-manager.users.thomas.imports = hostFeatures.home;
 
+        features.niri.overrides = {
+          outputs."eDP-1".scale = 1;
+        };
+
         system.stateVersion = "24.05";
         networking.hostName = "toaster";
 
