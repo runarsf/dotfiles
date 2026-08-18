@@ -50,7 +50,7 @@
           # gtk3
         ]
         ++ optionals cfg.ide [
-          unstable.android-studio
+          android-studio
         ];
     };
   };
