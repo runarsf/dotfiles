@@ -7,18 +7,25 @@
     {
       lib,
       pkgs,
+      osConfig,
       ...
     }: let
-      nixvim = inputs.nixvim.packages."${pkgs.stdenv.hostPlatform.system}".default;
+      inherit (pkgs.stdenv.hostPlatform) system;
+
+      nixvim = inputs.nixvim.packages."${system}".default;
       nixvim' = lib.getExe nixvim;
       aliases = {
         vim = "${nixvim'}";
       };
     in {
       home = {
-        packages = [
-          nixvim
-        ];
+        packages =
+          [
+            nixvim
+          ]
+          ++ lib.optionals (osConfig.host.desktop or true) [
+            inputs.nixvim.packages."${system}".neovide
+          ];
         sessionVariables = {
           EDITOR = "${nixvim'}";
           GIT_EDITOR = "${nixvim'}";
