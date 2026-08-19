@@ -31,7 +31,11 @@
     "vicinae"
     "network"
     "cli"
-    "git"
+    {
+      git = {
+        lfs = true;
+      };
+    }
     "docker"
     "norwegian"
     "japanese"

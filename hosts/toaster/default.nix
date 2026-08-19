@@ -8,6 +8,11 @@
   flake.nixosConfigurations.toaster = let
     hostFeatures = lib'.useFeatures self [
       "steam"
+      {
+        android = {
+          ide = true;
+        };
+      }
     ];
   in
     lib'.mkHost {
@@ -24,6 +29,10 @@
           ++ hostFeatures.nixos;
 
         home-manager.users.thomas.imports = hostFeatures.home;
+
+        features.niri.overrides = {
+          outputs."eDP-1".scale = 1;
+        };
 
         system.stateVersion = "24.05";
         networking.hostName = "toaster";
