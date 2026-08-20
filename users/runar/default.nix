@@ -84,7 +84,6 @@
 in {
   flake.nixosModules.runar = {
     pkgs,
-    config,
     ...
   }: let
     inherit (pkgs.stdenv.hostPlatform) system;
@@ -93,7 +92,6 @@ in {
     nix.settings.trusted-users = ["runar"];
     home-manager.users.runar = self.homeModules.runar;
     users.users.runar = {
-      openssh.authorizedKeys.keys = map (k: k.key) config.features.ssh.keys;
       isNormalUser = true;
       shell = self.packages.${system}.zsh;
       home = "/home/runar";

@@ -70,7 +70,6 @@
 in {
   flake.nixosModules.thomas = {
     pkgs,
-    config,
     ...
   }: let
     inherit (pkgs.stdenv.hostPlatform) system;
@@ -79,7 +78,6 @@ in {
     nix.settings.trusted-users = ["thomas"];
     home-manager.users.thomas = self.homeModules.thomas;
     users.users.thomas = {
-      openssh.authorizedKeys.keys = map (k: k.key) config.features.ssh.keys;
       isNormalUser = true;
       shell = self.packages.${system}.zsh;
       home = "/home/thomas";

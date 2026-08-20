@@ -21,6 +21,12 @@
     in
     {
       config = lib.mkIf (config.host.desktop or true) {
+        # Unlocks the GNOME keyring (and, via it, gcr-ssh-agent) with the
+        # login password so SSH_AUTH_SOCK is populated for the whole
+        # graphical session without a separate prompt.
+        services.gnome.gnome-keyring.enable = true;
+        security.pam.services.greetd.enableGnomeKeyring = true;
+
         services.greetd = {
           enable = true;
           settings.default_session = {

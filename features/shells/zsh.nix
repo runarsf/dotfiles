@@ -49,16 +49,17 @@
       ++ optional fzfTab "${pkgs.zsh-fzf-tab}/share/fzf-tab/fzf-tab.plugin.zsh"
       ++ ["${self.packages.${system}.zsh-docker-aliases}/zsh-docker-aliases.plugin.zsh"];
 
+    # "${pkgs.zsh-autosuggestions}/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
     deferredPlugins = [
-      "${pkgs.zsh-autosuggestions}/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
       "${pkgs.zsh-history-substring-search}/share/zsh-history-substring-search/zsh-history-substring-search.zsh"
       "${pkgs.zsh-syntax-highlighting}/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
     ];
 
     runtimeDeps = makeBinPath (
-      [
-        pkgs.carapace
-        pkgs.zoxide
+      with pkgs; [
+        carapace
+        zoxide
+        deja
       ]
       ++ optional fzfTab pkgs.fzf
     );
@@ -96,6 +97,11 @@
           fi
 
           bindkey -e
+
+          HISTFILE="''${XDG_STATE_HOME:-$HOME/.local/state}/zsh/history"
+          HISTSIZE=50000
+          SAVEHIST=50000
+          mkdir -p "''${HISTFILE:h}"
 
           source ${pkgs.zsh-defer}/share/zsh-defer/zsh-defer.plugin.zsh
         ''
@@ -166,6 +172,13 @@
               zstyle ':completion:*:default' list-colors ''${(s.:.)LS_COLORS}
             ''
           }
+
+          if [[ -r "$HOME/.local/share/deja/init.zsh" ]]; then
+            source "$HOME/.local/share/deja/init.zsh"
+          else
+            eval "$(deja init zsh)"
+          fi
+          export DEJA_EMPTY=off
 
           magic-enter-cmd () { ${greeting pkgs} }
           magic-enter () {
