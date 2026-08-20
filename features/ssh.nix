@@ -1,11 +1,5 @@
 _: {
-  flake.nixosModules.ssh = {
-    config,
-    lib,
-    ...
-  }: let
-    cfg = config.features.ssh;
-  in {
+  flake.nixosModules.ssh = {lib, ...}: {
     options.features.ssh.keys = lib.mkOption {
       default = [];
       description = "Public SSH keys. Added as authorized keys for all primaryUsers. First key is the default signing key.";

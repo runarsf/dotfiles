@@ -45,12 +45,28 @@
         default = ["${config.home.homeDirectory}/.ssh/id_nix"];
         description = "SSH key paths to use as age keys for user sops.";
       };
+      privateKeys = lib.mkOption {
+        type = lib.types.listOf lib.types.str;
+        default = [];
+        description = "Names of private SSH keys to fetch from the vault (<vaultPath>/<username>/keys/<name>) and place at ~/.ssh/<name>.";
+      };
     };
 
     config = lib.mkMerge [
       (lib.mkIf (vaultPath != null) {
         sops.age.sshKeyPaths = cfg.ageKeyPaths;
         sops.defaultSopsFile = lib.mkDefault "${vaultPath}/secrets.yaml";
+      })
+      (lib.mkIf (vaultPath != null && cfg.privateKeys != []) {
+        sops.secrets = builtins.listToAttrs (map (key: {
+            name = key;
+            value = {
+              sopsFile = "${vaultPath}/${config.home.username}/keys/${key}";
+              path = "${config.home.homeDirectory}/.ssh/${key}";
+              format = "binary";
+            };
+          })
+          cfg.privateKeys);
       })
       {
         home.packages = [

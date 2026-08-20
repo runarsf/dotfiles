@@ -4,8 +4,29 @@
   ...
 }: let
   features = lib'.useFeatures self [
-    "sops"
-    "ssh"
+    {
+      sops = {
+        privateKeys = ["id_priv" "id_ntnu"];
+      };
+    }
+    {
+      ssh = {
+        keys = [
+          {
+            name = "id_priv";
+            key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL8glmBsdfxRsQxzZrljQynBF09jljQD4KIH33Kcx9Hw";
+          }
+          {
+            name = "id_nix";
+            key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFw8lBpuv2bWKYxxXeeG6pZ7Ut2GCtjuEbuvVEp9DmeY";
+          }
+          {
+            name = "id_ntnu";
+            key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBYghkkwi+HG+q91Xhcdc+Ac8wYdIo8BzUZKUPa2/00f";
+          }
+        ];
+      };
+    }
     "fonts"
     "zsh"
     "flatpak"
@@ -31,11 +52,7 @@
     "vicinae"
     "network"
     "cli"
-    {
-      git = {
-        lfs = true;
-      };
-    }
+    "git"
     "docker"
     "norwegian"
     "japanese"
@@ -60,20 +77,6 @@ in {
   in {
     imports = features.nixos ++ [self.nixosModules.primaryUser];
     nix.settings.trusted-users = ["thomas"];
-    features.ssh.keys = [
-      {
-        name = "id_priv";
-        key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL8glmBsdfxRsQxzZrljQynBF09jljQD4KIH33Kcx9Hw thoesp@protonmail.com";
-      }
-      {
-        name = "id_nix";
-        key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFw8lBpuv2bWKYxxXeeG6pZ7Ut2GCtjuEbuvVEp9DmeY nix";
-      }
-      {
-        name = "id_ntnu";
-        key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBYghkkwi+HG+q91Xhcdc+Ac8wYdIo8BzUZKUPa2/00f thomes@stud.ntnu.no";
-      }
-    ];
     home-manager.users.thomas = self.homeModules.thomas;
     users.users.thomas = {
       openssh.authorizedKeys.keys = map (k: k.key) config.features.ssh.keys;
