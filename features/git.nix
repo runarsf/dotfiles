@@ -12,8 +12,6 @@ _: {
     cfg = config.features.git;
   in {
     options.features.git = {
-      lfs = mkEnableOption "Git LFS";
-
       emailSelector = {
         enable = mkEnableOption "Enable email selector on clone";
         extraEmails = mkOption {
@@ -43,7 +41,7 @@ _: {
         git = {
           enable = true;
 
-          lfs.enable = cfg.lfs;
+          lfs.enable = true;
 
           settings = {
             init.defaultBranch = "main";
