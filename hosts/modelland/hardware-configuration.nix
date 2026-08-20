@@ -16,37 +16,37 @@
   fileSystems."/" =
     { device = "/dev/disk/by-uuid/5a309a06-9747-450e-83a4-817908095b01";
       fsType = "btrfs";
-      options = [ "subvol=@" "compress=zstd:1" ];
+      options = [ "subvol=@" "compress=zstd:1" "noatime" ];
     };
 
   fileSystems."/home" =
     { device = "/dev/disk/by-uuid/5a309a06-9747-450e-83a4-817908095b01";
       fsType = "btrfs";
-      options = [ "subvol=@home" "compress=zstd:1" ];
+      options = [ "subvol=@home" "compress=zstd:1" "noatime"];
     };
 
   fileSystems."/nix" =
     { device = "/dev/disk/by-uuid/5a309a06-9747-450e-83a4-817908095b01";
       fsType = "btrfs";
-      options = [ "subvol=@nix" "compress=zstd:1" ];
+      options = [ "subvol=@nix" "compress=zstd:1" "noatime"];
     };
 
   fileSystems."/.snapshots" =
     { device = "/dev/disk/by-uuid/5a309a06-9747-450e-83a4-817908095b01";
       fsType = "btrfs";
-      options = [ "subvol=@snapshots" "compress=zstd:1" ];
+      options = [ "subvol=@snapshots" "compress=zstd:1" "noatime"];
     };
 
   fileSystems."/games" =
     { device = "/dev/disk/by-uuid/5a309a06-9747-450e-83a4-817908095b01";
       fsType = "btrfs";
-      options = [ "subvol=@games" "compress=zstd:1" ];
+      options = [ "subvol=@games" "compress=zstd:1" "noatime"];
     };
 
   fileSystems."/swap" =
     { device = "/dev/disk/by-uuid/5a309a06-9747-450e-83a4-817908095b01";
       fsType = "btrfs";
-      options = [ "subvol=@swap" "compress=zstd:1" ];
+      options = [ "subvol=@swap" "noatime"];
     };
 
   fileSystems."/boot" =
