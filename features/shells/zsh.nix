@@ -70,6 +70,15 @@
       zshenv.content = ''
         AUTOPAIR_INHIBIT_INIT=1
         AUTOPAIR_SPC_WIDGET="abbr-expand-and-insert"
+
+        # home-manager's hm-session-vars.sh (EDITOR, GIT_EDITOR, ...) isn't sourced
+        # anywhere by default since this is a custom-wrapped zsh, not home-manager's
+        # programs.zsh. Without this, EDITOR falls back to NixOS's nano default.
+        for p in ''${(z)NIX_PROFILES}; do
+          if [[ -r "$p/etc/profile.d/hm-session-vars.sh" ]]; then
+            source "$p/etc/profile.d/hm-session-vars.sh"
+          fi
+        done
       '';
 
       zshrc.content =
