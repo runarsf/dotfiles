@@ -82,33 +82,11 @@
     "writing"
   ];
 in {
-  flake.nixosModules.runar = {
-    pkgs,
-    ...
-  }: let
-    inherit (pkgs.stdenv.hostPlatform) system;
-  in {
-    imports = features.nixos ++ [self.nixosModules.primaryUser];
-    nix.settings.trusted-users = ["runar"];
-    home-manager.users.runar = self.homeModules.runar;
-    users.users.runar = {
-      isNormalUser = true;
-      shell = self.packages.${system}.zsh;
-      home = "/home/runar";
-      initialPassword = "changeme";
-      description = "Runar Fredagsvik";
-      extraGroups = [
-        "wheel"
-        "networkmanager"
-        "docker"
-        "audio"
-        "video"
-        "libvirtd"
-        "input"
-        "i2c"
-        "blahaj"
-      ];
-    };
+  flake.nixosModules.runar = lib'.mkNixosUser {
+    inherit self;
+    username = "runar";
+    features = features.nixos;
+    extraGroups = ["blahaj"];
   };
 
   flake.homeModules.runar = {

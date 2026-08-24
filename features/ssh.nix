@@ -1,32 +1,35 @@
-_: {
-  flake.nixosModules.ssh = {
-    config,
-    lib,
-    ...
-  }: let
-    cfg = config.features.ssh;
-  in {
-    options.features.ssh.keys = lib.mkOption {
-      default = [];
-      description = "Public SSH keys. Added as authorized keys for all primaryUsers. First key is the default signing key.";
-      type = lib.types.listOf (lib.types.submodule {
-        options = {
-          name = lib.mkOption {
-            type = lib.types.str;
-            description = "Key name, used as the filename (~/.ssh/<name>.pub).";
+{lib', ...}: {
+  flake.nixosModules.ssh = lib'.mkFeature "ssh" {
+    wants = ["primaryUser"];
+    config = {
+      config,
+      lib,
+      ...
+    }: let
+      cfg = config.features.ssh;
+    in {
+      options.features.ssh.keys = lib.mkOption {
+        default = [];
+        description = "Public SSH keys. Added as authorized keys for all primaryUsers. First key is the default signing key.";
+        type = lib.types.listOf (lib.types.submodule {
+          options = {
+            name = lib.mkOption {
+              type = lib.types.str;
+              description = "Key name, used as the filename (~/.ssh/<name>.pub).";
+            };
+            key = lib.mkOption {
+              type = lib.types.str;
+              description = "Public key string.";
+            };
           };
-          key = lib.mkOption {
-            type = lib.types.str;
-            description = "Public key string.";
-          };
-        };
-      });
-    };
+        });
+      };
 
-    config = lib.mkIf (cfg.keys != []) {
-      users.users = lib.genAttrs config.primaryUsers (_: {
-        openssh.authorizedKeys.keys = map (k: k.key) cfg.keys;
-      });
+      config = lib.mkIf (cfg.keys != []) {
+        users.users = lib.genAttrs config.primaryUsers (_: {
+          openssh.authorizedKeys.keys = map (k: k.key) cfg.keys;
+        });
+      };
     };
   };
 

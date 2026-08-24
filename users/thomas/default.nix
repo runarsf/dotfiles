@@ -68,32 +68,10 @@
     "tuigreet"
   ];
 in {
-  flake.nixosModules.thomas = {
-    pkgs,
-    ...
-  }: let
-    inherit (pkgs.stdenv.hostPlatform) system;
-  in {
-    imports = features.nixos ++ [self.nixosModules.primaryUser];
-    nix.settings.trusted-users = ["thomas"];
-    home-manager.users.thomas = self.homeModules.thomas;
-    users.users.thomas = {
-      isNormalUser = true;
-      shell = self.packages.${system}.zsh;
-      home = "/home/thomas";
-      initialPassword = "changeme";
-      description = "Thomas Espervik";
-      extraGroups = [
-        "wheel"
-        "networkmanager"
-        "docker"
-        "audio"
-        "video"
-        "libvirtd"
-        "input"
-        "i2c"
-      ];
-    };
+  flake.nixosModules.thomas = lib'.mkNixosUser {
+    inherit self;
+    username = "thomas";
+    features = features.nixos;
   };
 
   flake.homeModules.thomas = {pkgs, ...}: {
