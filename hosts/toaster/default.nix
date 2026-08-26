@@ -13,6 +13,7 @@
           ide = true;
         };
       }
+      "godot"
     ];
   in
     lib'.mkHost {
