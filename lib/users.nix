@@ -29,10 +29,7 @@
         extraGroups ? [],
         homeDirectory ? "/home/${username}",
         initialPassword ? "changeme",
-      }: {
-        pkgs,
-        ...
-      }: let
+      }: {pkgs, ...}: let
         inherit (pkgs.stdenv.hostPlatform) system;
       in {
         imports = features ++ [self.nixosModules.primaryUser];
@@ -40,10 +37,10 @@
         nix.settings.trusted-users = [username];
         home-manager.users.${username} = self.homeModules.${username};
         users.users.${username} = {
+          inherit initialPassword;
           isNormalUser = true;
           shell = self.packages.${system}.zsh;
           home = homeDirectory;
-          inherit initialPassword;
           extraGroups =
             [
               "wheel"

@@ -43,20 +43,22 @@
 
         # 1. Never idle-suspend the card's nodes → no re-open blips
         services.pipewire.wireplumber.extraConfig."51-no-suspend" = {
-          "monitor.alsa.rules" = [{
-            matches = [
-              { "node.name" = "~alsa_output.*"; }
-              { "node.name" = "~alsa_input.*"; }
-            ];
-            actions.update-props."session.suspend-timeout-seconds" = 0;
-          }];
+          "monitor.alsa.rules" = [
+            {
+              matches = [
+                {"node.name" = "~alsa_output.*";}
+                {"node.name" = "~alsa_input.*";}
+              ];
+              actions.update-props."session.suspend-timeout-seconds" = 0;
+            }
+          ];
         };
 
         # 2. Pin the card to the duplex profile so it can't drop to Off
         # Find card name and profile name from `pactl list cards`
         systemd.user.services.pin-audio-profile = {
-          wantedBy = [ "wireplumber.service" ];
-          after = [ "wireplumber.service" ];
+          wantedBy = ["wireplumber.service"];
+          after = ["wireplumber.service"];
           serviceConfig = {
             Type = "oneshot";
             RemainAfterExit = true;
@@ -91,7 +93,10 @@
         # services.displayManager.gdm.enable = true;
         services.xserver.xkb.layout = "no";
         services.xserver.xkb.variant = "nb";
-        # services.xserver.xkb.options = "eurosign:e,caps:escape";
+        console = {
+          font = "Lat2-Terminus16";
+          useXkbConfig = true; # use xkb.options in tty.
+        };
         services.pipewire = {
           enable = true;
           pulse.enable = true;

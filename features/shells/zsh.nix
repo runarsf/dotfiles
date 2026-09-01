@@ -49,17 +49,17 @@
       ++ optional fzfTab "${pkgs.zsh-fzf-tab}/share/fzf-tab/fzf-tab.plugin.zsh"
       ++ ["${self.packages.${system}.zsh-docker-aliases}/zsh-docker-aliases.plugin.zsh"];
 
-    # "${pkgs.zsh-autosuggestions}/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
     deferredPlugins = [
       "${pkgs.zsh-history-substring-search}/share/zsh-history-substring-search/zsh-history-substring-search.zsh"
       "${pkgs.zsh-syntax-highlighting}/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+      "${pkgs.zsh-autosuggestions}/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
     ];
 
     runtimeDeps = makeBinPath (
       with pkgs; [
         carapace
         zoxide
-        deja
+        # deja
       ]
       ++ optional fzfTab pkgs.fzf
     );
@@ -182,12 +182,12 @@
             ''
           }
 
-          if [[ -r "$HOME/.local/share/deja/init.zsh" ]]; then
-            source "$HOME/.local/share/deja/init.zsh"
-          else
-            eval "$(deja init zsh)"
-          fi
-          export DEJA_EMPTY=off
+          # if [[ -r "$HOME/.local/share/deja/init.zsh" ]]; then
+          #   source "$HOME/.local/share/deja/init.zsh"
+          # else
+          #   eval "$(deja init zsh)"
+          # fi
+          # export DEJA_EMPTY=off
 
           magic-enter-cmd () { ${greeting pkgs} }
           magic-enter () {

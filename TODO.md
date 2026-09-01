@@ -46,8 +46,10 @@
 - rework zsh config to a more stable format
 - why isn't $NH_FLAKE available in the environment?
 - android: remove enabled option if/when wrapper functions for this are created
+- add services.power-profiles-daemon.enable to where it belongs (dms and noctalia needs it)
 
 ## Hosts (separate repos)
+
 - [x] `boiler` — thomas's gaming desktop
 - [x] `toaster` — thomas's laptop
 - [ ] `hsrv` — legacy server (minimal config, may just fold into `anuc` instead of porting)
@@ -55,15 +57,18 @@
 - [x] `anuc`, `runix` (plus new `vm`)
 
 ## Users
+
 - [x] `thomas`
 - [x] `runar`, `blahaj` (system user only)
 
 ## Server / self-hosted services
+
 - [x] `containers.nix` quadlet framework, `glance` service
 - [ ] Wire `containers`/`nginx`/`fail2ban`/`teleport` into the `anuc` host — modules exist but aren't imported anywhere yet
 - [ ] Container services: `jellyfin`, `immich`, `slskd`, `wrtag`, `copyparty`, `freshrss`, `mealie`, `solidtime`, `stremio` (server variant), `wastebin`, `gonic`, `pinchflat`
 
 ## Development environments
+
 - [ ] `neovim`
 - [ ] `vscode`
 - [ ] `rust`
@@ -75,6 +80,7 @@
 - [ ] `nix` dev tooling (nixd/alejandra, distinct from the `nix.nix` feature)
 
 ## Desktop apps / WM extras
+
 - [ ] `gpg`
 - [ ] `keychain`
 - [ ] `spotify`
@@ -92,14 +98,17 @@
 - [ ] `wayle`, `ambxst` — look unfinished/abandoned in old-config; probably skip
 
 ## Gaming
+
 - [x] `steam`, `ffxiv`, `hytale`, `minecraft`, `emulation`, `controllers`
 - [x] Wire dualsense/8bitdo udev rules
 
 ## Locales
+
 - [x] `norwegian`
 - [x] `japanese`
 
 ## System / linux-level modules
+
 - [ ] `firewall`
 - [ ] `thunderbolt`
 - [ ] `virtualisation` (libvirt/kvm at system level)
