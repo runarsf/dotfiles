@@ -14,7 +14,7 @@ _: {
     home.packages = with pkgs; [
       obsidian
       typst
-      libreoffice-fresh
+      libreoffice-stable
       pandoc
       poppler-utils
       sc-im

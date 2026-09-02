@@ -7,6 +7,7 @@
   flake.nixosConfigurations.bramble = let
     hostFeatures = lib'.useFeatures self [
       "yubikey"
+      "web"
       {
         csharp = {
           ide = true;
