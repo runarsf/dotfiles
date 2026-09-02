@@ -1,4 +1,8 @@
-{self, ...}: {
+{
+  self,
+  lib',
+  ...
+}: {
   flake.nixosModules.android = {
     config,
     lib,
@@ -19,7 +23,7 @@
     ];
   };
 
-  flake.homeModules.android = {
+  flake.homeModules.android = lib'.mkFeature "android" ({
     config,
     pkgs,
     lib,
@@ -53,5 +57,5 @@
           android-studio
         ];
     };
-  };
+  });
 }

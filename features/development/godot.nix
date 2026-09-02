@@ -1,5 +1,9 @@
-_: {
-  flake.homeModules.godot = {
+{lib', ...}: let
+  # inherit (lib) optionals;
+  inherit (lib') mkFeature;
+  # cfg = config.features.godot;
+in {
+  flake.homeModules.godot = mkFeature "godot" ({
     config,
     pkgs,
     lib,
@@ -11,6 +15,7 @@ _: {
   in {
     options.features.godot = with types; {
       mono = mkEnableOption "Godot-Mono (C# support)";
+      android = mkEnableOption "Android Export";
     };
 
     config = {
@@ -20,5 +25,5 @@ _: {
         else [godot]
       );
     };
-  };
+  });
 }
