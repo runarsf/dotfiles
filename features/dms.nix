@@ -17,7 +17,7 @@
 
     options.features.dms.aiUsage = mkEnableOption "Claude Code usage widget";
 
-    config = mkIf (pkgs.stdenv.isLinux && (osConfig.host.desktop or true)) {
+    config = mkIf (pkgs.stdenv.hostPlatform.isLinux && (osConfig.host.desktop or true)) {
       home.packages = with pkgs; [
         libinput
       ];

@@ -24,7 +24,7 @@
     inherit (lib) mkIf;
     inherit (pkgs.stdenv.hostPlatform) system;
   in
-    mkIf pkgs.stdenv.isLinux {
+    mkIf pkgs.stdenv.hostPlatform.isLinux {
       home.shellAliases.ssh = "TERM=xterm-256color ssh";
 
       programs.wezterm = {

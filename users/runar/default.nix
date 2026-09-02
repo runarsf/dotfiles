@@ -33,21 +33,15 @@
     "discord"
     "fonts"
     "zsh"
-    "flatpak"
     "starship"
     "wayland"
     "nixvim"
     "niri"
     "nushell"
-    {
-      hyprland = {
-        nvidia = true;
-      };
-    }
+    "hyprland"
     "hypridle"
     "hyprlock"
     "hyprpaper"
-    "lumux"
     {
       stylix = {
         wallpaper = ./outerwilds.jpeg;
@@ -68,13 +62,12 @@
     "norwegian"
     "pipewire"
     "zed"
+    "flatpak"
     "zen"
-    "orion"
     {
       matrix = {
         clients = [
           "element"
-          "cinny"
         ];
       };
     }
@@ -101,7 +94,7 @@ in {
       name = "Runar Fredagsvik";
     };
 
-    home.packages = with pkgs; [claude-code] ++ lib.optionals pkgs.stdenv.isLinux [feishin me3 qbittorrent inputs.helium.packages.${pkgs.stdenv.hostPlatform.system}.default];
+    home.packages = with pkgs; [claude-code] ++ lib.optionals pkgs.stdenv.hostPlatform.isLinux [feishin me3 qbittorrent inputs.helium.packages.${pkgs.stdenv.hostPlatform.system}.default];
 
     home.stateVersion = "24.11";
   };

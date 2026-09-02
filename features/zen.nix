@@ -86,7 +86,7 @@
 
         "browser.tabs.insertAfterCurrent" = true;
         "browser.tabs.insertAfterCurrentExceptPinned" = true;
-        "browser.toolbars.bookmarks.visibility" = "newtab";
+        "browser.toolbars.bookmarks.visibility" = "always";
         "browser.translations.automaticallyPopup" = false;
 
         "layers.acceleration.force-enabled" = true;

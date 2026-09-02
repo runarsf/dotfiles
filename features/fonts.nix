@@ -55,10 +55,10 @@
             terminus_font
             monocraft
             departure-mono
+            unifont
+            (nofontsdir unifont_upper)
             (nofontsdir tamzen)
             (nofontsdir proggyfonts)
-            (nofontsdir unifont)
-            (nofontsdir unifont_upper)
             (nofontsdir gohufont)
             (nofontsdir spleen)
 

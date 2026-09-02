@@ -28,7 +28,7 @@ in {
         nofontsdir = font:
           font.overrideAttrs (oldAttrs: {
             installPhase =
-              oldAttrs.installPhase
+              (oldAttrs.installPhase or "")
               + ''
                 find "$out/share/fonts" -type f -name 'fonts.dir' -delete
               '';

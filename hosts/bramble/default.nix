@@ -5,7 +5,20 @@
   ...
 }: {
   flake.nixosConfigurations.bramble = let
-    hostFeatures = lib'.useFeatures self [];
+    hostFeatures = lib'.useFeatures self [
+      "yubikey"
+      {
+        csharp = {
+          ide = true;
+        };
+      }
+      # {
+      #   hyprland = {
+      #     animations = true;
+      #     nvidia = true;
+      #   };
+      # }
+    ];
   in
     lib'.mkHost {
       inherit self withSystem;
@@ -24,6 +37,8 @@
           ++ hostFeatures.nixos;
 
         home-manager.users.runar.imports = hostFeatures.home;
+        home-manager.users.runar.features.hyprland.nvidia = true;
+        home-manager.users.runar.features.hyprland.animations = true;
 
         system.stateVersion = "26.05";
         networking.hostName = "bramble";
@@ -68,8 +83,7 @@
         networking.networkmanager.enable = true;
 
         environment.systemPackages = with pkgs; [
-          git
-          vim
+          teams-for-linux
         ];
       };
     };
