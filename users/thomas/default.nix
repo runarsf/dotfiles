@@ -62,7 +62,7 @@
     "discord"
     {
       matrix = {
-        clients = ["cinny"];
+        clients = ["cinny" "element"];
       };
     }
     "tuigreet"
