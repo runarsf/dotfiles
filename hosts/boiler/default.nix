@@ -26,7 +26,12 @@
         };
       }
       "obs"
-      # "godot"
+      "godot"
+      {
+        android = {
+          ide = true;
+        };
+      }
     ];
   in
     lib'.mkHost {
