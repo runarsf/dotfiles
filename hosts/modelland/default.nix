@@ -24,6 +24,7 @@
           ++ hostFeatures.nixos;
 
         home-manager.users.runar.imports = hostFeatures.home;
+        home-manager.users.runar.features.hyprland.nvidia = true;
 
         system.stateVersion = "26.05";
         networking.hostName = "modelland";
@@ -102,11 +103,6 @@
           pulse.enable = true;
         };
         networking.networkmanager.enable = true;
-
-        environment.systemPackages = with pkgs; [
-          git
-          vim
-        ];
 
         systemd.tmpfiles.rules = [
           "d /games 0755 runar users -"

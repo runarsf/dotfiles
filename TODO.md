@@ -47,6 +47,8 @@
 - why isn't $NH_FLAKE available in the environment?
 - android: remove enabled option if/when wrapper functions for this are created
 - add services.power-profiles-daemon.enable to where it belongs (dms and noctalia needs it)
+- mkdir .config/discord, since otherwise home manager switch fails
+- post-install script that runs certain things based on the features you have enabled. use gumroad
 
 ## Hosts (separate repos)
 

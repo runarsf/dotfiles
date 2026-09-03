@@ -40,7 +40,6 @@
 
       environment.systemPackages = with pkgs; [
         nwg-displays
-        inputs.niri-scratchpad.packages.${system}.default
       ];
     };
   };

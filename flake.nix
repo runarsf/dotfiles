@@ -55,8 +55,6 @@
       inputs.hyprland.follows = "hyprland";
     };
 
-    niri-scratchpad.url = "github:argosnothing/niri-scratchpad";
-
     nwg-displays.url = "github:nwg-piotr/nwg-displays/v0.4.3";
 
     zed.url = "github:zed-industries/zed/v1.13.2";

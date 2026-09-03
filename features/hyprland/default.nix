@@ -302,6 +302,10 @@
           workspace = "2 silent";
         }
         {
+          match = {class = "(teams-for-linux)";};
+          workspace = "2 silent";
+        }
+        {
           match = {
             class = "(vesktop)";
           };
@@ -440,10 +444,20 @@
               inputs.hypr-dynamic-cursors.packages.${system}.hypr-dynamic-cursors
             ];
           configType = "lua";
-          extraConfig = ''
-            require("monitors")
-            require("workspaces")
-          '';
+          extraConfig =
+            ''
+              require("monitors")
+              require("workspaces")
+            ''
+            + lib.optionalString cfg.animations ''
+              if hl.plugin.dynamic_cursors then
+                hl.config { plugin = { dynamic_cursors = {
+                  enabled = true,
+                  mode = "tilt",
+                  threshold = 2,
+                }}}
+              end
+            '';
           settings = {
             env = lib.optionals cfg.nvidia [
               {_args = ["LIBVA_DRIVER_NAME" "nvidia"];}
@@ -479,10 +493,6 @@
                 resize_on_border = false;
               };
               binds.allow_workspace_cycles = true;
-              plugin.dynamic-cursors = lib.mkIf cfg.animations {
-                enabled = true;
-                mode = "tilt";
-              };
               input = {
                 kb_layout = "no";
                 kb_options = "ctrl:nocaps";
