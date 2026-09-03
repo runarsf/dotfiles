@@ -39,7 +39,6 @@
         "${pkgs.zsh-nix-shell}/share/zsh-nix-shell/nix-shell.plugin.zsh"
         "${pkgs.nix-zsh-completions}/share/zsh/plugins/nix/init.zsh"
         "${pkgs.zsh-abbr}/share/zsh/zsh-abbr/zsh-abbr.plugin.zsh"
-        "${pkgs.oh-my-zsh}/share/oh-my-zsh/plugins/dotenv/dotenv.plugin.zsh"
         "${pkgs.oh-my-zsh}/share/oh-my-zsh/plugins/fancy-ctrl-z/fancy-ctrl-z.plugin.zsh"
         "${pkgs.oh-my-zsh}/share/oh-my-zsh/plugins/per-directory-history/per-directory-history.plugin.zsh"
         "${pkgs.oh-my-zsh}/share/oh-my-zsh/lib/key-bindings.zsh"
@@ -111,6 +110,9 @@
           HISTSIZE=50000
           SAVEHIST=50000
           mkdir -p "''${HISTFILE:h}"
+
+          ZSH_CACHE_DIR="''${XDG_CACHE_HOME:-$HOME/.cache}/oh-my-zsh"
+          mkdir -p "$ZSH_CACHE_DIR"
 
           source ${pkgs.zsh-defer}/share/zsh-defer/zsh-defer.plugin.zsh
         ''
