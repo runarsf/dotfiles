@@ -6388,6 +6388,21 @@
         "type": "github"
       }
     },
+    "nixpkgs-multiverse": {
+      "locked": {
+        "lastModified": 1788419320,
+        "narHash": "sha256-/LW1CxljQdHLs3MKvsdQvSFyyR75Wml25urU9A2602E=",
+        "owner": "fzakaria",
+        "repo": "nixpkgs-multiverse",
+        "rev": "f413ff37b512bfcc5e4c0471632252815cc94d12",
+        "type": "github"
+      },
+      "original": {
+        "owner": "fzakaria",
+        "repo": "nixpkgs-multiverse",
+        "type": "github"
+      }
+    },
     "nixpkgs-unstable": {
       "locked": {
         "lastModified": 1769421245,
@@ -8435,6 +8450,7 @@
         "nixos-hardware": "nixos-hardware",
         "nixpkgs": "nixpkgs_9",
         "nixpkgs-master": "nixpkgs-master",
+        "nixpkgs-multiverse": "nixpkgs-multiverse",
         "nixvim": "nixvim",
         "nwg-displays": "nwg-displays",
         "sops-nix": "sops-nix_4",

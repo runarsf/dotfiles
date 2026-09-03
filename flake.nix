@@ -10,6 +10,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    nixpkgs-multiverse.url = "github:fzakaria/nixpkgs-multiverse";
+
     alien.url = "github:thiagokokada/nix-alien";
     treefmt-nix.url = "github:numtide/treefmt-nix";
     import-tree.url = "github:vic/import-tree";
