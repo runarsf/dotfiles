@@ -42,6 +42,7 @@
     "hypridle"
     "hyprlock"
     "hyprpaper"
+    "xdg"
     {
       stylix = {
         wallpaper = ./outerwilds.jpeg;

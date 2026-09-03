@@ -31,6 +31,8 @@
         options = mkDefault "--delete-older-than 5d";
       };
     };
+
+    programs.nix-ld.enable = true;
   };
 
   flake.homeModules.nix = {pkgs, ...}: {

@@ -61,6 +61,19 @@
       # TODO: This doesn't seem like the way to do this
       terminal = config.programs.wezterm.package;
 
+      # Rainbow gradient, matching the niri active-window focus ring.
+      rainbowColors = [
+        "rgba(FF6161FF)"
+        "rgba(FFD761FF)"
+        "rgba(B0FF61FF)"
+        "rgba(61FF88FF)"
+        "rgba(61FFFFFF)"
+        "rgba(6188FFFF)"
+        "rgba(B061FFFF)"
+        "rgba(FF61D7FF)"
+        "rgba(FF6161FF)"
+      ];
+
       binds = [
         (kb "SUPER SHIFT" "P" "hl.dsp.submap(\"passthrough\")" {})
         (kb "SUPER" "Return" (exec (lib.getExe terminal)) {})
@@ -85,6 +98,15 @@
         (kb "SUPER" "right" (exec "${hypr-move} focus right") {})
         (kb "SUPER" "up" (exec "${hypr-move} focus up") {})
         (kb "SUPER" "down" (exec "${hypr-move} focus down") {})
+
+        # Layout-scoped column focus (not hl.dsp.focus): stays within the
+        # workspace and doesn't cross monitors. Dispatched via exec rather than
+        # directly so the bind's own dispatcher (exec_cmd) always succeeds and
+        # fully consumes the scroll event, even when hl.dsp.layout has no
+        # column left to move to and would otherwise let it leak through as
+        # in-app scrolling.
+        (kb "SUPER" "mouse_down" (exec ''hyprctl dispatch 'hl.dsp.layout("focus r")' '') {})
+        (kb "SUPER" "mouse_up" (exec ''hyprctl dispatch 'hl.dsp.layout("focus l")' '') {})
 
         (kb "SUPER SHIFT" "TAB" "hl.dsp.window.center()" {})
         # (kb "SUPER SHIFT" "Return" "hl.dsp.layout.msg(\"swapwithmaster\")" {})
@@ -228,10 +250,17 @@
 
         {
           match = {
-            class = "^jetbrains-(?!toolbox)";
+            class = "^jetbrains-";
             float = true;
           };
           no_initial_focus = true;
+        }
+        {
+          match = {
+            class = "^jetbrains-toolbox$";
+            float = true;
+          };
+          no_initial_focus = false;
         }
 
         # Games
@@ -438,7 +467,7 @@
           portalPackage = null;
           plugins =
             [
-              inputs.hyprland-plugins.packages.${system}.borders-plus-plus
+              # inputs.hyprland-plugins.packages.${system}.borders-plus-plus
             ]
             ++ lib.optionals cfg.animations [
               inputs.hypr-dynamic-cursors.packages.${system}.hypr-dynamic-cursors
@@ -474,13 +503,13 @@
               general = {
                 gaps_in = 5;
                 gaps_out = 20;
-                border_size = 1;
+                # Constant across focus states - safe, unlike a per-window
+                # override (see plugin.borders_plus_plus below for how the
+                # focused/unfocused visual distinction is actually made).
+                border_size = 2;
                 "col.active_border" = {
-                  colors = [
-                    "rgba(717585FF)"
-                    "rgba(707480FF)"
-                  ];
-                  angle = 90;
+                  colors = rainbowColors;
+                  angle = 45;
                 };
                 "col.inactive_border" = {
                   colors = [
@@ -489,10 +518,16 @@
                   ];
                   angle = 90;
                 };
-                layout = "master";
+                layout = "scrolling";
                 resize_on_border = false;
               };
-              binds.allow_workspace_cycles = true;
+              binds = {
+                allow_workspace_cycles = true;
+                # Without this, hl.dsp.focus({ direction = ... }) treats a fullscreen
+                # window as a dead end instead of cycling to the next column, which
+                # made window_direction_monitor_fallback kick in and jump monitors.
+                movefocus_cycles_fullscreen = true;
+              };
               input = {
                 kb_layout = "no";
                 kb_options = "ctrl:nocaps";
@@ -500,7 +535,6 @@
                 accel_profile = "flat";
                 follow_mouse = 1;
                 mouse_refocus = false;
-                sensitivity = 0.5;
                 touchpad = {
                   natural_scroll = true;
                   drag_lock = false;
@@ -516,7 +550,17 @@
               dwindle = {
                 force_split = 2;
               };
+              scrolling = {
+                wrap_focus = false;
+              };
+              # plugin.borders_plus_plus = {
+              #   add_borders = 1;
+              #   border_size_1 = 1;
+              # };
               ecosystem.no_update_news = true;
+              cursor = {
+                no_warps = true;
+              };
               misc = {
                 disable_hyprland_logo = true;
                 enable_anr_dialog = false;
@@ -543,14 +587,14 @@
                   noise = 3.0e-2;
                   contrast = 1;
                 };
-                shadow = {
-                  enabled = true;
-                  range = 32;
-                  render_power = 3;
-                  scale = 1;
-                  color = "rgba(00000055)";
-                  color_inactive = "rgba(00000028)";
-                };
+                # shadow = {
+                #   enabled = true;
+                #   range = 32;
+                #   render_power = 3;
+                #   scale = 1;
+                #   color = "rgba(00000055)";
+                #   color_inactive = "rgba(00000028)";
+                # };
               };
             };
             layer_rule = [

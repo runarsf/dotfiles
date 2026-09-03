@@ -1,5 +1,16 @@
 def main [action: string, dir: string] {
   let window = hyprctl -j activewindow | from json
+
+  # No active window (e.g. empty workspace): the group/monocle checks below
+  # need an active window to inspect, so skip straight to the plain
+  # focus/monitor dispatch. There's nothing to "move" without a window.
+  if ($window | columns | is-empty) {
+    if $action == "focus" {
+      hyprctl --batch $"dispatch hl.dsp.focus\({ direction = \"($dir)\" }); dispatch hl.dsp.cursor.move_to_corner\({ corner = 2 })"
+    }
+    return
+  }
+
   let workspaces = hyprctl -j workspaces | from json
   let workspace = $workspaces | where id == $window.workspace.id | first
 

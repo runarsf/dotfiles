@@ -13,6 +13,7 @@
       git
       wget
       curl
+      zip
       unzip
 
       bat

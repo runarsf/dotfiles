@@ -8,6 +8,7 @@
     hostFeatures = lib'.useFeatures self [
       "yubikey"
       "web"
+      "sql"
       {
         csharp = {
           ide = true;
@@ -39,7 +40,6 @@
 
         home-manager.users.runar.imports = hostFeatures.home;
         home-manager.users.runar.features.hyprland.nvidia = true;
-        home-manager.users.runar.features.hyprland.animations = true;
 
         system.stateVersion = "26.05";
         networking.hostName = "bramble";

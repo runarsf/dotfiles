@@ -30,6 +30,7 @@
     "fonts"
     "zsh"
     "flatpak"
+    "xdg"
     "starship"
     "niri"
     # "hyprland"

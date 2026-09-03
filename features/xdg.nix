@@ -1,5 +1,5 @@
-{ ... }: {
-  flake.homeModules.xdg = { ... }: {
+_: {
+  flake.homeModules.xdg = _: {
     xdg = {
       userDirs = {
         enable = true;
