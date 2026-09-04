@@ -190,10 +190,7 @@
       xdg.mimeApps = {
         enable = true;
         defaultApplications = let
-          entries = [
-            "${zen-browser}/share/applications/zen.desktop"
-            "zen.desktop"
-          ];
+          entries = ["zen.desktop"];
         in {
           "default-web-browser" = entries;
           "text/html" = entries;
