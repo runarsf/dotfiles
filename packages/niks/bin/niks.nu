@@ -23,9 +23,9 @@ def after-os-switch [bin: string] {
   if $generations < 10 { return }
 
   if (confirm $"(ansi yellow)You have (ansi red)($generations)(ansi yellow) system generations, clean up now?(ansi reset)") {
-    nh clean all --keep=3
+    nh clean all --keep=3 --optimise
   } else {
-    print $"  $ ($bin) clean all --keep=3"
+    print $"  $ ($bin) clean all --keep=3 --optimise"
   }
 }
 
