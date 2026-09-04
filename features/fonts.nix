@@ -1,43 +1,61 @@
-{lib', ...}: {
-  flake.nixosModules.fonts = {
-    # fonts.fontconfig = {
-    #   enable = true;
-    #   hinting = {
-    #     style = "slight";
-    #     autohint = true;
-    #   };
-    #   subpixel = {
-    #     lcdfilter = "default";
-    #     rgba = "rgb";
-    #   };
-    # };
-  };
+{ lib', ... }: {
+  flake.nixosModules.fonts =
+    { config, lib, ... }:
+    let
+      inherit (lib) mkEnableOption mkIf;
 
-  flake.homeModules.fonts = {
-    config,
-    osConfig ? {},
-    pkgs,
-    self,
-    lib,
-    ...
-  }: let
-    inherit (pkgs.stdenv.hostPlatform) system;
-    inherit (lib'.fonts) nofontsdir;
+      cfg = config.features.fonts;
+    in
+    {
+      options.features.fonts = {
+        oled = mkEnableOption "OLED";
+      };
 
-    vaultPath = osConfig.features.sops.vaultPath or null;
-  in
+      config = {
+        fonts.fontconfig = {
+          enable = true;
+          antialias = true;
+          hinting = {
+            enable = true;
+            style = "slight";
+          };
+          subpixel.rgba = if cfg.oled then "none" else "rgb";
+        };
+
+        environment.variables.FREETYPE_PROPERTIES = mkIf cfg.oled "cff:no-stem-darkening=0 autofitter:no-stem-darkening=0 type1:no-stem-darkening=0";
+      };
+    };
+
+  flake.homeModules.fonts =
+    {
+      config,
+      osConfig ? { },
+      pkgs,
+      self,
+      lib,
+      ...
+    }:
+    let
+      inherit (pkgs.stdenv.hostPlatform) system;
+      inherit (lib'.fonts) nofontsdir;
+
+      vaultPath = osConfig.features.sops.vaultPath or null;
+    in
     lib.mkMerge [
       {
         fonts.fontconfig.enable = true;
 
-        home.packages = with pkgs;
+        home.packages =
+          with pkgs;
           [
             # Writing
             libertine
+            libertinus
             atkinson-hyperlegible
             montserrat
             roboto
             ia-writer-duospace
+            inter
 
             # Unicode table
             noto-fonts
@@ -105,19 +123,21 @@
         systemd.user.services.sops-fonts = {
           Unit = {
             Description = "Fonts with stupid licenses";
-            PartOf = ["home-manager-${config.home.username}.service"];
+            PartOf = [ "home-manager-${config.home.username}.service" ];
           };
-          Install.WantedBy = ["default.target"];
-          Service.ExecStart = toString (pkgs.writeShellScript "install-fonts" ''
-            set -o errexit
-            set -o nounset
+          Install.WantedBy = [ "default.target" ];
+          Service.ExecStart = toString (
+            pkgs.writeShellScript "install-fonts" ''
+              set -o errexit
+              set -o nounset
 
-            ${pkgs.coreutils}/bin/mkdir -p "${config.xdg.dataHome}/fonts"
-            ${pkgs.unzip}/bin/unzip -o "${config.sops.secrets.monolisa.path}" -d "${config.xdg.dataHome}/fonts"
-            ${pkgs.unzip}/bin/unzip -o "${config.sops.secrets.dankmono.path}" -d "${config.xdg.dataHome}/fonts"
-            ${pkgs.unzip}/bin/unzip -o "${config.sops.secrets.operatormono.path}" -d "${config.xdg.dataHome}/fonts"
-            ${pkgs.fontconfig}/bin/fc-cache -f
-          '');
+              ${pkgs.coreutils}/bin/mkdir -p "${config.xdg.dataHome}/fonts"
+              ${pkgs.unzip}/bin/unzip -o "${config.sops.secrets.monolisa.path}" -d "${config.xdg.dataHome}/fonts"
+              ${pkgs.unzip}/bin/unzip -o "${config.sops.secrets.dankmono.path}" -d "${config.xdg.dataHome}/fonts"
+              ${pkgs.unzip}/bin/unzip -o "${config.sops.secrets.operatormono.path}" -d "${config.xdg.dataHome}/fonts"
+              ${pkgs.fontconfig}/bin/fc-cache -f
+            ''
+          );
         };
       })
     ];

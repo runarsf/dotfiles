@@ -574,7 +574,7 @@
                 animate_mouse_windowdragging = cfg.animations;
               };
               decoration = {
-                rounding = 7;
+                rounding = 9;
                 blur = {
                   enabled = true;
                   size = 16;

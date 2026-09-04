@@ -55,7 +55,11 @@
           description = "Base16 scheme name from base16-schemes.";
         };
         cursor = lib.mkOption {
-          type = lib.types.enum [ "bibata" "wii" "osu" ];
+          type = lib.types.enum [
+            "bibata"
+            "wii"
+            "osu"
+          ];
           default = "bibata";
         };
       };
@@ -63,84 +67,95 @@
       config =
         let
           cursors = {
-            bibata = { package = pkgs.bibata-cursors; name = "Bibata-Modern-Classic"; };
-            wii    = { package = self.packages.${pkgs.stdenv.hostPlatform.system}.wii-cursor; name = "Wii"; };
-            osu    = { package = self.packages.${pkgs.stdenv.hostPlatform.system}.osu-cursor; name = "Osu"; };
+            bibata = {
+              package = pkgs.bibata-cursors;
+              name = "Bibata-Modern-Classic";
+            };
+            wii = {
+              package = self.packages.${pkgs.stdenv.hostPlatform.system}.wii-cursor;
+              name = "Wii";
+            };
+            osu = {
+              package = self.packages.${pkgs.stdenv.hostPlatform.system}.osu-cursor;
+              name = "Osu";
+            };
           };
         in
         {
-        stylix = {
-          enable = true;
-          overlays.enable = false;
-          polarity = "dark";
-          image = cfg.wallpaper;
-          base16Scheme = "${pkgs.base16-schemes}/share/themes/${cfg.scheme}.yaml";
+          stylix = {
+            enable = true;
+            overlays.enable = false;
+            polarity = "dark";
+            image = cfg.wallpaper;
+            base16Scheme = "${pkgs.base16-schemes}/share/themes/${cfg.scheme}.yaml";
 
-          cursor = cursors.${cfg.cursor} // { size = 24; };
+            cursor = cursors.${cfg.cursor} // {
+              size = 24;
+            };
 
-          fonts = {
-            monospace = {
-              package = pkgs.nerd-fonts.caskaydia-cove;
-              name = "Cascadia Mono NF";
+            fonts = {
+              serif = {
+                package = pkgs.libertinus;
+                name = "Libertinus Serif";
+              };
+              sansSerif = {
+                package = pkgs.inter;
+                name = "Inter";
+              };
+              monospace = {
+                package = pkgs.nerd-fonts.caskaydia-cove;
+                name = "CaskaydiaCove Nerd Font";
+              };
+              emoji = {
+                package = pkgs.noto-fonts-color-emoji;
+                name = "Noto Color Emoji";
+              };
+              sizes = {
+                terminal = 14;
+                applications = 12;
+                desktop = 10;
+                popups = 10;
+              };
             };
-            sansSerif = {
-              package = pkgs.dejavu_fonts;
-              name = "DejaVu Sans";
+
+            opacity = {
+              applications = 1.0;
+              terminal = 0.8;
+              desktop = 1.0;
+              popups = 1.0;
             };
-            serif = {
-              package = pkgs.libertine;
-              name = "Linux Libertine O";
-            };
-            emoji = {
-              package = pkgs.noto-fonts-color-emoji;
-              name = "Noto Color Emoji";
-            };
-            sizes = {
-              terminal = 14;
-              applications = 12;
-              desktop = 10;
-              popups = 10;
-            };
+
+            # Disable targets we configure ourselves or don't use.
+            targets = lib'.disable [
+              "nixvim"
+              "spicetify"
+              "hyprland"
+              "hyprlock"
+              "vscode"
+              "kitty"
+              "waybar"
+              "ghostty"
+              "zed"
+              "zen-browser"
+              "nixvim"
+            ];
           };
 
-          opacity = {
-            applications = 1.0;
-            terminal = 0.8;
-            desktop = 1.0;
-            popups = 1.0;
+          gtk = {
+            enable = true;
+            gtk3.extraConfig.gtk-application-prefer-dark-theme = true;
+            gtk4.extraConfig.gtk-application-prefer-dark-theme = true;
           };
 
-          # Disable targets we configure ourselves or don't use.
-          targets = lib'.disable [
-            "nixvim"
-            "spicetify"
-            "hyprland"
-            "hyprlock"
-            "vscode"
-            "kitty"
-            "waybar"
-            "ghostty"
-            "zed"
-            "zen-browser"
-            "nixvim"
+          home.sessionVariables = {
+            XCURSOR_SIZE = config.stylix.cursor.size;
+            HYPRCURSOR_SIZE = config.stylix.cursor.size;
+          };
+
+          xdg.systemDirs.data = [
+            "${pkgs.gtk3}/share/gsettings-schemas/${pkgs.gtk3.name}"
+            "${pkgs.gsettings-desktop-schemas}/share/gsettings-schemas/${pkgs.gsettings-desktop-schemas.name}"
           ];
         };
-
-        gtk = {
-          enable = true;
-          gtk3.extraConfig.gtk-application-prefer-dark-theme = true;
-          gtk4.extraConfig.gtk-application-prefer-dark-theme = true;
-        };
-
-        home.sessionVariables = {
-          XCURSOR_SIZE = config.stylix.cursor.size;
-          HYPRCURSOR_SIZE = config.stylix.cursor.size;
-        };
-
-        xdg.systemDirs.data = [
-          "${pkgs.gtk3}/share/gsettings-schemas/${pkgs.gtk3.name}"
-          "${pkgs.gsettings-desktop-schemas}/share/gsettings-schemas/${pkgs.gsettings-desktop-schemas.name}"
-        ];
-      };
     };
 }
