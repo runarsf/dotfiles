@@ -85,6 +85,7 @@
 
         environment.systemPackages = with pkgs; [
           teams-for-linux
+          self.packages.${pkgs.stdenv.hostPlatform.system}.zaku
         ];
       };
     };
