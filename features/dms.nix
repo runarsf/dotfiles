@@ -31,7 +31,7 @@
           runUserMatugenTemplates = false;
           widgetBackgroundColor = "s";
           showWorkspaceApps = true;
-          workspaceFollowFocus = true;
+          workspaceFollowFocus = false;
           showOccupiedWorkspacesOnly = true;
           workspaceOccupiedColorMode = "s";
           workspaceNameIcons = {
