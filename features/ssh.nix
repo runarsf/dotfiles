@@ -84,9 +84,25 @@
         Install.WantedBy = ["graphical-session.target"];
       };
 
-      home.file = builtins.listToAttrs (map (k:
-        lib.nameValuePair ".ssh/${k.name}.pub" {text = k.key;})
-      keys);
+      home.file =
+        {
+          ".ssh/config".force = true;
+        }
+        // builtins.listToAttrs (map (k:
+          lib.nameValuePair ".ssh/${k.name}.pub" {text = k.key;})
+        keys);
+
+      home.activation = {
+        # https://github.com/nix-community/home-manager/issues/322
+        fixSshPermissions = lib.hm.dag.entryAfter ["linkGeneration"] ''
+          run install -d -m 0700 "$HOME/.ssh"
+          if [ -L "$HOME/.ssh/config" ]; then
+            src="$(readlink -f "$HOME/.ssh/config")"
+            run rm -f "$HOME/.ssh/config"
+            run install -m 0600 "$src" "$HOME/.ssh/config"
+          fi
+        '';
+      };
     };
   };
 }
