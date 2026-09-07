@@ -13,7 +13,7 @@
     programs = {
       zed-editor = {
         enable = true;
-        # package = inputs.zed.packages.${system}.default;
+        package = pkgs.zed-editor-fhs;
       };
       television.enable = true;
     };

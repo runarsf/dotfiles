@@ -52,6 +52,7 @@
 - useFeatures should support passing multiple features in the same attrset.
 - useFeatures should support passing the same feature in multiple places without failing (e.g., "hyprland" in user config, and { hyprland = { nvidia = true; }; } in host config)
 - vicinae's Mod+D bind is in vicinae.nix for hyprland, but in niri's config for niri
+- enable nix-ld for everyone
 
 ## Hosts (separate repos)
 
