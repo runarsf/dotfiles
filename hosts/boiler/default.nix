@@ -25,6 +25,7 @@
           consoles = ["retroarch"];
         };
       }
+      "randomizer"
       "obs"
       "godot"
       {
