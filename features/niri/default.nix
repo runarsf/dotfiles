@@ -105,6 +105,10 @@
       {app-id = "^r2modman$";}
       {app-id = "^steam_app_[0-9]+$";}
     ];
+
+    system = pkgs.stdenv.hostPlatform.system;
+    mv = inputs.nixpkgs-multiverse.multiverse."${system}".versions;
+    xwayland-sattelite-pinned = "0.8.1";
   in {
     # TODO: polkit and portal https://github.com/niri-wm/niri/wiki/Important-Software
     packages.niri = inputs.wrapper-modules.wrappers.niri.wrap {
@@ -236,7 +240,10 @@
           ["${floating-sidebar}" "listen"]
         ];
 
-        xwayland-satellite.path = lib.getExe pkgs.xwayland-satellite;
+        # Regression bug in current latest causes drop-downs (e.g. menus in Steam) to fail to render
+        # https://github.com/Supreeeme/xwayland-satellite/issues/468
+        # Pinning to downgrade until fixed
+        xwayland-satellite.path = lib.getExe mv."xwayland-satellite"."${xwayland-sattelite-pinned}";
         layer-rules = [
           {
             matches = [
