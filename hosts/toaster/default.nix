@@ -8,11 +8,6 @@
   flake.nixosConfigurations.toaster = let
     hostFeatures = lib'.useFeatures self [
       "steam"
-      {
-        android = {
-          ide = true;
-        };
-      }
       "godot"
     ];
   in
