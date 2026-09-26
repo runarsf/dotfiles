@@ -9,6 +9,14 @@
   in {
     options.features.zen = {
       transparency = lib.mkEnableOption "Enable transparency in Zen";
+      customPrefs = lib.mkOption {
+        type = lib.types.attrsOf lib.types.anything;
+        default = {};
+        description = ''
+          User-specific preferences to extend or
+          replace defaults defined in this feature
+        '';
+      };
     };
     config = let
       # TODO Zen Mods
@@ -38,89 +46,91 @@
           else toJSON pref
         );
 
-      prefs = {
-        # Zen
-        "browser.tabs.groups.enabled" = true;
-        "tab.groups.add-arrow" = true;
-        "tab.groups.background" = true;
-        "tab.groups.borders" = true;
-        "zen.urlbar.replace-newtab" = false;
-        "zen.widget.linux.transparency" = cfg.transparency;
+      prefs =
+        {
+          # Zen
+          "browser.tabs.groups.enabled" = true;
+          "tab.groups.add-arrow" = true;
+          "tab.groups.background" = true;
+          "tab.groups.borders" = true;
+          "zen.urlbar.replace-newtab" = false;
+          "zen.widget.linux.transparency" = cfg.transparency;
 
-        # Zen Context Menu
-        "uc.hidecontext.screenshot" = true;
-        "uc.hidecontext.unloadactions" = true;
-        "uc.hidecontext.selectalltabs" = true;
-        "uc.hidecontext.image" = true;
-        "uc.hidecontext.printselection" = true;
-        "uc.hidecontext.search" = true;
-        "uc.hidecontext.searchinpriv" = true;
-        "uc.hidecontext.closetab" = true;
-        "uc.hidecontext.movetaboptions" = true;
-        "uc.hidecontext.newtab" = true;
-        "uc.hidecontext.mutetab" = true;
-        "uc.hidecontext.menubar" = true;
+          # Zen Context Menu
+          "uc.hidecontext.screenshot" = true;
+          "uc.hidecontext.unloadactions" = true;
+          "uc.hidecontext.selectalltabs" = true;
+          "uc.hidecontext.image" = true;
+          "uc.hidecontext.printselection" = true;
+          "uc.hidecontext.search" = true;
+          "uc.hidecontext.searchinpriv" = true;
+          "uc.hidecontext.closetab" = true;
+          "uc.hidecontext.movetaboptions" = true;
+          "uc.hidecontext.newtab" = true;
+          "uc.hidecontext.mutetab" = true;
+          "uc.hidecontext.menubar" = true;
 
-        # Private Mode Highlighting
-        "uc.private-browsing-top-bar.highlighting-style" = "";
+          # Private Mode Highlighting
+          "uc.private-browsing-top-bar.highlighting-style" = "";
 
-        # Better Find Bar
-        "theme.better_find_bar.transparent_background" = true;
+          # Better Find Bar
+          "theme.better_find_bar.transparent_background" = true;
 
-        # UI
-        "ui.osk.enabled" = true;
-        "apz.overscroll.enabled" = false;
-        "browser.tabs.allow_transparent_browser" = true;
-        "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
-        "svg.context-properties.content.enabled" = true;
-        "layout.css.color-mix.enabled" = true;
-        "layout.css.light-dark.enabled" = true;
-        "layout.css.backdrop-filter.enabled" = true;
-        "layout.css.has-selector.enabled" = true;
-        "browser.tabs.hoverPreview.enabled" = true;
-        "browser.tabs.hoverPreview.showThumbnails" = true;
+          # UI
+          "ui.osk.enabled" = true;
+          "apz.overscroll.enabled" = false;
+          "browser.tabs.allow_transparent_browser" = true;
+          "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
+          "svg.context-properties.content.enabled" = true;
+          "layout.css.color-mix.enabled" = true;
+          "layout.css.light-dark.enabled" = true;
+          "layout.css.backdrop-filter.enabled" = true;
+          "layout.css.has-selector.enabled" = true;
+          "browser.tabs.hoverPreview.enabled" = true;
+          "browser.tabs.hoverPreview.showThumbnails" = true;
 
-        "devtools.toolbox.selectedTool" = "webconsole";
-        "devtools.debugger.remote-enabled" = true;
-        "devtools.chrome.enabled" = true;
+          "devtools.toolbox.selectedTool" = "webconsole";
+          "devtools.debugger.remote-enabled" = true;
+          "devtools.chrome.enabled" = true;
 
-        "browser.tabs.insertAfterCurrent" = true;
-        "browser.tabs.insertAfterCurrentExceptPinned" = true;
-        "browser.toolbars.bookmarks.visibility" = "always";
-        "browser.translations.automaticallyPopup" = false;
+          "browser.tabs.insertAfterCurrent" = true;
+          "browser.tabs.insertAfterCurrentExceptPinned" = true;
+          "browser.toolbars.bookmarks.visibility" = "always";
+          "browser.translations.automaticallyPopup" = false;
 
-        "layers.acceleration.force-enabled" = true;
-        "gfx.webrender.all" = true;
+          "layers.acceleration.force-enabled" = true;
+          "gfx.webrender.all" = true;
 
-        "browser.urlbar.suggest.bookmark" = true;
-        "browser.urlbar.suggest.history" = true;
-        "browser.urlbar.suggest.calculator" = true;
-        "browser.urlbar.unitConversion.enabled" = true;
-        "browser.urlbar.suggest.engines" = false;
-        "browser.urlbar.suggest.openpage" = false;
-        "browser.urlbar.suggest.remotetab" = true;
-        "browser.urlbar.suggest.topsites" = false;
-        "browser.urlbar.autoFill.adaptiveHistory.enabled" = false;
+          "browser.urlbar.suggest.bookmark" = true;
+          "browser.urlbar.suggest.history" = true;
+          "browser.urlbar.suggest.calculator" = true;
+          "browser.urlbar.unitConversion.enabled" = true;
+          "browser.urlbar.suggest.engines" = false;
+          "browser.urlbar.suggest.openpage" = false;
+          "browser.urlbar.suggest.remotetab" = true;
+          "browser.urlbar.suggest.topsites" = false;
+          "browser.urlbar.autoFill.adaptiveHistory.enabled" = false;
 
-        "browser.search.isUS" = false;
+          "browser.search.isUS" = false;
 
-        "extensions.webextensions.tabhide.enabled" = true;
-        "signon.rememberSignons" = false;
-        "media.cache_readahead_limit" = 9999;
-        "media.cache_resume_threshold" = 9999;
+          "extensions.webextensions.tabhide.enabled" = true;
+          "signon.rememberSignons" = false;
+          "media.cache_readahead_limit" = 9999;
+          "media.cache_resume_threshold" = 9999;
 
-        "print.print_footerleft" = "";
-        "print.print_footerright" = "";
-        "print.print_headerleft" = "";
-        "print.print_headerright" = "";
+          "print.print_footerleft" = "";
+          "print.print_footerright" = "";
+          "print.print_headerleft" = "";
+          "print.print_headerright" = "";
 
-        # https://support.mozilla.org/en-US/kb/sync-custom-preferences
-        "services.sync.prefs.dangerously_allow_arbitrary" = true;
-        "services.sync.prefs.sync.browser.uiCustomization.state" = true;
-        "widget.gtk.rounded-bottom-corners.enabled" = true;
-        "browser.aboutConfig.showWarning" = false;
-        "browser.translations.neverTranslateLanguages" = "nb,de";
-      };
+          # https://support.mozilla.org/en-US/kb/sync-custom-preferences
+          "services.sync.prefs.dangerously_allow_arbitrary" = true;
+          "services.sync.prefs.sync.browser.uiCustomization.state" = true;
+          "widget.gtk.rounded-bottom-corners.enabled" = true;
+          "browser.aboutConfig.showWarning" = false;
+          "browser.translations.neverTranslateLanguages" = "nb,de";
+        }
+        // cfg.customPrefs;
       userChrome = {
         # transparency = ''
         #   :root {

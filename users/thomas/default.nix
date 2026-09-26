@@ -59,7 +59,13 @@
     "japanese"
     "pipewire"
     "zed"
-    "zen"
+    {
+      zen = {
+        customPrefs = {
+          "zen.urlbar.replace-newtab" = true;
+        };
+      };
+    }
     "discord"
     {
       matrix = {
