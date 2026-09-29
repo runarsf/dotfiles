@@ -89,10 +89,13 @@
             pulse.enable = true;
           };
           networking.networkmanager.enable = true;
+          programs.localsend.enable = true;
 
           environment.systemPackages = with pkgs; [
             teams-for-linux
-            self.packages.${pkgs.stdenv.hostPlatform.system}.zaku
+            # self.packages.${pkgs.stdenv.hostPlatform.system}.zaku
+            yaak
+            bruno
             caffeine-ng
           ];
         };

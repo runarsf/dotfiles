@@ -45,17 +45,19 @@
     }: let
       inherit (lib'.hyprland) kb exec onStart;
       inherit (pkgs.stdenv.hostPlatform) system;
+      inherit (pkgs.writers) writeNuBin;
 
       cfg = config.features.hyprland;
 
-      hypr-snap = "${pkgs.writers.writeNuBin "hypr-snap" (builtins.readFile ./bin/hypr-snap.nu)}/bin/hypr-snap";
+      hypr-snap = "${writeNuBin "hypr-snap" (builtins.readFile ./bin/hypr-snap.nu)}/bin/hypr-snap";
 
-      hypr-gamemode = "${pkgs.writers.writeNuBin "hypr-gamemode" (builtins.readFile ./bin/hypr-gamemode.nu)}/bin/hypr-gamemode";
+      hypr-gamemode = "${writeNuBin "hypr-gamemode" (builtins.readFile ./bin/hypr-gamemode.nu)}/bin/hypr-gamemode";
 
-      hypr-pin = "${pkgs.writers.writeNuBin "hypr-pin" (builtins.readFile ./bin/hypr-pin.nu)}/bin/hypr-pin";
+      hypr-pin = "${writeNuBin "hypr-pin" (builtins.readFile ./bin/hypr-pin.nu)}/bin/hypr-pin";
 
-      hypr-move = "${pkgs.writers.writeNuBin "hypr-move" (builtins.readFile ./bin/move.nu)}/bin/hypr-move";
-      hypr-workspace = "${pkgs.writers.writeNuBin "hypr-workspace" (builtins.readFile ./bin/workspace.nu)}/bin/hypr-workspace";
+      hypr-move = "${writeNuBin "hypr-move" (builtins.readFile ./bin/move.nu)}/bin/hypr-move";
+      hypr-workspace = "${writeNuBin "hypr-workspace" (builtins.readFile ./bin/workspace.nu)}/bin/hypr-workspace";
+      hypr-fit = "${writeNuBin "hypr-fit" (builtins.readFile ./bin/fit.nu)}/bin/hypr-fit";
 
       pypr = lib.getExe pkgs.pyprland;
       # TODO: This doesn't seem like the way to do this
@@ -83,7 +85,8 @@
         (kb "SUPER SHIFT" "F" "hl.dsp.window.float({ action = \"toggle\" })" {})
         # (kb "SUPER ALT" "F" "hl.dsp.workspace.opt(\"allfloat\")" {})
         (kb "SUPER" "F" "hl.dsp.window.fullscreen({ mode = 0 })" {})
-        (kb "SUPER" "space" "hl.dsp.window.fullscreen({ mode = 1 })" {})
+        # (kb "SUPER" "space" "hl.dsp.window.fullscreen({ mode = 1 })" {})
+        (kb "SUPER" "space" (exec "${hypr-fit}") {})
         (kb "SUPER" "A" (exec hypr-pin) {})
         (kb "ALT" "P" (
           exec
@@ -181,7 +184,7 @@
                 toString (x + 1 - (c * 10));
             in [
               (kb "SUPER" ws (exec "${hypr-workspace} ${toString (x + 1)}") {repeating = true;})
-              (kb "SUPER SHIFT" ws "hl.dsp.window.move({ workspace = ${toString (x + 1)} })" {
+              (kb "SUPER SHIFT" ws "hl.dsp.window.move({ workspace = ${toString (x + 1)}, follow = false })" {
                 repeating = true;
               })
             ]

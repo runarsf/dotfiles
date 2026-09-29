@@ -31,6 +31,7 @@
       // {
         ls = "EZA_ICON_SPACING=2 ${getExe pkgs.eza} -l -F -g -a --group-directories-first --no-time --git";
         develop = "nix develop --command zsh";
+        zj = "zellij";
       };
 
     eagerPlugins =
@@ -231,7 +232,16 @@
           fi
 
           autopair-init
+
+          if test -n "$ZELLIJ"; then
+            if test "$ZELLIJ_SESSION_NAME" = "zj-launcher"; then
+              zellij kill-session "$ZELLIJ_SESSION_NAME"
+            elif test -n "$ZJ_FROM_LAUNCHER"; then
+              z "$ZELLIJ_SESSION_NAME" 2>/dev/null
+            fi
+          fi
         '';
+        # TODO: Zellij part should be set in zellij.nix
     };
   in
     (pkgs.symlinkJoin {

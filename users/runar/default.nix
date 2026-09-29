@@ -3,11 +3,15 @@
   lib',
   inputs,
   ...
-}: let
+}:
+let
   features = lib'.useFeatures self [
     {
       sops = {
-        privateKeys = ["id_priv" "id_golog"];
+        privateKeys = [
+          "id_priv"
+          "id_golog"
+        ];
       };
     }
     {
@@ -28,21 +32,6 @@
         ];
       };
     }
-    "git"
-    "podman"
-    "discord"
-    "fonts"
-    "zsh"
-    "starship"
-    "wayland"
-    "nixvim"
-    "niri"
-    "nushell"
-    "hyprland"
-    "hypridle"
-    "hyprlock"
-    "hyprpaper"
-    "xdg"
     {
       stylix = {
         wallpaper = ./outerwilds.jpeg;
@@ -54,6 +43,30 @@
         aiUsage = true;
       };
     }
+    {
+      matrix = {
+        clients = [
+          "element"
+        ];
+      };
+    }
+    "tuigreet"
+    "git"
+    "podman"
+    "discord"
+    "fonts"
+    "zsh"
+    "zellij"
+    "starship"
+    "wayland"
+    "nixvim"
+    "niri"
+    "nushell"
+    "hyprland"
+    "hypridle"
+    "hyprlock"
+    "hyprpaper"
+    "xdg"
     "wezterm"
     "niks"
     "nix"
@@ -63,42 +76,56 @@
     "norwegian"
     "pipewire"
     "zed"
+    "claude"
     "flatpak"
     "zen"
-    {
-      matrix = {
-        clients = [
-          "element"
-        ];
-      };
-    }
-    "tuigreet"
     "writing"
   ];
-in {
+in
+{
   flake.nixosModules.runar = lib'.mkNixosUser {
     inherit self;
     username = "runar";
     features = features.nixos;
-    extraGroups = ["blahaj"];
+    extraGroups = [ "blahaj" ];
   };
 
-  flake.homeModules.runar = {
-    pkgs,
-    lib,
-    ...
-  }: {
-    imports = features.home;
+  flake.homeModules.runar =
+    {
+      pkgs,
+      lib,
+      ...
+    }:
+    let
+      inherit (pkgs.stdenv.hostPlatform) system isLinux;
+    in
+    {
+      imports = features.home;
 
-    programs.git.settings.user = {
-      email = "git@runar.ch";
-      name = "Runar Fredagsvik";
+      programs.git.settings.user = {
+        email = "git@runar.ch";
+        name = "Runar Fredagsvik";
+      };
+
+        # programs.ssh.matchBlocks."gitlab.com" = {
+        #   hostname = "altssh.gitlab.com";
+        #   user = "git";
+        #   port = 443;
+        #   extraOptions.PreferredAuthentications = "publickey";
+        #   # identityFile = "~/.ssh/id_priv.pub";
+        # };
+
+      home.packages =
+        with pkgs;
+        lib.optionals isLinux [
+          feishin
+          me3
+          qbittorrent
+          inputs.helium.packages.${system}.default
+        ];
+
+      home.stateVersion = "24.11";
     };
-
-    home.packages = with pkgs; [claude-code] ++ lib.optionals pkgs.stdenv.hostPlatform.isLinux [feishin me3 qbittorrent inputs.helium.packages.${pkgs.stdenv.hostPlatform.system}.default];
-
-    home.stateVersion = "24.11";
-  };
 
   flake.homeConfigurations.runar = lib'.mkUser {
     inherit self;

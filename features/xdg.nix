@@ -6,6 +6,7 @@ _: {
       userDirs = {
         enable = true;
         createDirectories = true;
+        setSessionVariables = true;
       };
 
       configFile."mimeapps.list".enable = false;
