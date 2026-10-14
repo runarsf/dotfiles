@@ -128,8 +128,8 @@
         input = {
           keyboard = {
             xkb.layout = "no";
-            repeat-delay = 200;
-            repeat-rate = 35;
+            repeat-delay = lib.mkDefault 200;
+            repeat-rate = lib.mkDefault 35;
             numlock = _: {};
           };
           mouse = {
