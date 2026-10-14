@@ -57,7 +57,11 @@ let
     "vicinae"
     "network"
     "cli"
-    "git"
+    {
+      git = {
+        emailSelector.extraEmails = ["thomes@stud.ntnu.no"];
+      };
+    }
     "docker"
     "norwegian"
     "japanese"
@@ -74,7 +78,6 @@ let
     {
       matrix = {
         clients = [
-          "cinny"
           "element"
           "sable"
         ];
