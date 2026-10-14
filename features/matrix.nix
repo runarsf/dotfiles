@@ -8,6 +8,11 @@ let
     "element"
     "cinny"
     "commet"
+    "sable"
+  ];
+  defaultClients = [
+    "element"
+    "sable"
   ];
 in
 {
@@ -29,7 +34,7 @@ in
       options.features.matrix = with types; {
         clients = mkOption {
           type = either clients (listOf clients);
-          default = [ ];
+          default = defaultClients;
           apply = toList;
         };
       };
@@ -64,7 +69,7 @@ in
       options.features.matrix = with types; {
         clients = mkOption {
           type = either clients (listOf clients);
-          default = "element";
+          default = defaultClients;
           apply = toList;
         };
       };
@@ -76,6 +81,10 @@ in
             [
               "cinny"
               cinny-desktop
+            ]
+            [
+              "sable"
+              self.packages.${system}.sable
             ]
           ];
 

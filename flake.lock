@@ -8386,7 +8386,6 @@
         "stackpkgs": "stackpkgs_4",
         "stylix": "stylix_4",
         "treefmt-nix": "treefmt-nix_19",
-        "vault": "vault_4",
         "vicinae": "vicinae_5",
         "vicinae-extensions": "vicinae-extensions_3",
         "wrapper-modules": "wrapper-modules",
@@ -10368,22 +10367,6 @@
         "ref": "refs/heads/main",
         "rev": "1788c71aa5edfd86fa12d4996e789f349ea6f3c6",
         "revCount": 44,
-        "type": "git",
-        "url": "ssh://git@github.com/runarsf/vault"
-      },
-      "original": {
-        "type": "git",
-        "url": "ssh://git@github.com/runarsf/vault"
-      }
-    },
-    "vault_4": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1787214925,
-        "narHash": "sha256-5ZhotJdSXiNNA7oi/4O3vOQyJS8htJySclhVHnDK5GA=",
-        "ref": "refs/heads/main",
-        "rev": "438aa27ebea72f6523c1ae6ec6abad3433aa3f5a",
-        "revCount": 48,
         "type": "git",
         "url": "ssh://git@github.com/runarsf/vault"
       },

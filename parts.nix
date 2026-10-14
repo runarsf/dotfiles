@@ -37,10 +37,6 @@ in
 
         overlays = [
           (_: prev: {
-            master = import inputs.nixpkgs-master {
-              inherit system;
-              config.allowUnfree = true;
-            };
             nur = import inputs.nur {
               pkgs = prev;
               nurpkgs = import inputs.nixpkgs {inherit (prev) system config overlays;};

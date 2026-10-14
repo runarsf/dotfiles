@@ -45,6 +45,8 @@ _: {
           type = nullOr str;
           description = "Name of SSH key used for signing. Defaults to the first key in features.ssh.keys.";
         };
+
+        gitlabAltSsh = mkEnableOption "Use alternative SSH server for GitLab";
       };
 
       config = {
@@ -60,6 +62,24 @@ _: {
               pull.rebase = true;
               push.autoSetupRemote = true;
               rerere.enabled = true;
+              merge.conflictstyle = "zdiff3";
+              help.autocorrect = "prompt";
+              diff.algorithm = "histogram";
+              transfer.fsckobjects = true;
+              fetch.fsckobjects = true;
+              receive.fsckObjects = true;
+              status.submoduleSummary = true;
+              diff.submodule = "log";
+              submodule.recurse = true;
+              commit.cleanup = "scissors";
+              diff.colorMoved = "default";
+              diff.colorMovedWS = "allow-indentation-change";
+              fetch.prune = true;
+              fetch.prunetags = true;
+              log.date = "iso";
+              rebase.missingCommitsCheck = "error";
+              # https://andrewlock.net/working-with-stacked-branches-in-git-is-easier-with-update-refs/
+              rebase.updateRefs = true;
 
               user.email = mkDefault (throw "programs.git.settings.user.email is not set");
               user.name = mkDefault (throw "programs.git.settings.user.name is not set");
@@ -72,9 +92,7 @@ _: {
 
               alias =
                 let
-                  mkGitFn =
-                    body:
-                    "!fn() { ${replaceString "\n" " " body} }; fn";
+                  mkGitFn = body: "!fn() { ${replaceString "\n" " " body} }; fn";
                 in
                 rec {
                   alias = "config --get-regexp alias";
@@ -149,6 +167,16 @@ _: {
                     echo 'Popped and re-hid:'; printf '%s\n' "$files";
                   '';
                 };
+            };
+          };
+
+          ssh.matchBlocks = optionalAttrs cfg.gitlabAltSsh {
+            "gitlab.com" = {
+              hostname = "altssh.gitlab.com";
+              user = "git";
+              port = 443;
+              extraOptions.PreferredAuthentications = "publickey";
+              # identityFile = "~/.ssh/id_priv.pub";
             };
           };
 

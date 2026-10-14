@@ -5,7 +5,7 @@
   };
 
   flake.homeModules.osu = {pkgs, ...}: {
-    home.packages = with pkgs.master; [
+    home.packages = with pkgs; [
       osu-lazer-bin
     ];
   };

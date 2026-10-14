@@ -3,6 +3,7 @@
     # Use `nix run .#updater` to update
     # See `packages/updater/default.nix` for release-locked inputs
     # NOTE: adding inputs.nixpkgs.follows will likely make cache miss
+    # nixpkgs.url = "https://channels.nixos.org/nixos-unstable/nixexprs.tar.zst";
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs-master.url = "github:nixos/nixpkgs/master";
     home-manager = {
@@ -33,11 +34,6 @@
       url = "github:danth/stylix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    vault = {
-      url = "git+ssh://git@github.com/runarsf/vault";
-      flake = false;
-    };
-
     nix-index-database = {
       url = "github:nix-community/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";

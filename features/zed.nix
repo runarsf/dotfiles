@@ -1,20 +1,15 @@
-{inputs, ...}: {
+_: {
   flake.nixosModules.zed = _: {
     nix.settings = rec {
-      substituters = ["https://zed.cachix.org"];
+      substituters = [ "https://zed.cachix.org" ];
       trusted-substituters = substituters;
-      trusted-public-keys = ["zed.cachix.org-1:/pHQ6dpMsAZk2DiP4WCL0p9YDNKWj2Q5FL20bNmw1cU="];
+      trusted-public-keys = [ "zed.cachix.org-1:/pHQ6dpMsAZk2DiP4WCL0p9YDNKWj2Q5FL20bNmw1cU=" ];
     };
   };
 
-  flake.homeModules.zed = {pkgs, ...}: let
-    inherit (pkgs.stdenv.hostPlatform) system;
-  in {
+  flake.homeModules.zed = { pkgs, ... }: {
     programs = {
-      zed-editor = {
-        enable = true;
-        package = pkgs.zed-editor-fhs;
-      };
+      zed-editor.enable = true;
       television.enable = true;
     };
 

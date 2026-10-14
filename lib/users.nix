@@ -9,7 +9,12 @@
         system ? "x86_64-linux",
       }:
         inputs.home-manager.lib.homeManagerConfiguration {
-          pkgs = import inputs.nixpkgs {inherit system;};
+          # Matches the perSystem pkgs nixosConfigurations get via mkHost;
+          # without it the standalone configs choke on e.g. zsh-abbr's license.
+          pkgs = import inputs.nixpkgs {
+            inherit system;
+            config.allowUnfree = true;
+          };
           extraSpecialArgs = {inherit self;};
           modules = [
             homeModule
@@ -29,9 +34,7 @@
         extraGroups ? [],
         homeDirectory ? "/home/${username}",
         initialPassword ? "changeme",
-      }: {pkgs, ...}: let
-        inherit (pkgs.stdenv.hostPlatform) system;
-      in {
+      }: {pkgs, ...}: {
         imports = features ++ [self.nixosModules.primaryUser];
         primaryUsers = [username];
         nix.settings.trusted-users = [username];
@@ -39,7 +42,9 @@
         users.users.${username} = {
           inherit initialPassword;
           isNormalUser = true;
-          shell = self.packages.${system}.zsh;
+          # The interactive configuration lives in home-manager
+          # (features/shells/zsh.nix); this only needs the plain shell binary.
+          shell = pkgs.zsh;
           home = homeDirectory;
           extraGroups =
             [

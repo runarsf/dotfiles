@@ -1,4 +1,8 @@
-{inputs, ...}: {
+{
+  inputs,
+  self,
+  ...
+}: {
   flake.nixosModules.sops = {
     config,
     lib,
@@ -11,7 +15,7 @@
     options.features.sops = {
       vaultPath = lib.mkOption {
         type = lib.types.nullOr lib.types.path;
-        default = inputs.vault;
+        default = self.lib.vaultPath;
         description = "Path to the secrets vault directory.";
       };
       ageKeyPaths = lib.mkOption {

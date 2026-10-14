@@ -1,5 +1,5 @@
 {
-  inputs,
+  self,
   lib',
   ...
 }: {
@@ -32,17 +32,17 @@
 
       sops.secrets = {
         ds-bios7 = {
-          sopsFile = "${inputs.vault}/shared/DS/bios7.bin";
+          sopsFile = "${self.lib.vaultPath}/shared/DS/bios7.bin";
           format = "binary";
           path = "${config.home.homeDirectory}/Emulation/DS/system/bios7.bin";
         };
         ds-bios9 = {
-          sopsFile = "${inputs.vault}/shared/DS/bios9.bin";
+          sopsFile = "${self.lib.vaultPath}/shared/DS/bios9.bin";
           format = "binary";
           path = "${config.home.homeDirectory}/Emulation/DS/system/bios9.bin";
         };
         ds-firmware = {
-          sopsFile = "${inputs.vault}/shared/DS/firmware.bin";
+          sopsFile = "${self.lib.vaultPath}/shared/DS/firmware.bin";
           format = "binary";
           path = "${config.home.homeDirectory}/Emulation/DS/system/firmware.bin";
         };

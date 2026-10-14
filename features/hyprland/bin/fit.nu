@@ -13,12 +13,6 @@ def main [] {
 
   let monitor = $monitors | where id == $window.monitor | first
   let workspace = $workspaces | where id == $monitor.activeWorkspace.id | first
-  let layout = $workspace.tiledLayout
-
-  if ($layout != "scrolling") {
-    hyprctl dispatch 'hl.dsp.window.fullscreen({ mode = 1 })'
-    return
-  }
 
   let window_width = $window.size | first
   let gaps = hyprctl -j getoption general.gaps_out | from json | get css | from-css

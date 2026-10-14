@@ -2,11 +2,15 @@
   self,
   lib',
   ...
-}: let
+}:
+let
   features = lib'.useFeatures self [
     {
       sops = {
-        privateKeys = ["id_priv" "id_ntnu"];
+        privateKeys = [
+          "id_priv"
+          "id_ntnu"
+        ];
       };
     }
     {
@@ -69,19 +73,24 @@
     "discord"
     {
       matrix = {
-        clients = ["cinny" "element"];
+        clients = [
+          "cinny"
+          "element"
+          "sable"
+        ];
       };
     }
     "tuigreet"
   ];
-in {
+in
+{
   flake.nixosModules.thomas = lib'.mkNixosUser {
     inherit self;
     username = "thomas";
     features = features.nixos;
   };
 
-  flake.homeModules.thomas = {pkgs, ...}: {
+  flake.homeModules.thomas = { pkgs, ... }: {
     imports = features.home;
 
     home.stateVersion = "24.11";
@@ -98,6 +107,7 @@ in {
         };
       };
     };
+    programs.zed-editor.package = pkgs.zed-editor-fhs;
   };
 
   flake.homeConfigurations.thomas = lib'.mkUser {
