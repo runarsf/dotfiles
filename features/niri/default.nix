@@ -225,6 +225,7 @@
               {app-id = "^discord$";}
               {app-id = "^element$";}
               {app-id = "^cinny$";}
+              {app-id = "^sable$";}
             ];
             open-on-workspace = "chat";
           }
