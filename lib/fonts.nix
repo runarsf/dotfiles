@@ -26,9 +26,12 @@ in {
         renamettf = pkgs:
           mkPythonTool pkgs "renamettf" (with pkgs.python3Packages; [fonttools]) ../packages/fonts/bin/rename_ttf.py;
         nofontsdir = font:
+          # postFixup (not installPhase/postInstall): some packages set a raw
+          # installPhase string that never calls runHook postInstall, but
+          # fixupPhase always runs as its own phase after install completes.
           font.overrideAttrs (oldAttrs: {
-            installPhase =
-              (oldAttrs.installPhase or "")
+            postFixup =
+              (oldAttrs.postFixup or "")
               + ''
                 find "$out/share/fonts" -type f -name 'fonts.dir' -delete
               '';

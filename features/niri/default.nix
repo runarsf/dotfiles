@@ -82,7 +82,7 @@
       exec ${pkgs.nushell}/bin/nu ${./bin/workspace-init.nu}
     '';
 
-    # TODO: Waiting on the following PR to hide the scratch WS: https://github.com/niri-wm/niri/pull/2997
+    # UPDATE: waiting on this PR to hide the scratch WS: https://github.com/niri-wm/niri/pull/2997
     toggle-scratchpad = pkgs.writeShellScript "niri-toggle-scratchpad" ''
       exec ${pkgs.nushell}/bin/nu ${./bin/toggle-scratchpad.nu}
     '';

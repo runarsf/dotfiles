@@ -1,6 +1,3 @@
-- Fix proper font in wezterm
-- wezterm theme looks incorrect
-- rewrite hyprland scripts to nushell
 - fix commented out binds in hyprland
 - configure default terminal
 - fix hyprland switch workspace bind
@@ -39,8 +36,6 @@
 - Add user to trusted users `nix.settings.trusted-users = [ "root" "@wheel" ];`
 - flake udpater: make it lock with the tag name (e.g., v2.3.1) instead of the commit hash of that release
 - how to configure home manager modules that should only be active on a certain host? e.g., gaming-related modules that need home manager config. how would i configure that for the modelland host
-- gitui
-- zsh not saving history
 - why doesn't opentabletdriver start automatically
 - does hyprland bind to open vicinae belong in hyprland or vicinae config? same applies for terminal
 - rework zsh config to a more stable format

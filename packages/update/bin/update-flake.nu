@@ -163,6 +163,7 @@ def main [
     if ($release_inputs | is-not-empty) {
         let lock = open --raw flake.lock | from json
         mut override_args: list<string> = []
+        mut update_inputs: list<string> = []
 
         for input in $release_inputs {
             let original = $lock.nodes | get $input | get original
@@ -182,16 +183,19 @@ def main [
                 _        => { "" }
             }
             let old_flake = open --raw flake.nix
-            let new_flake = $old_flake | str replace --regex $"\"($base_url)[^\"]*\"" $"\"($nix_url)\""
-            if $base_url == "" or $old_flake == $new_flake {
+            if $base_url == "" or not ($old_flake | str contains $"\"($base_url)") {
                 print $"(ansi yellow_bold)warn:(ansi reset) could not find URL for ($input) in flake.nix, falling back to --override-input"
                 let extra = follows-overrides $lock.nodes $input $nix_url
                 $override_args = ($override_args | append (["--override-input" $input $nix_url] ++ $extra))
             } else {
+                let new_flake = $old_flake | str replace --regex $"\"($base_url)[^\"]*\"" $"\"($nix_url)\""
                 $new_flake | save --force flake.nix
+                # bare `nix flake lock` won't re-resolve an already-locked input
+                # just because its url text changed, so force it explicitly.
+                $update_inputs = ($update_inputs | append $input)
             }
         }
 
-        nix flake lock ...$nix_token_args ...$override_args
+        nix flake update ...$nix_token_args ...$override_args ...$update_inputs
     }
 }

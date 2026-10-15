@@ -14,6 +14,9 @@
     let
       inherit (pkgs.stdenv.hostPlatform) system;
     in
+    let
+      hyprlandNixpkgs = inputs.hyprland.inputs.nixpkgs.legacyPackages.${system};
+    in
     {
       config = lib.mkIf (config.host.desktop or true) {
         nix.settings = rec {
@@ -26,14 +29,28 @@
           hyprland = {
             enable = true;
             package = inputs.hyprland.packages.${system}.hyprland;
-            portalPackage = inputs.hyprland.inputs.nixpkgs.legacyPackages.${system}.xdg-desktop-portal-hyprland;
+            portalPackage = hyprlandNixpkgs.xdg-desktop-portal-hyprland;
           };
         };
+        # bin/Hyprland is wrapped in a bash script injecting these onto PATH,
+        # but that breaks security.wrappers.Hyprland (cap_sys_nice, set by
+        # nixpkgs' hyprland.nix module), which needs a bare ELF. Point the
+        # wrapper at the real binary instead of disabling the wrap, so the
+        # package stays identical to what hyprland.cachix.org has cached.
+        security.wrappers.Hyprland.source = lib.mkForce "${config.programs.hyprland.package}/bin/.Hyprland-wrapped";
+        # UPDATE: keep in sync with Hyprland's nix/default.nix wrapProgram deps.
+        environment.systemPackages = (with hyprlandNixpkgs; [
+          binutils
+          pciutils
+          pkgconf
+        ]) ++ [
+          inputs.hyprland.inputs.hyprland-guiutils.packages.${system}.hyprland-guiutils
+        ];
         hardware.graphics = {
           enable = true;
           enable32Bit = true;
-          package = inputs.hyprland.inputs.nixpkgs.legacyPackages.${system}.mesa;
-          package32 = inputs.hyprland.inputs.nixpkgs.legacyPackages.${system}.pkgsi686Linux.mesa;
+          package = hyprlandNixpkgs.mesa;
+          package32 = hyprlandNixpkgs.pkgsi686Linux.mesa;
         };
       };
     };

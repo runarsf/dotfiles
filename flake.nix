@@ -3,9 +3,7 @@
     # Use `nix run .#updater` to update
     # See `packages/updater/default.nix` for release-locked inputs
     # NOTE: adding inputs.nixpkgs.follows will likely make cache miss
-    # nixpkgs.url = "https://channels.nixos.org/nixos-unstable/nixexprs.tar.zst";
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-    nixpkgs-master.url = "github:nixos/nixpkgs/master";
+    nixpkgs.url = "https://channels.nixos.org/nixos-unstable/nixexprs.tar.zst";
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -41,9 +39,9 @@
 
     nixvim.url = "github:runarsf/nixvim";
 
-    hyprland.url = "github:hyprwm/Hyprland/275e27704a36d956fbdc28cec6399b8e298b06ca";
+    hyprland.url = "github:hyprwm/Hyprland";
     hyprland-plugins = {
-      url = "github:hyprwm/hyprland-plugins/v0.56.0";
+      url = "github:hyprwm/hyprland-plugins";
       inputs.hyprland.follows = "hyprland";
     };
     hypr-dynamic-cursors = {
@@ -51,11 +49,11 @@
       inputs.hyprland.follows = "hyprland";
     };
 
-    nwg-displays.url = "github:nwg-piotr/nwg-displays/v0.4.3";
+    nwg-displays.url = "github:nwg-piotr/nwg-displays/v0.4.4";
 
-    zed.url = "github:zed-industries/zed/v1.13.2";
+    zed.url = "github:zed-industries/zed/v1.24.2";
 
-    vicinae.url = "github:vicinaehq/vicinae/v0.24.0";
+    vicinae.url = "github:vicinaehq/vicinae/v0.29.1";
     vicinae-extensions = {
       url = "github:vicinaehq/extensions";
       inputs.vicinae.follows = "vicinae";
@@ -67,7 +65,7 @@
     };
 
     dms = {
-      url = "github:AvengeMedia/DankMaterialShell/v1.5.3";
+      url = "github:AvengeMedia/DankMaterialShell/v1.6.3";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     dgop = {

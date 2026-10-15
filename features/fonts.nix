@@ -65,7 +65,6 @@
 
             # Bitmap fonts
             self.packages.${system}.scientifica-hidpi
-            creep
             cozette
             undefined-medium
             zpix-pixel-font
@@ -74,6 +73,7 @@
             monocraft
             departure-mono
             unifont
+            (nofontsdir creep)
             (nofontsdir unifont_upper)
             (nofontsdir tamzen)
             (nofontsdir proggyfonts)

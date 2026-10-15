@@ -26,7 +26,6 @@
         enable = true;
         systemd.enable = true;
         enableSystemMonitoring = true;
-        dgop.package = inputs.dgop.packages.${system}.default;
         settings = {
           runUserMatugenTemplates = false;
           widgetBackgroundColor = "s";
@@ -127,7 +126,6 @@
         plugins = {
           easyEffects.enable = true;
           dankGifSearch.enable = true;
-          dankBatteryAlerts.enable = true;
           dankStickerSearch.enable = true;
           gitmojiLauncher.enable = true;
           nixMonitor.enable = true;
