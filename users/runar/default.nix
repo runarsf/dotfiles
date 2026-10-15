@@ -30,6 +30,7 @@ let
             key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMj5BHJ789MPmWsYNLCcfstrH5ouqr9LrkqvL3pKcvb5";
           }
         ];
+        hostKeys."gitlab.com" = "id_golog";
       };
     }
     {

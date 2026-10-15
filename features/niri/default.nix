@@ -110,7 +110,7 @@
     mv = inputs.nixpkgs-multiverse.multiverse."${system}".versions;
     xwayland-sattelite-pinned = "0.8.1";
   in {
-    # TODO: polkit and portal https://github.com/niri-wm/niri/wiki/Important-Software
+    # https://github.com/niri-wm/niri/wiki/Important-Software
     packages.niri = inputs.wrapper-modules.wrappers.niri.wrap {
       inherit pkgs;
 

@@ -341,6 +341,10 @@
             workspace = "2 silent";
           }
           {
+            match.class = "(sable-next)";
+            workspace = "2 silent";
+          }
+          {
             match = {
               class = "(teams-for-linux)";
             };
@@ -576,7 +580,6 @@
               on = map onStart [
                 "${lib.getExe pkgs.sway-audio-idle-inhibit}"
                 "${lib.getExe pkgs.networkmanagerapplet}"
-                "systemctl --user start hyprpolkitagent"
                 "${hypr-gamemode}"
                 "${pypr}"
               ];

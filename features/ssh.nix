@@ -54,20 +54,35 @@
       '';
     };
 
+    options.features.ssh.hostKeys = lib.mkOption {
+      default = {};
+      type = lib.types.attrsOf lib.types.str;
+      example = lib.literalExpression ''{ "gitlab.com" = "id_priv"; }'';
+      description = ''
+        Maps an SSH host (matched the same way as ~/.ssh/config `Host`
+        patterns) to the name of the key it should use, restricting *that
+        host* to only that identity (IdentitiesOnly yes). Hosts not listed
+        here keep the default behavior of offering every agent key in the
+        order given by features.ssh.keys.
+      '';
+    };
+
     config = {
       programs.ssh = {
         enable = true;
-        matchBlocks."*".addKeysToAgent = "yes";
+        matchBlocks =
+          lib.mapAttrs (_: keyName: {
+            identityFile = "${config.home.homeDirectory}/.ssh/${keyName}";
+            identitiesOnly = true;
+          }) cfg.hostKeys
+          // {
+            "*".addKeysToAgent = "yes";
+          };
       };
 
-      # gcr-ssh-agent (started by features.tuigreet's PAM/gnome-keyring
-      # integration) listens here; export it session-wide via
-      # environment.d so it's set before hyprland/niri even start.
       systemd.user.sessionVariables.SSH_AUTH_SOCK = "%t/gcr/ssh";
+      home.sessionVariables.SSH_AUTH_SOCK = "$XDG_RUNTIME_DIR/gcr/ssh";
 
-      # Loads cfg.agentKeys into the agent once per graphical login.
-      # gcr-ssh-agent pulls the passphrase from the (PAM-unlocked) keyring,
-      # so this runs silently after the one-time "remember" prompt.
       systemd.user.services.ssh-add-agent-keys = lib.mkIf (cfg.agentKeys != []) {
         Unit = {
           Description = "Add SSH keys to the agent";
