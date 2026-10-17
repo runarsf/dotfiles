@@ -3,7 +3,12 @@ _: {
   flake.nixosModules.norwegian = {lib, ...}: {
     time.timeZone = lib.mkDefault "Europe/Oslo";
     i18n.defaultLocale = lib.mkDefault "en_GB.UTF-8";
-    console.keyMap = lib.mkDefault "no";
+
+    console = {
+      keyMap = lib.mkDefault "no";
+      font = lib.mkDefault "Lat2-Terminus16";
+      useXkbConfig = lib.mkDefault true;
+    };
 
     services.xserver.xkb = {
       layout = lib.mkDefault "no";

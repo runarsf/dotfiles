@@ -9,11 +9,7 @@
   in
     lib'.mkHost {
       inherit self withSystem;
-      configuration = {
-        pkgs,
-        lib,
-        ...
-      }: {
+      configuration = _: {
         imports = with self.nixosModules;
           [
             ./hardware-configuration.nix

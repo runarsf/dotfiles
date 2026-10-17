@@ -12,7 +12,7 @@ _: {
       lowLatency = mkEnableOption "Enable low latency mode for Pipewire";
     };
 
-    config = lib.mkIf (config.hosts.desktop or true) {
+    config = lib.mkIf (config.host.desktop or true) {
       environment.systemPackages = with pkgs; [
         pwvucontrol
         pavucontrol

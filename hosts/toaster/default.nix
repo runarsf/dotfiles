@@ -32,9 +32,6 @@
 
         system.stateVersion = "24.05";
         networking.hostName = "toaster";
-
-        boot.loader.systemd-boot.enable = true;
-        boot.loader.efi.canTouchEfiVariables = true;
       };
     };
 }

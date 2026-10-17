@@ -26,8 +26,10 @@ _: {
           # Workflow
           - Keep changes scoped to what I asked. No unrelated refactors or reformatting.
           - If you're missing documentation I could easily provide, ask before digging in the nix store.
-          - Don't commit, push, or create branches.
+          - Don't commit, push, or create branches. If asked to commit, don't add a Co-authored-by trailer; always commit as me.
           - Don't create README/summary/docs files unless I ask.
+          - Don't create code comments unless strictly necessary.
+          - Code comments must be short and concise, and avoid irrelevant historical data.
           - Never format code with commands; I prefer formatting myself.
         '';
         environment = ''
@@ -41,6 +43,5 @@ _: {
         '';
       };
     };
-
   };
 }

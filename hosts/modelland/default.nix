@@ -7,16 +7,29 @@
   flake.nixosConfigurations.modelland = lib'.mkHost {
     inherit self withSystem;
     configuration = {
-      config,
       pkgs,
+      lib,
       ...
     }: let
+      inherit (lib) mkForce;
+
       hostFeatures = lib'.useFeatures self [
         "osu"
         "steam"
         "controllers"
         "easyeffects"
         "go"
+        {
+          nvidia = {
+            branch = "legacy_580";
+            open = false;
+          };
+        }
+        {
+          zram = {
+            swapfile = "/swap/swapfile";
+          };
+        }
       ];
     in {
       imports = with self.nixosModules;
@@ -30,13 +43,14 @@
 
       home-manager.users.runar = {
         imports = hostFeatures.home;
-        features = {
-          hyprland.nvidia = true;
-        };
+
+        home.packages = [pkgs.bruno];
       };
 
       system.stateVersion = "26.05";
       networking.hostName = "modelland";
+
+      time.timeZone = mkForce "Europe/Zurich";
 
       features = {
         fonts.oled = true;
@@ -54,6 +68,11 @@
         };
       };
 
+      # services.desktopManager.plasma6.enable = true;
+      # services.displayManager.plasma-login-manager.enable = true;
+      # services.desktopManager.gnome.enable = true;
+      # services.displayManager.gdm.enable = true;
+
       # Samsung USB-C headset negotiates full-speed only; its duplex profile
       # (mic + playback) exceeds full-speed USB bandwidth for the mic's
       # altsetting, causing a suspend/resume crash loop that took down
@@ -69,49 +88,8 @@
         ];
       };
 
-      services.power-profiles-daemon.enable = true;
-
-      boot.loader.systemd-boot.enable = true;
-      boot.loader.efi.canTouchEfiVariables = true;
-      boot.kernelPackages = pkgs.linuxPackages_latest;
-      time.timeZone = "Europe/Zurich";
-      zramSwap.enable = true;
-      swapDevices = [{device = "/swap/swapfile";}];
-      services.xserver.videoDrivers = ["nvidia"];
-      hardware.graphics = {
-        enable = true;
-        enable32Bit = true;
-      };
-      hardware.nvidia = {
-        modesetting.enable = true;
-        open = false;
-        nvidiaSettings = true;
-        powerManagement.enable = false;
-        package = config.boot.kernelPackages.nvidiaPackages.legacy_580;
-      };
-      # services.desktopManager.plasma6.enable = true;
-      # services.displayManager.plasma-login-manager.enable = true;
-      # services.desktopManager.gnome.enable = true;
-      # services.displayManager.gdm.enable = true;
-      services.xserver.xkb.layout = "no";
-      services.xserver.xkb.variant = "nb";
-      console = {
-        font = "Lat2-Terminus16";
-        useXkbConfig = true; # use xkb.options in tty.
-      };
-      services.pipewire = {
-        enable = true;
-        pulse.enable = true;
-      };
-      networking.networkmanager.enable = true;
-
       systemd.tmpfiles.rules = [
         "d /games 0755 runar users -"
-      ];
-
-      environment.systemPackages = with pkgs; [
-        bruno
-        caffeine-ng
       ];
     };
   };

@@ -29,7 +29,6 @@
         boot.loader.grub.device = "/dev/vda";
         boot.loader.grub.useOSProber = true;
 
-        networking.networkmanager.enable = true;
         services.xserver.enable = true;
         services.displayManager.sddm.enable = true;
         services.desktopManager.plasma6.enable = true;
