@@ -1,5 +1,5 @@
 _: {
-  perSystem = {pkgs, ...}: {
+  perSystem = { pkgs, ... }: {
     packages.stderred = pkgs.stderred.overrideAttrs {
       src = pkgs.fetchFromGitHub {
         owner = "sickill";

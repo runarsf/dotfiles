@@ -47,7 +47,7 @@ lib'.mkUser {
       git = {
         name = "Thomas Espervik";
         email = "thoesp@protonmail.com";
-        emailSelector.extraEmails = ["thomes@stud.ntnu.no"];
+        emailSelector.extraEmails = [ "thomes@stud.ntnu.no" ];
       };
     }
     {
@@ -73,7 +73,7 @@ lib'.mkUser {
     "japanese"
   ];
 
-  home = {pkgs, ...}: {
+  home = { pkgs, ... }: {
     home.packages = with pkgs; [
       solidtime-desktop
     ];

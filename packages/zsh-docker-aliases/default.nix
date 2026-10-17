@@ -1,5 +1,5 @@
 _: {
-  perSystem = {pkgs, ...}: {
+  perSystem = { pkgs, ... }: {
     packages.zsh-docker-aliases = pkgs.fetchFromGitHub {
       owner = "akarzim";
       repo = "zsh-docker-aliases";

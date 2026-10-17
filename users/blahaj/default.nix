@@ -1,5 +1,5 @@
-{...}: {
-  flake.nixosModules.blahaj = {pkgs, ...}: {
+{ ... }: {
+  flake.nixosModules.blahaj = { pkgs, ... }: {
     users.users.blahaj = {
       isSystemUser = true;
       uid = 10001;

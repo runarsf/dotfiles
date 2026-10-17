@@ -3,18 +3,19 @@
   withSystem,
   lib',
   ...
-}: {
+}:
+{
   flake.nixosConfigurations.vm = lib'.mkHost {
     inherit self withSystem;
 
     hostName = "vm";
     stateVersion = "25.11";
-    users = ["runar"];
-    features = ["sshServer"];
+    users = [ "runar" ];
+    features = [ "sshServer" ];
 
-    imports = [./hardware-configuration.nix];
+    imports = [ ./hardware-configuration.nix ];
 
-    configuration = {pkgs, ...}: {
+    configuration = { pkgs, ... }: {
       host.efi = false;
 
       boot.loader.grub = {
@@ -33,7 +34,7 @@
         vim
       ];
 
-      home-manager.users.runar = {config, ...}: {
+      home-manager.users.runar = { config, ... }: {
         features.niks.flake = "${config.home.homeDirectory}/shared/dotfiles";
       };
     };

@@ -1,5 +1,5 @@
 _: {
-  perSystem = {pkgs, ...}: {
+  perSystem = { pkgs, ... }: {
     packages.commet = rec {
       appId = "chat.commet.commetapp";
       sha256 = "";

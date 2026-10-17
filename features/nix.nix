@@ -2,40 +2,48 @@
   self,
   inputs,
   ...
-}: {
-  flake.nixosModules.nix = {lib, ...}: let
-    inherit (lib) mkDefault;
-  in {
-    imports = [
-      self.nixosModules.legacyConsistency
-    ];
+}:
+{
+  flake.nixosModules.nix =
+    { lib, ... }:
+    let
+      inherit (lib) mkDefault;
+    in
+    {
+      imports = [
+        self.nixosModules.legacyConsistency
+      ];
 
-    nix = {
-      settings = rec {
-        auto-optimise-store = true;
-        warn-dirty = false;
-        experimental-features = ["nix-command" "flakes" "pipe-operators"];
-        substituters = [
-          "https://cache.nixos.org/"
-          "https://nix-community.cachix.org"
-        ];
-        trusted-substituters = substituters;
-        trusted-public-keys = [
-          "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
-          "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-        ];
+      nix = {
+        settings = rec {
+          auto-optimise-store = true;
+          warn-dirty = false;
+          experimental-features = [
+            "nix-command"
+            "flakes"
+            "pipe-operators"
+          ];
+          substituters = [
+            "https://cache.nixos.org/"
+            "https://nix-community.cachix.org"
+          ];
+          trusted-substituters = substituters;
+          trusted-public-keys = [
+            "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+            "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+          ];
+        };
+        gc = {
+          automatic = mkDefault true;
+          dates = mkDefault "weekly";
+          options = mkDefault "--delete-older-than 5d";
+        };
       };
-      gc = {
-        automatic = mkDefault true;
-        dates = mkDefault "weekly";
-        options = mkDefault "--delete-older-than 5d";
-      };
+
+      programs.nix-ld.enable = true;
     };
 
-    programs.nix-ld.enable = true;
-  };
-
-  flake.homeModules.nix = {pkgs, ...}: {
+  flake.homeModules.nix = { pkgs, ... }: {
     imports = [
       inputs.nix-index-database.homeModules.nix-index
     ];
@@ -87,44 +95,48 @@
     ];
   };
 
-  flake.nixosModules.legacyConsistency = {lib, ...}: let
-    inherit (lib) mapAttrs mapAttrs';
-  in rec {
-    nix = {
-      nixPath = ["/etc/nix/path"];
-      registry = mapAttrs (_: value: {flake = value;}) inputs;
-    };
+  flake.nixosModules.legacyConsistency =
+    { lib, ... }:
+    let
+      inherit (lib) mapAttrs mapAttrs';
+    in
+    rec {
+      nix = {
+        nixPath = [ "/etc/nix/path" ];
+        registry = mapAttrs (_: value: { flake = value; }) inputs;
+      };
 
-    environment.etc =
-      mapAttrs' (key: value: {
+      environment.etc = mapAttrs' (key: value: {
         name = "nix/path/${key}";
         value.source = value.flake;
-      })
-      nix.registry;
-  };
+      }) nix.registry;
+    };
 
-  flake.homeModules.niks = {
-    pkgs,
-    lib,
-    config,
-    ...
-  }: let
-    inherit (pkgs.stdenv.hostPlatform) system;
-  in {
-    options.features.niks = {
-      flake = lib.mkOption {
-        type = lib.types.str;
-        default = "${config.home.homeDirectory}/.config/nixos";
-        description = "Path to the NixOS flake, set as NH_FLAKE.";
+  flake.homeModules.niks =
+    {
+      pkgs,
+      lib,
+      config,
+      ...
+    }:
+    let
+      inherit (pkgs.stdenv.hostPlatform) system;
+    in
+    {
+      options.features.niks = {
+        flake = lib.mkOption {
+          type = lib.types.str;
+          default = "${config.home.homeDirectory}/.config/nixos";
+          description = "Path to the NixOS flake, set as NH_FLAKE.";
+        };
+      };
+
+      config = {
+        home.packages = with pkgs; [
+          self.packages.${system}.niks
+          nh
+        ];
+        home.sessionVariables.NH_FLAKE = config.features.niks.flake;
       };
     };
-
-    config = {
-      home.packages = with pkgs; [
-        self.packages.${system}.niks
-        nh
-      ];
-      home.sessionVariables.NH_FLAKE = config.features.niks.flake;
-    };
-  };
 }

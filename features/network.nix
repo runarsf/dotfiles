@@ -1,5 +1,5 @@
 _: {
-  flake.nixosModules.network = {pkgs, ...}: {
+  flake.nixosModules.network = { pkgs, ... }: {
     networking.networkmanager = {
       enable = true;
       plugins = with pkgs; [

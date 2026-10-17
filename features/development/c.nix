@@ -1,29 +1,33 @@
 _: {
-  flake.homeModules.c = {
-    config,
-    pkgs,
-    lib,
-    ...
-  }: let
-    inherit (builtins) readFile;
-    inherit (lib) mkEnableOption optionals;
-    inherit (pkgs.writers) writePython3Bin;
+  flake.homeModules.c =
+    {
+      config,
+      pkgs,
+      lib,
+      ...
+    }:
+    let
+      inherit (builtins) readFile;
+      inherit (lib) mkEnableOption optionals;
+      inherit (pkgs.writers) writePython3Bin;
 
-    cfg = config.features.c;
-  in {
-    options.features.c = {
-      ide = mkEnableOption "C IDE";
+      cfg = config.features.c;
+    in
+    {
+      options.features.c = {
+        ide = mkEnableOption "C IDE";
+      };
+
+      config = {
+        home.packages =
+          with pkgs;
+          [
+            cmake
+            gcc
+
+            (writePython3Bin "find-cmake-target" { doCheck = false; } (readFile ./bin/find-cmake-target.py))
+          ]
+          ++ optionals cfg.ide [ jetbrains.clion ];
+      };
     };
-
-    config = {
-      home.packages = with pkgs;
-        [
-          cmake
-          gcc
-
-          (writePython3Bin "find-cmake-target" {doCheck = false;} (readFile ./bin/find-cmake-target.py))
-        ]
-        ++ optionals cfg.ide [jetbrains.clion];
-    };
-  };
 }

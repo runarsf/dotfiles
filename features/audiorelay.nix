@@ -1,11 +1,11 @@
-{inputs, ...}: {
+{ inputs, ... }: {
   flake.nixosModules.audiorelay = _: {
     networking.firewall = {
       allowedUDPPorts = [
         59100
         59200
       ];
-      allowedTCPPorts = [59100];
+      allowedTCPPorts = [ 59100 ];
     };
     # https://docs.audiorelay.net/instructions/linux/stream-audio-from-your-linux-pc-to-your-phone
     services.pulseaudio.extraConfig = ''
@@ -13,9 +13,12 @@
     '';
   };
 
-  flake.homeModules.audiorelay = {pkgs, ...}: let
-    inherit (pkgs.stdenv.hostPlatform) system;
-  in {
-    home.packages = [inputs.stackpkgs.${system}.audiorelay];
-  };
+  flake.homeModules.audiorelay =
+    { pkgs, ... }:
+    let
+      inherit (pkgs.stdenv.hostPlatform) system;
+    in
+    {
+      home.packages = [ inputs.stackpkgs.${system}.audiorelay ];
+    };
 }

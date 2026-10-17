@@ -1,5 +1,5 @@
 _: {
-  flake.homeModules.ffxiv = {pkgs, ...}: {
-    home.packages = with pkgs; [xivlauncher];
+  flake.homeModules.ffxiv = { pkgs, ... }: {
+    home.packages = with pkgs; [ xivlauncher ];
   };
 }

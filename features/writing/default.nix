@@ -1,5 +1,5 @@
 _: {
-  flake.homeModules.writing = {pkgs, ...}: {
+  flake.homeModules.writing = { pkgs, ... }: {
     programs.zathura = {
       enable = true;
       package = pkgs.zathura;

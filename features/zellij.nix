@@ -7,16 +7,7 @@ _: {
       ...
     }:
     let
-      inherit (lib) listToAttrs mapAttrsToList getExe;
-
-      mkBinds =
-        attrs:
-        listToAttrs (
-          mapAttrsToList (key: value: {
-            name = ''bind "${key}"'';
-            value = [ value ];
-          }) attrs
-        );
+      inherit (lib) getExe;
 
       zellij = getExe config.programs.zellij.finalPackage;
       zellijWrapped = pkgs.writeShellScriptBin "zellij" ''

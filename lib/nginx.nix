@@ -1,10 +1,10 @@
-{lib, ...}: let
-  baseDomain = domains: subdomain:
-    lib.findFirst
-    (d: lib.hasSuffix ".${d}" subdomain || subdomain == d)
-    subdomain
-    domains;
-in {
+{ lib, ... }:
+let
+  baseDomain =
+    domains: subdomain:
+    lib.findFirst (d: lib.hasSuffix ".${d}" subdomain || subdomain == d) subdomain domains;
+in
+{
   nginx = {
     inherit baseDomain;
     # Returns { forceSSL; sslCertificate; sslCertificateKey } for a wildcard cert.

@@ -4,14 +4,18 @@
   withSystem,
   lib',
   ...
-}: {
+}:
+{
   flake.nixosConfigurations.toaster = lib'.mkHost {
     inherit self withSystem;
 
     hostName = "toaster";
     stateVersion = "24.05";
-    users = ["thomas"];
-    features = ["steam" "godot"];
+    users = [ "thomas" ];
+    features = [
+      "steam"
+      "godot"
+    ];
 
     imports = [
       ./hardware-configuration.nix

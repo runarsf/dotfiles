@@ -50,9 +50,15 @@ _: {
           style = "purple";
           symbol = "";
         };
-        git_commit = {format = "[\\($hash$tag\\)]($style)";};
-        git_state = {format = "\\([$state( $progress_current/$progress_total)]($style)\\)";};
-        git_metrics = {format = "([+$added]($added_style))( [-$deleted]($deleted_style))";};
+        git_commit = {
+          format = "[\\($hash$tag\\)]($style)";
+        };
+        git_state = {
+          format = "\\([$state( $progress_current/$progress_total)]($style)\\)";
+        };
+        git_metrics = {
+          format = "([+$added]($added_style))( [-$deleted]($deleted_style))";
+        };
         git_status = {
           format = "([\\[$all_status$ahead_behind\\]]($style))";
           deleted = "×";

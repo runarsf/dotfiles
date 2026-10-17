@@ -1,12 +1,12 @@
-{lib', ...}: {
+{ lib', ... }: {
   flake.nixosModules.nvidia = lib'.mkFeature "nvidia" (
     {
       config,
       lib,
       ...
-    }: let
-      inherit
-        (lib)
+    }:
+    let
+      inherit (lib)
         filterAttrs
         mkIf
         mkOption
@@ -18,7 +18,8 @@
       busIds = filterAttrs (_: v: v != null) {
         inherit (cfg.prime) amdgpuBusId intelBusId nvidiaBusId;
       };
-    in {
+    in
+    {
       options.features.nvidia = {
         branch = mkOption {
           type = types.str;
@@ -42,7 +43,7 @@
         prime = {
           offload = mkOption {
             type = types.bool;
-            default = busIds != {};
+            default = busIds != { };
             defaultText = lib.literalMD "true if any bus ID is set";
             description = "Render-offload mode, keeping the integrated GPU primary.";
           };
@@ -71,7 +72,7 @@
       };
 
       config = {
-        services.xserver.videoDrivers = ["nvidia"];
+        services.xserver.videoDrivers = [ "nvidia" ];
 
         hardware.graphics = {
           enable = true;
@@ -86,14 +87,12 @@
           powerManagement.enable = cfg.powerManagement;
           package = config.boot.kernelPackages.nvidiaPackages.${cfg.branch};
 
-          prime =
-            busIds
-            // {
-              offload = mkIf cfg.prime.offload {
-                enable = true;
-                enableOffloadCmd = true;
-              };
+          prime = busIds // {
+            offload = mkIf cfg.prime.offload {
+              enable = true;
+              enableOffloadCmd = true;
             };
+          };
         };
       };
     }

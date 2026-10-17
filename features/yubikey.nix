@@ -1,6 +1,6 @@
 _: {
-  flake.nixosModules.yubikey = {pkgs, ...}: {
-    services.udev.packages = with pkgs; [yubikey-personalization];
+  flake.nixosModules.yubikey = { pkgs, ... }: {
+    services.udev.packages = with pkgs; [ yubikey-personalization ];
 
     security.pam.u2f = {
       enable = true;

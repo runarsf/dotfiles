@@ -1,6 +1,6 @@
 _: {
-  flake.homeModules.yazi = {pkgs, ...}: {
-    home.packages = with pkgs; [exiftool];
+  flake.homeModules.yazi = { pkgs, ... }: {
+    home.packages = with pkgs; [ exiftool ];
     # NOTE This only works for posix compliant shells, not nushell
     # home.shellAliases."fm" = ''${config.programs.yazi.package}/bin/yazi --cwd-file /tmp/yazi.dir "$@" && cd "$(\cat /tmp/yazi.dir)"'';
 

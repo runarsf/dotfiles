@@ -3,13 +3,14 @@
   withSystem,
   lib',
   ...
-}: {
+}:
+{
   flake.nixosConfigurations.bramble = lib'.mkHost {
     inherit self withSystem;
 
     hostName = "bramble";
     stateVersion = "26.05";
-    users = ["runar"];
+    users = [ "runar" ];
 
     features = [
       "yubikey"
@@ -43,30 +44,32 @@
       # }
     ];
 
-    imports = [./hardware-configuration.nix];
+    imports = [ ./hardware-configuration.nix ];
 
-    configuration = {
-      pkgs,
-      lib,
-      ...
-    }: {
-      time.timeZone = lib.mkForce "Europe/Zurich";
+    configuration =
+      {
+        pkgs,
+        lib,
+        ...
+      }:
+      {
+        time.timeZone = lib.mkForce "Europe/Zurich";
 
-      services.libinput.enable = true;
-      programs.localsend.enable = true;
+        services.libinput.enable = true;
+        programs.localsend.enable = true;
 
-      environment.systemPackages = with pkgs; [
-        teams-for-linux
-        # self.packages.${pkgs.stdenv.hostPlatform.system}.zaku
-      ];
+        environment.systemPackages = with pkgs; [
+          teams-for-linux
+          # self.packages.${pkgs.stdenv.hostPlatform.system}.zaku
+        ];
 
-      features.fonts.oled = true;
+        features.fonts.oled = true;
 
-      home-manager.users.runar = {
-        home.packages = [pkgs.bruno];
+        home-manager.users.runar = {
+          home.packages = [ pkgs.bruno ];
 
-        wayland.windowManager.hyprland.settings.config.input.numlock_by_default = lib.mkForce false;
+          wayland.windowManager.hyprland.settings.config.input.numlock_by_default = lib.mkForce false;
+        };
       };
-    };
   };
 }

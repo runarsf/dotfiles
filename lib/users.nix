@@ -3,7 +3,8 @@
   lib,
   lib',
   ...
-}: let
+}:
+let
   inherit (lib) optionals;
 
   # Features every user gets unless they pass baseFeatures = false. Only ones
@@ -32,48 +33,49 @@
     "zed"
     "zsh"
   ];
-in {
+in
+{
   inherit defaultFeatures;
 
   # All three outputs for one user: the nixos module holding the account and
   # the nixos half of their features, the home module, and a standalone home
   # configuration. `features` is appended to defaultFeatures and resolved by
   # useFeatures; `home` is the user's own home-manager settings.
-  mkUser = {
-    self,
-    withSystem,
-    username,
-    stateVersion,
-    features ? [],
-    baseFeatures ? true,
-    home ? {},
-    extraGroups ? [],
-    homeDirectory ? "/home/${username}",
-    initialPassword ? "changeme",
-    system ? "x86_64-linux",
-  }: let
-    resolved = lib'.useFeatures self (
-      optionals baseFeatures defaultFeatures ++ features
-    );
-  in {
-    flake.nixosModules.${username} = {pkgs, ...}: {
-      imports = resolved.nixos ++ [self.nixosModules.primaryUser];
+  mkUser =
+    {
+      self,
+      withSystem,
+      username,
+      stateVersion,
+      features ? [ ],
+      baseFeatures ? true,
+      home ? { },
+      extraGroups ? [ ],
+      homeDirectory ? "/home/${username}",
+      initialPassword ? "changeme",
+      system ? "x86_64-linux",
+    }:
+    let
+      resolved = lib'.useFeatures self (optionals baseFeatures defaultFeatures ++ features);
+    in
+    {
+      flake.nixosModules.${username} = { pkgs, ... }: {
+        imports = resolved.nixos ++ [ self.nixosModules.primaryUser ];
 
-      primaryUsers = [username];
-      nix.settings.trusted-users = [username];
+        primaryUsers = [ username ];
+        nix.settings.trusted-users = [ username ];
 
-      home-manager.users.${username} = self.homeModules.${username};
+        home-manager.users.${username} = self.homeModules.${username};
 
-      users.users.${username} = {
-        inherit initialPassword;
+        users.users.${username} = {
+          inherit initialPassword;
 
-        isNormalUser = true;
-        # The interactive configuration lives in home-manager
-        # (features/shells/zsh.nix); this only needs the plain shell binary.
-        shell = pkgs.zsh;
-        home = homeDirectory;
-        extraGroups =
-          [
+          isNormalUser = true;
+          # The interactive configuration lives in home-manager
+          # (features/shells/zsh.nix); this only needs the plain shell binary.
+          shell = pkgs.zsh;
+          home = homeDirectory;
+          extraGroups = [
             "wheel"
             "networkmanager"
             "docker"
@@ -84,28 +86,28 @@ in {
             "i2c"
           ]
           ++ extraGroups;
+        };
       };
-    };
 
-    flake.homeModules.${username} = {
-      imports = resolved.home ++ [home];
+      flake.homeModules.${username} = {
+        imports = resolved.home ++ [ home ];
 
-      home.stateVersion = stateVersion;
-    };
+        home.stateVersion = stateVersion;
+      };
 
-    # pkgs comes from withSystem so standalone configs get the same package set
-    # as the nixos ones, overlays and nixpkgs config included.
-    flake.homeConfigurations.${username} = withSystem system (
-      {pkgs, ...}:
+      # pkgs comes from withSystem so standalone configs get the same package set
+      # as the nixos ones, overlays and nixpkgs config included.
+      flake.homeConfigurations.${username} = withSystem system (
+        { pkgs, ... }:
         inputs.home-manager.lib.homeManagerConfiguration {
           inherit pkgs;
 
-          extraSpecialArgs = {inherit self;};
+          extraSpecialArgs = { inherit self; };
           modules = [
             self.homeModules.${username}
-            {home = {inherit username homeDirectory;};}
+            { home = { inherit username homeDirectory; }; }
           ];
         }
-    );
-  };
+      );
+    };
 }

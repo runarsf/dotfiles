@@ -71,20 +71,19 @@ in
 
       # Sourced eagerly, because the block at order 1000 binds keys to widgets
       # and completers these define.
-      eagerPlugins =
-        [
-          "${pkgs.zsh-autopair}/share/zsh/zsh-autopair/autopair.zsh"
-          "${pkgs.zsh-nix-shell}/share/zsh-nix-shell/nix-shell.plugin.zsh"
-          "${pkgs.nix-zsh-completions}/share/zsh/plugins/nix/init.zsh"
-          "${pkgs.zsh-abbr}/share/zsh/zsh-abbr/zsh-abbr.plugin.zsh"
-          "${pkgs.oh-my-zsh}/share/oh-my-zsh/plugins/fancy-ctrl-z/fancy-ctrl-z.plugin.zsh"
-          "${pkgs.oh-my-zsh}/share/oh-my-zsh/plugins/per-directory-history/per-directory-history.plugin.zsh"
-          "${pkgs.oh-my-zsh}/share/oh-my-zsh/lib/key-bindings.zsh"
-          "${config.programs.fzf.package}/share/fzf/completion.zsh"
-          "${config.programs.fzf.package}/share/fzf/key-bindings.zsh"
-        ]
-        ++ optional cfg.fzfTab "${pkgs.zsh-fzf-tab}/share/fzf-tab/fzf-tab.plugin.zsh"
-        ++ [ "${self.packages.${system}.zsh-docker-aliases}/zsh-docker-aliases.plugin.zsh" ];
+      eagerPlugins = [
+        "${pkgs.zsh-autopair}/share/zsh/zsh-autopair/autopair.zsh"
+        "${pkgs.zsh-nix-shell}/share/zsh-nix-shell/nix-shell.plugin.zsh"
+        "${pkgs.nix-zsh-completions}/share/zsh/plugins/nix/init.zsh"
+        "${pkgs.zsh-abbr}/share/zsh/zsh-abbr/zsh-abbr.plugin.zsh"
+        "${pkgs.oh-my-zsh}/share/oh-my-zsh/plugins/fancy-ctrl-z/fancy-ctrl-z.plugin.zsh"
+        "${pkgs.oh-my-zsh}/share/oh-my-zsh/plugins/per-directory-history/per-directory-history.plugin.zsh"
+        "${pkgs.oh-my-zsh}/share/oh-my-zsh/lib/key-bindings.zsh"
+        "${config.programs.fzf.package}/share/fzf/completion.zsh"
+        "${config.programs.fzf.package}/share/fzf/key-bindings.zsh"
+      ]
+      ++ optional cfg.fzfTab "${pkgs.zsh-fzf-tab}/share/fzf-tab/fzf-tab.plugin.zsh"
+      ++ [ "${self.packages.${system}.zsh-docker-aliases}/zsh-docker-aliases.plugin.zsh" ];
 
       # Nothing before the first prompt needs these, so zsh-defer them.
       deferredPlugins = [

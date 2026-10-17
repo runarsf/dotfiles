@@ -94,13 +94,15 @@ _: {
               rebase.updateRefs = true;
 
               user.email =
-                if cfg.email != null
-                then cfg.email
-                else mkDefault (throw "neither features.git.email nor programs.git.settings.user.email is set");
+                if cfg.email != null then
+                  cfg.email
+                else
+                  mkDefault (throw "neither features.git.email nor programs.git.settings.user.email is set");
               user.name =
-                if cfg.name != null
-                then cfg.name
-                else mkDefault (throw "neither features.git.name nor programs.git.settings.user.name is set");
+                if cfg.name != null then
+                  cfg.name
+                else
+                  mkDefault (throw "neither features.git.name nor programs.git.settings.user.name is set");
 
               signing = optionalAttrs (cfg.signingKey != null) {
                 format = "ssh";

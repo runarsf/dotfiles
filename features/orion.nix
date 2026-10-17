@@ -1,5 +1,5 @@
 _: {
-  flake.nixosModules.orion = {lib, ...}: {
+  flake.nixosModules.orion = { lib, ... }: {
     services.flatpak = {
       remotes = lib.mkOptionDefault [
         {

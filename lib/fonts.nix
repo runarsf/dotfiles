@@ -1,4 +1,5 @@
-_: let
+_:
+let
   flakeIgnore = [
     "E302"
     "W293"
@@ -10,29 +11,40 @@ _: let
     "F405" # name may be undefined, or defined from star imports: module
   ];
 
-  mkPythonTool = pkgs: name: libraries: src:
-    pkgs.lib.getExe (pkgs.writers.writePython3Bin name
-      {
+  mkPythonTool =
+    pkgs: name: libraries: src:
+    pkgs.lib.getExe (
+      pkgs.writers.writePython3Bin name {
         inherit libraries flakeIgnore;
-      } (builtins.readFile src));
-in {
+      } (builtins.readFile src)
+    );
+in
+{
   fonts = {
-    resizebdf = pkgs:
-      mkPythonTool pkgs "resizebdf" (with pkgs.python3Packages; [numpy]) ../packages/fonts/bin/resize_bdf.py;
-    resizettf = pkgs:
-      mkPythonTool pkgs "resizettf" (with pkgs.python3Packages; [fonttools]) ../packages/fonts/bin/resize_ttf.py;
-    renamettf = pkgs:
-      mkPythonTool pkgs "renamettf" (with pkgs.python3Packages; [fonttools]) ../packages/fonts/bin/rename_ttf.py;
-    nofontsdir = font:
-    # postFixup (not installPhase/postInstall): some packages set a raw
-    # installPhase string that never calls runHook postInstall, but
-    # fixupPhase always runs as its own phase after install completes.
+    resizebdf =
+      pkgs:
+      mkPythonTool pkgs "resizebdf" (with pkgs.python3Packages; [
+        numpy
+      ]) ../packages/fonts/bin/resize_bdf.py;
+    resizettf =
+      pkgs:
+      mkPythonTool pkgs "resizettf" (with pkgs.python3Packages; [
+        fonttools
+      ]) ../packages/fonts/bin/resize_ttf.py;
+    renamettf =
+      pkgs:
+      mkPythonTool pkgs "renamettf" (with pkgs.python3Packages; [
+        fonttools
+      ]) ../packages/fonts/bin/rename_ttf.py;
+    nofontsdir =
+      font:
+      # postFixup (not installPhase/postInstall): some packages set a raw
+      # installPhase string that never calls runHook postInstall, but
+      # fixupPhase always runs as its own phase after install completes.
       font.overrideAttrs (oldAttrs: {
-        postFixup =
-          (oldAttrs.postFixup or "")
-          + ''
-            find "$out/share/fonts" -type f -name 'fonts.dir' -delete
-          '';
+        postFixup = (oldAttrs.postFixup or "") + ''
+          find "$out/share/fonts" -type f -name 'fonts.dir' -delete
+        '';
       });
   };
 }

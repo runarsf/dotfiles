@@ -1,5 +1,5 @@
 _: {
-  flake.homeModules.obs = {pkgs, ...}: {
-    home.packages = with pkgs; [obs-studio];
+  flake.homeModules.obs = { pkgs, ... }: {
+    home.packages = with pkgs; [ obs-studio ];
   };
 }

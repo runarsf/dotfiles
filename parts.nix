@@ -1,10 +1,13 @@
-{inputs, lib', ...}:
+{ inputs, lib', ... }:
 let
-  nixpkgsConfig = builtins.foldl' lib'.recursiveUpdate {} (
+  nixpkgsConfig = builtins.foldl' lib'.recursiveUpdate { } (
     map import (
-      builtins.filter
-        (p: builtins.baseNameOf p == "nixpkgs.nix")
-        (lib'.concatPaths { paths = ./features; filterDefault = false; })
+      builtins.filter (p: builtins.baseNameOf p == "nixpkgs.nix") (
+        lib'.concatPaths {
+          paths = ./features;
+          filterDefault = false;
+        }
+      )
     )
   );
 in
@@ -22,28 +25,30 @@ in
       "aarch64-darwin"
     ];
 
-    perSystem = {
-      system,
-      config,
-      ...
-    }: {
-      treefmt.imports = [./treefmt.nix];
-      _module.args.pkgs = import inputs.nixpkgs {
-        inherit system;
-        config = lib'.recursiveUpdate {
-          allowUnfree = true;
-          allowUnfreePredicate = _: true;
-        } nixpkgsConfig;
+    perSystem =
+      {
+        system,
+        config,
+        ...
+      }:
+      {
+        treefmt.imports = [ ./treefmt.nix ];
+        _module.args.pkgs = import inputs.nixpkgs {
+          inherit system;
+          config = lib'.recursiveUpdate {
+            allowUnfree = true;
+            allowUnfreePredicate = _: true;
+          } nixpkgsConfig;
 
-        overlays = [
-          (_: prev: {
-            nur = import inputs.nur {
-              pkgs = prev;
-              nurpkgs = import inputs.nixpkgs {inherit (prev) system config overlays;};
-            };
-          })
-        ];
+          overlays = [
+            (_: prev: {
+              nur = import inputs.nur {
+                pkgs = prev;
+                nurpkgs = import inputs.nixpkgs { inherit (prev) system config overlays; };
+              };
+            })
+          ];
+        };
       };
-    };
   };
 }

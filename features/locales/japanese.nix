@@ -1,5 +1,5 @@
 _: {
-  flake.nixosModules.japanese = {pkgs, ...}: {
+  flake.nixosModules.japanese = { pkgs, ... }: {
     environment.sessionVariables.XMODIFIERS = "@im=fcitx";
     i18n.inputMethod = {
       enable = true;
@@ -22,7 +22,11 @@ _: {
             };
           };
         };
-        addons = with pkgs; [qt6Packages.fcitx5-configtool fcitx5-mozc fcitx5-gtk];
+        addons = with pkgs; [
+          qt6Packages.fcitx5-configtool
+          fcitx5-mozc
+          fcitx5-gtk
+        ];
         # waylandFrontend = true;
       };
     };

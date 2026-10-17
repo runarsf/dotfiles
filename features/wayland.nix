@@ -1,6 +1,12 @@
 { lib', ... }: {
   flake.homeModules.wayland = lib'.mkFeature "wayland" (
-    { pkgs, lib, osConfig, ... }: {
+    {
+      pkgs,
+      lib,
+      osConfig,
+      ...
+    }:
+    {
       config = lib.mkIf (osConfig.host.desktop or true) {
         home.packages = [ pkgs.wl-clipboard ];
         home.sessionVariables = {
