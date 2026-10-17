@@ -47,8 +47,13 @@
         # The handle comes from the EDK2 shell: `map -c`, then `ls <handle>:EFI`
         # until one lists Microsoft.
         boot.loader.systemd-boot = {
-          edk2-uefi-shell.enable = true;
-          # windows."11".efiDeviceHandle = "";
+          # edk2-uefi-shell.enable = true;
+          windows."11" = {
+            efiDeviceHandle = "HD0c65535a1";
+            # Sorts before the nixos entries. The newest generation stays the
+            # preselected default, so Windows is one key up from it.
+            sortKey = "a_windows";
+          };
         };
 
         systemd.tmpfiles.rules = [
