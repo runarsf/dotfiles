@@ -3,26 +3,26 @@
   withSystem,
   lib',
   ...
-}: {
-  flake.nixosConfigurations.anuc = let
-    hostFeatures = lib'.useFeatures self [];
-  in
-    lib'.mkHost {
-      inherit self withSystem;
-      configuration = _: {
-        imports = with self.nixosModules;
-          [
-            ./hardware-configuration.nix
-            host
-            homeManager
-            runar
-          ]
-          ++ hostFeatures.nixos;
+}: let
+  hostFeatures = lib'.useFeatures self [];
+in {
+  flake.nixosConfigurations.anuc = lib'.mkHost {
+    inherit self withSystem;
 
-        home-manager.users.runar.imports = hostFeatures.home;
+    configuration = _: {
+      imports = with self.nixosModules;
+        [
+          ./hardware-configuration.nix
+          host
+          homeManager
+          runar
+        ]
+        ++ hostFeatures.nixos;
 
-        system.stateVersion = "25.05";
-        networking.hostName = "anuc";
-      };
+      networking.hostName = "anuc";
+      system.stateVersion = "25.05";
+
+      home-manager.users.runar.imports = hostFeatures.home;
     };
+  };
 }

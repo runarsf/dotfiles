@@ -4,34 +4,34 @@
   withSystem,
   lib',
   ...
-}: {
-  flake.nixosConfigurations.toaster = let
-    hostFeatures = lib'.useFeatures self [
-      "steam"
-      "godot"
-    ];
-  in
-    lib'.mkHost {
-      inherit self withSystem;
-      configuration = _: {
-        imports = with self.nixosModules;
-          [
-            ./hardware-configuration.nix
-            inputs.nixos-hardware.nixosModules.lenovo-thinkpad-t490s
-            host
-            homeManager
-            thomas
-          ]
-          ++ hostFeatures.nixos;
+}: let
+  hostFeatures = lib'.useFeatures self [
+    "steam"
+    "godot"
+  ];
+in {
+  flake.nixosConfigurations.toaster = lib'.mkHost {
+    inherit self withSystem;
 
-        home-manager.users.thomas.imports = hostFeatures.home;
+    configuration = _: {
+      imports = with self.nixosModules;
+        [
+          ./hardware-configuration.nix
+          inputs.nixos-hardware.nixosModules.lenovo-thinkpad-t490s
+          host
+          homeManager
+          thomas
+        ]
+        ++ hostFeatures.nixos;
 
-        features.niri.overrides = {
-          outputs."eDP-1".scale = 1;
-        };
+      networking.hostName = "toaster";
+      system.stateVersion = "24.05";
 
-        system.stateVersion = "24.05";
-        networking.hostName = "toaster";
+      features.niri.overrides = {
+        outputs."eDP-1".scale = 1;
       };
+
+      home-manager.users.thomas.imports = hostFeatures.home;
     };
+  };
 }
