@@ -22,10 +22,11 @@
           branch = "legacy_580";
           open = false;
         };
-      }
-      {
         zram = {
           swapfile = "/swap/swapfile";
+        };
+        hyprland = {
+          animations = true;
         };
       }
     ];
