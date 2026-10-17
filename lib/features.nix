@@ -1,5 +1,6 @@
-_: let
-  inherit (builtins) filter isString attrNames head;
+{lib, ...}: let
+  inherit (builtins) filter isString concatMap;
+  inherit (lib) mapAttrsToList;
 in {
   # Wraps a feature module and declares a read-only `features.<name>.enable`
   # option alongside it, set to `true` whenever the module is imported. Lets
@@ -63,18 +64,17 @@ in {
   };
 
   useFeatures = self: features: let
+    # An entry is either a bare name or an attrset of name -> config, so one
+    # attrset may declare several features at once.
     normalize = f:
       if isString f
-      then {
-        name = f;
-        config = {};
-      }
-      else let
-        name = head (attrNames f);
-      in {
-        inherit name;
-        config = f.${name};
-      };
+      then [
+        {
+          name = f;
+          config = {};
+        }
+      ]
+      else mapAttrsToList (name: config: {inherit name config;}) f;
 
     hasHome = e: (self.homeModules or {}) ? ${e.name};
     hasNixos = e: (self.nixosModules or {}) ? ${e.name};
@@ -87,7 +87,15 @@ in {
           then e
           else throw "useFeatures: feature '${e.name}' has neither a homeModules nor a nixosModules entry"
       )
-      (map normalize features);
+      (concatMap normalize features);
+
+    # A stable key lets the module system dedupe a feature reached from more
+    # than one list (a user's and their host's). Without it the module is
+    # evaluated twice and unique options conflict with themselves.
+    featureModule = kind: name: {
+      key = "feature:${kind}:${name}";
+      imports = [self."${kind}Modules".${name}];
+    };
 
     configModule = name: cfg: {
       lib,
@@ -102,10 +110,10 @@ in {
     };
   in {
     home =
-      map (e: self.homeModules.${e.name}) (filter hasHome normalized)
+      map (e: featureModule "home" e.name) (filter hasHome normalized)
       ++ map (e: configModule e.name e.config) (filter (e: hasHome e && hasConfig e) normalized);
     nixos =
-      map (e: self.nixosModules.${e.name}) (filter hasNixos normalized)
+      map (e: featureModule "nixos" e.name) (filter hasNixos normalized)
       ++ map (e: configModule e.name e.config) (filter (e: hasNixos e && hasConfig e) normalized);
   };
 }

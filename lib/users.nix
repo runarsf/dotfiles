@@ -1,61 +1,111 @@
-{inputs, ...}: {
+{
+  inputs,
+  lib,
+  lib',
+  ...
+}: let
+  inherit (lib) optionals;
+
+  # Features every user gets unless they pass baseFeatures = false. Only ones
+  # that take no per-user options: a feature someone configures belongs in that
+  # user's own list, so each feature is named exactly once.
+  defaultFeatures = [
+    "cli"
+    "discord"
+    "flatpak"
+    "fonts"
+    "hypridle"
+    "hyprlock"
+    "hyprpaper"
+    "network"
+    "niks"
+    "niri"
+    "nix"
+    "nixvim"
+    "norwegian"
+    "pipewire"
+    "starship"
+    "tuigreet"
+    "vicinae"
+    "wezterm"
+    "xdg"
+    "zed"
+    "zsh"
+  ];
+in {
+  inherit defaultFeatures;
+
+  # All three outputs for one user: the nixos module holding the account and
+  # the nixos half of their features, the home module, and a standalone home
+  # configuration. `features` is appended to defaultFeatures and resolved by
+  # useFeatures; `home` is the user's own home-manager settings.
   mkUser = {
     self,
+    withSystem,
     username,
-    homeModule,
-    homeDirectory ? "/home/${username}",
-    system ? "x86_64-linux",
-  }:
-    inputs.home-manager.lib.homeManagerConfiguration {
-      # Matches the perSystem pkgs nixosConfigurations get via mkHost;
-      # without it the standalone configs choke on e.g. zsh-abbr's license.
-      pkgs = import inputs.nixpkgs {
-        inherit system;
-        config.allowUnfree = true;
-      };
-      extraSpecialArgs = {inherit self;};
-      modules = [
-        homeModule
-        {
-          home = {
-            inherit username homeDirectory;
-          };
-        }
-      ];
-    };
-
-  # Wraps the boilerplate common to every users/<name>/default.nix
-  mkNixosUser = {
-    self,
-    username,
-    features,
+    stateVersion,
+    features ? [],
+    baseFeatures ? true,
+    home ? {},
     extraGroups ? [],
     homeDirectory ? "/home/${username}",
     initialPassword ? "changeme",
-  }: {pkgs, ...}: {
-    imports = features ++ [self.nixosModules.primaryUser];
-    primaryUsers = [username];
-    nix.settings.trusted-users = [username];
-    home-manager.users.${username} = self.homeModules.${username};
-    users.users.${username} = {
-      inherit initialPassword;
-      isNormalUser = true;
-      # The interactive configuration lives in home-manager
-      # (features/shells/zsh.nix); this only needs the plain shell binary.
-      shell = pkgs.zsh;
-      home = homeDirectory;
-      extraGroups =
-        [
-          "wheel"
-          "networkmanager"
-          "docker"
-          "audio"
-          "video"
-          "libvirtd"
-          "input"
-          "i2c"
-        ]
-        ++ extraGroups;
+    system ? "x86_64-linux",
+  }: let
+    resolved = lib'.useFeatures self (
+      optionals baseFeatures defaultFeatures ++ features
+    );
+  in {
+    flake.nixosModules.${username} = {pkgs, ...}: {
+      imports = resolved.nixos ++ [self.nixosModules.primaryUser];
+
+      primaryUsers = [username];
+      nix.settings.trusted-users = [username];
+
+      home-manager.users.${username} = self.homeModules.${username};
+
+      users.users.${username} = {
+        inherit initialPassword;
+
+        isNormalUser = true;
+        # The interactive configuration lives in home-manager
+        # (features/shells/zsh.nix); this only needs the plain shell binary.
+        shell = pkgs.zsh;
+        home = homeDirectory;
+        extraGroups =
+          [
+            "wheel"
+            "networkmanager"
+            "docker"
+            "audio"
+            "video"
+            "libvirtd"
+            "input"
+            "i2c"
+          ]
+          ++ extraGroups;
+      };
     };
+
+    flake.homeModules.${username} = {
+      imports = resolved.home ++ [home];
+
+      home.stateVersion = stateVersion;
+    };
+
+    # pkgs comes from withSystem so standalone configs get the same package set
+    # as the nixos ones, overlays and nixpkgs config included.
+    flake.homeConfigurations.${username} = withSystem system (
+      {pkgs, ...}:
+        inputs.home-manager.lib.homeManagerConfiguration {
+          inherit pkgs;
+
+          extraSpecialArgs = {inherit self;};
+          modules = [
+            self.homeModules.${username}
+            {home = {inherit username homeDirectory;};}
+          ];
+        }
+    );
   };
 }

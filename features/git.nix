@@ -46,6 +46,18 @@ _: {
           description = "Name of SSH key used for signing. Defaults to the first key in features.ssh.keys.";
         };
 
+        name = mkOption {
+          type = nullOr str;
+          default = null;
+          description = "Name to commit as.";
+        };
+
+        email = mkOption {
+          type = nullOr str;
+          default = null;
+          description = "Email to commit as.";
+        };
+
         gitlabAltSsh = mkEnableOption "Use alternative SSH server for GitLab";
       };
 
@@ -81,8 +93,14 @@ _: {
               # https://andrewlock.net/working-with-stacked-branches-in-git-is-easier-with-update-refs/
               rebase.updateRefs = true;
 
-              user.email = mkDefault (throw "programs.git.settings.user.email is not set");
-              user.name = mkDefault (throw "programs.git.settings.user.name is not set");
+              user.email =
+                if cfg.email != null
+                then cfg.email
+                else mkDefault (throw "neither features.git.email nor programs.git.settings.user.email is set");
+              user.name =
+                if cfg.name != null
+                then cfg.name
+                else mkDefault (throw "neither features.git.name nor programs.git.settings.user.name is set");
 
               signing = optionalAttrs (cfg.signingKey != null) {
                 format = "ssh";

@@ -1,10 +1,16 @@
 {
   self,
+  withSystem,
   lib',
   ...
 }:
-let
-  features = lib'.useFeatures self [
+lib'.mkUser {
+  inherit self withSystem;
+
+  username = "thomas";
+  stateVersion = "24.11";
+
+  features = [
     {
       sops = {
         privateKeys = [
@@ -31,42 +37,19 @@ let
         ];
       };
     }
-    "fonts"
-    "zsh"
-    "flatpak"
-    "xdg"
-    "starship"
-    "niri"
-    # "hyprland"
-    "hypridle"
-    "hyprlock"
-    "hyprpaper"
     {
       stylix = {
         wallpaper = ./wallpaper.jpg;
         cursor = "wii";
       };
     }
-    "dms"
-    "wezterm"
-    "yazi"
-    "nixvim"
-    "fastfetch"
-    "niks"
-    "nix"
-    "vicinae"
-    "network"
-    "cli"
     {
       git = {
+        name = "Thomas Espervik";
+        email = "thoesp@protonmail.com";
         emailSelector.extraEmails = ["thomes@stud.ntnu.no"];
       };
     }
-    "docker"
-    "norwegian"
-    "japanese"
-    "pipewire"
-    "zed"
     {
       zen = {
         customPrefs = {
@@ -74,7 +57,6 @@ let
         };
       };
     }
-    "discord"
     {
       matrix = {
         clients = [
@@ -83,39 +65,19 @@ let
         ];
       };
     }
-    "tuigreet"
+    # "hyprland"
+    "dms"
+    "yazi"
+    "fastfetch"
+    "docker"
+    "japanese"
   ];
-in
-{
-  flake.nixosModules.thomas = lib'.mkNixosUser {
-    inherit self;
-    username = "thomas";
-    features = features.nixos;
-  };
 
-  flake.homeModules.thomas = { pkgs, ... }: {
-    imports = features.home;
-
-    home.stateVersion = "24.11";
-
+  home = {pkgs, ...}: {
     home.packages = with pkgs; [
       solidtime-desktop
     ];
 
-    programs.git = {
-      settings = {
-        user = {
-          name = "Thomas Espervik";
-          email = "thoesp@protonmail.com";
-        };
-      };
-    };
     programs.zed-editor.package = pkgs.zed-editor-fhs;
-  };
-
-  flake.homeConfigurations.thomas = lib'.mkUser {
-    inherit self;
-    username = "thomas";
-    homeModule = self.homeModules.thomas;
   };
 }

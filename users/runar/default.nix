@@ -1,11 +1,18 @@
 {
   self,
+  withSystem,
   lib',
   inputs,
   ...
 }:
-let
-  features = lib'.useFeatures self [
+lib'.mkUser {
+  inherit self withSystem;
+
+  username = "runar";
+  stateVersion = "24.11";
+  extraGroups = ["blahaj"];
+
+  features = [
     {
       sops = {
         privateKeys = [
@@ -44,127 +51,85 @@ let
         aiUsage = true;
       };
     }
+    {
+      git = {
+        name = "Runar Fredagsvik";
+        email = "git@runar.ch";
+      };
+    }
     "matrix"
     "nautilus"
-    "tuigreet"
-    "git"
     "podman"
-    "discord"
-    "fonts"
-    "zsh"
     "zellij"
-    "starship"
     "wayland"
-    "nixvim"
-    "niri"
     "nushell"
     "hyprland"
-    "hypridle"
-    "hyprlock"
-    "hyprpaper"
-    "xdg"
-    "wezterm"
-    "niks"
-    "nix"
-    "vicinae"
-    "network"
-    "cli"
-    "norwegian"
-    "pipewire"
-    "zed"
     "claude"
-    "flatpak"
     "zen"
     "writing"
   ];
-in
-{
-  flake.nixosModules.runar = lib'.mkNixosUser {
-    inherit self;
-    username = "runar";
-    features = features.nixos;
-    extraGroups = [ "blahaj" ];
-  };
 
-  flake.homeModules.runar =
-    {
-      config,
-      pkgs,
-      lib,
-      ...
-    }:
-    let
-      inherit (pkgs.stdenv.hostPlatform) system isLinux;
-    in
-    {
-      imports = features.home;
+  home = {
+    config,
+    pkgs,
+    lib,
+    ...
+  }: let
+    inherit (pkgs.stdenv.hostPlatform) system isLinux;
+  in {
+    programs.claude-code = {
+        # settings = {
+        #   permissions = {
+        #     additionalDirectories = [ "${config.home.homeDirectory}/Documents/notes" ];
+        #   };
+        # };
+      rules.task-vault = ''
+        # Task vault workflow (dormant unless triggered)
 
-      programs.git.settings.user = {
-        email = "git@runar.ch";
-        name = "Runar Fredagsvik";
-      };
+        Applies ONLY when the user names a task or asks to continue/resume one.
+        Otherwise skip this section entirely and work normally — never mention it.
 
-      programs.claude-code = {
-          # settings = {
-          #   permissions = {
-          #     additionalDirectories = [ "${config.home.homeDirectory}/Documents/notes" ];
-          #   };
-          # };
-        rules.task-vault = ''
-          # Task vault workflow (dormant unless triggered)
+        Vault: `~/Documents/notes` — all planning, findings, and progress live there,
+        never in the current repo. If that path doesn't exist, say so in one line and
+        continue without it.
 
-          Applies ONLY when the user names a task or asks to continue/resume one.
-          Otherwise skip this section entirely and work normally — never mention it.
+        ## Layout
+        - `Plans/<task-name>/` containing `Task Plan.md`, `Findings.md`, `Progress.md`
+        - Folder name = task name. Tasks coexist as sibling folders; never rename or merge them.
 
-          Vault: `~/Documents/notes` — all planning, findings, and progress live there,
-          never in the current repo. If that path doesn't exist, say so in one line and
-          continue without it.
+        ## Session
+        - On trigger: read the named task's `Task Plan.md` + `Progress.md` first.
+        - "Continue" with no task name → ask which task; don't guess.
+        - Touch only the named task's folder. Other task folders are off-limits even for reference unless asked.
+        - No folder for the named task yet → confirm whether to scaffold the three files or wait for the user to populate them.
+        - Work only the current phase unless redirected. Never write plan/progress/findings/notes files in the repo.
 
-          ## Layout
-          - `Plans/<task-name>/` containing `Task Plan.md`, `Findings.md`, `Progress.md`
-          - Folder name = task name. Tasks coexist as sibling folders; never rename or merge them.
+        ## Mid-task questions
+        - Batch non-blocking questions instead of asking one at a time.
+        - Minor, easily reversible: decide, act, log decision + why in `Findings.md`.
+        - Irreversible or scope-changing: stop and ask.
+        - Working unattended: append questions with a proposed default under `Open questions` in the task's `Task Plan.md`; proceed only if reversible.
 
-          ## Session
-          - On trigger: read the named task's `Task Plan.md` + `Progress.md` first.
-          - "Continue" with no task name → ask which task; don't guess.
-          - Touch only the named task's folder. Other task folders are off-limits even for reference unless asked.
-          - No folder for the named task yet → confirm whether to scaffold the three files or wait for the user to populate them.
-          - Work only the current phase unless redirected. Never write plan/progress/findings/notes files in the repo.
+        ## Session end — always
+        Append dated (ISO) entries; never overwrite or reorder existing content:
+        - `Findings.md` — decisions + why, gotchas, dead ends, key files touched
+        - `Progress.md` — what was done, what was verified, exact next step
+        - `Task Plan.md` — tick completed phases; adjust later phases if reality diverged
 
-          ## Mid-task questions
-          - Batch non-blocking questions instead of asking one at a time.
-          - Minor, easily reversible: decide, act, log decision + why in `Findings.md`.
-          - Irreversible or scope-changing: stop and ask.
-          - Working unattended: append questions with a proposed default under `Open questions` in the task's `Task Plan.md`; proceed only if reversible.
-
-          ## Session end — always
-          Append dated (ISO) entries; never overwrite or reorder existing content:
-          - `Findings.md` — decisions + why, gotchas, dead ends, key files touched
-          - `Progress.md` — what was done, what was verified, exact next step
-          - `Task Plan.md` — tick completed phases; adjust later phases if reality diverged
-
-          ## Vault etiquette
-          - Ask before deleting or renaming notes; never touch any folder outside of `**/agent` or attachments
-          - Keep YAML frontmatter intact; use `[[wikilinks]]`
-          - No secrets in vault notes
-        '';
-      };
-
-      home.packages =
-        with pkgs;
-        lib.optionals isLinux [
-          feishin
-          me3
-          qbittorrent
-          inputs.helium.packages.${system}.default
-        ];
-
-      home.stateVersion = "24.11";
+        ## Vault etiquette
+        - Ask before deleting or renaming notes; never touch any folder outside of `**/agent` or attachments
+        - Keep YAML frontmatter intact; use `[[wikilinks]]`
+        - No secrets in vault notes
+      '';
     };
 
-  flake.homeConfigurations.runar = lib'.mkUser {
-    inherit self;
-    username = "runar";
-    homeModule = self.homeModules.runar;
+    home.packages =
+      with pkgs;
+      lib.optionals isLinux [
+        feishin
+        me3
+        qbittorrent
+        inputs.helium.packages.${system}.default
+      ];
   };
 }
