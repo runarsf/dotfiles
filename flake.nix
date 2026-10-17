@@ -102,17 +102,29 @@
   }: let
     inherit (builtins) elem;
     inherit (flake-parts.lib) mkFlake;
+
+    # lib/ is read here instead of by import-tree, so its files are plain
+    # functions rather than flake modules.
+    myLib = import ./lib {inherit inputs;};
   in
-    mkFlake {inherit inputs;} (
-      import-tree.filterNot (
-        x:
-          elem (baseNameOf x) [
-            "flake.nix"
-            "treefmt.nix"
-            "hardware-configuration.nix"
-            "nixpkgs.nix"
-          ]
-      )
-      ./.
-    );
+    mkFlake {
+      inherit inputs;
+      specialArgs = {inherit (myLib) lib';};
+    } {
+      imports = [
+        (import-tree.filterNot (
+            x:
+              elem (baseNameOf x) [
+                "flake.nix"
+                "treefmt.nix"
+                "hardware-configuration.nix"
+                "nixpkgs.nix"
+              ]
+              || baseNameOf (dirOf x) == "lib"
+          )
+          ./.)
+      ];
+
+      flake.lib = myLib.own;
+    };
 }

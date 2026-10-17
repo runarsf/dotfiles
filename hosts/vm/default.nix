@@ -3,25 +3,19 @@
   withSystem,
   lib',
   ...
-}: let
-  hostFeatures = lib'.useFeatures self [];
-in {
+}: {
   flake.nixosConfigurations.vm = lib'.mkHost {
     inherit self withSystem;
 
-    configuration = {pkgs, ...}: {
-      imports = with self.nixosModules;
-        [
-          ./hardware-configuration.nix
-          host
-          homeManager
-          runar
-          sshServer
-        ]
-        ++ hostFeatures.nixos;
+    hostName = "vm";
+    stateVersion = "25.11";
+    users = ["runar"];
+    features = ["sshServer"];
 
-      networking.hostName = "vm";
-      system.stateVersion = "25.11";
+    imports = [./hardware-configuration.nix];
+
+    configuration = {pkgs, ...}: {
+      host.efi = false;
 
       boot.loader.grub = {
         enable = true;
@@ -33,21 +27,15 @@ in {
       services.displayManager.sddm.enable = true;
       services.desktopManager.plasma6.enable = true;
 
-      # git and vim are home-only features here, so root has no copy otherwise.
+      # Home-only features otherwise, so root has no copy.
       environment.systemPackages = with pkgs; [
         git
         vim
       ];
 
-      home-manager.users.runar.imports = hostFeatures.home;
+      home-manager.users.runar = {config, ...}: {
+        features.niks.flake = "${config.home.homeDirectory}/shared/dotfiles";
+      };
     };
-
-    extraModules = [
-      {
-        home-manager.users.runar = {config, ...}: {
-          features.niks.flake = "${config.home.homeDirectory}/shared/dotfiles";
-        };
-      }
-    ];
   };
 }

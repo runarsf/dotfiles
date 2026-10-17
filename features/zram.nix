@@ -13,11 +13,7 @@ _: {
         type = types.nullOr types.str;
         default = null;
         example = "/swap/swapfile";
-        description = ''
-          Disk swapfile to register in addition to zram, as a lower-priority
-          tier for once zram fills up. The file itself is not created here;
-          null registers no disk swap at all.
-        '';
+        description = "Disk swapfile to register alongside zram. Not created here.";
       };
     };
 

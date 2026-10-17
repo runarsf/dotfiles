@@ -24,39 +24,27 @@
           type = types.str;
           default = "production";
           example = "legacy_580";
-          description = ''
-            Attribute of `boot.kernelPackages.nvidiaPackages` to use as the
-            driver package, e.g. "production", "beta", "legacy_580".
-          '';
+          description = "Attribute of `boot.kernelPackages.nvidiaPackages` to use.";
         };
 
         open = mkOption {
           type = types.bool;
           default = true;
-          description = ''
-            Use the open-source kernel modules. Requires Turing or newer; older
-            cards (and the legacy driver branches) need this off.
-          '';
+          description = "Use the open-source kernel modules. Needs Turing or newer.";
         };
 
         powerManagement = mkOption {
           type = types.bool;
           default = false;
-          description = ''
-            Preserve video memory across suspend/resume. Experimental, and the
-            cause of more hangs than it fixes on desktops.
-          '';
+          description = "Preserve video memory across suspend/resume. Experimental.";
         };
 
         prime = {
           offload = mkOption {
             type = types.bool;
             default = busIds != {};
-            defaultText = lib.literalMD "true if any of the prime bus IDs are set";
-            description = ''
-              Run the nvidia GPU in render-offload mode, keeping the integrated
-              GPU as the primary display adapter. Also provides `nvidia-offload`.
-            '';
+            defaultText = lib.literalMD "true if any bus ID is set";
+            description = "Render-offload mode, keeping the integrated GPU primary.";
           };
 
           amdgpuBusId = mkOption {

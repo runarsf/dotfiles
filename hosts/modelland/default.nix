@@ -3,45 +3,40 @@
   withSystem,
   lib',
   ...
-}: let
-  hostFeatures = lib'.useFeatures self [
-    "osu"
-    "steam"
-    "controllers"
-    "easyeffects"
-    "go"
-    {
-      nvidia = {
-        branch = "legacy_580";
-        open = false;
-      };
-    }
-    {
-      zram = {
-        swapfile = "/swap/swapfile";
-      };
-    }
-  ];
-in {
+}: {
   flake.nixosConfigurations.modelland = lib'.mkHost {
     inherit self withSystem;
+
+    hostName = "modelland";
+    stateVersion = "26.05";
+    users = ["runar"];
+
+    features = [
+      "osu"
+      "steam"
+      "controllers"
+      "easyeffects"
+      "go"
+      {
+        nvidia = {
+          branch = "legacy_580";
+          open = false;
+        };
+      }
+      {
+        zram = {
+          swapfile = "/swap/swapfile";
+        };
+      }
+    ];
+
+    imports = [./hardware-configuration.nix];
 
     configuration = {
       pkgs,
       lib,
       ...
     }: {
-      imports = with self.nixosModules;
-        [
-          ./hardware-configuration.nix
-          host
-          homeManager
-          runar
-        ]
-        ++ hostFeatures.nixos;
-
-      networking.hostName = "modelland";
-      system.stateVersion = "26.05";
       time.timeZone = lib.mkForce "Europe/Zurich";
 
       systemd.tmpfiles.rules = [
@@ -81,8 +76,6 @@ in {
       };
 
       home-manager.users.runar = {
-        imports = hostFeatures.home;
-
         home.packages = [pkgs.bruno];
       };
     };

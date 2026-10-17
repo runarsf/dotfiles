@@ -28,7 +28,6 @@ _: {
     lockCmd = lib.getExe pkgs.hyprlock;
   in {
     config = lib.mkIf (osConfig.host.desktop or true) {
-      # Manual inhibitor, for when the timeouts below are the wrong call.
       home.packages = with pkgs; [caffeine-ng];
 
       services.hypridle = {

@@ -16,27 +16,23 @@ _: let
         inherit libraries flakeIgnore;
       } (builtins.readFile src));
 in {
-  libExtensions = [
-    {
-      fonts = {
-        resizebdf = pkgs:
-          mkPythonTool pkgs "resizebdf" (with pkgs.python3Packages; [numpy]) ../packages/fonts/bin/resize_bdf.py;
-        resizettf = pkgs:
-          mkPythonTool pkgs "resizettf" (with pkgs.python3Packages; [fonttools]) ../packages/fonts/bin/resize_ttf.py;
-        renamettf = pkgs:
-          mkPythonTool pkgs "renamettf" (with pkgs.python3Packages; [fonttools]) ../packages/fonts/bin/rename_ttf.py;
-        nofontsdir = font:
-          # postFixup (not installPhase/postInstall): some packages set a raw
-          # installPhase string that never calls runHook postInstall, but
-          # fixupPhase always runs as its own phase after install completes.
-          font.overrideAttrs (oldAttrs: {
-            postFixup =
-              (oldAttrs.postFixup or "")
-              + ''
-                find "$out/share/fonts" -type f -name 'fonts.dir' -delete
-              '';
-          });
-      };
-    }
-  ];
+  fonts = {
+    resizebdf = pkgs:
+      mkPythonTool pkgs "resizebdf" (with pkgs.python3Packages; [numpy]) ../packages/fonts/bin/resize_bdf.py;
+    resizettf = pkgs:
+      mkPythonTool pkgs "resizettf" (with pkgs.python3Packages; [fonttools]) ../packages/fonts/bin/resize_ttf.py;
+    renamettf = pkgs:
+      mkPythonTool pkgs "renamettf" (with pkgs.python3Packages; [fonttools]) ../packages/fonts/bin/rename_ttf.py;
+    nofontsdir = font:
+    # postFixup (not installPhase/postInstall): some packages set a raw
+    # installPhase string that never calls runHook postInstall, but
+    # fixupPhase always runs as its own phase after install completes.
+      font.overrideAttrs (oldAttrs: {
+        postFixup =
+          (oldAttrs.postFixup or "")
+          + ''
+            find "$out/share/fonts" -type f -name 'fonts.dir' -delete
+          '';
+      });
+  };
 }

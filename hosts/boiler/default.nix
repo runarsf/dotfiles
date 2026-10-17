@@ -3,53 +3,47 @@
   withSystem,
   lib',
   ...
-}: let
-  hostFeatures = lib'.useFeatures self [
-    "easyeffects"
-    "steam"
-    "controllers"
-    "ffxiv"
-    {
-      minecraft = {
-        launcher = "prism";
-      };
-    }
-    {
-      modding = {
-        games = ["unity" "celeste" "outer wilds"];
-      };
-    }
-    {
-      emulation = {
-        consoles = ["retroarch"];
-      };
-    }
-    "randomizer"
-    "obs"
-    "godot"
-    {
-      android = {
-        ide = true;
-      };
-    }
-  ];
-in {
+}: {
   flake.nixosConfigurations.boiler = lib'.mkHost {
     inherit self withSystem;
 
+    hostName = "boiler";
+    stateVersion = "24.05";
+    users = ["thomas"];
+
+    features = [
+      "easyeffects"
+      "steam"
+      "controllers"
+      "ffxiv"
+      {
+        minecraft = {
+          launcher = "prism";
+        };
+      }
+      {
+        modding = {
+          games = ["unity" "celeste" "outer wilds"];
+        };
+      }
+      {
+        emulation = {
+          consoles = ["retroarch"];
+        };
+      }
+      "randomizer"
+      "obs"
+      "godot"
+      {
+        android = {
+          ide = true;
+        };
+      }
+    ];
+
+    imports = [./hardware-configuration.nix];
+
     configuration = _: {
-      imports = with self.nixosModules;
-        [
-          ./hardware-configuration.nix
-          host
-          homeManager
-          thomas
-        ]
-        ++ hostFeatures.nixos;
-
-      networking.hostName = "boiler";
-      system.stateVersion = "24.05";
-
       features.niri.overrides = {
         outputs = {
           "DP-1" = {
@@ -86,8 +80,6 @@ in {
           };
         };
       };
-
-      home-manager.users.thomas.imports = hostFeatures.home;
     };
   };
 }

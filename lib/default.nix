@@ -1,36 +1,30 @@
-{
-  inputs,
-  lib,
-  config,
-  ...
-}: let
-  inherit (lib) mkOption;
-  inherit (lib.types) listOf raw;
-  inherit (inputs.nixlib.lib) deepMerge;
-in {
-  options = {
-    libExtensions = mkOption {
-      type = listOf raw;
-      default = [];
-    };
-  };
+{inputs}: let
+  inherit (inputs.nixpkgs) lib;
+  inherit (inputs.nixlib.lib) concatPaths deepMerge;
 
-  config = let
-    lib' = deepMerge (
-      [
-        lib
-        inputs.home-manager.lib
-        inputs.nixlib.lib
-      ]
-      ++ config.libExtensions
-    );
-  in {
-    # Support both passing as an argument and using as a dendrite.
-    _module.args = {
-      inherit lib';
-    };
-    flake = {
-      inherit lib';
-    };
-  };
+  # `let` is recursive, so own and lib' resolve as a fixpoint. A lib file may
+  # use lib' inside a function body, but not at definition time.
+  own =
+    builtins.foldl'
+    (acc: path: acc // import path {inherit inputs lib lib';})
+    {}
+    (concatPaths {
+      paths = ./.;
+      exclude = [./default.nix];
+      filterDefault = false;
+    });
+
+  # own is merged with // rather than deepMerge: deepMerge forces each value to
+  # test for an attrset, which would run vault's fetchGit on every eval. No
+  # top-level name in own collides with the base libs.
+  lib' =
+    deepMerge [
+      lib
+      inputs.home-manager.lib
+      inputs.nixlib.lib
+    ]
+    // own;
+in {
+  # own goes to flake.lib, lib' to every module as an argument.
+  inherit own lib';
 }
