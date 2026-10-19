@@ -24,6 +24,7 @@
 
     configuration = _: {
       features.niri.overrides.outputs."eDP-1".scale = 1;
+      services.throttled.enable = false;
     };
   };
 }
