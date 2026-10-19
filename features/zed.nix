@@ -9,7 +9,10 @@ _: {
 
   flake.homeModules.zed = { pkgs, ... }: {
     programs = {
-      zed-editor.enable = true;
+      zed-editor = {
+        enable = true;
+        installRemoteServer = true;
+      };
       television.enable = true;
     };
 

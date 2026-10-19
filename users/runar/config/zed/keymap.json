@@ -1,0 +1,204 @@
+// TODO: https://gist.github.com/oca159/0b480ed6555056418905b6e59af33674
+[
+  {
+    // Normal & Visual mode
+    "context": "Editor && (vim_mode == normal || vim_mode == visual) && !VimWaiting && !menu",
+    "bindings": {
+      ", f": "editor::FormatSelections",
+      ", w": "workspace::Save",
+      ", q": "pane::CloseActiveItem",
+      ", w q": ["workspace::SendKeystrokes", ", w , q"],
+      "ctrl-w": "pane::CloseActiveItem",
+      "space h e": ["task::Spawn", { "task_name": "Show bookmarks" }],
+      "space h a": ["task::Spawn", { "task_name": "Add bookmark" }],
+      "space 1": ["task::Spawn", { "task_name": "Open bookmark 1" }],
+      "shift-t up": ["task::Spawn", { "task_name": "Typst: Previous Page" }],
+      "shift-t down": ["task::Spawn", { "task_name": "Typst: Next Page" }],
+      "shift-t shift-p": ["task::Spawn", { "task_name": "Typst: Preview PNG" }],
+      "shift-t p": ["task::Spawn", { "task_name": "Typst: Go to Page" }]
+    }
+  },
+  {
+    // Normal mode
+    "context": "Editor && vim_mode == normal && !VimWaiting && !menu",
+    "bindings": {
+      "shift-h": "pane::ActivatePreviousItem",
+      "shift-l": "pane::ActivateNextItem",
+      ", f": "editor::Format",
+      "ctrl-f": "buffer_search::Deploy",
+      ", space": "buffer_search::Dismiss",
+      ", t": [
+        "task::Spawn",
+        {
+          "task_name": "TODO : List TODOs"
+        }
+      ],
+      ", g": [
+        "task::Spawn",
+        {
+          "task_name": "gitui",
+          "reveal_target": "center"
+        }
+      ]
+    }
+  },
+  {
+    // Insert mode
+    "context": "Editor && vim_mode == insert && !VimWaiting && !menu",
+    "bindings": {
+      "alt-v": "editor::Paste",
+      // "alt-c": "editor::Copy", // This is already toggle comments
+      "ctrl-alt-down": "editor::DuplicateLineUp",
+      "ctrl-d": ["workspace::SendKeystrokes", "ctrl-alt-down down"],
+      "ctrl-v": "editor::Paste"
+    }
+  },
+  {
+    "context": "EmptyPane || SharedScreen",
+    "bindings": {
+      // Put key bindings here (in addition to the context above) if you want them to
+      // work when no editor exists.
+      // "space f": "file_finder::Toggle"
+    }
+  },
+  {
+    "context": "Workspace || Editor",
+    "bindings": {
+      "ctrl-shift-s": "workspace::SaveWithoutFormat",
+      "ctrl-alt-right": "workspace::ToggleRightDock",
+      "ctrl-alt-left": "workspace::ToggleLeftDock"
+    }
+  },
+  {
+    "context": "Editor",
+    "bindings": {
+      "alt-c": "editor::ToggleComments",
+      "alt-n": ["workspace::SendKeystrokes", "ctrl-shift-j alt-z"],
+      "ctrl-g": [
+        "task::Spawn",
+        {
+          "task_name": "swoop",
+          "reveal_target": "center"
+        }
+      ]
+    }
+  },
+  {
+    "context": "Terminal",
+    "bindings": {
+      "alt-c": "terminal::Copy",
+      "alt-v": "terminal::Paste",
+      "ctrl-n": "workspace::NewTerminal",
+      "alt-n": ["workspace::SendKeystrokes", "alt-z ctrl-shift-j"]
+    }
+  },
+  {
+    "bindings": {
+      "alt-z": "workspace::ToggleZoom",
+      "ctrl-shift-j": "terminal_panel::ToggleFocus",
+      "ctrl-f": "search::FocusSearch",
+      // "ctrl-shift-q": "workspace::CopyPath",
+      // "ctrl-enter": [
+      //   "workspace::SendKeystrokes",
+      //   "ctrl-shift-q ctrl-shift-q ctrl-shift-q ctrl-shift-j ctrl-c ctrl-l python3 space alt-v enter ctrl-shift-j"
+      // ],
+      "f12": "workspace::ToggleBottomDock"
+    }
+  },
+  {
+    "context": "(Editor && (showing_code_actions || showing_completions))",
+    "bindings": {
+      "tab": "editor::ContextMenuNext",
+      "shift-tab": "editor::ContextMenuPrevious"
+    }
+  },
+  // {
+  // "context": "Workspace",
+  // "bindings": {
+  // "ctrl-p": [
+  // "task::Spawn",
+  // {
+  // "task_name": "file_finder",
+  // "reveal_target": "center"
+  // }
+  // ],
+  // "alt-~ a": [
+  // "task::Spawn",
+  // {
+  // "task_name": "live_grep",
+  // "reveal_target": "center"
+  // }
+  // ]
+  // }
+  // },
+  // {
+  // "context": "Terminal",
+  // "bindings": {
+  // "ctrl-p": [
+  // "workspace::SendKeystrokes",
+  // "escape alt-~ a"
+  // ]
+  // }
+  // }
+  {
+    "bindings": {
+      "ctrl-,": "zed::OpenSettingsFile"
+    }
+  },
+  {
+    "bindings": {
+      "ctrl-alt-,": "zed::OpenSettings"
+    }
+  },
+  {
+    "bindings": {
+      "alt-s": "editor::InsertSnippet"
+    }
+  },
+  {
+    "bindings": {
+      "alt-b": "editor::ToggleBookmark"
+    }
+  },
+  {
+    "bindings": {
+      "alt-shift-b": "editor::ViewBookmarks"
+    }
+  },
+  {
+    "context": "VimControl && !menu",
+    "bindings": {
+      "g r": "editor::FindAllReferences"
+    }
+  },
+  {
+    "context": "VimControl && !menu",
+    "unbind": {
+      "g r r": "editor::FindAllReferences"
+    }
+  },
+  {
+    "context": "VimControl && !menu",
+    "unbind": {
+      "g i": "vim::InsertAtPrevious"
+    }
+  },
+  {
+    "context": "VimControl && !menu",
+    "bindings": {
+      "g i": "editor::GoToImplementation"
+    }
+  },
+  {
+    "context": "VimControl && !menu",
+    "unbind": {
+      "g shift-i": "editor::GoToImplementation"
+    }
+  },
+  {
+    "unbind": {
+      "ctrl-p": "menu::SelectPrevious"
+    }
+  }
+]
+

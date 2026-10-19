@@ -1,0 +1,120 @@
+[
+  {
+    "label": "file_finder",
+    "command": "zeditor \"$(tv files)\"",
+    "hide": "always",
+    "shell": {
+      "program": "bash"
+    },
+    "cwd": "${ZED_WORKTREE_ROOT}",
+    "allow_concurrent_runs": false,
+    "use_new_terminal": false
+  },
+  {
+    "label": "live_grep",
+    "command": "zeditor \"$(tv --input '${ZED_SELECTED_TEXT:-}' --exact text)\"",
+    "hide": "always",
+    "shell": {
+      "program": "bash"
+    },
+    "cwd": "${ZED_WORKTREE_ROOT}",
+    "allow_concurrent_runs": false,
+    "use_new_terminal": false
+  },
+  {
+    "label": "TODO : List TODOs",
+    "command": "rg",
+    "args": [
+      "--hyperlink-format=file://{path}:{line}",
+      "-e TODO",
+      "-e FIXME",
+      "-e HACK"
+    ],
+    "cwd": "${ZED_WORKTREE_ROOT}",
+    "use_new_terminal": true,
+    "allow_concurrent_runs": false,
+    "reveal": "always",
+    "hide": "never",
+    "show_summary": false,
+    "show_command": false,
+    "reveal_target": "dock"
+  },
+  {
+    "label": "C++ : Build and Run (auto-detect)",
+    "command": "export TARGET=\"$(find-cmake-target \"${ZED_FILE}\" \"${ZED_WORKTREE_ROOT}\")\"; cmake -B build -S . && cmake --build build --target \"${TARGET}\" && find ./build/bin -type f -executable -name \"${TARGET}\" -exec {} \\; -quit",
+    "cwd": "${ZED_WORKTREE_ROOT}",
+    "hide": "on_success",
+    "shell": {
+      "program": "bash"
+    },
+    "show_summary": false,
+    "show_command": false
+  },
+  {
+    "label": "fzf_swoop",
+    "command": "bat --style=numbers --color=always --theme=TwoDark --paging=never $ZED_FILE | fzf --ansi --tiebreak=index --layout=reverse --input-border=rounded --info=inline-right --height=100% --border=rounded --margin=4 --color=bg+:#262930 --header=\"\n\" --prompt=\"$ZED_FILENAME > \" | awk '{print $1}' | xargs -I{} zed $ZED_FILE:{}",
+    "use_new_terminal": true,
+    "allow_concurrent_runs": true,
+    "reveal": "always",
+    "hide": "always",
+    "shell": {
+      "program": "sh"
+    }
+  },
+  {
+    "label": "fzf_file",
+    "command": "fzf --preview 'bat --style=numbers --theme=TwoDark --color=always --line-range=:100 {}' --height=100% --header=\"\n\" --margin=4 --reverse --input-border=rounded --info=inline-right | xargs -I{} zed {}",
+    "use_new_terminal": true,
+    "allow_concurrent_runs": true,
+    "reveal": "always",
+    "hide": "always",
+    "shell": {
+      "program": "sh"
+    }
+  },
+  {
+    "label": "swoop",
+    "command": "bat --style=numbers --color=always --theme=TwoDark --paging=never \"$ZED_FILE\" | tv --ansi --input-header=\"$ZED_RELATIVE_FILE\" | ansifilter | xargs | awk '{print $1}' | xargs -I{} zeditor \"$ZED_FILE:{}\"",
+    "hide": "always",
+    "allow_concurrent_runs": true,
+    "use_new_terminal": true,
+    "shell": {
+      "program": "sh"
+    }
+  },
+  {
+    "label": "gitui",
+    "command": "gitui",
+    "use_new_terminal": true,
+    "allow_concurrent_runs": false,
+    "reveal": "always",
+    "hide": "always",
+    "shell": {
+      "program": "sh"
+    }
+  },
+
+  // https://github.com/tobiasklemp/zigzag
+  {
+    "label": "Show bookmarks",
+    "command": "zigzag show \"$ZED_WORKTREE_ROOT\""
+  },
+  {
+    "label": "Add bookmark",
+    "command": "zigzag add",
+    "args": ["$ZED_WORKTREE_ROOT", "$ZED_RELATIVE_FILE"]
+  },
+  {
+    "label": "Open bookmark 1",
+    "command": "zigzag open",
+    "args": [
+      "$ZED_WORKTREE_ROOT",
+      "0",
+      "--filePath $ZED_RELATIVE_FILE",
+      "--line $ZED_ROW",
+      "--col $ZED_COLUMN"
+    ]
+  }
+]
+
+

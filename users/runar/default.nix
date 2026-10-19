@@ -20,8 +20,6 @@ lib'.mkUser {
           "id_golog"
         ];
       };
-    }
-    {
       ssh = {
         keys = [
           {
@@ -39,19 +37,13 @@ lib'.mkUser {
         ];
         hostKeys."gitlab.com" = "id_golog";
       };
-    }
-    {
       stylix = {
         wallpaper = ./outerwilds.jpeg;
         cursor = "wii";
       };
-    }
-    {
       dms = {
         aiUsage = true;
       };
-    }
-    {
       git = {
         name = "Runar Fredagsvik";
         email = "git@runar.ch";
@@ -67,6 +59,7 @@ lib'.mkUser {
     "claude"
     "zen"
     "writing"
+    "zed-runar"
   ];
 
   home =

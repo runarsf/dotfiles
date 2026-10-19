@@ -5913,11 +5913,11 @@
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1780781041,
-        "narHash": "sha256-UdfSs/LIk2AOVoB3jHHQdMGHuRXz9fHF2XgTznDk9u4=",
+        "lastModified": 1792400058,
+        "narHash": "sha256-Qia4/F34qB9PnjpRdHuRwGIToK7UhMZ943g08pDYqeQ=",
         "owner": "runarsf",
         "repo": "nixlib",
-        "rev": "00ae94926058f6efb02bf509aa60470755882a34",
+        "rev": "87c14823c52bd12e0a0a6f8865bc364bb9f1c6a0",
         "type": "github"
       },
       "original": {
