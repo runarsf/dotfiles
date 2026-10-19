@@ -23,6 +23,8 @@
     let
       inherit (lib'.hyprland) lua onStart;
       inherit (pkgs.stdenv.hostPlatform) system;
+      # System mesa may need a newer glibc than vicinae's pinned nixpkgs provides
+      vicinaeMesa = inputs.vicinae.inputs.nixpkgs.legacyPackages.${system}.mesa;
     in
     {
       imports = [ inputs.vicinae.homeManagerModules.default ];
@@ -33,7 +35,11 @@
           systemd = {
             enable = true;
             autoStart = true;
-            environment.USE_LAYER_SHELL = 1;
+            environment = {
+              USE_LAYER_SHELL = 1;
+              __EGL_VENDOR_LIBRARY_FILENAMES = "${vicinaeMesa}/share/glvnd/egl_vendor.d/50_mesa.json";
+              GBM_BACKENDS_PATH = "${vicinaeMesa}/lib/gbm";
+            };
           };
           settings = {
             "$schema" = "https://vicinae.com/schemas/config.json";
