@@ -51,15 +51,17 @@
       cfg = config.features.ssh;
     in
     {
-      options.features.ssh.agentKeys = lib.mkOption {
-        default = map (k: k.name) keys;
-        defaultText = lib.literalExpression "map (k: k.name) osConfig.features.ssh.keys";
-        type = lib.types.listOf lib.types.str;
-        description = ''
-          Names of private keys (files at ~/.ssh/<name>, e.g. from
-          features.sops.privateKeys) to load into the agent once per
-          graphical login.
-        '';
+      options.features.ssh = {
+        agentKeys = lib.mkOption {
+          default = map (k: k.name) keys;
+          defaultText = lib.literalExpression "map (k: k.name) osConfig.features.ssh.keys";
+          type = lib.types.listOf lib.types.str;
+          description = ''
+            Names of private keys (files at ~/.ssh/<name>, e.g. from
+            features.sops.privateKeys) to load into the agent once per
+            graphical login.
+          '';
+        };
       };
 
       options.features.ssh.hostKeys = lib.mkOption {

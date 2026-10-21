@@ -82,6 +82,17 @@ lib'.mkUser {
           inputs.helium.packages.${system}.default
         ];
 
-      programs.herdr.enable = true;
+      programs.herdr = {
+        enable = true;
+        settings = {
+          keys.prefix = "ctrl+a";
+          onboarding = false;
+          theme = {
+            auto_switch = false;
+            name = "vesper";
+          };
+          ui.status_indicators = "symbols";
+        };
+      };
     };
 }
