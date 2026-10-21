@@ -34,6 +34,10 @@
     let
       inherit (lib) mapAttrsToList concatStringsSep;
       inherit (lib'.shell) greeting aliases;
+      # the shared `develop` uses POSIX `$SHELL`, which nushell cannot parse
+      aliases' = aliases pkgs // {
+        develop = "nix develop --command nu";
+      };
       carapaceInit = pkgs.runCommand "carapace-init-nushell" { } ''
         ${pkgs.lib.getExe pkgs.carapace} _carapace nushell > $out
       '';
@@ -82,7 +86,7 @@
             ) | sort-by type name -i | if $raw { table } else { move type target readonly num_links inode size created accessed modified --last | drop column 7 }
           }
 
-          ${aliases pkgs |> mapAttrsToList (k: v: "alias ${k} = ${v}") |> concatStringsSep "\n"}
+          ${aliases' |> mapAttrsToList (k: v: "alias ${k} = ${v}") |> concatStringsSep "\n"}
 
           ${greeting pkgs}
         '';

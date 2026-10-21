@@ -85,7 +85,7 @@ lib'.mkUser {
       programs.herdr = {
         enable = true;
         settings = {
-          keys.prefix = "ctrl+a";
+          keys.prefix = "ctrl+b";
           onboarding = false;
           theme = {
             auto_switch = false;
