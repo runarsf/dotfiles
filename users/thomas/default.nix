@@ -7,6 +7,8 @@
 lib'.mkUser {
   inherit self withSystem;
 
+  root = ./.;
+
   username = "thomas";
   stateVersion = "24.11";
 

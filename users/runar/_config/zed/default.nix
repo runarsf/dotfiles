@@ -8,7 +8,7 @@ let
   userSettings = ./settings.json |> readFile |> fromJSONCPure;
 in
 {
-  flake.homeModules.zed-runar = _: {
+  homeModule = _: {
     programs.zed-editor = {
       userSettings = (removeAttrs userSettings [ "auto_install_extensions" ]) // {
         buffer_font_family = if bitmap then "ScientificaVector" else "CaskaydiaCove Nerd Font";

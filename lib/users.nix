@@ -5,7 +5,28 @@
   ...
 }:
 let
-  inherit (lib) optionals;
+  inherit (builtins) pathExists attrNames;
+
+  inherit (lib) optionals catAttrs concatStringsSep;
+
+  # Import every .nix file under <root>/_config, in the shape { homeModule?, nixosModule? }.
+  # The dir is underscore-prefixed so import-tree doesn't import it.
+  readUserConfig =
+    self: root:
+    let
+      dir = root + "/_config";
+      load =
+        path:
+        let
+          entry = import path { inherit lib' inputs self; };
+          unknown = attrNames (removeAttrs entry [ "homeModule" "nixosModule" ]);
+        in
+        if unknown == [ ] then
+          entry
+        else
+          throw "mkUser: ${toString path} sets unknown attribute(s) ${concatStringsSep ", " unknown}; expected homeModule and/or nixosModule";
+    in
+    if root == null || !(pathExists dir) then [ ] else map load (lib'.concatPaths { paths = dir; });
 
   # Features every user gets unless they pass baseFeatures = false. Only ones
   # that take no per-user options: a feature someone configures belongs in that
@@ -50,6 +71,7 @@ in
       features ? [ ],
       baseFeatures ? true,
       home ? { },
+      root ? null,
       extraGroups ? [ ],
       homeDirectory ? "/home/${username}",
       initialPassword ? "changeme",
@@ -57,10 +79,11 @@ in
     }:
     let
       resolved = lib'.useFeatures self (optionals baseFeatures defaultFeatures ++ features);
+      userConfig = readUserConfig self root;
     in
     {
       flake.nixosModules.${username} = { pkgs, ... }: {
-        imports = resolved.nixos ++ [ self.nixosModules.primaryUser ];
+        imports = resolved.nixos ++ catAttrs "nixosModule" userConfig ++ [ self.nixosModules.primaryUser ];
 
         primaryUsers = [ username ];
         nix.settings.trusted-users = [ username ];
@@ -90,7 +113,7 @@ in
       };
 
       flake.homeModules.${username} = {
-        imports = resolved.home ++ [ home ];
+        imports = resolved.home ++ catAttrs "homeModule" userConfig ++ [ home ];
 
         home.stateVersion = stateVersion;
       };
