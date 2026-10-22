@@ -37,6 +37,10 @@ lib'.mkUser {
             key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBYghkkwi+HG+q91Xhcdc+Ac8wYdIo8BzUZKUPa2/00f";
           }
         ];
+        hostKeys = {
+          "git.ntnu.no" = "id_ntnu";
+          "git.gvk.idi.ntnu.no" = "id_ntnu";
+        };
       };
     }
     {
@@ -49,7 +53,7 @@ lib'.mkUser {
       git = {
         name = "Thomas Espervik";
         email = "thoesp@protonmail.com";
-        emailSelector.extraEmails = [ "thomes@stud.ntnu.no" ];
+        emailSelector.extraEmails = ["thomes@stud.ntnu.no"];
       };
     }
     {
@@ -75,7 +79,7 @@ lib'.mkUser {
     "japanese"
   ];
 
-  home = { pkgs, ... }: {
+  home = {pkgs, ...}: {
     home.packages = with pkgs; [
       solidtime-desktop
     ];
