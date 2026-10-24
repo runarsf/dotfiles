@@ -1,6 +1,6 @@
 def main [target: string] {
   let monitors = hyprctl -j monitors | from json
-  let monitorRules: list<string> = (hyprctl -j workspacerules | from json | where {
+  let monitorRules: table<workspaceString: string, enabled: bool, monitor: string> = (hyprctl -j workspacerules | from json | where {
     |it| "monitor" in $it
   } | update monitor {
     |$it| $it.monitor | split row ";"
