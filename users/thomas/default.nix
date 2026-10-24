@@ -83,8 +83,7 @@ lib'.mkUser {
   home = {pkgs, ...}: {
     home.packages = with pkgs; [
       solidtime-desktop
+      spotify
     ];
-
-    programs.zed-editor.package = pkgs.zed-editor-fhs;
   };
 }
