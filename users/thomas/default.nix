@@ -71,9 +71,10 @@ lib'.mkUser {
         ];
       };
     }
-    # "hyprland"
+    "hyprland"
     "dms"
     "yazi"
+    "nushell"
     "fastfetch"
     "docker"
     "japanese"
