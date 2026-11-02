@@ -1,10 +1,6 @@
 _: {
   perSystem =
-    {
-      pkgs,
-      lib,
-      ...
-    }:
+    { pkgs, ... }:
     {
       packages.zsh-manpage-completion-generator = pkgs.buildGoModule {
         pname = "zsh-manpage-completion-generator";
@@ -18,13 +14,6 @@ _: {
         };
 
         vendorHash = "sha256-Wb00v363VjrRKMRQ2beA1pxRYB7LY9yTHPdiXIDdLQA=";
-
-        nativeBuildInputs = [ pkgs.makeWrapper ];
-
-        postInstall = ''
-          wrapProgram $out/bin/zsh-manpage-completion-generator \
-            --prefix PATH : ${lib.makeBinPath [ pkgs.fish ]}
-        '';
 
         meta.mainProgram = "zsh-manpage-completion-generator";
       };

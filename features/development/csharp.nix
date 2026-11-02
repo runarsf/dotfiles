@@ -38,6 +38,7 @@ _: {
 
         home.sessionVariables = {
           DOTNET_ROOT = "${dotnet}/share/dotnet/";
+          TZDIR = "/etc/zoneinfo";
         };
       };
     };

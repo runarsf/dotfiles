@@ -18,6 +18,7 @@
       nixvim' = lib.getExe nixvim;
       aliases = {
         vim = "${nixvim'}";
+        vimdiff = "${nixvim'} -d";
       };
     in
     {

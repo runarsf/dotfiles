@@ -7,7 +7,7 @@ _: {
       ...
     }:
     let
-      inherit (lib) getExe;
+      inherit (lib) getExe mkIf mkOrder;
 
       zellij = getExe config.programs.zellij.finalPackage;
       zellijWrapped = pkgs.writeShellScriptBin "zellij" ''
@@ -29,10 +29,19 @@ _: {
       '';
     in
     {
-      # TODO: overrides in zsh
-      # if [[ -n "$ZELLIJ" && "$ZELLIJ_SESSION_NAME" == "zj-launcher" ]]; then
-      # zellij kill-session "$ZELLIJ_SESSION_NAME"
-      # fi
+      # Leave the launcher session; ordered after zoxide's init since it uses `z`.
+      programs.zsh.initContent = mkIf config.programs.zsh.enable (
+        mkOrder 1050 ''
+          if test -n "$ZELLIJ"; then
+            if test "$ZELLIJ_SESSION_NAME" = "zj-launcher"; then
+              zellij kill-session "$ZELLIJ_SESSION_NAME"
+            elif test -n "$ZJ_FROM_LAUNCHER"; then
+              z "$ZELLIJ_SESSION_NAME" 2>/dev/null
+            fi
+          fi
+        ''
+      );
+
       programs.zellij = {
         enable = true;
         settings = {

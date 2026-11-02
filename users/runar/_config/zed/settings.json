@@ -126,7 +126,6 @@
         }
       }
     },
-    "sidebar_side": "right",
     "enable_feedback": false,
     "default_profile": "write",
     "button": true,
@@ -497,6 +496,7 @@
     "awk": true,
     "basher": true,
     "beanseeds-pro": true,
+    "bruno": true,
     "colored-zed-icons-theme": true,
     "comment": true,
     "csharp": true,

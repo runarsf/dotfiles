@@ -1,37 +1,32 @@
 _: {
-  homeModule = _: {
+  homeModule = {config, ...}: {
     programs.claude-code = {
-      # settings = {
-      #   permissions = {
-      #     additionalDirectories = [ "${config.home.homeDirectory}/Documents/notes" ];
-      #   };
-      # };
+      settings = {
+        permissions = {
+          additionalDirectories = [ "${config.home.homeDirectory}/Documents/notes/Work" ];
+        };
+      };
       rules.task-vault = ''
-        # Task vault workflow (dormant unless triggered)
+        # Task vault workflow
 
-        Applies ONLY when the user names a task or asks to continue/resume one.
+        This section only applies when working/asked to work on a task that exists in `~/Documents/notes/Work/Tasks/`.
         Otherwise skip this section entirely and work normally — never mention it.
 
-        Vault: `~/Documents/notes` — all planning, findings, and progress live there,
-        never in the current repo. If that path doesn't exist, say so in one line and
-        continue without it.
+        Vault: `~/Documents/notes/Work` — all planning, findings, and progress live there,
+        never in the current repo.
 
         ## Layout
-        - `Plans/<task-name>/` containing `Task Plan.md`, `Findings.md`, `Progress.md`
-        - Folder name = task name. Tasks coexist as sibling folders; never rename or merge them.
+        - `Tasks/<task-name>/` containing `Plan.md`, `Findings.md`, `Progress.md`, among other related documentation.
+        - Tasks coexist as sibling folders; never rename or merge them.
+        - Always be short and concise when documenting, and use human language rather than overcomplicated words.
+        - `Tickets/<ticket-name>` containing git issues; not scoped to any plans. Never edit tickets, but use them for reference.
 
         ## Session
         - On trigger: read the named task's `Task Plan.md` + `Progress.md` first.
-        - "Continue" with no task name → ask which task; don't guess.
-        - Touch only the named task's folder. Other task folders are off-limits even for reference unless asked.
+        - Modify only the named task's folder. Other task folders are off-limits, except for reference.
         - No folder for the named task yet → confirm whether to scaffold the three files or wait for the user to populate them.
         - Work only the current phase unless redirected. Never write plan/progress/findings/notes files in the repo.
-
-        ## Mid-task questions
-        - Batch non-blocking questions instead of asking one at a time.
-        - Minor, easily reversible: decide, act, log decision + why in `Findings.md`.
-        - Irreversible or scope-changing: stop and ask.
-        - Working unattended: append questions with a proposed default under `Open questions` in the task's `Task Plan.md`; proceed only if reversible.
+        - Always stop and ask when decisions/questions arise, but consult tickets and provide options.
 
         ## Session end — always
         Append dated (ISO) entries; never overwrite or reorder existing content:
@@ -40,9 +35,9 @@ _: {
         - `Task Plan.md` — tick completed phases; adjust later phases if reality diverged
 
         ## Vault etiquette
-        - Ask before deleting or renaming notes; never touch any folder outside of `**/agent` or attachments
-        - Keep YAML frontmatter intact; use `[[wikilinks]]`
-        - No secrets in vault notes
+        - Ask before deleting or renaming notes.
+        - Never touch YAML frontmatter unless prompted, keep it intact, but never update; use `[[wikilinks]]` when referring to other files.
+        - Never store secrets in vault notes.
       '';
     };
   };
