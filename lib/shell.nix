@@ -1,19 +1,21 @@
 { lib, ... }:
 {
   shell = {
-    # Every man1/man8 page in `packages`, converted to zsh completions. Nix
-    # caches the result, so it only reruns when one of those packages changes.
-    mkManCompletions =
+    # Man pages in `packages` turned into zsh completions. `commands` have no
+    # man page, so help2man builds one from `--help`.
+    mkDocCompletions =
       {
         pkgs,
         generator,
         packages,
+        commands,
       }:
-      pkgs.runCommand "zsh-man-completions"
+      pkgs.runCommand "zsh-doc-completions"
         {
           nativeBuildInputs = [
             pkgs.carapace
             pkgs.fish
+            pkgs.help2man
             pkgs.jq
             pkgs.python3
             generator
@@ -22,17 +24,24 @@
         ''
           shopt -s nullglob
           export HOME="$NIX_BUILD_TOP"
+          export PATH="${lib.makeBinPath packages}:$PATH"
 
           # site-functions rather than $out directly: compaudit rejects an
           # $fpath entry whose parent is group-writable, and /nix/store is.
           dst="$out/share/zsh/site-functions"
-          mkdir -p fish converted "$dst"
+          mkdir -p fish converted help "$dst"
+
+          # --version-string so help2man does not run each command twice.
+          for cmd in ${lib.escapeShellArgs commands}; do
+            timeout 20 help2man --no-info --no-discard-stderr --version-string=0 \
+              --output="help/$cmd.1" "$cmd" < /dev/null
+          done
 
           # fish 4 keeps the parser inside the binary.
           fish -c 'status get-file tools/create_manpage_completions.py' > parser.py
           python3 -B parser.py --directory=fish ${
             lib.concatStringsSep " " (lib.unique (map (p: "${p.man or p}/share/man/man[18]/*") packages))
-          }
+          } help/*.1
 
           zsh-manpage-completion-generator -src fish -dst converted
 
@@ -46,6 +55,15 @@
           ls converted | sed 's/^_//' | sort > generated
 
           comm -23 generated covered | while read -r cmd; do
+            cp "converted/_$cmd" "$dst/_$cmd"
+          done
+
+          # `commands` skip the filter -- nothing else completes them anyway.
+          for cmd in ${lib.escapeShellArgs commands}; do
+            if [[ ! -e "converted/_$cmd" ]]; then
+              echo "no options parsed out of \`$cmd --help'" >&2
+              exit 1
+            fi
             cp "converted/_$cmd" "$dst/_$cmd"
           done
         '';
@@ -62,11 +80,38 @@
     # per startup. The output is static, so bake it at build time instead.
     # carapace is the exception: it bakes $XDG_CONFIG_HOME into its snippet, so
     # keep that an expansion or the build sandbox's value leaks into the shell.
-    mkCarapaceInit =
-      pkgs: shellName:
-      pkgs.runCommand "carapace-init-${shellName}" { } ''
-        XDG_CONFIG_HOME=/@XDG@ ${pkgs.lib.getExe pkgs.carapace} _carapace ${shellName} \
-          | sed 's|/@XDG@|''${XDG_CONFIG_HOME:-$HOME/.config}|' > $out
+    #
+    # It also grabs ~800 commands in one compdef, hiding the completions
+    # packages ship themselves. Drop the ones we already have a `_<cmd>` for.
+    mkCarapaceZshInit =
+      {
+        pkgs,
+        packages,
+      }:
+      pkgs.runCommand "carapace-init-zsh" { } ''
+        shopt -s nullglob
+
+        XDG_CONFIG_HOME=/@XDG@ ${pkgs.lib.getExe pkgs.carapace} _carapace zsh \
+          | sed 's|/@XDG@|''${XDG_CONFIG_HOME:-$HOME/.config}|' > snippet
+
+        # Fails the build if carapace stops emitting this line.
+        grep '^compdef _carapace_completer ' snippet > registration
+        grep -v '^compdef _carapace_completer ' snippet > $out
+
+        tr ' ' '\n' < registration | tail -n +3 | tr -d '"' | sort -u > claimed
+
+        for f in ${
+          lib.concatStringsSep " " (lib.unique (map (p: "${p}/share/zsh/site-functions/_*") packages))
+        }; do
+          f=''${f##*/}
+          printf '%s\n' "''${f#_}"
+        done | sort -u > shipped
+
+        {
+          printf 'compdef _carapace_completer'
+          comm -23 claimed shipped | sed 's/.*/ "&"/' | tr -d '\n'
+          echo
+        } >> $out
       '';
     mkDirenvHook =
       pkgs: shellName:

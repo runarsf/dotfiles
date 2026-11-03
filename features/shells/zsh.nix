@@ -27,10 +27,10 @@
       ;
     inherit
       (lib'.shell)
-      mkCarapaceInit
+      mkCarapaceZshInit
       mkDirenvHook
       mkLsColors
-      mkManCompletions
+      mkDocCompletions
       mkStarshipInit
       mkZoxideInit
       greeting
@@ -40,15 +40,31 @@
 
     zshCacheHome = "\${XDG_CACHE_HOME:-$HOME/.cache}/zsh";
     omzCacheDir = "\${XDG_CACHE_HOME:-$HOME/.cache}/oh-my-zsh";
-    manCompletions = mkManCompletions {
-      inherit pkgs;
+    packages = config.home.packages ++ (osConfig.environment.systemPackages or []);
+    docCompletions = mkDocCompletions {
+      inherit pkgs packages;
       generator = self.packages.${system}.zsh-manpage-completion-generator;
-      packages = config.home.packages ++ (osConfig.environment.systemPackages or []);
+      # Nothing else completes these; `--help` is all they have.
+      commands = [
+        "alejandra"
+        "blahaj"
+        "cava"
+        "claude"
+        "deadnix"
+        "matugen"
+        "niks"
+        "oxker"
+        "podman-compose"
+        "spd-say"
+        "sqlit"
+        "tomlq"
+      ];
     };
+    carapaceInit = mkCarapaceZshInit {inherit pkgs packages;};
 
     # Keyed on the generated completions, so regenerating them takes effect
     # at once instead of waiting out the staleness check below.
-    zcompdump = "${zshCacheHome}/zcompdump-${substring 0 8 (baseNameOf manCompletions)}";
+    zcompdump = "${zshCacheHome}/zcompdump-${substring 0 8 (baseNameOf docCompletions)}";
 
     omz = "${pkgs.oh-my-zsh}/share/oh-my-zsh";
 
@@ -187,7 +203,7 @@
                          down-line-or-beginning-search
 
             # Appended, so hand-written completers keep precedence.
-            fpath+=(${manCompletions}/share/zsh/site-functions)
+            fpath+=(${docCompletions}/share/zsh/site-functions)
 
             mkdir -p "${zshCacheHome}" "${omzCacheDir}"
 
@@ -198,7 +214,7 @@
           # After compinit for compdef, and after the history block --
           # per-directory-history reads $HISTFILE when sourced.
           (afterHistory ''
-            source ${mkCarapaceInit pkgs "zsh"}
+            source ${carapaceInit}
 
             ${sourceAll eagerPlugins}
           '')
@@ -235,10 +251,6 @@
             zstyle ':completion:*' list-colors ''${(s.:.)LS_COLORS}
             # Where you are while scrolling a long menu.
             zstyle ':completion:*' select-prompt '%S%p%s'
-
-            # Flags parsed from --help, for commands with no completer in
-            # $fpath and no carapace spec.
-            compdef _gnu_generic alejandra matugen niks podman-compose
 
             magic-enter-cmd () { ${greeting pkgs} }
             magic-enter () {
