@@ -109,6 +109,9 @@
     "mode": "subtle"
   },
   "agent": {
+    "threads_sidebar": {
+      "position": "right"
+    },
     "thinking_display": "preview",
     "single_file_review": true,
     "message_editor_min_lines": 2,
@@ -276,7 +279,7 @@
     "default_mode": "normal"
   },
   "tab_bar": {
-    "show_pinned_tabs_in_separate_row": false,
+    "show_pinned_tabs_in_separate_row": true,
     "show_tab_bar_buttons": false,
     "show_nav_history_buttons": false
   },
