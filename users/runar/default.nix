@@ -43,7 +43,7 @@ lib'.mkUser {
         wallpaper = ./outerwilds.jpeg;
         cursor = "wii";
       };
-      dms = {
+      dux = {
         aiUsage = true;
       };
       git = {

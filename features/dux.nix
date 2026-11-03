@@ -1,5 +1,5 @@
 { inputs, ... }: {
-  flake.homeModules.dms =
+  flake.homeModules.dux =
     {
       pkgs,
       lib,
@@ -9,15 +9,17 @@
     }:
     let
       inherit (lib) mkIf mkEnableOption optionals;
-      cfg = config.features.dms;
+      cfg = config.features.dux;
     in
     {
       imports = [
-        inputs.dms.homeModules.dank-material-shell
-        inputs.dms-plugin-registry.homeModules.default
+        inputs.dux-shell.homeModules.dank-material-shell
+        inputs.dux-plugin-registry.homeModules.default
       ];
 
-      options.features.dms.aiUsage = mkEnableOption "Claude Code usage widget";
+      options.features.dux = {
+        aiUsage = mkEnableOption "Claude Code usage widget";
+      };
 
       config = mkIf (pkgs.stdenv.hostPlatform.isLinux && (osConfig.host.desktop or true)) {
         home.packages = with pkgs; [

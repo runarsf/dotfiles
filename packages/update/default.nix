@@ -2,7 +2,6 @@
 let
   # NOTE: hyprland's cache gets evicted on a schedule, so releases tend to not be cached
   releaseLockedInputs = [
-    "dms"
     "vicinae"
     "nwg-displays"
     "zed"

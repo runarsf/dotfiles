@@ -72,7 +72,7 @@ lib'.mkUser {
       };
     }
     "hyprland"
-    "dms"
+    "dux"
     "yazi"
     "nushell"
     "fastfetch"
