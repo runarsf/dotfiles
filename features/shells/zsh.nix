@@ -288,6 +288,10 @@
 
                       # Heading even when there is just one group.
                       zstyle ':fzf-tab:*' single-group color header
+
+                      # carapace shows basenames but completes full paths, so the typed
+                      # path would end up in the query and match none of them.
+                      zstyle ':fzf-tab:*' query-string prefix
                     ''
                   else
                     ''
