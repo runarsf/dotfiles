@@ -50,6 +50,9 @@ lib'.mkUser {
         name = "Runar Fredagsvik";
         email = "git@runar.ch";
       };
+      zsh = {
+        fzfTab = true;
+      };
     }
     "matrix"
     "nautilus"
