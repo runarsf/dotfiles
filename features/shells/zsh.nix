@@ -27,6 +27,7 @@
         optional
         optionalString
         substring
+        getExe
         ;
       inherit (lib'.shell)
         mkCarapaceZshInit
@@ -277,11 +278,19 @@
                 # Match dotfiles without typing the dot.
                 _comp_options+=(globdots)
 
+                # File colours in every group, not just the ungrouped `default` one.
+                zstyle ':completion:*' list-colors ''${(s.:.)LS_COLORS}
+
                 ${
                   if cfg.fzfTab then
                     ''
-                      zstyle ':fzf-tab:*' fzf-flags '--border=rounded' '--height=~50%' '--min-height=20'
-                      zstyle ':fzf-tab:*' switch-group ',' '.'
+                      zstyle ':completion:*' menu no
+
+                      zstyle ':fzf-tab:*' use-fzf-default-opts yes
+                      zstyle ':fzf-tab:*' fzf-flags '--height=~50%' '--min-height=20' '--border=none'
+                      zstyle ':fzf-tab:*' switch-group 'left' 'right'
+
+                      zstyle ':fzf-tab:complete:cd:*' fzf-preview '${getExe pkgs.eza} -1 --color=always $realpath'
 
                       # fzf-tab reuses the group heading verbatim, so no %F codes here.
                       zstyle ':completion:*:descriptions' format '[%d]'
@@ -297,9 +306,6 @@
                     ''
                       # Arrow-key menu, current match highlighted.
                       zstyle ':completion:*' menu select
-
-                      # File colours in every group, not just the ungrouped `default` one.
-                      zstyle ':completion:*' list-colors ''${(s.:.)LS_COLORS}
 
                       # Where you are while scrolling a long menu.
                       zstyle ':completion:*' select-prompt '%S%p%s'
