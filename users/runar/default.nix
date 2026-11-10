@@ -52,6 +52,7 @@ lib'.mkUser {
       };
       zsh = {
         fzfTab = true;
+        deja = true;
       };
     }
     "matrix"

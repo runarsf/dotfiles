@@ -26,11 +26,14 @@
         mkOrder
         optional
         optionalString
+        optionalAttrs
+        mkEnableOption
         substring
         getExe
         ;
       inherit (lib'.shell)
         mkCarapaceZshInit
+        mkDejaInit
         mkDirenvHook
         mkLsColors
         mkDocCompletions
@@ -108,16 +111,28 @@
       deferredPlugins = [
         "${pkgs.zsh-syntax-highlighting}/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
         "${pkgs.zsh-history-substring-search}/share/zsh-history-substring-search/zsh-history-substring-search.zsh"
-        "${pkgs.zsh-autosuggestions}/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+        # Both draw their suggestion with POSTDISPLAY, and deja stands down when
+        # it sees zsh-autosuggestions, so only one of the two is sourced.
+        (
+          if cfg.deja then
+            "${mkDejaInit pkgs}"
+          else
+            "${pkgs.zsh-autosuggestions}/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+        )
         "${self.packages.${system}.zsh-fz}/fz.plugin.zsh"
       ];
     in
     {
       options.features.zsh = {
-        fzfTab = lib.mkEnableOption "fzf-tab completion UI";
+        fzfTab = mkEnableOption "fzf-tab completion UI";
+        deja = mkEnableOption "predictive inline suggestions with deja";
       };
 
       config = {
+        # The init script calls the binary by store path; this is for `deja
+        # import`, `deja fuzzy` and friends on the command line.
+        home.packages = optional cfg.deja pkgs.deja;
+
         programs = {
           # Disable shell integrations that run on startup
           starship.enableZshIntegration = mkDefault false;
@@ -191,6 +206,12 @@
               # fz.sh defaults to rupa/z; we have zoxide.
               FZ_HISTORY_CD_CMD = "__zoxide_z";
               FZ_HISTORY_LIST_GENERATOR = "__fz_zoxide_list";
+              DEJA_EMPTY = "off";
+            }
+            // optionalAttrs (cfg.deja && cfg.fzfTab) {
+              # Tab belongs to fzf-tab; deja would send it to expand-or-complete
+              # whenever it has no suggestion to cycle through.
+              DEJA_CYCLE_KEY = "";
             };
 
             completionInit = ''
