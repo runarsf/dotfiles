@@ -40,7 +40,7 @@ lib'.mkUser {
         hostKeys."gitlab.com" = "id_golog";
       };
       stylix = {
-        wallpaper = ./outerwilds.jpeg;
+        wallpaper = ./_config/wallpapers/nomai_chart.png;
         cursor = "wii";
       };
       dux = {
