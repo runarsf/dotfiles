@@ -257,7 +257,7 @@ _: {
                   quick = mkGitFn "git add -A && git commit --allow-empty -m \"$*\" && git push;";
                   again = mkGitFn "git add -A && git commit --amend --no-edit --gpg-sign;";
 
-                  poop = mkGitFn ''git push && { ${getExe' pkgs.mplayer "mplayer"} "https://www.myinstants.com/media/sounds/fart-with-reverb.mp3" >/dev/null 2>&1; } || { ${getExe' pkgs.mplayer "mplayer"} "https://www.myinstants.com/media/sounds/fart-meme-sound_qo90QRs.mp3" >/dev/null 2>&1; };'';
+                  # poop = mkGitFn ''git push && { ${getExe' pkgs.mplayer "mplayer"} "https://www.myinstants.com/media/sounds/fart-with-reverb.mp3" >/dev/null 2>&1; } || { ${getExe' pkgs.mplayer "mplayer"} "https://www.myinstants.com/media/sounds/fart-meme-sound_qo90QRs.mp3" >/dev/null 2>&1; };'';
 
                   unstage = "reset --";
                   discard = "!git reset --hard && git clean -df";

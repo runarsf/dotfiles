@@ -19,8 +19,8 @@
       environment.systemPackages = with pkgs.nushellPlugins; [
         pkgs.carapace
         query
-        gstat
         formats
+        # gstat
         # polars
       ];
     };

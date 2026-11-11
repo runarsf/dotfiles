@@ -49,11 +49,11 @@
       inputs.hyprland.follows = "hyprland";
     };
 
-    nwg-displays.url = "github:nwg-piotr/nwg-displays/v0.4.4";
+    nwg-displays.url = "github:nwg-piotr/nwg-displays/v0.5.0";
 
-    zed.url = "github:zed-industries/zed/v1.24.2";
+    zed.url = "github:zed-industries/zed/v1.27.0";
 
-    vicinae.url = "github:vicinaehq/vicinae/v0.29.1";
+    vicinae.url = "github:vicinaehq/vicinae/v0.30.0";
     vicinae-extensions = {
       url = "github:vicinaehq/extensions";
       inputs.vicinae.follows = "vicinae";
