@@ -249,8 +249,6 @@
                 source ${pkgs.zsh-defer}/share/zsh-defer/zsh-defer.plugin.zsh
               '')
 
-              # After compinit for compdef, and after the history block --
-              # per-directory-history reads $HISTFILE when sourced.
               (afterHistory ''
                 source ${carapaceInit}
 
@@ -258,6 +256,9 @@
               '')
 
               ''
+                # Make / count as a word boundary
+                WORDCHARS=''${WORDCHARS//\//}
+
                 # Real completer first, plain filenames as the fallback.
                 zstyle ':completion:*' completer _complete _files
 
