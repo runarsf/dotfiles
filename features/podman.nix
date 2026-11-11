@@ -23,10 +23,12 @@ _: {
           registries.settings = {
             unqualified-search-registries = [ "docker.io" ];
           };
-          storage.settings.storage = {
-            runroot = "/run/containers/storage";
-            graphroot = "/var/lib/containers/storage";
-            options.overlay.mountopt = "nodev,metacopy=on";
+          storage = {
+            rootful.settings.storage = {
+              runroot = "/run/containers/storage";
+              graphroot = "/var/lib/containers/storage";
+            };
+            settings.storage.options.overlay.mountopt = "nodev,metacopy=on";
           };
         };
 
