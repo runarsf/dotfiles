@@ -250,7 +250,7 @@
     "show_background": false,
     "show_parameter_hints": true,
     "show_other_hints": true,
-    "enabled": true,
+    "enabled": false,
     "toggle_on_modifiers_press": {
       "control": true,
       "alt": true
@@ -267,7 +267,7 @@
     "git_gutter": null,
     "gutter_debounce": null,
     "inline_blame": {
-      "location": "inline",
+      "location": "status_bar",
       "show_commit_summary": false
     },
     "branch_picker": null
@@ -418,6 +418,9 @@
   "tab_size": 2,
   "languages": {
     "Angular": {
+      "prettier": {
+        "allowed": true
+      },
       "formatter": ["prettier"],
       "format_on_save": "on"
     },

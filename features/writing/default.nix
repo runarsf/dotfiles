@@ -18,7 +18,6 @@ _: {
       pandoc
       poppler-utils
       sc-im
-      anki
       plantuml
       graphviz
       octaveFull

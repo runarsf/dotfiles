@@ -20,11 +20,15 @@ _: {
       virtualisation = {
         containers = {
           enable = true;
-          registries.search = [ "docker.io" ];
-          storage.settings.storage = {
-            runroot = "/run/containers/storage";
-            graphroot = "/var/lib/containers/storage";
-            options.overlay.mountopt = "nodev,metacopy=on";
+          registries.settings = {
+            unqualified-search-registries = [ "docker.io" ];
+          };
+          storage = {
+            rootful.settings.storage = {
+              runroot = "/run/containers/storage";
+              graphroot = "/var/lib/containers/storage";
+            };
+            settings.storage.options.overlay.mountopt = "nodev,metacopy=on";
           };
         };
 

@@ -117,6 +117,20 @@
       pkgs: shellName:
       pkgs.runCommand "direnv-hook-${shellName}" { }
         "${pkgs.lib.getExe pkgs.direnv} hook ${shellName} > $out";
+    # `deja init zsh` bakes the socket path into the script it writes under
+    # $HOME, so run it against a stub home and put $HOME back afterwards.
+    # The binary stamp is cleared: it guards a staleness check that forks a
+    # `deja init` per shell, and the store path already pins the version.
+    mkDejaInit =
+      pkgs:
+      pkgs.runCommand "deja-init-zsh" { } ''
+        export HOME="$NIX_BUILD_TOP/@HOME@"
+        mkdir -p "$HOME"
+        ${pkgs.lib.getExe pkgs.deja} init zsh > /dev/null
+        sed -e "s|$HOME|\''${HOME}|g" \
+            -e 's|^typeset -g _DEJA_BIN_STAMP=.*|typeset -g _DEJA_BIN_STAMP=""|' \
+            "$HOME/.local/share/deja/init.zsh" > $out
+      '';
     # `enableLsColors` would eval `dircolors` on every startup; this is the
     # same output, and completion list-colors needs $LS_COLORS to exist.
     mkLsColors =

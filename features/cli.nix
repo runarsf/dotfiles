@@ -10,7 +10,19 @@
       inherit (pkgs.stdenv.hostPlatform) system;
     in
     {
-      programs.fzf.enable = true;
+      programs.fzf = {
+        enable = true;
+        defaultOptions = [
+          "--style=minimal"
+          "--info=inline-right"
+          "--highlight-line"
+          "--color=fg:-1,bg:-1"
+        ];
+      };
+      stylix.targets.fzf.colors.override = {
+        bg = "-1";
+        fg = "-1";
+      };
 
       home.packages = with pkgs; [
         vim

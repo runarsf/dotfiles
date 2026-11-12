@@ -40,7 +40,7 @@ lib'.mkUser {
         hostKeys."gitlab.com" = "id_golog";
       };
       stylix = {
-        wallpaper = ./outerwilds.jpeg;
+        wallpaper = ./_config/wallpapers/nomai_chart.png;
         cursor = "wii";
       };
       dux = {
@@ -49,6 +49,10 @@ lib'.mkUser {
       git = {
         name = "Runar Fredagsvik";
         email = "git@runar.ch";
+      };
+      zsh = {
+        fzfTab = true;
+        deja = true;
       };
     }
     "matrix"

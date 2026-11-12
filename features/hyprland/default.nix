@@ -32,12 +32,6 @@
             portalPackage = hyprlandNixpkgs.xdg-desktop-portal-hyprland;
           };
         };
-        # bin/Hyprland is wrapped in a bash script injecting these onto PATH,
-        # but that breaks security.wrappers.Hyprland (cap_sys_nice, set by
-        # nixpkgs' hyprland.nix module), which needs a bare ELF. Point the
-        # wrapper at the real binary instead of disabling the wrap, so the
-        # package stays identical to what hyprland.cachix.org has cached.
-        security.wrappers.Hyprland.source = lib.mkForce "${config.programs.hyprland.package}/bin/.Hyprland-wrapped";
         # UPDATE: keep in sync with Hyprland's nix/default.nix wrapProgram deps.
         environment.systemPackages =
           (with hyprlandNixpkgs; [
@@ -68,7 +62,7 @@
         ...
       }:
       let
-        inherit (lib'.hyprland) kb exec onStart;
+        inherit (lib'.hyprland) kb exec onStart lua;
         inherit (pkgs.stdenv.hostPlatform) system;
         inherit (pkgs.writers) writeNuBin;
         inherit (lib) mkDefault;
@@ -604,6 +598,25 @@
                 "${lib.getExe pkgs.networkmanagerapplet}"
                 "${hypr-gamemode}"
                 "${pypr}"
+              ]
+              ++ [
+                {
+                  _args = [
+                    "workspace.created"
+                    (lua ''
+                      function(ws)
+                        if not ws.is_empty or ws.name ~= "special:scratchpad" then
+                          return
+                        end
+
+                        hl.exec_cmd("${lib.getExe terminal}", {
+                          size = { 1310, 836 },
+                          workspace = ws.name .. " silent",
+                        })
+                      end
+                    '')
+                  ];
+                }
               ];
               config = {
                 general = {
@@ -795,12 +808,6 @@
                 }
               ];
               bind = binds ++ repeatBinds ++ releaseBinds ++ mouseBinds;
-              workspace_rule = [
-                {
-                  workspace = "special:scratchpad";
-                  on_created_empty = "[size 1310 836] ${lib.getExe terminal}";
-                }
-              ];
               window_rule = windowRules;
             };
             submaps.passthrough.settings.bind = [

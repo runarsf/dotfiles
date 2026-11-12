@@ -33,6 +33,7 @@
           settings = {
             runUserMatugenTemplates = false;
             widgetBackgroundColor = "s";
+            m3ElevationEnabled = false;
             showWorkspaceApps = true;
             workspaceFollowFocus = false;
             showOccupiedWorkspacesOnly = true;
@@ -74,8 +75,11 @@
                 screenPreferences = [ "all" ];
                 showOnLastDisplay = true;
                 leftWidgets = [
-                  # { id = "launcherButton"; }
-                  { id = "workspaceSwitcher"; }
+                  {
+                    id = "workspaceSwitcher";
+                    showWorkspaceName = true;
+                    showWorkspaceApps = true;
+                  }
                   {
                     id = "spacer";
                     size = 20;
@@ -121,6 +125,9 @@
                 widgetOutlineEnabled = true;
                 widgetOutlineColor = "secondary";
                 widgetOutlineOpacity = 0.3;
+                widgetStyle = "segments";
+                maximizeWidgetIcons = true;
+                followInterfaceStyle = false;
               }
             ];
           };
