@@ -65,9 +65,37 @@
 
 ## Server / self-hosted services
 
-- [x] `containers.nix` quadlet framework, `glance` service
-- [ ] Wire `containers`/`nginx`/`fail2ban`/`teleport` into the `anuc` host — modules exist but aren't imported anywhere yet
-- [ ] Container services: `jellyfin`, `immich`, `slskd`, `wrtag`, `copyparty`, `freshrss`, `mealie`, `solidtime`, `stremio` (server variant), `wastebin`, `gonic`, `pinchflat`
+- [x] `containers.nix` quadlet framework (`mkService` in `lib/services.nix`)
+- [x] Wire `containers`/`nginx`/`teleport` into the `anuc` host
+- [ ] `fail2ban` — module exists but isn't in any host's feature list
+- [x] Ported the eleven services blahaj actually ran: `slskd`, `wrtag`, `navidrome`,
+      `metadata-remote`, `copyparty`, `freshrss`, `uptime-kuma`, `flaresolverr`,
+      `grimmory`, `karakeep`, `octo-fiesta`
+
+### Unported container services
+
+Modules still only in old-config `modules/users/containers/`. These were enabled for
+blahaj at some point but commented out before the refactor, so they have state on disk
+and are the likeliest to want back:
+
+- [ ] `mealie`
+- [ ] `tandoor`
+- [ ] `trek`
+- [ ] `actual-budget`
+
+Never referenced by blahaj — port only if actually wanted:
+
+- [ ] `glance` (previously ticked off here, but nothing by that name exists in this repo)
+- [ ] `jellyfin` (+ `jellyfin-refresh-library.sh`)
+- [ ] `immich`
+- [ ] `gonic`
+- [ ] `pinchflat`
+- [ ] `readeck`
+- [ ] `linkwarden`
+- [ ] `chibisafe`
+- [ ] `solidtime`
+- [ ] `stremio` (server variant)
+- [ ] `wastebin`
 
 ## Development environments
 

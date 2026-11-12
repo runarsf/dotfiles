@@ -1,4 +1,5 @@
-_: {
+{ self, lib', ... }:
+{
   flake.nixosModules.nginx =
     {
       config,
@@ -16,6 +17,8 @@ _: {
       cfg = config.features.nginx;
     in
     {
+      imports = [ (lib'.importFeature self "nixos" "sops") ];
+
       options.features.nginx = {
         domains = mkOption {
           type = listOf str;
@@ -35,15 +38,17 @@ _: {
 
       config = mkIf (cfg.domains != [ ]) {
         sops = {
-          templates."acme-credentials".content = ''
-            CLOUDFLARE_DNS_API_TOKEN=${config.sops.placeholder.cloudflare_token}
-          '';
-        }
-        // optionalAttrs cfg.dyndns {
           secrets.cloudflare_token = { };
-          templates."cloudflare-dyndns".content = ''
-            ${config.sops.placeholder.cloudflare_token}
-          '';
+          templates = {
+            "acme-credentials".content = ''
+              CLOUDFLARE_DNS_API_TOKEN=${config.sops.placeholder.cloudflare_token}
+            '';
+          }
+          // optionalAttrs cfg.dyndns {
+            "cloudflare-dyndns".content = ''
+              ${config.sops.placeholder.cloudflare_token}
+            '';
+          };
         };
 
         services.nginx = {
@@ -82,10 +87,7 @@ _: {
             limit_req_zone $binary_remote_addr zone=mylimit:10m rate=10r/s;
           '';
 
-          virtualHosts."_" = {
-            forceSSL = true;
-            sslCertificate = cfg.cert;
-            sslCertificateKey = cfg.key;
+          virtualHosts."_" = lib'.nginx.wildcardVhost (builtins.head cfg.domains) // {
             locations."/" = {
               return = "418";
             };
@@ -113,7 +115,7 @@ _: {
                 extraDomainNames = [ domain ];
                 group = "acmereceivers";
                 dnsProvider = "cloudflare";
-                credentialsFile = config.sops.templates."acme-credentials".path;
+                environmentFile = config.sops.templates."acme-credentials".path;
               };
             }) cfg.domains
           );

@@ -34,8 +34,8 @@ let
   defaultFeatures = [
     "cli"
     "discord"
-    "flatpak"
     "fonts"
+    "flatpak"
     "hypridle"
     "hyprlock"
     "hyprpaper"
@@ -132,5 +132,34 @@ in
           ];
         }
       );
+    };
+
+  # An account for something the system runs rather than someone who logs in:
+  # no home-manager, no features, no wheel, no password. The uid is required
+  # rather than allocated, since rootless podman and on-disk ownership both
+  # depend on it staying put. Anything beyond the account itself is an
+  # ordinary definition of users.users.<name> wherever it belongs.
+  mkServiceUser =
+    {
+      username,
+      uid,
+      gid ? uid,
+      group ? username,
+      homeDirectory ? "/var/lib/${username}",
+      extraGroups ? [ ],
+    }:
+    {
+      flake.nixosModules.${username} = { pkgs, ... }: {
+        users.users.${username} = {
+          inherit uid group extraGroups;
+
+          isSystemUser = true;
+          home = homeDirectory;
+          createHome = true;
+          shell = lib.mkDefault pkgs.bash;
+        };
+
+        users.groups.${group} = { inherit gid; };
+      };
     };
 }

@@ -2,8 +2,17 @@
 let
   inherit (builtins) filter isString concatMap;
   inherit (lib) mapAttrsToList;
+
+  # Imports a feature's module under the key useFeatures gives it, so reaching
+  # it from both a feature list and another feature's imports loads it once.
+  importFeature = self: kind: name: {
+    key = "feature:${kind}:${name}";
+    imports = [ self."${kind}Modules".${name} ];
+  };
 in
 {
+  inherit importFeature;
+
   # Wraps a feature module and declares a read-only `features.<name>.enable`
   # option alongside it, set to `true` whenever the module is imported. Lets
   # other features check `config.features.<name>.enable or false` to react
@@ -98,10 +107,7 @@ in
       # A stable key lets the module system dedupe a feature reached from more
       # than one list (a user's and their host's). Without it the module is
       # evaluated twice and unique options conflict with themselves.
-      featureModule = kind: name: {
-        key = "feature:${kind}:${name}";
-        imports = [ self."${kind}Modules".${name} ];
-      };
+      featureModule = importFeature self;
 
       configModule =
         name: cfg:

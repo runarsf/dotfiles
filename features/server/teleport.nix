@@ -12,7 +12,7 @@
       baseDomain = lib'.nginx.baseDomain nginxDomains cfg.domain;
     in
     {
-      imports = [ self.nixosModules.nginx ];
+      imports = [ (lib'.importFeature self "nixos" "nginx") ];
 
       options.features.teleport.domain = lib.mkOption {
         type = lib.types.str;

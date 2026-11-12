@@ -31,7 +31,7 @@
 
       config = lib.mkIf (cfg.vaultPath != null) {
         sops.age.sshKeyPaths = cfg.ageKeyPaths;
-        sops.defaultSopsFile = lib.mkDefault "${cfg.vaultPath}/secrets.yaml";
+        sops.defaultSopsFile = lib.mkDefault "${cfg.vaultPath}/${config.networking.hostName}/secrets.yaml";
       };
     };
 
@@ -66,7 +66,7 @@
       config = lib.mkMerge [
         (lib.mkIf (vaultPath != null) {
           sops.age.sshKeyPaths = cfg.ageKeyPaths;
-          sops.defaultSopsFile = lib.mkDefault "${vaultPath}/secrets.yaml";
+          sops.defaultSopsFile = lib.mkDefault "${vaultPath}/${config.home.username}/secrets.yaml";
         })
         (lib.mkIf (vaultPath != null && cfg.privateKeys != [ ]) {
           sops.secrets = builtins.listToAttrs (
