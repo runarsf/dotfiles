@@ -56,7 +56,6 @@
         commands = [
           "alejandra"
           "blahaj"
-          "cava"
           "claude"
           "deadnix"
           "matugen"

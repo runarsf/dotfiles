@@ -4,30 +4,40 @@
   ...
 }:
 {
-  flake.nixosModules.wezterm = { pkgs, ... }: {
-    hardware.graphics = {
-      enable = true;
-      extraPackages = [ pkgs.egl-wayland ];
+  flake.nixosModules.wezterm =
+    {
+      config,
+      lib,
+      pkgs,
+      ...
+    }:
+    {
+      config = lib.mkIf (config.host.desktop or true) {
+        hardware.graphics = {
+          enable = true;
+          extraPackages = [ pkgs.egl-wayland ];
+        };
+        environment.systemPackages = [ pkgs.egl-wayland ];
+        nix.settings = rec {
+          substituters = [ "https://wezterm.cachix.org" ];
+          trusted-substituters = substituters;
+          trusted-public-keys = [ "wezterm.cachix.org-1:kAbhjYUC9qvblTE+s7S+kl5XM1zVa4skO+E/1IDWdH0=" ];
+        };
+      };
     };
-    environment.systemPackages = [ pkgs.egl-wayland ];
-    nix.settings = rec {
-      substituters = [ "https://wezterm.cachix.org" ];
-      trusted-substituters = substituters;
-      trusted-public-keys = [ "wezterm.cachix.org-1:kAbhjYUC9qvblTE+s7S+kl5XM1zVa4skO+E/1IDWdH0=" ];
-    };
-  };
 
   flake.homeModules.wezterm =
     {
       pkgs,
       lib,
+      osConfig,
       ...
     }:
     let
       inherit (lib) mkIf;
       inherit (pkgs.stdenv.hostPlatform) system;
     in
-    mkIf pkgs.stdenv.hostPlatform.isLinux {
+    mkIf (pkgs.stdenv.hostPlatform.isLinux && (osConfig.host.desktop or true)) {
       home.shellAliases.ssh = "TERM=xterm-256color ssh";
 
       programs.wezterm = {

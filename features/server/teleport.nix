@@ -1,8 +1,9 @@
-{ self, lib', ... }: {
+{ self, inputs, lib', ... }: {
   flake.nixosModules.teleport =
     {
       config,
       lib,
+      pkgs,
       ...
     }:
     let
@@ -10,6 +11,8 @@
       nginxDomains = config.features.nginx.domains;
       usingNginx = nginxDomains != [ ];
       baseDomain = lib'.nginx.baseDomain nginxDomains cfg.domain;
+
+      inherit (pkgs.stdenv.hostPlatform) system;
     in
     {
       imports = [ (lib'.importFeature self "nixos" "nginx") ];
@@ -28,6 +31,8 @@
         {
           services.teleport = {
             enable = true;
+            # UPDATE: Drop once teleport builds on the current nixpkgs again.
+            package = inputs.nixpkgs-multiverse.multiverse.${system}.fast.versions.teleport."18.10.0".out;
             settings = {
               proxy_service = {
                 enabled = true;
@@ -52,7 +57,6 @@
             locations."/" = {
               proxyPass = "https://127.0.0.1:3080";
               proxyWebsockets = true;
-              extraConfig = "proxy_set_header Host $host;";
             };
           };
         })

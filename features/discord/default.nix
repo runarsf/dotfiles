@@ -2,6 +2,8 @@ _: {
   flake.homeModules.discord =
     {
       config,
+      lib,
+      osConfig,
       pkgs,
       ...
     }:
@@ -20,13 +22,17 @@ _: {
       } (builtins.readFile ./bin/discord-krisp-patcher.py);
     in
     {
-      # https://github.com/NixOS/nixpkgs/issues/195512
-      home.activation.krispPatch = config.lib.dag.entryAfter [ "writeBoundary" ] ''
-        run ${pkgs.findutils}/bin/find -L ${config.home.homeDirectory}/.config/discord -name 'discord_krisp.node' -exec ${discordPatcher}/bin/discord-krisp-patcher {} \;
-      '';
+      config = lib.mkIf (osConfig.host.desktop or true) {
+        # https://github.com/NixOS/nixpkgs/issues/195512
+        home.activation.krispPatch = config.lib.dag.entryAfter [ "writeBoundary" ] ''
+          if [ -d ${config.home.homeDirectory}/.config/discord ]; then
+            run ${pkgs.findutils}/bin/find -L ${config.home.homeDirectory}/.config/discord -name 'discord_krisp.node' -exec ${discordPatcher}/bin/discord-krisp-patcher {} \;
+          fi
+        '';
 
-      home.packages = with pkgs; [
-        discord
-      ];
+        home.packages = with pkgs; [
+          discord
+        ];
+      };
     };
 }

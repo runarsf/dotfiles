@@ -31,17 +31,17 @@
         };
         navidrome.domain = "fm.runar.ch";
       }
-      "slskd"
+      # "slskd"
       "wrtag"
       "navidrome"
       "metadataRemote"
       "copyparty"
       "freshrss"
       "uptimeKuma"
-      "flaresolverr"
+      # "flaresolverr"
       "grimmory"
       "karakeep"
-      "octoFiesta"
+      # "octoFiesta"
     ];
 
     imports = [
@@ -51,6 +51,29 @@
 
     configuration = _: {
       host.desktop = false;
+
+      boot.kernelParams = [
+        # The link to the 870 EVO drops under write bursts; this chipset
+        # defaults to min_power_with_partial.
+        "ahci.mobile_lpm_policy=1"
+        # Reboot after a panic instead of sitting dead.
+        "panic=10"
+      ];
+
+      # A hang here went unnoticed for 15 days once.
+      systemd.watchdog = {
+        runtimeTime = "30s";
+        rebootTime = "5m";
+      };
+
+      # Appends to hardware-configuration.nix's options: a flaky ESP
+      # shouldn't drop the whole boot into emergency mode.
+      fileSystems."/boot".options = [ "nofail" ];
+
+      services.smartd = {
+        enable = true;
+        notifications.wall.enable = true;
+      };
 
       # Served from this host but not managed from here.
       services.nginx.virtualHosts."nowplaying.runar.ch" = lib'.nginx.wildcardVhost "runar.ch" // {

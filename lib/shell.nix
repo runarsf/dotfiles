@@ -31,10 +31,19 @@
           dst="$out/share/zsh/site-functions"
           mkdir -p fish converted help "$dst"
 
+          # `commands` is static but `packages` is not: a command whose feature
+          # this host disables is simply absent, which is not an error.
           # --version-string so help2man does not run each command twice.
           for cmd in ${lib.escapeShellArgs commands}; do
-            timeout 20 help2man --no-info --no-discard-stderr --version-string=0 \
-              --output="help/$cmd.1" "$cmd" < /dev/null
+            if ! command -v "$cmd" > /dev/null; then
+              echo "note: $cmd is not installed here, skipping" >&2
+              continue
+            fi
+            if ! timeout 20 help2man --no-info --no-discard-stderr --version-string=0 \
+              --output="help/$cmd.1" "$cmd" < /dev/null; then
+              echo "warning: help2man got nothing out of \`$cmd --help', skipping" >&2
+              rm -f "help/$cmd.1"
+            fi
           done
 
           # fish 4 keeps the parser inside the binary.
@@ -60,11 +69,11 @@
 
           # `commands` skip the filter -- nothing else completes them anyway.
           for cmd in ${lib.escapeShellArgs commands}; do
-            if [[ ! -e "converted/_$cmd" ]]; then
-              echo "no options parsed out of \`$cmd --help'" >&2
-              exit 1
+            if [[ -e "converted/_$cmd" ]]; then
+              cp "converted/_$cmd" "$dst/_$cmd"
+            else
+              echo "warning: no completion generated for $cmd" >&2
             fi
-            cp "converted/_$cmd" "$dst/_$cmd"
           done
         '';
 

@@ -27,8 +27,10 @@ _: {
             rootful.settings.storage = {
               runroot = "/run/containers/storage";
               graphroot = "/var/lib/containers/storage";
+              # Rootless overlay mounts use userxattr, which the kernel won't combine with metacopy.
+              options.overlay.mountopt = "nodev,metacopy=on";
             };
-            settings.storage.options.overlay.mountopt = "nodev,metacopy=on";
+            settings.storage.options.overlay.mountopt = "nodev";
           };
         };
 
