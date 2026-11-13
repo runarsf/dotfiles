@@ -1,14 +1,5 @@
-{
-  self,
-  withSystem,
-  lib',
-  ...
-}:
-{
-  flake.nixosConfigurations.bramble = lib'.mkHost {
-    inherit self withSystem;
-
-    hostName = "bramble";
+_: {
+  hosts.bramble = {
     stateVersion = "26.05";
     users = [ "runar" ];
 
@@ -44,7 +35,7 @@
       # }
     ];
 
-    imports = [
+    modules = [
       ./_hardware.nix
     ];
 

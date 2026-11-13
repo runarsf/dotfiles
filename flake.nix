@@ -102,30 +102,37 @@
       ...
     }:
     let
-      inherit (builtins) elem;
       inherit (flake-parts.lib) mkFlake;
 
       # lib/ is read here instead of by import-tree, so its files are plain
       # functions rather than flake modules.
       myLib = import ./lib { inherit inputs; };
-    in
-    mkFlake
-      {
-        inherit inputs;
-        specialArgs = { inherit (myLib) lib'; };
-      }
-      {
+
+      # Everything but hosts and users. Other flakes import it and set
+      # hosts.<name> and users.<name>; they need these inputs too.
+      shared = {
         imports = [
-          (import-tree.filterNot (
-            x:
-            elem (baseNameOf x) [
-              "flake.nix"
-              "hardware-configuration.nix"
-            ]
-            || baseNameOf (dirOf x) == "lib"
-          ) ./.)
+          ./parts.nix
+          (import-tree [
+            ./features
+            ./modules
+            ./packages
+          ])
         ];
 
+        _module.args.lib' = myLib.lib';
         flake.lib = myLib.own;
       };
+    in
+    mkFlake { inherit inputs; } {
+      imports = [
+        shared
+        (import-tree [
+          ./hosts
+          ./users
+        ])
+      ];
+
+      flake.flakeModules.default = shared;
+    };
 }

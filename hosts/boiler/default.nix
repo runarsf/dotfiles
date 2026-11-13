@@ -1,13 +1,5 @@
-{
-  self,
-  withSystem,
-  lib',
-  ...
-}: {
-  flake.nixosConfigurations.boiler = lib'.mkHost {
-    inherit self withSystem;
-
-    hostName = "boiler";
+_: {
+  hosts.boiler = {
     stateVersion = "24.05";
     users = ["thomas"];
 
@@ -40,7 +32,7 @@
       "godot"
     ];
 
-    imports = [
+    modules = [
       ./_hardware.nix
     ];
 

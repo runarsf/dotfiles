@@ -1,14 +1,6 @@
+{ self, lib', ... }:
 {
-  self,
-  withSystem,
-  lib',
-  ...
-}:
-{
-  flake.nixosConfigurations.anuc = lib'.mkHost {
-    inherit self withSystem;
-
-    hostName = "anuc";
+  hosts.anuc = {
     stateVersion = "25.05";
     users = [ "runar" ];
 
@@ -44,7 +36,7 @@
       # "octoFiesta"
     ];
 
-    imports = [
+    modules = [
       ./_hardware.nix
       self.nixosModules.blahaj
     ];

@@ -1,15 +1,6 @@
+{ inputs, ... }:
 {
-  self,
-  inputs,
-  withSystem,
-  lib',
-  ...
-}:
-{
-  flake.nixosConfigurations.toaster = lib'.mkHost {
-    inherit self withSystem;
-
-    hostName = "toaster";
+  hosts.toaster = {
     stateVersion = "24.05";
     users = [ "thomas" ];
     features = [
@@ -17,7 +8,7 @@
       "godot"
     ];
 
-    imports = [
+    modules = [
       ./_hardware.nix
       inputs.nixos-hardware.nixosModules.lenovo-thinkpad-t490s
     ];

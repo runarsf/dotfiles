@@ -13,6 +13,9 @@ in
 {
   inherit importFeature;
 
+  # What useFeatures takes: names, or attrsets of name -> feature config.
+  featuresType = lib.types.listOf (lib.types.either lib.types.str (lib.types.attrsOf lib.types.raw));
+
   # Wraps a feature module and declares a read-only `features.<name>.enable`
   # option alongside it, set to `true` whenever the module is imported. Lets
   # other features check `config.features.<name>.enable or false` to react

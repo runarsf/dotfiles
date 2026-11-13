@@ -1,14 +1,5 @@
-{
-  self,
-  withSystem,
-  lib',
-  ...
-}:
-{
-  flake.nixosConfigurations.modelland = lib'.mkHost {
-    inherit self withSystem;
-
-    hostName = "modelland";
+_: {
+  hosts.modelland = {
     stateVersion = "26.05";
     users = [ "runar" ];
 
@@ -32,7 +23,7 @@
       }
     ];
 
-    imports = [
+    modules = [
       ./_hardware.nix
     ];
 

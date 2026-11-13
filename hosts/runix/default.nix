@@ -1,15 +1,6 @@
+{ inputs, ... }:
 {
-  self,
-  inputs,
-  withSystem,
-  lib',
-  ...
-}:
-{
-  flake.nixosConfigurations.runix = lib'.mkHost {
-    inherit self withSystem;
-
-    hostName = "runix";
+  hosts.runix = {
     stateVersion = "24.05";
     users = [ "runar" ];
     features = [
@@ -18,7 +9,7 @@
       "controllers"
     ];
 
-    imports = [
+    modules = [
       ./_hardware.nix
       inputs.nixos-hardware.nixosModules.lenovo-thinkpad-t480s
     ];

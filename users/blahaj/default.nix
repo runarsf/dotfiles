@@ -1,7 +1,5 @@
-{ lib', ... }:
-lib'.mkServiceUser {
-  username = "blahaj";
+_: {
   # Pinned: /data is owned by it, and its quadlets live in
   # /etc/containers/systemd/users/<uid>.
-  uid = 10001;
+  serviceUsers.blahaj.uid = 10001;
 }

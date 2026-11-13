@@ -1,19 +1,10 @@
-{
-  self,
-  withSystem,
-  lib',
-  ...
-}:
-{
-  flake.nixosConfigurations.vm = lib'.mkHost {
-    inherit self withSystem;
-
-    hostName = "vm";
+_: {
+  hosts.vm = {
     stateVersion = "25.11";
     users = [ "runar" ];
     features = [ "sshServer" ];
 
-    imports = [
+    modules = [
       ./_hardware.nix
     ];
 
