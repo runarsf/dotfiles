@@ -69,7 +69,9 @@
 
         cfg = config.features.hyprland;
 
-        hypr-snap = "${writeNuBin "hypr-snap" (builtins.readFile ./bin/hypr-snap.nu)}/bin/hypr-snap";
+        inherit (config.lib.stylix) colors;
+
+        hypr-snap ="${writeNuBin "hypr-snap" (builtins.readFile ./bin/hypr-snap.nu)}/bin/hypr-snap";
 
         hypr-gamemode = "${writeNuBin "hypr-gamemode" (builtins.readFile ./bin/hypr-gamemode.nu)}/bin/hypr-gamemode";
 
@@ -95,6 +97,27 @@
           "rgba(FF61D7FF)"
           "rgba(FF6161FF)"
         ];
+
+        borderStyles = {
+          # Solid theme accent, so there is no gradient for borderangle to spin.
+          minimal = {
+            active.colors = [ "rgba(${colors.base0D}FF)" ];
+            inactive.colors = [ "rgba(${colors.base02}FF)" ];
+          };
+          rainbow = {
+            active = {
+              colors = rainbowColors;
+              angle = 45;
+            };
+            inactive = {
+              colors = [
+                "rgba(616977FF)"
+                "rgba(636973FF)"
+              ];
+              angle = 90;
+            };
+          };
+        };
 
         binds = [
           (kb "SUPER SHIFT" "P" "hl.dsp.submap(\"passthrough\")" { })
@@ -461,6 +484,11 @@
 
         options.features.hyprland = {
           extraAnimations = lib.mkEnableOption "dynamic cursors, animated manual resizes and window dragging";
+          borderStyle = lib.mkOption {
+            type = lib.types.enum (lib.attrNames borderStyles);
+            default = "minimal";
+            description = "Window border colours. `minimal` uses the stylix accent, `rainbow` the animated gradient.";
+          };
           nvidia = lib.mkEnableOption "nvidia-specific environment variables" // {
             default = osConfig.features.nvidia.enable or false;
             defaultText = lib.literalMD "whether the host enables the `nvidia` feature";
@@ -629,17 +657,8 @@
                   # override (see plugin.borders_plus_plus below for how the
                   # focused/unfocused visual distinction is actually made).
                   border_size = 2;
-                  "col.active_border" = {
-                    colors = rainbowColors;
-                    angle = 45;
-                  };
-                  "col.inactive_border" = {
-                    colors = [
-                      "rgba(616977FF)"
-                      "rgba(636973FF)"
-                    ];
-                    angle = 90;
-                  };
+                  "col.active_border" = borderStyles.${cfg.borderStyle}.active;
+                  "col.inactive_border" = borderStyles.${cfg.borderStyle}.inactive;
                   layout = "scrolling";
                   resize_on_border = false;
                 };
