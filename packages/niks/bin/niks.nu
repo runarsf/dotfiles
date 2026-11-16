@@ -126,7 +126,7 @@ def --wrapped main [
         $"($acc) ($arg)"
       }
     }
-    print $"(ansi blue)info:(ansi reset) running:(char newline)$ nh ($formatted)(char newline)"
+    print $"$ nh ($formatted)(char newline)"
   }
 
   with-nix-args {

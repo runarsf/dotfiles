@@ -39,7 +39,7 @@
       }
       # {
       #   hyprland = {
-      #     animations = true;
+      #     extraAnimations = true;
       #   };
       # }
     ];

@@ -50,18 +50,17 @@ lib'.mkUser {
         name = "Runar Fredagsvik";
         email = "git@runar.ch";
       };
-      zsh = {
-        fzfTab = true;
-        deja = true;
+      hyprland = {
+        animationPreset = "diablo";
       };
     }
+    "zsh"
     "matrix"
     "nautilus"
     "podman"
     "zellij"
     "wayland"
     "nushell"
-    "hyprland"
     "claude"
     "zen"
     "writing"

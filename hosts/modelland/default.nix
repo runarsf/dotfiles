@@ -27,7 +27,7 @@
           swapfile = "/swap/swapfile";
         };
         hyprland = {
-          animations = true;
+          extraAnimations = true;
         };
       }
     ];

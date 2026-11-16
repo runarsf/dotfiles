@@ -454,10 +454,13 @@
         ];
       in
       {
-        imports = [ inputs.hyprland.homeManagerModules.default ];
+        imports = [
+          inputs.hyprland.homeManagerModules.default
+          ./_animations
+        ];
 
         options.features.hyprland = {
-          animations = lib.mkEnableOption "animations and dynamic cursors";
+          extraAnimations = lib.mkEnableOption "dynamic cursors, animated manual resizes and window dragging";
           nvidia = lib.mkEnableOption "nvidia-specific environment variables" // {
             default = osConfig.features.nvidia.enable or false;
             defaultText = lib.literalMD "whether the host enables the `nvidia` feature";
@@ -501,7 +504,7 @@
             plugins = [
               # inputs.hyprland-plugins.packages.${system}.borders-plus-plus
             ]
-            ++ lib.optionals cfg.animations [
+            ++ lib.optionals cfg.extraAnimations [
               inputs.hypr-dynamic-cursors.packages.${system}.hypr-dynamic-cursors
             ];
             configType = "lua";
@@ -569,7 +572,7 @@
                 end
               end)
             ''
-            + lib.optionalString cfg.animations ''
+            + lib.optionalString cfg.extraAnimations ''
               if hl.plugin.dynamic_cursors then
                 hl.config { plugin = { dynamic_cursors = {
                   enabled = true,
@@ -653,6 +656,7 @@
                   numlock_by_default = mkDefault true;
                   accel_profile = "flat";
                   follow_mouse = 1;
+                  focus_on_close = 2;
                   mouse_refocus = false;
                   touchpad = {
                     natural_scroll = true;
@@ -689,8 +693,8 @@
                   render_unfocused_fps = 30;
                   allow_session_lock_restore = 1;
                   swallow_regex = "^(Alacritty|kitty|org.wezfurlong.wezterm|com.mitchellh.ghostty)$";
-                  animate_manual_resizes = cfg.animations;
-                  animate_mouse_windowdragging = cfg.animations;
+                  animate_manual_resizes = cfg.extraAnimations;
+                  animate_mouse_windowdragging = cfg.extraAnimations;
                 };
                 decoration = {
                   rounding = 9;
@@ -702,7 +706,7 @@
                     ignore_opacity = true;
                     vibrancy = 1;
                     brightness = 1;
-                    xray = !cfg.animations;
+                    xray = !cfg.extraAnimations;
                     noise = 3.0e-2;
                     contrast = 1;
                   };
@@ -728,83 +732,6 @@
                     namespace = "launcher";
                   };
                   blur = true;
-                }
-              ];
-              curve = [
-                {
-                  _args = [
-                    "myBezier"
-                    {
-                      type = "bezier";
-                      points = [
-                        [
-                          0.05
-                          0.9
-                        ]
-                        [
-                          0.1
-                          1.05
-                        ]
-                      ];
-                    }
-                  ];
-                }
-                {
-                  _args = [
-                    "overshot"
-                    {
-                      type = "bezier";
-                      points = [
-                        [
-                          0.05
-                          0.9
-                        ]
-                        [
-                          0.1
-                          1.1
-                        ]
-                      ];
-                    }
-                  ];
-                }
-              ];
-              animation = [
-                {
-                  leaf = "windows";
-                  enabled = true;
-                  speed = 7;
-                  bezier = "overshot";
-                }
-                {
-                  leaf = "windowsOut";
-                  enabled = true;
-                  speed = 7;
-                  bezier = "default";
-                  style = "popin 80%";
-                }
-                {
-                  leaf = "border";
-                  enabled = true;
-                  speed = 10;
-                  bezier = "default";
-                }
-                {
-                  leaf = "borderangle";
-                  enabled = true;
-                  speed = 8;
-                  bezier = "default";
-                }
-                {
-                  leaf = "fade";
-                  enabled = true;
-                  speed = 7;
-                  bezier = "default";
-                }
-                {
-                  leaf = "workspaces";
-                  enabled = true;
-                  speed = 6;
-                  bezier = "default";
                 }
               ];
               bind = binds ++ repeatBinds ++ releaseBinds ++ mouseBinds;
