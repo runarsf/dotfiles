@@ -49,41 +49,11 @@
 - vicinae's Mod+D bind is in vicinae.nix for hyprland, but in niri's config for niri
 - enable nix-ld for everyone
 - When running home switch: error: unexpected argument '--accept-flake-config' found
+- go over dms options
+- fail2ban
+- https://github.com/0xc000022070/zen-browser-flake
 
-## Hosts (separate repos)
-
-- [x] `boiler` — thomas's gaming desktop
-- [x] `toaster` — thomas's laptop
-- [ ] `hsrv` — legacy server (minimal config, may just fold into `anuc` instead of porting)
-- [ ] `rpi` — Raspberry Pi host
-- [x] `anuc`, `runix` (plus new `vm`)
-
-## Users
-
-- [x] `thomas`
-- [x] `runar`, `blahaj` (system user only)
-
-## Server / self-hosted services
-
-- [x] `containers.nix` quadlet framework (`mkService` in `lib/services.nix`)
-- [x] Wire `containers`/`nginx`/`teleport` into the `anuc` host
-- [ ] `fail2ban` — module exists but isn't in any host's feature list
-- [x] Ported the eleven services blahaj actually ran: `slskd`, `wrtag`, `navidrome`,
-      `metadata-remote`, `copyparty`, `freshrss`, `uptime-kuma`, `flaresolverr`,
-      `grimmory`, `karakeep`, `octo-fiesta`
-
-### Unported container services
-
-Modules still only in old-config `modules/users/containers/`. These were enabled for
-blahaj at some point but commented out before the refactor, so they have state on disk
-and are the likeliest to want back:
-
-- [ ] `mealie`
-- [ ] `tandoor`
-- [ ] `trek`
-- [ ] `actual-budget`
-
-Never referenced by blahaj — port only if actually wanted:
+## Containers
 
 - [ ] `glance` (previously ticked off here, but nothing by that name exists in this repo)
 - [ ] `jellyfin` (+ `jellyfin-refresh-library.sh`)
@@ -99,7 +69,6 @@ Never referenced by blahaj — port only if actually wanted:
 
 ## Development environments
 
-- [ ] `neovim`
 - [ ] `vscode`
 - [ ] `rust`
 - [ ] `java`
@@ -126,16 +95,6 @@ Never referenced by blahaj — port only if actually wanted:
 - [ ] Terminal alternatives: `alacritty`, `kitty`, `ghostty` (wezterm already ported)
 - [ ] Possibly superseded, verify before porting: `dunst`, `waybar`, `ulauncher`, `lf`, `trayer`
 - [ ] `wayle`, `ambxst` — look unfinished/abandoned in old-config; probably skip
-
-## Gaming
-
-- [x] `steam`, `ffxiv`, `hytale`, `minecraft`, `emulation`, `controllers`
-- [x] Wire dualsense/8bitdo udev rules
-
-## Locales
-
-- [x] `norwegian`
-- [x] `japanese`
 
 ## System / linux-level modules
 

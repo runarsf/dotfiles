@@ -53,6 +53,9 @@ lib'.mkUser {
       hyprland = {
         animationPreset = "diablo";
       };
+      wezterm = {
+        bitmapFont = true;
+      };
     }
     "zsh"
     "matrix"
@@ -86,7 +89,7 @@ lib'.mkUser {
         ];
 
       programs.herdr = {
-        enable = true;
+        enable = false;
         settings = {
           keys.prefix = "ctrl+b";
           onboarding = false;
