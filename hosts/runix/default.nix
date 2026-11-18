@@ -19,7 +19,7 @@
     ];
 
     imports = [
-      ./hardware-configuration.nix
+      ./_hardware.nix
       inputs.nixos-hardware.nixosModules.lenovo-thinkpad-t480s
     ];
   };

@@ -32,7 +32,9 @@
       }
     ];
 
-    imports = [ ./hardware-configuration.nix ];
+    imports = [
+      ./_hardware.nix
+    ];
 
     configuration =
       {

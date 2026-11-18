@@ -13,7 +13,9 @@
     users = [ "runar" ];
     features = [ "sshServer" ];
 
-    imports = [ ./hardware-configuration.nix ];
+    imports = [
+      ./_hardware.nix
+    ];
 
     configuration = { pkgs, ... }: {
       host.efi = false;

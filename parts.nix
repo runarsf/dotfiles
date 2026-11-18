@@ -2,9 +2,9 @@
 let
   nixpkgsConfig = builtins.foldl' lib'.recursiveUpdate { } (
     map import (
-      builtins.filter (p: builtins.baseNameOf p == "nixpkgs.nix") (
+      builtins.filter (p: builtins.baseNameOf p == "_nixpkgs.nix") (
         lib'.concatPaths {
-          paths = ./features;
+          paths = ./.;
           filterDefault = false;
         }
       )
@@ -32,7 +32,7 @@ in
         ...
       }:
       {
-        treefmt.imports = [ ./treefmt.nix ];
+        treefmt.imports = [ ./_treefmt.nix ];
         _module.args.pkgs = import inputs.nixpkgs {
           inherit system;
           config = lib'.recursiveUpdate {

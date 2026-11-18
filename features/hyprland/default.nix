@@ -77,7 +77,6 @@
 
         hypr-pin = "${writeNuBin "hypr-pin" (builtins.readFile ./bin/hypr-pin.nu)}/bin/hypr-pin";
 
-        hypr-move = "${writeNuBin "hypr-move" (builtins.readFile ./bin/move.nu)}/bin/hypr-move";
         hypr-workspace = "${writeNuBin "hypr-workspace" (builtins.readFile ./bin/workspace.nu)}/bin/hypr-workspace";
         hypr-fit = "${writeNuBin "hypr-fit" (builtins.readFile ./bin/fit.nu)}/bin/hypr-fit";
 
@@ -138,10 +137,10 @@
             { }
           )
 
-          (kb "SUPER" "left" (exec "${hypr-move} focus left") { })
-          (kb "SUPER" "right" (exec "${hypr-move} focus right") { })
-          (kb "SUPER" "up" (exec "${hypr-move} focus up") { })
-          (kb "SUPER" "down" (exec "${hypr-move} focus down") { })
+          (kb "SUPER" "left" ''function() nav.focus("left") end'' { })
+          (kb "SUPER" "right" ''function() nav.focus("right") end'' { })
+          (kb "SUPER" "up" ''function() nav.focus("up") end'' { })
+          (kb "SUPER" "down" ''function() nav.focus("down") end'' { })
 
           # Layout-scoped column focus (not hl.dsp.focus): stays within the
           # workspace and doesn't cross monitors. Dispatched via exec rather than
@@ -194,8 +193,8 @@
               repeating = true;
             })
 
-            (kb "SUPER SHIFT" "up" (exec "${hypr-move} move up") { repeating = true; })
-            (kb "SUPER SHIFT" "down" (exec "${hypr-move} move down") { repeating = true; })
+            (kb "SUPER SHIFT" "up" ''function() nav.move("up") end'' { repeating = true; })
+            (kb "SUPER SHIFT" "down" ''function() nav.move("down") end'' { repeating = true; })
 
             (kb "" "XF86AudioRaiseVolume" (exec "${wpctl} set-volume -l 2.0 @DEFAULT_SINK@ 5%+") {
               repeating = true;
@@ -540,6 +539,16 @@
               require("monitors")
               require("workspaces")
 
+              ${builtins.readFile ./lua/nav.lua}
+
+              -- hl.dsp.* closures are functions too, so they can't be told apart
+              -- from a plain lua action; wrap them instead.
+              local function dsp(dispatcher)
+                return function()
+                  hl.dispatch(dispatcher)
+                end
+              end
+
               local function layout_bind(bind_table)
                 return function ()
                   local workspace = hl.get_active_special_workspace() or
@@ -549,27 +558,27 @@
                     return
                   end
 
-                  local dispatch = bind_table[workspace.tiled_layout] or bind_table.all
+                  local action = bind_table[workspace.tiled_layout] or bind_table.all
 
-                  if dispatch then
-                    hl.dispatch(dispatch)
+                  if action then
+                    action()
                   end
                 end
               end
 
               hl.bind("SUPER + space", layout_bind({
-                scrolling = ${exec "${hypr-fit}"},
-                all = hl.dsp.window.fullscreen({ mode = 1 }),
+                scrolling = dsp(${exec "${hypr-fit}"}),
+                all = dsp(hl.dsp.window.fullscreen({ mode = 1 })),
               }))
 
               hl.bind("SUPER + SHIFT + left", layout_bind({
-                scrolling = hl.dsp.layout("swapcol l"),
-                all = ${exec "${hypr-move} move left"},
+                scrolling = dsp(hl.dsp.layout("swapcol l")),
+                all = function() nav.move("left") end,
               }))
 
               hl.bind("SUPER + SHIFT + right", layout_bind({
-                scrolling = hl.dsp.layout("swapcol r"),
-                all = ${exec "${hypr-move} move right"},
+                scrolling = dsp(hl.dsp.layout("swapcol r")),
+                all = function() nav.move("right") end,
               }))
 
               hl.bind("SUPER + M", function()

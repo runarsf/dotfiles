@@ -413,7 +413,7 @@
   },
   "tabs": {
     "show_diagnostics": "all",
-    "close_position": "left",
+    "close_position": "right",
     "file_icons": true,
     "git_status": false
   },

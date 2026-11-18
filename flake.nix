@@ -120,9 +120,7 @@
             x:
             elem (baseNameOf x) [
               "flake.nix"
-              "treefmt.nix"
               "hardware-configuration.nix"
-              "nixpkgs.nix"
             ]
             || baseNameOf (dirOf x) == "lib"
           ) ./.)

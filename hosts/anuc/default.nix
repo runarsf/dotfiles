@@ -45,7 +45,7 @@
     ];
 
     imports = [
-      ./hardware-configuration.nix
+      ./_hardware.nix
       self.nixosModules.blahaj
     ];
 
@@ -66,7 +66,7 @@
         rebootTime = "5m";
       };
 
-      # Appends to hardware-configuration.nix's options: a flaky ESP
+      # Appends to _hardware.nix's options: a flaky ESP
       # shouldn't drop the whole boot into emergency mode.
       fileSystems."/boot".options = [ "nofail" ];
 
