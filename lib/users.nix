@@ -19,7 +19,12 @@ let
         path:
         let
           entry = import path { inherit lib' inputs self; };
-          unknown = attrNames (removeAttrs entry [ "homeModule" "nixosModule" ]);
+          unknown = attrNames (
+            removeAttrs entry [
+              "homeModule"
+              "nixosModule"
+            ]
+          );
         in
         if unknown == [ ] then
           entry
