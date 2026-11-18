@@ -541,6 +541,8 @@
 
               ${builtins.readFile ./lua/nav.lua}
 
+              ${builtins.readFile ./lua/focus.lua}
+
               -- hl.dsp.* closures are functions too, so they can't be told apart
               -- from a plain lua action; wrap them instead.
               local function dsp(dispatcher)
