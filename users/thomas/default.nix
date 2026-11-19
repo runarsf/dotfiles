@@ -45,7 +45,7 @@ lib'.mkUser {
     }
     {
       stylix = {
-        wallpaper = ./wallpaper.jpg;
+        wallpaper = ./_config/wallpapers/nomai_chart.png;
         cursor = "wii";
       };
     }
