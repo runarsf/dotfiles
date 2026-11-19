@@ -20,8 +20,6 @@ lib'.mkUser {
           "id_ntnu"
         ];
       };
-    }
-    {
       ssh = {
         keys = [
           {
@@ -42,33 +40,28 @@ lib'.mkUser {
           "git.gvk.idi.ntnu.no" = "id_ntnu";
         };
       };
-    }
-    {
       stylix = {
         wallpaper = ./_config/wallpapers/nomai_chart.png;
         cursor = "wii";
       };
-    }
-    {
       git = {
         name = "Thomas Espervik";
         email = "thoesp@protonmail.com";
         emailSelector.extraEmails = ["thomes@stud.ntnu.no"];
       };
-    }
-    {
       zen = {
         customPrefs = {
           "zen.urlbar.replace-newtab" = true;
         };
       };
-    }
-    {
       matrix = {
         clients = [
           "element"
           "sable"
         ];
+      };
+      wezterm = {
+        bitmapFont = true;
       };
     }
     "hyprland"
