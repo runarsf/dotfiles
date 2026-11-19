@@ -3,14 +3,13 @@
   withSystem,
   lib',
   ...
-}:
-{
+}: {
   flake.nixosConfigurations.boiler = lib'.mkHost {
     inherit self withSystem;
 
     hostName = "boiler";
     stateVersion = "24.05";
-    users = [ "thomas" ];
+    users = ["thomas"];
 
     features = [
       "easyeffects"
@@ -33,17 +32,12 @@
       }
       {
         emulation = {
-          consoles = [ "retroarch" ];
+          consoles = ["retroarch"];
         };
       }
       "randomizer"
       "obs"
       "godot"
-      {
-        android = {
-          ide = true;
-        };
-      }
     ];
 
     imports = [
@@ -61,9 +55,9 @@
                 y = 0;
               };
             };
-            focus-at-startup = _: { };
+            focus-at-startup = _: {};
             hot-corners = {
-              off = _: { };
+              off = _: {};
             };
           };
           "HDMI-A-1" = {
@@ -75,7 +69,7 @@
               };
             };
             hot-corners = {
-              off = _: { };
+              off = _: {};
             };
           };
         };
