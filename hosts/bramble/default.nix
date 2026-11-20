@@ -3,7 +3,7 @@ _: {
     stateVersion = "26.05";
     users = [ "runar" ];
 
-    features = [
+    modules = [
       "yubikey"
       "web"
       "sql"
@@ -35,7 +35,7 @@ _: {
       # }
     ];
 
-    modules = [
+    extraModules = [
       ./_hardware.nix
     ];
 
@@ -56,7 +56,7 @@ _: {
           # self.packages.${pkgs.stdenv.hostPlatform.system}.zaku
         ];
 
-        features.fonts.oled = true;
+        modules.fonts.oled = true;
 
         home-manager.users.runar = {
           home.packages = [ pkgs.bruno ];

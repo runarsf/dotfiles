@@ -3,7 +3,7 @@ _: {
     stateVersion = "26.05";
     users = [ "runar" ];
 
-    features = [
+    modules = [
       "osu"
       "steam"
       "controllers"
@@ -23,7 +23,7 @@ _: {
       }
     ];
 
-    modules = [
+    extraModules = [
       ./_hardware.nix
     ];
 
@@ -53,7 +53,7 @@ _: {
           "d /games 0755 runar users -"
         ];
 
-        features = {
+        modules = {
           fonts.oled = true;
 
           niri.overrides.outputs."GIGA-BYTE TECHNOLOGY CO., LTD. GO27Q24G 26112F001094" = {

@@ -31,7 +31,7 @@
           dst="$out/share/zsh/site-functions"
           mkdir -p fish converted help "$dst"
 
-          # `commands` is static but `packages` is not: a command whose feature
+          # `commands` is static but `packages` is not: a command whose module
           # this host disables is simply absent, which is not an error.
           # --version-string so help2man does not run each command twice.
           for cmd in ${lib.escapeShellArgs commands}; do

@@ -3,7 +3,7 @@ _: {
     stateVersion = "24.05";
     users = ["thomas"];
 
-    features = [
+    modules = [
       "easyeffects"
       "steam"
       "controllers"
@@ -32,12 +32,12 @@ _: {
       "godot"
     ];
 
-    modules = [
+    extraModules = [
       ./_hardware.nix
     ];
 
     configuration = _: {
-      features.niri.overrides = {
+      modules.niri.overrides = {
         outputs = {
           "DP-1" = {
             mode = "2560x1440@143.998";

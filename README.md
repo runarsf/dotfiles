@@ -49,7 +49,7 @@ nix run .#update-flake -- zed
 nix run .#update-flake -- --release zed
 ```
 
-## Module/Feature Structure
+## Module Structure
 
 ```nix
 {
@@ -80,11 +80,11 @@ nix run .#update-flake -- --release zed
 
 ## nixpkgs Config
 
-Since nixpkgs is instantiated externally in `parts.nix` (via `perSystem`), `nixpkgs.config` cannot be set inside NixOS or Home Manager modules. Instead, place a `nixpkgs.nix` sidecar next to the feature's `default.nix` returning a plain attrset:
+Since nixpkgs is instantiated externally in `parts/default.nix` (via `perSystem`), `nixpkgs.config` cannot be set inside NixOS or Home Manager modules. Instead, place a `_nixpkgs.nix` sidecar next to the module's `default.nix` returning a plain attrset:
 
 ```nix
-# features/my-feature/nixpkgs.nix
+# modules/my-module/_nixpkgs.nix
 { allowedLicenses = [ ... ]; }
 ```
 
-`parts.nix` collects all `nixpkgs.nix` files under `features/` and deep-merges them into the nixpkgs config at instantiation time.
+`parts/default.nix` merges all `_nixpkgs.nix` files under `modules/` into the `nixpkgsConfig` option. Hosts, users and other flakes can set `nixpkgsConfig` directly.

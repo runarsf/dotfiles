@@ -1,11 +1,11 @@
 { lib, lib', ... }:
 {
-  # A container-backed service behind nginx: declares `features.<name>.domain`,
+  # A container-backed service behind nginx: declares `modules.<name>.domain`,
   # a vhost proxying to `port` under the base domain's wildcard cert, and pulls
-  # in the nginx and containers features. `module` holds the service itself --
+  # in the nginx and containers modules. `module` holds the service itself --
   # its containers, secrets, and any extra vhost settings, which merge with the
-  # vhost made here. Goes through mkFeature, so one service can check another
-  # with `config.features.<name>.enable or false`.
+  # vhost made here. Goes through mkModule, so one service can check another
+  # with `config.modules.<name>.enable or false`.
   mkService =
     {
       self,
@@ -17,26 +17,26 @@
       maxBodySize ? null,
       module ? _: { },
     }:
-    lib'.mkFeature name (
+    lib'.mkModule name (
       { config, ... }:
       let
-        cfg = config.features.${name};
-        inherit (config.features.nginx) domains;
+        cfg = config.modules.${name};
+        inherit (config.modules.nginx) domains;
       in
       {
         imports = [
-          (lib'.importFeature self "nixos" "nginx")
-          (lib'.importFeature self "nixos" "containers")
+          (lib'.importModule self "nixos" "nginx")
+          (lib'.importModule self "nixos" "containers")
           module
         ];
 
-        options.features.${name}.domain = lib.mkOption {
+        options.modules.${name}.domain = lib.mkOption {
           type = lib.types.str;
           default =
             if domains != [ ] then
               "${subdomain}.${builtins.head domains}"
             else
-              throw "Set features.${name}.domain or configure features.nginx.domains";
+              throw "Set modules.${name}.domain or configure modules.nginx.domains";
           description = "Public domain for the ${name} service.";
         };
 

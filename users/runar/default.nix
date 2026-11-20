@@ -6,7 +6,7 @@
     stateVersion = "24.11";
     extraGroups = [ "blahaj" ];
 
-    features = [
+    modules = [
       {
         sops = {
           privateKeys = [

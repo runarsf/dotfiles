@@ -3,13 +3,13 @@
   hosts.runix = {
     stateVersion = "24.05";
     users = [ "runar" ];
-    features = [
+    modules = [
       "osu"
       "steam"
       "controllers"
     ];
 
-    modules = [
+    extraModules = [
       ./_hardware.nix
       inputs.nixos-hardware.nixosModules.lenovo-thinkpad-t480s
     ];

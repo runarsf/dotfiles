@@ -1,0 +1,98 @@
+{
+  inputs,
+  self,
+  ...
+}:
+{
+  flake.nixosModules.sops =
+    {
+      config,
+      lib,
+      ...
+    }:
+    let
+      cfg = config.modules.sops;
+    in
+    {
+      imports = [ inputs.sops-nix.nixosModules.sops ];
+
+      options.modules.sops = {
+        vaultPath = lib.mkOption {
+          type = lib.types.nullOr lib.types.path;
+          default = self.lib.vaultPath;
+          description = "Path to the secrets vault directory.";
+        };
+        ageKeyPaths = lib.mkOption {
+          type = lib.types.listOf lib.types.str;
+          default = [ "/etc/ssh/ssh_host_ed25519_key" ];
+          description = "SSH key paths to use as age keys for system sops.";
+        };
+      };
+
+      config = lib.mkIf (cfg.vaultPath != null) {
+        sops.age.sshKeyPaths = cfg.ageKeyPaths;
+        sops.defaultSopsFile = lib.mkDefault "${cfg.vaultPath}/${config.networking.hostName}/secrets.yaml";
+      };
+    };
+
+  flake.homeModules.sops =
+    {
+      config,
+      pkgs,
+      lib,
+      osConfig ? { },
+      ...
+    }:
+    let
+      cfg = config.modules.sops;
+      vaultPath = osConfig.modules.sops.vaultPath or null;
+    in
+    {
+      imports = [ inputs.sops-nix.homeManagerModules.sops ];
+
+      options.modules.sops = {
+        ageKeyPaths = lib.mkOption {
+          type = lib.types.listOf lib.types.str;
+          default = [ "${config.home.homeDirectory}/.ssh/id_nix" ];
+          description = "SSH key paths to use as age keys for user sops.";
+        };
+        privateKeys = lib.mkOption {
+          type = lib.types.listOf lib.types.str;
+          default = [ ];
+          description = "Names of private SSH keys to fetch from the vault (<vaultPath>/<username>/keys/<name>) and place at ~/.ssh/<name>.";
+        };
+      };
+
+      config = lib.mkMerge [
+        (lib.mkIf (vaultPath != null) {
+          sops.age.sshKeyPaths = cfg.ageKeyPaths;
+          sops.defaultSopsFile = lib.mkDefault "${vaultPath}/${config.home.username}/secrets.yaml";
+        })
+        (lib.mkIf (vaultPath != null && cfg.privateKeys != [ ]) {
+          sops.secrets = builtins.listToAttrs (
+            map (key: {
+              name = key;
+              value = {
+                sopsFile = "${vaultPath}/${config.home.username}/keys/${key}";
+                path = "${config.home.homeDirectory}/.ssh/${key}";
+                format = "binary";
+              };
+            }) cfg.privateKeys
+          );
+        })
+        {
+          home.packages = [
+            (pkgs.symlinkJoin {
+              name = "sops";
+              paths = [
+                (pkgs.writeShellScriptBin "sops" ''
+                  SOPS_AGE_KEY_FILE="''${XDG_RUNTIME_DIR}/secrets.d/age-keys.txt" exec ${pkgs.sops}/bin/sops ''${@}
+                '')
+                pkgs.sops
+              ];
+            })
+          ];
+        }
+      ];
+    };
+}

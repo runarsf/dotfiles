@@ -4,7 +4,7 @@
     stateVersion = "25.05";
     users = [ "runar" ];
 
-    features = [
+    modules = [
       "sshServer"
       "tmux"
       "docker"
@@ -36,7 +36,7 @@
       # "octoFiesta"
     ];
 
-    modules = [
+    extraModules = [
       ./_hardware.nix
       self.nixosModules.blahaj
     ];

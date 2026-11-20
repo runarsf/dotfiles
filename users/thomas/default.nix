@@ -1,10 +1,13 @@
 _: {
+  # UPDATE: Needed for solidtime-desktop. Drop once it moves to a supported electron.
+  nixpkgsConfig.permittedInsecurePackages = [ "electron-41.10.7" ];
+
   users.thomas = {
     root = ./.;
 
     stateVersion = "24.11";
 
-    features = [
+    modules = [
       {
         sops = {
           privateKeys = [

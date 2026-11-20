@@ -2,9 +2,9 @@ _: {
   hosts.vm = {
     stateVersion = "25.11";
     users = [ "runar" ];
-    features = [ "sshServer" ];
+    modules = [ "sshServer" ];
 
-    modules = [
+    extraModules = [
       ./_hardware.nix
     ];
 
@@ -21,14 +21,14 @@ _: {
       services.displayManager.sddm.enable = true;
       services.desktopManager.plasma6.enable = true;
 
-      # Home-only features otherwise, so root has no copy.
+      # Home-only modules otherwise, so root has no copy.
       environment.systemPackages = with pkgs; [
         git
         vim
       ];
 
       home-manager.users.runar = { config, ... }: {
-        features.niks.flake = "${config.home.homeDirectory}/shared/dotfiles";
+        modules.niks.flake = "${config.home.homeDirectory}/shared/dotfiles";
       };
     };
   };

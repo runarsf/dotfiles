@@ -112,9 +112,8 @@
       # hosts.<name> and users.<name>; they need these inputs too.
       shared = {
         imports = [
-          ./parts.nix
           (import-tree [
-            ./features
+            ./parts
             ./modules
             ./packages
           ])
