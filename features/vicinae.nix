@@ -126,10 +126,11 @@
         };
 
         home.packages = with pkgs; [
-          awww
           matugen
           sqlite # Needed for zed-recents
         ];
+
+        services.awww.enable = true;
 
         wayland.windowManager.hyprland.settings = {
           bind = [
@@ -154,9 +155,6 @@
               };
               no_anim = true;
             }
-          ];
-          on = [
-            (onStart (lib.getExe' pkgs.awww "awww-daemon"))
           ];
         };
       };
