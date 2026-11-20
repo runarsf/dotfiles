@@ -32,7 +32,7 @@ ShellRoot {
 
     Connections {
         target: windows
-        function onRectsChanged() { settle.restart(); }
+        function onRectsChanged() { root.queueEvaluate(); }
     }
 
     Connections {
@@ -67,14 +67,19 @@ ShellRoot {
 
     // --- Rules -------------------------------------------------------------
 
-    // The moon jumps the moment it becomes fully covered. From the Eye it
-    // returns as soon as any spot is covered.
-    function evaluate() {
+    // Only real window changes (re)start the delay. Hyprland reports a change on
+    // every refresh, so title or focus events would otherwise keep resetting it.
+    function queueEvaluate() {
         const key = JSON.stringify(windows.rects);
         if (key === lastWindows)
             return;
         lastWindows = key;
+        settle.restart();
+    }
 
+    // The moon jumps the moment it becomes fully covered. From the Eye it
+    // returns as soon as any spot is covered.
+    function evaluate() {
         const isCovered = covered(moon);
         if (moon.planet === "eye" || (isCovered && !wasCovered))
             place(next(false));
@@ -103,14 +108,16 @@ ShellRoot {
 
     // --- Spots -------------------------------------------------------------
 
-    // Candidate spots: every screen × planet × a jittered sample of allowed angles.
+    // Candidate spots: every screen × planet × a jittered sample of allowed
+    // angles, where the moon is fully on its screen. Cropped edges on other
+    // aspect ratios would otherwise hold spots no window can ever cover.
     function spots() {
         const out = [];
         for (const screen of allScreens())
             for (const planet in Config.planets)
                 for (let i = 0; i < Config.samples; i++)
                     out.push({ screen: screen.name, planet, angle: 2 * Math.PI * (i + Math.random()) / Config.samples });
-        return out.filter(allowed);
+        return out.filter(s => allowed(s) && onScreen(s));
     }
 
     function randomSpot(planets = Object.keys(Config.planets)) {
@@ -131,6 +138,11 @@ ShellRoot {
         const x = Math.round(p.x + p.r * Math.cos(spot.angle));
         const y = Math.round(p.y + p.r * Math.sin(spot.angle));
         return { x, y, rotation: towardSun(x, y) - towardSun(Config.moonOrigin.x, Config.moonOrigin.y) };
+    }
+
+    function onScreen(spot) {
+        const r = rectOf(spot), s = screenNamed(spot.screen);
+        return r.x >= s.x && r.y >= s.y && r.x + r.w <= s.x + s.width && r.y + r.h <= s.y + s.height;
     }
 
     function towardSun(x, y) {
