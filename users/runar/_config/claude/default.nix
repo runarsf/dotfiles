@@ -1,5 +1,7 @@
 _: {
   homeModule = {config, ...}: {
+    xdg.configFile."nixos/CLAUDE.md".source = ./CLAUDE.md;
+
     programs.claude-code = {
       settings = {
         permissions = {

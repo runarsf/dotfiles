@@ -117,9 +117,8 @@
                     id = "spacer";
                     size = 20;
                   }
-                  { id = "controlCenterButton"; }
                   { id = "clock"; }
-                  { id = "notificationButton"; }
+                  { id = "controlCenterButton"; }
                 ];
                 transparency = 0;
                 widgetOutlineEnabled = true;

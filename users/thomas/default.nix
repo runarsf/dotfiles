@@ -59,6 +59,7 @@ _: {
           bitmapFont = true;
         };
       }
+      "quantum-moon"
       "hyprland"
       "dux"
       "yazi"

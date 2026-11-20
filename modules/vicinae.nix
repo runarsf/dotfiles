@@ -96,18 +96,18 @@
               theme.enabled = false;
               wm.enabled = false;
             };
-            providers = {
-              "@sovereign/vicinae-extension-awww-switcher-0".preferences = {
-                wallpaperPath = "${config.home.homeDirectory}/Pictures/Wallpapers";
-                transitionDuration = 1;
-              };
-            };
+            # providers = {
+            #   "@sovereign/vicinae-extension-awww-switcher-0".preferences = {
+            #     wallpaperPath = "${config.home.homeDirectory}/Pictures/Wallpapers";
+            #     transitionDuration = 1;
+            #   };
+            # };
           };
           extensions = with inputs.vicinae-extensions.packages.${system}; [
             # bluetooth
             nix
             power-profile
-            awww-switcher
+            # awww-switcher
             it-tools
             ssh
             color-converter
@@ -130,7 +130,7 @@
           sqlite # Needed for zed-recents
         ];
 
-        services.awww.enable = true;
+        # services.awww.enable = true;
 
         wayland.windowManager.hyprland.settings = {
           bind = [

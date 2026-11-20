@@ -11,6 +11,12 @@
 
     nixpkgs-multiverse.url = "github:fzakaria/nixpkgs-multiverse";
 
+    # Overlaid onto pkgs in parts/default.nix; modules/xonsh.nix needs it.
+    nur = {
+      url = "github:nix-community/nur";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     alien.url = "github:thiagokokada/nix-alien";
     treefmt-nix.url = "github:numtide/treefmt-nix";
     import-tree.url = "github:vic/import-tree";
@@ -88,6 +94,8 @@
     nixos-hardware.url = "github:nixos/nixos-hardware";
 
     hytale-launcher.url = "github:JPyke3/hytale-launcher-nix";
+
+    artcraft.url = "github:ipeglin/artcraft-nix";
 
     helium = {
       url = "github:schembriaiden/helium-browser-nix-flake";

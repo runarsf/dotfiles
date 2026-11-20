@@ -48,7 +48,11 @@
         wezterm = {
           bitmapFont = true;
         };
+        artcraft = {
+          photocraft.enable = true;
+        };
       }
+      "quantum-moon"
       "zsh"
       "matrix"
       "nautilus"
