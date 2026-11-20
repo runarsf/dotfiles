@@ -1,4 +1,9 @@
-{ self, lib', ... }:
+{
+  self,
+  inputs,
+  lib',
+  ...
+}:
 {
   flake.nixosModules.nginx =
     {
@@ -13,8 +18,15 @@
       inherit (lib.types) listOf str bool;
       inherit (lib.strings) concatMapStringsSep splitString;
       inherit (pkgs) fetchurl;
+      inherit (pkgs.stdenv.hostPlatform) system;
 
       cfg = config.modules.nginx;
+
+      mv = inputs.nixpkgs-multiverse.multiverse."${system}".versions;
+      # HTTP/2 use-after-free and flow control overflow, fixed in 1.30.7
+      # https://nginx.org/en/CHANGES-1.30 (CVE-2026-123633, CVE-2026-123007)
+      # UPDATE: Drop once nixpkgs ships >= 1.30.7.
+      nginx-pinned = "1.30.7";
     in
     {
       imports = [ (lib'.importModule self "nixos" "sops") ];
@@ -53,6 +65,7 @@
 
         services.nginx = {
           enable = true;
+          package = mv."nginx"."${nginx-pinned}";
           # https://github.com/NixOS/nixpkgs/blob/nixos-unstable/pkgs/servers/http/nginx/modules.nix
           additionalModules = with pkgs.nginxModules; [
             pam
