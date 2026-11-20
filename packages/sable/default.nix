@@ -4,16 +4,16 @@
     let
       inherit (pkgs) stdenv;
 
-      version = "2.0.2";
+      version = "26.11.4";
 
       debs = {
         x86_64-linux = {
-          url = "https://git.sable.moe/SableClient/sable-next/releases/download/v${version}/sable-${version}-linux-x86_64.deb";
-          hash = "sha256-5+UrRXhE/bRL7wWKpg5kWFifQ4ncCg2DFf3BTI9CGJs=";
+          url = "https://git.sable.moe/SableClient/sable-next/releases/download/v${version}/sable-${version}-amd64.deb";
+          hash = "sha256-bRMUy1wfha+7SaNxQ+I7sdVI2GP4ilbmZZFf1KukdKY=";
         };
         aarch64-linux = {
-          url = "https://git.sable.moe/SableClient/sable-next/releases/download/v${version}/sable-${version}-linux-aarch64.deb";
-          hash = lib.fakeHash;
+          url = "https://git.sable.moe/SableClient/sable-next/releases/download/v${version}/sable-${version}-arm64.deb";
+          hash = "sha256-d23qJev/2ZMRu1q/PXKZVFlKPnRyd8ZDpArJpIO8/zY=";
         };
       };
     in
@@ -28,7 +28,7 @@
         );
 
         nativeBuildInputs = with pkgs; [
-          dpkg # unpack the .deb
+          dpkg
           autoPatchelfHook
           makeWrapper
           wrapGAppsHook3
@@ -36,42 +36,49 @@
 
         buildInputs = with pkgs; [
           alsa-lib
+          at-spi2-atk
           at-spi2-core
+          cairo
           cups
           dbus
           expat
-          fontconfig
-          freetype
-          gdk-pixbuf
           glib
           gtk3
-          libayatana-appindicator
-          libdrm
-          libgbm # mesa's GBM lib; on older channels use `mesa` instead
-          libGL
+          libgbm
+          libpulseaudio
           libxkbcommon
-          libxshmfence
           libX11
           libXcomposite
           libXdamage
           libXext
           libXfixes
-          libXi
           libXrandr
-          libXrender
-          libXtst
           libxcb
           nspr
           nss
           pango
           pipewire
+          stdenv.cc.cc.lib
           udev
+        ];
+
+        # Loaded with dlopen() at runtime, so not picked up from DT_NEEDED.
+        runtimeDependencies = with pkgs; [
+          (lib.getLib udev)
+          libappindicator-gtk3
+          libGL
+          libnotify
+          libsecret
+          libuuid
+          libXScrnSaver
+          libXtst
           wayland
         ];
 
         dontConfigure = true;
         dontBuild = true;
-        dontStrip = true; # matches upstream's !strip; never strip a bundled CEF runtime
+        dontStrip = true;
+        dontWrapGApps = true;
 
         unpackPhase = ''
           dpkg-deb -x $src .
@@ -81,60 +88,27 @@
           runHook preInstall
 
           mkdir -p $out/bin $out/lib $out/share
-          # The app tree (sable-next binary + libcef.so, *.pak, locales/, …)
-          # must stay in one directory; move it wholesale.
-          cp -r opt/sable-next $out/lib/sable-next
-          cp -r usr/share/. $out/share/
+          cp -r opt/Sable $out/lib/sable
+          cp -r usr/share/applications usr/share/icons $out/share/
 
-          # The setuid chrome-sandbox helper can't work in the Nix store;
-          # Chromium falls back to unprivileged user namespaces (default on NixOS).
-          rm -f $out/lib/sable-next/chrome-sandbox
-
-          # Replace the deb's `exec /opt/sable-next/sable-next` shim [^f330cc#60-74]
-          # with a proper wrapper.
-          # CEF dlopen()s these at runtime instead of linking them as DT_NEEDED,
-          # so autoPatchelfHook never gives them an rpath even though they're
-          # already in buildInputs; without this the window fails to create.
-          # desktop-file-utils' update-desktop-database is run by the deep-link
-          # plugin's setup hook, which panics (crashing the app) if it's missing.
-          makeWrapper $out/lib/sable-next/sable-next $out/bin/sable-next \
-            --prefix PATH : ${
-              lib.makeBinPath (
-                with pkgs;
-                [
-                  desktop-file-utils
-                  xdg-utils
-                  xwayland
-                ]
-              )
-            } \
-            --prefix LD_LIBRARY_PATH : ${
-              lib.makeLibraryPath (
-                with pkgs;
-                [
-                  libX11
-                  libxkbcommon
-                ]
-              )
-            }
-          ln -s sable-next $out/bin/sable
-
-          # Desktop file: upstream generates it at build time, so its Exec= may be
-          # bare, /usr/bin/-based, or /opt/sable-next/-based. Patch what's there,
-          # warn (not fail) on what isn't. Icon= may also use an absolute path.
-          for f in $out/share/applications/*.desktop; do
-            [ -e "$f" ] || continue
-            substituteInPlace "$f" \
-              --replace-warn /usr/bin/ $out/bin/ \
-              --replace-warn /opt/sable-next/ $out/lib/sable-next/ \
-              --replace-warn /usr/share/ $out/share/
-          done
+          # Setuid helper can't work in the store; user namespaces are used instead.
+          rm -f $out/lib/sable/chrome-sandbox
 
           runHook postInstall
         '';
 
+        postFixup = ''
+          makeWrapper $out/lib/sable/sable $out/bin/sable \
+            "''${gappsWrapperArgs[@]}" \
+            --prefix PATH : ${lib.makeBinPath [ pkgs.xdg-utils ]} \
+            --add-flags "\''${NIXOS_OZONE_WL:+\''${WAYLAND_DISPLAY:+--ozone-platform-hint=auto --enable-features=WaylandWindowDecorations --enable-wayland-ime=true}}"
+
+          substituteInPlace $out/share/applications/moe.sable.client.desktop \
+            --replace-fail /opt/Sable/sable $out/bin/sable
+        '';
+
         meta = with lib; {
-          description = "A Matrix client (Sable v2)";
+          description = "A Matrix client";
           homepage = "https://sable.moe";
           license = licenses.agpl3Plus;
           sourceProvenance = with sourceTypes; [ binaryNativeCode ];
@@ -142,7 +116,7 @@
             "x86_64-linux"
             "aarch64-linux"
           ];
-          mainProgram = "sable-next";
+          mainProgram = "sable";
         };
       };
     };
