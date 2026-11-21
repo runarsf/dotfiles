@@ -59,6 +59,9 @@ in
             }
 
             # An `update-flake` wrapper.
+            #
+            # Set GITHUB_TOKEN to avoid GitHub's rate limit. Any token works,
+            # no scopes needed.
             def main [
               ...inputs: string,  # specific inputs to update; empty updates all
               --no-fetchgit,      # skip fetchgit update (runs by default)

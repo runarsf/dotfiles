@@ -17,9 +17,6 @@ _: {
         zram = {
           swapfile = "/swap/swapfile";
         };
-        hyprland = {
-          extraAnimations = true;
-        };
       }
     ];
 

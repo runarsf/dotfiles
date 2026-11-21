@@ -246,6 +246,10 @@ def pin-releases [inputs: list<string>, token_args: list<string>] {
     }
 }
 
+# Update flake inputs, packages and git fetchers.
+#
+# Set GITHUB_TOKEN to avoid GitHub's rate limit. Any token works, no scopes
+# needed; it is passed on to nix as --extra-access-tokens.
 def main [
     ...inputs: string,           # specific inputs to update normally
     --dir (-d): string,          # override the flake directory

@@ -4,8 +4,8 @@ _: {
       src = pkgs.fetchFromGitHub { # follow:branch master
         owner = "sickill";
         repo = "stderred";
-        rev = "76fde071dd17a72700098617ae0813848eeba7a3";
-        sha256 = "15rwgk782b1gdq857f5d9cn61j0scxxfwbw7qxlqb4whmhqnzh22";
+        rev = "cf0d118440a930024b4a58a9d787debc492256b7";
+        sha256 = "1hix3pi7fmpna4swcgl87wx361c34nc4qisqkc6dn43vvxsilx2j";
       };
     };
   };

@@ -57,18 +57,18 @@
 
     nwg-displays.url = "github:nwg-piotr/nwg-displays/v0.5.0";
 
-    zed.url = "github:zed-industries/zed/v1.27.0";
+    zed.url = "github:zed-industries/zed/v1.29.3";
 
-    vicinae.url = "github:vicinaehq/vicinae/v0.30.0";
+    vicinae.url = "github:vicinaehq/vicinae/v0.30.1";
     vicinae-extensions = {
       url = "github:vicinaehq/extensions";
       inputs.vicinae.follows = "vicinae";
     };
 
-    # TODO: https://github.com/0xc000022070/zen-browser-flake
     zen-browser = {
-      url = "github:youwen5/zen-browser-flake";
+      url = "github:0xc000022070/zen-browser-flake";
       inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
     };
 
     dux-shell = {

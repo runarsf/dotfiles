@@ -5,7 +5,7 @@
       inherit (pkgs) stdenv;
     in
     let
-      version = "26.0-beta.3";
+      version = "26.0";
 
       # Zaku (https://github.com/buildzaku/zaku) is a Rust desktop app built on
       # Zed's GPUI framework. It vendors large parts of Zed's own crates and
@@ -14,7 +14,7 @@
       # tarballs per release, so we just fetch and patch those instead.
       source = {
         url = "https://github.com/buildzaku/zaku/releases/download/${version}/Zaku-${version}-linux-x86_64.tar.gz";
-        hash = "sha256-U33OPIJua/wkMsNMbIdmchK7F8THOP/oNvWYEZ/mXoI=";
+        hash = "sha256-Q4b6x818/okbd5QLpnw5Lmh4NckQOnIrJV1xDCblXmc=";
       };
     in
     {

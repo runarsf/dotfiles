@@ -4,7 +4,7 @@
     let
       inherit (pkgs) stdenv;
 
-      version = "2026.8.1";
+      version = "2026.9.1";
 
       # Yaak's CLI (https://github.com/mountain-loop/yaak) ships on npm as a
       # thin JS wrapper (@yaakapp/cli) around a per-platform prebuilt binary
@@ -12,7 +12,7 @@
       # binary, so we skip npm/node entirely and patch the binary directly.
       source = {
         url = "https://registry.npmjs.org/@yaakapp/cli-linux-x64/-/cli-linux-x64-${version}.tgz";
-        hash = "sha512-F5syueaftcsxftmp8Trhtx1QSYjI5uTzgyl5kUWejRzBAnY5JUnCEL1Q3S5/tXVIFAXEa+Fb221XgdMcdU1KMw==";
+        hash = "sha256-45evNmlTiMqzD0a/7GzTG8YCTP9hKywBAZrjF4sK1is=";
       };
     in
     {
