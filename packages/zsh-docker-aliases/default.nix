@@ -1,6 +1,6 @@
 _: {
   perSystem = { pkgs, ... }: {
-    packages.zsh-docker-aliases = pkgs.fetchFromGitHub {
+    packages.zsh-docker-aliases = pkgs.fetchFromGitHub { # follow:branch master
       owner = "akarzim";
       repo = "zsh-docker-aliases";
       rev = "6c3479abeef33362a7ec7e713a5a95f292fee9b9";

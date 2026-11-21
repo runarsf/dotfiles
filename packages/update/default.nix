@@ -5,11 +5,12 @@ let
     "vicinae"
     "nwg-displays"
     "zed"
+    "nix-update-git"
   ];
 in
 {
   perSystem =
-    { pkgs, ... }:
+    { pkgs, inputs', ... }:
     let
       inherit (builtins) readFile concatStringsSep;
       inherit (lib) makeBinPath;
@@ -23,13 +24,11 @@ in
         postBuild = ''
           wrapProgram $out/bin/update-flake \
             --prefix PATH : ${
-              makeBinPath (
-                with pkgs;
-                [
-                  update-nix-fetchgit
-                  fd
-                ]
-              )
+              makeBinPath [
+                inputs'.nix-update-git.packages.default
+                pkgs.nix-update
+                pkgs.ripgrep
+              ]
             }
         '';
       };
@@ -64,6 +63,7 @@ in
               ...inputs: string,  # specific inputs to update; empty updates all
               --no-fetchgit,      # skip fetchgit update (runs by default)
               --no-release,       # skip release-locked inputs
+              --no-packages,      # skip nix-update packages
               --audit,            # only print `# UPDATE:` markers, skip updating
             ] {
               let dir = if "NH_FLAKE" in $env { $env.NH_FLAKE } else { "." }
@@ -77,7 +77,8 @@ in
               let fetchgit_args = if $no_fetchgit { [] } else { ["--fetchgit"] }
               let all_args = if ($inputs | is-empty) { ["--all"] } else { [] }
               let release_args = if $no_release { [] } else { ["--release" "${lockedStr}"] }
-              ^${update-flake}/bin/update-flake ...$dir_args ...$fetchgit_args ...$all_args ...$release_args ...$inputs
+              let package_args = if $no_packages { [] } else { ["--packages"] }
+              ^${update-flake}/bin/update-flake ...$dir_args ...$fetchgit_args ...$all_args ...$release_args ...$package_args ...$inputs
 
               audit $dir
             }

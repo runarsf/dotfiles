@@ -5,27 +5,16 @@
       inherit (pkgs) stdenv;
 
       version = "26.11.4";
-
-      debs = {
-        x86_64-linux = {
-          url = "https://git.sable.moe/SableClient/sable-next/releases/download/v${version}/sable-${version}-amd64.deb";
-          hash = "sha256-bRMUy1wfha+7SaNxQ+I7sdVI2GP4ilbmZZFf1KukdKY=";
-        };
-        aarch64-linux = {
-          url = "https://git.sable.moe/SableClient/sable-next/releases/download/v${version}/sable-${version}-arm64.deb";
-          hash = "sha256-d23qJev/2ZMRu1q/PXKZVFlKPnRyd8ZDpArJpIO8/zY=";
-        };
-      };
     in
     {
       packages.sable = stdenv.mkDerivation {
         pname = "sable";
         inherit version;
 
-        src = pkgs.fetchurl (
-          debs.${stdenv.hostPlatform.system}
-            or (throw "sable: no prebuilt .deb for ${stdenv.hostPlatform.system}")
-        );
+        src = pkgs.fetchurl {
+          url = "https://git.sable.moe/SableClient/sable-next/releases/download/v${version}/sable-${version}-amd64.deb";
+          hash = "sha256-bRMUy1wfha+7SaNxQ+I7sdVI2GP4ilbmZZFf1KukdKY=";
+        };
 
         nativeBuildInputs = with pkgs; [
           dpkg
@@ -112,10 +101,7 @@
           homepage = "https://sable.moe";
           license = licenses.agpl3Plus;
           sourceProvenance = with sourceTypes; [ binaryNativeCode ];
-          platforms = [
-            "x86_64-linux"
-            "aarch64-linux"
-          ];
+          platforms = [ "x86_64-linux" ];
           mainProgram = "sable";
         };
       };

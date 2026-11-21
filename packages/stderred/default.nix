@@ -1,7 +1,7 @@
 _: {
   perSystem = { pkgs, ... }: {
     packages.stderred = pkgs.stderred.overrideAttrs {
-      src = pkgs.fetchFromGitHub {
+      src = pkgs.fetchFromGitHub { # follow:branch master
         owner = "sickill";
         repo = "stderred";
         rev = "76fde071dd17a72700098617ae0813848eeba7a3";

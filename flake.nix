@@ -86,6 +86,11 @@
 
     nix-flatpak.url = "github:gmodena/nix-flatpak";
 
+    nix-update-git = {
+      url = "github:yuxqiu/nix-update-git/v0.7.0";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     stackpkgs = {
       type = "git";
       url = "https://code.thishorsie.rocks/ryze/stackpkgs";

@@ -162,7 +162,7 @@
               }
             '';
             advancedTabGroups = readFile "${
-              pkgs.fetchFromGitHub {
+              pkgs.fetchFromGitHub { # follow:branch main
                 owner = "Anoms12";
                 repo = "Advanced-Tab-Groups";
                 rev = "0dea07986100b26d24f2004794f110404723ab58";

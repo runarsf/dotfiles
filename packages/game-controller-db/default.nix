@@ -5,11 +5,11 @@ _: {
       inherit (pkgs) fetchFromGitHub;
     in
     {
-      packages.game-controller-db = fetchFromGitHub {
+      packages.game-controller-db = fetchFromGitHub { # follow:branch master
         owner = "mdqinc";
         repo = "SDL_GameControllerDB";
         rev = "992a0caf690e32a332a9707c355a4444516a2764";
-        sha256 = "sha256-hv1xtAXpSQlzO1nSUkFaeoth4o0V7aUjzZgqnehezaY=";
+        hash = "sha256-hv1xtAXpSQlzO1nSUkFaeoth4o0V7aUjzZgqnehezaY=";
       };
     };
 }

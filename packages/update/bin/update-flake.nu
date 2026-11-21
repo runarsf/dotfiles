@@ -24,6 +24,21 @@ def follows-overrides [nodes: record, input_name: string, nix_url: string]: noth
     | flatten
 }
 
+# nix-update evaluates the store path `nix flake metadata` reports, which nix
+# doesn't realise on its own for a git tree. Prefetch puts the tree there.
+def prefetch-flake []: nothing -> nothing {
+    do { ^nix flake prefetch --json . } | complete | ignore
+}
+
+# Every package nix-update can bump: a derivation carrying its own version and
+# source. `passthru.autoUpdate = false` pins one. tryEval keeps a package that
+# fails to evaluate from hiding the rest.
+def updatable-packages []: nothing -> list<string> {
+    let system = ^nix eval --impure --raw --expr "builtins.currentSystem"
+    let filter = 'ps: builtins.filter (n: let r = builtins.tryEval (let p = ps.${n}; in (p.type or "") == "derivation" && (p.autoUpdate or true) && p ? src && (p.version or "") != ""); in r.success && r.value) (builtins.attrNames ps)'
+    ^nix eval --json --apply $filter $".#packages.($system)" | from json
+}
+
 # Extracts provider, repo path, and host from a lock node's original field.
 # Returns: { provider: string, repo: string, host: string }
 def get-provider-info [original: record]: nothing -> record {
@@ -128,6 +143,7 @@ def main [
   --dir (-d): string,                 # override the flake directory
   --all (-a),                         # update all regular inputs (implied when nothing is passed)
   --release (-r): string = "",        # comma-separated inputs to pin to their latest release
+  --packages (-p),                    # bump every package's version and source hash
   --fetchgit (-f),                    # update git fetchers
 ] {
     if $dir != null {
@@ -154,10 +170,50 @@ def main [
         }
     }
 
+    # Before the fetchers: nix-update also refreshes vendorHash/cargoHash, which
+    # nix-update-git leaves alone. Bumping the source first would strand those.
+    if $packages {
+        let package_names = updatable-packages
+        if ($package_names | is-empty) {
+            print $"(ansi yellow_bold)warn:(ansi reset) no package carries its own version and source"
+        } else {
+            print $"(ansi blue_bold)info:(ansi reset) updating packages: ($package_names | str join ', ')..."
+            for pkg in $package_names {
+                prefetch-flake
+                let status = do { ^nix-update --flake $pkg }
+                    | complete
+                    | get stdout
+                    | lines
+                    | where { |l| ($l | str starts-with "Update ") or ($l | str starts-with "Not updating") }
+                if ($status | is-empty) {
+                    print $"(ansi yellow_bold)warn:(ansi reset) skipped ($pkg) — run `nix-update --flake ($pkg)` to see why"
+                    continue
+                }
+                print $"  ($status | first)"
+                if ($status | first | str starts-with "Update ") {
+                    # Rewriting the version changed the tree, so the source hash
+                    # needs a second pass against the new store path.
+                    prefetch-flake
+                    let rehash = do { ^nix-update --flake --version=skip $pkg } | complete
+                    if $rehash.exit_code != 0 {
+                        print $"(ansi red_bold)error:(ansi reset) ($pkg): version bumped but the hash did not update"
+                    }
+                }
+            }
+        }
+    }
+
     if $fetchgit {
-        print $"(ansi blue_bold)info:(ansi reset) updating fetchgit..."
-        let nix_files = ^fd --extension nix --type file | lines
-        ^update-nix-fetchgit --verbose ...$nix_files out+err>| lines | where not ($it =~ '^Made.*updates$') | each { print $in }
+        print $"(ansi blue_bold)info:(ansi reset) updating git fetchers..."
+        # nix-update-git can't parse pipe operators yet, so only hand it files
+        # that hold a fetcher it knows about.
+        let found = do {
+            ^rg --files-with-matches --glob '*.nix' 'fetch(git|Git|patch|Tarball|From[A-Z])'
+        } | complete
+        let nix_files = $found.stdout | lines | where { |x| not ($x | is-empty) }
+        if ($nix_files | is-not-empty) {
+            ^nix-update-git --update --rules all -- ...$nix_files
+        }
     }
 
     if ($release_inputs | is-not-empty) {
