@@ -1,257 +1,275 @@
 #!/usr/bin/env nu
 
-# Scans direct top-level inputs (via root node) for any that follow `input_name`,
-# returning explicit --override-input args to keep them in sync.
-# Only checks root-level inputs to avoid transitive deps and deduplicated nodes (_2, _3).
-def follows-overrides [nodes: record, input_name: string, nix_url: string]: nothing -> list<string> {
-    $nodes.root.inputs
-    | items { |logical_name, node_name|
-        if $logical_name == $input_name { return [] }
-        let node = $nodes | get $node_name
-        if ("inputs" not-in $node) { return [] }
-        $node.inputs
-        | items { |sub_name, sub_ref|
-            if $sub_name != $input_name { return null }
-            # follows refs are lists in the lock file (e.g. ["hyprland"]), direct locks are strings
-            if ($sub_ref | describe | str starts-with "list") {
-                print $"(ansi green_bold)info:(ansi reset) found dependency: ($logical_name)/($input_name)"
-                ["--override-input" $"($logical_name)/($input_name)" $nix_url]
-            }
-        }
-        | compact
-        | flatten
-    }
-    | flatten
-}
+def info [msg: string] { print $"(ansi blue_bold)info:(ansi reset) ($msg)" }
+def warn [msg: string] { print $"(ansi yellow_bold)warn:(ansi reset) ($msg)" }
+def fail [msg: string] { print $"(ansi red_bold)error:(ansi reset) ($msg)" }
 
-# nix-update evaluates the store path `nix flake metadata` reports, which nix
-# doesn't realise on its own for a git tree. Prefetch puts the tree there.
-def prefetch-flake []: nothing -> nothing {
-    do { ^nix flake prefetch --json . } | complete | ignore
-}
-
-# Every package nix-update can bump: a derivation carrying its own version and
-# source. `passthru.autoUpdate = false` pins one. tryEval keeps a package that
-# fails to evaluate from hiding the rest.
-def updatable-packages []: nothing -> list<string> {
-    let system = ^nix eval --impure --raw --expr "builtins.currentSystem"
-    let filter = 'ps: builtins.filter (n: let r = builtins.tryEval (let p = ps.${n}; in (p.type or "") == "derivation" && (p.autoUpdate or true) && p ? src && (p.version or "") != ""); in r.success && r.value) (builtins.attrNames ps)'
-    ^nix eval --json --apply $filter $".#packages.($system)" | from json
-}
-
-# Extracts provider, repo path, and host from a lock node's original field.
-# Returns: { provider: string, repo: string, host: string }
-def get-provider-info [original: record]: nothing -> record {
-    match $original.type {
-        "github" => {
-            { provider: "github", repo: $"($original.owner)/($original.repo)", host: "github.com" }
-        }
-        "gitlab" => {
-            let host = if "host" in $original { $original.host } else { "gitlab.com" }
-            { provider: "gitlab", repo: $"($original.owner)/($original.repo)", host: $host }
-        }
-        "git" => {
-            # Parse host and repo from the URL (e.g. git+https://codeberg.org/LGFae/awww)
-            let clean = $original.url
-                | str replace --regex '^(?:git\+)?https://' ''
-                | str replace --regex '\?.*$' ''
-            let parts = $clean | split row "/"
-            let host = $parts | first
-            let repo = $parts | skip 1 | str join "/"
-            # Forgejo/Gitea API (covers Codeberg and other instances)
-            { provider: "forgejo", repo: $repo, host: $host }
-        }
-        _ => {
-            error make { msg: $"Unsupported input type: ($original.type)" }
-        }
-    }
-}
-
-def github-get [url: string]: nothing -> any {
-    if "GITHUB_TOKEN" in $env {
-        http get --headers {Authorization: $"Bearer ($env.GITHUB_TOKEN)"} $url
+# Only github.com gets the token; it must never reach another host.
+def forge-get [url: string]: nothing -> any {
+    if ($url | str starts-with "https://api.github.com/") and ("GITHUB_TOKEN" in $env) {
+        http get --headers { Authorization: $"Bearer ($env.GITHUB_TOKEN)" } $url
     } else {
         http get $url
     }
 }
 
-# Fetches the latest release or tag from the appropriate forge API.
-# Falls back to the tags API if no releases exist.
-def fetch-latest-tag [info: record]: nothing -> string {
+def forge-of [original: record]: nothing -> record {
+    match $original.type {
+        "github" => { provider: "github", repo: $"($original.owner)/($original.repo)", host: "github.com" }
+        "gitlab" => {
+            let host = if "host" in $original { $original.host } else { "gitlab.com" }
+            { provider: "gitlab", repo: $"($original.owner)/($original.repo)", host: $host }
+        }
+        # A plain git input is taken to be Forgejo/Gitea, which covers Codeberg.
+        "git" => {
+            let parts = $original.url
+                | str replace --regex '^(?:git\+)?https://' ''
+                | str replace --regex '\?.*$' ''
+                | split row "/"
+            { provider: "forgejo", repo: ($parts | skip 1 | str join "/"), host: ($parts | first) }
+        }
+        _ => { error make { msg: $"unsupported input type: ($original.type)" } }
+    }
+}
+
+# All three answer with `tag_name` for a release and `name` for a tag.
+def forge-endpoints [forge: record]: nothing -> record {
+    match $forge.provider {
+        "github" => {
+            let base = $"https://api.github.com/repos/($forge.repo)"
+            { release: $"($base)/releases/latest", tags: $"($base)/tags?per_page=1" }
+        }
+        "gitlab" => {
+            let base = $"https://($forge.host)/api/v4/projects/($forge.repo | str replace '/' '%2F')"
+            {
+                release: $"($base)/releases/permalink/latest"
+                tags: $"($base)/repository/tags?order_by=updated&sort=desc&per_page=1"
+            }
+        }
+        "forgejo" => {
+            let base = $"https://($forge.host)/api/v1/repos/($forge.repo)"
+            { release: $"($base)/releases/latest", tags: $"($base)/tags?limit=1" }
+        }
+    }
+}
+
+def latest-tag [forge: record]: nothing -> string {
+    let api = forge-endpoints $forge
     try {
-        match $info.provider {
-            "github" => {
-                try {
-                    github-get $"https://api.github.com/repos/($info.repo)/releases/latest"
-                    | get tag_name
-                } catch {
-                    let tags = github-get $"https://api.github.com/repos/($info.repo)/tags?per_page=1"
-                    if ($tags | is-empty) { error make { msg: $"($info.repo) has no releases or tags" } }
-                    $tags | first | get name
-                }
-            }
-            "gitlab" => {
-                let encoded = $info.repo | str replace "/" "%2F"
-                try {
-                    http get $"https://($info.host)/api/v4/projects/($encoded)/releases/permalink/latest"
-                    | get tag_name
-                } catch {
-                    http get $"https://($info.host)/api/v4/projects/($encoded)/repository/tags?order_by=updated&sort=desc&per_page=1"
-                    | first
-                    | get name
-                }
-            }
-            "forgejo" => {
-                try {
-                    http get $"https://($info.host)/api/v1/repos/($info.repo)/releases/latest"
-                    | get tag_name
-                } catch {
-                    http get $"https://($info.host)/api/v1/repos/($info.repo)/tags?limit=1"
-                    | first
-                    | get name
-                }
-            }
+        try {
+            forge-get $api.release | get tag_name
+        } catch {
+            let tags = forge-get $api.tags
+            if ($tags | is-empty) { error make { msg: $"($forge.repo) has no releases or tags" } }
+            $tags | first | get name
         }
     } catch { |err|
-        let msg = if ($err.msg | str contains "403") {
-            $"rate limit hit for ($info.repo) — wait or set GITHUB_TOKEN in the environment"
+        if ($err.msg | str contains "403") {
+            error make { msg: $"rate limit hit for ($forge.repo) — wait or set GITHUB_TOKEN in the environment" }
+        }
+        error make { msg: $"could not find a release or tag for ($forge.repo): ($err.msg)" }
+    }
+}
+
+def flake-url [forge: record, tag: string]: nothing -> string {
+    match $forge.provider {
+        "github" => $"github:($forge.repo)/($tag)"
+        "gitlab" if $forge.host == "gitlab.com" => $"gitlab:($forge.repo)/($tag)"
+        "gitlab" => $"gitlab:($forge.repo)/($tag)?host=($forge.host)"
+        "forgejo" => $"git+https://($forge.host)/($forge.repo)?ref=refs/tags/($tag)"
+    }
+}
+
+def base-url [original: record]: nothing -> string {
+    match $original.type {
+        "github" => $"github:($original.owner)/($original.repo)"
+        "gitlab" => $"gitlab:($original.owner)/($original.repo)"
+        "git" => ($original.url | str replace --regex '^git\+' '' | str replace --regex '\?.*$' '')
+        _ => ""
+    }
+}
+
+def update-inputs [names: list<string>, token_args: list<string>] {
+    if ($names | is-empty) {
+        info "updating all flake inputs..."
+    } else {
+        info $"updating inputs: ($names | str join ', ')..."
+    }
+    ^nix flake update ...$token_args ...$names
+}
+
+# nix-update evaluates the store path `nix flake metadata` reports, which nix
+# doesn't realise on its own for a git tree. Prefetch puts the tree there.
+def prefetch-flake [] {
+    do { ^nix flake prefetch --json . } | complete | ignore
+}
+
+# `passthru.autoUpdate = false` pins a package. tryEval keeps one that fails to
+# evaluate from hiding the rest.
+def updatable-packages []: nothing -> list<string> {
+    let system = ^nix eval --impure --raw --expr "builtins.currentSystem"
+    let filter = '
+      ps: builtins.filter (name:
+        let probe = builtins.tryEval (
+          let p = ps.${name}; in
+            (p.type or "") == "derivation"
+            && (p.autoUpdate or true)
+            && p ? src
+            && (p.version or "") != ""
+        );
+        in probe.success && probe.value
+      ) (builtins.attrNames ps)
+    '
+    ^nix eval --json --apply $filter $".#packages.($system)" | from json
+}
+
+def run-nix-update [pkg: string, ...args: string]: nothing -> record {
+    do { ^nix-update --flake ...$args $pkg } | complete
+}
+
+def bump-package [pkg: string] {
+    prefetch-flake
+    let result = run-nix-update $pkg
+    # Anything else means nix-update bailed before touching the file.
+    let status = $result.stdout | lines | where { |line| $line =~ '^(Update|Not updating) ' }
+    if ($status | is-empty) {
+        warn $"skipped ($pkg) — run `nix-update --flake ($pkg)` to see why"
+        return
+    }
+
+    let line = $status | first
+    print $"  ($line)"
+    if not ($line | str starts-with "Update ") { return }
+
+    # Rewriting the version changed the tree, so the hash needs a second pass
+    # against the new store path.
+    prefetch-flake
+    if (run-nix-update $pkg "--version=skip" | get exit_code) != 0 {
+        fail $"($pkg): version bumped but the hash did not update"
+    }
+}
+
+def update-packages [] {
+    let names = updatable-packages
+    if ($names | is-empty) {
+        warn "no package carries its own version and source"
+        return
+    }
+    info $"updating packages: ($names | str join ', ')..."
+    for pkg in $names { bump-package $pkg }
+}
+
+def update-fetchers [] {
+    info "updating git fetchers..."
+    # nix-update-git can't parse pipe operators, so only hand it files that hold
+    # a fetcher it knows about.
+    let files = do {
+        ^rg --files-with-matches --glob '*.nix' 'fetch(git|Git|patch|Tarball|From[A-Z])'
+    }
+    | complete
+    | get stdout
+    | lines
+    | where { |file| $file | is-not-empty }
+
+    if ($files | is-not-empty) {
+        ^nix-update-git --update --rules all -- ...$files
+    }
+}
+
+# Root level only, to skip transitive and deduplicated nodes (_2, _3).
+def follows-overrides [nodes: record, input: string, url: string]: nothing -> list<string> {
+    $nodes.root.inputs
+    | items { |name, node_name|
+        let node = $nodes | get $node_name
+        if $name == $input or ("inputs" not-in $node) or ($input not-in $node.inputs) {
+            return []
+        }
+        # A follows ref is a list in the lock file (e.g. ["hyprland"]); a direct
+        # lock is a string.
+        if (($node.inputs | get $input | describe) | str starts-with "list") {
+            info $"found dependency: ($name)/($input)"
+            ["--override-input" $"($name)/($input)" $url]
         } else {
-            $"could not find a release or tag for ($info.repo): ($err.msg)"
+            []
         }
-        error make { msg: $msg }
     }
+    | flatten
 }
 
-# Returns the nix flake URL for a given provider/repo/tag.
-def make-nix-url [info: record, tag: string]: nothing -> string {
-    match $info.provider {
-        "github" => { $"github:($info.repo)/($tag)" }
-        "gitlab" => {
-            if $info.host == "gitlab.com" {
-                $"gitlab:($info.repo)/($tag)"
-            } else {
-                $"gitlab:($info.repo)/($tag)?host=($info.host)"
-            }
-        }
-        "forgejo" => { $"git+https://($info.host)/($info.repo)?ref=refs/tags/($tag)" }
+# nix skips re-locking an input whose commit is unchanged, so a rewritten url
+# only takes effect when the input is named on `nix flake update`; an input whose
+# url isn't written literally in flake.nix needs an override instead.
+def pin-input [nodes: record, input: string]: nothing -> record {
+    let original = $nodes | get $input | get original
+    let forge = forge-of $original
+    info $"fetching latest release tag for ($forge.provider):($forge.repo)..."
+    let tag = latest-tag $forge
+    let url = flake-url $forge $tag
+    info $"pinning ($input) to ($tag)..."
+
+    let base = base-url $original
+    let flake = open --raw flake.nix
+    if $base == "" or not ($flake | str contains $"\"($base)") {
+        warn $"no URL for ($input) in flake.nix, falling back to --override-input"
+        let overrides = ["--override-input" $input $url]
+            ++ (follows-overrides $nodes $input $url)
+        return { overrides: $overrides, relock: [], failed: [] }
     }
+
+    $flake
+    | str replace --regex $"\"($base)[^\"]*\"" $"\"($url)\""
+    | save --force flake.nix
+    { overrides: [], relock: [$input], failed: [] }
 }
 
+def pin-releases [inputs: list<string>, token_args: list<string>] {
+    let nodes = open --raw flake.lock | from json | get nodes
+    let pins = $inputs | each { |input|
+        try {
+            pin-input $nodes $input
+        } catch { |err|
+            fail $"($input): ($err.msg)"
+            { overrides: [], relock: [], failed: [$input] }
+        }
+    }
+    let overrides = $pins | get overrides | flatten
+    let relock = $pins | get relock | flatten
+    let failed = $pins | get failed | flatten
+
+    # Re-lock what was pinned even if another input failed, or flake.nix and
+    # flake.lock disagree. A bare `nix flake update` would update every input.
+    if ($overrides | is-not-empty) or ($relock | is-not-empty) {
+        ^nix flake update ...$token_args ...$overrides ...$relock
+    }
+    if ($failed | is-not-empty) {
+        error make --unspanned { msg: $"could not pin: ($failed | str join ', ')" }
+    }
+}
 
 def main [
-  ...inputs: string,                  # specific inputs to update normally
-  --dir (-d): string,                 # override the flake directory
-  --all (-a),                         # update all regular inputs (implied when nothing is passed)
-  --release (-r): string = "",        # comma-separated inputs to pin to their latest release
-  --packages (-p),                    # bump every package's version and source hash
-  --fetchgit (-f),                    # update git fetchers
+    ...inputs: string,           # specific inputs to update normally
+    --dir (-d): string,          # override the flake directory
+    --all (-a),                  # update all regular inputs (implied when nothing is passed)
+    --release (-r): string = "", # comma-separated inputs to pin to their latest release
+    --packages (-p),             # bump every package's version and source hash
+    --fetchgit (-f),             # update git fetchers
 ] {
-    if $dir != null {
-        cd $dir
-    }
+    if $dir != null { cd $dir }
 
-    let release_inputs = $release | split row "," | where { |x| not ($x | is-empty) }
-    let regular_inputs = $inputs | where { |x| $x not-in $release_inputs }
-    let nix_token_args = if "GITHUB_TOKEN" in $env {
+    let release_inputs = $release | split row "," | where { |name| $name | is-not-empty }
+    let regular_inputs = $inputs | where { |name| $name not-in $release_inputs }
+    let token_args = if "GITHUB_TOKEN" in $env {
         ["--extra-access-tokens" $"github.com=($env.GITHUB_TOKEN)"]
     } else {
         []
     }
 
-    let do_regular = ($regular_inputs | is-not-empty) or $all or ($release_inputs | is-empty)
-
-    if $do_regular {
-        if ($regular_inputs | is-not-empty) {
-            print $"(ansi blue_bold)info:(ansi reset) updating inputs: ($regular_inputs | str join ', ')..."
-            nix flake update ...$nix_token_args ...$regular_inputs
-        } else {
-            print $"(ansi blue_bold)info:(ansi reset) updating all flake inputs..."
-            nix flake update ...$nix_token_args
-        }
+    if ($regular_inputs | is-not-empty) or $all or ($release_inputs | is-empty) {
+        update-inputs $regular_inputs $token_args
     }
-
-    # Before the fetchers: nix-update also refreshes vendorHash/cargoHash, which
-    # nix-update-git leaves alone. Bumping the source first would strand those.
-    if $packages {
-        let package_names = updatable-packages
-        if ($package_names | is-empty) {
-            print $"(ansi yellow_bold)warn:(ansi reset) no package carries its own version and source"
-        } else {
-            print $"(ansi blue_bold)info:(ansi reset) updating packages: ($package_names | str join ', ')..."
-            for pkg in $package_names {
-                prefetch-flake
-                let status = do { ^nix-update --flake $pkg }
-                    | complete
-                    | get stdout
-                    | lines
-                    | where { |l| ($l | str starts-with "Update ") or ($l | str starts-with "Not updating") }
-                if ($status | is-empty) {
-                    print $"(ansi yellow_bold)warn:(ansi reset) skipped ($pkg) — run `nix-update --flake ($pkg)` to see why"
-                    continue
-                }
-                print $"  ($status | first)"
-                if ($status | first | str starts-with "Update ") {
-                    # Rewriting the version changed the tree, so the source hash
-                    # needs a second pass against the new store path.
-                    prefetch-flake
-                    let rehash = do { ^nix-update --flake --version=skip $pkg } | complete
-                    if $rehash.exit_code != 0 {
-                        print $"(ansi red_bold)error:(ansi reset) ($pkg): version bumped but the hash did not update"
-                    }
-                }
-            }
-        }
-    }
-
-    if $fetchgit {
-        print $"(ansi blue_bold)info:(ansi reset) updating git fetchers..."
-        # nix-update-git can't parse pipe operators yet, so only hand it files
-        # that hold a fetcher it knows about.
-        let found = do {
-            ^rg --files-with-matches --glob '*.nix' 'fetch(git|Git|patch|Tarball|From[A-Z])'
-        } | complete
-        let nix_files = $found.stdout | lines | where { |x| not ($x | is-empty) }
-        if ($nix_files | is-not-empty) {
-            ^nix-update-git --update --rules all -- ...$nix_files
-        }
-    }
-
-    if ($release_inputs | is-not-empty) {
-        let lock = open --raw flake.lock | from json
-        mut override_args: list<string> = []
-        mut update_inputs: list<string> = []
-
-        for input in $release_inputs {
-            let original = $lock.nodes | get $input | get original
-            let info = get-provider-info $original
-            print $"(ansi blue_bold)info:(ansi reset) fetching latest release tag for ($info.provider):($info.repo)..."
-            let latest_tag = fetch-latest-tag $info
-            let nix_url = make-nix-url $info $latest_tag
-            print $"(ansi blue_bold)info:(ansi reset) pinning ($input) to ($latest_tag)..."
-
-            # Construct the base URL as it appears in flake.nix (without any tag/ref).
-            # nix skips rewriting the lock when the commit is unchanged, so --override-input
-            # won't set original.ref in that case. Updating flake.nix directly is reliable.
-            let base_url = match $original.type {
-                "github" => { $"github:($original.owner)/($original.repo)" }
-                "gitlab" => { $"gitlab:($original.owner)/($original.repo)" }
-                "git"    => { $original.url | str replace --regex '^git\+' '' | str replace --regex '\?.*$' '' }
-                _        => { "" }
-            }
-            let old_flake = open --raw flake.nix
-            if $base_url == "" or not ($old_flake | str contains $"\"($base_url)") {
-                print $"(ansi yellow_bold)warn:(ansi reset) could not find URL for ($input) in flake.nix, falling back to --override-input"
-                let extra = follows-overrides $lock.nodes $input $nix_url
-                $override_args = ($override_args | append (["--override-input" $input $nix_url] ++ $extra))
-            } else {
-                let new_flake = $old_flake | str replace --regex $"\"($base_url)[^\"]*\"" $"\"($nix_url)\""
-                $new_flake | save --force flake.nix
-                # bare `nix flake lock` won't re-resolve an already-locked input
-                # just because its url text changed, so force it explicitly.
-                $update_inputs = ($update_inputs | append $input)
-            }
-        }
-
-        nix flake update ...$nix_token_args ...$override_args ...$update_inputs
-    }
+    # Packages before fetchers: nix-update also refreshes vendorHash/cargoHash,
+    # which nix-update-git leaves alone, so a bumped source would strand those.
+    if $packages { update-packages }
+    if $fetchgit { update-fetchers }
+    if ($release_inputs | is-not-empty) { pin-releases $release_inputs $token_args }
 }
