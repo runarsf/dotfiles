@@ -5,15 +5,23 @@
       lib,
       pkgs,
       config,
+      osConfig,
       ...
     }:
     let
-      inherit (builtins) readFile;
-      inherit (pkgs) symlinkJoin fetchFromGitHub;
-      inherit (pkgs.stdenv.hostPlatform) system;
-      inherit (lib) mkEnableOption mkOption;
+      inherit (lib)
+        mkEnableOption
+        mkOption
+        mkIf
+        ;
+      inherit (lib) getAttrs attrValues;
       inherit (lib.strings) concatStringsSep;
-      inherit (lib.types) attrsOf anything;
+      inherit (lib.types)
+        attrsOf
+        listOf
+        anything
+        str
+        ;
 
       cfg = config.modules.zen;
 
@@ -23,8 +31,14 @@
         "tab.groups.add-arrow" = true;
         "tab.groups.background" = true;
         "tab.groups.borders" = true;
+        "zen.urlbar.behavior" = "float";
         "zen.urlbar.replace-newtab" = false;
         "zen.widget.linux.transparency" = cfg.transparency;
+        "zen.tabs.show-newtab-vertical" = false;
+        "zen.pinned-tab-manager.restore-pinned-tabs-to-pinned-url" = true;
+        "zen.window-sync.sync-only-pinned-tabs" = true;
+        "zen.tabs.ctrl-tab.ignore-pending-tabs" = true;
+        "zen.workspaces.continue-where-left-off" = true;
 
         # Zen Context Menu
         "uc.hidecontext.screenshot" = true;
@@ -39,12 +53,6 @@
         "uc.hidecontext.newtab" = true;
         "uc.hidecontext.mutetab" = true;
         "uc.hidecontext.menubar" = true;
-
-        # Private Mode Highlighting
-        "uc.private-browsing-top-bar.highlighting-style" = "";
-
-        # Better Find Bar
-        "theme.better_find_bar.transparent_background" = true;
 
         # UI
         "ui.osk.enabled" = true;
@@ -98,7 +106,16 @@
         "services.sync.prefs.sync.browser.uiCustomization.state" = true;
         "widget.gtk.rounded-bottom-corners.enabled" = true;
         "browser.aboutConfig.showWarning" = false;
-        "browser.translations.neverTranslateLanguages" = "nb,de";
+        "browser.translations.neverTranslateLanguages" = "en,nb,de";
+      }
+      // {
+        # Private Mode Highlighting
+        "uc.private-browsing-top-bar.highlighting-style" = "";
+
+        # Super Pins
+        "uc.superpins.border.pins" = true;
+        "browser.sessionstore.restore_pinned_tabs_on_demand" = true;
+        "zen.workspaces.show-workspace-indicator" = false;
       }
       // cfg.customPrefs;
 
@@ -120,22 +137,6 @@
             }
           }
         '';
-        hideWorkspaces = ''
-          #zen-current-workspace-indicator,
-          #zen-workspaces-button {
-            display: none !important;
-          }
-        '';
-        advancedTabGroups = readFile "${
-          fetchFromGitHub {
-            # follow:branch main
-            owner = "Anoms12";
-            repo = "Advanced-Tab-Groups";
-            rev = "2136f303375588ecb6585f59a054109c8f1cde5d";
-            hash = "sha256-8AOik681SkdNYWVjtFIsv4sQiinIdo14Qt0lbZf0yGQ=";
-            sparseCheckout = [ "tab-group.css" ];
-          }
-        }/tab-group.css";
       };
 
       userContent = {
@@ -151,26 +152,6 @@
           }
         '';
       };
-
-      legacyRoot = "${config.home.homeDirectory}/.zen";
-      profileDir = "${config.xdg.configHome}/zen/default";
-
-      # Zen's "Profile Groups" feature tracks the last-used profile in its own
-      # sqlite state and ignores the classic profiles.ini Default=1 flag, so we
-      # force the desired profile via --profile instead, wrapped into the bin
-      # itself so it applies no matter how zen is launched (terminal, app
-      # launcher, xdg-open default browser, etc).
-      # zen-browser = symlinkJoin {
-      #   name = "zen-browser";
-      #   paths = [
-      #     inputs.zen-browser.packages.${system}.default
-      #   ];
-      #   nativeBuildInputs = [ pkgs.makeWrapper ];
-      #   postBuild = ''
-      #     wrapProgram $out/bin/zen \
-      #       --add-flags "--profile ${homeDirectory}/.zen/${username}"
-      #   '';
-      # };
     in
     {
       imports = [
@@ -187,47 +168,76 @@
             replace defaults defined in this module
           '';
         };
-      };
+        userChromePresets = mkOption {
+          type = listOf str;
+          default = [ ];
+        };
+        userContentPresets = mkOption {
+          type = listOf str;
+          default = [ ];
+        };
+        mods = mkOption {
+          type = listOf str;
+          default = [
+            "ff-better-findbar"
+            "context-menu-icons"
 
-      config = {
-        # Gecko only looks at $XDG_CONFIG_HOME/zen when ~/.zen is absent, so the
-        # legacy root has to be moved out of the way, not just emptied.
-        modules.migrations.entries.zen-profile = {
-          when = ''[ -d "${legacyRoot}" ]'';
-          locks = [
-            "${legacyRoot}/*/.parentlock"
-            "${profileDir}/.parentlock"
+            # Zen Mods
+            "c01d3e22-1cee-45c1-a25e-53c0f180eea8" # Ghost Tabs
+            "58649066-2b6f-4a5b-af6d-c3d21d16fc00" # Private Mode Highlighting
+            "ad97bb70-0066-4e42-9b5f-173a5e42c6fc" # Super Pins
           ];
-          before = [ "zen-browser-default" ];
-          script = ''
-            src=$(${lib.getExe pkgs.gawk} -v root="${legacyRoot}" -F= '
-              /^\[Profile/ { n++; idx = n; inprof = 1; next }
-              /^\[/        { inprof = 0; next }
-              inprof && $1 == "Path"       { p[idx] = $2 }
-              inprof && $1 == "IsRelative" { r[idx] = $2 }
-              inprof && $1 == "Default" && $2 == "1" { d = idx }
-              END {
-                i = d ? d : (n == 1 ? 1 : 0)
-                if (i && p[i] != "") print (r[i] == "0" ? p[i] : root "/" p[i])
-              }
-            ' "${legacyRoot}/profiles.ini")
-
-            if [ -z "$src" ]; then
-              echo "zen: no default profile in ${legacyRoot}/profiles.ini, migrate by hand"
-            elif [ -e "${profileDir}/places.sqlite" ] &&
-                 [ "$(readlink -f "$src")" != "$(readlink -f "${profileDir}")" ]; then
-              echo "zen: ${profileDir} already holds another profile's data, migrate by hand"
-            else
-              hm-migrate merge "$src" "${profileDir}" --mode 700
-              hm-migrate aside "${legacyRoot}"
-            fi
+          description = ''
+            Zen and Sine mods to be installed.
+            Get the IDs from https://zen-browser.app/mods and https://github.com/sineorg/store/tree/main/mods.
           '';
         };
+      };
+
+      config = mkIf (osConfig.host.desktop or true) {
+        # Gecko only looks at $XDG_CONFIG_HOME/zen when ~/.zen is absent, so the
+        # legacy root has to be moved out of the way, not just emptied.
+        modules.migrations.entries.zen-profile =
+          let
+            legacyRoot = "${config.home.homeDirectory}/.zen";
+            profileDir = "${config.xdg.configHome}/zen/default";
+          in
+          {
+            when = ''[ -d "${legacyRoot}" ]'';
+            locks = [
+              "${legacyRoot}/*/.parentlock"
+              "${profileDir}/.parentlock"
+            ];
+            before = [ "zen-browser-default" ];
+            script = ''
+              src=$(${lib.getExe pkgs.gawk} -v root="${legacyRoot}" -F= '
+                /^\[Profile/ { n++; idx = n; inprof = 1; next }
+                /^\[/        { inprof = 0; next }
+                inprof && $1 == "Path"       { p[idx] = $2 }
+                inprof && $1 == "IsRelative" { r[idx] = $2 }
+                inprof && $1 == "Default" && $2 == "1" { d = idx }
+                END {
+                  i = d ? d : (n == 1 ? 1 : 0)
+                  if (i && p[i] != "") print (r[i] == "0" ? p[i] : root "/" p[i])
+                }
+              ' "${legacyRoot}/profiles.ini")
+
+              if [ -z "$src" ]; then
+                echo "zen: no default profile in ${legacyRoot}/profiles.ini, migrate by hand"
+              elif [ -e "${profileDir}/places.sqlite" ] &&
+                   [ "$(readlink -f "$src")" != "$(readlink -f "${profileDir}")" ]; then
+                echo "zen: ${profileDir} already holds another profile's data, migrate by hand"
+              else
+                hm-migrate merge "$src" "${profileDir}" --mode 700
+                hm-migrate aside "${legacyRoot}"
+              fi
+            '';
+          };
 
         programs.zen-browser = {
           enable = true;
-          # package = zen-browser;
           setAsDefaultBrowser = true;
+
           policies = {
             DisableAppUpdate = true;
             DisableTelemetry = true;
@@ -244,17 +254,78 @@
               Fingerprinting = true;
             };
           };
+
+          nativeMessagingHosts = [
+            pkgs.firefoxpwa
+          ];
+          env = {
+            GTK_THEME = "Adwaita";
+          };
+
           profiles.default = {
             inherit settings;
 
-            userChrome =
-              with userChrome;
-              [
-                fixBookmarksBar
-              ]
-              |> concatStringsSep "\n";
-            userContent = with userContent; [ ] |> concatStringsSep "\n";
             presets.betterfox.enable = true;
+
+            userChrome =
+              userChrome
+              |> getAttrs cfg.userChromePresets
+              |> attrValues
+              |> concatStringsSep "\n";
+            userContent =
+              userContent
+              |> getAttrs cfg.userContentPresets
+              |> attrValues
+              |> concatStringsSep "\n";
+
+            sine = {
+              inherit (cfg) mods;
+
+              enable = true;
+            };
+
+            keyboardShortcuts = [
+              {
+                id = "zen-compact-mode-toggle";
+                key = "c";
+                modifiers = {
+                  control = true;
+                  alt = true;
+                };
+              }
+              {
+                id = "key_savePage";
+                key = "s";
+                modifiers = {
+                  control = true;
+                };
+              }
+              {
+                id = "zen-toggle-sidebar";
+                key = "x";
+                modifiers = {
+                  control = true;
+                  alt = true;
+                };
+              }
+              {
+                id = "key_quitApplication";
+                disabled = true;
+              }
+              {
+                id = "key_reload";
+                key = "r";
+                modifiers.control = true;
+              }
+              {
+                id = "key_reload_skip_cache";
+                key = "r";
+                modifiers = {
+                  control = true;
+                  shift = true;
+                };
+              }
+            ];
             # pinsForce = true;
             # pins = {
             #   "Email" = {
@@ -282,50 +353,23 @@
             #     position = 2000;
             #   };
             # };
-            search = {
-              force = true;
-              default = "kagi";
-              engines = {
-                kagi = {
-                  name = "Kagi";
-                  urls = [
-                    {
-                      template = "https://kagi.com/search?q={searchTerms}";
-                    }
-                  ];
-                  definedAliases = [ "@k" ];
-                };
-              };
-            };
-            sine = {
-              enable = true;
-              mods = [
-                "Nebula"
-                "remove-tabs-separator"
-
-                # Zen Mods
-                "c01d3e22-1cee-45c1-a25e-53c0f180eea8" # Ghost Tabs
-                "cb5efa80-f1e1-43ce-8c0b-fece8462d225" # Container Halo
-              ];
-            };
+            # search = {
+            #   force = true;
+            #   default = "kagi";
+            #   engines = {
+            #     kagi = {
+            #       name = "Kagi";
+            #       urls = [
+            #         {
+            #           template = "https://kagi.com/search?q={searchTerms}";
+            #         }
+            #       ];
+            #       definedAliases = [ "@k" ];
+            #     };
+            #   };
+            # };
           };
         };
-
-        # xdg.mimeApps = {
-        #   enable = true;
-        #   defaultApplications =
-        #     let
-        #       entries = [ "zen.desktop" ];
-        #     in
-        #     {
-        #       "default-web-browser" = entries;
-        #       "text/html" = entries;
-        #       "x-scheme-handler/http" = entries;
-        #       "x-scheme-handler/https" = entries;
-        #       "x-scheme-handler/about" = entries;
-        #       "x-scheme-handler/unknown" = entries;
-        #     };
-        # };
       };
     };
 
