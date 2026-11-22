@@ -1,6 +1,6 @@
 const gravity = 30
 
-def get-geometry [client: record] -> record {
+def get-geometry [client: record]: nothing -> record {
     {
         n: $client.at.1
         s: ($client.at.1 + $client.size.1)

@@ -25,7 +25,7 @@ nix build .#<package>       # anything in packages/
 nix flake check
 nix fmt                     # treefmt: nixfmt + deadnix
 
-nix run .#update            # update inputs + git fetchers, re-lock release-pinned inputs
+nix run .#update            # update inputs + git fetchers + versioned packages, re-lock release-pinned inputs
 nix run .#update-flake -- --release <input>   # single input
 ```
 
@@ -70,6 +70,7 @@ A host sets `modules` (names, or attrsets of name → config, resolved by `lib'.
 
 ## Conventions
 
-- Git fetchers must be at top level, not inside `let ... in` — `update-nix-fetchgit` can't rewrite them. `# UPDATE:` comments are printed by `nix run .#update` for manual review.
+- Git fetchers (`fetchFromGitHub`, `fetchgit`, …) are rewritten by `nix-update-git`, which can't parse the pipe operator — keep `|>` out of files that hold a fetcher. `# UPDATE:` comments are printed by `nix run .#update` for manual review.
 - Release-pinned inputs are listed in `releaseLockedInputs` in `packages/update/default.nix`.
+- `nix run .#update` runs `nix-update` on every package that carries its own `version` and `src`, no list to maintain; `passthru.autoUpdate = false` pins one. A package whose `version` comes from nixpkgs (an `overrideAttrs` of one) is skipped with a warning — `nix-update` can only patch files inside this flake. `nix-update` only sees the current system's source, so such a package carries one platform's URL and hash.
 - `TODO.md` is the backlog, including modules still to port from `old-dotfiles/`.

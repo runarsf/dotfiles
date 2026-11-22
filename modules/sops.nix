@@ -1,10 +1,11 @@
 {
   inputs,
+  lib',
   self,
   ...
 }:
 {
-  flake.nixosModules.sops =
+  flake.nixosModules.sops = lib'.mkModule "sops" (
     {
       config,
       lib,
@@ -33,9 +34,10 @@
         sops.age.sshKeyPaths = cfg.ageKeyPaths;
         sops.defaultSopsFile = lib.mkDefault "${cfg.vaultPath}/${config.networking.hostName}/secrets.yaml";
       };
-    };
+    }
+  );
 
-  flake.homeModules.sops =
+  flake.homeModules.sops = lib'.mkModule "sops" (
     {
       config,
       pkgs,
@@ -94,5 +96,6 @@
           ];
         }
       ];
-    };
+    }
+  );
 }

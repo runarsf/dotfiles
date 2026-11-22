@@ -1,81 +1,85 @@
 {
   self,
+  lib',
   inputs,
   ...
 }:
 {
-  flake.homeModules.cli =
-    { pkgs, ... }:
-    let
-      inherit (pkgs.stdenv.hostPlatform) system;
-    in
-    {
-      programs.fzf = {
-        enable = true;
-        defaultOptions = [
-          "--style=minimal"
-          "--info=inline-right"
-          "--highlight-line"
-          "--color=fg:-1,bg:-1"
+  flake.homeModules.cli = lib'.mkModule "cli" {
+    wants = [ "stylix" ];
+    config =
+      { pkgs, ... }:
+      let
+        inherit (pkgs.stdenv.hostPlatform) system;
+      in
+      {
+        programs.fzf = {
+          enable = true;
+          defaultOptions = [
+            "--style=minimal"
+            "--info=inline-right"
+            "--highlight-line"
+            "--color=fg:-1,bg:-1"
+          ];
+        };
+        stylix.targets.fzf.colors.override = {
+          bg = "-1";
+          fg = "-1";
+        };
+
+        home.packages = with pkgs; [
+          vim
+          git
+          wget
+          curl
+          zip
+          unzip
+
+          bat
+          eza
+          ripgrep
+          fd
+          sad
+
+          btop
+          ncdu
+          dysk
+          killall
+          moreutils
+          watchexec
+          expect
+
+          gay
+          blahaj
+          krabby
+          cowsay
+
+          tldr
+          dig
+          socat
+          nmap
+
+          jq
+          yq
+          fx
+          imagemagick
+          bc
+
+          yt-dlp
+          appimage-run
+          inputs.alien.packages.${system}.nix-alien
         ];
-      };
-      stylix.targets.fzf.colors.override = {
-        bg = "-1";
-        fg = "-1";
-      };
 
-      home.packages = with pkgs; [
-        vim
-        git
-        wget
-        curl
-        zip
-        unzip
-
-        bat
-        eza
-        ripgrep
-        fd
-        sad
-
-        btop
-        ncdu
-        dysk
-        killall
-        moreutils
-        watchexec
-        expect
-
-        gay
-        blahaj
-        krabby
-        cowsay
-
-        tldr
-        dig
-        socat
-        nmap
-
-        jq
-        yq
-        fx
-        imagemagick
-        bc
-
-        yt-dlp
-        appimage-run
-        inputs.alien.packages.${system}.nix-alien
-      ];
-
-      home.file.".bcrc".text = ''
-        define pow(a, b) {
-          if (scale(b) == 0) {
-            return a ^ b;
+        home.file.".bcrc".text = ''
+          define pow(a, b) {
+            if (scale(b) == 0) {
+              return a ^ b;
+            }
+            return e(b*l(a));
           }
-          return e(b*l(a));
-        }
-      '';
-    };
+        '';
+      };
+  };
 
   flake.homeModules.stderred =
     { pkgs, ... }:

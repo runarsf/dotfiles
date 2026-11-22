@@ -5,27 +5,17 @@
       inherit (pkgs) stdenv;
     in
     let
-      version = "26.0-beta.3";
+      version = "26.0";
 
       # Zaku (https://github.com/buildzaku/zaku) is a Rust desktop app built on
       # Zed's GPUI framework. It vendors large parts of Zed's own crates and
       # several git-pinned forks, so building from source is roughly as
       # involved as packaging Zed itself. Upstream publishes prebuilt Linux
       # tarballs per release, so we just fetch and patch those instead.
-      sources = {
-        x86_64-linux = {
-          url = "https://github.com/buildzaku/zaku/releases/download/${version}/Zaku-${version}-linux-x86_64.tar.gz";
-          hash = "sha256-U33OPIJua/wkMsNMbIdmchK7F8THOP/oNvWYEZ/mXoI=";
-        };
-        aarch64-linux = {
-          url = "https://github.com/buildzaku/zaku/releases/download/${version}/Zaku-${version}-linux-aarch64.tar.gz";
-          hash = "sha256-pZwKBm+BKNPxybY3M3hOSc1eI8R3i1ZnC4rvrgLF2Qc=";
-        };
+      source = {
+        url = "https://github.com/buildzaku/zaku/releases/download/${version}/Zaku-${version}-linux-x86_64.tar.gz";
+        hash = "sha256-Q4b6x818/okbd5QLpnw5Lmh4NckQOnIrJV1xDCblXmc=";
       };
-
-      source =
-        sources.${stdenv.hostPlatform.system}
-          or (throw "zaku: no prebuilt release for ${stdenv.hostPlatform.system}");
     in
     {
       packages.zaku = stdenv.mkDerivation {
@@ -83,10 +73,7 @@
           homepage = "https://github.com/buildzaku/zaku";
           changelog = "https://github.com/buildzaku/zaku/releases/tag/${version}";
           license = lib.licenses.agpl3Plus;
-          platforms = [
-            "x86_64-linux"
-            "aarch64-linux"
-          ];
+          platforms = [ "x86_64-linux" ];
           mainProgram = "zaku";
           sourceProvenance = [ lib.sourceTypes.binaryNativeCode ];
         };

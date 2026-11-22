@@ -1,10 +1,10 @@
 _: {
   perSystem = { pkgs, ... }: {
-    packages.zsh-docker-aliases = pkgs.fetchFromGitHub {
+    packages.zsh-docker-aliases = pkgs.fetchFromGitHub { # follow:branch master
       owner = "akarzim";
       repo = "zsh-docker-aliases";
-      rev = "6c3479abeef33362a7ec7e713a5a95f292fee9b9";
-      sha256 = "0iycb90l83l09skcd2yy0kc112225psgd063cf950v7gjga7h46z";
+      rev = "77716803ac38ed0ab414c71ff25c8f9565ec2849";
+      sha256 = "1cqllwld31dhlf78jn58js1j3z110fbiys16d8scx4i9pvx0dxwy";
     };
   };
 }

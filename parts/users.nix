@@ -47,6 +47,7 @@ let
     "flatpak"
     "hypridle"
     "hyprlock"
+    "migrations"
     "network"
     "niks"
     "niri"

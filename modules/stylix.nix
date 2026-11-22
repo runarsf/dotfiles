@@ -5,7 +5,7 @@
   ...
 }:
 {
-  flake.nixosModules.stylix =
+  flake.nixosModules.stylix = lib'.mkModule "stylix" (
     {
       config,
       lib,
@@ -27,9 +27,10 @@
           "spicetify"
         ];
       };
-    };
+    }
+  );
 
-  flake.homeModules.stylix =
+  flake.homeModules.stylix = lib'.mkModule "stylix" (
     {
       config,
       lib,
@@ -157,5 +158,6 @@
             "${pkgs.gsettings-desktop-schemas}/share/gsettings-schemas/${pkgs.gsettings-desktop-schemas.name}"
           ];
         };
-    };
+    }
+  );
 }

@@ -95,17 +95,23 @@ def --wrapped main [
       nix eval --json $".#nixosConfigurations.\"($config_name)\".config.nix.settings" --apply "s: { substituters = s.trusted-substituters; publicKeys = s.trusted-public-keys; }"
     } | from json
 
-    let substituters = $settings.substituters | str join " "
-    let public_keys  = $settings.publicKeys   | str join " "
-    let sub_opt = if $extra { "extra-substituters" } else { "substituters" }
-    let t_sub_opt = if $extra { "extra-trusted-substituters" } else { "trusted-substituters" }
-    let key_opt = if $extra { "extra-trusted-public-keys" } else { "trusted-public-keys" }
+    # Without this an empty list would replace the daemon's caches with
+    # nothing, and everything gets built from source.
+    if ($settings.substituters | is-empty) {
+      []
+    } else {
+      let substituters = $settings.substituters | str join " "
+      let public_keys  = $settings.publicKeys   | str join " "
+      let sub_opt = if $extra { "extra-substituters" } else { "substituters" }
+      let t_sub_opt = if $extra { "extra-trusted-substituters" } else { "trusted-substituters" }
+      let key_opt = if $extra { "extra-trusted-public-keys" } else { "trusted-public-keys" }
 
-    [
-      "--option", $sub_opt, $substituters,
-      "--option", $t_sub_opt, $substituters,
-      "--option", $key_opt, $public_keys
-    ]
+      [
+        "--option", $sub_opt, $substituters,
+        "--option", $t_sub_opt, $substituters,
+        "--option", $key_opt, $public_keys
+      ]
+    }
   }
 
   let final_args = (

@@ -1,6 +1,6 @@
 def flag [] { $"($env.XDG_RUNTIME_DIR)/hypr-gamemode-active" }
 
-def has-effects [] -> bool {
+def has-effects []: nothing -> bool {
     not ((flag) | path exists)
 }
 

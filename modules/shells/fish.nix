@@ -80,7 +80,7 @@
           { src = puffer.src; }
           { src = done.src; }
           {
-            src = pkgs.fetchFromGitHub {
+            src = pkgs.fetchFromGitHub { # follow:branch main
               owner = "mattmc3";
               repo = "magic-enter.fish";
               rev = "ddcf5c2cf9ff90c15a724bcdd794a486098492e0";
