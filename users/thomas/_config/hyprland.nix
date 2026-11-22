@@ -1,5 +1,7 @@
-_: {
-  homeModule = _: {
+{lib', ...}: {
+  homeModule = _: let
+    inherit (lib'.hyprland) kb;
+  in {
     wayland.windowManager.hyprland.settings = {
       monitor = [
         {
@@ -34,6 +36,9 @@ _: {
           workspace = "10";
           monitor = "DP-1";
         }
+      ];
+      bind = [
+        (kb "" "Pause" "hl.dsp.global(\"discord:discord-toggle-mute\")" {})
       ];
     };
   };
