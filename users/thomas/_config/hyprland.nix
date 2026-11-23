@@ -18,15 +18,31 @@
           scale = 1;
           vrr = 0;
         }
+        {
+          # Toaster screen
+          output = "desc:Chimei Innolux Corporation 0x14F2";
+          mode = "1920x1080@60.00100";
+          position = "1920x0";
+          scale = 1;
+          vrr = 0;
+        }
+        {
+          # Portable secondary monitor
+          output = "desc:Acer Technologies PM161Q B 15380108B3X00";
+          mode = "1920x1080@60.00000";
+          position = "0x0";
+          scale = 1;
+          vrr = 0;
+        }
       ];
       workspace_rule = [
         {
           workspace = "1";
-          monitor = "HDMI-A-1";
+          monitor = "desc:Chimei Innolux Corporation 0x14F2";
         }
         {
           workspace = "2";
-          monitor = "HDMI-A-1";
+          monitor = "desc:Chimei Innolux Corporation 0x14F2";
         }
         {
           workspace = "4";
