@@ -39,6 +39,9 @@
         "zen.window-sync.sync-only-pinned-tabs" = true;
         "zen.tabs.ctrl-tab.ignore-pending-tabs" = true;
         "zen.workspaces.continue-where-left-off" = true;
+        "zen.glance.activation-method" = "ctrl";
+        "zen.glance.animation-duration" = 150;
+        "intl.regional_prefs.use_os_locales" = true;
 
         # Zen Context Menu
         "uc.hidecontext.screenshot" = true;
@@ -113,7 +116,7 @@
         "uc.private-browsing-top-bar.highlighting-style" = "";
 
         # Super Pins
-        "uc.superpins.border.pins" = true;
+        "uc.superpins.border.pins" = false;
         "browser.sessionstore.restore_pinned_tabs_on_demand" = true;
         "zen.workspaces.show-workspace-indicator" = false;
       }
@@ -195,43 +198,109 @@
       };
 
       config = mkIf (osConfig.host.desktop or true) {
-        # Gecko only looks at $XDG_CONFIG_HOME/zen when ~/.zen is absent, so the
-        # legacy root has to be moved out of the way, not just emptied.
-        modules.migrations.entries.zen-profile =
+        modules.migrations.entries =
           let
             legacyRoot = "${config.home.homeDirectory}/.zen";
             profileDir = "${config.xdg.configHome}/zen/default";
+            modsDir = "${profileDir}/chrome/sine-mods";
+            modsFile = "${modsDir}/mods.json";
+            zenModsFile = "${profileDir}/zen-themes.json";
+            zenModsDir = "${profileDir}/chrome/zen-themes";
+
+            find = lib.getExe' pkgs.findutils "find";
+            jq = lib.getExe pkgs.jq;
+            keep = lib.escapeShellArg (builtins.toJSON cfg.mods);
+            stale = ''${jq} -r --argjson keep ${keep} '(keys - $keep)[]' "${modsFile}"'';
           in
           {
-            when = ''[ -d "${legacyRoot}" ]'';
-            locks = [
-              "${legacyRoot}/*/.parentlock"
-              "${profileDir}/.parentlock"
-            ];
-            before = [ "zen-browser-default" ];
-            script = ''
-              src=$(${lib.getExe pkgs.gawk} -v root="${legacyRoot}" -F= '
-                /^\[Profile/ { n++; idx = n; inprof = 1; next }
-                /^\[/        { inprof = 0; next }
-                inprof && $1 == "Path"       { p[idx] = $2 }
-                inprof && $1 == "IsRelative" { r[idx] = $2 }
-                inprof && $1 == "Default" && $2 == "1" { d = idx }
-                END {
-                  i = d ? d : (n == 1 ? 1 : 0)
-                  if (i && p[i] != "") print (r[i] == "0" ? p[i] : root "/" p[i])
-                }
-              ' "${legacyRoot}/profiles.ini")
+            # Gecko only looks at $XDG_CONFIG_HOME/zen when ~/.zen is absent, so the
+            # legacy root has to be moved out of the way, not just emptied.
+            zen-profile = {
+              when = ''[ -d "${legacyRoot}" ]'';
+              locks = [
+                "${legacyRoot}/*/.parentlock"
+                "${profileDir}/.parentlock"
+              ];
+              before = [ "zen-browser-default" ];
+              script = ''
+                # Any directory holding a profile, for a legacy root whose
+                # profiles.ini is gone or never got written.
+                found=$(${find} "${legacyRoot}" -maxdepth 3 -name places.sqlite -printf '%h\n' | sort -u)
+                count=$(printf '%s\n' "$found" | ${lib.getExe pkgs.gawk} 'NF' | wc -l)
 
-              if [ -z "$src" ]; then
-                echo "zen: no default profile in ${legacyRoot}/profiles.ini, migrate by hand"
-              elif [ -e "${profileDir}/places.sqlite" ] &&
-                   [ "$(readlink -f "$src")" != "$(readlink -f "${profileDir}")" ]; then
-                echo "zen: ${profileDir} already holds another profile's data, migrate by hand"
-              else
-                hm-migrate merge "$src" "${profileDir}" --mode 700
-                hm-migrate aside "${legacyRoot}"
-              fi
-            '';
+                src=""
+                if [ -f "${legacyRoot}/profiles.ini" ]; then
+                  src=$(${lib.getExe pkgs.gawk} -v root="${legacyRoot}" -F= '
+                    /^\[Profile/ { n++; idx = n; inprof = 1; next }
+                    /^\[/        { inprof = 0; next }
+                    inprof && $1 == "Path"       { p[idx] = $2 }
+                    inprof && $1 == "IsRelative" { r[idx] = $2 }
+                    inprof && $1 == "Default" && $2 == "1" { d = idx }
+                    END {
+                      i = d ? d : (n == 1 ? 1 : 0)
+                      if (i && p[i] != "") print (r[i] == "0" ? p[i] : root "/" p[i])
+                    }
+                  ' "${legacyRoot}/profiles.ini")
+                fi
+                if [ -z "$src" ] && [ "$count" = 1 ]; then
+                  src="$found"
+                fi
+
+                if [ -n "$src" ] && [ ! -d "$src" ]; then
+                  echo "zen: ${legacyRoot} points at $src, which is not there, migrate by hand"
+                elif [ -z "$src" ] && [ "$count" != 0 ]; then
+                  echo "zen: cannot tell which of the $count profiles under ${legacyRoot} to take, migrate by hand"
+                elif [ -z "$src" ]; then
+                  echo "zen: no profile data in ${legacyRoot}, moving it aside so Gecko uses ${profileDir}"
+                  hm-migrate aside "${legacyRoot}"
+                elif [ -e "${profileDir}/places.sqlite" ] &&
+                     [ "$(readlink -f "$src")" != "$(readlink -f "${profileDir}")" ]; then
+                  echo "zen: ${profileDir} already holds another profile's data, migrate by hand"
+                else
+                  hm-migrate merge "$src" "${profileDir}" --mode 700
+                  hm-migrate aside "${legacyRoot}"
+                fi
+              '';
+            };
+
+            # Sine copies zen-themes.json into mods.json on every start and only
+            # deletes it once every mod folder has been copied, so one mod without
+            # a folder makes that import repeat forever.
+            zen-mods = {
+              when = ''
+                [ -e "${zenModsFile}" ] || [ -e "${zenModsDir}" ] ||
+                  { [ -f "${modsFile}" ] && [ -n "$(${stale} 2>/dev/null || true)" ]; }
+              '';
+              locks = [ "${profileDir}/.parentlock" ];
+              before = [ "zen-browser-default" ];
+              after = [
+                "writeBoundary"
+                "migrate-zen-profile"
+              ];
+              script = ''
+                for legacy in "${zenModsFile}" "${zenModsDir}"; do
+                  if [ -e "$legacy" ]; then
+                    hm-migrate aside "$legacy"
+                  fi
+                done
+
+                if [ -f "${modsFile}" ]; then
+                  ${stale} | while read -r id; do
+                    echo "zen: dropping mod $id, it is not in modules.zen.mods"
+                    run rm -rf "${modsDir}/$id"
+                  done
+
+                  if [ -n "''${DRY_RUN:-}" ]; then
+                    echo "zen: would prune ${modsFile}"
+                  else
+                    ${jq} --argjson keep ${keep} \
+                      'with_entries(select(.key as $k | $keep | index($k)))' \
+                      "${modsFile}" > "${modsFile}.tmp"
+                    mv "${modsFile}.tmp" "${modsFile}"
+                  fi
+                fi
+              '';
+            };
           };
 
         programs.zen-browser = {

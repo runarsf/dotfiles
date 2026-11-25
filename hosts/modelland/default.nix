@@ -4,6 +4,7 @@ _: {
     users = [ "runar" ];
 
     modules = [
+      "podman"
       "osu"
       "steam"
       "controllers"

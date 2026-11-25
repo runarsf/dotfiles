@@ -4,6 +4,7 @@
     stateVersion = "24.05";
     users = [ "runar" ];
     modules = [
+      "podman"
       "osu"
       "steam"
       "controllers"

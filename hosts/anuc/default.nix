@@ -8,6 +8,7 @@
       "sshServer"
       "tmux"
       "docker"
+      "podman"
       "teleport"
       {
         nginx = {

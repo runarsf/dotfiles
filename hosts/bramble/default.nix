@@ -4,6 +4,7 @@ _: {
     users = [ "runar" ];
 
     modules = [
+      "docker"
       "yubikey"
       "web"
       "sql"
@@ -49,6 +50,12 @@ _: {
         time.timeZone = lib.mkForce "Europe/Zurich";
 
         services.libinput.enable = true;
+
+        services.logind.settings.Login = {
+          HandlePowerKey = "ignore";
+          HandlePowerKeyLongPress = "ignore";
+        };
+
         programs.localsend.enable = true;
 
         environment.systemPackages = with pkgs; [

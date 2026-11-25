@@ -26,6 +26,25 @@
 
       entries = filterAttrs (_: entry: entry.enable) cfg.entries;
 
+      # Its own process, so `set -e` still applies: bash turns errexit off for
+      # everything inside an `if` condition, subshells included.
+      runner =
+        name: entry:
+        pkgs.writeShellScript "migrate-${name}" ''
+          set -euo pipefail
+          PATH="${hm-migrate}/bin:$PATH"
+
+          run() {
+            if [ -n "''${DRY_RUN:-}" ]; then
+              echo "migrate ${name}: would run $*"
+            else
+              "$@"
+            fi
+          }
+
+          ${entry.script}
+        '';
+
       # One activation entry per step: a step that has to beat another module's
       # activation to the files it writes needs its own place in the dag.
       step =
@@ -54,16 +73,21 @@
         ''
         + ''
           if [ "$migrate_run" = 1 ]; then
-            (
-              PATH="${hm-migrate}/bin:$PATH"
-              ${entry.script}
-            )
+            # A broken step is left for the next switch instead of taking the
+            # whole activation down with it.
+            if ${runner name entry}; then
+              :
         ''
         + optionalString entry.once ''
-            run mkdir -p "${markers}"
-            run touch "${markers}/${name}"
+              if [ -z "''${DRY_RUN:-}" ]; then
+                mkdir -p "${markers}"
+                touch "${markers}/${name}"
+              fi
         ''
         + ''
+            else
+              echo "migrate ${name}: failed, leaving it for the next switch" >&2
+            fi
           fi
         '';
 

@@ -56,6 +56,7 @@ let
     "norwegian"
     "pipewire"
     "starship"
+    "terminal"
     "tuigreet"
     "vicinae"
     "wezterm"

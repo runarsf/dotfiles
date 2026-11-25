@@ -23,11 +23,14 @@
         };
       };
 
-      networking.firewall.trustedInterfaces = [ "docker0" ];
+      networking.firewall.trustedInterfaces = [ "docker0" "br-+" ];
 
       users.groups.docker.members = config.primaryUsers;
 
-      environment.systemPackages = with pkgs; [ docker-buildx ];
+      environment.systemPackages = with pkgs; [
+        dive
+        oxker
+      ];
 
       environment.sessionVariables.COMPOSE_BAKE = "true";
     };

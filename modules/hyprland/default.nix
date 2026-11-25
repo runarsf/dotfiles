@@ -53,6 +53,7 @@
 
   flake.homeModules.hyprland = lib'.mkModule "hyprland" {
     wants = [ "wayland" ];
+    needs = [ "terminal" ];
     config =
       {
         config,
@@ -81,8 +82,8 @@
         hypr-fit = "${writeNuBin "hypr-fit" (builtins.readFile ./bin/fit.nu)}/bin/hypr-fit";
 
         pypr = lib.getExe pkgs.pyprland;
-        # TODO: This doesn't seem like the way to do this
-        terminal = config.programs.wezterm.package;
+
+        terminal = config.modules.terminal.command;
 
         # Rainbow gradient, matching the niri active-window focus ring.
         rainbowColors = [
@@ -120,7 +121,7 @@
 
         binds = [
           (kb "SUPER SHIFT" "P" "hl.dsp.submap(\"passthrough\")" { })
-          (kb "SUPER" "Return" (exec (lib.getExe terminal)) { })
+          (kb "SUPER" "Return" (exec terminal) { })
           (kb "SUPER" "Q" "hl.dsp.window.close()" { })
           (kb "SUPER SHIFT" "E" (exec "loginctl terminate-user \"\"") { })
           (kb "SUPER" "E" (exec (lib.getExe pkgs.nautilus)) { })
@@ -469,7 +470,7 @@
           }
           {
             match = {
-              workspace = "name:special:scratchpad";
+              workspace = "special:scratchpad";
             };
             float = true;
           }
@@ -651,8 +652,9 @@
                           return
                         end
 
-                        hl.exec_cmd("${lib.getExe terminal}", {
-                          size = { 1310, 836 },
+                        hl.exec_cmd("${terminal}", {
+                          float = true,
+                          size = { 1200, 760 },
                           workspace = ws.name .. " silent",
                         })
                       end

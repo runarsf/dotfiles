@@ -48,6 +48,12 @@
         wezterm = {
           bitmapFont = true;
         };
+        ghostty = {
+          bitmapFont = true;
+        };
+        terminal = {
+          default = "ghostty";
+        };
         artcraft = {
           photocraft.enable = true;
         };
@@ -56,7 +62,6 @@
       "zsh"
       "matrix"
       "nautilus"
-      "podman"
       "zellij"
       "wayland"
       "nushell"

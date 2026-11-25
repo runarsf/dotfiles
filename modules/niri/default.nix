@@ -292,7 +292,7 @@
               ];
               "Mod+Shift+M".spawn = [ "${master-stack}" ];
 
-              "Mod+Return".spawn-sh = "wezterm";
+              "Mod+Return".spawn-sh = "terminal";
               "Mod+Q".close-window = _: { };
               # "Mod+D".spawn-sh = "${lib.getExe self'.packages.noctalia} ipc call launcher toggle";
               "Mod+D".spawn-sh = "vicinae toggle";
