@@ -376,7 +376,7 @@
             workspace = "2 silent";
           }
           {
-            match.class = "(sable-next)";
+            match.class = "(moe.sable.client)";
             workspace = "2 silent";
           }
           {
