@@ -1,6 +1,43 @@
 {lib', ...}: {
-  homeModule = _: let
+  homeModule = {lib, ...}: let
     inherit (lib'.hyprland) kb;
+    inherit (lib) flatten;
+
+    primaries = [
+      "DP-1" # desktop
+      "DP-2" # laptop
+    ];
+
+    secondaries = [
+      "HDMI-A-1" # desktop
+      "eDP-1" # laptop
+    ];
+
+    primary_rules =
+      map (monitor: [
+        {
+          workspace = "4";
+          monitor = monitor;
+        }
+        {
+          workspace = "10";
+          monitor = monitor;
+        }
+      ])
+      primaries;
+
+    secondary_rules =
+      map (monitor: [
+        {
+          workspace = "1";
+          monitor = monitor;
+        }
+        {
+          workspace = "2";
+          monitor = monitor;
+        }
+      ])
+      secondaries;
   in {
     wayland.windowManager.hyprland.settings = {
       monitor = [
@@ -35,24 +72,7 @@
           vrr = 0;
         }
       ];
-      workspace_rule = [
-        {
-          workspace = "1";
-          monitor = "desc:Chimei Innolux Corporation 0x14F2";
-        }
-        {
-          workspace = "2";
-          monitor = "desc:Chimei Innolux Corporation 0x14F2";
-        }
-        {
-          workspace = "4";
-          monitor = "DP-1";
-        }
-        {
-          workspace = "10";
-          monitor = "DP-1";
-        }
-      ];
+      workspace_rule = (primary_rules ++ secondary_rules) |> flatten;
       bind = [
         (kb "" "Pause" "hl.dsp.global(\"discord:discord-toggle-mute\")" {})
       ];
