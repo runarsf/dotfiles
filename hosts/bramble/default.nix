@@ -4,6 +4,7 @@ _: {
     users = [ "runar" ];
 
     modules = [
+      "docker"
       "yubikey"
       "web"
       "sql"
@@ -12,8 +13,9 @@ _: {
         csharp = {
           ide = true;
         };
-      }
-      {
+        android = {
+          ide = true;
+        };
         nvidia = {
           branch = "production";
           open = true;
@@ -22,17 +24,10 @@ _: {
             nvidiaBusId = "PCI:1:0:0";
           };
         };
-      }
-      {
         zram = {
           swapfile = "/swap/swapfile";
         };
       }
-      # {
-      #   hyprland = {
-      #     extraAnimations = true;
-      #   };
-      # }
     ];
 
     extraModules = [
@@ -49,6 +44,12 @@ _: {
         time.timeZone = lib.mkForce "Europe/Zurich";
 
         services.libinput.enable = true;
+
+        services.logind.settings.Login = {
+          HandlePowerKey = "ignore";
+          HandlePowerKeyLongPress = "ignore";
+        };
+
         programs.localsend.enable = true;
 
         environment.systemPackages = with pkgs; [

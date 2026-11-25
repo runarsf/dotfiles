@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ inputs, lib, ... }:
 let
   inherit (builtins) filter isString concatMap;
   inherit (lib) mapAttrsToList;
@@ -27,6 +27,10 @@ in
   # alongside it), the module goes under `config` instead, and a warning is
   # emitted (build-time only, nothing is disabled) for each unmet want:
   #   mkModule "hyprland" { wants = [ "wayland" ]; config = { ... }: { ... }; }
+  # `needs` is the hard version: each name is imported, so its options are
+  # declared and this module can read or set them. Use it when `config` would
+  # fail without the other module, `wants` when it only degrades. A name in
+  # both module sets is ambiguous and throws; import it with `importModule`.
   # `wants` checks `config.modules.<dep>.enable` first (same-evaluation
   # modules), falling back to `osConfig.modules.<dep>.enable` (a
   # nixos-only module, seen from a home module running under that nixos
@@ -36,10 +40,26 @@ in
   mkModule =
     name: arg:
     let
-      hasWants = arg ? wants;
+      wrapped = arg ? wants || arg ? needs;
       wants = arg.wants or [ ];
       module =
-        if hasWants then arg.config or (throw "mkModule '${name}': missing 'config' attribute") else arg;
+        if wrapped then arg.config or (throw "mkModule '${name}': missing 'config' attribute") else arg;
+
+      needs = map (
+        dep:
+        let
+          kinds = filter (kind: (inputs.self."${kind}Modules" or { }) ? ${dep}) [
+            "home"
+            "nixos"
+          ];
+        in
+        if kinds == [ ] then
+          throw "mkModule '${name}': needs unknown module '${dep}'"
+        else if kinds != [ (builtins.head kinds) ] then
+          throw "mkModule '${name}': needs '${dep}', which is both a home and a nixos module; import the one you mean with lib'.importModule"
+        else
+          importModule inputs.self (builtins.head kinds) dep
+      ) (arg.needs or [ ]);
     in
     {
       imports = [
@@ -53,6 +73,7 @@ in
           };
         })
       ]
+      ++ needs
       ++ (
         if wants == [ ] then
           [ ]

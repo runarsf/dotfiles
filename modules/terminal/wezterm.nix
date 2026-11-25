@@ -51,54 +51,66 @@ in
       };
     };
 
-  flake.homeModules.wezterm =
-    {
-      config,
-      pkgs,
-      lib,
-      osConfig,
-      ...
-    }:
-    let
-      inherit (lib)
-        mkIf
-        mkEnableOption
-        optionalAttrs
-        ;
-      inherit (pkgs.stdenv.hostPlatform) system;
+  flake.homeModules.wezterm = lib'.mkModule "wezterm" {
+    needs = [ "terminal" ];
+    config =
+      {
+        config,
+        pkgs,
+        lib,
+        osConfig,
+        ...
+      }:
+      let
+        inherit (lib)
+          mkIf
+          mkEnableOption
+          optionalAttrs
+          ;
+        inherit (pkgs.stdenv.hostPlatform) system;
 
-      cfg = config.modules.wezterm;
-    in
-    {
-      options.modules.wezterm = {
-        bitmapFont = mkEnableOption "the bitmap variant of the font";
+        cfg = config.modules.wezterm;
+      in
+      {
+        options.modules.wezterm = {
+          bitmapFont = mkEnableOption "the bitmap variant of the font";
 
-        font = mkOption {
-          type = types.nullOr fontType;
-          default = null;
-          description = "Replaces the whole fallback list; null takes the default for `bitmapFont`.";
+          font = mkOption {
+            type = types.nullOr fontType;
+            default = null;
+            description = "Replaces the whole fallback list; null takes the default for `bitmapFont`.";
+          };
+
+          fontSize = mkOption {
+            type = types.nullOr types.number;
+            default = null;
+          };
         };
 
-        fontSize = mkOption {
-          type = types.nullOr types.number;
-          default = null;
-        };
-      };
+        config = mkIf (pkgs.stdenv.hostPlatform.isLinux && (osConfig.host.desktop or true)) {
+          home.shellAliases.ssh = "TERM=xterm-256color ssh";
 
-      config = mkIf (pkgs.stdenv.hostPlatform.isLinux && (osConfig.host.desktop or true)) {
-        home.shellAliases.ssh = "TERM=xterm-256color ssh";
+          modules.terminal.terminals.wezterm = {
+            package = config.programs.wezterm.package;
+            class = class: [
+              "start"
+              "--class"
+              class
+            ];
+          };
 
-        programs.wezterm = {
-          enable = true;
-          package = self.packages.${system}.wezterm.wrap {
-            modules.wezterm =
-              { inherit (cfg) bitmapFont; }
-              // optionalAttrs (cfg.font != null) { inherit (cfg) font; }
-              // optionalAttrs (cfg.fontSize != null) { inherit (cfg) fontSize; };
+          programs.wezterm = {
+            enable = true;
+            package = self.packages.${system}.wezterm.wrap {
+              modules.wezterm =
+                { inherit (cfg) bitmapFont; }
+                // optionalAttrs (cfg.font != null) { inherit (cfg) font; }
+                // optionalAttrs (cfg.fontSize != null) { inherit (cfg) fontSize; };
+            };
           };
         };
       };
-    };
+  };
 
   perSystem =
     { pkgs, self', ... }:

@@ -510,6 +510,7 @@
     "csharp": true,
     "csv": true,
     "d2": true,
+    "dart": true,
     "docker-compose": true,
     "dockerfile": true,
     "emmet": true,

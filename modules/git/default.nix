@@ -8,19 +8,34 @@ _: {
       ...
     }:
     let
+      inherit (builtins) readFile;
       inherit (lib)
         mkEnableOption
         mkOption
-        getExe'
         mkDefault
         concatStringsSep
         optionalAttrs
         ;
       inherit (lib.types) listOf str nullOr;
       inherit (lib.strings) replaceString;
-      inherit (pkgs) writeText;
+      inherit (pkgs.writers) writeNuBin writeText;
 
       cfg = config.modules.git;
+
+      git-localignore = writeNuBin "git-localignore" {
+        makeWrapperArgs = [
+          "--prefix"
+          "PATH"
+          ":"
+          (lib.makeBinPath (
+            with pkgs;
+            [
+              fzf
+              coreutils
+            ]
+          ))
+        ];
+      } (readFile ./bin/localignore.nu);
     in
     {
       options.modules.git = {
@@ -63,6 +78,10 @@ _: {
       };
 
       config = {
+        home.packages = [
+          git-localignore
+        ];
+
         programs = {
           git = {
             enable = true;

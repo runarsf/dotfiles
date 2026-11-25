@@ -52,6 +52,7 @@
 - go over dms options
 - fail2ban
 - https://github.com/0xc000022070/zen-browser-flake
+- screenshots show the selection rectangle
 
 ## Containers
 
