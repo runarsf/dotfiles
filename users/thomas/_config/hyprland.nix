@@ -40,6 +40,7 @@
       secondaries;
   in {
     wayland.windowManager.hyprland.settings = {
+      config.scrolling.column_width = 1.0;
       monitor = [
         {
           output = "DP-1";
