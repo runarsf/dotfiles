@@ -13,8 +13,9 @@ _: {
         csharp = {
           ide = true;
         };
-      }
-      {
+        android = {
+          ide = true;
+        };
         nvidia = {
           branch = "production";
           open = true;
@@ -23,17 +24,10 @@ _: {
             nvidiaBusId = "PCI:1:0:0";
           };
         };
-      }
-      {
         zram = {
           swapfile = "/swap/swapfile";
         };
       }
-      # {
-      #   hyprland = {
-      #     extraAnimations = true;
-      #   };
-      # }
     ];
 
     extraModules = [

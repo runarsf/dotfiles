@@ -3,26 +3,51 @@
   ...
 }:
 {
-  flake.nixosModules.android =
+  flake.nixosModules.android = lib'.mkModule "android" (
     {
       config,
       pkgs,
+      lib,
       ...
     }:
-    {
-      users.groups = {
-        adbusers.members = config.primaryUsers;
-        plugdev.members = config.primaryUsers;
-        kvm.members = config.primaryUsers;
+    let
+      inherit (lib) mkEnableOption optionals;
+
+      cfg = config.modules.android;
+
+      # androidenv.androidPkgs defaults to 5 platforms x 4 image types x 4 ABIs,
+      # which is tens of GB of system images.
+      sdk = pkgs.androidenv.composeAndroidPackages {
+        platformVersions = [ "latest" ];
+        systemImageTypes = [ "google_apis_playstore_ps16k" ];
+        abiVersions = [ "x86_64" ];
+        includeSystemImages = true;
+        includeEmulator = true;
+        includeNDK = true;
       };
-      environment.systemPackages = with pkgs; [
-        android-tools
-        androidenv.androidPkgs.androidsdk
-        androidenv.androidPkgs.emulator
-        androidenv.androidPkgs.ndk-bundle
-        jdk
-      ];
-    };
+    in
+    {
+      options.modules.android = {
+        sdk = mkEnableOption "Android SDK from nixpkgs; Android Studio brings its own";
+      };
+
+      config = {
+        users.groups = {
+          adbusers.members = config.primaryUsers;
+          plugdev.members = config.primaryUsers;
+          kvm.members = config.primaryUsers;
+        };
+
+        environment.systemPackages =
+          with pkgs;
+          [
+            android-tools
+            jdk
+          ]
+          ++ optionals cfg.sdk [ sdk.androidsdk ];
+      };
+    }
+  );
 
   flake.homeModules.android = lib'.mkModule "android" (
     {
@@ -32,23 +57,12 @@
       ...
     }:
     let
-      inherit (lib)
-        mkEnableOption
-        mkOption
-        optionals
-        types
-        ;
+      inherit (lib) optionals mkEnableOption;
 
       cfg = config.modules.android;
     in
     {
-      options.modules.android = with types; {
-        enabled = mkOption {
-          description = "If this module has been enabled (read-only, used to verify from other modules)";
-          type = bool;
-          default = true;
-          readOnly = true;
-        };
+      options.modules.android = {
         ide = mkEnableOption "Android IDE";
       };
 

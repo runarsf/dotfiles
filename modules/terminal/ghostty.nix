@@ -3,16 +3,42 @@
   flake.homeModules.ghostty = lib'.mkModule "ghostty" {
     needs = [ "terminal" ];
     config =
-      { config, lib, ... }:
+      {
+        config,
+        lib,
+        pkgs,
+        ...
+      }:
       let
         inherit (lib)
           mkEnableOption
+          mkIf
           mkOption
           types
           optionals
           ;
 
         cfg = config.modules.ghostty;
+
+        # GTK 4.20 stopped handling dead keys itself on Wayland when no input
+        # method is running, so ¨ and ~ never reach the terminal.
+        package = pkgs.symlinkJoin {
+          name = "ghostty-${pkgs.ghostty.version}";
+          paths = [ pkgs.ghostty ];
+          nativeBuildInputs = [ pkgs.makeWrapper ];
+          postBuild = ''
+            wrapProgram $out/bin/ghostty --set-default GTK_IM_MODULE simple
+          '';
+          inherit (pkgs.ghostty) meta;
+          passthru = pkgs.ghostty.passthru // {
+            inherit (pkgs.ghostty)
+              man
+              shell_integration
+              terminfo
+              vim
+              ;
+          };
+        };
 
         bitmapFonts = [
           "scientifica"
@@ -65,17 +91,40 @@
             class = class: [ "--class=${class}" ];
           };
 
+          # The unit ships inside the package and runs the unwrapped binary.
+          xdg.configFile."systemd/user/app-com.mitchellh.ghostty.service.d/im.conf" =
+            mkIf config.programs.ghostty.systemd.enable
+              {
+                text = ''
+                  [Service]
+                  Environment=GTK_IM_MODULE=simple
+                '';
+              };
+
           programs.ghostty = {
             enable = true;
+            inherit package;
             settings = {
-              theme = "Ayu";
+              theme = "dark:Ayu,light:Ayu Light";
+              window-theme = "ghostty";
+              cursor-style-blink = false;
               cursor-style = "bar";
+
+              working-directory = "home";
+              window-inherit-working-directory = false;
+              tab-inherit-working-directory = false;
+              split-inherit-working-directory = true;
 
               keybind = [
                 "alt+c=copy_to_clipboard"
                 "alt+v=paste_from_clipboard"
                 "ctrl+a>|=new_split:right"
                 "ctrl+a>-=new_split:down"
+                "ctrl+a>z=toggle_split_zoom"
+                "shift+left=goto_split:left"
+                "shift+right=goto_split:right"
+                "shift+up=goto_split:up"
+                "shift+down=goto_split:down"
               ];
 
               font-family =
