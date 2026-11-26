@@ -1,5 +1,7 @@
 _: {
   hosts.boiler = {
+    root = ./.;
+
     stateVersion = "24.05";
     users = ["thomas"];
 

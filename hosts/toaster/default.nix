@@ -1,8 +1,9 @@
-{ inputs, ... }:
-{
+{inputs, ...}: {
   hosts.toaster = {
+    root = ./.;
+
     stateVersion = "24.05";
-    users = [ "thomas" ];
+    users = ["thomas"];
     modules = [
       "steam"
       "godot"
