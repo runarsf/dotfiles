@@ -24,8 +24,8 @@
         # method is running, so ¨ and ~ never reach the terminal.
         package = pkgs.symlinkJoin {
           name = "ghostty-${pkgs.ghostty.version}";
-          paths = [ pkgs.ghostty ];
-          nativeBuildInputs = [ pkgs.makeWrapper ];
+          paths = with pkgs; [ ghostty ];
+          nativeBuildInputs = with pkgs; [ makeWrapper ];
           postBuild = ''
             wrapProgram $out/bin/ghostty --set-default GTK_IM_MODULE simple
           '';

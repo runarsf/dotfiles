@@ -291,6 +291,12 @@
             };
             opacity = 0.8;
           }
+          # {
+          #   match = {
+          #     class = "com.mitchellh.ghostty";
+          #   };
+          #   opacity = 0.8;
+          # }
 
           {
             match = {

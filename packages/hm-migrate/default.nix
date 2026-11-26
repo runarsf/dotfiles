@@ -18,7 +18,7 @@
             --prefix PATH : ${
               makeBinPath [
                 pkgs.coreutils
-                pkgs.findutils
+                pkgs.rsync
                 pkgs.lsof
               ]
             }

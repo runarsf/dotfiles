@@ -40,18 +40,12 @@ def "main merge" [
     if $dry { print $"migrate: would create ($into)" } else { mkdir $into }
   }
 
-  let files = ^find $from -mindepth 1 -not -type d -printf "%P\n" | lines
-  let missing = $files | where {|f| not (present ($into | path join $f)) }
-  let kept = ($files | length) - ($missing | length)
-
-  if ($missing | is-empty) {
-    print $"migrate: ($into) already has every file from ($from)"
-  } else if $dry {
-    print $"migrate: would copy ($missing | length) files from ($from) to ($into), keeping ($kept) already there"
+  # One rsync instead of a file list: a big profile blew past ARG_MAX.
+  if $dry {
+    print $"migrate: would copy anything ($into) is missing from ($from)"
   } else {
-    cd $from
-    ^cp -a --parents ...$missing $into
-    print $"migrate: copied ($missing | length) files from ($from) to ($into), kept ($kept) already there"
+    ^rsync -a --ignore-existing $"($from)/" $into
+    print $"migrate: copied anything ($into) was missing from ($from)"
   }
 
   if $mode != "" {
