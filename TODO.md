@@ -43,15 +43,11 @@
 - android: remove enabled option if/when wrapper functions for this are created
 - add services.power-profiles-daemon.enable to where it belongs (dms and noctalia needs it)
 - mkdir .config/discord, since otherwise home manager switch fails
-- post-install script that runs certain things based on the features you have enabled. use gumroad
-- useFeatures should support passing multiple features in the same attrset.
-- useFeatures should support passing the same feature in multiple places without failing (e.g., "hyprland" in user config, and { hyprland = { nvidia = true; }; } in host config)
 - vicinae's Mod+D bind is in vicinae.nix for hyprland, but in niri's config for niri
 - enable nix-ld for everyone
 - When running home switch: error: unexpected argument '--accept-flake-config' found
 - go over dms options
 - fail2ban
-- https://github.com/0xc000022070/zen-browser-flake
 - screenshots show the selection rectangle
 
 ## Containers

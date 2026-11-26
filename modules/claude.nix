@@ -58,6 +58,7 @@ _: {
               type = "command";
               command = "bash ${homeDirectory}/.claude/hooks/caveman-statusline.sh";
             };
+            remoteControlAtStartup = true;
           };
           rules = {
             communication = ''

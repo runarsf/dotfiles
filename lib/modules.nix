@@ -1,4 +1,9 @@
-{ inputs, lib, ... }:
+{
+  inputs,
+  lib,
+  lib',
+  ...
+}:
 let
   inherit (builtins) filter isString concatMap;
   inherit (lib) mapAttrsToList;
@@ -12,6 +17,36 @@ let
 in
 {
   inherit importModule;
+
+  # Import every .nix file under <root>/_config, in the shape
+  # { homeModule?, nixosModule? }. The dir is underscore-prefixed so
+  # import-tree doesn't import it.
+  readConfigDir =
+    root:
+    let
+      dir = root + "/_config";
+      load =
+        path:
+        let
+          entry = import path {
+            inherit lib' inputs;
+            inherit (inputs) self;
+          };
+          unknown = builtins.attrNames (
+            removeAttrs entry [
+              "homeModule"
+              "nixosModule"
+            ]
+          );
+        in
+        if unknown == [ ] then
+          entry
+        else
+          throw "readConfigDir: ${toString path} sets unknown attribute(s) ${
+            lib.concatStringsSep ", " unknown
+          }; expected homeModule and/or nixosModule";
+    in
+    if root == null || !(builtins.pathExists dir) then [ ] else map load (lib'.concatPaths { paths = dir; });
 
   # What useModules takes: names, or attrsets of name -> module config.
   modulesType = lib.types.listOf (lib.types.either lib.types.str (lib.types.attrsOf lib.types.raw));
