@@ -34,6 +34,8 @@
       # "flaresolverr"
       "grimmory"
       "karakeep"
+      "home-assistant"
+      "terminus"
       # "octoFiesta"
     ];
 

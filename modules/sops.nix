@@ -88,7 +88,7 @@
               name = "sops";
               paths = [
                 (pkgs.writeShellScriptBin "sops" ''
-                  SOPS_AGE_KEY_FILE="''${XDG_RUNTIME_DIR}/secrets.d/age-keys.txt" exec ${pkgs.sops}/bin/sops ''${@}
+                  SOPS_AGE_KEY_FILE="''${XDG_RUNTIME_DIR:-/run/user/$(${pkgs.coreutils}/bin/id -u)}/secrets.d/age-keys.txt" exec ${pkgs.sops}/bin/sops "''$@"
                 '')
                 pkgs.sops
               ];

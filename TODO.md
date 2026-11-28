@@ -49,6 +49,7 @@
 - go over dms options
 - fail2ban
 - screenshots show the selection rectangle
+- convert mkService to a module instead like users and hosts
 
 ## Containers
 

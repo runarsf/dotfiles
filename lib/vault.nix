@@ -2,6 +2,6 @@ _: {
   vaultPath = fetchGit { # follow:branch main
     url = "ssh://git@github.com/runarsf/vault";
     ref = "refs/heads/main";
-    rev = "b90674bfc9bdd76742be470d947171267876a07d";
+    rev = "afa21f42c0c641d51dd5ba453bc9684e583879e9";
   };
 }
